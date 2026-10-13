@@ -1,0 +1,588 @@
+<title>Sprite Playtest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a game-editor workspace. Header, tab bar, then a stage (canvas) with an inspector-style control column; stacks on phones. Single deliberate dark editor look. */
+:root {
+  --bg: #1b1f26;
+  --panel: #252b34;
+  --panel-2: #2e3540;
+  --line: #3a4350;
+  --fg: #e3e7ee;
+  --muted: #98a2b3;
+  --accent: #5aa2d6;
+  --accent-ink: #0f1a24;
+  --warn: #e0a84a;
+  --hit: #ef6b5b;
+  --ok: #69c08b;
+  --display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--body); font-size: 14px; line-height: 1.5; padding-inline: 16px; padding-block: 16px 32px; }
+.wrap { max-width: 1280px; margin: 0 auto; display: grid; gap: 14px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+h1 { font-family: var(--display); font-weight: 600; font-size: 1.5rem; letter-spacing: 0.02em; margin: 0; text-wrap: balance; }
+header p { margin: 0; color: var(--muted); max-width: 70ch; }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); }
+.tab { font: 500 0.92rem var(--body); color: var(--muted); background: none; border: 0; border-bottom: 2px solid transparent; padding: 8px 14px; cursor: pointer; }
+.tab[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+.tab:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.view { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 14px; align-items: start; }
+@media (max-width: 900px) { .view { grid-template-columns: minmax(0, 1fr); } }
+.stage { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; min-width: 0; }
+.stage canvas { display: block; width: 100%; height: auto; }
+.stagebar { display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 8px 12px; border-top: 1px solid var(--line); font: 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.stagebar b { color: var(--fg); font-weight: 500; }
+.side { display: grid; gap: 12px; min-width: 0; }
+.group { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px; display: grid; gap: 10px; }
+.group h2 { font: 600 0.72rem var(--body); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+button.btn { font: 500 0.85rem var(--body); color: var(--fg); background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 6px 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+button.btn:hover { border-color: var(--accent); }
+button.btn.primary, button.btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button.btn img { width: 22px; height: 22px; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.seg button { font: 500 0.8rem var(--mono); background: var(--panel-2); color: var(--muted); border: 0; padding: 5px 9px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+label.check { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+label.slider { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 0.85rem; }
+label.slider input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); }
+label.slider output { font: 12px var(--mono); color: var(--fg); font-variant-numeric: tabular-nums; }
+.hint { color: var(--muted); font-size: 0.82rem; margin: 0; }
+.hint b { color: var(--fg); font-weight: 500; font-family: var(--mono); }
+.legend { display: grid; gap: 4px; font-size: 0.82rem; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.strip { display: grid; gap: 6px; padding: 10px 12px; border-top: 1px solid var(--line); }
+.strip button { position: relative; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 4px; cursor: pointer; display: grid; justify-items: center; gap: 2px; font: 11px var(--mono); color: var(--muted); min-width: 0; }
+.strip button[aria-current="true"] { border-color: var(--accent); color: var(--fg); box-shadow: inset 0 0 0 1px var(--accent); }
+.strip button.hit::after { content: "HIT"; position: absolute; top: 3px; right: 4px; font: 600 9px var(--mono); color: var(--hit); }
+.strip img { width: 100%; max-width: 72px; aspect-ratio: 1; object-fit: contain; }
+pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; overflow-x: auto; color: var(--fg); }
+.err { color: var(--hit); }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Sprite Playtest</h1>
+    <p>Mô phỏng cách một engine 2D (kiểu AnimatedSprite2D của Godot) phát sprite enemy: fps, lặp, lật ngang cho hướng trái, pivot ở chân, di chuyển 8 hướng.</p>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-battle" aria-selected="true" aria-controls="view-battle">Trận đấu</button>
+    <button class="tab" role="tab" id="tab-inspect" aria-selected="false" aria-controls="view-inspect">Soi animation</button>
+  </div>
+
+  <section class="view" id="view-battle" role="tabpanel" aria-labelledby="tab-battle">
+    <div class="stage">
+      <canvas id="battle" width="1536" height="1024" aria-label="Map with enemies walking along the road"></canvas>
+      <div class="stagebar" id="battle-status">Đang tải asset…</div>
+    </div>
+    <div class="side">
+      <div class="group">
+        <h2>Thả quái</h2>
+        <div class="row" id="spawn-row"></div>
+        <label class="check"><input type="checkbox" id="auto-spawn" checked> Tự thả xen kẽ mỗi 3 giây</label>
+        <button class="btn" id="clear" type="button">Xoá hết quái</button>
+      </div>
+      <div class="group">
+        <h2>Tốc độ đi của từng nhân vật</h2>
+        <div id="speed-sliders" class="side"></div>
+        <p class="hint">Mặc định lấy <b>move_speed</b> trong meta.json. Chỉnh đến khi chân không trượt trên đất, rồi báo con số cho Claude để ghi vào meta.</p>
+      </div>
+      <div class="group">
+        <h2>Tốc độ game và camera</h2>
+        <div class="seg" id="game-speed">
+          <button type="button" data-v="0.25">0.25×</button><button type="button" data-v="0.5">0.5×</button><button type="button" data-v="1" aria-pressed="true">1×</button><button type="button" data-v="2">2×</button>
+        </div>
+        <div class="seg" id="camera">
+          <button type="button" data-v="map" aria-pressed="true">Toàn map</button><button type="button" data-v="follow">Bám theo quái</button>
+        </div>
+        <label class="check"><input type="checkbox" id="show-path"> Hiện đường đi và tầm bắn</label>
+        <label class="check"><input type="checkbox" id="show-debug"> Hiện hướng, animation, frame</label>
+        <label class="check"><input type="checkbox" id="show-soldier" checked> Lính chặn đường</label>
+        <label class="check"><input type="checkbox" id="show-tower" checked> Tháp bắn</label>
+        <p class="hint">Tắt lính và tháp để quái đi hết đường và đi qua mọi hướng.</p>
+      </div>
+      <div class="group legend">
+        <h2>Trong cảnh</h2>
+        <span><i class="dot" style="background: var(--accent)"></i>Tháp cung: 50 sát thương mỗi 0,8 giây</span>
+        <span><i class="dot" style="background: var(--warn)"></i>Lính chặn đường: quái đứng lại và đánh</span>
+        <span><i class="dot" style="background: var(--hit)"></i>Chớp đỏ trên lính = frame trúng đòn</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-inspect" role="tabpanel" aria-labelledby="tab-inspect" hidden>
+    <div class="stage">
+      <canvas id="inspect" width="960" height="560" aria-label="Animation preview"></canvas>
+      <div class="strip" id="strip"></div>
+      <div class="stagebar" id="inspect-status"></div>
+    </div>
+    <div class="side">
+      <div class="group">
+        <h2>Nhân vật</h2>
+        <div class="row" id="pick-enemy"></div>
+        <h2>Animation</h2>
+        <div class="row" id="pick-anim"></div>
+      </div>
+      <div class="group">
+        <h2>Phát</h2>
+        <div class="row">
+          <button class="btn" id="prev" type="button" aria-label="Frame trước">◀</button>
+          <button class="btn primary" id="play" type="button">Tạm dừng</button>
+          <button class="btn" id="next" type="button" aria-label="Frame sau">▶</button>
+        </div>
+        <label class="slider" for="fps">FPS <output id="fps-out">10</output>
+          <input type="range" id="fps" min="2" max="24" step="1" value="10"></label>
+        <button class="btn" id="fps-reset" type="button">Về fps trong meta.json</button>
+        <div class="seg" id="zoom">
+          <button type="button" data-v="1">1x</button><button type="button" data-v="2" aria-pressed="true">2x</button><button type="button" data-v="3">3x</button>
+        </div>
+      </div>
+      <div class="group">
+        <h2>Kiểm tra</h2>
+        <label class="check"><input type="checkbox" id="onion"> Onion skin (hiện mờ frame trước)</label>
+        <label class="check"><input type="checkbox" id="treadmill" checked> Nền đất trôi theo tốc độ đi</label>
+        <label class="slider" for="tread-speed">Tốc độ đi (px/giây ở 1x) <output id="tread-out">40</output>
+          <input type="range" id="tread-speed" min="5" max="160" step="1" value="40"></label>
+        <p class="hint" id="stride-info"></p>
+        <label class="check"><input type="checkbox" id="guides" checked> Khung, đường chân và pivot</label>
+      </div>
+      <div class="group">
+        <h2>Cấu hình tương đương trong Godot</h2>
+        <pre class="code" id="godot"></pre>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  // Road of the valley map (map pixels), smoothed with Catmull-Rom below.
+  const WAYPOINTS = [[-60,250],[40,258],[120,292],[178,352],[232,415],[300,448],[400,456],[490,470],[545,520],[575,590],[600,660],[680,722],[790,735],[880,712],[960,680],[1060,630],[1120,560],[1170,505],[1270,455],[1380,425],[1480,405],[1600,388]];
+  const TOWER = { x: 707, y: 607, range: 250, every: 0.8, dmg: 50 };
+  const HP = 260;
+  const SCALE = 0.5;   // @2x frames drawn at half size = in-game 1x
+  const C = getComputedStyle(document.documentElement);
+  const col = n => C.getPropertyValue(n).trim();
+
+  // ---------- assets ----------
+  let M, IDS = [], IMG = {}, MAP, FOOT;
+  const speedOf = {};  // px/s at 1x, per enemy, shared by battle and inspector
+  const load = src => new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => bad(src); i.src = src; });
+
+  async function boot() {
+    try {
+      M = await (await fetch("manifest.json")).json();
+      IDS = Object.keys(M.enemies);
+      const jobs = [load("assets/map.jpg").then(i => MAP = i), load("assets/footman.png").then(i => FOOT = i)];
+      for (const id of IDS) {
+        const e = M.enemies[id]; IMG[id] = {};
+        if (e.icon) jobs.push(load(`assets/${id}/icon/01.png`).then(i => IMG[id].icon = i));
+        for (const [a, info] of Object.entries(e.anims)) {
+          IMG[id][a] = [];
+          for (let f = 1; f <= info.frames; f++) jobs.push(load(`assets/${id}/${a}/${String(f).padStart(2, "0")}.png`).then(i => IMG[id][a][f - 1] = i));
+        }
+        speedOf[id] = Math.round(e.move_speed || 40);
+      }
+      await Promise.all(jobs);
+      initBattle(); initInspector();
+      requestAnimationFrame(loop);
+    } catch (e) {
+      document.getElementById("battle-status").innerHTML = `<span class="err">Không tải được ${e}. Thử tải lại trang.</span>`;
+    }
+  }
+
+  // ---------- Godot-like AnimatedSprite2D ----------
+  class Sprite {
+    constructor(id) { this.id = id; this.anim = null; this.t = 0; this.frame = 0; this.done = false; }
+    info(a = this.anim) { return M.enemies[this.id].anims[a]; }
+    play(a, keepPhase) {
+      if (a === this.anim) return;
+      const prev = this.anim ? this.info() : null, next = this.info(a);
+      // switching between walk directions keeps the step phase (no snap back to frame 1)
+      const keep = keepPhase && prev && prev.frames === next.frames;
+      this.anim = a; this.done = false;
+      if (!keep) { this.t = 0; this.frame = 0; }
+    }
+    step(dt, fpsOverride) {
+      const info = this.info(), fps = fpsOverride || info.fps, prev = this.frame;
+      this.t += dt;
+      let f = Math.floor(this.t * fps);
+      if (info.loop) f %= info.frames; else if (f >= info.frames) { f = info.frames - 1; this.done = true; }
+      this.frame = f;
+      return f !== prev ? f : -1;
+    }
+    draw(ctx, x, y, s, flip, alpha = 1, frame = this.frame) {
+      const e = M.enemies[this.id], info = this.info(), img = IMG[this.id][this.anim][frame];
+      const w = info.cell[0] * s, h = info.cell[1] * s;
+      ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); if (flip) ctx.scale(-1, 1);
+      ctx.drawImage(img, -w * e.pivot[0], -h * e.pivot[1], w, h);
+      ctx.restore();
+    }
+  }
+
+  // 8-way view selection: angle sector -> generated sheet + flip, with fallbacks.
+  const SECTORS = ["side", "down_side", "down", "down_side", "side", "up_side", "up", "up_side"]; // 0°, 45°, ... (screen y down)
+  function walkAnim(id, sector) {
+    const has = a => !!M.enemies[id].anims[a];
+    let view = SECTORS[sector];
+    if (!has("walk_" + view)) view = "side";            // asset without diagonals / up / down: fall back to the side walk
+    const left = sector >= 3 && sector <= 5;
+    return { anim: "walk_" + view, flip: view === "up" || view === "down" ? false : left };
+  }
+  const animLabel = (a, flip) => flip ? a.replace("_side", "_left") : a;
+
+  // ---------- path (Catmull-Rom smoothed) ----------
+  const PTS = [];
+  for (let i = 0; i < WAYPOINTS.length - 1; i++) {
+    const p0 = WAYPOINTS[Math.max(0, i - 1)], p1 = WAYPOINTS[i], p2 = WAYPOINTS[i + 1], p3 = WAYPOINTS[Math.min(WAYPOINTS.length - 1, i + 2)];
+    for (let k = 0; k < 12; k++) {
+      const t = k / 12, t2 = t * t, t3 = t2 * t;
+      PTS.push([0, 1].map(j => 0.5 * ((2 * p1[j]) + (-p0[j] + p2[j]) * t + (2 * p0[j] - 5 * p1[j] + 4 * p2[j] - p3[j]) * t2 + (-p0[j] + 3 * p1[j] - 3 * p2[j] + p3[j]) * t3)));
+    }
+  }
+  PTS.push(WAYPOINTS[WAYPOINTS.length - 1]);
+  const SEG = []; let PATH_LEN = 0;
+  for (let i = 0; i < PTS.length - 1; i++) {
+    const [x1, y1] = PTS[i], [x2, y2] = PTS[i + 1], l = Math.hypot(x2 - x1, y2 - y1) || 0.001;
+    SEG.push({ x1, y1, dx: (x2 - x1) / l, dy: (y2 - y1) / l, l, s0: PATH_LEN }); PATH_LEN += l;
+  }
+  function at(s) {
+    s = Math.max(0, Math.min(PATH_LEN, s));
+    let lo = 0, hi = SEG.length - 1;
+    while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (SEG[mid].s0 <= s) lo = mid; else hi = mid - 1; }
+    const g = SEG[lo], k = s - g.s0;
+    return { x: g.x1 + g.dx * k, y: g.y1 + g.dy * k, dx: g.dx, dy: g.dy };
+  }
+  function heading(s) { // look a little ahead so the character turns into a bend instead of after it
+    const a = at(s), b = at(s + 28);
+    return Math.atan2(b.y - a.y, b.x - a.x);
+  }
+  function nearestS(x, y) {
+    let best = 0, bd = 1e9;
+    for (let s = 0; s < PATH_LEN; s += 4) { const p = at(s), d = Math.hypot(p.x - x, p.y - y); if (d < bd) { bd = d; best = s; } }
+    return best;
+  }
+
+  // ---------- battle ----------
+  const bc = document.getElementById("battle"), bx = bc.getContext("2d");
+  const st = { speed: 1, cam: "map", path: false, debug: false, soldier: true, tower: true, auto: true, spawnT: 0, next: 0 };
+  let enemies = [], arrows = [], towerT = 0, soldierFlash = 0, camX = 768, camY = 512, slotN = 0;
+  const SOLDIER = { s: 0, x: 0, y: 0 };
+
+  function initBattle() {
+    SOLDIER.s = nearestS(790, 735); Object.assign(SOLDIER, at(SOLDIER.s));
+    const row = document.getElementById("spawn-row"), sl = document.getElementById("speed-sliders");
+    IDS.forEach((id, i) => {
+      const e = M.enemies[id];
+      const b = document.createElement("button"); b.type = "button"; b.className = "btn";
+      b.innerHTML = `${e.icon ? `<img alt="" src="assets/${id}/icon/01.png">` : ""}${e.name}`;
+      b.onclick = () => spawn(id); row.appendChild(b);
+      const lab = document.createElement("label"); lab.className = "slider"; lab.htmlFor = "spd-" + id;
+      lab.innerHTML = `${e.name} <output id="spd-out-${id}">${speedOf[id]}</output><input type="range" id="spd-${id}" min="5" max="160" step="1" value="${speedOf[id]}">`;
+      sl.appendChild(lab);
+      lab.querySelector("input").oninput = ev => setSpeed(id, +ev.target.value);
+      spawn(id, 600 - i * 280);
+    });
+    bind();
+  }
+  function setSpeed(id, v) {
+    speedOf[id] = v;
+    const o = document.getElementById("spd-out-" + id), i = document.getElementById("spd-" + id);
+    if (o) o.textContent = v; if (i) i.value = v;
+    if (typeof ins !== "undefined" && ins.id === id) { document.getElementById("tread-speed").value = v; document.getElementById("tread-out").textContent = v; strideInfo(); }
+  }
+  function spawn(id, s = 0) {
+    const e = { id, sp: new Sprite(id), s, hp: HP, max: HP, state: "walk", sector: 0, flip: false, fade: 1, hold: 0, x: 0, y: 0, slot: (slotN++) % 3, turnT: 0 };
+    const p = at(s); e.x = p.x; e.y = p.y; e.sector = sectorOf(heading(s), -1);
+    const w = walkAnim(id, e.sector); e.sp.play(w.anim); e.flip = w.flip;
+    enemies.push(e);
+  }
+  function sectorOf(angle, current) {
+    const deg = ((angle * 180 / Math.PI) + 360) % 360;
+    const raw = Math.round(deg / 45) % 8;
+    if (current < 0) return raw;
+    const centre = current * 45, diff = Math.abs(((deg - centre + 540) % 360) - 180);
+    return diff > 22.5 + 8 ? raw : current;   // hysteresis: leave a sector only when clearly outside it
+  }
+  function update(dt) {
+    if (st.auto) { st.spawnT += dt; if (st.spawnT >= 3) { st.spawnT = 0; spawn(IDS[st.next % IDS.length]); st.next++; } }
+    for (const e of enemies) {
+      if (e.state === "walk") {
+        const v = speedOf[e.id];
+        const blocked = st.soldier && e.s < SOLDIER.s && e.s + v * dt >= SOLDIER.s - 34 - e.slot * 12;
+        if (blocked) { e.state = "attack"; e.flip = SOLDIER.x < e.x; }
+        else {
+          e.s += v * dt; const p = at(e.s); e.x = p.x; e.y = p.y;
+          e.turnT += dt;
+          const ns = sectorOf(heading(e.s), e.sector);
+          if (ns !== e.sector && e.turnT > 0.12) { e.sector = ns; e.turnT = 0; }
+          const w = walkAnim(e.id, e.sector); e.sp.play(w.anim, true); e.flip = w.flip;
+          if (e.s >= PATH_LEN) e.state = "gone";
+        }
+      }
+      if (e.state === "attack") { if (!st.soldier) { e.state = "walk"; continue; } e.sp.play("attack_side"); }
+      if (e.state === "death") {
+        e.sp.play("death_side");
+        if (e.sp.done) { e.hold += dt; if (e.hold > 1.2) e.fade -= dt / 0.6; if (e.fade <= 0) e.state = "gone"; }
+      }
+      const entered = e.sp.step(dt);
+      const hit = M.enemies[e.id].anims.attack_side?.hit;
+      if (e.state === "attack" && hit && entered === hit - 1) soldierFlash = 0.12;
+    }
+    enemies = enemies.filter(e => e.state !== "gone");
+    towerT += dt;
+    if (st.tower && towerT >= TOWER.every) {
+      const tgt = enemies.filter(e => e.state !== "death" && Math.hypot(e.x - TOWER.x, e.y - TOWER.y) <= TOWER.range).sort((a, b) => b.s - a.s)[0];
+      if (tgt) { towerT = 0; arrows.push({ tgt, t: 0, dur: 0.35, x0: TOWER.x, y0: TOWER.y - 60 }); }
+    }
+    for (const a of arrows) {
+      a.t += dt;
+      if (a.t >= a.dur && !a.hit) {
+        a.hit = true; const e = a.tgt;
+        if (e.state !== "death") {
+          e.hp -= TOWER.dmg;
+          if (e.hp <= 0) {
+            if (e.state !== "attack") e.flip = e.sector >= 3 && e.sector <= 5;   // death is a side sheet: face the way it was walking
+            e.hp = 0; e.state = "death";
+          }
+        }
+      }
+    }
+    arrows = arrows.filter(a => !a.hit);
+    soldierFlash = Math.max(0, soldierFlash - dt);
+  }
+
+  function drawBattle() {
+    const W = bc.width, H = bc.height;
+    bx.setTransform(1, 0, 0, 1, 0, 0); bx.clearRect(0, 0, W, H);
+    let z = 1, tx = 768, ty = 512;
+    if (st.cam === "follow") {
+      const lead = enemies.filter(e => e.state !== "death").sort((a, b) => b.s - a.s)[0] || enemies[0];
+      if (lead) { tx = lead.x; ty = lead.y - 30; }
+      z = 2.6;
+    }
+    camX += (tx - camX) * 0.12; camY += (ty - camY) * 0.12;
+    const hw = W / 2 / z, hh = H / 2 / z;
+    const cx = Math.min(Math.max(camX, hw), 1536 - hw), cy = Math.min(Math.max(camY, hh), 1024 - hh);
+    bx.setTransform(z, 0, 0, z, W / 2 - cx * z, H / 2 - cy * z);
+    bx.imageSmoothingQuality = "high";
+    bx.drawImage(MAP, 0, 0, 1536, 1024);
+    if (st.path) {
+      bx.strokeStyle = "rgba(255,255,255,.55)"; bx.lineWidth = 3; bx.setLineDash([10, 8]);
+      bx.beginPath(); PTS.forEach(([x, y], i) => i ? bx.lineTo(x, y) : bx.moveTo(x, y)); bx.stroke(); bx.setLineDash([]);
+      bx.strokeStyle = col("--accent"); bx.lineWidth = 2; bx.beginPath(); bx.arc(TOWER.x, TOWER.y, TOWER.range, 0, Math.PI * 2); bx.stroke();
+    }
+    // tower marker (placeholder: no tower art yet)
+    bx.fillStyle = "#5a4330"; bx.strokeStyle = "#1b140e"; bx.lineWidth = 4;
+    bx.beginPath(); bx.ellipse(TOWER.x, TOWER.y - 20, 34, 22, 0, 0, Math.PI * 2); bx.fill(); bx.stroke();
+    bx.fillStyle = "#7b6a55"; bx.fillRect(TOWER.x - 26, TOWER.y - 82, 52, 62); bx.strokeRect(TOWER.x - 26, TOWER.y - 82, 52, 62);
+    bx.fillStyle = col("--accent"); bx.beginPath(); bx.moveTo(TOWER.x - 34, TOWER.y - 82); bx.lineTo(TOWER.x, TOWER.y - 112); bx.lineTo(TOWER.x + 34, TOWER.y - 82); bx.closePath(); bx.fill(); bx.stroke();
+
+    const things = enemies.map(e => ({ y: e.y, draw: () => drawEnemy(e) }));
+    if (st.soldier) things.push({ y: SOLDIER.y + 6, draw: drawSoldier });
+    things.sort((a, b) => a.y - b.y).forEach(t => t.draw());
+    for (const a of arrows) {
+      const k = a.t / a.dur, x = a.x0 + (a.tgt.x - a.x0) * k, y = a.y0 + (a.tgt.y - 40 - a.y0) * k - Math.sin(k * Math.PI) * 40;
+      bx.strokeStyle = "#2a1d10"; bx.lineWidth = 3; bx.beginPath(); bx.moveTo(x, y); bx.lineTo(x - (a.tgt.x - a.x0) * 0.05, y - (a.tgt.y - a.y0) * 0.05); bx.stroke();
+    }
+    bx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+  function drawSoldier() {
+    const w = 84, h = w * FOOT.height / FOOT.width, x = SOLDIER.x + 34, y = SOLDIER.y + 6;
+    bx.fillStyle = "rgba(0,0,0,.25)"; bx.beginPath(); bx.ellipse(x, y, 24, 8, 0, 0, Math.PI * 2); bx.fill();
+    bx.save(); bx.translate(x, y); bx.scale(-1, 1); bx.drawImage(FOOT, -w / 2, -h, w, h); bx.restore();
+    if (soldierFlash > 0) { bx.fillStyle = col("--hit"); bx.globalAlpha = 0.8; bx.beginPath(); bx.arc(x - 6, y - h * 0.55, 16, 0, Math.PI * 2); bx.fill(); bx.globalAlpha = 1; }
+  }
+  function drawEnemy(e) {
+    bx.fillStyle = `rgba(0,0,0,${0.22 * e.fade})`; bx.beginPath(); bx.ellipse(e.x, e.y, 26, 8, 0, 0, Math.PI * 2); bx.fill();
+    e.sp.draw(bx, e.x, e.y, SCALE, e.flip, e.fade);
+    if (e.state !== "death") {
+      const w = 40, y = e.y - 80;
+      bx.fillStyle = "#1b1b1b"; bx.fillRect(e.x - w / 2 - 1, y - 1, w + 2, 6);
+      bx.fillStyle = col("--ok"); bx.fillRect(e.x - w / 2, y, w * e.hp / e.max, 4);
+    }
+    if (st.debug) {
+      bx.fillStyle = col("--hit"); bx.beginPath(); bx.arc(e.x, e.y, 3, 0, Math.PI * 2); bx.fill();
+      const label = `${animLabel(e.sp.anim, e.flip)} ${e.sp.frame + 1}/${e.sp.info().frames}`;
+      bx.font = "600 12px IBM Plex Mono, monospace"; bx.textAlign = "center";
+      const tw = bx.measureText(label).width + 8;
+      bx.fillStyle = "rgba(15,20,28,.85)"; bx.fillRect(e.x - tw / 2, e.y + 8, tw, 16); bx.fillStyle = "#fff"; bx.fillText(label, e.x, e.y + 20);
+    }
+  }
+  function battleStatus() {
+    const by = {}; enemies.forEach(e => { const k = animLabel(e.sp.anim, e.flip); by[k] = (by[k] || 0) + 1; });
+    const parts = Object.entries(by).map(([a, n]) => `${a} <b>${n}</b>`).join(" · ");
+    document.getElementById("battle-status").innerHTML = `Quái trên map <b>${enemies.length}</b>${parts ? " · " + parts : ""} · Tốc độ game <b>${st.speed}×</b>`;
+  }
+  function seg(id, fn) {
+    const el = document.getElementById(id);
+    el.addEventListener("click", ev => {
+      const b = ev.target.closest("button"); if (!b) return;
+      el.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      fn(b.dataset.v);
+    });
+  }
+  function bind() {
+    document.getElementById("clear").onclick = () => { enemies = []; arrows = []; };
+    document.getElementById("auto-spawn").onchange = e => st.auto = e.target.checked;
+    document.getElementById("show-path").onchange = e => st.path = e.target.checked;
+    document.getElementById("show-debug").onchange = e => st.debug = e.target.checked;
+    document.getElementById("show-soldier").onchange = e => st.soldier = e.target.checked;
+    document.getElementById("show-tower").onchange = e => st.tower = e.target.checked;
+    seg("game-speed", v => st.speed = +v);
+    seg("camera", v => st.cam = v);
+  }
+
+  // ---------- inspector ----------
+  const ic = document.getElementById("inspect"), ix = ic.getContext("2d");
+  var ins = { id: null, anim: null, flip: false, playing: true, fps: 10, zoom: 2, onion: false, tread: true, guides: true, sp: null, ground: 0, hold: 0 };
+
+  function initInspector() {
+    ins.id = IDS[0];
+    const pe = document.getElementById("pick-enemy");
+    for (const id of IDS) {
+      const e = M.enemies[id], b = document.createElement("button");
+      b.type = "button"; b.className = "btn"; b.dataset.id = id;
+      b.innerHTML = `${e.icon ? `<img alt="" src="assets/${id}/icon/01.png">` : ""}${e.name}`;
+      b.onclick = () => { ins.id = id; ins.anim = null; buildAnimList(); };
+      pe.appendChild(b);
+    }
+    const fps = document.getElementById("fps");
+    fps.oninput = () => { ins.fps = +fps.value; document.getElementById("fps-out").textContent = fps.value; godot(); strideInfo(); };
+    document.getElementById("fps-reset").onclick = () => setFps(M.enemies[ins.id].anims[ins.anim].fps);
+    document.getElementById("play").onclick = () => setPlaying(!ins.playing);
+    document.getElementById("prev").onclick = () => stepFrame(-1);
+    document.getElementById("next").onclick = () => stepFrame(1);
+    document.getElementById("onion").onchange = e => ins.onion = e.target.checked;
+    document.getElementById("treadmill").onchange = e => ins.tread = e.target.checked;
+    document.getElementById("guides").onchange = e => ins.guides = e.target.checked;
+    document.getElementById("tread-speed").oninput = e => setSpeed(ins.id, +e.target.value);
+    seg("zoom", v => ins.zoom = +v);
+    document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+      document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", String(x === t)));
+      document.getElementById("view-battle").hidden = t.id !== "tab-battle";
+      document.getElementById("view-inspect").hidden = t.id !== "tab-inspect";
+    });
+    buildAnimList();
+  }
+  function buildAnimList() {
+    const e = M.enemies[ins.id], pa = document.getElementById("pick-anim");
+    pa.innerHTML = "";
+    const list = [];
+    for (const a of Object.keys(e.anims)) {
+      list.push([a, false]);
+      if (a.endsWith("_side")) list.push([a, true]);
+    }
+    list.forEach(([a, flip]) => {
+      const b = document.createElement("button"); b.type = "button"; b.className = "btn";
+      b.textContent = animLabel(a, flip); b.dataset.a = a; b.dataset.f = flip;
+      b.onclick = () => { ins.anim = a; ins.flip = flip; select(); };
+      pa.appendChild(b);
+    });
+    if (!ins.anim) { ins.anim = list[0][0]; ins.flip = false; }
+    document.querySelectorAll("#pick-enemy button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === ins.id)));
+    setSpeed(ins.id, speedOf[ins.id]);
+    select();
+  }
+  function setFps(v) { ins.fps = v; document.getElementById("fps").value = v; document.getElementById("fps-out").textContent = v; godot(); strideInfo(); }
+  function setPlaying(p) { ins.playing = p; document.getElementById("play").textContent = p ? "Tạm dừng" : "Phát"; }
+  function select() {
+    ins.sp = new Sprite(ins.id); ins.sp.play(ins.anim); ins.hold = 0;
+    setFps(M.enemies[ins.id].anims[ins.anim].fps); setPlaying(true);
+    document.querySelectorAll("#pick-anim button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.a === ins.anim && (b.dataset.f === "true") === ins.flip)));
+    const info = M.enemies[ins.id].anims[ins.anim], strip = document.getElementById("strip");
+    strip.style.gridTemplateColumns = `repeat(${info.frames}, minmax(0, 1fr))`;
+    strip.innerHTML = "";
+    for (let i = 0; i < info.frames; i++) {
+      const b = document.createElement("button"); b.type = "button"; if (info.hit === i + 1) b.classList.add("hit");
+      b.innerHTML = `<img alt="Frame ${i + 1}" src="assets/${ins.id}/${ins.anim}/${String(i + 1).padStart(2, "0")}.png" style="${ins.flip ? "transform:scaleX(-1)" : ""}">${i + 1}`;
+      b.onclick = () => { setPlaying(false); ins.sp.frame = i; ins.sp.t = i / ins.fps; };
+      strip.appendChild(b);
+    }
+    godot(); strideInfo();
+  }
+  function strideInfo() {
+    const info = M.enemies[ins.id].anims[ins.anim], cyc = info.frames / ins.fps, v = speedOf[ins.id];
+    document.getElementById("stride-info").innerHTML = ins.anim.startsWith("walk")
+      ? `1 chu kỳ = <b>${cyc.toFixed(2)} s</b> (2 bước) → đi được <b>${(v * cyc).toFixed(0)} px</b>, mỗi bước <b>${(v * cyc / 2).toFixed(0)} px</b>. Bước chân trên hình dài hơn số này thì chân sẽ trượt.`
+      : "Nền chỉ trôi khi xem animation walk.";
+  }
+  function stepFrame(d) {
+    setPlaying(false);
+    const n = M.enemies[ins.id].anims[ins.anim].frames;
+    ins.sp.frame = (ins.sp.frame + d + n) % n; ins.sp.t = ins.sp.frame / ins.fps; ins.sp.done = false;
+  }
+  function godot() {
+    const e = M.enemies[ins.id], info = e.anims[ins.anim], h1 = info.cell[1] / 2;
+    const off = (-(e.pivot[1] - 0.5) * h1).toFixed(1);
+    document.getElementById("godot").textContent =
+`# SpriteFrames: "${animLabel(ins.anim, ins.flip)}"
+frames = ${info.frames}   # ${ins.anim}_01..${String(info.frames).padStart(2, "0")}.png
+speed  = ${ins.fps} FPS
+loop   = ${info.loop}
+
+# AnimatedSprite2D
+centered = true
+offset   = Vector2(0, ${off})  # chân nằm ở gốc node (@1x)
+flip_h   = ${ins.flip}
+# di chuyển: ${speedOf[ins.id]} px/giây (@1x)${info.hit ? `\n# gây sát thương khi frame == ${info.hit - 1}` : ""}`;
+  }
+  function drawInspector(dt) {
+    const W = ic.width, H = ic.height, e = M.enemies[ins.id], info = e.anims[ins.anim];
+    const s = ins.zoom * 0.5, cw = info.cell[0] * s, ch = info.cell[1] * s, gx = W / 2, gy = H * 0.74;
+    if (ins.playing) {
+      ins.sp.step(dt, ins.fps);
+      if (!info.loop && ins.sp.done) { ins.hold += dt; if (ins.hold > 1) { ins.sp.t = 0; ins.sp.done = false; ins.hold = 0; } }
+    }
+    const walk = ins.anim.startsWith("walk");
+    if (ins.tread && ins.playing && walk) ins.ground += speedOf[ins.id] * ins.zoom * dt;
+    ix.clearRect(0, 0, W, H);
+    ix.fillStyle = "#2b3a2c"; ix.fillRect(0, 0, W, H);
+    ix.fillStyle = "#a88a5c"; ix.fillRect(0, gy - 14 * ins.zoom, W, H);
+    ix.fillStyle = "#8a6d42";
+    // ground marks scroll against the movement direction
+    const view = ins.anim.replace("walk_", "");
+    const mx = !walk ? 0 : view === "side" || view.endsWith("_side") ? (ins.flip ? 1 : -1) : 0;
+    const my = !walk ? 0 : view === "up" || view === "up_side" ? 1 : view === "down" || view === "down_side" ? -1 : 0;
+    const norm = Math.hypot(mx, my) || 1, tile = 56 * ins.zoom;
+    const ox = (((mx / norm) * ins.ground) % tile + tile) % tile, oy = (((my / norm) * ins.ground * 0.5) % tile + tile) % tile;
+    for (let y = gy - 14 * ins.zoom - tile + oy; y < H + tile; y += tile * 0.5)
+      for (let x = -tile + ox + ((Math.round((y - oy) / (tile * 0.5)) % 2) * tile * 0.5); x < W + tile; x += tile)
+        if (y > gy - 14 * ins.zoom) ix.fillRect(x, y, tile * 0.32, 4 * ins.zoom);
+    ix.fillStyle = "rgba(0,0,0,.22)"; ix.beginPath(); ix.ellipse(gx, gy, 26 * ins.zoom, 8 * ins.zoom, 0, 0, Math.PI * 2); ix.fill();
+    if (ins.onion) { const n = info.frames, pf = (ins.sp.frame - 1 + n) % n; ins.sp.draw(ix, gx, gy, s, ins.flip, 0.3, pf); }
+    ins.sp.draw(ix, gx, gy, s, ins.flip, 1);
+    if (ins.guides) {
+      ix.strokeStyle = "rgba(255,255,255,.35)"; ix.setLineDash([6, 6]); ix.lineWidth = 1;
+      ix.strokeRect(gx - cw * e.pivot[0], gy - ch * e.pivot[1], cw, ch);
+      ix.beginPath(); ix.moveTo(0, gy); ix.lineTo(W, gy); ix.stroke(); ix.setLineDash([]);
+      ix.strokeStyle = col("--hit"); ix.lineWidth = 2; ix.beginPath(); ix.moveTo(gx - 8, gy); ix.lineTo(gx + 8, gy); ix.moveTo(gx, gy - 8); ix.lineTo(gx, gy + 8); ix.stroke();
+    }
+    document.querySelectorAll("#strip button").forEach((b, i) => b.setAttribute("aria-current", String(i === ins.sp.frame)));
+    const hitNow = info.hit && ins.sp.frame === info.hit - 1;
+    document.getElementById("inspect-status").innerHTML =
+      `${e.name} · <b>${animLabel(ins.anim, ins.flip)}</b>${ins.flip ? " (lật)" : ""} · bản <b>${info.version}</b> · frame <b>${ins.sp.frame + 1}/${info.frames}</b> · ${ins.fps} fps · ${info.loop ? "lặp" : "chạy 1 lần, giữ frame cuối"}${hitNow ? ` · <b style="color:var(--hit)">HIT</b>` : ""}`;
+  }
+
+  // ---------- main loop ----------
+  let last = performance.now(), statusT = 0;
+  function loop(now) {
+    const raw = Math.min(0.05, (now - last) / 1000); last = now;
+    if (!document.getElementById("view-battle").hidden) {
+      update(raw * st.speed); drawBattle();
+      statusT += raw; if (statusT > 0.25) { statusT = 0; battleStatus(); }
+    } else drawInspector(raw);
+    requestAnimationFrame(loop);
+  }
+  boot();
+})();
+</script>

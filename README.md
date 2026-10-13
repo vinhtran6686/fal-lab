@@ -40,7 +40,8 @@ Claude dùng skill `fal-image`: chọn template → viết prompt → chạy scr
 Cấu trúc: **format chung → class → level → archetype**.
 
 - `.claude/skills/fal-image/format.md`: style (rút ra từ `ref/`), góc nhìn, khung, pivot, tên file, `meta.json`, quy trình, checklist. Mọi class dùng chung.
-- `.claude/skills/fal-image/classes/enemy.md`: class Enemy, hiện có **Level 1** (cận chiến / đánh xa): walk 3 hướng, attack, death (mỗi sheet 6 frame, lưới 3×2), icon, khung 96px.
+- `.claude/skills/fal-image/classes/enemy.md`: class Enemy, hiện có **Level 1** (cận chiến / đánh xa): walk **8 hướng** (5 sheet tạo + 3 lật), walk 8 frame, attack/death 9 frame, icon, khung 128px, `move_speed`.
+- Playtest: `python scripts/build_playtest.py` rồi nhờ Claude publish `out/playtest/` để xem quái đi trên map.
 
 Ví dụ:
 - `Tạo sprite enemy nhện quái vật cận chiến` → Claude chỉ tạo **master** rồi dừng; bạn chốt (vd. "chốt v02") → Claude tạo hết các sheet.

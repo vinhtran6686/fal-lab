@@ -62,6 +62,12 @@ Shared endings:
 Make the single-character sprite first and get it approved, then describe that exact design in `{who}`
 (colors, gear, proportions) so the sheet matches it.
 
+These are drawing prompts only. Any sheet that animates (walk, attack, VFX, a tower that fires) is first
+designed with `animation.md`: motion card, the object's motion profile, a frame-by-frame blueprint, key
+poses before in-betweens, and the review loop. Replace the per-frame wording below with sentences from
+that blueprint; for characters of a defined class, use the class file's frame counts and grids instead
+of the 4-frame layouts here.
+
 ### walk — Walk cycle, 4 frames
 > Sprite sheet of {who}: a 4-frame walk cycle in ONE horizontal row of four equal-width cells, evenly spaced. The same character at the same scale and facing the same direction (down-left) in every frame, feet on one shared baseline. Frame 1 left foot forward contact, frame 2 passing pose, frame 3 right foot forward contact, frame 4 passing pose. {STYLE} {SHEET}
 
@@ -116,4 +122,5 @@ Make the single-character sprite first and get it approved, then describe that e
 - Transparent assets: no painted background, ground plate or scenery
   (transparent pixels may show as black, white or a checkerboard; that is fine).
 - Sheets: correct frame/cell count, equal spacing, same character and scale in every cell, shared baseline.
+- Animated sheets: also the motion checks and verdict in `animation.md` §7 (frame count alone never passes).
 - Style matches the style guide and earlier approved assets.

@@ -1,0 +1,488 @@
+<title>Motion Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an animation bench. Top bar picks character + motion, a large stage with a frame strip under it, a control column on the right (playback, movement, view, notes). Same dark editor look as Sprite Playtest. */
+:root {
+  --bg: #1b1f26;
+  --panel: #252b34;
+  --panel-2: #2e3540;
+  --line: #3a4350;
+  --fg: #e3e7ee;
+  --muted: #98a2b3;
+  --accent: #5aa2d6;
+  --accent-ink: #0f1a24;
+  --bad: #ef6b5b;
+  --pin: #f2c14e;
+  --display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--body); font-size: 14px; line-height: 1.5; padding-inline: 16px; padding-block: 16px 32px; }
+.wrap { max-width: 1280px; margin: 0 auto; display: grid; gap: 14px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+h1 { font-family: var(--display); font-weight: 600; font-size: 1.5rem; letter-spacing: 0.02em; margin: 0; }
+header p { margin: 0; color: var(--muted); max-width: 72ch; }
+.bar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: end; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field > span { font: 600 0.72rem var(--body); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+select { font: 500 0.9rem var(--body); color: var(--fg); background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; min-width: 160px; max-width: 100%; }
+.dirs { display: grid; grid-template-columns: repeat(3, 38px); gap: 4px; }
+.dirs button { height: 34px; font: 600 1rem var(--mono); }
+.dirs .mid { font-size: 0.7rem; color: var(--muted); background: transparent; border: 1px dashed var(--line); cursor: default; }
+.states { display: flex; flex-wrap: wrap; gap: 6px; }
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 14px; align-items: start; }
+@media (max-width: 960px) { .main { grid-template-columns: minmax(0, 1fr); } }
+.stage { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; min-width: 0; }
+.stage canvas { display: block; width: 100%; height: auto; cursor: crosshair; touch-action: manipulation; }
+.strip { display: grid; gap: 6px; padding: 10px 12px; border-top: 1px solid var(--line); }
+.strip button { position: relative; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 4px; cursor: pointer; display: grid; justify-items: center; gap: 2px; font: 11px var(--mono); color: var(--muted); min-width: 0; }
+.strip button[aria-current="true"] { border-color: var(--accent); color: var(--fg); box-shadow: inset 0 0 0 1px var(--accent); }
+.strip button.bad { border-color: var(--bad); }
+.strip button.bad::after { content: "LỖI"; position: absolute; top: 2px; right: 3px; font: 600 9px var(--mono); color: var(--bad); }
+.strip button.hit::before { content: "HIT"; position: absolute; top: 2px; left: 3px; font: 600 9px var(--mono); color: var(--accent); }
+.strip img { width: 100%; max-width: 64px; aspect-ratio: 1; object-fit: contain; }
+.statusbar { display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 8px 12px; border-top: 1px solid var(--line); font: 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.statusbar b { color: var(--fg); font-weight: 500; }
+.side { display: grid; gap: 12px; min-width: 0; }
+.group { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px; display: grid; gap: 10px; }
+.group h2 { font: 600 0.72rem var(--body); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+button.btn { font: 500 0.85rem var(--body); color: var(--fg); background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 6px 10px; cursor: pointer; }
+button.btn:hover:not(:disabled) { border-color: var(--accent); }
+button.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+button.btn.primary, button.btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.seg button { font: 500 0.8rem var(--body); background: var(--panel-2); color: var(--muted); border: 0; padding: 5px 9px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+label.check { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+label.slider { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 0.85rem; }
+label.slider input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); }
+label.slider output { font: 12px var(--mono); color: var(--fg); font-variant-numeric: tabular-nums; }
+.calc { font: 12px/1.6 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.calc b { color: var(--fg); font-weight: 500; }
+.hint { color: var(--muted); font-size: 0.82rem; margin: 0; }
+textarea { width: 100%; min-height: 64px; resize: vertical; font: 13px/1.4 var(--body); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; }
+.notes { display: grid; gap: 6px; max-height: 220px; overflow-y: auto; }
+.note { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: start; font-size: 0.85rem; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; }
+.note b { font-family: var(--mono); font-weight: 500; color: var(--bad); white-space: nowrap; }
+.note span { min-width: 0; overflow-wrap: anywhere; }
+.note button { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 0.8rem; }
+pre.summary { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; overflow-x: auto; white-space: pre-wrap; color: var(--fg); }
+.err { color: var(--bad); }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Motion Lab</h1>
+    <p>Chỉnh tốc độ đi và fps cho đến khi bước chân khớp với mặt đất, soi từng frame, đánh dấu frame lỗi, rồi sao chép thông số gửi cho Claude.</p>
+  </header>
+
+  <div class="bar">
+    <label class="field" for="char"><span>Nhân vật</span><select id="char"></select></label>
+    <div class="field"><span>Hướng đi</span>
+      <div class="dirs" id="dirs">
+        <button class="btn" type="button" data-dir="up_left" title="Lên trái">↖</button>
+        <button class="btn" type="button" data-dir="up" title="Lên">↑</button>
+        <button class="btn" type="button" data-dir="up_right" title="Lên phải">↗</button>
+        <button class="btn" type="button" data-dir="left" title="Trái">←</button>
+        <button class="btn mid" type="button" tabindex="-1" aria-hidden="true">walk</button>
+        <button class="btn" type="button" data-dir="right" title="Phải">→</button>
+        <button class="btn" type="button" data-dir="down_left" title="Xuống trái">↙</button>
+        <button class="btn" type="button" data-dir="down" title="Xuống">↓</button>
+        <button class="btn" type="button" data-dir="down_right" title="Xuống phải">↘</button>
+      </div>
+    </div>
+    <div class="field"><span>Chuyển động khác</span>
+      <div class="states" id="states"></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="stage">
+      <canvas id="stage" width="1000" height="560" aria-label="Animation stage. Click the ground to drop a foot pin."></canvas>
+      <div class="strip" id="strip"></div>
+      <div class="statusbar" id="status">Đang tải asset…</div>
+    </div>
+
+    <div class="side">
+      <div class="group">
+        <h2>Phát</h2>
+        <div class="row">
+          <button class="btn" id="prev" type="button" aria-label="Frame trước">◀ Trước</button>
+          <button class="btn primary" id="auto" type="button">Tạm dừng</button>
+          <button class="btn" id="next" type="button" aria-label="Frame sau">Sau ▶</button>
+        </div>
+        <label class="slider" for="fps">FPS (khung hình/giây) <output id="fps-out">10</output>
+          <input type="range" id="fps" min="2" max="24" step="1" value="10"></label>
+        <p class="hint">Phím tắt: ← → để đi từng frame, Space để chạy/dừng.</p>
+      </div>
+
+      <div class="group">
+        <h2>Di chuyển</h2>
+        <label class="slider" for="speed">Tốc độ đi (px/giây ở 1x) <output id="speed-out">60</output>
+          <input type="range" id="speed" min="0" max="160" step="1" value="60"></label>
+        <div class="seg" id="move-mode">
+          <button type="button" data-v="walk" aria-pressed="true">Đi trên nền cố định</button><button type="button" data-v="tread">Tại chỗ, nền trôi</button>
+        </div>
+        <div class="calc" id="calc"></div>
+        <div class="row">
+          <button class="btn" id="reset-tuning" type="button">Về giá trị trong meta.json</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>Hiển thị</h2>
+        <div class="seg" id="zoom">
+          <button type="button" data-v="1">1x (thật)</button><button type="button" data-v="2">2x</button><button type="button" data-v="3" aria-pressed="true">3x</button>
+        </div>
+        <label class="slider" for="onion">Onion skin: hiện mờ các frame trước <output id="onion-out">0</output>
+          <input type="range" id="onion" min="0" max="3" step="1" value="0"></label>
+        <label class="check"><input type="checkbox" id="marks" checked> Vạch mốc trên mặt đất (mỗi 16 px)</label>
+        <label class="check"><input type="checkbox" id="guides" checked> Khung, đường chân và pivot</label>
+        <div class="row">
+          <button class="btn" id="clear-pins" type="button">Xoá ghim chân</button>
+        </div>
+        <p class="hint">Bấm lên mặt đất để cắm ghim tại chỗ bàn chân chạm đất. Bước từng frame: chân đang chạm đất phải đứng yên trên ghim, lệch đi là bị trượt.</p>
+      </div>
+
+      <div class="group">
+        <h2>Ghi chú frame <span id="note-frame"></span></h2>
+        <label class="check"><input type="checkbox" id="bad"> Frame này lỗi</label>
+        <textarea id="note-text" placeholder="Ví dụ: chân sau bị trượt, cùng một chân bước 2 lần, đao đổi tay…" aria-label="Ghi chú cho frame đang xem"></textarea>
+        <div class="notes" id="notes"></div>
+      </div>
+
+      <div class="group">
+        <h2>Thông số gửi Claude</h2>
+        <pre class="summary" id="summary"></pre>
+        <div class="row">
+          <button class="btn primary" id="copy" type="button">Sao chép</button>
+          <span class="hint" id="copy-msg" role="status"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const DIRS = {           // movement vector, generated view, mirrored?
+    right:      { v: [1, 0],  view: "side",      flip: false, label: "→ phải" },
+    left:       { v: [-1, 0], view: "side",      flip: true,  label: "← trái" },
+    down_right: { v: [0.7071, 0.7071],  view: "down_side", flip: false, label: "↘ xuống phải" },
+    down_left:  { v: [-0.7071, 0.7071], view: "down_side", flip: true,  label: "↙ xuống trái" },
+    up_right:   { v: [0.7071, -0.7071], view: "up_side",   flip: false, label: "↗ lên phải" },
+    up_left:    { v: [-0.7071, -0.7071], view: "up_side",  flip: true,  label: "↖ lên trái" },
+    down:       { v: [0, 1],  view: "down",      flip: false, label: "↓ xuống" },
+    up:         { v: [0, -1], view: "up",        flip: false, label: "↑ lên" },
+  };
+  const STORE = "motion-lab-v1";
+  const $ = id => document.getElementById(id);
+  const cv = $("stage"), cx = cv.getContext("2d");
+  const C = getComputedStyle(document.documentElement), col = n => C.getPropertyValue(n).trim();
+
+  let M, IMG = {};
+  const S = { id: null, key: "walk:right", playing: true, mode: "walk", zoom: 3, onion: 0, marks: true, guides: true,
+              t: 0, frame: 0, hold: 0, pos: [0, 0], ground: 0, pins: [] };
+  // tuning and notes survive reloads in this browser only
+  let saved = { speed: {}, fps: {}, notes: {} };
+  try { saved = Object.assign(saved, JSON.parse(localStorage.getItem(STORE) || "{}")); } catch (e) {}
+  const persist = () => { try { localStorage.setItem(STORE, JSON.stringify(saved)); } catch (e) {} };
+
+  const load = src => new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => bad(src); i.src = src; });
+
+  async function boot() {
+    try {
+      M = await (await fetch("manifest.json")).json();
+      const jobs = [];
+      for (const [id, e] of Object.entries(M.enemies)) {
+        IMG[id] = {};
+        for (const [a, info] of Object.entries(e.anims)) {
+          IMG[id][a] = [];
+          for (let f = 1; f <= info.frames; f++) jobs.push(load(`assets/${id}/${a}/${String(f).padStart(2, "0")}.png`).then(i => IMG[id][a][f - 1] = i));
+        }
+      }
+      await Promise.all(jobs);
+      const sel = $("char");
+      for (const [id, e] of Object.entries(M.enemies)) sel.add(new Option(e.name, id));
+      S.id = M.enemies.bandit ? "bandit" : Object.keys(M.enemies)[0];
+      sel.value = S.id;
+      bind(); pickChar(S.id);
+      requestAnimationFrame(loop);
+    } catch (e) {
+      $("status").innerHTML = `<span class="err">Không tải được ${e}. Thử tải lại trang.</span>`;
+    }
+  }
+
+  // ---------- current selection ----------
+  function current() {
+    const e = M.enemies[S.id], [kind, which] = S.key.split(":");
+    if (kind === "walk") {
+      const d = DIRS[which];
+      let anim = "walk_" + d.view, fallback = false;
+      if (!e.anims[anim]) { anim = "walk_side"; fallback = true; }
+      const flip = (d.view === "up" || d.view === "down") && !fallback ? false : d.v[0] < 0;
+      return { anim, flip, dir: d, moving: true, label: `walk ${d.label}`, fallback };
+    }
+    const flip = which === "left";
+    return { anim: kind, flip, dir: null, moving: false, label: `${kind.replace("_side", "")} ${flip ? "← trái" : "→ phải"}`, fallback: false };
+  }
+  const info = () => M.enemies[S.id].anims[current().anim];
+  const fpsKey = () => `${S.id}/${current().anim}`;
+  const fps = () => saved.fps[fpsKey()] ?? info().fps;
+  const speed = () => saved.speed[S.id] ?? Math.round(M.enemies[S.id].move_speed || 40);
+  const noteKey = () => `${S.id}/${S.key}`;
+
+  function pickChar(id) {
+    S.id = id;
+    const st = $("states"); st.innerHTML = "";
+    const anims = M.enemies[id].anims;
+    for (const a of Object.keys(anims).filter(a => !a.startsWith("walk"))) {
+      for (const side of ["right", "left"]) {
+        const b = document.createElement("button"); b.type = "button"; b.className = "btn";
+        b.dataset.key = `${a}:${side}`; b.textContent = `${a.replace("_side", "")} ${side === "right" ? "→" : "←"}`;
+        b.onclick = () => pick(b.dataset.key); st.appendChild(b);
+      }
+    }
+    document.querySelectorAll("#dirs [data-dir]").forEach(b => {
+      const d = DIRS[b.dataset.dir], has = !!anims["walk_" + d.view];
+      b.title = `${d.label}${has ? "" : " (chưa có sheet, dùng walk_side)"}`;
+      b.style.opacity = has ? "" : "0.55";
+    });
+    pick(S.key.startsWith("walk") || anims[S.key.split(":")[0]] ? S.key : "walk:right");
+  }
+  function pick(key) {
+    S.key = key; S.t = 0; S.frame = 0; S.hold = 0; S.pins = []; S.ground = 0;
+    const W = cv.width, H = cv.height, c = current();
+    S.pos = c.moving ? [W / 2 - c.dir.v[0] * W * 0.3, groundY() - c.dir.v[1] * H * 0.18] : [W / 2, groundY()];
+    document.querySelectorAll("#dirs [data-dir]").forEach(b => b.setAttribute("aria-pressed", String(key === "walk:" + b.dataset.dir)));
+    document.querySelectorAll("#states button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.key === key)));
+    $("speed").disabled = !c.moving; document.querySelectorAll("#move-mode button").forEach(b => b.disabled = !c.moving);
+    syncControls(); buildStrip(); refreshNotes();
+  }
+  function syncControls() {
+    $("fps").value = fps(); $("fps-out").textContent = fps();
+    $("speed").value = speed(); $("speed-out").textContent = speed();
+    calc(); summary();
+  }
+
+  // ---------- strip, notes, summary ----------
+  function buildStrip() {
+    const c = current(), inf = info(), strip = $("strip");
+    strip.style.gridTemplateColumns = `repeat(${inf.frames}, minmax(0, 1fr))`;
+    strip.innerHTML = "";
+    for (let i = 0; i < inf.frames; i++) {
+      const b = document.createElement("button"); b.type = "button";
+      if (inf.hit === i + 1) b.classList.add("hit");
+      b.innerHTML = `<img alt="Frame ${i + 1}" src="assets/${S.id}/${c.anim}/${String(i + 1).padStart(2, "0")}.png" style="${c.flip ? "transform:scaleX(-1)" : ""}">${i + 1}`;
+      b.onclick = () => goFrame(i);
+      strip.appendChild(b);
+    }
+    markStrip();
+  }
+  function markStrip() {
+    const notes = saved.notes[noteKey()] || {};
+    document.querySelectorAll("#strip button").forEach((b, i) => {
+      b.setAttribute("aria-current", String(i === S.frame));
+      b.classList.toggle("bad", !!notes[i + 1]?.bad);
+    });
+  }
+  function refreshNotes() {
+    const notes = saved.notes[noteKey()] || {}, n = notes[S.frame + 1] || {};
+    $("note-frame").textContent = `· frame ${S.frame + 1}`;
+    $("bad").checked = !!n.bad; $("note-text").value = n.text || "";
+    const list = $("notes"); list.innerHTML = "";
+    Object.entries(notes).filter(([, v]) => v.bad || v.text).sort((a, b) => a[0] - b[0]).forEach(([f, v]) => {
+      const row = document.createElement("div"); row.className = "note";
+      row.innerHTML = `<b>F${f}</b><span></span><button type="button" aria-label="Xoá ghi chú frame ${f}">xoá</button>`;
+      row.querySelector("span").textContent = (v.bad ? "lỗi" : "") + (v.bad && v.text ? ": " : "") + (v.text || "");
+      row.querySelector("span").onclick = () => goFrame(+f - 1);
+      row.querySelector("button").onclick = () => { delete notes[f]; persist(); refreshNotes(); markStrip(); summary(); };
+      list.appendChild(row);
+    });
+    markStrip(); summary();
+  }
+  function saveNote() {
+    const k = noteKey(); saved.notes[k] = saved.notes[k] || {};
+    const f = S.frame + 1, bad = $("bad").checked, text = $("note-text").value.trim();
+    if (bad || text) saved.notes[k][f] = { bad, text }; else delete saved.notes[k][f];
+    persist(); refreshNotes();
+  }
+  function calc() {
+    const c = current(), inf = info(), f = fps(), cyc = inf.frames / f;
+    if (!c.moving) { $("calc").innerHTML = `${inf.frames} frame ở ${f} fps = <b>${cyc.toFixed(2)} s</b>${inf.loop ? " mỗi vòng" : ", chạy 1 lần"}`; return; }
+    const v = speed();
+    $("calc").innerHTML =
+      `1 chu kỳ = <b>${inf.frames}</b> frame / <b>${f}</b> fps = <b>${cyc.toFixed(2)} s</b> (2 bước)<br>` +
+      `Đi được <b>${(v * cyc).toFixed(0)} px</b> mỗi chu kỳ, <b>${(v * cyc / 2).toFixed(0)} px</b> mỗi bước<br>` +
+      `Mỗi frame nhân vật tiến <b>${(v / f).toFixed(1)} px</b> (ở 1x)`;
+  }
+  function summary() {
+    const e = M.enemies[S.id], lines = [`Nhân vật: ${e.name} (${S.id})`, `Tốc độ đi đề xuất: ${speed()} px/s @1x (meta hiện tại: ${e.move_speed ?? "chưa có"})`];
+    for (const [a, inf] of Object.entries(e.anims)) {
+      const f = saved.fps[`${S.id}/${a}`];
+      if (f != null && f !== inf.fps) lines.push(`FPS ${a} (${inf.version}): ${f} (meta: ${inf.fps})`);
+    }
+    for (const [k, notes] of Object.entries(saved.notes)) {
+      if (!k.startsWith(S.id + "/")) continue;
+      const [kind, which] = k.slice(S.id.length + 1).split(":");
+      const label = kind === "walk" ? `walk ${DIRS[which].label}` : `${kind} ${which === "left" ? "←" : "→"}`;
+      const anim = kind === "walk" ? "walk_" + DIRS[which].view : kind;
+      const ver = e.anims[anim]?.version || "";
+      const items = Object.entries(notes).filter(([, v]) => v.bad || v.text).sort((a, b) => a[0] - b[0]);
+      if (!items.length) continue;
+      lines.push(`${label} [${anim} ${ver}]:`);
+      items.forEach(([f, v]) => lines.push(`  - frame ${f}${v.bad ? " LỖI" : ""}${v.text ? ": " + v.text : ""}`));
+    }
+    $("summary").textContent = lines.join("\n");
+  }
+
+  // ---------- playback ----------
+  function goFrame(i) {
+    const n = info().frames;
+    setPlaying(false);
+    const d = ((i - S.frame) % n + n) % n;
+    stepWorld(d > n / 2 ? d - n : d);
+    S.frame = ((i % n) + n) % n; S.t = S.frame / fps();
+    markStrip(); refreshNotes();
+  }
+  function stepWorld(frames) { // move the character (or ground) by whole frames while stepping
+    const c = current(); if (!c.moving) return;
+    const px = speed() / fps() * frames * S.zoom;
+    if (S.mode === "walk") { S.pos[0] += c.dir.v[0] * px; S.pos[1] += c.dir.v[1] * px * 0.6; wrap(); }
+    else S.ground += px;
+  }
+  function setPlaying(p) { S.playing = p; $("auto").textContent = p ? "Tạm dừng" : "Tự chạy"; $("auto").classList.toggle("primary", p); }
+  function tick(dt) {
+    const inf = info(), f = fps(), c = current();
+    if (!S.playing) return;
+    if (!inf.loop && S.frame === inf.frames - 1 && S.t * f >= inf.frames) { S.hold += dt; if (S.hold > 1) { S.t = 0; S.hold = 0; } }
+    else S.t += dt;
+    let fr = Math.floor(S.t * f);
+    fr = inf.loop ? fr % inf.frames : Math.min(fr, inf.frames - 1);
+    if (fr !== S.frame) { S.frame = fr; markStrip(); refreshNotes(); }
+    if (c.moving) {
+      const px = speed() * dt * S.zoom;
+      if (S.mode === "walk") { S.pos[0] += c.dir.v[0] * px; S.pos[1] += c.dir.v[1] * px * 0.6; wrap(); }
+      else S.ground += px;
+    }
+  }
+  function wrap() {
+    const W = cv.width, H = cv.height, m = 60 * S.zoom;
+    if (S.pos[0] > W + m) { S.pos[0] = -m; S.pins = []; }
+    if (S.pos[0] < -m) { S.pos[0] = W + m; S.pins = []; }
+    const top = H * 0.32, bottom = H - 20;
+    if (S.pos[1] > bottom + m) { S.pos[1] = top; S.pins = []; }
+    if (S.pos[1] < top - 10) { S.pos[1] = bottom; S.pins = []; }
+  }
+  const groundY = () => cv.height * 0.7;
+
+  // ---------- drawing ----------
+  function draw() {
+    const W = cv.width, H = cv.height, z = S.zoom, c = current(), inf = info(), e = M.enemies[S.id];
+    cx.clearRect(0, 0, W, H);
+    cx.fillStyle = "#26332a"; cx.fillRect(0, 0, W, H * 0.3);
+    cx.fillStyle = "#a88a5c"; cx.fillRect(0, H * 0.3, W, H);
+    // ground marks: fixed in "walk" mode, scrolling against the motion in "tread" mode
+    if (S.marks) {
+      const step = 16 * z, off = S.mode === "tread" && c.moving ? S.ground : 0;
+      const ox = c.moving ? -c.dir.v[0] * off : 0, oy = c.moving ? -c.dir.v[1] * off * 0.6 : 0;
+      for (let y = H * 0.3 + (((oy % step) + step) % step); y < H; y += step) {
+        for (let x = (((ox % step) + step) % step); x < W; x += step) {
+          const major = Math.round((x - ox) / step) % 4 === 0;
+          cx.fillStyle = major ? "rgba(70,50,25,.55)" : "rgba(70,50,25,.25)";
+          cx.fillRect(x - 1, y - 1, major ? 3 : 2, major ? 3 : 2);
+        }
+      }
+    }
+    // pins (fixed on the ground)
+    for (const p of S.pins) {
+      const px = p[0] - (S.mode === "tread" && c.moving ? c.dir.v[0] * (S.ground - p[2]) : 0);
+      const py = p[1] - (S.mode === "tread" && c.moving ? c.dir.v[1] * (S.ground - p[2]) * 0.6 : 0);
+      cx.strokeStyle = col("--pin"); cx.lineWidth = 2;
+      cx.beginPath(); cx.moveTo(px - 7, py); cx.lineTo(px + 7, py); cx.moveTo(px, py - 7); cx.lineTo(px, py + 7); cx.stroke();
+      cx.beginPath(); cx.arc(px, py, 4, 0, Math.PI * 2); cx.stroke();
+    }
+    const [x, y] = S.pos, s = z * 0.5, w = inf.cell[0] * s, h = inf.cell[1] * s;
+    cx.fillStyle = "rgba(0,0,0,.22)"; cx.beginPath(); cx.ellipse(x, y, 26 * z, 8 * z, 0, 0, Math.PI * 2); cx.fill();
+    const imgs = IMG[S.id][c.anim], n = inf.frames;
+    for (let k = S.onion; k >= 1; k--) drawFrame(imgs[((S.frame - k) % n + n) % n], x, y, w, h, c.flip, 0.18 + 0.1 * (S.onion - k), e);
+    drawFrame(imgs[S.frame], x, y, w, h, c.flip, 1, e);
+    if (S.guides) {
+      cx.strokeStyle = "rgba(255,255,255,.35)"; cx.setLineDash([6, 6]); cx.lineWidth = 1;
+      cx.strokeRect(x - w * e.pivot[0], y - h * e.pivot[1], w, h);
+      cx.beginPath(); cx.moveTo(0, y); cx.lineTo(W, y); cx.stroke(); cx.setLineDash([]);
+      cx.strokeStyle = col("--bad"); cx.lineWidth = 2;
+      cx.beginPath(); cx.moveTo(x - 8, y); cx.lineTo(x + 8, y); cx.moveTo(x, y - 8); cx.lineTo(x, y + 8); cx.stroke();
+    }
+    cx.font = "600 14px IBM Plex Mono, monospace"; cx.fillStyle = "rgba(15,20,28,.8)"; cx.fillRect(10, 10, 210, 26);
+    cx.fillStyle = "#fff"; cx.fillText(`FRAME ${S.frame + 1} / ${n}${inf.hit === S.frame + 1 ? "  HIT" : ""}`, 18, 28);
+    $("status").innerHTML = `${e.name} · <b>${c.label}</b> · ${c.anim}${c.flip ? " (lật)" : ""} <b>${inf.version}</b>${c.fallback ? ` · <span class="err">chưa có sheet hướng này, đang dùng walk_side</span>` : ""} · ${fps()} fps · ${c.moving ? `${speed()} px/s` : "đứng yên"} · zoom ${z}x`;
+  }
+  function drawFrame(img, x, y, w, h, flip, alpha, e) {
+    cx.save(); cx.globalAlpha = alpha; cx.translate(x, y); if (flip) cx.scale(-1, 1);
+    cx.drawImage(img, -w * e.pivot[0], -h * e.pivot[1], w, h); cx.restore();
+  }
+
+  // ---------- controls ----------
+  function seg(id, fn) {
+    $(id).addEventListener("click", ev => {
+      const b = ev.target.closest("button"); if (!b || b.disabled) return;
+      $(id).querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      fn(b.dataset.v);
+    });
+  }
+  function bind() {
+    $("char").onchange = ev => pickChar(ev.target.value);
+    document.querySelectorAll("#dirs [data-dir]").forEach(b => b.onclick = () => pick("walk:" + b.dataset.dir));
+    $("prev").onclick = () => goFrame(S.frame - 1);
+    $("next").onclick = () => goFrame(S.frame + 1);
+    $("auto").onclick = () => setPlaying(!S.playing);
+    $("fps").oninput = ev => { saved.fps[fpsKey()] = +ev.target.value; persist(); $("fps-out").textContent = ev.target.value; calc(); summary(); };
+    $("speed").oninput = ev => { saved.speed[S.id] = +ev.target.value; persist(); $("speed-out").textContent = ev.target.value; calc(); summary(); };
+    $("reset-tuning").onclick = () => { delete saved.speed[S.id]; delete saved.fps[fpsKey()]; persist(); syncControls(); };
+    seg("move-mode", v => { S.mode = v; S.pins = []; pick(S.key); });
+    seg("zoom", v => { S.zoom = +v; S.pins = []; pick(S.key); });
+    $("onion").oninput = ev => { S.onion = +ev.target.value; $("onion-out").textContent = ev.target.value; };
+    $("marks").onchange = ev => S.marks = ev.target.checked;
+    $("guides").onchange = ev => S.guides = ev.target.checked;
+    $("clear-pins").onclick = () => S.pins = [];
+    $("bad").onchange = saveNote;
+    $("note-text").addEventListener("change", saveNote);
+    $("note-text").addEventListener("focus", () => setPlaying(false));   // notes always belong to the frame on screen
+    $("note-text").addEventListener("input", () => { clearTimeout(S.noteT); S.noteT = setTimeout(saveNote, 400); });
+    cv.addEventListener("click", ev => {
+      const r = cv.getBoundingClientRect(), x = (ev.clientX - r.left) * cv.width / r.width, y = (ev.clientY - r.top) * cv.height / r.height;
+      if (y > cv.height * 0.3) { S.pins.push([x, y, S.ground]); if (S.pins.length > 6) S.pins.shift(); }
+    });
+    document.addEventListener("keydown", ev => {
+      if (ev.target.closest("textarea, input, select")) return;
+      if (ev.key === "ArrowRight") { ev.preventDefault(); goFrame(S.frame + 1); }
+      if (ev.key === "ArrowLeft") { ev.preventDefault(); goFrame(S.frame - 1); }
+      if (ev.key === " ") { ev.preventDefault(); setPlaying(!S.playing); }
+    });
+    $("copy").onclick = () => {
+      const text = $("summary").textContent, msg = $("copy-msg");
+      navigator.clipboard.writeText(text).then(() => msg.textContent = "Đã sao chép.", () => {
+        const sel = window.getSelection(), rng = document.createRange(); rng.selectNodeContents($("summary")); sel.removeAllRanges(); sel.addRange(rng);
+        msg.textContent = "Không sao chép được tự động: đã bôi đen, bấm Ctrl+C.";
+      });
+    };
+  }
+
+  let last = performance.now();
+  function loop(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    tick(dt); draw();
+    requestAnimationFrame(loop);
+  }
+  boot();
+})();
+</script>

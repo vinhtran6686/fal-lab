@@ -10,7 +10,13 @@
       "Read(style.md)",
       "Bash(python scripts/sprite_pack.py:*)",
       "Bash(python3 scripts/sprite_pack.py:*)",
-      "Read(ref/**)"
+      "Read(ref/**)",
+      "Bash(python scripts/build_playtest.py:*)",
+      "Bash(python3 scripts/build_playtest.py:*)",
+      "Bash(python scripts/leg_check.py:*)",
+      "Bash(python scripts/motion_check.py:*)",
+      "Bash(python3 scripts/motion_check.py:*)",
+      "Bash(python3 scripts/leg_check.py:*)"
     ],
     "deny": [
       "Read(.env)",
