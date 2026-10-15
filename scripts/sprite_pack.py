@@ -16,14 +16,17 @@ What it does:
      median body area (largest solid blob: detached weapons and translucent smears are
      ignored) matches, because the model often draws a sheet a bit smaller or bigger
   3. puts the feet on a shared baseline (12% above the cell bottom), centered
-  4. writes <asset>/<state>_<dir>/vNN/ (frames @2x and @1x, a horizontal sheet, a GIF
-     preview), where vNN is the raw file's version, and records it in <asset>/meta.json.
+  4. writes <asset>/<state>_<dir>/vNN/ (frames/@2x and @1x, sheet.png, preview.gif; checks go to
+     vNN/check/), where vNN is the raw file's version, and records it in <asset>/meta.json.
      Earlier packed versions are kept; the highest vNN is the final one.
 Prints a one-line summary; warnings go to stderr.
 """
 import argparse, json, math, pathlib, re, sys
 from collections import deque
 from PIL import Image, ImageChops, ImageFilter
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from asset_layout import sheet_dir, sheet_rel  # noqa: E402
 
 ALPHA = 24          # alpha above this counts as sprite pixels
 BASELINE = 0.12     # feet sit this fraction of the cell above its bottom edge
@@ -231,7 +234,7 @@ def main() -> None:
     if not m:
         sys.exit("raw file must be versioned (<name>_vNN.png); generate it with gen_image.py --versioned")
     version = f"v{int(m.group(1)):02d}"
-    packed = sorted(int(d.name[1:]) for d in (asset / key).glob("v[0-9]*") if d.is_dir() and d.name[1:].isdigit())
+    packed = sorted(int(d.name[1:]) for d in sheet_dir(asset, key).glob("v[0-9]*") if d.is_dir() and d.name[1:].isdigit())
     if packed and packed[-1] > int(version[1:]):
         sys.exit(f"{key} already has packed v{packed[-1]:02d}; to go back to {version}, copy its raw "
                  f"to the next version number and pack that (the highest version is always the final one)")
@@ -283,7 +286,7 @@ def main() -> None:
         scale *= limit
 
     tag = f"{a.kind}_{a.id}_{key}"
-    vdir = asset / key / version
+    vdir = sheet_dir(asset, key) / version
     d2, d1, ds = vdir / "frames" / "@2x", vdir / "frames" / "@1x", vdir
     for d in (d2, d1, ds):
         d.mkdir(parents=True, exist_ok=True)
@@ -303,16 +306,17 @@ def main() -> None:
     strip = Image.new("RGBA", (c2w * len(cells), c2), (0, 0, 0, 0))
     for i, cell in enumerate(cells):
         strip.paste(cell, (i * c2w, 0))
-    strip.save(ds / f"{tag}.png")
+    strip.save(ds / "sheet.png")
     preview = [Image.alpha_composite(Image.new("RGBA", cell.size, (200, 200, 190, 255)), cell).convert("P")
                for cell in cells]
-    preview[0].save(ds / f"{tag}_preview.gif", save_all=True, append_images=preview[1:],
+    preview[0].save(ds / "preview.gif", save_all=True, append_images=preview[1:],
                     duration=round(1000 / a.fps), loop=0)
 
     rel = lambda path: path.resolve().relative_to(asset.resolve()).as_posix()
     entry = {"version": version, "source": rel(pathlib.Path(a.raw)), "frames": len(cells), "fps": a.fps,
-             "loop": not a.no_loop, "files": f"{key}/{version}/frames/@1x/{tag}_NN.png",
-             "sheet": f"{key}/{version}/{tag}.png", "split": method}
+             "loop": not a.no_loop, "dir": f"{sheet_rel(key)}/{version}",
+             "files": f"{sheet_rel(key)}/{version}/frames/@1x/{tag}_NN.png",
+             "sheet": f"{sheet_rel(key)}/{version}/sheet.png", "split": method}
     if a.cell != meta["cell"][0] or a.cell_w:
         entry["cell"] = [c2w // 2, a.cell]
     if a.center:

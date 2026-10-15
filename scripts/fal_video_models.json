@@ -1,0 +1,107 @@
+{
+  "_about": "Image-to-video models on fal.ai used by scripts/fal_video.py. Field maps come from agent-sprite-forge capabilities.json (MIT, 2026-10-06) and each endpoint's public OpenAPI schema (re-checked 2026-10-14). usd_per_s = the base unit price from fal's pricing API (GET /v1/models/pricing, 2026-10-14) or the model page for a resolution; real charges can differ by resolution and audio: compare with out/costs.csv after a run. last_required = the model needs an end frame; without --last-frame the start frame is sent (a loop). Models that only take 16:9 (Veo, LTX, Gemini Omni Flash) are left out: sprite_set sends square and 3:4 canvases.",
+  "default": "h3-max-turbo",
+  "models": {
+    "h3-max-turbo": {
+      "endpoint": "minimax/h3-max-turbo/image-to-video",
+      "first": "image_url",
+      "last": "end_image_url",
+      "duration": {"field": "duration", "min": 1, "max": 15, "format": "int"},
+      "resolution": {"field": "resolution", "map": {"480p": "480P", "540p": "480P", "720p": "768P", "1080p": "1080P"}},
+      "fixed": {"prompt_expansion_mode": "disabled"},
+      "usd_per_s": {"480P": 0.015, "768P": 0.015, "1080P": 0.015},
+      "note": "cheapest with an end frame (2026-09); aspect follows the input image; price is the API base rate"
+    },
+    "h3-max": {
+      "endpoint": "minimax/h3-max/image-to-video",
+      "first": "image_url",
+      "last": "end_image_url",
+      "duration": {"field": "duration", "min": 1, "max": 15, "format": "int"},
+      "resolution": {"field": "resolution", "map": {"480p": "480P", "540p": "480P", "720p": "768P", "1080p": "1080P"}},
+      "fixed": {"prompt_expansion_mode": "disabled"},
+      "usd_per_s": {"480P": 0.03, "768P": 0.03, "1080P": 0.03},
+      "note": "MiniMax H3 post-trained for prompt adherence; aspect follows the input image"
+    },
+    "flux-3-flf-draft": {
+      "endpoint": "blackforestlabs/flux-3/first-last-frame-to-video/draft",
+      "first": "start_image_url",
+      "last": "end_image_url",
+      "last_required": true,
+      "duration": {"field": "duration", "min": 5, "max": 20, "format": "int"},
+      "aspect": {"field": "aspect_ratio", "values": ["21:9", "2:1", "16:9", "4:3", "1:1", "3:4", "9:16"]},
+      "fixed": {"generate_audio": false},
+      "usd_per_s": {"any": 0.03},
+      "note": "needs an end frame: without one the start is sent, so every clip loops"
+    },
+    "pixverse-v6": {
+      "endpoint": "fal-ai/pixverse/v6/image-to-video",
+      "first": "image_url",
+      "duration": {"field": "duration", "min": 1, "max": 15, "format": "int"},
+      "resolution": {"field": "resolution", "map": {"480p": "540p", "540p": "540p", "720p": "720p", "1080p": "1080p"}},
+      "fixed": {"generate_audio_switch": false},
+      "usd_per_s": {"540p": 0.005, "720p": 0.005, "1080p": 0.005},
+      "note": "cheapest of all, NO end frame (idle/attack are not pinned); price is the API base rate"
+    },
+    "luma-ray-3.2": {
+      "endpoint": "luma/agent/ray/v3.2/image-to-video",
+      "first": "image_url",
+      "last": "end_image_url",
+      "loop_field": "loop",
+      "duration": {"field": "duration", "values": [5, 10], "format": "{}s"},
+      "resolution": {"field": "resolution", "map": {"480p": "540p", "540p": "540p", "720p": "720p", "1080p": "1080p"}},
+      "aspect": {"field": "aspect_ratio", "values": ["3:4", "4:3", "1:1", "9:16", "16:9", "21:9"]},
+      "fixed": {},
+      "usd_per_s": {"540p": 0.03, "720p": 0.06, "1080p": 0.24},
+      "note": "cheapest draft; a last frame identical to the first is sent as loop: true (the model's own loop)"
+    },
+    "wan-3.0": {
+      "endpoint": "alibaba/wan-3.0/image-to-video",
+      "first": "start_image_url",
+      "last": "end_image_url",
+      "duration": {"field": "duration", "min": 2, "max": 15, "format": "int"},
+      "resolution": {"field": "resolution", "map": {"480p": "480p", "540p": "480p", "720p": "720p", "1080p": "1080p"}},
+      "aspect": {"field": "aspect_ratio", "values": ["16:9", "4:3", "1:1", "3:4", "9:16"]},
+      "fixed": {"audio": false, "enable_prompt_expansion": false},
+      "usd_per_s": {"480p": 0.05, "720p": 0.10, "1080p": 0.20},
+      "note": "preview model; prompt expansion off so the prompt is used as written"
+    },
+    "minimax-h3": {
+      "endpoint": "minimax/h3/image-to-video",
+      "first": "image_url",
+      "last": "end_image_url",
+      "duration": {"field": "duration", "min": 5, "max": 15, "format": "int"},
+      "resolution": {"field": "resolution", "map": {"480p": "480P", "540p": "480P", "720p": "768P", "1080p": "2K"}},
+      "fixed": {"prompt_expansion_mode": "disabled"},
+      "usd_per_s": {"480P": 0.05, "768P": 0.06, "2K": 0.13},
+      "note": "aspect follows the input image"
+    },
+    "kling-3-std": {
+      "endpoint": "fal-ai/kling-video/v3/standard/image-to-video",
+      "first": "start_image_url",
+      "last": "end_image_url",
+      "duration": {"field": "duration", "min": 3, "max": 15, "format": "str"},
+      "fixed": {"generate_audio": false},
+      "usd_per_s": {"any": 0.14},
+      "note": "no resolution field; aspect follows the input image; API base rate (upstream listed $0.084/s with audio off)"
+    },
+    "kling-3-pro": {
+      "endpoint": "fal-ai/kling-video/v3/pro/image-to-video",
+      "first": "start_image_url",
+      "last": "end_image_url",
+      "duration": {"field": "duration", "min": 3, "max": 15, "format": "str"},
+      "fixed": {"generate_audio": false},
+      "usd_per_s": {"any": 0.14},
+      "note": "best motion quality in the list, most expensive"
+    },
+    "vidu-q3": {
+      "endpoint": "fal-ai/vidu/q3/image-to-video",
+      "first": "image_url",
+      "last": "end_image_url",
+      "duration": {"field": "duration", "min": 1, "max": 15, "format": "int"},
+      "resolution": {"field": "resolution", "map": {"480p": "540p", "540p": "540p", "720p": "720p", "1080p": "1080p"}},
+      "fixed": {"audio": false},
+      "usd_per_s": {"540p": 0.07, "720p": 0.154, "1080p": 0.154},
+      "note": "may cut between shots: check the clip"
+    }
+  }
+}

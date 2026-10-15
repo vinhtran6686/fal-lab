@@ -1,15 +1,17 @@
 # Game asset templates (2D fantasy tower defense)
 
-Fill the `{placeholders}` from the user's request (use the defaults when they give nothing),
-then append the **style guide** wherever `{STYLE}` appears. Keep every technical requirement
-(camera, facing, frame count, equal cells, baseline, transparency) exactly as written.
+Still images only: this skill draws stills (characters, their standard views, towers, props, icons, UI,
+maps). Character and enemy animation is made by the `video-sprite` skill from approved stills; never draw
+a multi-frame motion sheet here. Fill the `{placeholders}` from the user's request (use the defaults when
+they give nothing), then append the **style guide** wherever `{STYLE}` appears. Keep every technical
+requirement (camera, facing, cells, baseline, transparency) exactly as written.
 Never name a commercial game or studio in a prompt.
 
 ## Style guide (`{STYLE}`)
 
 Use the style block in `format.md` section 1 (or `style.md` at the project root if it exists)
-so every asset matches the enemy sprites. Raw sizes here are model sizes; for game-ready
-frames use a class file and `sprite_pack.py`.
+so every asset matches the enemy sprites. Raw sizes here are model sizes; characters of a defined class
+use their class file (`classes/<class>.md`) instead.
 
 Shared endings:
 - `{CLEAN}` = Isolated on a fully transparent background: no ground, no cast-shadow plate, no scenery, no text, no border.
@@ -23,12 +25,10 @@ Shared endings:
 | hero | Hero | 1024x1024 | --transparent | hero_ranger |
 | enemy | Regular enemy | 1024x1024 | --transparent | goblin |
 | boss | Boss | 1024x1024 | --transparent | boss_ogre |
-| walk | Walk cycle, 4 frames | 1536x1024 | --transparent | goblin_walk |
-| attack | Attack, 4 frames | 1536x1024 | --transparent | footman_attack |
-| turn | 4-direction turnaround | 1536x1024 | --transparent | dwarf_turn |
+| turn | 5-view turnaround (review sheet) | 2048x1024 | --transparent | dwarf_turn |
 | tower | Tower, 3 upgrade levels | 1536x1024 | --transparent | tower_archer |
 | prop | Map props, 3x2 grid | 1024x1024 | --transparent | props_forest |
-| vfx | VFX, 4 frames | 1536x1024 | --transparent | fx_explosion |
+| vfx | VFX key frame (one still) | 1024x1024 | --transparent | fx_explosion |
 | icon | Ability icon | 1024x1024 | --transparent | icon_fire_arrows |
 | ui | UI panel / button | 1024x1024 | --transparent | ui_panel |
 | map | Level background | 1536x1024 | (opaque) | map_valley |
@@ -57,27 +57,14 @@ Shared endings:
 
 > Single boss enemy sprite: {who}. Huge and heavy, intimidating silhouette, glowing eyes, full body, centered, facing down-left, filling about 85% of the frame. {STYLE} {CLEAN}
 
-## Sprite sheets
+## Turnaround (review only)
 
-Make the single-character sprite first and get it approved, then describe that exact design in `{who}`
-(colors, gear, proportions) so the sheet matches it.
+Make the single-character sprite first and get it approved, then describe that exact design in `{who}`.
+For a character of a defined class, generate its standard views one by one (`classes/<class>.md`,
+"Standard views"); this sheet only helps compare them side by side and is never animated.
 
-These are drawing prompts only. Any sheet that animates (walk, attack, VFX, a tower that fires) is first
-designed with `animation.md`: motion card, the object's motion profile, a frame-by-frame blueprint, key
-poses before in-betweens, and the review loop. Replace the per-frame wording below with sentences from
-that blueprint; for characters of a defined class, use the class file's frame counts and grids instead
-of the 4-frame layouts here.
-
-### walk — Walk cycle, 4 frames
-> Sprite sheet of {who}: a 4-frame walk cycle in ONE horizontal row of four equal-width cells, evenly spaced. The same character at the same scale and facing the same direction (down-left) in every frame, feet on one shared baseline. Frame 1 left foot forward contact, frame 2 passing pose, frame 3 right foot forward contact, frame 4 passing pose. {STYLE} {SHEET}
-
-### attack — Attack, 4 frames
-`{move}` default: an overhead sword slash
-
-> Sprite sheet of {who} performing {move}: 4 frames in ONE horizontal row of four equal-width cells. Frame 1 anticipation wind-up, frame 2 strike with a motion smear, frame 3 follow-through, frame 4 recover to ready stance. Same character, same scale, facing down-right in every frame, feet on one shared baseline. {STYLE} {SHEET}
-
-### turn — 4-direction turnaround
-> Character turnaround sheet of {who}: 4 views in ONE horizontal row of four equal-width cells, left to right: facing down (front), facing right, facing up (back), facing left. Identical design, colors, proportions and scale in every view, feet on one shared baseline, neutral standing pose. {STYLE} {SHEET}
+### turn — 5-view turnaround
+> Character turnaround sheet of {who}: 5 views in ONE horizontal row of five equal-width cells, left to right: three-quarter front facing down-right, side profile facing right, straight front, three-quarter back facing up-right, straight back. Identical design, colors, proportions and scale in every view, feet on one shared baseline, neutral standing pose. {STYLE} {SHEET}
 
 ## Buildings and props
 
@@ -93,10 +80,10 @@ of the 4-frame layouts here.
 
 ## Effects and UI
 
-### vfx — Effect, 4 frames
-`{fx}` default: a fiery cannonball explosion with smoke and sparks
+### vfx — Effect key frame (one still)
+`{fx}` default: a fiery cannonball explosion at its peak, with smoke and sparks
 
-> VFX sprite sheet of {fx}: 4 frames in ONE horizontal row of four equal-width cells, centered on the same point in each cell. Frame 1 small bright flash, frame 2 full burst, frame 3 dissipating smoke, frame 4 faint wisps. Stylized cartoon effect, bold shapes, limited palette. {SHEET}
+> Single VFX sprite of {fx}, centered, stylized cartoon effect, bold shapes, limited palette. {CLEAN}
 
 ### icon — Ability icon
 `{skill}` default: rain of fire arrows
@@ -121,6 +108,5 @@ of the 4-frame layouts here.
 - Camera is slightly overhead 3/4; facing direction is as requested.
 - Transparent assets: no painted background, ground plate or scenery
   (transparent pixels may show as black, white or a checkerboard; that is fine).
-- Sheets: correct frame/cell count, equal spacing, same character and scale in every cell, shared baseline.
-- Animated sheets: also the motion checks and verdict in `animation.md` §7 (frame count alone never passes).
+- Sheets (turnaround, towers, props): correct cell count, equal spacing, same scale in every cell, shared baseline.
 - Style matches the style guide and earlier approved assets.

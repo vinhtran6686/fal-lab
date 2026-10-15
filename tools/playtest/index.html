@@ -182,7 +182,9 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); border:
     try {
       M = await (await fetch("manifest.json")).json();
       IDS = Object.keys(M.enemies);
-      const jobs = [load("assets/map.jpg").then(i => MAP = i), load("assets/footman.png").then(i => FOOT = i)];
+      const jobs = [];   // scenery is optional: without it a plain field, the road and a placeholder soldier
+      if (M.map !== false) jobs.push(load("assets/map.jpg").then(i => MAP = i));
+      if (M.footman !== false) jobs.push(load("assets/footman.png").then(i => FOOT = i));
       for (const id of IDS) {
         const e = M.enemies[id]; IMG[id] = {};
         if (e.icon) jobs.push(load(`assets/${id}/icon/01.png`).then(i => IMG[id].icon = i));
@@ -375,7 +377,16 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); border:
     const cx = Math.min(Math.max(camX, hw), 1536 - hw), cy = Math.min(Math.max(camY, hh), 1024 - hh);
     bx.setTransform(z, 0, 0, z, W / 2 - cx * z, H / 2 - cy * z);
     bx.imageSmoothingQuality = "high";
-    bx.drawImage(MAP, 0, 0, 1536, 1024);
+    if (MAP) bx.drawImage(MAP, 0, 0, 1536, 1024);
+    else {
+      bx.fillStyle = "#7d8a55"; bx.fillRect(0, 0, 1536, 1024);
+      bx.lineCap = bx.lineJoin = "round";
+      for (const [w, c] of [[78, "#5e4a33"], [66, "#b49a6c"]]) {
+        bx.strokeStyle = c; bx.lineWidth = w;
+        bx.beginPath(); PTS.forEach(([x, y], i) => i ? bx.lineTo(x, y) : bx.moveTo(x, y)); bx.stroke();
+      }
+      bx.lineCap = bx.lineJoin = "butt";
+    }
     if (st.path) {
       bx.strokeStyle = "rgba(255,255,255,.55)"; bx.lineWidth = 3; bx.setLineDash([10, 8]);
       bx.beginPath(); PTS.forEach(([x, y], i) => i ? bx.lineTo(x, y) : bx.moveTo(x, y)); bx.stroke(); bx.setLineDash([]);
@@ -397,9 +408,14 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); border:
     bx.setTransform(1, 0, 0, 1, 0, 0);
   }
   function drawSoldier() {
-    const w = 84, h = w * FOOT.height / FOOT.width, x = SOLDIER.x + 34, y = SOLDIER.y + 6;
+    const w = 84, h = FOOT ? w * FOOT.height / FOOT.width : 92, x = SOLDIER.x + 34, y = SOLDIER.y + 6;
     bx.fillStyle = "rgba(0,0,0,.25)"; bx.beginPath(); bx.ellipse(x, y, 24, 8, 0, 0, Math.PI * 2); bx.fill();
-    bx.save(); bx.translate(x, y); bx.scale(-1, 1); bx.drawImage(FOOT, -w / 2, -h, w, h); bx.restore();
+    if (FOOT) { bx.save(); bx.translate(x, y); bx.scale(-1, 1); bx.drawImage(FOOT, -w / 2, -h, w, h); bx.restore(); }
+    else {   // placeholder soldier: body and head
+      bx.fillStyle = "#6f7a86"; bx.strokeStyle = "#1b140e"; bx.lineWidth = 4;
+      bx.fillRect(x - 18, y - 58, 36, 56); bx.strokeRect(x - 18, y - 58, 36, 56);
+      bx.fillStyle = "#d9b48c"; bx.beginPath(); bx.arc(x, y - 74, 16, 0, Math.PI * 2); bx.fill(); bx.stroke();
+    }
     if (soldierFlash > 0) { bx.fillStyle = col("--hit"); bx.globalAlpha = 0.8; bx.beginPath(); bx.arc(x - 6, y - h * 0.55, 16, 0, Math.PI * 2); bx.fill(); bx.globalAlpha = 1; }
   }
   function drawEnemy(e) {

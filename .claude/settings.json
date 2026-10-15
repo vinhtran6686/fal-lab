@@ -16,7 +16,13 @@
       "Bash(python scripts/leg_check.py:*)",
       "Bash(python scripts/motion_check.py:*)",
       "Bash(python3 scripts/motion_check.py:*)",
-      "Bash(python3 scripts/leg_check.py:*)"
+      "Bash(python3 scripts/leg_check.py:*)",
+      "Bash(python scripts/make_master.py:*)",
+      "Bash(python scripts/video_to_sheet.py:*)",
+      "Bash(python scripts/fal_video.py models:*)",
+      "Bash(python .claude/skills/video-sprite/scripts/sprite_set.py plan:*)",
+      "Bash(python .claude/skills/video-sprite/scripts/sprite_set.py review:*)",
+      "Bash(python .claude/skills/video-sprite/scripts/sprite_set.py report:*)"
     ],
     "deny": [
       "Read(.env)",

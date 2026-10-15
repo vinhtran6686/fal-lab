@@ -4,7 +4,7 @@
 Usage: python scripts/build_playtest.py [--out out/playtest]
 
 Reads out/enemies/*/meta.json (the final version of each sheet), copies the @2x frames,
-icons, the valley map and the footman soldier, writes manifest.json and copies
+icons, the valley map and the footman soldier when present in out/ (both optional), writes manifest.json and copies
 tools/playtest/index.html next to them. Publish out/playtest/index.html with all files
 in that folder as an Artifact to watch the animations in a game-like scene, and
 out/playtest/motion.html (same files) as a second Artifact: the Motion Lab for tuning
@@ -16,11 +16,9 @@ from PIL import Image
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 
-def first(pattern: str) -> pathlib.Path:
+def first(pattern: str) -> pathlib.Path | None:
     hits = sorted((ROOT / "out").glob(pattern))
-    if not hits:
-        sys.exit(f"missing out/{pattern}")
-    return hits[0]
+    return hits[0] if hits else None
 
 
 def main() -> None:
@@ -41,7 +39,7 @@ def main() -> None:
         title = re.search(r"^# Brief: enemy `(.+?)`", brief.read_text(encoding="utf-8"), re.M) if brief.exists() else None
         anims, icon = {}, False
         for key, st in meta["states"].items():
-            src = asset / key / st["version"] / "frames" / "@2x"
+            src = asset / (st.get("dir") or pathlib.Path(st["files"]).parents[2].as_posix()) / "frames" / "@2x"
             dst = out / "assets" / eid / key
             dst.mkdir(parents=True)
             names = sorted(src.glob("*.png"))
@@ -59,11 +57,16 @@ def main() -> None:
     if not man["enemies"]:
         sys.exit("no packed enemies found in out/enemies")
 
-    Image.open(first("map_valley-*.jpg")).convert("RGB").save(out / "assets" / "map.jpg", quality=88)
-    foot = Image.open(first("footman-*.png")).convert("RGBA")
-    foot = foot.crop(foot.getchannel("A").point(lambda v: 255 if v > 24 else 0).getbbox())
-    foot.thumbnail((160, 160))
-    foot.save(out / "assets" / "footman.png")
+    # optional scenery: without them the page draws a plain field with the road and a placeholder soldier
+    map_img, foot_img = first("map_valley-*.jpg"), first("footman-*.png")
+    if map_img:
+        Image.open(map_img).convert("RGB").save(out / "assets" / "map.jpg", quality=88)
+    if foot_img:
+        foot = Image.open(foot_img).convert("RGBA")
+        foot = foot.crop(foot.getchannel("A").point(lambda v: 255 if v > 24 else 0).getbbox())
+        foot.thumbnail((160, 160))
+        foot.save(out / "assets" / "footman.png")
+    man["map"], man["footman"] = bool(map_img), bool(foot_img)
     (out / "manifest.json").write_text(json.dumps(man, ensure_ascii=False, indent=1), encoding="utf-8")
     shutil.copy(ROOT / "tools" / "playtest" / "index.html", out / "index.html")
     shutil.copy(ROOT / "tools" / "playtest" / "motion.html", out / "motion.html")   # Motion Lab, same assets

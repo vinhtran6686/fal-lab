@@ -29,34 +29,39 @@ Mở panel Claude Code và ra lệnh bằng tiếng Việt, ví dụ:
 
 - "Tạo sprite lính bộ binh cầm khiên tròn, nền trong suốt"
 - "Dùng template tháp 3 cấp, loại tháp pháo bằng đồng"
-- "Làm sprite đi bộ 4 frame cho con goblin vừa duyệt"
+- "Làm animation đi bộ 8 hướng cho con goblin vừa duyệt"
 - "Vẽ nền màn chơi sa mạc có 8 ô xây tháp"
 - "Hôm nay mình đã tiêu bao nhiêu?"
 
-Claude dùng skill `fal-image`: chọn template → viết prompt → chạy script → mở ảnh xem → chấm điểm → sửa prompt → lặp tối đa 3 vòng, rồi báo ảnh tốt nhất và tổng chi phí.
+Hai skill, mỗi skill một việc:
+- `fal-image`: **ảnh tĩnh** (ảnh gốc): nhân vật đã chốt và các góc chuẩn (side, trước, sau, 3/4 trước, 3/4 sau), icon, tháp, map… Chọn template → viết prompt → chạy script → xem ảnh → chấm điểm → sửa prompt, tối đa 3 vòng.
+- `video-sprite`: **animation** (move, attack, death…) từ các ảnh tĩnh đã chốt: image-to-video trên fal.ai → tách frame → xuất vào thư mục asset, **cùng một khung và một kích thước thân cho mọi action**. Claude hỏi trước khi tốn tiền video.
 
-## Sprite theo class (enemy)
+## Nhân vật theo class (enemy)
 
 Cấu trúc: **format chung → class → level → archetype**.
 
-- `.claude/skills/fal-image/format.md`: style (rút ra từ `ref/`), góc nhìn, khung, pivot, tên file, `meta.json`, quy trình, checklist. Mọi class dùng chung.
-- `.claude/skills/fal-image/classes/enemy.md`: class Enemy, hiện có **Level 1** (cận chiến / đánh xa): walk **8 hướng** (5 sheet tạo + 3 lật), walk 8 frame, attack/death 9 frame, icon, khung 128px, `move_speed`.
+- `.claude/skills/fal-image/format.md`: style (rút ra từ `ref/`), bộ góc nhìn chuẩn, cấu trúc thư mục, khung/pivot, checklist ảnh tĩnh.
+- `.claude/skills/fal-image/classes/enemy.md`: class Enemy, **Level 1**: các góc cần có, prompt từng góc, khung **256×128** cho mọi action, thân cao 69 px (138 px @2x), danh sách animation (move 5 hướng + 3 lật, attack, death, icon).
+- `.claude/skills/video-sprite/SKILL.md`: quy trình tạo animation từ ảnh tĩnh.
 - Playtest: `python scripts/build_playtest.py` rồi nhờ Claude publish `out/playtest/` để xem quái đi trên map.
 
 Ví dụ:
-- `Tạo sprite enemy nhện quái vật cận chiến` → Claude chỉ tạo **master** rồi dừng; bạn chốt (vd. "chốt v02") → Claude tạo hết các sheet.
-- `Tạo sprite enemy nhện quái vật cận chiến --auto` → chạy hết một mạch, Claude tự chốt master.
+- `Tạo enemy nhện quái vật cận chiến` → Claude tạo **master** rồi dừng; bạn chốt (vd. "chốt v02") → Claude tạo các góc chuẩn để bạn duyệt.
+- `Làm animation move/attack/death cho spider` → skill `video-sprite`, báo chi phí trước khi chạy.
 - `Sửa attack của spider cho cú cắn uy lực hơn` → chỉ tạo version mới của sheet attack, bản cũ giữ nguyên.
 
-Kết quả trong `out/enemies/<id>/`: mỗi sheet một thư mục (`walk_side/`, `attack_side/`…) gồm `raw/<sheet>_vNN.png`
-(mọi lần gen) và thư mục `vNN/` (bản đã đóng gói). **Số `vNN/` cao nhất là bản final.**
-`brief.md` = nội dung đã điền + master đã chốt; `history.md` = mỗi lần gen một dòng (điểm, lỗi, sửa gì).
+Kết quả trong `out/enemies/<id>/`:
+- `stills/`: ảnh tĩnh đầu vào (master, các góc view, icon) đã chốt.
+- theo nhóm: `move/`, `attack/`, `death/`… mỗi animation một thư mục (`move/walk_side/`, `attack/attack_side/`): **nguồn** là `clip_tNN.mp4`; **output** là `vNN/` (`preview.gif` để xem nhanh, `frames/` cho game, `check/` để kiểm tra). **Số `vNN/` cao nhất là bản final.**
+- `.work/`: dữ liệu nội bộ của tool (đã dọn gọn), không cần mở.
+- `brief.md` = nội dung đã điền + ảnh đã chốt; `history.md` = mỗi lần gen một dòng (điểm, lỗi, sửa gì).
 
-Hậu kỳ: `python scripts/sprite_pack.py --help`. Ảnh `--ref` dùng endpoint edit để giữ nhân vật đồng nhất.
+Ảnh `--ref` dùng endpoint edit để giữ nhân vật đồng nhất giữa các góc.
 
 ## Template asset game (khác)
 
-13 template nằm trong `.claude/skills/fal-image/templates.md`: lính, anh hùng, quái, boss, sprite đi bộ, tấn công, 4 hướng nhìn, tháp 3 cấp, vật trang trí, hiệu ứng, icon kỹ năng, khung UI, nền màn chơi.
+Template ảnh tĩnh trong `.claude/skills/fal-image/templates.md`: lính, anh hùng, quái, boss, bảng 5 góc nhìn (để so sánh), tháp 3 cấp, vật trang trí, hiệu ứng (1 khung), icon kỹ năng, khung UI, nền màn chơi.
 
 Muốn đổi style chung cho cả bộ asset: tạo file `style.md` ở thư mục gốc, ghi mô tả style bằng tiếng Anh. Claude sẽ dùng file đó thay cho style mặc định.
 

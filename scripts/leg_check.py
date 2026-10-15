@@ -7,7 +7,7 @@ Usage: python scripts/leg_check.py out/enemies/bandit/walk_down_side/v02 [--flip
 
 Reads <version dir>/frames/@2x/*.png, crops each frame from the thighs down (hands and
 weapons above stay out of the way), enlarges it, numbers it, lays the frames out 4 per row
-and writes <version dir>/legcheck.png. Open that image and write down, per frame,
+and writes <version dir>/check/legcheck.png. Open that image and write down, per frame,
 which leg is in front (see the leg standard in classes/enemy.md). --flip previews a mirrored
 direction (e.g. walk_down_left from walk_down_side): left and right legs swap.
 
@@ -22,7 +22,7 @@ import argparse, pathlib, sys
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
-DEFAULT_EXPECTED = {8: "LL-RRR-L"}   # 8-frame biped walk blueprint (animation.md §4): contact, down, passing, up x2
+DEFAULT_EXPECTED = {8: "LL-RRR-L"}   # 8-frame biped walk: contact, down, passing, up, then the mirrored step
 
 
 def suggest_order(observed: str, expected: str, bad: set) -> str:
@@ -106,7 +106,8 @@ def main() -> None:
         y = pad + (i // per) * (ch + label + pad)
         sheet.paste(c, (x + (cw - c.width) // 2, y + label + (ch - c.height)), c)
         d.text((x + 4, y), f"F{i + 1}", fill=(255, 255, 255), font=font)
-    out = vdir / ("legcheck_flipped.png" if a.flip else "legcheck.png")
+    (vdir / "check").mkdir(exist_ok=True)
+    out = vdir / "check" / ("legcheck_flipped.png" if a.flip else "legcheck.png")
     sheet.save(out)
     print(out)
 

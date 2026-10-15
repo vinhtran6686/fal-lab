@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure a packed animation as a motion, not as separate drawings (see .claude/skills/fal-image/animation.md §8).
+"""Measure a packed animation as a motion, not as separate drawings (video-sprite skill, "Check").
 
 Usage: python scripts/motion_check.py out/enemies/bandit/walk_side/v05 [--loop | --once]
 
@@ -10,7 +10,7 @@ Reads <version dir>/frames/@2x/*.png in order and reports, per frame:
   change  how much the frame differs from the previous one (0 = identical)
 and flags frozen frames (no change), spikes (a transition much bigger than the others) and,
 for cyclic animations (--loop, the default unless meta says loop=false), the last->first jump.
-Writes motioncheck.txt and transitions.png (every transition as an onion pair: previous frame
+Writes check/motioncheck.txt and check/transitions.png (every transition as an onion pair: previous frame
 in cyan under the current one, the N->1 pair included). Static numbers cannot judge timing or
 foot slide at the real speed: watch it moving in Motion Lab for that.
 """
@@ -72,7 +72,7 @@ def main() -> None:
     loop = a.loop
     if not a.loop and not a.once:   # read it from the asset's meta.json when possible
         loop = True
-        meta = vdir.parent.parent / "meta.json"
+        meta = next((d / "meta.json" for d in vdir.parents if (d / "meta.json").exists()), vdir / "meta.json")
         if meta.exists():
             st = json.loads(meta.read_text(encoding="utf-8"))["states"].get(vdir.parent.name)
             if st is not None:
@@ -119,7 +119,8 @@ def main() -> None:
         lines.append(f"loop 8->1 style check: {n}->1 change {ch[(n - 1, 0)]:.1f} vs median {med:.1f}")
     lines += ["flags:"] + (flags or ["  none (static checks only: timing and foot slide are unverified until seen moving)"])
     report = "\n".join(lines)
-    (vdir / "motioncheck.txt").write_text(report + "\n", encoding="utf-8")
+    (vdir / "check").mkdir(exist_ok=True)
+    (vdir / "check" / "motioncheck.txt").write_text(report + "\n", encoding="utf-8")
     print(report)
 
     cells = [onion(frames[i], frames[j]) for i, j in pairs]
@@ -135,8 +136,8 @@ def main() -> None:
         x, y = pad + (k % per) * (w + pad), pad + (k // per) * (h + label + pad)
         sheet.paste(cell.convert("RGB"), (x, y + label))
         d.text((x + 4, y + 2), f"{i + 1} -> {j + 1}", fill=(255, 255, 255), font=font)
-    sheet.save(vdir / "transitions.png")
-    print(vdir / "transitions.png")
+    sheet.save(vdir / "check" / "transitions.png")
+    print(vdir / "check" / "transitions.png")
 
 
 if __name__ == "__main__":

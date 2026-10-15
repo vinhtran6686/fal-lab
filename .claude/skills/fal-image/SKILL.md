@@ -1,61 +1,47 @@
 ---
 name: fal-image
-description: Generate or iterate on images with OpenAI GPT Image via fal.ai, including 2D game assets (enemy sprites with walk/attack/death animations, towers, icons, VFX, UI, level backgrounds). Use when the user asks to create, draw, render or design an image, sprite or game asset.
+description: Generate still images with OpenAI GPT Image via fal.ai: a game character's approved master and its standard views (side, front, back, three-quarter front and back), icons, projectiles, towers, props, UI and level backgrounds. Use when the user asks to create, draw, render or design an image, a character or a game asset. Animation (walk, attack, death ...) is not drawn here: it is made from these stills by the video-sprite skill.
 ---
 
-# Generate images with fal.ai
+# Generate stills with fal.ai
 
 You are the art director. The image model only draws; you plan, write prompts, review and iterate.
+This skill makes **stills**: the raw source images, one fixed design per character. It never draws a
+motion sheet. Animation comes from the `video-sprite` skill, which animates the approved stills.
 
 ## Pick the route
-- **Any animation request** (walk, run, attack, death, idle, tower attack, VFX ...), however short
-  ("Create a walk animation for this bandit", "idle animation for this magical tower"): read
-  `animation.md` first. Design the motion before drawing: motion card, phases from the object's
-  profile, frame-by-frame blueprint in `A/<sheet>/blueprint.md`, key poses first, then the full sheet,
-  then the review loop. Never treat a list of alternating poses as the spec. Ask only when a missing
-  fact changes the result (e.g. does the tower turn to aim?); otherwise use documented defaults.
-- **Game asset of a defined class** (currently: `enemy`): read `format.md` and `classes/<class>.md`
-  next to this file and follow them exactly. The user only gives content ("monster spider, melee");
-  the class file fixes states, frames, sizes, files and prompt wording.
-  If the level or archetype is not given, use Level 1 and the archetype that fits.
-  - **Mode** (`format.md` §4): request contains `--auto` → full run without stopping.
-    No `--auto` → generate the master only, **stop and ask the user to approve a master version**,
-    then make all sheets.
-  - **Edit** of an existing asset ("sửa attack của spider…", "dùng lại walk_down v02"): follow
-    "Edit an existing asset" in `format.md` §4: new version of that sheet only; old versions stay.
-  - Always keep `brief.md` and `history.md` of the asset up to date (one history row per raw).
-  - When reporting, name the final version of each sheet (highest `vNN/` folder) so the user knows
-    which image to review, and refresh the playtest (`format.md` §4 step 6) so they can watch it move.
-  - Leg feedback ("frame 6 bước cùng 1 chân"): turn the user's per-frame reading into
-    `leg_check.py --observed ... --expected <blueprint pattern> [--bad ...]`, re-pack with the printed
-    `--order` as a new version (no API call). Regenerate only if no frame shows the needed foot.
-  - Movement feedback ("bước nhiều mà đi ít", feet sliding): change `move_speed` (re-pack `walk_side`
-    with `--move-speed`), not the art. Limping or choppy walks: check the blueprint, then regenerate
-    from stage 1 (key poses). A sheet drawn smaller/bigger: re-pack it (the packer matches body size).
-- **Other game asset** (tower, prop, icon, VFX, UI, map): use `templates.md`, with the style block from `format.md`;
-  if it moves (tower attack/idle, VFX), design it with `animation.md` and its object profile (§3): a tower,
-  projectile or effect never inherits a walk cycle.
+- **Character of a defined class** (currently: `enemy`): read `format.md` and `classes/<class>.md` next to
+  this file and follow them exactly. The user gives content ("đạo tặc đầu trọc, dùng đao"); the class file
+  fixes the views, sizes, files and prompt wording. If the level or archetype is not given, use Level 1
+  and the archetype that fits.
+  1. `brief.md` with the filled slots, then the **master** (3/4 front). Mode (`format.md` §5): no `--auto`
+     → stop after the master and ask the user to approve a version; `--auto` → approve it yourself (>= 8).
+  2. The **standard views** from the approved master (`format.md` §3): side, front, back, 3/4 back, icon
+     (+ projectile for ranged; optional `pose_ready_side`, `turnaround`). Show them; get approval.
+  3. **Animation request** (move, attack, death, hurt, idle ...) or "làm tiếp phần chuyển động": hand over
+     to the `video-sprite` skill with the approved stills. Missing views are made here first.
+  - Keep `brief.md` and `history.md` of the asset up to date (one history row per still).
+  - Edit of a character ("đổi vũ khí", "góc sau bị lộ mặt"): `format.md` §5 "Edit an existing character".
+- **Character animation** asked directly ("tạo attack cho bandit"): use the `video-sprite` skill; it uses
+  this skill only for a missing still.
+- **Other game asset** (tower, prop, icon, VFX key frame, UI, map): `templates.md`, with the style block
+  from `format.md`. They are stills too.
 - **Anything else**: write a concrete prompt (subject, composition, camera, lighting, style, palette).
 
 ## Running the generator (project root)
-`python scripts/gen_image.py "<prompt>" --size <size> [--transparent] [--ref <image>] --name <name> [--out <dir>]`
-- Defaults: `--model gpt-image-2 --quality low` (cheap drafts).
-- Class assets do NOT use `--transparent`: they use gpt-image-2 on a flat magenta background with
-  `--png`, and `sprite_pack.py` removes it (see `format.md` §2). `--transparent` (other assets only)
-  switches to `gpt-image-1.5` automatically, which is weaker at style and multi-frame sheets.
-- `--ref` sends a local image as visual reference (edit endpoint); use the approved master for every sheet.
-- Only use `--quality medium` or `high` after the user approves a draft.
-- stdout lists saved image paths; stderr has a `cost:` line.
+`python scripts/gen_image.py "<prompt>" --size <size> [--ref <image>] [--png] --name <name> [--versioned] [--out <dir>]`
+- Defaults: `--model gpt-image-2 --quality low` (cheap drafts). Class stills: `--size 1024x1024 --png` on a
+  flat magenta background (no `--transparent`; the tools key it out), `--versioned --out <asset>/stills`.
+- `--ref` sends a local image as visual reference (edit endpoint): every view uses `--ref <approved master>`.
+- Only use `--quality medium` or `high` after the user asks.
+- stdout lists saved image paths; stderr has a `cost:` line. Independent stills can run in parallel.
 - Put any in-image text in double quotes and say it must render exactly as written.
 
 ## Review loop
-Open each image (and each packed sheet) with the Read tool, check it against the goal and the
-checklist in `format.md` (or `templates.md`), and score it 1-10. Animated sheets also go through the
-review loop in `animation.md` §8 (`scripts/motion_check.py`, onion transitions, leg check) and get a
-Pass / Needs Revision / Fail verdict with the defective transitions named; anything only visible in
-motion is reported as unverified until seen in Motion Lab. Below 8: revise the prompt with a
-specific fix and regenerate that image only. Max 3 rounds per image. Report: output paths, scores,
-what changed each round, and total cost from the `cost:` lines.
+Open each image with the Read tool, check it against the goal and the checklist in `format.md` §6 (or
+`templates.md`), and score it 1-10. Below 8: revise the prompt with a specific fix (name the angle in
+capitals, say what must not be visible) and regenerate that image only. Max 3 rounds per image. Report:
+output paths, scores, what changed each round, and the cost from the `cost:` lines.
 
 ## Costs
 - Each run logs to `out/costs.csv`. Spend summary: `python scripts/cost_report.py` (add `--today`).

@@ -1,11 +1,11 @@
 # Game asset format (shared by every class)
 
-Every class file in `classes/` (enemy, tower, hero, ...) inherits everything here.
-A class may add rules but must not change this frame. **Animated sheets are also designed with
-`animation.md`** (motion card, blueprint, staged key poses, motion checks); this file keeps the style,
-generation rules, files and packing those animations must respect. Style was derived from the
-reference pack in `ref/assets/` (read-only, for looking only: never send it to the API,
-never copy its designs, never name the game it comes from).
+Every class file in `classes/` (enemy, tower, hero, ...) inherits everything here. A class may add
+rules but must not change this frame. This skill makes **stills**: the approved master of a character
+and its standard views, plus icons and other single images. **Animation is never drawn here**: the
+`video-sprite` skill animates the approved stills (image-to-video) and exports the frames into the same
+asset folder. Style was derived from the reference pack in `ref/assets/` (read-only, for looking only:
+never send it to the API, never copy its designs, never name the game it comes from).
 
 ## 1. Style block `{STYLE}` (fixed, append to every prompt)
 
@@ -22,120 +22,95 @@ never copy its designs, never name the game it comes from).
 
 If `style.md` exists at the project root it replaces this block.
 
-## 2. Generation rules (fixed; tested 2026-10-13)
+## 2. Generation rules (fixed; tested 2026-10-13/14)
 | Rule | Value | Why |
 |---|---|---|
-| Model | `gpt-image-2` (default) for everything | follows style and per-frame poses; gpt-image-1.5 drew furry 3D look and copied one frame 6x |
-| Background | flat magenta `#FF00FF` + `--png`, **no `--transparent`**; `sprite_pack.py` keys it out and un-mixes translucent smears/glows (no pink tint) | gpt-image-2 has no transparency on fal |
-| Consistency | every image after the master uses `--ref <master.png>` | keeps design, colors, eye count |
-| Sheet layout | a grid of 512 px cells, row-major: **8 frames = 4x2 at `2048x1024`**, **9 frames = 3x3 at `1536x1536`**, **4 key poses = 2x2 at `1024x1024`** (stage 1 of an animation) (the class says which) | one long row is too short; the model makes a grid anyway. 6 frames looked choppy in the playtest |
-| Single sprite | `--size 1024x1024` | master, icon, projectile |
-| Poses | write every frame's pose **from the motion blueprint** (`animation.md` §4), key poses first (§5) | a bare pose list gave identical frames, repeated legs and no weight transfer |
-| Directions | 8-way movement from 5 generated views: `side` (true profile, right), `down_side` (3/4 front, down-right), `up_side` (3/4 back, up-right), `down` (front), `up` (back). Left, down-left, up-left = mirrors (never generated) | 4 directions made the character snap at every bend of the road |
-| Size lock | every sheet prompt says the character keeps the reference size; `sprite_pack.py` also matches each sheet's body size to `walk_side` | the model drew a death sheet ~27% smaller to fit a flung sword |
-| Quality | `low` while testing; `medium/high` only after the user approves | cost |
+| Model | `gpt-image-2` (default) | follows the style; gpt-image-1.5 drew a furry 3D look |
+| Size | `--size 1024x1024` for every still | master, views, icon, projectile |
+| Background | flat magenta `#FF00FF` + `--png`, **no `--transparent`**; the tools key it out | gpt-image-2 has no transparency on fal |
+| Consistency | every image after the master uses `--ref <approved master>` and repeats `{design}` verbatim | keeps design, colors, gear and proportions identical in every view |
+| Pose | every view: the same neutral standing ready pose, full body and weapon inside the frame, filling about 70% | video-sprite starts every clip from this still; a cut-off weapon or an odd pose shows in every frame |
+| Quality | `low` while testing; `medium/high` only after the user asks | cost |
 
 `{BG}` (append to every prompt):
 > Background: one flat solid pure magenta color (#FF00FF) everywhere, no gradient, no ground,
 > no shadow, no scenery, no text, no border. Do not use magenta or pink anywhere on the subject.
 
-`{GRID}` (append to every sheet prompt, before `{BG}`; fill in the sheet's columns, rows and frames):
-> Layout: a {COLS}x{ROWS} grid, {COLS} columns and {ROWS} rows of {N} equal cells, read left to right, top row first.
-> One figure per cell, centered, with clear empty space between figures. The exact same character,
-> same colors, same proportions and the same size in every frame, standing on the same ground line
-> in each row. No grid lines, no frame numbers, no labels.
+## 3. Standard views of a character (the "forms" video-sprite animates)
+A top-down game moves in 8 directions; 5 views are generated, the 3 left-facing ones are mirrors.
+| Still (`stills/`) | View | Animated by video-sprite as | Required |
+|---|---|---|---|
+| `master_vNN` | three-quarter FRONT, facing down-right (the design reference) | `move/walk_down_side` (+ mirror down-left) | yes |
+| `view_side_vNN` | true side profile, facing right | `move/walk_side`, `attack/attack_side`, `death/death_side`, `hurt`, `idle` (+ mirror left) | yes |
+| `view_front_vNN` | straight front, facing the viewer | `move/walk_down` | yes |
+| `view_back_vNN` | straight back, facing away | `move/walk_up` | yes |
+| `view_up_side_vNN` | three-quarter BACK, facing up-right | `move/walk_up_side` (+ mirror up-left) | yes |
+| `icon_vNN` | head-and-shoulders portrait badge | `ui/icon` (packed with `sprite_pack.py`) | yes |
+| `pose_ready_side_vNN` | side profile in a combat-ready stance (weapon raised, knees bent) | optional start still for `attack`/`hurt` when the neutral stance reads too passive | optional |
+| `turnaround_vNN` | the 5 views side by side (`templates.md` "turn") | review only, never animated | optional |
+The view prompts are in the class file ("Standard views"). Make and approve them in this order: master,
+then side, front, back, up_side (each with `--ref <master>`), then the icon.
 
-## 3. Files, folders and versions (fixed)
-One folder per asset, one subfolder per sheet. Every generation is a new version; nothing is overwritten.
+## 4. Files, folders and versions (fixed)
+One folder per asset. A person opens at most 4 levels: category, sheet, version. `.work/` is for tools only.
 ```
-out/<kind>s/<id>/                     e.g. out/enemies/spider/
-  brief.md                            request, class/level/archetype, filled slots, approved master
-  history.md                          one row per generated raw: version, score, verdict, issue, change
-  meta.json                           engine metadata; per sheet: final version + its source raw
-  master/raw/master_v01.png (+.json)  master candidates (never packed)
-  walk_side/                          one folder per sheet: walk_side, walk_up, walk_down, attack_side, death_side, icon ...
-    blueprint.md                      motion card + frame-by-frame blueprint (animation.md), written before generating
-    raw/walk_side_keys_v01.png        stage 1: key + breakdown poses (2x2), reviewed before the full sheet
-    raw/walk_side_v01.png (+.json)    every raw the model returned (.json = exact prompt, model, refs, cost)
-    raw/walk_side_v02.png
-    v02/                              packed from raw v02 (only approved raws get packed)
-      enemy_spider_walk_side.png        horizontal sheet @2x
-      enemy_spider_walk_side_preview.gif
-      frames/@2x/enemy_spider_walk_side_01.png ...
-      frames/@1x/enemy_spider_walk_side_01.png ...
-      legcheck.png, transitions.png, motioncheck.txt   review outputs (leg_check.py, motion_check.py)
+out/<kind>s/<id>/                         e.g. out/enemies/bandit/
+  brief.md                                request, class/level/archetype, filled slots, approved stills
+  history.md                              one row per still or video take: version, score, verdict, issue, change
+  meta.json                               engine metadata: one canvas, pivot and body height for every action
+  stills/                                 INPUT stills (this skill): master_v02.png, view_side_v01.png ... (+ .json prompt)
+  move/                                   one folder per category (scripts/asset_layout.py)
+    walk_side/                            one folder per sheet
+      clip_t01.mp4 (+ .json)              SOURCE: the video the frames were cut from (.json = model, prompt, cost)
+      v01/                                OUTPUT: one folder per export; the highest vNN is the final one
+        preview.gif                       look here first
+        sheet.png                         horizontal sheet @2x
+        frames/@2x/enemy_bandit_walk_side_01.png ...   frames for the game (also @1x)
+        check/                            motioncheck.txt, transitions.png, legcheck.png, take_review.png
+    walk_down_side/ walk_down/ walk_up_side/ walk_up/
+  attack/attack_side/                     same layout
+  death/death_side/
+  ui/icon/v01/                            packed icon (sprite_pack.py from stills/icon_vNN.png)
+  .work/                                  tools only (video-sprite sets, pruned to their decisions)
 ```
-- **The highest `vNN/` folder of a sheet is its final version.** A packed folder has the number of the raw it came from.
-- Raw names: `<sheet>_vNN.png`, made by `gen_image.py --name <sheet> --versioned --out <asset>/<sheet>/raw`.
-- Frame names keep kind and id (`enemy_spider_walk_side_03.png`) so they are unique inside a game project.
-- A few wrong frames in an otherwise good sheet (e.g. the same leg steps twice): fix them for free by
-  re-ordering frames instead of regenerating: copy the raw to the next version and pack it with
-  `--order 1,2,3,4,5,4,3,8` (reuse frames that show the right pose). Log it in `history.md`.
-- To go back to an older version (e.g. v02 after v03): copy `raw/<sheet>_v02.*` to the next free number,
-  pack it, and log it in `history.md` ("restore of v02"). `sprite_pack.py` refuses to pack below the final.
+Categories: `move` (walk, run), `attack` (attack, cast), `death`, `hurt`, `idle`, `ui` (icon), `projectile`.
+- Still names: `<name>_vNN.png`, made by `gen_image.py --name <name> --versioned --out <asset>/stills`.
+- Frame names keep kind and id (`enemy_bandit_walk_side_03.png`) so they are unique inside a game project.
 
-Game-ready frames (`sprite_pack.py`):
+Game-ready frames (the same for every action of an asset):
 | Item | Value |
 |---|---|
-| File type | PNG-32 RGBA, transparent |
-| Resolutions | `@2x` master and `@1x` in-game; cell size comes from the class/level |
-| Pivot | feet, bottom-center: x 0.5, y 0.88 of the cell (12% above the bottom); icons are centered. Horizontal registration: bbox centre, or `--align torso` (head+torso centre) for cyclic in-place motion such as walks, so the body does not slide when the stride changes |
-| Canvas | one canvas size for every animation of an asset (class/level decides, e.g. 128x128) so the engine needs one offset |
-| Scale | `walk_side` sets the base scale; every later sheet is matched to the same body size (packer prints `body matched xK`) |
-| Motion | `move_speed` (px/s at 1x) in `meta.json`: default from the stride, tuned in the playtest so the feet do not slide |
+| File type | PNG-32 RGBA, transparent; `@2x` master and `@1x` in-game |
+| Canvas | **one canvas for every action of an asset** (`meta.json` "cell"; class/level decides, Level 1 enemy 256x128 at 1x). No action gets a bigger or smaller frame, so the engine never rescales one action against another |
+| Body | **one body height for every action** (`meta.json` "body_height_2x", set by the first export); a sheet whose body differs by more than 4% is rescaled on export |
+| Pivot | feet, bottom-center: x 0.5, y 0.88 of the canvas; icons are centered |
+| Motion | `move_speed` (px/s at 1x) in `meta.json`, tuned in the playtest so the feet do not slide |
 
-`history.md` row format (append one row after reviewing every raw, including rejected ones):
-`| date | sheet | vNN | model | score | approved/rejected/final/awaiting user | issue | change for next version | requested by (pipeline/user: "...") |`
+`history.md` row format (append one row after reviewing every still or take, including rejected ones):
+`| date | sheet/still | vNN | model | score | approved/rejected/final/awaiting user | issue | change for next version | requested by (pipeline/user: "...") |`
 
-## 4. Run modes (fixed for every class)
-Read the mode from the user's request:
-
+## 5. Run modes (fixed for every class)
 **Default (no `--auto`): master checkpoint**
 1. Write `brief.md` (fill the class's content slots from the request; invent sensible details).
-2. Generate the master into `master/raw/`; self-review it and regenerate while it fails the checklist
-   (max 3 versions).
+2. Generate the master into `stills/`; self-review it and regenerate while it fails the checklist (max 3).
 3. **Stop.** Show the user the master candidates (paths + scores + issues), recommend one, and wait.
-4. When the user approves one ("chốt v02"), record it in `brief.md` and `history.md`, then run the
-   sheets exactly as in auto mode steps 3-6 (no further stops).
+4. When the user approves one ("chốt v02"), record it in `brief.md` and `history.md`, then make the other
+   standard views and the icon (§3) the same way (each reviewed, max 3 versions), show them, and wait for
+   approval before any animation is paid for.
+5. Animation: hand over to the `video-sprite` skill with the approved stills.
 
-**`--auto`: full run**
-1-2. As above, but approve the master yourself (score >= 8).
-3. Motion design, then sheets: for every animated sheet write `A/<sheet>/blueprint.md` (motion card +
-   frame-by-frame blueprint, `animation.md` §1-4), generate and review stage 1 (key + breakdown poses),
-   then the full sheet with the approved key poses as the first `--ref` (§5). All images use
-   `--ref <approved master> --png`; independent sheets run in parallel. Non-animated images (icon) skip this.
-4. Pack each approved raw with `sprite_pack.py`, `walk_side` first (it fixes the asset's scale).
-   Every walk sheet then goes through the class's **leg check** (`scripts/leg_check.py`); a broken leg
-   order is fixed with `--order` (a new version, no API call) before the sheet can be final.
-   The packer must report `split=gaps`; `split=equal` means figures touch: regenerate that sheet.
-5. Review each packed sheet with the review loop in `animation.md` §8 (`motion_check.py`, onion
-   transitions, leg check for walks) and classify it Pass / Needs Revision / Fail (§7), naming defective
-   transitions (`3->4`, `8->1`). Not Pass -> fix (re-order, regenerate the stage at fault, adjust fps or
-   move_speed), max 3 regeneration rounds per sheet. Log every raw and every verdict in `history.md`.
-6. Playtest: `python scripts/build_playtest.py` collects the final frames of every asset into
-   `out/playtest/`; publish `out/playtest/index.html` with the Artifact tool (all files in that folder,
-   same artifact URL each time if one exists) so the user can watch the animations moving on a map.
-7. Report: the final version of every sheet (path to its `vNN/` folder), scores, rounds, total cost,
-   the playtest link. Remind the user that frames may need hand-alignment: image models are not pixel-precise.
+**`--auto`**: as above, but approve the master and the views yourself (score >= 8), then continue with
+`video-sprite` (it still asks before paying for video unless the request already approved the cost).
 
-**Edit an existing asset** (e.g. "make the spider's attack bite more powerful")
-1. Read the asset's `brief.md`, `history.md` and `meta.json`; reuse the approved master and `{design}` verbatim.
-2. Change only the slot(s) the request is about (e.g. `{attack}`/attack poses); keep every other fixed block.
-   Record the new slot value in `brief.md`. For a change of motion, update the sheet's `blueprint.md`
-   first (create it if the sheet predates it), then regenerate from the stage that the change affects.
-3. Generate the next raw version of that sheet only (`--versioned` picks the number), review, iterate
-   (max 3), pack the approved one into its `vNN/`, log every raw in `history.md` with
-   requested by = the user's words.
-4. Report old final vs new final side by side (paths). The previous version stays untouched.
-- Changing the master or `{design}` affects every sheet: confirm with the user first, then regenerate all sheets.
+**Edit an existing character** (e.g. "đổi đao thành rìu"): changing the master or `{design}` affects every
+view and every animation: confirm with the user first, then regenerate the stills, then the animations.
+Fixing one view only (e.g. the back view shows the face): generate the next version of that still, and
+re-animate only the actions that start from it.
 
-## 5. Review checklist (score 1-10, redo below 8)
-Animated sheets: the structural and motion checks and the Pass / Needs Revision / Fail classification
-in `animation.md` §7 come first; a sheet never passes on frame count alone. Then:
-- Same character as the master in every frame: colors, gear, proportions.
-- The right number of separate figures (`split=gaps`).
-- Walks match their blueprint (lead-foot pattern via the leg check, e.g. `LL-RRR-L`); same character size across all sheets.
-- Direction correct (side faces right; up shows the back; down shows the face).
+## 6. Review checklist for stills (score 1-10, redo below 8)
+- Same character as the master: colors, gear, proportions, the weapon's shape and the hand that holds it.
+- The view is exact: side = true profile facing right (one eye); front = mirror-symmetric, face visible;
+  back = no face; 3/4 front faces down-right; 3/4 back faces up-right, face hidden.
+- Neutral standing ready pose, full body and weapon inside the frame with margin, nothing touching the edges.
 - Style: thick dark outlines, flat 2-3 tone shading, muted palette, no gradients, glow or fur.
-- Poses follow the blueprint and read as the requested action; cyclic sheets flow from the last frame to the first.
-- No leftover magenta fringe, background, ground, shadow or text; silhouette readable at @1x.
+- Flat magenta background only; no magenta or pink on the subject, no ground, shadow or text.

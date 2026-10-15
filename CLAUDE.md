@@ -4,13 +4,22 @@ Experiment: Claude Code is the "brain" (plans, writes prompts, reviews output, i
 fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 
 - Generator: `scripts/gen_image.py` (run `python scripts/gen_image.py --help`)
-- Workflow: follow the `fal-image` skill in `.claude/skills/fal-image/SKILL.md` for any image request.
-- Game assets: shared format + style in `.claude/skills/fal-image/format.md`, per-class specs in
-  `classes/` (currently `enemy.md`, Level 1), other assets in `templates.md`.
-  A `style.md` at the project root, if present, overrides the default style block.
-- Sprite post-processing: `scripts/sprite_pack.py` (slice, align, match size, resize, meta.json).
-- Animation: design motion first with `.claude/skills/fal-image/animation.md` (blueprint, key poses,
-  review loop); checks: `scripts/motion_check.py`, `scripts/leg_check.py`.
+- Two skills, one job each:
+  - `fal-image` (`.claude/skills/fal-image/`): stills only: a character's approved master and its standard
+    views (side, front, back, 3/4 front and back), icon, projectile; towers, props, UI, maps. Format, style
+    and views in `format.md`, per-class specs in `classes/` (currently `enemy.md`, Level 1), other assets in
+    `templates.md`. A `style.md` at the project root, if present, overrides the default style block.
+  - `video-sprite` (`.claude/skills/video-sprite/`): every character animation (move, attack, death ...) from
+    the approved stills: image-to-video on fal.ai (`scripts/fal_video.py`) -> keyed, registered, looped or
+    retimed frames -> `scripts/video_to_sheet.py` exports them into `out/<kind>s/<id>/<category>/<sheet>/vNN/`
+    with ONE canvas and ONE body size for every action (`meta.json`). After export, always
+    `python scripts/video_prune.py prune --set <set>`; intermediate frames are rebuilt from the clip with
+    `rebuild`. Checks: `scripts/motion_check.py`, `scripts/leg_check.py`.
+- Asset folder: `stills/` (inputs), `move/`, `attack/`, `death/` ... (one folder per sheet: `clip_tNN.mp4` =
+  source, `vNN/preview.gif` + `vNN/frames/` = output), `.work/` (tools only). Layout: `fal-image/format.md` §4.
+- Icon packing: `scripts/sprite_pack.py` (single stills into `ui/icon/vNN`).
+- Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
+  `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe`. Video tools need ffmpeg on PATH.
 - Playtest: `python scripts/build_playtest.py` builds `out/playtest/` from `tools/playtest/index.html`;
   publish `index.html` (Sprite Playtest: https://claude.ai/artifact/75DbnF3Fne9dnYVuu9XaSV) and
   `motion.html` (Motion Lab: https://claude.ai/artifact/C4umJEeQjjmx6FAjpcyT1J) with the same files.
@@ -19,3 +28,5 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - Spend summary: `python scripts/cost_report.py [--today]`.
 - Secrets: `FAL_KEY` is in `.env` (git-ignored). Never read it, print it, log it, or commit it.
 - Cost guard: stay on `--quality low` unless the user explicitly asks for medium/high.
+  Video clips cost ~10x an image: show the clip count and estimate and get a yes before a paid
+  `sprite_set.py run`; `FAL_VIDEO_MAX_USD` (default 0.60) caps each clip.
