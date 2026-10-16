@@ -25,3 +25,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-16 17:05:49,out/heroes/centaur/.work/down_side_run/actions/run/takes/t02/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.6,0.0750,True
 2026-10-16 17:35:36,out/heroes/inferno_monk/stills/master_v01.png,gpt-image-2,low,1024x1024,False,16.6,0.0133,True
 2026-10-16 17:35:38,out/heroes/inferno_monk/stills/master_v02.png,gpt-image-2,low,1024x1024,False,16.6,0.0133,True
+2026-10-16 17:38:30,out/heroes/inferno_monk/.work/down_side/actions/idle/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.2,0.0750,True
