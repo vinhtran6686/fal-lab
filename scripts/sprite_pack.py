@@ -21,7 +21,7 @@ What it does:
      Earlier packed versions are kept; the highest vNN is the final one.
 Prints a one-line summary; warnings go to stderr.
 """
-import argparse, json, math, pathlib, re, sys
+import argparse, json, math, pathlib, re, shutil, sys
 from collections import deque
 from PIL import Image, ImageChops, ImageFilter
 
@@ -286,7 +286,9 @@ def main() -> None:
         scale *= limit
 
     tag = f"{a.kind}_{a.id}_{key}"
-    vdir = sheet_dir(asset, key) / version
+    vdir = sheet_dir(asset, key)   # one final version per sheet; the raw still keeps its version number
+    if (vdir / "frames").exists():   # replace the previous final version
+        shutil.rmtree(vdir / "frames")
     d2, d1, ds = vdir / "frames" / "@2x", vdir / "frames" / "@1x", vdir
     for d in (d2, d1, ds):
         d.mkdir(parents=True, exist_ok=True)
@@ -314,9 +316,9 @@ def main() -> None:
 
     rel = lambda path: path.resolve().relative_to(asset.resolve()).as_posix()
     entry = {"version": version, "source": rel(pathlib.Path(a.raw)), "frames": len(cells), "fps": a.fps,
-             "loop": not a.no_loop, "dir": f"{sheet_rel(key)}/{version}",
-             "files": f"{sheet_rel(key)}/{version}/frames/@1x/{tag}_NN.png",
-             "sheet": f"{sheet_rel(key)}/{version}/sheet.png", "split": method}
+             "loop": not a.no_loop, "dir": sheet_rel(key),
+             "files": f"{sheet_rel(key)}/frames/@1x/{tag}_NN.png",
+             "sheet": f"{sheet_rel(key)}/sheet.png", "split": method}
     if a.cell != meta["cell"][0] or a.cell_w:
         entry["cell"] = [c2w // 2, a.cell]
     if a.center:

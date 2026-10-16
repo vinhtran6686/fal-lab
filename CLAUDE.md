@@ -11,13 +11,14 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
     `templates.md`. A `style.md` at the project root, if present, overrides the default style block.
   - `video-sprite` (`.claude/skills/video-sprite/`): every character animation (move, attack, death ...) from
     the approved stills: image-to-video on fal.ai (`scripts/fal_video.py`) -> keyed, registered, looped or
-    retimed frames -> `scripts/video_to_sheet.py` exports them into `out/<kind>s/<id>/<category>/<sheet>/vNN/`
+    retimed frames -> `scripts/video_to_sheet.py` exports them into `out/<class>/<id>/<category>/<sheet>/`
     with ONE canvas and ONE body size for every action (`meta.json`). After export, always
     `python scripts/video_prune.py prune --set <set>`; intermediate frames are rebuilt from the clip with
     `rebuild`. Checks: `scripts/motion_check.py`, `scripts/leg_check.py`.
-- Asset folder: `stills/` (inputs), `move/`, `attack/`, `death/` ... (one folder per sheet: `clip_tNN.mp4` =
-  source, `vNN/preview.gif` + `vNN/frames/` = output), `.work/` (tools only). Layout: `fal-image/format.md` §4.
-- Icon packing: `scripts/sprite_pack.py` (single stills into `ui/icon/vNN`).
+- Asset folder `out/<class>/<id>/`: `stills/` (source images, every version), `raw/` (source videos, every
+  take, saved as soon as they are generated), state folders `idle/`, `move/`, `attack/`, `death/` ... (ONE final
+  version per sheet: `preview.gif`, `frames/`, `check/`), `.work/` (tools only, not in git). `format.md` §4.
+- Icon packing: `scripts/sprite_pack.py` (single stills into `ui/icon/`).
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe`. Video tools need ffmpeg on PATH.
 - Playtest: `python scripts/build_playtest.py` builds `out/playtest/` from `tools/playtest/index.html`;

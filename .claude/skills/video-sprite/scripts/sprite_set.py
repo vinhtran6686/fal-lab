@@ -2025,12 +2025,36 @@ class SetRunner:
         return {"status": "ok", "route": summary.get("route"), "artifact": artifact, "summary": summary,
                 "pinned": pin, "pinNote": pin_note}
 
+    def to_raw(self, ident: str, record: dict, clip: Path) -> Path:
+        """fal-image-lab: every clip the model returns is the paid source; it leaves the tool folder at once for
+        <asset>/raw/<action>_<set>_tNN.mp4 (+ .json), which is versioned in git (.work is not). A set outside
+        <asset>/.work/ keeps its clips where they are."""
+        if self.root.parent.name != ".work":
+            return clip
+        raw = self.root.parent.parent / "raw"
+        dest = raw / f"{ident}_{self.root.name}_t{int(record['take']):02d}{clip.suffix.lower() or '.mp4'}"
+        if clip.resolve() == dest.resolve():
+            return dest
+        raw.mkdir(parents=True, exist_ok=True)
+        if dest.exists():
+            if forge_core.sha256_file(dest) == forge_core.sha256_file(clip):   # a raw clip adopted back (no API call)
+                clip.unlink()
+                return dest
+            raise ValueError(f"{dest} already exists; it belongs to another take")
+        shutil.move(str(clip), dest)
+        job = clip.parent / "job.json"
+        if job.exists():
+            shutil.move(str(job), dest.with_suffix(".json"))
+        return dest
+
     def record_generation(self, ident: str, record: dict, result: dict) -> str:
         st = self.astate(ident)
         folder = self.root / record["dir"]
         if result["status"] == "ok":
             clip = Path(result["artifact"])
-            record["clip"] = {"path": self.rel(clip), "sha256": forge_core.sha256_file(clip)}
+            clip = self.to_raw(ident, record, clip)
+            record["clip"] = {"path": Path(os.path.relpath(clip, self.root)).as_posix(),
+                              "sha256": forge_core.sha256_file(clip)}
             record["route"] = _scrub(result.get("route")) or "unknown"
             record["pinnedLastFrame"] = result.get("pinned")
             if result.get("pinNote"):

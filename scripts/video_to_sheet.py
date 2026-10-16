@@ -22,11 +22,11 @@ What it does:
      export is rescaled only when its linear size (sqrt of the area ratio) differs by more than 4%
   4. places every frame with one fixed transform: the feet anchor on the pivot (x 0.5, y 0.88); no
      per-frame crop or re-centering, so registered motion (bob, lean, a fall, a spin) is kept
-  5. moves the clip out of the set to <asset>/<category>/<sheet>/clip_tNN.mp4 (+ .json: model, prompt,
-     cost); category = move, attack, death ... (scripts/asset_layout.py); set_state.json follows the clip
-  6. writes <asset>/<category>/<sheet>/vNN/ (frames/@2x and @1x, sheet.png, preview.gif,
-     check/take_review.png), records the state in <asset>/meta.json and the export in <set>/exports.json
-     (video_prune.py only drops frames of exported takes)
+  5. writes the ONE final version of the sheet into <asset>/<category>/<sheet>/ (frames/@2x and @1x,
+     sheet.png, preview.gif, check/take_review.png), replacing the previous export; category = move, attack,
+     death ... (scripts/asset_layout.py). The source clip stays in <asset>/raw/ (sprite_set puts every clip
+     there when it is generated); meta.json records which clip and take the frames come from, and
+     <set>/exports.json records the export (video_prune.py only drops frames of exported takes)
 Prints a one-line summary; warnings go to stderr.
 """
 import argparse, json, math, os, pathlib, shutil, sys
@@ -116,39 +116,6 @@ def hit_index(selection: dict, durations: list[int]) -> int | None:
             return i + 1
         t += d
     return len(durations)
-
-
-def next_version(sheet_dir: pathlib.Path, sheet: str) -> int:
-    nums = [int(d.name[1:]) for d in sheet_dir.glob("v[0-9]*") if d.is_dir() and d.name[1:].isdigit()]
-    nums += [int(f.stem.rsplit("_v", 1)[1]) for f in (sheet_dir / "raw").glob(f"{sheet}_v*.*")
-             if f.stem.rsplit("_v", 1)[-1].isdigit()]
-    return max(nums, default=0) + 1
-
-
-def move_clip(set_dir: pathlib.Path, sheet_dir: pathlib.Path, record: dict) -> pathlib.Path:
-    """Move the take's clip (+ its job.json) out of the set to <sheet>/clip_tNN.mp4 (+ .json), the one place a
-    reader looks for the source video, and point set_state.json at it (sprite_set reads it from there to
-    rebuild). A clip already moved is left alone."""
-    clip = (set_dir / record["clip"]["path"]).resolve()
-    dest = (sheet_dir / f"clip_t{record['take']:02d}.mp4").resolve()
-    if clip == dest:
-        return dest
-    if dest.exists():
-        sys.exit(f"{dest} already exists and is not this take's clip; rename it first")
-    sheet_dir.mkdir(parents=True, exist_ok=True)
-    shutil.move(str(clip), dest)
-    if (clip.parent / "job.json").exists():
-        shutil.move(str(clip.parent / "job.json"), dest.with_suffix(".json"))
-    if clip.parent.name == "media" and not any(clip.parent.iterdir()):
-        clip.parent.rmdir()
-    state_path = set_dir / "set_state.json"
-    state = read_json(state_path)
-    for st in state["actions"].values():
-        for take in st["takes"]:
-            if take.get("clip", {}).get("path") == record["clip"]["path"]:
-                take["clip"]["path"] = pathlib.Path(os.path.relpath(dest, set_dir.resolve())).as_posix()
-    state_path.write_text(json.dumps(state, indent=2), encoding="utf-8")
-    return dest
 
 
 def body_area(im: Image.Image) -> int:
@@ -246,10 +213,16 @@ def main() -> None:
                  "at 1x). Keep one canvas for every action: delete meta.json and re-export every sheet with a "
                  "larger --cell")
 
+    # the sheet folder holds ONE final version: an export replaces the previous one (the clips stay in raw/)
     folder = layout_dir(asset, a.sheet)
-    version = f"v{next_version(folder, a.sheet):02d}"
+    version = f"t{record['take']:02d}{tag}"
     tagname = f"{a.kind}_{a.id}_{a.sheet}"
-    vdir = folder / version
+    vdir = folder
+    for old in ("frames", "check"):
+        if (vdir / old).exists():
+            shutil.rmtree(vdir / old)
+    for old in ("sheet.png", "preview.gif"):
+        (vdir / old).unlink(missing_ok=True)
     d2, d1 = vdir / "frames" / "@2x", vdir / "frames" / "@1x"
     for d in (d2, d1):
         d.mkdir(parents=True, exist_ok=True)
@@ -278,11 +251,11 @@ def main() -> None:
         (vdir / "check").mkdir(exist_ok=True)
         shutil.copyfile(review, vdir / "check" / "take_review.png")
 
-    clip = move_clip(set_dir, folder, record)
+    clip = (set_dir / record["clip"]["path"]).resolve()   # in <asset>/raw/ since generation (sprite_set)
     def rel(path: pathlib.Path) -> str:
         path = path.resolve()
         return path.relative_to(asset.resolve()).as_posix() if path.is_relative_to(asset.resolve()) else str(path)
-    base = f"{sheet_rel(a.sheet)}/{version}"
+    base = sheet_rel(a.sheet)
     entry = {"version": version, "dir": base, "source": rel(clip), "frames": len(cells), "fps": fps, "loop": loop,
              "files": f"{base}/frames/@1x/{tagname}_NN.png", "sheet": f"{base}/sheet.png", "split": "video",
              "video": {"set": rel(set_dir), "action": a.action, "take": record["take"],

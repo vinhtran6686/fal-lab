@@ -51,10 +51,11 @@ Ví dụ:
 - `Làm animation move/attack/death cho spider` → skill `video-sprite`, báo chi phí trước khi chạy.
 - `Sửa attack của spider cho cú cắn uy lực hơn` → chỉ tạo version mới của sheet attack, bản cũ giữ nguyên.
 
-Kết quả trong `out/enemies/<id>/`:
-- `stills/`: ảnh tĩnh đầu vào (master, các góc view, icon) đã chốt.
-- theo nhóm: `move/`, `attack/`, `death/`… mỗi animation một thư mục (`move/walk_side/`, `attack/attack_side/`): **nguồn** là `clip_tNN.mp4`; **output** là `vNN/` (`preview.gif` để xem nhanh, `frames/` cho game, `check/` để kiểm tra). **Số `vNN/` cao nhất là bản final.**
-- `.work/`: dữ liệu nội bộ của tool (đã dọn gọn), không cần mở.
+Kết quả trong `out/<class>/<id>/` (vd. `out/enemies/bandit/`, `out/heroes/centaur/`):
+- `stills/`: **ảnh gốc** (master, các góc, các pose), giữ mọi version.
+- `raw/`: **video gốc** model trả về, giữ mọi take (`<action>_<set>_tNN.mp4` + `.json` prompt/chi phí). Video vào đây ngay khi sinh xong, nên push git là không mất.
+- thư mục trạng thái `idle/`, `move/`, `attack/`, `death/`…: mỗi animation một thư mục, **chỉ giữ 1 bản cuối cùng đã chốt** (`preview.gif` để xem nhanh, `frames/` cho game, `check/` để kiểm tra).
+- `.work/`: dữ liệu trung gian của tool, không đưa lên git.
 - `brief.md` = nội dung đã điền + ảnh đã chốt; `history.md` = mỗi lần gen một dòng (điểm, lỗi, sửa gì).
 
 Ảnh `--ref` dùng endpoint edit để giữ nhân vật đồng nhất giữa các góc.

@@ -1,6 +1,6 @@
 ---
 name: video-sprite
-description: Animate a game character's approved stills into consistent sprite animations (move/walk in 5 views, attack, death, hurt, idle, run) with image-to-video on fal.ai, then key, register, loop or retime, finish and export them into out/enemies/<id>/<category>/<sheet>/vNN with one fixed canvas and body size for every action. Use for any character or enemy animation; the stills come from the fal-image skill.
+description: Animate a game character's approved stills into consistent sprite animations (move/walk in 5 views, attack, death, hurt, idle, run) with image-to-video on fal.ai, then key, register, loop or retime, finish and export them into out/<class>/<id>/<category>/<sheet>/ (one final version; every source clip kept in raw/) with one fixed canvas and body size for every action. Use for any character or enemy animation; the stills come from the fal-image skill.
 ---
 
 # Video sprites (image-to-video on fal.ai)
@@ -28,7 +28,7 @@ on PATH; in Git Bash use the real Python, see `CLAUDE.md`).
 | Review | `sprite_set.py review --plan ...`, then **Read** every `review/<action>/tNN-sheet.png` |
 | Accept / retake | `sprite_set.py accept --plan ... --action walk --take 1 [--window 0:124]` / `retake ... --action attack --fix weapon-shape` |
 | Export | `python scripts/video_to_sheet.py --set A/.work/<set> --action <action> --asset A --id <id> --sheet <sheet> [--flip-to <dir>] [--despill]` |
-| Checks | `python scripts/motion_check.py A/<category>/<sheet>/vNN`, `python scripts/leg_check.py ...` (walks), Motion Lab |
+| Checks | `python scripts/motion_check.py A/<category>/<sheet>`, `python scripts/leg_check.py ...` (walks), Motion Lab |
 | Prune (after export; always) | `python scripts/video_prune.py prune --set A/.work/<set>` |
 | Rebuild a pruned action | `python scripts/video_prune.py rebuild --set A/.work/<set> --action <action>` (from the clip, no API call) |
 `sprite_set.py` resumes where it stopped and never generates a clip twice; every verb prints one JSON line.
@@ -82,18 +82,18 @@ attack, death, hurt, idle, icon -> ui).
    `retake --fix <clause id or sentence>` (clause ids in `references/motion-prompts.md`), or plan options.
    Default mode: stop here and show the user (see "Run modes"); `--auto` continues.
 6. **Export** each accepted action with `video_to_sheet.py` (one canvas, one body size, see above). Each
-   export is a new `vNN`; the clip moves to `A/<category>/<sheet>/clip_tNN.mp4`. Log one row per take in
+   export replaces the sheet's state folder `A/<category>/<sheet>/` (one final version). Log one row per take in
    `history.md` (`model` column = the fal model).
 7. **Check**: `motion_check.py` on every sheet, `leg_check.py` on walks; anything only visible in motion is
    unverified until seen in Motion Lab (`python scripts/build_playtest.py`, republish, see `CLAUDE.md`).
 8. **Prune** every set once its actions are exported (always; no need to ask).
-Report: the final `vNN` of every sheet, the model and takes, the cost (`python scripts/cost_report.py --today`).
+Report: the state folder of every sheet, the model and takes, the cost (`python scripts/cost_report.py --today`).
 
 ## Run modes (like fal-image: preview by default)
 Read the mode from the request. Every paid clip still needs the cost agreed first (Workflow step 4).
 - **Default: preview checkpoint.** After `run` + `review`, do your own review (Pass / Needs Revision / Fail)
   but **do not export**. Stop and show the user, per action: the clip
-  (`A/.work/<set>/actions/<action>/takes/tNN/media/clip.mp4`), the review sheet
+  (`A/raw/<action>_<set>_tNN.mp4`), the review sheet
   (`review/<action>/tNN-sheet.png`), your verdict with the frames at fault, and the next options. Wait.
   - "ok" / "chốt" → accept (with `--window` if a gate misread it), export, check, prune, log.
   - Natural-language feedback ("liềm bị méo khi chạy", "đánh chậm quá", "ngựa không phi") → **Retake
@@ -129,10 +129,10 @@ Log the user's words and the translated fix in `history.md`.
 ## Changing existing sprites
 | Request | What to do | Cost |
 |---|---|---|
-| Frames cut wrong (loop length, timing, smear colour) | edit `set_plan.json` / export flags, `video_prune.py rebuild`, export again (new `vNN`) | free |
+| Frames cut wrong (loop length, timing, smear colour) | edit `set_plan.json` / export flags, `video_prune.py rebuild`, export again (replaces the state folder) | free |
 | Motion wrong (pose, weapon, turned head) | `retake --fix ...`, `run`, review, export | 1 clip per take |
-| New stills (restyle, new design, fixed view) from `fal-image` | `make_master.py` from the new still into a NEW folder (`A/.work/masters/<view>_v2`), plan a NEW set (`A/.work/<set>_v2`; plan refuses an existing folder), run, export: a new `vNN` on the SAME canvas and body height (`meta.json` stays) | 1 clip per action |
-Old versions and their clips stay; the highest `vNN` is the final one.
+| New stills (restyle, new design, fixed view) from `fal-image` | `make_master.py` from the new still into a NEW folder (`A/.work/masters/<view>_v2`), plan a NEW set (`A/.work/<set>_v2`; plan refuses an existing folder), run, export (replaces the state folder) on the SAME canvas and body height (`meta.json` stays) | 1 clip per action |
+Every clip stays in `A/raw/`; the state folder holds only the exported (final) take.
 
 ## Per-action options in `set_plan.json` (ours, see `VENDORED.md`)
 - `"spins": true`: the body turns on purpose (a whirlwind spin attack); the prompt locks the facing only at
@@ -163,12 +163,16 @@ Video models play one-shots in slow motion; the retime cuts frozen holds and com
 (The clip canvas only frames the video; every export lands on the asset's one canvas.)
 
 ## Where things are, and disk
-A person opens `A/<category>/<sheet>/`: `clip_tNN.mp4` (+ `.json`: model, prompt, cost) is the source,
-`vNN/preview.gif` the result, `vNN/frames/` the game frames, `vNN/check/` the checks and the take's review
-sheet. `A/.work/` is for tools only. One take produces ~550 files / ~70 MB of intermediate frames;
+Layout (`fal-image/format.md` §4): `A/raw/<action>_<set>_tNN.mp4` (+ `.json`: model, prompt, cost, request
+id) = every clip the model returned, moved there by `sprite_set.py` **as soon as it is generated** (git keeps
+it even before any export); `A/<category>/<sheet>/` = the ONE final version: `preview.gif`, `frames/`,
+`check/` (checks and the take's review sheet); `meta.json` names the take. `A/.work/` is for tools only and
+is not in git: on another machine, to cut a clip again, plan the set again (`make_master.py` + `plan`), copy
+the clip from `raw/` into the new take's `actions/<action>/takes/t01/media/` and `run`: the clip is adopted
+(no API call) and matched back to its `raw/` file. One take produces ~550 files / ~70 MB of intermediate frames;
 `video_prune.py prune` keeps per set only what decides the frames (the master, the input image and transform
 sent to the model, prompts, QC and every stage's JSON in `takes/tNN/record/`): ~1.4 MB per set; the review
-folder goes once every action of the set is exported (the chosen take's sheet is in `vNN/check/`). Wrong
+folder goes once every action of the set is exported (the chosen take's sheet is in `<sheet>/check/`). Wrong
 frames after a conversion: fix the tool or the plan, `rebuild` (byte-identical, tested), export again; the
 clip is never bought twice. `--drop-rejected-clips` also deletes clips of takes never chosen.
 

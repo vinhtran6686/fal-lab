@@ -12,14 +12,14 @@
   ],
   "states": {
     "walk_side": {
-      "version": "v01",
-      "dir": "move/walk_side/v01",
-      "source": "move/walk_side/clip_t01.mp4",
+      "version": "t01",
+      "dir": "move/walk_side",
+      "source": "raw/walk_side_t01.mp4",
       "frames": 10,
       "fps": 12,
       "loop": true,
-      "files": "move/walk_side/v01/frames/@1x/enemy_bandit_walk_side_NN.png",
-      "sheet": "move/walk_side/v01/sheet.png",
+      "files": "move/walk_side/frames/@1x/enemy_bandit_walk_side_NN.png",
+      "sheet": "move/walk_side/sheet.png",
       "split": "video",
       "video": {
         "set": ".work/side",
@@ -29,14 +29,14 @@
       }
     },
     "walk_down_side": {
-      "version": "v01",
-      "dir": "move/walk_down_side/v01",
-      "source": "move/walk_down_side/clip_t01.mp4",
+      "version": "t01",
+      "dir": "move/walk_down_side",
+      "source": "raw/walk_down_side_t01.mp4",
       "frames": 24,
       "fps": 12,
       "loop": true,
-      "files": "move/walk_down_side/v01/frames/@1x/enemy_bandit_walk_down_side_NN.png",
-      "sheet": "move/walk_down_side/v01/sheet.png",
+      "files": "move/walk_down_side/frames/@1x/enemy_bandit_walk_down_side_NN.png",
+      "sheet": "move/walk_down_side/sheet.png",
       "split": "video",
       "video": {
         "set": ".work/down_side",
@@ -46,14 +46,14 @@
       }
     },
     "walk_down": {
-      "version": "v01",
-      "dir": "move/walk_down/v01",
-      "source": "move/walk_down/clip_t01.mp4",
+      "version": "t01",
+      "dir": "move/walk_down",
+      "source": "raw/front-walk_down_t01.mp4",
       "frames": 25,
       "fps": 12,
       "loop": true,
-      "files": "move/walk_down/v01/frames/@1x/enemy_bandit_walk_down_NN.png",
-      "sheet": "move/walk_down/v01/sheet.png",
+      "files": "move/walk_down/frames/@1x/enemy_bandit_walk_down_NN.png",
+      "sheet": "move/walk_down/sheet.png",
       "split": "video",
       "video": {
         "set": ".work/down",
@@ -63,14 +63,14 @@
       }
     },
     "walk_up_side": {
-      "version": "v01",
-      "dir": "move/walk_up_side/v01",
-      "source": "move/walk_up_side/clip_t01.mp4",
+      "version": "t01",
+      "dir": "move/walk_up_side",
+      "source": "raw/walk_up_side_t01.mp4",
       "frames": 24,
       "fps": 12,
       "loop": true,
-      "files": "move/walk_up_side/v01/frames/@1x/enemy_bandit_walk_up_side_NN.png",
-      "sheet": "move/walk_up_side/v01/sheet.png",
+      "files": "move/walk_up_side/frames/@1x/enemy_bandit_walk_up_side_NN.png",
+      "sheet": "move/walk_up_side/sheet.png",
       "split": "video",
       "video": {
         "set": ".work/up_side",
@@ -80,14 +80,14 @@
       }
     },
     "walk_up": {
-      "version": "v01",
-      "dir": "move/walk_up/v01",
-      "source": "move/walk_up/clip_t01.mp4",
+      "version": "t01",
+      "dir": "move/walk_up",
+      "source": "raw/back-walk_up_t01.mp4",
       "frames": 25,
       "fps": 12,
       "loop": true,
-      "files": "move/walk_up/v01/frames/@1x/enemy_bandit_walk_up_NN.png",
-      "sheet": "move/walk_up/v01/sheet.png",
+      "files": "move/walk_up/frames/@1x/enemy_bandit_walk_up_NN.png",
+      "sheet": "move/walk_up/sheet.png",
       "split": "video",
       "video": {
         "set": ".work/up",
@@ -97,14 +97,14 @@
       }
     },
     "attack_side": {
-      "version": "v01",
-      "dir": "attack/attack_side/v01",
-      "source": "attack/attack_side/clip_t01.mp4",
+      "version": "t01",
+      "dir": "attack/attack_side",
+      "source": "raw/attack_side_attack_t01.mp4",
       "frames": 11,
       "fps": 12,
       "loop": false,
-      "files": "attack/attack_side/v01/frames/@1x/enemy_bandit_attack_side_NN.png",
-      "sheet": "attack/attack_side/v01/sheet.png",
+      "files": "attack/attack_side/frames/@1x/enemy_bandit_attack_side_NN.png",
+      "sheet": "attack/attack_side/sheet.png",
       "split": "video",
       "video": {
         "set": ".work/side_attack",

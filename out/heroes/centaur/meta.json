@@ -12,14 +12,14 @@
   ],
   "states": {
     "idle_down_side": {
-      "version": "v01",
-      "dir": "idle/idle_down_side/v01",
-      "source": "idle/idle_down_side/clip_t01.mp4",
+      "version": "t01",
+      "dir": "idle/idle_down_side",
+      "source": "raw/idle_down_side_t01.mp4",
       "frames": 43,
       "fps": 12,
       "loop": true,
-      "files": "idle/idle_down_side/v01/frames/@1x/hero_centaur_idle_down_side_NN.png",
-      "sheet": "idle/idle_down_side/v01/sheet.png",
+      "files": "idle/idle_down_side/frames/@1x/hero_centaur_idle_down_side_NN.png",
+      "sheet": "idle/idle_down_side/sheet.png",
       "split": "video",
       "video": {
         "set": ".work/down_side",
@@ -29,14 +29,14 @@
       }
     },
     "run_down_side": {
-      "version": "v01",
-      "dir": "move/run_down_side/v01",
-      "source": "move/run_down_side/clip_t01.mp4",
+      "version": "t01",
+      "dir": "move/run_down_side",
+      "source": "raw/run_down_side_run_t01.mp4",
       "frames": 15,
       "fps": 12,
       "loop": true,
-      "files": "move/run_down_side/v01/frames/@1x/hero_centaur_run_down_side_NN.png",
-      "sheet": "move/run_down_side/v01/sheet.png",
+      "files": "move/run_down_side/frames/@1x/hero_centaur_run_down_side_NN.png",
+      "sheet": "move/run_down_side/sheet.png",
       "split": "video",
       "video": {
         "set": ".work/down_side_run",
@@ -46,14 +46,14 @@
       }
     },
     "attack_down_side": {
-      "version": "v01",
-      "dir": "attack/attack_down_side/v01",
-      "source": "attack/attack_down_side/clip_t01.mp4",
+      "version": "t01",
+      "dir": "attack/attack_down_side",
+      "source": "raw/attack_down_side_t01.mp4",
       "frames": 8,
       "fps": 12,
       "loop": false,
-      "files": "attack/attack_down_side/v01/frames/@1x/hero_centaur_attack_down_side_NN.png",
-      "sheet": "attack/attack_down_side/v01/sheet.png",
+      "files": "attack/attack_down_side/frames/@1x/hero_centaur_attack_down_side_NN.png",
+      "sheet": "attack/attack_down_side/sheet.png",
       "split": "video",
       "video": {
         "set": ".work/down_side",
@@ -64,14 +64,14 @@
       "hit_frame": 4
     },
     "death_down_side": {
-      "version": "v01",
-      "dir": "death/death_down_side/v01",
-      "source": "death/death_down_side/clip_t01.mp4",
+      "version": "t01",
+      "dir": "death/death_down_side",
+      "source": "raw/death_down_side_t01.mp4",
       "frames": 11,
       "fps": 12,
       "loop": false,
-      "files": "death/death_down_side/v01/frames/@1x/hero_centaur_death_down_side_NN.png",
-      "sheet": "death/death_down_side/v01/sheet.png",
+      "files": "death/death_down_side/frames/@1x/hero_centaur_death_down_side_NN.png",
+      "sheet": "death/death_down_side/sheet.png",
       "split": "video",
       "video": {
         "set": ".work/down_side",

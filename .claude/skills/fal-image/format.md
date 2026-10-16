@@ -72,27 +72,27 @@ The view prompts are in the class file ("Standard views"). Make and approve them
 then side, front, back, up_side (each with `--ref <master>`), then the icon.
 
 ## 4. Files, folders and versions (fixed)
-One folder per asset. A person opens at most 4 levels: category, sheet, version. `.work/` is for tools only.
+One folder per asset (`out/<class>/<id>/`: enemies, heroes, towers ...). Sources keep every version; state
+folders keep only the one final version; `.work/` holds the tools' intermediate data and is not in git.
 ```
-out/<kind>s/<id>/                         e.g. out/enemies/bandit/
-  brief.md                                request, class/level/archetype, filled slots, approved stills
+out/<class>/<id>/                         e.g. out/heroes/centaur/
+  brief.md                                request, class/level, filled slots, approved stills and poses
   history.md                              one row per still or video take: version, score, verdict, issue, change
-  meta.json                               engine metadata: one canvas, pivot and body height for every action
-  stills/                                 INPUT stills (this skill): master_v02.png, view_side_v01.png ... (+ .json prompt)
-  move/                                   one folder per category (scripts/asset_layout.py)
-    walk_side/                            one folder per sheet
-      clip_t01.mp4 (+ .json)              SOURCE: the video the frames were cut from (.json = model, prompt, cost)
-      v01/                                OUTPUT: one folder per export; the highest vNN is the final one
-        preview.gif                       look here first
-        sheet.png                         horizontal sheet @2x
-        frames/@2x/enemy_bandit_walk_side_01.png ...   frames for the game (also @1x)
-        check/                            motioncheck.txt, transitions.png, legcheck.png, take_review.png
-    walk_down_side/ walk_down/ walk_up_side/ walk_up/
-  attack/attack_side/                     same layout
-  death/death_side/
-  ui/icon/v01/                            packed icon (sprite_pack.py from stills/icon_vNN.png)
-  .work/                                  tools only (video-sprite sets, pruned to their decisions)
+  meta.json                               engine metadata: one canvas, pivot and body size for every action
+  stills/                                 SOURCE images (this skill), every version: master_v03.png, pose_run_v01.png ... (+ .json)
+  raw/                                    SOURCE videos (video-sprite), every take, saved as soon as the model returns
+    run_down_side_run_t02.mp4 (+ .json)   <action>_<set>_tNN: the .json holds model, prompt, cost, request id
+  idle/ move/ attack/ death/ ...          STATE folders (category, scripts/asset_layout.py): ONE final version each
+    move/run_down_side/                   one folder per sheet
+      preview.gif                         look here first
+      sheet.png                           horizontal sheet @2x
+      frames/@2x/hero_centaur_run_down_side_01.png ...   frames for the game (also @1x)
+      check/                              motioncheck.txt, transitions.png, legcheck.png, take_review.png
+  ui/icon/                                packed icon (sprite_pack.py from stills/icon_vNN.png)
+  .work/                                  tools only, not in git (video-sprite sets pruned to their decisions)
 ```
+Re-exporting a sheet replaces its state folder; the take it came from is named in `meta.json` (`version`,
+`source`), and every other take stays in `raw/` (any of them can be accepted and exported later).
 Categories: `move` (walk, run), `attack` (attack, cast), `death`, `hurt`, `idle`, `ui` (icon), `projectile`.
 - Still names: `<name>_vNN.png`, made by `gen_image.py --name <name> --versioned --out <asset>/stills`.
 - Frame names keep kind and id (`enemy_bandit_walk_side_03.png`) so they are unique inside a game project.
