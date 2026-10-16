@@ -1,0 +1,480 @@
+{
+ "object": "hero_ignus_attack",
+ "kind": "animation",
+ "fps": 30,
+ "exported": "2026-10-16T06:24:57.865Z",
+ "frames": {
+  "hero_elemental_0014": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    15,
+    33
+   ],
+   "content": [
+    51,
+    64
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    75,
+    469,
+    51,
+    64
+   ],
+   "alias_of": null,
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0015": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    15,
+    33
+   ],
+   "content": [
+    51,
+    64
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    75,
+    469,
+    51,
+    64
+   ],
+   "alias_of": "hero_elemental_0014",
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0016": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    11,
+    35
+   ],
+   "content": [
+    57,
+    62
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    624,
+    6,
+    57,
+    62
+   ],
+   "alias_of": null,
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0017": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    11,
+    35
+   ],
+   "content": [
+    57,
+    62
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    624,
+    6,
+    57,
+    62
+   ],
+   "alias_of": "hero_elemental_0016",
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0018": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    11,
+    34
+   ],
+   "content": [
+    57,
+    63
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    586,
+    74,
+    57,
+    63
+   ],
+   "alias_of": null,
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0019": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    11,
+    34
+   ],
+   "content": [
+    57,
+    63
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    586,
+    74,
+    57,
+    63
+   ],
+   "alias_of": "hero_elemental_0018",
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0020": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    10,
+    35
+   ],
+   "content": [
+    58,
+    62
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    496,
+    6,
+    58,
+    62
+   ],
+   "alias_of": null,
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0021": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    10,
+    35
+   ],
+   "content": [
+    58,
+    62
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    496,
+    6,
+    58,
+    62
+   ],
+   "alias_of": "hero_elemental_0020",
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0022": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    22,
+    37
+   ],
+   "content": [
+    47,
+    60
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    583,
+    156,
+    47,
+    60
+   ],
+   "alias_of": null,
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0023": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    22,
+    37
+   ],
+   "content": [
+    47,
+    60
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    583,
+    156,
+    47,
+    60
+   ],
+   "alias_of": "hero_elemental_0022",
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0024": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    22,
+    39
+   ],
+   "content": [
+    48,
+    58
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    78,
+    216,
+    48,
+    58
+   ],
+   "alias_of": null,
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0025": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    22,
+    39
+   ],
+   "content": [
+    48,
+    58
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    78,
+    216,
+    48,
+    58
+   ],
+   "alias_of": "hero_elemental_0024",
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0026": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    22,
+    39
+   ],
+   "content": [
+    47,
+    58
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    689,
+    156,
+    47,
+    58
+   ],
+   "alias_of": null,
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0027": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    22,
+    39
+   ],
+   "content": [
+    47,
+    58
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    689,
+    156,
+    47,
+    58
+   ],
+   "alias_of": "hero_elemental_0026",
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0028": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    22,
+    39
+   ],
+   "content": [
+    49,
+    58
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    310,
+    156,
+    49,
+    58
+   ],
+   "alias_of": null,
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0029": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    22,
+    39
+   ],
+   "content": [
+    49,
+    58
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    310,
+    156,
+    49,
+    58
+   ],
+   "alias_of": "hero_elemental_0028",
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0030": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    22,
+    39
+   ],
+   "content": [
+    49,
+    58
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    365,
+    156,
+    49,
+    58
+   ],
+   "alias_of": null,
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0031": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    22,
+    39
+   ],
+   "content": [
+    49,
+    58
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    365,
+    156,
+    49,
+    58
+   ],
+   "alias_of": "hero_elemental_0030",
+   "group": "go_hero_ignus"
+  },
+  "hero_elemental_0032": {
+   "size": [
+    86,
+    102
+   ],
+   "trim_offset": [
+    15,
+    33
+   ],
+   "content": [
+    51,
+    64
+   ],
+   "atlas": "go_hero_ignus-1.png",
+   "quad_in_atlas": [
+    72,
+    834,
+    51,
+    64
+   ],
+   "alias_of": null,
+   "group": "go_hero_ignus"
+  }
+ },
+ "animations": {
+  "hero_ignus_attack": {
+   "group": "go_hero_ignus",
+   "def": {
+    "from": 14,
+    "prefix": "hero_elemental",
+    "to": 32
+   },
+   "layers": [
+    [
+     "hero_elemental_0014",
+     "hero_elemental_0015",
+     "hero_elemental_0016",
+     "hero_elemental_0017",
+     "hero_elemental_0018",
+     "hero_elemental_0019",
+     "hero_elemental_0020",
+     "hero_elemental_0021",
+     "hero_elemental_0022",
+     "hero_elemental_0023",
+     "hero_elemental_0024",
+     "hero_elemental_0025",
+     "hero_elemental_0026",
+     "hero_elemental_0027",
+     "hero_elemental_0028",
+     "hero_elemental_0029",
+     "hero_elemental_0030",
+     "hero_elemental_0031",
+     "hero_elemental_0032"
+    ]
+   ]
+  }
+ },
+ "sounds": [],
+ "missing_frames": []
+}

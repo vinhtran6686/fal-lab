@@ -1,0 +1,16 @@
+out\enemies\bandit\move\walk_side\v01  frames=10  cyclic
+  F  height  ground  torso_x  change_in
+  1     147     226     21.2        1.5
+  2     143     225     24.6        2.8
+  3     140     226     24.8        1.9
+  4     140     225     22.5        2.4
+  5     143     225     15.9        2.9
+  6     143     226     11.1        2.9
+  7     142     225     11.7        1.7
+  8     141     225     11.3        1.6
+  9     145     225     12.6        2.9
+ 10     147     226     19.0        2.5
+bob (height range): 7px = 4.8% of the body; lowest F3, highest F1
+loop 8->1 style check: 10->1 change 1.5 vs median 2.5
+flags:
+  none (static checks only: timing and foot slide are unverified until seen moving)

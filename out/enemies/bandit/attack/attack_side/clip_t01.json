@@ -1,0 +1,27 @@
+{
+  "prompt": "The same stocky bald bandit with a big round belly and a shiny shaved head, a black cloth mask covering the lower half of the face so only two narrow eyes show, wearing a black sleeveless tunic, baggy black trousers, a dark red cloth sash tied around the belly, brown leather wrist wraps and boots, holding a large curved single-edged broadsword (dao) with a wide steel blade in the right hand, drawn with chibi-like squat proportions: an oversized head about one third of the total height, a huge round belly, very short thick legs and big hands, starting and ending facing RIGHT, starts in their ready stance, plants both feet and spins ONE full 360-degree turn in place around their own center like a whirlwind, the broadsword held out straight at arm's length in the right hand so its curved blade sweeps one full horizontal circle around their body; during the spin the body turns through the back view and the front view, then stops facing RIGHT again in the exact same ready stance as the start and holds still. One fast spin only; the feet stay on the same spot and the body stays centered in the frame, no jumping, no stepping away, no leaving the frame. The clip starts AND ends in exactly the same pose as the still. The weapon stays one single broadsword of the same length and shape, always in the right hand. Constant character size. No motion trails, no slash or whirlwind effects, no sparks, no dust, no effects. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aae5640/Zu7nlB9K7THFLcGxtMdcN_input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aae5640/Iw4ZGy_rFgkA6wWBbM6fp_input.png"
+  },
+  "seconds": 5,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.075,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\enemies\\bandit\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "lastFrame": "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\enemies\\bandit\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "requestId": "01a13a09-522c-7172-b0f7-9d00c2374772",
+  "seconds_elapsed": 4.1,
+  "source_url": "https://v3b.fal.media/files/b/0aae5641/4lLBwdJ0Oml7nKyRikZ3W_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

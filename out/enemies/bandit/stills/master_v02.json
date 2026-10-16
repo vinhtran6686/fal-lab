@@ -1,0 +1,12 @@
+{
+  "prompt": "Single game enemy sprite: a stocky bald bandit with a big round belly and a shiny shaved head, a black cloth mask covering the lower half of the face so only two narrow eyes show, wearing a black sleeveless tunic, baggy black trousers, a dark red cloth sash tied around the belly, brown leather wrist wraps and boots, holding a large curved single-edged broadsword (dao) with a wide steel blade in the right hand. Chibi-like squat proportions: an oversized head about one third of the total height, a huge round belly, very short thick legs, big hands. The broadsword is held up in front of the body, blade pointing up and forward, clearly separated from the body and legs so the silhouette reads at small size. Side profile view: the head is on the RIGHT side of the image facing right, as if walking to the right. Neutral ready pose, full body, centered, filling about 70% of the frame. Background: one flat solid pure magenta color (#FF00FF) everywhere, no gradient, no ground, no shadow, no scenery, no text, no border. Do not use magenta or pink anywhere on the subject. Flat vector-style 2D cartoon game art for a top-down fantasy tower defense game. Thick, uniform near-black outlines around every shape and major inner detail. Flat color fills with only 2-3 tone hard-edged cel shading: no gradients, no airbrush, no glow, no painterly texture, no realistic detail, no fur, no noise. Muted earthy palette: stone grey, olive green, khaki, rust brown, dull leather and bone, with at most one small saturated accent color per asset. Simple, chunky, readable shapes that still read clearly when shrunk to 64 pixels. Characters are squat and stocky with an oversized head, hands and weapon. High top-down camera tilted about 60 degrees: the top of the head and shoulders are visible. Light comes from the top-left.",
+  "model": "openai/gpt-image-2",
+  "quality": "low",
+  "size": "1024x1024",
+  "refs": [],
+  "transparent": false,
+  "seconds": 15.3,
+  "cost_usd": 0.0123,
+  "cost_is_estimate": true,
+  "source_url": "https://v3b.fal.media/files/b/0aae31ad/Lti_5tHjoteyshatpvCyF_imRgOpZS.png"
+}

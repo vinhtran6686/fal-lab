@@ -4,23 +4,43 @@ Every class file in `classes/` (enemy, tower, hero, ...) inherits everything her
 rules but must not change this frame. This skill makes **stills**: the approved master of a character
 and its standard views, plus icons and other single images. **Animation is never drawn here**: the
 `video-sprite` skill animates the approved stills (image-to-video) and exports the frames into the same
-asset folder. Style was derived from the reference pack in `ref/assets/` (read-only, for looking only:
-never send it to the API, never copy its designs, never name the game it comes from).
+asset folder. Style references live in `ref/` (`ref/assets/`, `ref/hero/`; read-only, for looking only:
+never send them to the API, never copy their designs, never name the game they come from).
 
 ## 1. Style block `{STYLE}` (fixed, append to every prompt)
+The block fixes the **design principles** (how things are drawn), not a look: body type, costume, armour,
+weapon, colours and which parts are exaggerated belong to each character's `{design}`, so a robed mage, an
+armoured knight and a fire elemental can all share it.
 
-> Flat vector-style 2D cartoon game art for a top-down fantasy tower defense game.
-> Thick, uniform near-black outlines around every shape and major inner detail.
-> Flat color fills with only 2-3 tone hard-edged cel shading: no gradients, no airbrush,
-> no glow, no painterly texture, no realistic detail, no fur, no noise.
-> Muted earthy palette: stone grey, olive green, khaki, rust brown, dull leather and bone,
-> with at most one small saturated accent color per asset.
-> Simple, chunky, readable shapes that still read clearly when shrunk to 64 pixels.
-> Characters are squat and stocky with an oversized head, hands and weapon.
-> High top-down camera tilted about 60 degrees: the top of the head and shoulders are visible.
-> Light comes from the top-left.
+> Stylized 2D vector cartoon game art for a top-down fantasy tower defense game, designed to read at about
+> 64 pixels tall.
+> Simple design: big clear shapes and a strong silhouette; small details are left out or merged into larger
+> shapes; faces, hands, armour and clothing are suggested with a few lines, never rendered in fine detail.
+> Stylized, exaggerated cartoon proportions, not realistic anatomy (about 2.5 to 4 heads tall): the parts
+> that express the character's role are enlarged and the rest is shrunk, so the silhouette reads at 64 pixels.
+> Colour: flat solid fills only, no gradients, no airbrush, no painterly texture, no noise, no realistic
+> rendering. Volume and shadow come from 2-3 hard-edged tones of the same colour (shadow, base, light), plus a
+> few small highlight shapes.
+> Thick clean outlines in a dark shade of the neighbouring colour.
+> Effects (fire, ice, magic, poison, glow, energy) are drawn as stacked layers of flat single-colour vector
+> shapes with an outline that follows the effect's form (flame tongues, ice shards, drips, sparks), never as
+> soft blur or gradient glow.
+> High top-down camera tilted about 60 degrees; light comes from the top-left.
 
-If `style.md` exists at the project root it replaces this block.
+Why each line (from `ref/hero`, a 64 px fire elemental, studied 2026-10-16): the face is a brow line and an
+eye slit; hands are mitten shapes; muscles are 1-2 lines; the body is 3 tones of one orange with a few light
+specks; the outline is dark brown, not black; the fire around it is flat yellow layers with flame-tongue
+edges; it is about 3.8 heads tall and top-heavy (huge shoulders and arms, small head, short legs), its
+exaggeration chosen for its role. It is vector art drawn large and scaled down (hundreds of colours,
+anti-aliased edges), **not pixel art**: never write "pixel art" in a prompt (the model then draws fake
+pixels that blur when the tools scale them).
+
+`{design}` carries what the style leaves open: body type and the parts it exaggerates ("top-heavy: huge
+shoulders and arms, small head, short legs"), costume and gear, the weapon and the hand that holds it, the
+dominant colour family and one accent, any effect and its colours ("yellow flame layers around an orange body").
+
+If `style.md` exists at the project root it replaces this block. Assets made before 2026-10-16 (bandit) used
+the previous block (muted earthy palette, near-black outlines, oversized chibi head); restyle them only on request.
 
 ## 2. Generation rules (fixed; tested 2026-10-13/14)
 | Rule | Value | Why |
@@ -102,6 +122,17 @@ Game-ready frames (the same for every action of an asset):
 **`--auto`**: as above, but approve the master and the views yourself (score >= 8), then continue with
 `video-sprite` (it still asks before paying for video unless the request already approved the cost).
 
+**Restyle a character** (same character, new look: "restyle bandit sang pixel art", a new `style.md`):
+1. Write the new style block (into `style.md` if it should apply to every asset, else into `brief.md`
+   as `{STYLE}` for this character) and record the request in `brief.md`.
+2. New master: `--ref <current approved master>`, prompt starts "Use the reference image for the character
+   design (shape, gear, colours, proportions, the hand that holds the weapon); redraw it ONLY in the new
+   style described", then `{design}`, the master view, `{BG}`, the new `{STYLE}`. Next free `master_vNN`;
+   old stills stay. Stop for approval (unless `--auto`).
+3. Every standard view again from the NEW master (§3), next free versions; approve them.
+4. Update `brief.md` (approved stills) and `history.md`; animations are then redone by `video-sprite`
+   from the new stills (paid clips; old sheets stay as earlier versions).
+
 **Edit an existing character** (e.g. "đổi đao thành rìu"): changing the master or `{design}` affects every
 view and every animation: confirm with the user first, then regenerate the stills, then the animations.
 Fixing one view only (e.g. the back view shows the face): generate the next version of that still, and
@@ -112,5 +143,7 @@ re-animate only the actions that start from it.
 - The view is exact: side = true profile facing right (one eye); front = mirror-symmetric, face visible;
   back = no face; 3/4 front faces down-right; 3/4 back faces up-right, face hidden.
 - Neutral standing ready pose, full body and weapon inside the frame with margin, nothing touching the edges.
-- Style: thick dark outlines, flat 2-3 tone shading, muted palette, no gradients, glow or fur.
+- Style (§1): simple big shapes and a clear silhouette at 64 px; no fine detail on face, hands or clothes;
+  stylized proportions as `{design}` says; flat fills with 2-3 hard tones per colour, no gradient or blur;
+  thick outlines in a dark shade of the neighbouring colour; effects as flat layered shapes, not glow.
 - Flat magenta background only; no magenta or pink on the subject, no ground, shadow or text.

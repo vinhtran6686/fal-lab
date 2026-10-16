@@ -1,0 +1,21 @@
+out\heroes\centaur\move\run_down_side\v01  frames=15  cyclic
+  F  height  ground  torso_x  change_in
+  1     134     206    -21.3        0.8
+  2     141     213    -21.0        1.0
+  3     141     216    -21.6        1.4
+  4     135     216    -22.3        2.0
+  5     139     225    -21.5        1.7
+  6     134     219    -20.3        1.7
+  7     126     205    -21.5        1.9
+  8     133     204    -22.0        1.5
+  9     141     212    -21.2        0.8
+ 10     142     216    -21.7        1.6
+ 11     135     216    -22.6        2.1
+ 12     138     225    -21.5        1.8
+ 13     136     222    -20.2        1.6
+ 14     128     208    -21.4        1.9
+ 15     130     204    -21.7        1.5
+bob (height range): 16px = 11.3% of the body; lowest F7, highest F10
+loop 8->1 style check: 15->1 change 0.8 vs median 1.6
+flags:
+GROUND  lowest pixel varies 21px; fine for jumps/deaths, not for planted feet

@@ -1,0 +1,26 @@
+{
+  "prompt": "The same heavy-metal centaur warrior: the upper body of a broad-shouldered man rising from the body of a strong four-legged horse, top-heavy with huge shoulders and arms, a small head and a compact horse body on sturdy short legs with big hooves; ash-grey skin and a darker charcoal-grey horse coat and tail; a few pieces of dark gunmetal armour only: one big spiked shoulder plate, a simple chest strap and plates on the horse's chest; large heavy steel gauntlets on both hands (a key feature); a long war scythe with a dark iron haft and a bright polished steel curved blade with a cold blue-white edge, clearly brighter than the grey skin; the outlines are dark purple and a small violet accent glows in the eyes and on the blade's edge, facing diagonally toward the BOTTOM-RIGHT of the screen (three-quarter front view) the entire time and never turning around, gallops in place like a looping game run cycle on a treadmill: a full four-legged gallop with the front legs reaching forward, the hind legs pushing back and a brief flight phase with all hooves off the ground, the horse body rising and falling with each stride, the human upper body leaning forward, the tail streaming back; the scythe stays held DIAGONALLY ACROSS THE BODY WITH BOTH GAUNTLETED HANDS the whole time, the curved blade pointing FORWARD in front of him. The character stays in the same spot and never moves across the frame; the hooves land on the same ground line. The clip starts AND ends in exactly the same pose as the still. Constant character size. No dust, no speed lines, no motion trails, no effects. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aae9787/2cmpQhkMfCmoZGa4tZX3S_input.png"
+  },
+  "seconds": 5,
+  "resolution": "480P",
+  "size": [
+    1024,
+    1024
+  ],
+  "estimateUsd": 0.075,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\heroes\\centaur\\.work\\down_side_run\\actions\\run\\job\\input.png",
+  "lastFrame": null,
+  "requestId": "01a143ff-3470-7e61-a3ca-5f4a1432fbf5",
+  "seconds_elapsed": 3.2,
+  "source_url": "https://v3b.fal.media/files/b/0aae9788/X0uTVyJMBHehDxzLncob6_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

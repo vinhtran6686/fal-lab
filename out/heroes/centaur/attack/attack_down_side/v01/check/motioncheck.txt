@@ -1,0 +1,13 @@
+out\heroes\centaur\attack\attack_down_side\v01  frames=8  one-shot
+  F  height  ground  torso_x  change_in
+  1     138     225     15.0 
+  2     162     225     -4.5        2.6
+  3     158     225    -20.9        2.4
+  4     186     226     69.9        6.4
+  5     119     225      2.5        6.3
+  6     108     225     23.4        3.2
+  7     142     225     30.0        2.9
+  8     139     225     15.2        1.7
+bob (height range): 78px = 41.9% of the body; lowest F6, highest F4
+flags:
+SPIKE   3->4: change 6.4 vs median 2.9; check pose continuity

@@ -1,0 +1,24 @@
+time,file,model,quality,size,transparent,seconds,cost_usd,approx
+2026-10-14 17:21:29,out/enemies/bandit/stills/view_back_v01.png,gpt-image-2,low,1024x1024,False,28.5,0.0127,True
+2026-10-14 17:21:35,out/enemies/bandit/stills/view_up_side_v01.png,gpt-image-2,low,1024x1024,False,35.4,0.0127,True
+2026-10-14 17:32:52,out/enemies/bandit/.work/down/actions/front-walk/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,5.0,0.0750,True
+2026-10-14 17:32:56,out/enemies/bandit/.work/down_side/actions/walk/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,6.5,0.0750,True
+2026-10-14 17:32:58,out/enemies/bandit/.work/up_side/actions/walk/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,8.2,0.0750,True
+2026-10-14 17:33:17,out/enemies/bandit/.work/up/actions/back-walk/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,9.1,0.0750,True
+2026-10-14 17:50:56,out/enemies/bandit/.work/side_attack/actions/attack/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,4.1,0.0750,True
+2026-10-16 14:46:21,out/heroes/centaur/stills/master_v01.png,gpt-image-2,low,1024x1024,False,18.0,0.0131,True
+2026-10-16 14:46:24,out/heroes/centaur/stills/master_v02.png,gpt-image-2,low,1024x1024,False,18.0,0.0131,True
+2026-10-16 14:47:05,out/heroes/centaur/stills/master_v03.png,gpt-image-2,low,1024x1024,False,17.6,0.0136,True
+2026-10-16 14:47:07,out/heroes/centaur/stills/master_v04.png,gpt-image-2,low,1024x1024,False,17.6,0.0136,True
+2026-10-16 15:22:01,out/heroes/centaur/stills/pose_run_v01.png,gpt-image-2,low,1024x1024,False,32.5,0.0138,True
+2026-10-16 15:22:03,out/heroes/centaur/stills/pose_run_v02.png,gpt-image-2,low,1024x1024,False,32.5,0.0138,True
+2026-10-16 15:38:50,out/heroes/centaur/stills/pose_attack_v01.png,gpt-image-2,low,1024x1024,False,24.2,0.0138,True
+2026-10-16 15:38:53,out/heroes/centaur/stills/pose_attack_v02.png,gpt-image-2,low,1024x1024,False,24.2,0.0138,True
+2026-10-16 15:38:51,out/heroes/centaur/stills/pose_death_v01.png,gpt-image-2,low,1024x1024,False,25.0,0.0138,True
+2026-10-16 15:38:55,out/heroes/centaur/stills/pose_death_v02.png,gpt-image-2,low,1024x1024,False,25.0,0.0138,True
+2026-10-16 15:47:04,out/heroes/centaur/stills/pose_death_v03.png,gpt-image-2,low,1024x1024,False,20.7,0.0139,True
+2026-10-16 15:47:06,out/heroes/centaur/stills/pose_death_v04.png,gpt-image-2,low,1024x1024,False,20.7,0.0139,True
+2026-10-16 16:11:16,out/heroes/centaur/.work/down_side/actions/idle/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.5,0.0750,True
+2026-10-16 16:11:28,out/heroes/centaur/.work/down_side/actions/attack/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.2,0.0750,True
+2026-10-16 16:11:40,out/heroes/centaur/.work/down_side/actions/death/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,4.2,0.0750,True
+2026-10-16 16:16:06,out/heroes/centaur/.work/down_side_run/actions/run/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.2,0.0750,True

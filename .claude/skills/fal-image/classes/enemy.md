@@ -10,7 +10,7 @@ by the `video-sprite` skill from those stills, with the Level 1 values below.
 | Slot | Meaning | Example (bandit request) |
 |---|---|---|
 | `{id}` | short snake_case id | `bandit` |
-| `{design}` | one dense sentence that locks the look: body type, proportions, colors, gear, the hand that holds the weapon, distinctive marks. Reused verbatim in every prompt (stills and video) | `a stocky bald bandit with a big round belly ..., holding a large curved single-edged broadsword (dao) ... in the right hand, drawn with chibi-like squat proportions ...` |
+| `{design}` | one dense sentence that locks the look (format.md §1 leaves these open): body type and the parts it exaggerates, costume and gear, the weapon and the hand that holds it, the dominant colour family and one accent, any effect drawn as flat layers. Reused verbatim in every prompt (stills and video) | `a stocky bald bandit with a big round belly ..., holding a large curved single-edged broadsword (dao) ... in the right hand, drawn with chibi-like squat proportions ...` |
 | `{body}` | how it moves: biped / quadruped / multi-legged / blob / flyer (flyers: video-sprite class `flying`) | `biped` |
 | `{attack}` | the attack motion (user's words if given), written into the video prompt | `a whirlwind spin in place with the broadsword held out` |
 | `{death}` | how it dies (user's words if given), written into the video prompt | `knocked backward off his feet, the sword flung away` |
@@ -22,7 +22,7 @@ by the `video-sprite` skill from those stills, with the Level 1 values below.
 | Canvas | **256 x 128 at 1x (512 x 256 at @2x) for every action**: move, attack, death, hurt, idle. One frame size and one pivot for the whole enemy, wide enough for weapon swings and a body lying flat |
 | Body height | **69 px at 1x (138 px at @2x)** in every action (video-sprite `--target-height 138`; the first export records it in `meta.json`, later exports are matched to it) |
 | Pivot | feet, x 0.5, y 0.88 of the canvas |
-| Look | simple, few details, one accent color; must read at 48 px |
+| Look | the style principles of format.md §1; must read at 48-64 px |
 | Archetypes | `melee` (fights soldiers that block the road), `ranged` (shoots from a distance) |
 | Move speed | `move_speed` in `meta.json`, px/s at 1x: a default from the stride, tuned in the playtest (feet must not slide) |
 

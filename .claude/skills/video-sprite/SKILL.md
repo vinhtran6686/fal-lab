@@ -45,7 +45,7 @@ bigger or smaller than another:
   sheet with a larger `--cell` (all actions move to the new canvas together).
 - **Body**: every set is finished at `--target-height 138` (Level 1 body height at @2x); the first export
   records the measured body height (`body_height_2x`) and later exports are rescaled when they differ by
-  more than 4% (bandit: the attack clip drew him 5% smaller, rescaled x1.048).
+  more than 4% by silhouette area (a height-based check misread weapons and was replaced, 2026-10-16).
 - **Pivot**: feet at x 0.5, y 0.88; one fixed transform per clip, so bob, lean, a fall or a spin are kept.
 
 ## Views and sets (top-down game, 8 directions from 5 views)
@@ -80,6 +80,7 @@ attack, death, hurt, idle, icon -> ui).
    **Pass** (8-10, coherent motion, same character), **Needs Revision** (5-7, name the frames, e.g.
    `F5-F10 pink smear`), **Fail** (1-4). Fix: `accept --window` (a gate that misreads a correct motion),
    `retake --fix <clause id or sentence>` (clause ids in `references/motion-prompts.md`), or plan options.
+   Default mode: stop here and show the user (see "Run modes"); `--auto` continues.
 6. **Export** each accepted action with `video_to_sheet.py` (one canvas, one body size, see above). Each
    export is a new `vNN`; the clip moves to `A/<category>/<sheet>/clip_tNN.mp4`. Log one row per take in
    `history.md` (`model` column = the fal model).
@@ -88,11 +89,61 @@ attack, death, hurt, idle, icon -> ui).
 8. **Prune** every set once its actions are exported (always; no need to ask).
 Report: the final `vNN` of every sheet, the model and takes, the cost (`python scripts/cost_report.py --today`).
 
+## Run modes (like fal-image: preview by default)
+Read the mode from the request. Every paid clip still needs the cost agreed first (Workflow step 4).
+- **Default: preview checkpoint.** After `run` + `review`, do your own review (Pass / Needs Revision / Fail)
+  but **do not export**. Stop and show the user, per action: the clip
+  (`A/.work/<set>/actions/<action>/takes/tNN/media/clip.mp4`), the review sheet
+  (`review/<action>/tNN-sheet.png`), your verdict with the frames at fault, and the next options. Wait.
+  - "ok" / "chốt" → accept (with `--window` if a gate misread it), export, check, prune, log.
+  - Natural-language feedback ("liềm bị méo khi chạy", "đánh chậm quá", "ngựa không phi") → **Retake
+    translation** below, show the user the new prompt lines and the cost of the retake, then run it and come
+    back to this checkpoint with the new take next to the old one.
+- **`--auto`**: no stop after review: accept takes that score >= 8 yourself, retake the others with your own
+  translated fix up to `--max-takes`, then export, check and prune, and report. The cost must still be
+  agreed (the request can carry it: "--auto, tối đa 0.5 USD").
+- **Re-export only** (frames cut wrong, loop length, smear colour, size): free, no checkpoint needed
+  (`rebuild` + export), see "Changing existing sprites".
+
+### Retake translation (user's words -> a prompt h3-max-turbo follows)
+Turn the feedback into short, concrete, physical sentences; keep the rest of the prompt unchanged.
+1. Name the defect and where it is ("frames 20-40 of the run: the scythe blade bends and changes length").
+2. Write what must STAY, in absolute terms, first: "The scythe keeps exactly the same rigid shape and length
+   in every frame: a straight dark iron haft and one curved steel blade; it never bends, stretches or melts."
+3. Then the corrected motion, body part by body part, with directions on screen and hand positions ("both
+   gauntlets stay on the haft, the blade stays in front of his chest pointing toward the bottom-right").
+4. Add the matching clause ids from `references/motion-prompts.md` (`weapon-shape`, `no-blur`,
+   `fluid-motion`, `visible-motion`, `steady-cycle`, `never-turn`, `identity-lock` ...).
+5. Speed/amplitude words that work: "fast", "powerful", "big clearly visible", "full", "one"; avoid weak
+   ones ("slightly", "gently", "subtle") for actions, and never ask for slow motion. For a motion the model
+   keeps too small, describe the extreme poses ("the front hooves reach far forward, then the hind hooves
+   push far back").
+6. h3-max-turbo habits seen so far: lowers or swings a weapon held upright (say "held upright the whole
+   time"), warps long thin weapons in fast motion (rigid-weapon sentence + `no-blur`), adds pink/violet
+   smears on fast blades (`no-blur`), plays one-shots slowly (the retime handles it), keeps idles very still
+   (ask for "clearly visible breathing" and one named secondary motion).
+Apply: `sprite_set.py retake --plan ... --action <a> --fix "<sentence>"` (repeatable; clause ids allowed),
+and/or edit the action's `motion` in `set_plan.json` for a bigger change; then `run` (1 clip per take).
+Log the user's words and the translated fix in `history.md`.
+
+## Changing existing sprites
+| Request | What to do | Cost |
+|---|---|---|
+| Frames cut wrong (loop length, timing, smear colour) | edit `set_plan.json` / export flags, `video_prune.py rebuild`, export again (new `vNN`) | free |
+| Motion wrong (pose, weapon, turned head) | `retake --fix ...`, `run`, review, export | 1 clip per take |
+| New stills (restyle, new design, fixed view) from `fal-image` | `make_master.py` from the new still into a NEW folder (`A/.work/masters/<view>_v2`), plan a NEW set (`A/.work/<set>_v2`; plan refuses an existing folder), run, export: a new `vNN` on the SAME canvas and body height (`meta.json` stays) | 1 clip per action |
+Old versions and their clips stay; the highest `vNN` is the final one.
+
 ## Per-action options in `set_plan.json` (ours, see `VENDORED.md`)
 - `"spins": true`: the body turns on purpose (a whirlwind spin attack); the prompt locks the facing only at
   the start and end. Also set `gates.turn.enabled` to false. Example: bandit `attack_side`.
 - `"gaitStride": "period"`: a walk whose `loop-report.json` says `ambiguous` and whose leg check shows both
   steps inside T: loop T instead of 2T (half the frames). `"double"` forces 2T. Then `rebuild` and export.
+- `"endStill": "<path from the set folder>"`: pin the clip's LAST frame to another approved still (a death
+  ending in the approved lying pose): the still is placed on the start frame's canvas (`job/end.png`).
+- `"registerArgs": [...]`: extra `register_clip.py apply` flags, e.g. `["--max-anchor-error", "100"]` when the
+  stance anchor misreads a quadruped with a weapon touching the ground; check by hand that the clip's frame 0
+  matches the input framing first (centaur, 2026-10-16).
 - `timing` of one-shots: `{"mode": "auto", "durationMs": 700, "keys": {"hit": {"at": 0.4, "holdMs": 80}}}`.
 Lessons from bandit (2026-10-14): on 3/4, front and back walks the `feet` gate flags the lifted foot of each
 step (5-7% vs 5%): check the sheet and `accept --window 0:<frames>`; a spin fails `area` (the held-out blade);

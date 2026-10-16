@@ -17,8 +17,9 @@ What it does:
      --cell 256x128 at 1x for Level 1 enemies): move, attack, death ... share the same frame size and
      pivot, so the engine never rescales one action against another. A state that does not fit is
      refused (never shrunk): re-export the whole asset with a larger --cell
-  3. ONE body size: the first export records the body height (@2x, the largest solid blob, median of the
-     rest frames); every later export is compared with it and rescaled when it differs by more than 4%
+  3. ONE body size: every set is finished at the same --target-height; the first export also records the
+     silhouette area of the rest frames (@2x, weapon included: barely changes with the pose) and a later
+     export is rescaled only when its linear size (sqrt of the area ratio) differs by more than 4%
   4. places every frame with one fixed transform: the feet anchor on the pivot (x 0.5, y 0.88); no
      per-frame crop or re-centering, so registered motion (bob, lean, a fall, a spin) is kept
   5. moves the clip out of the set to <asset>/<category>/<sheet>/clip_tNN.mp4 (+ .json: model, prompt,
@@ -31,7 +32,6 @@ Prints a one-line summary; warnings go to stderr.
 import argparse, json, math, os, pathlib, shutil, sys
 import numpy as np
 from PIL import Image
-from scipy import ndimage
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from asset_layout import sheet_dir as layout_dir, sheet_rel  # noqa: E402
@@ -151,15 +151,16 @@ def move_clip(set_dir: pathlib.Path, sheet_dir: pathlib.Path, record: dict) -> p
     return dest
 
 
+def body_area(im: Image.Image) -> int:
+    """Opaque area (alpha > 127) of the whole silhouette, weapon included: unlike a height it barely changes
+    with the pose (a raised or lowered weapon, a lean), so it compares the body size of two actions."""
+    return int((np.asarray(im)[..., 3] > 127).sum())
+
+
 def body_height(im: Image.Image) -> int:
-    """Height of the largest solid blob (alpha > 200): the body with what it holds, not detached smears."""
-    a = np.asarray(im)[..., 3] > 200
-    lab, n = ndimage.label(a)
-    if not n:
-        return 0
-    k = int(np.argmax(ndimage.sum(a, lab, range(1, n + 1)))) + 1
-    ys = np.nonzero(lab == k)[0]
-    return int(ys.max() - ys.min() + 1)
+    """Height of the opaque silhouette (alpha > 127), recorded for information."""
+    rows = np.nonzero((np.asarray(im)[..., 3] > 127).any(axis=1))[0]
+    return int(rows.max() - rows.min() + 1) if len(rows) else 0
 
 
 def parse_cell(text: str) -> tuple[int, int]:
@@ -217,16 +218,19 @@ def main() -> None:
     if a.despill:
         images = {i: despill(im) for i, im in images.items()}
 
-    # one body size per asset: rest frames = the first frames of a one-shot, every frame of a loop
-    rest = list(dict.fromkeys(indices if loop else indices[:2]))
-    body = float(np.median([body_height(images[i]) for i in rest]))
+    # one body size per asset, compared by silhouette area (pose-independent); rest frames = the first frame of
+    # a one-shot (it starts on the still), every frame of a loop. Every set is already finished at the same
+    # --target-height, so this only catches a set finished from a still drawn at another scale
+    rest = list(dict.fromkeys(indices if loop else indices[:1]))
+    area = float(np.median([body_area(images[i]) for i in rest]))
+    height = float(np.median([body_height(images[i]) for i in rest]))
     scale, note = 1.0, ""
-    ref = meta.get("body_height_2x")
+    ref = meta.get("body_area_2x")
     if ref is None:
-        meta["body_height_2x"] = round(body)
-    elif abs(body / ref - 1) > BODY_TOLERANCE:
-        scale = ref / body
-        note = f", body {body:.0f}px rescaled x{scale:.3f} to the asset's {ref}px"
+        meta["body_area_2x"], meta["body_height_2x"] = round(area), round(height)
+    elif abs(math.sqrt(ref / area) - 1) > BODY_TOLERANCE:
+        scale = math.sqrt(ref / area)
+        note = f", body area {area:.0f}px2 rescaled x{scale:.3f} to the asset's {ref}px2"
 
     # every frame must fit the shared canvas around the pivot; nothing is shrunk to make it fit
     left = right = up = down = 0.0
@@ -307,7 +311,7 @@ def main() -> None:
     exports_path.write_text(json.dumps(exports, indent=2), encoding="utf-8")
     extra = f", hit frame {hit}" if hit else ""
     print(f"exported {a.sheet} from {a.action} take {record['take']}: {len(cells)} frames @ {fps} fps, "
-          f"{'loop' if loop else 'once'}, canvas {c2w // 2}x{c2 // 2}, body {body * scale:.0f}px@2x{note}{extra} "
+          f"{'loop' if loop else 'once'}, canvas {c2w // 2}x{c2 // 2}, body {height * scale:.0f}px@2x{note}{extra} "
           f"-> {vdir}")
 
 

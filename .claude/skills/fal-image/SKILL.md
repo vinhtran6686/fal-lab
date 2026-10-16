@@ -21,7 +21,7 @@ motion sheet. Animation comes from the `video-sprite` skill, which animates the 
   3. **Animation request** (move, attack, death, hurt, idle ...) or "làm tiếp phần chuyển động": hand over
      to the `video-sprite` skill with the approved stills. Missing views are made here first.
   - Keep `brief.md` and `history.md` of the asset up to date (one history row per still).
-  - Edit of a character ("đổi vũ khí", "góc sau bị lộ mặt"): `format.md` §5 "Edit an existing character".
+  - Restyle ("restyle bandit sang ..."), edit ("đổi vũ khí", "góc sau bị lộ mặt"): `format.md` §5.
 - **Character animation** asked directly ("tạo attack cho bandit"): use the `video-sprite` skill; it uses
   this skill only for a missing still.
 - **Other game asset** (tower, prop, icon, VFX key frame, UI, map): `templates.md`, with the style block

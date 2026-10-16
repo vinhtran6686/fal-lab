@@ -375,6 +375,37 @@ def run_tool(script: Path, args: Sequence[Any], *, timeout: float = TOOL_TIMEOUT
     return summary, warnings
 
 
+def end_still_frame(still: Path, start: Path, out: Path, key: str) -> Path:
+    """fal-image-lab: an action whose clip must END on another approved still (a death ending lying down):
+    place that still on the start frame's canvas: same key backdrop, same scale as the start still, its lowest
+    pixel on the start figure's ground line, centred on the start figure. Written once to job/end.png."""
+    if out.exists():
+        return out
+    key_rgb = tuple(forge_matte.DECLARED_KEYS.get(key, (255, 0, 255)))
+    base = Image.open(start).convert("RGB")
+    W, H = base.size
+    arr = np.asarray(base).astype(np.int32)
+    fg = np.abs(arr - np.array(key_rgb)).sum(axis=2) > 120
+    ys, xs = np.nonzero(fg)
+    ground, cx = int(ys.max()), int((xs.min() + xs.max()) / 2)
+    img = Image.open(still).convert("RGB")
+    sa = np.asarray(img).astype(np.int32)
+    smask = np.abs(sa - np.array(key_rgb)).sum(axis=2) > 120
+    sy, sx = np.nonzero(smask)
+    crop = img.crop((int(sx.min()), int(sy.min()), int(sx.max()) + 1, int(sy.max()) + 1))
+    mask = Image.fromarray((smask[sy.min():sy.max() + 1, sx.min():sx.max() + 1] * 255).astype(np.uint8))
+    scale = H / img.height   # both stills were drawn at the same framing (1024 squares) as the start's source
+    if crop.width * scale > W * 0.95:
+        scale = W * 0.95 / crop.width
+    size = (max(1, round(crop.width * scale)), max(1, round(crop.height * scale)))
+    crop, mask = crop.resize(size, Image.LANCZOS), mask.resize(size, Image.LANCZOS)
+    canvas = Image.new("RGB", (W, H), key_rgb)
+    x = min(max(0, cx - size[0] // 2), W - size[0])
+    canvas.paste(crop, (x, max(0, ground - size[1])), mask)
+    canvas.save(out)
+    return out
+
+
 # --------------------------------------------------------------------------- the prompt library
 
 _FENCE = re.compile(r"^```(template|negatives|clauses|gatefix)(?:[ \t]+([A-Za-z0-9_-]+))?[ \t]*\r?\n(.*?)^```[ \t]*$",
@@ -1958,7 +1989,11 @@ class SetRunner:
                 "--duration", _duration_arg(generation["duration"]), "--resolution", generation["resolution"],
                 "--out-dir", media]
         pin = bool(self.entries[ident]["pinLastFrame"])
-        result = self._call_media(base + (["--last-frame", job / "input.png"] if pin else []), timeout)
+        last = job / "input.png"
+        if self.entries[ident].get("endStill"):   # fal-image-lab: pin the end to another approved still
+            last, pin = end_still_frame(self.root / self.entries[ident]["endStill"], job / "input.png",
+                                        job / "end.png", self.plan["key"]), True
+        result = self._call_media(base + (["--last-frame", last] if pin else []), timeout)
         pin_note = None
         if pin and result["code"] not in (0, EXIT_NO_ROUTE) and _LAST_FRAME_WORDS.search(result["message"] or ""):
             if os.path.lexists(media):
@@ -2079,6 +2114,9 @@ class SetRunner:
             args += ["--lock", "feet"]
         if window:
             args += ["--range", f"{window[0]}:{window[1]}"]
+        # fal-image-lab: per-action escape hatch, e.g. ["--max-anchor-error", "100"] when the stance anchor misreads
+        # a quadruped plus a weapon touching the ground (framing verified identical by hand)
+        args += [str(arg) for arg in self.entries[ident].get("registerArgs", [])]
         summary, warnings = run_tool(SCRIPTS["register_clip"], args, label="register_clip.py apply")
         return {"frames": summary["frames"], "sourceSize": summary["sourceSize"],
                 "sourceAnchor": summary["sourceAnchor"], "fit": summary.get("fitApplied"),

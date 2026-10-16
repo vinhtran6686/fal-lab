@@ -1,5 +1,7 @@
 .env
 .venv/
 __pycache__/
-out/*
-!out/.gitkeep
+
+# out/ is tracked (stills, clips, exported frames, meta, briefs); tool-only data is not:
+out/**/.work/
+out/playtest/

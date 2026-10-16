@@ -1,0 +1,26 @@
+{
+  "prompt": "The same stocky bald bandit with a big round belly and a shiny shaved head, a black cloth mask covering the lower half of the face so only two narrow eyes show, wearing a black sleeveless tunic, baggy black trousers, a dark red cloth sash tied around the belly, brown leather wrist wraps and boots, holding a large curved single-edged broadsword (dao) with a wide steel blade in the right hand, drawn with chibi-like squat proportions: an oversized head about one third of the total height, a huge round belly, very short thick legs and big hands, facing the viewer the entire time and never turning around, walks in place like a looping game walk cycle on a treadmill: clearly alternating left and right steps with heel contact, a bent-knee passing pose and toe-off, arms swinging opposite to the legs, a small natural up-and-down weight shift. The character stays in the same spot and never moves across the frame; one foot is always on the same ground line. The clip starts AND ends in exactly the same pose as the still. Constant character size. No dust clouds, no speed lines, no effects. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aae55d4/iM8A0JjwnWtyEr8SsW1Pn_input.png"
+  },
+  "seconds": 5,
+  "resolution": "480P",
+  "size": [
+    1024,
+    1024
+  ],
+  "estimateUsd": 0.075,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\enemies\\bandit\\.work\\down\\actions\\front-walk\\job\\input.png",
+  "lastFrame": null,
+  "requestId": "01a139f8-bf36-76b1-abd2-6a4ac32a20a4",
+  "seconds_elapsed": 5.0,
+  "source_url": "https://v3b.fal.media/files/b/0aae55d4/4GxMOrrH1i4M9bftqJzxw_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

@@ -1,0 +1,27 @@
+{
+  "prompt": "The same heavy-metal centaur warrior: the upper body of a broad-shouldered man rising from the body of a strong four-legged horse, top-heavy with huge shoulders and arms, a small head and a compact horse body on sturdy short legs with big hooves; ash-grey skin and a darker charcoal-grey horse coat and tail; a few pieces of dark gunmetal armour only: one big spiked shoulder plate, a simple chest strap and plates on the horse's chest; large heavy steel gauntlets on both hands (a key feature); a long war scythe with a dark iron haft and a bright polished steel curved blade with a cold blue-white edge, clearly brighter than the grey skin; the outlines are dark purple and a small violet accent glows in the eyes and on the blade's edge, facing diagonally toward the BOTTOM-RIGHT of the screen (three-quarter front view) the entire time and never turning around, starts in their idle stance with the scythe upright, grips the haft with BOTH gauntleted hands and pulls the scythe back behind his shoulder (a short wind-up) with the upper body twisting back, then performs ONE powerful horizontal sweep from behind to the front toward the bottom-right, the curved blade sweeping out in front of him at waist height while the horse rears slightly lifting one front leg, holds the strike for a brief moment, then brings the scythe back upright to the exact same idle stance as the start and holds still. Only one sweep: no second strike, no spinning, no leaving the frame. The hind hooves stay planted. The clip starts AND ends in exactly the same pose as the still. The weapon stays one single weapon of the same length and shape. Constant character size. No motion trails, no slash effects, no sparks, no effects. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aae976c/OKr_zc1ajlD-XoCTzGq55_input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aae976c/1EfCz61IDeKEosqP3jmqP_input.png"
+  },
+  "seconds": 5,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.075,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\heroes\\centaur\\.work\\down_side\\actions\\attack\\job\\input.png",
+  "lastFrame": "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\heroes\\centaur\\.work\\down_side\\actions\\attack\\job\\input.png",
+  "requestId": "01a143fa-f8e9-7150-a987-594e3671deba",
+  "seconds_elapsed": 3.2,
+  "source_url": "https://v3b.fal.media/files/b/0aae976c/imlorwRoY9mvWFwslu_CH_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

@@ -1,0 +1,30 @@
+out\enemies\bandit\move\walk_down_side\v01  frames=24  cyclic
+  F  height  ground  torso_x  change_in
+  1     150     226     31.9        1.8
+  2     145     226     34.5        2.7
+  3     139     226     36.1        2.7
+  4     138     225     36.0        0.7
+  5     141     225     34.6        2.2
+  6     143     225     31.9        2.5
+  7     145     226     28.9        2.3
+  8     143     226     28.7        2.4
+  9     142     225     29.4        1.7
+ 10     145     225     29.1        1.9
+ 11     148     225     28.3        2.5
+ 12     150     226     29.5        2.7
+ 13     148     225     32.5        2.6
+ 14     142     225     34.7        2.7
+ 15     137     226     36.3        2.6
+ 16     138     226     35.8        1.2
+ 17     141     226     34.1        2.4
+ 18     144     225     31.1        2.6
+ 19     145     225     28.7        2.4
+ 20     142     226     29.0        2.6
+ 21     143     226     29.4        1.7
+ 22     145     225     29.2        2.0
+ 23     148     225     28.4        2.7
+ 24     150     225     30.1        2.8
+bob (height range): 13px = 8.7% of the body; lowest F15, highest F1
+loop 8->1 style check: 24->1 change 1.8 vs median 2.5
+flags:
+  none (static checks only: timing and foot slide are unverified until seen moving)
