@@ -111,6 +111,7 @@ the hand that holds the weapon (or the staff, the book ...).
 | `view_front` | Straight FRONT view, perfectly facing the viewer, mirror-symmetric body: both eyes visible, both shoulders the same size, feet side by side, the weapon held upright in its {weapon hand} (on the left side of the image for a right hand). Not a three-quarter view. |
 | `view_back` | Straight BACK view, seen from directly behind, walking away from the viewer: the back of the head, NO face and NO eyes visible, mirror-symmetric body, feet side by side with the heels toward the viewer, the weapon held upright in its {weapon hand} (on the RIGHT side of the image for a right hand). Not a three-quarter view, not a front view. |
 | `view_up_side` | Three-quarter BACK view, turned 45 degrees to face the TOP-RIGHT of the screen, walking away from the viewer toward the upper right: the back and the left side visible, only the edge of one ear, NO eyes and no face visible, the weapon held upright in its {weapon hand}. Not a side profile, not a front view. |
+| `pose_ready_side` (example of `pose_<action>`) | FLAT SIDE PROFILE facing exactly right in a combat-ready stance: knees bent, weight forward, the weapon raised and ready to strike. Not a three-quarter view. |
 
 **quadruped** (four legs, incl. centaurs and beasts; *untested as a full set*): as biped, with these changes.
 - `view_side`: the whole body long and flat across the frame, head and chest to the right, tail to the left, all four legs visible as two pairs, one eye visible.
@@ -122,6 +123,8 @@ a wide flat base on the ground". `{design}` must name one asymmetric mark and it
 side"): that mark tells the views apart. Front: eyes and mouth visible, the mark on the image left. Back:
 no face, only a highlight arc, the mark on the image right. Side: one eye, the body bulging to the right.
 up_side: the back and right flank, face hidden, mark visible. The top-left highlight never moves with the body.
+Blob and flyer have no head count: `{design}` gives a width-to-height ratio instead of "2.5 to 4 heads tall"
+("about 1.3 times as wide as it is tall").
 
 **flyer** (wings, floats; *untested*): no feet on the ground; "standing" becomes "hovering in place, wings
 spread level". Side: wings seen edge-on, one above the other; front/back: wings spread symmetrically, face
