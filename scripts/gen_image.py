@@ -173,17 +173,29 @@ def main() -> None:
                 path = out / f"{prefix}_v{next_version(out, prefix):02d}.{ext}"
             else:
                 path = out / f"{prefix + '-' if prefix else ''}{stamp}-{i}.{ext}"
-            r = requests.get(img["url"], timeout=120); r.raise_for_status()
-            path.write_bytes(r.content)
             meta = {"prompt": a.prompt, "model": endpoint, "quality": a.quality, "size": size,
                     "refs": [str(pathlib.Path(r).resolve()) for r in a.ref],
                     "transparent": a.transparent, "seconds": elapsed, "cost_usd": round(unit, 4),
                     "cost_is_estimate": True, "source_url": img["url"]}
             path.with_suffix(".json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+            # the image is already paid for: the sidecar (with source_url) is written first, then the download is
+            # retried; on failure the URL stays on disk and on stderr so it can be fetched later
+            for attempt in range(3):
+                try:
+                    r = requests.get(img["url"], timeout=120); r.raise_for_status()
+                    path.write_bytes(r.content)
+                    break
+                except Exception as e:
+                    if attempt == 2:
+                        print(f"download failed ({e}); paid image kept at {img['url']} (see {path.with_suffix('.json').name}); "
+                              f"fetch it later, e.g. allow *.fal.media in the network policy", file=sys.stderr)
+                    else:
+                        time.sleep(2 * (attempt + 1))
             shown = path.resolve().relative_to(ROOT).as_posix() if path.resolve().is_relative_to(ROOT) else path.name
             log.writerow([time.strftime("%Y-%m-%d %H:%M:%S"), shown, a.model, a.quality, size,
                           a.transparent, elapsed, f"{unit:.4f}", approx])
-            print(path)
+            if path.exists():
+                print(path)
     total = unit * len(images)
     print(f"cost: {'~' if approx else ''}${total:.4f} for {len(images)} image(s) "
           f"[{a.model}, {a.quality}, {size}] in {elapsed}s", file=sys.stderr)

@@ -29,6 +29,9 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - Output: images, `.json` sidecars (prompt, settings, estimated cost) and `costs.csv` go to `out/`.
 - Spend summary: `python scripts/cost_report.py [--today]`.
 - Secrets: `FAL_KEY` is in `.env` (git-ignored). Never read it, print it, log it, or commit it.
+  Cloud sessions: `FAL_KEY` comes from the environment's settings (Network secrets or an environment
+  variable), never pasted into chat. Network policy must allow the fal API hosts and `*.fal.media` (image
+  downloads); `gen_image.py` keeps the paid image URL in the `.json` sidecar if a download fails.
 - Cost guard: stay on `--quality low` unless the user explicitly asks for medium/high.
   Video clips cost ~10x an image: show the clip count and estimate and get a yes before a paid
   `sprite_set.py run`; `FAL_VIDEO_MAX_USD` (default 0.60) caps each clip.

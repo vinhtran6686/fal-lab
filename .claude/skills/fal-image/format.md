@@ -81,6 +81,16 @@ the previous block (muted earthy palette, near-black outlines, oversized chibi h
 > Background: one flat solid pure magenta color (#FF00FF) everywhere, no gradient, no ground,
 > no shadow, no scenery, no text, no border. Do not use magenta or pink anywhere on the subject.
 
+`{SIMPLE}` (append to every character prompt, right after `{design}` and the view; learned 2026-10-17: without
+it the first masters came back with buckles, pouches, bandages and fabric texture, scored 7 and were redrawn):
+> The face is only a brow line and a small eye slit; hands are simple mitten shapes, visible and holding the
+> weapon (not hidden in sleeves). No buckles, no pouches, no straps beyond one, no rope, no bandages, no
+> spikes, no stitches, no patches, no fabric texture: clothing is a few big flat shapes. At most three
+> colour families. The weapon and every part of the body stay inside the frame with margin on every side.
+
+Proportions drift taller: ask for half a head less than wanted ("about 3 heads tall" came back near 4), and
+a long upright weapon (glaive, staff, spear) held diagonally so its tip does not reach the top edge.
+
 ## 3. Standard views of a character (the "forms" video-sprite animates)
 A top-down game moves in 8 directions; 5 views are generated, the 3 left-facing ones are mirrors.
 | Still (`design/`) | View | Animated by video-sprite as | Required |
@@ -100,7 +110,7 @@ master, then side, front, back, up_side (each with `--ref <master>`), then the i
 `{kind}` is the class word ("enemy", "hero", "friendly soldier"). Every view prompt is:
 `Use the reference image only for the character design; redraw it in the style described. Single game
 {kind} sprite: {design}. <VIEW> Neutral standing pose, full body, centered, filling about 70% of the frame.
-{BG} {STYLE}`. The master has no `--ref` and starts directly with "Single game {kind} sprite: {design}.".
+{SIMPLE} {BG} {STYLE}`. The master has no `--ref` and starts directly with "Single game {kind} sprite: {design}.".
 `<VIEW>` comes from the table of the character's `{body}`. The model pulls every view back toward the 3/4
 master: name the angle in capitals, say what must and must not be visible (eyes, face, which side the
 weapon or the asymmetric mark is on), and end with "Not a three-quarter view". A `pose_<action>` still uses
