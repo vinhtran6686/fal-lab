@@ -1,1 +1,5 @@
 time,file,model,quality,size,transparent,seconds,cost_usd,approx
+2026-10-17 11:08:26,out/heroes/wind_dancer/design/master_v01.png,gpt-image-2,low,1024x1024,False,13.5,0.0126,True
+2026-10-17 11:08:26,out/heroes/wind_dancer/design/master_v02.png,gpt-image-2,low,1024x1024,False,13.5,0.0126,True
+2026-10-17 11:08:56,out/heroes/wind_dancer/design/master_v03.png,gpt-image-2,low,1024x1024,False,13.2,0.0129,True
+2026-10-17 11:08:57,out/heroes/wind_dancer/design/master_v04.png,gpt-image-2,low,1024x1024,False,13.2,0.0129,True
