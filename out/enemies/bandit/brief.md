@@ -6,8 +6,8 @@
 | Mode | default (master checkpoint); user approved master v02 on 2026-10-13 |
 | Class / level / archetype | enemy / 1 / melee |
 | Canvas | 256 x 128 at 1x (512 x 256 @2x), the same for every action; body 138 px @2x; icon 128 px |
-| Approved master | `stills/master_v02.png` (user: "chốt v02") |
-| View references | `stills/view_side_v01.png` (side), `stills/view_front_v01.png` (front), `stills/view_up_side_v01.png` (3/4 back), `stills/view_back_v01.png` (back): approved 2026-10-14 |
+| Approved master | `design/master_v02.png` (user: "chốt v02") |
+| View references | `design/view_side_v01.png` (side), `design/view_front_v01.png` (front), `design/view_up_side_v01.png` (3/4 back), `design/view_back_v01.png` (back): approved 2026-10-14 |
 | Move speed | from the video walk_side v01 (meta.json); tune in the playtest |
 
 ## Slots (reuse verbatim in every prompt)

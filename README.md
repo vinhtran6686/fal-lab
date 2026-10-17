@@ -52,7 +52,7 @@ Ví dụ:
 - `Sửa attack của spider cho cú cắn uy lực hơn` → chỉ tạo version mới của sheet attack, bản cũ giữ nguyên.
 
 Kết quả trong `out/<class>/<id>/` (vd. `out/enemies/bandit/`, `out/heroes/centaur/`):
-- `stills/`: **ảnh gốc** (master, các góc, các pose), giữ mọi version.
+- `design/`: **thiết kế gốc** (master, các góc, các pose), giữ mọi version.
 - `raw/`: **video gốc** model trả về, giữ mọi take (`<action>_<set>_tNN.mp4` + `.json` prompt/chi phí). Video vào đây ngay khi sinh xong, nên push git là không mất.
 - thư mục trạng thái `idle/`, `move/`, `attack/`, `death/`…: mỗi animation một thư mục, **chỉ giữ 1 bản cuối cùng đã chốt** (`preview.gif` để xem nhanh, `frames/` cho game, `check/` để kiểm tra).
 - `.work/`: dữ liệu trung gian của tool, không đưa lên git.

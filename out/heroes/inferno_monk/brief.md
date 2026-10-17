@@ -5,7 +5,7 @@
 | Request | Hỏa Ngục Võ Tăng: võ tăng da nâu sẫm, đầu cạo trọc với hình xăm phong ấn đỏ sẫm trên mặt, mặc cà sa cháy xém, đeo chuỗi hạt gỗ đen cỡ lớn và cầm côn sắt có vòng kim loại; idle: đứng một chân như cây cổ thụ, chân còn lại co ngang đầu gối, bàn chân thả lỏng, thân thẳng thư thái, vai buông, hai tay chắp hờ trước ngực hoặc xoay chuỗi hạt, mặt bình thản như thiền (full idle motion text below) |
 | Mode | default (master checkpoint) |
 | Class / level | hero; enemy Level 1 conventions (canvas 256x128 at 1x, body 138 px @2x, standard views, style of format.md §1) |
-| Approved master | `stills/master_v01.png` = idle pose (user 2026-10-16: "rất rất đẹp") |
+| Approved master | `design/master_v01.png` = idle pose (user 2026-10-16: "rất rất đẹp") |
 
 ## Slots
 - `{design}`: a fire warrior monk with dark brown skin, top-heavy with broad shoulders and strong arms, a small shaven bald head with a dark crimson seal tattoo on the face and scalp, a calm meditating face with closed eyes; a scorched saffron-orange monk robe draped over one shoulder with charred blackened hems and a dark red sash; an oversized necklace of big black wooden prayer beads; an iron monk staff (a long dark iron rod with three metal rings at its top) held upright in the crook of his left arm, resting against his shoulder; the seal tattoo glows red-orange; small flat layered flame shapes (yellow over orange) at the foot he stands on

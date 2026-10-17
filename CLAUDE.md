@@ -15,7 +15,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
     with ONE canvas and ONE body size for every action (`meta.json`). After export, always
     `python scripts/video_prune.py prune --set <set>`; intermediate frames are rebuilt from the clip with
     `rebuild`. Checks: `scripts/motion_check.py`, `scripts/leg_check.py`.
-- Asset folder `out/<class>/<id>/`: `stills/` (source images, every version), `raw/` (source videos, every
+- Asset folder `out/<class>/<id>/`: `design/` (the original design: source images, every version), `raw/` (source videos, every
   take, saved as soon as they are generated), state folders `idle/`, `move/`, `attack/`, `death/` ... (ONE final
   version per sheet: `preview.gif`, `frames/`, `check/`), `.work/` (tools only, not in git). `format.md` §4.
 - Icon packing: `scripts/sprite_pack.py` (single stills into `ui/icon/`).

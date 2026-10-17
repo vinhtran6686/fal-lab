@@ -10,7 +10,7 @@ project: clips come from `scripts/fal_video.py` (fal.ai, `FAL_KEY` in `.env`), f
 asset folder by `scripts/video_to_sheet.py`, and a top-down tower-defense game needs 5 views.
 
 **Division of work.** The `fal-image` skill makes the stills: one approved master per character and its
-standard views (`fal-image/format.md` §3), all in `A/stills/`. This skill animates them: one image-to-video
+standard views (`fal-image/format.md` §3), all in `A/design/`. This skill animates them: one image-to-video
 clip per action and view, then deterministic tools cut the frames. A video model moves ONE character
 continuously from ONE still, so identity and motion stay consistent (an image model drawing a sheet repeated
 poses, swapped legs and froze the upper body). A missing still: ask fal-image for it first.
@@ -21,7 +21,7 @@ on PATH; in Git Bash use the real Python, see `CLAUDE.md`).
 ## Tools
 | Step | Command |
 |---|---|
-| Still -> master.json | `python scripts/make_master.py A/stills/<still>.png --out-dir A/.work/masters/<view> --name <id> --facing <facing> --recap "<{design}>"` |
+| Still -> master.json | `python scripts/make_master.py A/design/<still>.png --out-dir A/.work/masters/<view> --name <id> --facing <facing> --recap "<{design}>"` |
 | Plan a set | `python .claude/skills/video-sprite/scripts/sprite_set.py plan --master A/.work/masters/<view>/master.json --views <side\|front\|back> --output-dir A/.work/<set> --actions <list> --duration 5 --resolution 480p --fps 12 --target-height 138 --formats png --max-takes 1` |
 | Cost before paying | clips x takes x price (`python scripts/fal_video.py models`), or `fal_video.py video ... --dry-run` |
 | Generate + process | `python .claude/skills/video-sprite/scripts/sprite_set.py run --plan A/.work/<set>/set_plan.json` |
@@ -64,7 +64,7 @@ The category folder comes from the sheet name (`scripts/asset_layout.py`: walk/r
 attack, death, hurt, idle, icon -> ui).
 
 ## Workflow
-1. **Stills.** The approved master and the views the actions need, from `fal-image` (`A/stills/`).
+1. **Stills.** The approved master and the views the actions need, from `fal-image` (`A/design/`).
 2. **Masters.** `make_master.py` per view, with `--recap` = the `{design}` slot of `brief.md` verbatim (the
    long recap is repeated in every motion prompt; short recaps let the model redesign the character).
 3. **Plan** each set. Read every action's `prompt` in `set_plan.json` and edit `motion` there for this

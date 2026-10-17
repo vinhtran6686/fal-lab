@@ -3,7 +3,7 @@
 master.json that the video-sprite skill animates (.claude/skills/video-sprite/SKILL.md).
 
 Usage:
-  python scripts/make_master.py out/enemies/bandit/stills/view_side_v01.png
+  python scripts/make_master.py out/enemies/bandit/design/view_side_v01.png
                                 --out-dir out/enemies/bandit/.work/masters/side
                                 --name bandit --facing right --recap "<{design} from brief.md>"
                                 [--class mob] [--height 0.56] [--canvas 1024]
