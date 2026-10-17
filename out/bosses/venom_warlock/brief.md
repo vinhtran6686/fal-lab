@@ -13,3 +13,7 @@ APPROVED (user, 2026-10-17): master_v01 (user: "master v01 ổn nhất - chốt"
 Icon: rim muted stone-grey, badge muted khaki (enemy.md)
 
 Stills awaiting approval: view_side_v01, view_front_v02, view_back_v01, view_up_side_v01, icon_v02 (master_v01 approved)
+
+APPROVED (user, 2026-10-17): view_side_v01, view_front_v02, view_back_v01, view_up_side_v01, icon_v02 (+ master_v01).
+The standing stills count as the idle state (user: "các biến thể hiện có về hướng được xem là idle").
+Animation request: attack, walk (move), death. Size XL: --cell 308x204, --target-height 240.
