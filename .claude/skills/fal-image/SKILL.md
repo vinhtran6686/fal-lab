@@ -9,14 +9,33 @@ You are the art director. The image model only draws; you plan, write prompts, r
 This skill makes **stills**: the raw source images, one fixed design per character. It never draws a
 motion sheet. Animation comes from the `video-sprite` skill, which animates the approved stills.
 
+## Arguments
+- `--example [--hero | --ally | --enemy-small | --enemy | --enemy-large | --boss]`: only print the matching
+  section of `examples.md` (no flag: the overview and one example per class). No API call, no size question,
+  nothing written.
+- Class flags (`--hero`, `--ally`, `--enemy-small`, `--enemy`, `--enemy-large`, `--boss`) and `--tier
+  XS|S|M|L|XL|XXL` may also come with a real request; plain words work too ("hero size L", "boss cỡ XXL").
+- `--auto`: format.md §5.
+
+## Ask for class and size (every character, before anything else)
+A character needs a **class** and a **size tier** from the matrix (`format.md` §7) before `brief.md` or any
+paid call, in `--auto` mode too. Take them from the flags or the words of the request; never guess a missing one.
+1. Class missing: AskUserQuestion "Nhân vật thuộc class nào?" with the options Hero, Quân phe ta (ally),
+   Quái (enemy), Boss; the one the description suggests first, marked "(Recommended)".
+2. Tier missing: AskUserQuestion "Chọn size cho <class>" with that class's tiers only (hero: S, M, L; ally:
+   S, M, L; enemy: XS, S, M, L; boss: XL, XXL). Each option: tier, `{H}` and canvas, with a typical example
+   ("L: 84 px, canvas 220x192 — robot, golem"). The tier that fits the description first, "(Recommended)".
+   Both missing: ask the class first, then the tier, in two calls (the tier options depend on the class).
+3. Record class, tier, `{H}` and canvas in `brief.md`; `{H}` goes into `{STYLE}`.
+
 ## Pick the route
-- **Character of a defined class** (`classes/enemy.md`, `classes/hero.md`): read `format.md` and the class
-  file next to this file and follow them exactly. The user gives content ("đạo tặc đầu trọc, dùng đao"); the
-  class file sets the slots, sheets and frame size; `format.md` sets the style, the view prompts (by `{body}`:
-  biped, quadruped, blob, flyer), files and checklist. If the level or archetype is not given, use Level 1
-  and the archetype that fits. A character of a class with no file yet (friendly unit, boss ...): ask the
-  user, then use the closest class file and note it in `brief.md`.
-  1. `brief.md` with the filled slots, then the **master** (3/4 front) into `<asset>/design/`. Mode (`format.md` §5): no `--auto`
+- **Character** (hero, ally, enemy, boss; `format.md` §7 says which class file holds its slots and sheets:
+  `classes/hero.md` or `classes/enemy.md`): read `format.md` and the class file next to this file and follow
+  them exactly. The user gives content ("đạo tặc đầu trọc, dùng đao"); the class file sets the slots and
+  sheets, the matrix the frame size; `format.md` sets the style, the view prompts (by `{body}`: biped,
+  quadruped, blob, flyer), files and checklist. If the level or archetype is not given, use Level 1 and the
+  archetype that fits.
+  1. `brief.md` with class, tier and the filled slots, then the **master** (3/4 front) into `<asset>/design/`. Mode (`format.md` §5): no `--auto`
      → stop after the master and ask the user to approve a version; `--auto` → approve it yourself (>= 8).
   2. The **standard views** and stills the class needs, from the approved master (`format.md` §3): side,
      front, back, 3/4 back, icon (+ projectile; optional `pose_<action>`, `turnaround`). Show them; get approval.

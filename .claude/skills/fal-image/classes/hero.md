@@ -29,9 +29,9 @@ purple outlines, format.md §1).
   (`--ref M`, same view as the sheet). video-sprite starts that action from it.
 
 ## Frame size
-**Pending** (format.md §4): heroes will get a frame with room for skills and casts above and around the
-body. Until it is set, the two existing heroes use the enemy Level 1 values (256 x 128 at 1x, body 69 px,
-pivot y 0.88); a new hero uses them too and is marked interim in `brief.md`.
+Profile `hero` of the size matrix (`../format.md` §7): tier S 104x92, **M 156x136 (default)**, L 220x192 at
+1x, feet at y 0.88. The canvas leaves about 2 x `{H}` above the feet for casts, level-up and respawn; big skill
+effects (storms, rains, beams) are separate vfx assets. A small mage is S, most heroes M, a robot or golem L.
 
 ## What a hero needs
 | Category | Sheet | From still | Loop | Status |

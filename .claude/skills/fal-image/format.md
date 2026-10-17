@@ -14,11 +14,11 @@ weapon, colours and which parts are exaggerated belong to each character's `{des
 armoured knight and a fire elemental can all share it.
 
 > Stylized 2D vector cartoon game art for a top-down fantasy tower defense game, designed to read at about
-> 64 pixels tall.
+> {H} pixels tall.
 > Simple design: big clear shapes and a strong silhouette; small details are left out or merged into larger
 > shapes; faces, hands, armour and clothing are suggested with a few lines, never rendered in fine detail.
 > Stylized, exaggerated cartoon proportions, not realistic anatomy (about 2.5 to 4 heads tall): the parts
-> that express the character's role are enlarged and the rest is shrunk, so the silhouette reads at 64 pixels.
+> that express the character's role are enlarged and the rest is shrunk, so the silhouette reads at {H} pixels.
 > Colour: flat solid fills only, no gradients, no airbrush, no painterly texture, no noise, no realistic
 > rendering. Volume and shadow come from 2-3 hard-edged tones of the same colour (shadow, base, light), plus a
 > few small highlight shapes.
@@ -35,6 +35,10 @@ edges; it is about 3.8 heads tall and top-heavy (huge shoulders and arms, small 
 exaggeration chosen for its role. It is vector art drawn large and scaled down (hundreds of colours,
 anti-aliased edges), **not pixel art**: never write "pixel art" in a prompt (the model then draws fake
 pixels that blur when the tools scale them).
+
+`{H}` is the character's body height at 1x from its size tier (§7: 24, 40, 60, 84, 120 or 170); for an
+asset without a tier (tower, prop, UI) write 64. Detail scales with it: a 24 px critter is one or two
+shapes, a 170 px boss may show a few more.
 
 `{design}` carries what the style leaves open: body type and the parts it exaggerates ("top-heavy: huge
 shoulders and arms, small head, short legs"), costume and gear, the weapon and the hand that holds it, the
@@ -55,10 +59,10 @@ the body or the weapon; the big effects of a skill belong to the animation, not 
 - Enemies: a slightly darker, muted main colour plus one warning accent (red, sickly green, violet ...).
 - Never magenta or pink on any subject (`{BG}` is keyed out).
 
-**Style anchors** (review only): before approving a new master, open it next to one approved master with
-the Read tool (`out/heroes/inferno_monk/design/master_v01.png`, `out/heroes/centaur/design/master_v03.png`)
-and check outline weight, tone count, shape size and face simplicity match. Never send an anchor as `--ref`:
-its design would leak into the new character.
+**Style anchors** (review only): before approving a new master, open it next to `ref/hero/frames/hero_elemental_0014.png`
+(and, once one exists, the first approved master of the project) with the Read tool and check outline weight,
+tone count, shape size and face simplicity match. Never send an anchor as `--ref`: `ref/` never goes to the
+API, and an approved master's design would leak into the new character.
 
 If `style.md` exists at the project root it replaces this block. Assets made before 2026-10-16 (bandit) used
 the previous block (muted earthy palette, near-black outlines, oversized chibi head); restyle them only on request.
@@ -186,12 +190,11 @@ Game-ready frames (the same for every action of an asset):
 | Item | Value |
 |---|---|
 | File type | PNG-32 RGBA, transparent; `@2x` master and `@1x` in-game |
-| Canvas | **one canvas for every action of an asset** (`meta.json` "cell"), set by the class file. No action gets a bigger or smaller frame, so the engine never rescales one action against another |
-| Body | **one body height for every action** (`meta.json` "body_height_2x"); a sheet whose body differs by more than 4% is rescaled on export |
-| Pivot | feet, bottom-center (`meta.json` "pivot"); icons are centered |
+| Canvas | **one canvas for every action of an asset** (`meta.json` "cell"), from the size matrix (§7) by class and tier. No action gets a bigger or smaller frame, so the engine never rescales one action against another |
+| Body | **one body height for every action**: `2 x {H}` at @2x (video-sprite `--target-height`), recorded as `meta.json` "body_height_2x"; a sheet whose body differs by more than 4% is rescaled on export |
+| Pivot | feet, x 0.5, y 0.88 of the canvas (`meta.json` "pivot"; fixed in `video_to_sheet.py`); icons are centered |
 | Motion | `move_speed` (px/s at 1x) in `meta.json`, tuned in the playtest so the feet do not slide |
-**Frame size is interim**: the size rule across classes (bigger and smaller characters, room for skills
-inside the frame) is being set from more references. Until then use the class file's values.
+Frame size: §7.
 
 `history.md` row format (append one row after reviewing every still or take, including rejected ones):
 `| date | sheet/still | vNN | model | score | approved/rejected/final/awaiting user | issue | change for next version | requested by (pipeline/user: "...") |`
@@ -230,9 +233,57 @@ re-animate only the actions that start from it.
 - The view is exact (§3 table of its `{body}`): side = true profile facing right (one eye); front =
   mirror-symmetric, face visible; back = no face; 3/4 front faces down-right; 3/4 back faces up-right, face hidden.
 - Neutral pose (or the requested `pose_*`), full body and weapon inside the frame with margin, nothing touching the edges.
-- Style (§1): simple big shapes and a clear silhouette at 64 px; no fine detail on face, hands or clothes;
+- Style (§1): simple big shapes and a clear silhouette at `{H}` px; no fine detail on face, hands or clothes;
   stylized proportions as `{design}` says; flat fills with 2-3 hard tones per colour, no gradient or blur;
   thick outlines in a dark shade (or the hue set in the brief); effects as flat layered shapes, not glow.
   A new master also matches a style anchor (§1) side by side.
 - Flat magenta background only; no magenta or pink on the subject, no ground, shadow or text.
 - Class-specific points in the class file.
+
+## 7. Size: class x tier matrix (fixed; measured 2026-10-17)
+Every character has a **class** and a **size tier** before anything is drawn (SKILL.md "Ask for class and
+size"). The tier fixes the body height `{H}`; the class fixes the frame profile; together they give the canvas
+that every action of the asset shares.
+
+**Size tiers** (`{H}` = height of the whole standing idle silhouette at 1x, feet to the top of whatever the
+idle pose shows, a weapon held upright included; the same box video-sprite measures for `--target-height`):
+| Tier | `{H}` @1x | `--target-height` (@2x) | Range in the references | Typical |
+|---|---|---|---|---|
+| XS | 24 | 48 | 17-30 | spiderling, rat, imp, sheep |
+| S | 40 | 80 | 31-48 | goblin, bandit, skeleton, footman, archer, small mage |
+| M | 60 | 120 | 49-70 | most heroes, knight, raider, werewolf |
+| L | 84 | 168 | 71-100 | robot, golem, ogre, yeti, troll brute |
+| XL | 120 | 240 | 101-140 | mini-boss, giant |
+| XXL | 170 | 340 | 141-200 | boss |
+
+**Frame profiles** (canvas in units of `{H}`, feet at x 0.5, y 0.88):
+| Profile | Canvas W x H | Used by | Why |
+|---|---|---|---|
+| `unit` | 2.25 x 2.0 | allies, enemies | references: reach from the feet (85th percentile) up 1.56H, sideways 1.12H, below 0.24H (deaths fall toward the viewer) |
+| `hero` | 2.6 x 2.3 | heroes | up 2.0H (level-up, respawn, casts above the head), sideways 1.29H |
+| `boss` | 2.55 x 1.7 | bosses | up 1.48H, sideways 1.27H: wide, low frames |
+Back-test on 107 reference characters (heroes, allies, enemies, bosses; flyers excluded): 78 (73%) fit their
+profile canvas; the rest are wide death falls and skill moves, which our prompts keep inside the frame.
+
+**Matrix** (canvas at 1x, rounded to 4 px; @2x doubles it; default tier marked *):
+| Class | Example flag | Folder, kind | Profile | Sheets | Tiers -> canvas @1x |
+|---|---|---|---|---|---|
+| hero | `--hero` | `out/heroes/`, `hero` | hero | `classes/hero.md` | S 104x92, **M* 156x136**, L 220x192 |
+| ally (friendly soldier) | `--ally` | `out/allies/`, `ally` | unit | `classes/enemy.md` list (5 walks, attack, death), icon rim gold | **S* 88x80**, M 136x120, L 188x168 |
+| enemy, small | `--enemy-small` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **XS* 56x48** |
+| enemy | `--enemy` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **S* 88x80**, M 136x120 |
+| enemy, large | `--enemy-large` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **L* 188x168** |
+| boss | `--boss` | `out/bosses/`, `boss` | boss | `classes/enemy.md` list + one sheet per special move | XL 304x204, **XXL* 432x288** |
+When asking, enemies are one class with tiers XS, S, M, L; bosses XL, XXL.
+
+Rules that come with the matrix:
+- Pass the canvas to video-sprite as `--cell <W>x<H>` (1x) and `--target-height <2 x {H}>`; record class,
+  tier, `{H}` and canvas in `brief.md`.
+- `{attack}`, `{death}` and casts are written to stay inside the canvas (strike forward or upward, fall
+  in place); the exporter refuses a frame that does not fit and never shrinks it.
+- **Big skill effects are separate assets**, as in the references: a rain of fire, a lightning chain or a
+  summoned storm is a vfx asset (`templates.md` vfx, `out/vfx/<id>/`) placed over the scene by the game. Only
+  the body and effects touching it (a glowing fist, flames on the weapon) stay in the character's frame.
+- Flyers (*to confirm*): the references float their body well above the canvas bottom (feet line about
+  0.55-0.65); until a flyer is made, use the `unit` canvas one tier up and note it in `brief.md`.
+- `{H}` replaces "64" in `{STYLE}` (§1).

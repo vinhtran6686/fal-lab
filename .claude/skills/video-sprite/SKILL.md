@@ -22,7 +22,7 @@ on PATH; in Git Bash use the real Python, see `CLAUDE.md`).
 | Step | Command |
 |---|---|
 | Still -> master.json | `python scripts/make_master.py A/design/<still>.png --out-dir A/.work/masters/<view> --name <id> --facing <facing> --recap "<{design}>"` |
-| Plan a set | `python .claude/skills/video-sprite/scripts/sprite_set.py plan --master A/.work/masters/<view>/master.json --views <side\|front\|back> --output-dir A/.work/<set> --actions <list> --duration 5 --resolution 480p --fps 12 --target-height 138 --formats png --max-takes 1` |
+| Plan a set | `python .claude/skills/video-sprite/scripts/sprite_set.py plan --master A/.work/masters/<view>/master.json --views <side\|front\|back> --output-dir A/.work/<set> --actions <list> --duration 5 --resolution 480p --fps 12 --target-height <2x{H}> --formats png --max-takes 1` |
 | Cost before paying | clips x takes x price (`python scripts/fal_video.py models`), or `fal_video.py video ... --dry-run` |
 | Generate + process | `python .claude/skills/video-sprite/scripts/sprite_set.py run --plan A/.work/<set>/set_plan.json` |
 | Review | `sprite_set.py review --plan ...`, then **Read** every `review/<action>/tNN-sheet.png` |
@@ -39,11 +39,13 @@ the same command again (run sets one after another, not in parallel, when it hap
 ## One canvas and one body size for every action (fixed)
 The engine draws every action of a character in the same frame with the same pivot, so no action may be
 bigger or smaller than another:
-- **Canvas**: `meta.json` "cell", set by the first export and shared by every later one (Level 1 enemy:
-  **256x128 at 1x**, `fal-image/classes/enemy.md`). `video_to_sheet.py` never widens it for one action and
+- **Canvas**: `meta.json` "cell", set by the first export and shared by every later one. Read class and tier
+  from the asset's `brief.md` and pass that canvas from the size matrix (`fal-image/format.md` §7) as
+  `--cell <W>x<H>` on the first export (e.g. hero M: `--cell 156x136`; enemy S: `--cell 88x80`). `video_to_sheet.py` never widens it for one action and
   never shrinks a body to fit; a state that does not fit is refused: delete `meta.json` and re-export every
   sheet with a larger `--cell` (all actions move to the new canvas together).
-- **Body**: every set is finished at `--target-height 138` (Level 1 body height at @2x); the first export
+- **Body**: every set is finished at `--target-height <2 x {H}>` (the tier's body height at @2x, format.md §7:
+  XS 48, S 80, M 120, L 168, XL 240, XXL 340); the first export
   records the measured body height (`body_height_2x`) and later exports are rescaled when they differ by
   more than 4% by silhouette area (a height-based check misread weapons and was replaced, 2026-10-16).
 - **Pivot**: feet at x 0.5, y 0.88; one fixed transform per clip, so bob, lean, a fall or a spin are kept.
