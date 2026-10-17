@@ -1,0 +1,14 @@
+{
+  "prompt": "Use the reference image only for the character design; redraw it in the style described. Round boss portrait icon: ONLY the head and shoulders of a tall gaunt hunched boss, about 3 heads tall, top-heavy with huge long bandaged brown arms and big mitten hands and a small head in a pale long-beaked plague mask under a muted purple-grey hood, a ragged muted purple-grey robe with a torn hem, brown bandaged short legs, a brown leather harness crossing the chest, small pale bone spikes on the hood and shoulders, holding a curved bone-coloured fang dagger tipped with sickly green in each hand; its ONE signature feature is a huge swollen sickly green venom sac strapped to its back with a flat layered drip; the outlines are dark purple, cropped at the chest, facing slightly right, inside a circular badge with a thick dark outline and a muted stone-grey rim, plain muted khaki background inside the circle. Background: one flat solid pure magenta color (#FF00FF) everywhere, no gradient, no ground, no shadow, no scenery, no text, no border. Do not use magenta or pink anywhere on the subject. Stylized 2D vector cartoon game art for a top-down fantasy tower defense game, designed to read at about 120 pixels tall. Simple design: big clear shapes and a strong silhouette; small details are left out or merged into larger shapes; faces, hands, armour and clothing are suggested with a few lines, never rendered in fine detail. Stylized, exaggerated cartoon proportions, not realistic anatomy (about 2.5 to 4 heads tall): the parts that express the character's role are enlarged and the rest is shrunk, so the silhouette reads at 120 pixels. Colour: flat solid fills only, no gradients, no airbrush, no painterly texture, no noise, no realistic rendering. Volume and shadow come from 2-3 hard-edged tones of the same colour (shadow, base, light), plus a few small highlight shapes. Thick clean outlines in a dark shade of the neighbouring colour. Effects are drawn as stacked layers of flat single-colour vector shapes with an outline that follows the effect's form, never as soft blur or gradient glow. High top-down camera tilted about 60 degrees; light comes from the top-left.",
+  "model": "openai/gpt-image-2/edit",
+  "quality": "low",
+  "size": "1024x1024",
+  "refs": [
+    "/home/user/fal-lab/out/bosses/venom_warlock/design/master_v01.png"
+  ],
+  "transparent": false,
+  "seconds": 17.1,
+  "cost_usd": 0.0127,
+  "cost_is_estimate": true,
+  "source_url": "https://v3b.fal.media/files/b/0aaec939/dgPKVus8xLQBRBO8O_eVu_2rTisVNS.png"
+}

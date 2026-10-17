@@ -7,3 +7,10 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-17 11:11:39,out/bosses/venom_warlock/design/master_v02.png,gpt-image-2,low,1024x1024,False,17.1,0.0127,True
 2026-10-17 11:12:07,out/bosses/venom_warlock/design/master_v03.png,gpt-image-2,low,1024x1024,False,13.8,0.0130,True
 2026-10-17 11:12:08,out/bosses/venom_warlock/design/master_v04.png,gpt-image-2,low,1024x1024,False,13.8,0.0130,True
+2026-10-17 20:36:29,out/bosses/venom_warlock/design/view_back_v01.png,gpt-image-2,low,1024x1024,False,17.2,0.0131,True
+2026-10-17 20:36:29,out/bosses/venom_warlock/design/icon_v01.png,gpt-image-2,low,1024x1024,False,17.1,0.0127,True
+2026-10-17 20:36:29,out/bosses/venom_warlock/design/view_front_v01.png,gpt-image-2,low,1024x1024,False,17.2,0.0130,True
+2026-10-17 20:36:29,out/bosses/venom_warlock/design/view_side_v01.png,gpt-image-2,low,1024x1024,False,17.4,0.0131,True
+2026-10-17 20:36:30,out/bosses/venom_warlock/design/view_up_side_v01.png,gpt-image-2,low,1024x1024,False,17.4,0.0130,True
+2026-10-17 20:37:02,out/bosses/venom_warlock/design/view_front_v02.png,gpt-image-2,low,1024x1024,False,14.7,0.0131,True
+2026-10-17 20:37:03,out/bosses/venom_warlock/design/icon_v02.png,gpt-image-2,low,1024x1024,False,16.7,0.0129,True

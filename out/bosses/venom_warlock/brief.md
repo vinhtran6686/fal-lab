@@ -11,3 +11,5 @@ Candidates (awaiting user): master_v03 recommended (vivid green accent, flat), m
 APPROVED (user, 2026-10-17): master_v01 (user: "master v01 ổn nhất - chốt"). Design now follows v01:
 {design}: a tall gaunt hunched boss, about 3 heads tall, top-heavy with huge long bandaged brown arms and big mitten hands and a small head in a pale long-beaked plague mask under a muted purple-grey hood, a ragged muted purple-grey robe with a torn hem, brown bandaged short legs, a brown leather harness crossing the chest, small pale bone spikes on the hood and shoulders, holding a curved bone-coloured fang dagger tipped with sickly green in each hand; its ONE signature feature is a huge swollen sickly green venom sac strapped to its back with a flat layered drip; the outlines are dark purple
 Icon: rim muted stone-grey, badge muted khaki (enemy.md)
+
+Stills awaiting approval: view_side_v01, view_front_v02, view_back_v01, view_up_side_v01, icon_v02 (master_v01 approved)
