@@ -14,3 +14,6 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-17 20:36:30,out/bosses/venom_warlock/design/view_up_side_v01.png,gpt-image-2,low,1024x1024,False,17.4,0.0130,True
 2026-10-17 20:37:02,out/bosses/venom_warlock/design/view_front_v02.png,gpt-image-2,low,1024x1024,False,14.7,0.0131,True
 2026-10-17 20:37:03,out/bosses/venom_warlock/design/icon_v02.png,gpt-image-2,low,1024x1024,False,16.7,0.0129,True
+2026-10-17 20:43:10,out/bosses/venom_warlock/.work/side_death/actions/death/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,2.2,0.0750,True
+2026-10-17 20:43:10,out/bosses/venom_warlock/.work/down_side/actions/walk/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,2.4,0.0750,True
+2026-10-17 20:43:11,out/bosses/venom_warlock/.work/side_attack/actions/attack/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,2.5,0.0750,True

@@ -1,0 +1,26 @@
+{
+  "prompt": "The same tall gaunt hunched boss, about 3 heads tall, top-heavy with huge long bandaged brown arms and big mitten hands and a small head in a pale long-beaked plague mask under a muted purple-grey hood, a ragged muted purple-grey robe with a torn hem, brown bandaged short legs, a brown leather harness crossing the chest, small pale bone spikes on the hood and shoulders, holding a curved bone-coloured fang dagger tipped with sickly green in each hand; its ONE signature feature is a huge swollen sickly green venom sac strapped to its back with a flat layered drip; the outlines are dark purple, facing diagonally toward the BOTTOM-RIGHT of the screen (three-quarter front view) the entire time and never turning around, walks in place like a looping game walk cycle on a treadmill: clearly alternating left and right steps with heel contact, a bent-knee passing pose and toe-off, arms swinging opposite to the legs, a small natural up-and-down weight shift. The character stays in the same spot and never moves across the frame; one foot is always on the same ground line. The clip starts AND ends in exactly the same pose as the still. Constant character size. No dust clouds, no speed lines, no effects. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaec962/l7r390rSTOMwiuCfB0Xl4_input.png"
+  },
+  "seconds": 5,
+  "resolution": "480P",
+  "size": [
+    1024,
+    1024
+  ],
+  "estimateUsd": 0.075,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/bosses/venom_warlock/.work/down_side/actions/walk/job/input.png",
+  "lastFrame": null,
+  "requestId": "01a14b9a-a02d-75b1-910a-c209485c2db2",
+  "seconds_elapsed": 2.4,
+  "source_url": "https://v3b.fal.media/files/b/0aaec962/v-3JcM6T41Qn7lQqrVJaV_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

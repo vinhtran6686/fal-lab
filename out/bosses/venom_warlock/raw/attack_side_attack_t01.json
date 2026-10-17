@@ -1,0 +1,27 @@
+{
+  "prompt": "The same tall gaunt hunched boss, about 3 heads tall, top-heavy with huge long bandaged brown arms and big mitten hands and a small head in a pale long-beaked plague mask under a muted purple-grey hood, a ragged muted purple-grey robe with a torn hem, brown bandaged short legs, a brown leather harness crossing the chest, small pale bone spikes on the hood and shoulders, holding a curved bone-coloured fang dagger tipped with sickly green in each hand; its ONE signature feature is a huge swollen sickly green venom sac strapped to its back with a flat layered drip; the outlines are dark purple, facing RIGHT the entire time and never turning around, starts in their ready stance, draws their right arm back a little (a short wind-up), then performs ONE fast, powerful stab to the RIGHT with the right-hand fang dagger at chest height while the body leans forward, holds the strike for a brief moment, then returns to the exact same ready stance as the start and holds still. The left dagger hangs low and barely moves. Only one attack: no second strike, no spinning, no jumping, no leaving the frame. The back foot stays planted. Both daggers stay held upright-curved fangs of the same length and shape; the venom sac stays strapped to the back and only sways a little. The clip starts AND ends in exactly the same pose as the still. The weapon stays one single weapon of the same length and shape. Constant character size. No motion trails, no slash effects, no sparks, no effects. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaec962/mNWHOnAi2yRwgfAbcRZ6G_input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aaec962/Ls9zXnbk0hlQe3EJUpt4O_input.png"
+  },
+  "seconds": 5,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.075,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/bosses/venom_warlock/.work/side_attack/actions/attack/job/input.png",
+  "lastFrame": "/home/user/fal-lab/out/bosses/venom_warlock/.work/side_attack/actions/attack/job/input.png",
+  "requestId": "01a14b9a-a491-7b80-b16f-d08ed0b0d027",
+  "seconds_elapsed": 2.5,
+  "source_url": "https://v3b.fal.media/files/b/0aaec962/gJFt4XGUF_m4PJY7_HZn-_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

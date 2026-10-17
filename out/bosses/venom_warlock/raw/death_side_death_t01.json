@@ -1,0 +1,26 @@
+{
+  "prompt": "The same tall gaunt hunched boss, about 3 heads tall, top-heavy with huge long bandaged brown arms and big mitten hands and a small head in a pale long-beaked plague mask under a muted purple-grey hood, a ragged muted purple-grey robe with a torn hem, brown bandaged short legs, a brown leather harness crossing the chest, small pale bone spikes on the hood and shoulders, holding a curved bone-coloured fang dagger tipped with sickly green in each hand; its ONE signature feature is a huge swollen sickly green venom sac strapped to its back with a flat layered drip; the outlines are dark purple, facing RIGHT the entire time and never turning around, is struck by a heavy unseen blow from behind, jolts forward to the RIGHT, the knees buckle and the heavy venom sac on the back pulls the body down, he falls forward onto the ground in one continuous motion, both daggers drop from the hands, bounces once slightly, then lies completely still on the ground, face down, for the rest of the clip. The venom sac stays strapped to the back. Stays on the same ground line; never gets up again. Constant character size. No dissolving body, no fragments, no ghosts, no blood, no dust, no effects. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaec962/_NPEbZB-gE23E4mxKckJL_input.png"
+  },
+  "seconds": 5,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.075,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/bosses/venom_warlock/.work/side_death/actions/death/job/input.png",
+  "lastFrame": null,
+  "requestId": "01a14b9a-a267-7912-a9e2-3a09c36d0dfe",
+  "seconds_elapsed": 2.2,
+  "source_url": "https://v3b.fal.media/files/b/0aaec962/F2h0A7tKOw5CyfVY0kFPj_minimax-h3.mp4",
+  "cost_is_estimate": true
+}
