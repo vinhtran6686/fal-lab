@@ -31,3 +31,6 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - Cost guard: stay on `--quality low` unless the user explicitly asks for medium/high.
   Video clips cost ~10x an image: show the clip count and estimate and get a yes before a paid
   `sprite_set.py run`; `FAL_VIDEO_MAX_USD` (default 0.60) caps each clip.
+- Advisor rule: consult the advisor (Opus 5.5) before locking a plan, after hitting the same error
+  twice, and before calling a task done. If no built-in advisor is available, spawn an agent with
+  model `opus` and ask it instead.
