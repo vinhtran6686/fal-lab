@@ -32,5 +32,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   Video clips cost ~10x an image: show the clip count and estimate and get a yes before a paid
   `sprite_set.py run`; `FAL_VIDEO_MAX_USD` (default 0.60) caps each clip.
 - Advisor rule: consult the advisor (Opus 5.5) before locking a plan, after hitting the same error
-  twice, and before calling a task done. If no built-in advisor is available, spawn an agent with
-  model `opus` and ask it instead.
+  twice, and before calling a task done. Use the built-in advisor tool; when it is unavailable, or when
+  the user wants proof that Opus answered, call the `advisor` subagent (`.claude/agents/advisor.md`,
+  Opus 5.5) with a self-contained brief (task, plan or result, file paths). Its transcript messages record
+  the model, so the session can be checked with `list_events`.
