@@ -2,7 +2,8 @@
 
 Inherits everything in `../format.md` (style, generation rules, view prompts, commands, folders, checklist).
 Hierarchy: **format → class (enemy) → size tier → level → archetype (melee / ranged)**.
-Allies (`out/allies/`) and bosses (`out/bosses/`) use this file's slots and sheet list (format.md §7).
+Allies (`out/allies/`) and bosses (`out/bosses/`) use this file's slots and sheet list (format.md §7); allies
+take the hero palette instead of the enemy one.
 Only **Level 1** is defined for now. Kind tag for files and `{kind}`: `enemy`. Folder: `out/enemies/{id}/`.
 This skill makes the enemy's design stills (master, standard views, icon, projectile). Its animations are
 made by the `video-sprite` skill from those stills, with the size of format.md §7.
@@ -21,7 +22,7 @@ Icon: `{rim}` = muted stone-grey, `{badge}` = muted khaki.
 ## Level 1: regular enemies (fodder of the first maps)
 | Item | Value |
 |---|---|
-| Size | tier and canvas from the size matrix (`../format.md` §7, profile `unit`): XS 56x48, S 88x80 (default), M 136x120, L 188x168 at 1x; bosses (XL, XXL) use profile `boss`. Body `{H}` per tier, video-sprite `--target-height 2x{H}` |
+| Size | tier and canvas from the size matrix (`../format.md` §7, profile `unit`): XS 56x48, S 92x80 (default), M 136x120, L 192x168 at 1x; bosses (XL, XXL) use profile `boss`. Body `{H}` per tier, video-sprite `--target-height 2x{H}` |
 | Pivot | feet, x 0.5, y 0.88 of the canvas |
 | Look | the style principles of format.md §1; must read at its tier height `{H}` |
 | Archetypes | `melee` (fights soldiers that block the road), `ranged` (shoots from a distance) |

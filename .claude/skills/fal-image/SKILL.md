@@ -24,7 +24,7 @@ paid call, in `--auto` mode too. Take them from the flags or the words of the re
    Quái (enemy), Boss; the one the description suggests first, marked "(Recommended)".
 2. Tier missing: AskUserQuestion "Chọn size cho <class>" with that class's tiers only (hero: S, M, L; ally:
    S, M, L; enemy: XS, S, M, L; boss: XL, XXL). Each option: tier, `{H}` and canvas, with a typical example
-   ("L: 84 px, canvas 220x192 — robot, golem"). The tier that fits the description first, "(Recommended)".
+   ("L: 84 px, canvas 220x196 — robot, golem"). The tier that fits the description first, "(Recommended)".
    Both missing: ask the class first, then the tier, in two calls (the tier options depend on the class).
 3. Record class, tier, `{H}` and canvas in `brief.md`; `{H}` goes into `{STYLE}`.
 

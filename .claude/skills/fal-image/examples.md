@@ -7,12 +7,12 @@ content. Sizes and canvases come from `format.md` §7; never name a commercial g
 ## Overview
 | Flag | Class | Tiers (default *) | Canvas @1x |
 |---|---|---|---|
-| `--hero` | Hero | S, M*, L | 104x92, 156x136, 220x192 |
-| `--ally` | Quân phe ta | S*, M, L | 88x80, 136x120, 188x168 |
+| `--hero` | Hero | S, M*, L | 104x92, 156x140, 220x196 |
+| `--ally` | Quân phe ta | S*, M, L | 92x80, 136x120, 192x168 |
 | `--enemy-small` | Quái nhỏ | XS* | 56x48 |
-| `--enemy` | Quái thường | S*, M | 88x80, 136x120 |
-| `--enemy-large` | Quái lớn | L* | 188x168 |
-| `--boss` | Boss | XL, XXL* | 304x204, 432x288 |
+| `--enemy` | Quái thường | S*, M | 92x80, 136x120 |
+| `--enemy-large` | Quái lớn | L* | 192x168 |
+| `--boss` | Boss | XL, XXL* | 308x204, 436x292 |
 
 ## --hero
 - **S (40 px)**: `/fal-image --hero --tier S nữ pháp sư băng nhỏ nhắn, áo choàng xanh nhạt có mũ trùm, cầm quyền trượng pha lê tay phải; attack: phóng một mảnh băng ngắn về phía trước; death: ngã quỵ, quyền trượng rơi`
@@ -30,12 +30,12 @@ content. Sizes and canvases come from `format.md` §7; never name a commercial g
 
 ## --enemy-small
 - **XS (24 px)**: `/fal-image --enemy-small nhện con đen tím, tám chân ngắn, mắt đỏ; attack: lao cắn ngắn tại chỗ; death: lật ngửa co chân`
-- **XS (24 px)**: `/fal-image --enemy-small chuột cống khổng lồ lông xám, đuôi dài hồng nhạt (không dùng màu hồng tươi), răng cửa to`
+- **XS (24 px)**: `/fal-image --enemy-small chuột cống khổng lồ lông xám, đuôi dài nâu nhạt, răng cửa to`
 - **XS (24 px)**: `/fal-image --enemy-small slime xanh lá dạng giọt, thân đặc không trong suốt, một giọt nhớt bên PHẢI; di chuyển bằng cách co giãn`
 
 ## --enemy
 - **S (40 px)**: `/fal-image --enemy --tier S yêu tinh goblin da xanh, dao găm gỉ tay phải, giáp da vá víu; attack: đâm dao tới trước`
-- **S (40 px)**: `/fal-image --enemy --tier S đạo tặc đầu trọc bụng phệ, đao lớn tay phải, khăn đỏ ngang hông; attack: xoay một vòng tại chỗ với đao`
+- **S (40 px)**: `/fal-image --enemy --tier S đạo tặc đầu trọc bụng phệ, đao lớn tay phải, khăn đỏ ngang hông; attack: bổ đao từ trên xuống trước mặt, đứng tại chỗ`
 - **S (40 px)**: `/fal-image --enemy --tier S bộ xương cầm khiên tròn gỗ mục và kiếm gãy; death: sụp thành đống xương`
 - **M (60 px)**: `/fal-image --enemy --tier M người sói lông xám, móng vuốt dài, đứng hai chân khom lưng; attack: cào chéo hai tay`
 - **M (60 px)**: `/fal-image --enemy --tier M hắc kỵ sĩ giáp đen gai nhọn, kiếm hai tay, mắt đỏ trong mũ giáp`

@@ -36,7 +36,7 @@ from PIL import Image
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from asset_layout import sheet_dir as layout_dir, sheet_rel  # noqa: E402
 
-DEFAULT_CELL = (256, 128)   # Level 1 enemy canvas at 1x (fal-image/classes/enemy.md)
+DEFAULT_CELL = (256, 128)   # legacy fallback; pass --cell from the size matrix (fal-image/format.md §7)
 BODY_TOLERANCE = 0.04       # rescale a sheet whose body height differs more than this from the asset's
 
 BASELINE = 0.12     # feet sit this fraction of the cell above its bottom edge (same as sprite_pack.py)
@@ -143,7 +143,7 @@ def main() -> None:
     p.add_argument("--id", required=True)
     p.add_argument("--kind", default="enemy")
     p.add_argument("--sheet", required=True, help="our sheet name: walk_side, walk_down_side, attack_side ...")
-    p.add_argument("--cell", help="canvas WxH at 1x for a NEW asset (default 256x128); an existing asset keeps its own")
+    p.add_argument("--cell", help="canvas WxH at 1x for a NEW asset (fal-image/format.md §7 matrix by class and tier; default 256x128 is legacy); an existing asset keeps its own")
     p.add_argument("--flip-to", help="direction produced by mirroring this one, e.g. left")
     p.add_argument("--move-speed", type=float, help="walking speed in px/s at 1x (stored in meta.json)")
     p.add_argument("--despill", action="store_true",

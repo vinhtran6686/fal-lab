@@ -29,7 +29,7 @@ purple outlines, format.md §1).
   (`--ref M`, same view as the sheet). video-sprite starts that action from it.
 
 ## Frame size
-Profile `hero` of the size matrix (`../format.md` §7): tier S 104x92, **M 156x136 (default)**, L 220x192 at
+Profile `hero` of the size matrix (`../format.md` §7): tier S 104x92, **M 156x140 (default)**, L 220x196 at
 1x, feet at y 0.88. The canvas leaves about 2 x `{H}` above the feet for casts, level-up and respawn; big skill
 effects (storms, rains, beams) are separate vfx assets. A small mage is S, most heroes M, a robot or golem L.
 

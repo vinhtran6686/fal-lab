@@ -265,15 +265,15 @@ idle pose shows, a weapon held upright included; the same box video-sprite measu
 Back-test on 107 reference characters (heroes, allies, enemies, bosses; flyers excluded): 78 (73%) fit their
 profile canvas; the rest are wide death falls and skill moves, which our prompts keep inside the frame.
 
-**Matrix** (canvas at 1x, rounded to 4 px; @2x doubles it; default tier marked *):
+**Matrix** (canvas at 1x, rounded up to 4 px; @2x doubles it; default tier marked *):
 | Class | Example flag | Folder, kind | Profile | Sheets | Tiers -> canvas @1x |
 |---|---|---|---|---|---|
-| hero | `--hero` | `out/heroes/`, `hero` | hero | `classes/hero.md` | S 104x92, **M* 156x136**, L 220x192 |
-| ally (friendly soldier) | `--ally` | `out/allies/`, `ally` | unit | `classes/enemy.md` list (5 walks, attack, death), icon rim gold | **S* 88x80**, M 136x120, L 188x168 |
+| hero | `--hero` | `out/heroes/`, `hero` | hero | `classes/hero.md` | S 104x92, **M* 156x140**, L 220x196 |
+| ally (friendly soldier) | `--ally` | `out/allies/`, `ally` | unit | `classes/enemy.md` list (5 walks, attack, death), icon rim gold | **S* 92x80**, M 136x120, L 192x168 |
 | enemy, small | `--enemy-small` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **XS* 56x48** |
-| enemy | `--enemy` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **S* 88x80**, M 136x120 |
-| enemy, large | `--enemy-large` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **L* 188x168** |
-| boss | `--boss` | `out/bosses/`, `boss` | boss | `classes/enemy.md` list + one sheet per special move | XL 304x204, **XXL* 432x288** |
+| enemy | `--enemy` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **S* 92x80**, M 136x120 |
+| enemy, large | `--enemy-large` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **L* 192x168** |
+| boss | `--boss` | `out/bosses/`, `boss` | boss | `classes/enemy.md` list + one sheet per special move | XL 308x204, **XXL* 436x292** |
 When asking, enemies are one class with tiers XS, S, M, L; bosses XL, XXL.
 
 Rules that come with the matrix:
@@ -284,6 +284,11 @@ Rules that come with the matrix:
 - **Big skill effects are separate assets**, as in the references: a rain of fire, a lightning chain or a
   summoned storm is a vfx asset (`templates.md` vfx, `out/vfx/<id>/`) placed over the scene by the game. Only
   the body and effects touching it (a glowing fist, flames on the weapon) stay in the character's frame.
+- **A frame that does not fit**: first re-prompt that action to stay inside the canvas (shorter reach, fall
+  in place); if it still does not fit, use the next tier's canvas of the same profile, keep `{H}`, and record
+  it in `brief.md`. Never shrink the body.
+- Allies use the hero palette (§1: saturated main colour, bright accent), not the enemy one, and skip the
+  "reads as an enemy" review point of `classes/enemy.md`.
 - Flyers (*to confirm*): the references float their body well above the canvas bottom (feet line about
   0.55-0.65); until a flyer is made, use the `unit` canvas one tier up and note it in `brief.md`.
 - `{H}` replaces "64" in `{STYLE}` (§1).

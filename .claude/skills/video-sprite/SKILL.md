@@ -41,7 +41,7 @@ The engine draws every action of a character in the same frame with the same piv
 bigger or smaller than another:
 - **Canvas**: `meta.json` "cell", set by the first export and shared by every later one. Read class and tier
   from the asset's `brief.md` and pass that canvas from the size matrix (`fal-image/format.md` §7) as
-  `--cell <W>x<H>` on the first export (e.g. hero M: `--cell 156x136`; enemy S: `--cell 88x80`). `video_to_sheet.py` never widens it for one action and
+  `--cell <W>x<H>` on the first export (e.g. hero M: `--cell 156x140`; enemy S: `--cell 92x80`). `video_to_sheet.py` never widens it for one action and
   never shrinks a body to fit; a state that does not fit is refused: delete `meta.json` and re-export every
   sheet with a larger `--cell` (all actions move to the new canvas together).
 - **Body**: every set is finished at `--target-height <2 x {H}>` (the tier's body height at @2x, format.md §7:
