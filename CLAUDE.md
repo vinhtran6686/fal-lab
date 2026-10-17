@@ -9,7 +9,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
     views (side, front, back, 3/4 front and back), icon, projectile; towers, props, UI, maps. Format, style
     and views in `format.md`, per-class specs in `classes/` (`enemy.md`, `hero.md`), size matrix (class x tier) in
     `format.md` §7 (asked with AskUserQuestion when missing), other assets in `templates.md`, example
-    requests in `examples.md` (`/fal-image --example --hero`). A `style.md` at the project root, if present, overrides the default style block.
+    requests in `examples.md` (`/fal-image --example --hero`); `--creative` proposes designs from a short idea. A `style.md` at the project root, if present, overrides the default style block.
   - `video-sprite` (`.claude/skills/video-sprite/`): every character animation (move, attack, death ...) from
     the approved stills: image-to-video on fal.ai (`scripts/fal_video.py`) -> keyed, registered, looped or
     retimed frames -> `scripts/video_to_sheet.py` exports them into `out/<class>/<id>/<category>/<sheet>/`

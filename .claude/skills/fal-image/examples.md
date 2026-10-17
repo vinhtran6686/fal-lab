@@ -14,6 +14,12 @@ content. Sizes and canvases come from `format.md` §7; never name a commercial g
 | `--enemy-large` | Quái lớn | L* | 192x168 |
 | `--boss` | Boss | XL, XXL* | 308x204, 436x292 |
 
+## --creative (any class)
+Give only the idea; the skill proposes 3 concepts and asks shape, weapon, palette and size in one question box.
+- `/fal-image hero nữ có biệt tài sử dụng gió --creative`
+- `/fal-image quái rừng nhỏ biết ẩn mình --creative`
+- `/fal-image --boss chúa tể dưới lòng đất --creative`
+
 ## --hero
 - **S (40 px)**: `/fal-image --hero --tier S nữ pháp sư băng nhỏ nhắn, áo choàng xanh nhạt có mũ trùm, cầm quyền trượng pha lê tay phải; attack: phóng một mảnh băng ngắn về phía trước; death: ngã quỵ, quyền trượng rơi`
 - **S (40 px)**: `/fal-image --hero --tier S cung thủ elf thanh mảnh, áo xanh lá, cung gỗ dài tay trái, tóc buộc đuôi ngựa`

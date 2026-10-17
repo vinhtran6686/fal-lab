@@ -16,8 +16,31 @@ motion sheet. Animation comes from the `video-sprite` skill, which animates the 
 - Class flags (`--hero`, `--ally`, `--enemy-small`, `--enemy`, `--enemy-large`, `--boss`) and `--tier
   XS|S|M|L|XL|XXL` may also come with a real request; plain words work too ("hero size L", "boss cỡ XXL").
 - `--auto`: format.md §5.
+- `--creative`: design-suggestion mode (next section). The user gives only the idea; you propose, they pick.
 
-## Ask for class and size (every character, before anything else)
+## Creative mode (`--creative`)
+The user gives a short idea ("hero nữ có biệt tài sử dụng gió --creative"). You are the concept artist: you
+turn it into a few designs and the user only chooses. No API call until the choices are made.
+1. **Class**: from the idea or a class flag; missing → ask it first (as below, one call).
+2. **Propose** in chat, in Vietnamese, **3 concepts** that differ in silhouette and role, not only in colour.
+   Each concept, 3-4 short lines: name and body (`{body}`, build, what is exaggerated for its role), weapon
+   or focus and the hand that holds it, palette (one main colour family + one accent, by side: format.md §1),
+   one signature feature, the attack in one phrase, and the tier it fits.
+   Restraint (the style forbids the rest): one signature feature per concept, effects only as one or two flat
+   layered shapes touching the body or the weapon, no ornate trim, no glow, no aura, no extra accessories.
+3. **Ask** in ONE AskUserQuestion call, up to 4 questions, every option labelled with its concept letter:
+   - "Hình dáng / vai trò" (header `Concept`): the 3 concepts (A, B, C), the best fit first "(Recommended)".
+   - "Vũ khí / tâm điểm" (header `Weapon`): 3 options mixing the concepts' weapons.
+   - "Bảng màu" (header `Palette`): 3 palettes (main + accent), all within format.md §1.
+   - "Size" (header `Size`): the class's tiers with `{H}`, canvas and an example (as below), the tier the
+     concept fits first "(Recommended)".
+   The user may mix (concept A with weapon from B) or type their own with "Other".
+4. **Compose** `{design}` (one dense sentence, format.md §1) and the other slots from the choices; write
+   `brief.md` with the idea in the user's words, the 3 concepts offered, the choices made, class and tier.
+5. Continue in the normal mode (default: master, then stop for approval; with `--auto` too, if given).
+   Show the composed `{design}` sentence in the master report so the user sees what was drawn from.
+
+## Ask for class and size (every character, before anything else; `--creative` asks the size together with its design questions)
 A character needs a **class** and a **size tier** from the matrix (`format.md` §7) before `brief.md` or any
 paid call, in `--auto` mode too. Take them from the flags or the words of the request; never guess a missing one.
 1. Class missing: AskUserQuestion "Nhân vật thuộc class nào?" with the options Hero, Quân phe ta (ally),
