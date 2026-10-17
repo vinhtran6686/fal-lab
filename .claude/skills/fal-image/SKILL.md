@@ -10,28 +10,31 @@ This skill makes **stills**: the raw source images, one fixed design per charact
 motion sheet. Animation comes from the `video-sprite` skill, which animates the approved stills.
 
 ## Pick the route
-- **Character of a defined class** (currently: `enemy`): read `format.md` and `classes/<class>.md` next to
-  this file and follow them exactly. The user gives content ("đạo tặc đầu trọc, dùng đao"); the class file
-  fixes the views, sizes, files and prompt wording. If the level or archetype is not given, use Level 1
-  and the archetype that fits.
-  1. `brief.md` with the filled slots, then the **master** (3/4 front). Mode (`format.md` §5): no `--auto`
+- **Character of a defined class** (`classes/enemy.md`, `classes/hero.md`): read `format.md` and the class
+  file next to this file and follow them exactly. The user gives content ("đạo tặc đầu trọc, dùng đao"); the
+  class file sets the slots, sheets and frame size; `format.md` sets the style, the view prompts (by `{body}`:
+  biped, quadruped, blob, flyer), files and checklist. If the level or archetype is not given, use Level 1
+  and the archetype that fits. A character of a class with no file yet (friendly unit, boss ...): ask the
+  user, then use the closest class file and note it in `brief.md`.
+  1. `brief.md` with the filled slots, then the **master** (3/4 front) into `<asset>/design/`. Mode (`format.md` §5): no `--auto`
      → stop after the master and ask the user to approve a version; `--auto` → approve it yourself (>= 8).
-  2. The **standard views** from the approved master (`format.md` §3): side, front, back, 3/4 back, icon
-     (+ projectile for ranged; optional `pose_ready_side`, `turnaround`). Show them; get approval.
+  2. The **standard views** and stills the class needs, from the approved master (`format.md` §3): side,
+     front, back, 3/4 back, icon (+ projectile; optional `pose_<action>`, `turnaround`). Show them; get approval.
   3. **Animation request** (move, attack, death, hurt, idle ...) or "làm tiếp phần chuyển động": hand over
      to the `video-sprite` skill with the approved stills. Missing views are made here first.
   - Keep `brief.md` and `history.md` of the asset up to date (one history row per still).
   - Restyle ("restyle bandit sang ..."), edit ("đổi vũ khí", "góc sau bị lộ mặt"): `format.md` §5.
 - **Character animation** asked directly ("tạo attack cho bandit"): use the `video-sprite` skill; it uses
   this skill only for a missing still.
-- **Other game asset** (tower, prop, icon, VFX key frame, UI, map): `templates.md`, with the style block
-  from `format.md`. They are stills too.
+- **Other game asset** (tower, prop, ability icon, VFX key frame, UI, map): `templates.md`, with `{STYLE}` and
+  `{BG}` from `format.md`, into `out/<kind>s/<id>/design/` (`format.md` §4). They are stills too.
 - **Anything else**: write a concrete prompt (subject, composition, camera, lighting, style, palette).
 
 ## Running the generator (project root)
 `python scripts/gen_image.py "<prompt>" --size <size> [--ref <image>] [--png] --name <name> [--versioned] [--out <dir>]`
 - Defaults: `--model gpt-image-2 --quality low` (cheap drafts). Class stills: `--size 1024x1024 --png` on a
-  flat magenta background (no `--transparent`; the tools key it out), `--versioned --out <asset>/stills`.
+  flat magenta background (no `--transparent`; the tools key it out), `--versioned --out <asset>/design`.
+  Every other asset uses the magenta background too, except opaque maps.
 - `--ref` sends a local image as visual reference (edit endpoint): every view uses `--ref <approved master>`.
 - Only use `--quality medium` or `high` after the user asks.
 - stdout lists saved image paths; stderr has a `cost:` line. Independent stills can run in parallel.

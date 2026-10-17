@@ -7,7 +7,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - Two skills, one job each:
   - `fal-image` (`.claude/skills/fal-image/`): stills only: a character's approved master and its standard
     views (side, front, back, 3/4 front and back), icon, projectile; towers, props, UI, maps. Format, style
-    and views in `format.md`, per-class specs in `classes/` (currently `enemy.md`, Level 1), other assets in
+    and views in `format.md`, per-class specs in `classes/` (`enemy.md` Level 1, `hero.md`), other assets in
     `templates.md`. A `style.md` at the project root, if present, overrides the default style block.
   - `video-sprite` (`.claude/skills/video-sprite/`): every character animation (move, attack, death ...) from
     the approved stills: image-to-video on fal.ai (`scripts/fal_video.py`) -> keyed, registered, looped or
