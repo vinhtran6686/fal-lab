@@ -24,7 +24,7 @@ Record in `brief.md`: the approved master and every approved `pose_*` still (cen
 purple outlines, format.md §1).
 
 ## Master and poses
-- The master is the hero in its idle stance, in the side view (facing right, turned ~30° toward the camera;
+- The master is the hero in its idle stance, in the side view (facing right, turned 30-45° toward the camera;
   format.md §3). Heroes have no front or back view: the references draw every hero action from the side only.
 - When an action needs a different hold or stance (`{poses}`), make a `pose_<action>` still from the master
   (`--ref M`, same view as the sheet). video-sprite starts that action from it.
@@ -35,7 +35,8 @@ Profile `hero` of the size matrix (`../format.md` §7): tier S 104x92, **M 156x1
 effects (storms, rains, beams) are separate vfx assets. A small mage is S, most heroes M, a robot or golem L.
 
 ## What a hero needs (states measured on 22 reference heroes and 9 allies, 2026-10-17)
-Every sheet is side only (+ mirror left). Durations are the reference's (30 fps).
+Every sheet is side only (+ mirror left). Durations are the reference's (30 fps): one-shots aim at them;
+loops take their length from the stride.
 | Category | Sheet | From still | Loop | Reference |
 |---|---|---|---|---|
 | idle | `idle_side` = the master still, 1 frame (a breathing loop only on request) | `master` | hold | 15/15 heroes, 1 frame |

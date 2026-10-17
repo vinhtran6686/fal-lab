@@ -1,13 +1,13 @@
 ---
 name: video-sprite
-description: Animate a game character's approved stills into consistent sprite animations (move/walk in 5 views, attack, death, hurt, idle, run) with image-to-video on fal.ai, then key, register, loop or retime, finish and export them into out/<class>/<id>/<category>/<sheet>/ (one final version; every source clip kept in raw/) with one fixed canvas and body size for every action. Use for any character or enemy animation; the stills come from the fal-image skill.
+description: Animate a game character's approved stills into consistent sprite animations (walk in 3 views for enemies, run/attack/death/skills from the side view for heroes) with image-to-video on fal.ai, then key, register, loop or retime, finish and export them into out/<class>/<id>/<category>/<sheet>/ (one final version; every source clip kept in raw/) with one fixed canvas and body size for every action. Use for any character or enemy animation; the stills come from the fal-image skill.
 ---
 
 # Video sprites (image-to-video on fal.ai)
 
 Port of `video2dsprite` from agent-sprite-forge 0.4.0 (MIT, see `LICENSE`, `VENDORED.md`), adapted to this
 project: clips come from `scripts/fal_video.py` (fal.ai, `FAL_KEY` in `.env`), frames are exported into the
-asset folder by `scripts/video_to_sheet.py`, and a top-down tower-defense game needs 5 views.
+asset folder by `scripts/video_to_sheet.py`, and a top-down tower-defense game needs 1 view for heroes and allies, 3 for enemies and bosses (fal-image/format.md §3).
 
 **Division of work.** The `fal-image` skill makes the stills: one approved master per character and its
 standard views (`fal-image/format.md` §3), all in `A/design/`. This skill animates them: one image-to-video
@@ -50,16 +50,16 @@ bigger or smaller than another:
   more than 4% by silhouette area (a height-based check misread weapons and was replaced, 2026-10-16).
 - **Pivot**: feet at x 0.5, y 0.88; one fixed transform per clip, so bob, lean, a fall or a spin are kept.
 
-## Views and sets (top-down game, 8 directions from 5 views)
-One set per view (or per view and action group); left, down-left and up-left are mirrors (`--flip-to`).
-| Set (`A/.work/`) | Still | `--facing` | `--views` | Actions -> sheets (category/sheet, `--flip-to`) |
-|---|---|---|---|---|
-| `side` | `view_side` | `right` | `side` | walk -> `move/walk_side` left |
-| `side_attack`, `side_death` | `view_side` (or `pose_ready_side`) | `right` | `side` | attack -> `attack/attack_side` left; death -> `death/death_side` left |
-| `down_side` | `master` | `down-right` | `side` | walk -> `move/walk_down_side` down_left |
-| `up_side` | `view_up_side` | `up-right` | `side` | walk -> `move/walk_up_side` up_left |
-| `down` | `view_front` | `front` | `front` | front-walk -> `move/walk_down` |
-| `up` | `view_back` | `back` | `back` | back-walk -> `move/walk_up` |
+## Views and sets (fal-image/format.md §3: hero/ally 1 direction, enemy/boss 3, no diagonals)
+One set per view (or per view and action group); left is the mirror of the side (`--flip-to left`).
+The side still is the `master` (a three-quarter view facing right); idle is that still itself (no clip)
+unless a breathing loop is asked for.
+| Set (`A/.work/`) | Still | `--facing` | `--views` | Actions -> sheets (category/sheet, `--flip-to`) | Classes |
+|---|---|---|---|---|---|
+| `side` | `master` | `right` | `side` | walk -> `move/walk_side` (heroes, allies: run -> `move/run_side`) left | all |
+| `side_attack`, `side_death` | `master` (or `pose_<action>`) | `right` | `side` | attack -> `attack/attack_side` left; death -> `death/death_side` left | all |
+| `down` | `view_front` | `front` | `front` | front-walk -> `move/walk_down` | enemy, boss |
+| `up` | `view_back` | `back` | `back` | back-walk -> `move/walk_up` | enemy, boss |
 Front and back MUST be planned with `--views front` / `--views back` (their action ids become
 `front-walk` / `back-walk`): that turns off the turn-around gate, which cannot work on a symmetric view.
 The category folder comes from the sheet name (`scripts/asset_layout.py`: walk/run -> move, attack/cast ->

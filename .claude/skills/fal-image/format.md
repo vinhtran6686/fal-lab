@@ -101,15 +101,17 @@ The references draw far fewer directions than an 8-way game would suggest, and n
 Heroes and allies fight standing on the road, so one side view is enough; enemies follow the path, which
 also runs up and down the screen; a diagonal stretch uses the nearest of the three.
 
-**"Side" is not a flat profile**: in every reference the side sprite faces right with the body turned about
-30 degrees toward the camera (high top-down view), the face and the front of the torso visible, the far arm
-and leg partly hidden. "Down" is a straight front view, "up" a straight back view.
+**"Side" is not a flat profile**: in the references checked (bandit, knight hero, ogre, orc, demon, wolf) the
+side sprite is a three-quarter view facing right, the body turned about 30-45 degrees toward the camera (high
+top-down view), the face and the front of the torso visible, the far arm and leg partly hidden; four-legged
+beasts sit closer to a profile but still turn the head toward the camera. *Master wording untested*: the first
+master made with it is the test. "Down" is a straight front view, "up" a straight back view.
 
 **The master IS the side view.** It is the direction the game shows most, so it gets the best drawing, and
 every other view is redrawn from it with `--ref`. A diagonal (3/4 down or up) view is never made.
 | Still (`design/`) | View | Animated by video-sprite as | hero, ally | enemy, boss |
 |---|---|---|---|---|
-| `master_vNN` | side: facing right, body turned ~30° toward the camera | idle (the still itself, see below), `walk_side`/`run_side`, `attack_side`, `death_side`, specials (+ mirror left) | yes | yes |
+| `master_vNN` | side: three-quarter view facing right, body turned 30-45° toward the camera | idle (the still itself, see below), `walk_side`/`run_side`, `attack_side`, `death_side`, specials (+ mirror left) | yes | yes |
 | `view_front_vNN` | straight front, facing the viewer | `walk_down` | - | yes |
 | `view_back_vNN` | straight back, facing away | `walk_up` | - | yes |
 | `icon_vNN` | portrait badge | `ui/icon` | yes | yes |
@@ -133,7 +135,7 @@ same skeleton with the master's view, the pose instead of "Neutral standing pose
 the weapon (or the staff, the book ...).
 | Still | `<VIEW>` |
 |---|---|
-| `master` | SIDE VIEW from a high top-down camera: facing RIGHT, as if walking toward the right edge of the screen, the body turned about 30 degrees toward the viewer so the face and the front of the chest are visible, the far arm and leg partly hidden behind the body, the weapon held in front on the right side. Neutral ready pose. Not a flat profile, not a front view. |
+| `master` | SIDE VIEW from a high top-down camera: a three-quarter view facing RIGHT, as if walking toward the right edge of the screen, the body turned about 30-45 degrees toward the viewer so the face and the front of the chest are visible, the far arm and leg partly hidden behind the body, the weapon held in front on the right side. Neutral ready pose. Not a flat profile, not a front view. |
 | `view_front` | Straight FRONT view, perfectly facing the viewer, walking toward the bottom of the screen, mirror-symmetric body: both eyes visible, both shoulders the same size, feet side by side, the weapon held upright in its {weapon hand} (on the left side of the image for a right hand). Not a side view. |
 | `view_back` | Straight BACK view, seen from directly behind, walking away toward the top of the screen: the back of the head, NO face and NO eyes visible, mirror-symmetric body, feet side by side with the heels toward the viewer, the weapon held upright in its {weapon hand} (on the RIGHT side of the image for a right hand). Not a side view, not a front view. |
 | `pose_ready_side` (example of `pose_<action>`) | The master's SIDE VIEW (facing right, turned toward the viewer) in a combat-ready stance: knees bent, weight forward, the weapon raised and ready to strike. |
@@ -255,7 +257,7 @@ re-animate only the actions that start from it.
 
 ## 6. Review checklist for stills (score 1-10, redo below 8)
 - Same character as the master: colors, gear, proportions, the weapon's shape and the hand that holds it.
-- The view is exact (§3 table of its `{body}`): master = facing right, body turned ~30° toward the viewer,
+- The view is exact (§3 table of its `{body}`): master = three-quarter view facing right, body turned 30-45° toward the viewer,
   face visible (not a flat profile, not a front view); front = mirror-symmetric, face visible; back = no face.
 - Neutral pose (or the requested `pose_*`), full body and weapon inside the frame with margin, nothing touching the edges.
 - Style (§1): simple big shapes and a clear silhouette at `{H}` px; no fine detail on face, hands or clothes;

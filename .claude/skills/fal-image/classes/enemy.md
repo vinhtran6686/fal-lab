@@ -29,7 +29,8 @@ Icon: `{rim}` = muted stone-grey, `{badge}` = muted khaki.
 | Move speed | `move_speed` in `meta.json`, px/s at 1x: a default from the stride, tuned in the playtest (feet must not slide) |
 
 ### What an enemy needs (states measured on 68 reference enemies and 16 bosses, 2026-10-17)
-Durations are the reference's (30 fps); video-sprite retimes to its own fps but keeps the duration.
+Durations are the reference's (30 fps): one-shots (attack, death ...) aim at them; loops (walk, run) take
+their length from the stride, so a reference length does not carry over directly.
 | Category | Sheet | From still | Loop | Reference | Melee | Ranged |
 |---|---|---|---|---|---|---|
 | idle | `idle_side` = the master still, 1 frame | `master` | hold | 65/68 enemies, 1 frame | yes | yes |
