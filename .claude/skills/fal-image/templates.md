@@ -23,7 +23,7 @@ footprint) exactly as written. Never name a commercial game or studio in a promp
 ## Quick table
 | id | Asset | Size | `--name` example |
 |---|---|---|---|
-| turn | 5-view turnaround of a character (review sheet) | 2048x1024 | dwarf_turn |
+| turn | 3-view turnaround of an enemy (review sheet) | 1536x1024 | goblin_turn |
 | tower | Tower, 3 upgrade levels | 1536x1024 | tower_archer |
 | prop | Map props, 3x2 grid | 1024x1024 | props_forest |
 | vfx | VFX key frame (one still) | 1024x1024 | fx_explosion |
@@ -35,8 +35,8 @@ footprint) exactly as written. Never name a commercial game or studio in a promp
 Make the character's master and standard views first (`format.md` §3); this sheet only helps compare them
 side by side and is never animated. `--ref <approved master>`.
 
-### turn — 5-view turnaround
-> Character turnaround sheet of {design}: 5 views in ONE horizontal row of five equal-width cells, left to right: three-quarter front facing down-right, side profile facing right, straight front, three-quarter back facing up-right, straight back. Identical design, colors, proportions and scale in every view, feet on one shared baseline, neutral standing pose, no grid lines, no labels, no text. {BG} {STYLE}
+### turn — 3-view turnaround (enemies and bosses)
+> Character turnaround sheet of {design}: 3 views in ONE horizontal row of three equal-width cells, left to right: side view facing right with the body turned toward the viewer, straight front, straight back. Identical design, colors, proportions and scale in every view, feet on one shared baseline, neutral standing pose, no grid lines, no labels, no text. {BG} {STYLE}
 
 ## Buildings and props
 

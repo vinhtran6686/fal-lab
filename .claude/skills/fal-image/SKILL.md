@@ -1,6 +1,6 @@
 ---
 name: fal-image
-description: Generate still images with OpenAI GPT Image via fal.ai: a game character's approved master and its standard views (side, front, back, three-quarter front and back), icons, projectiles, towers, props, UI and level backgrounds. Use when the user asks to create, draw, render or design an image, a character or a game asset. Animation (walk, attack, death ...) is not drawn here: it is made from these stills by the video-sprite skill.
+description: Generate still images with OpenAI GPT Image via fal.ai: a game character's approved master (side view) and, for enemies, its front and back views, icons, projectiles, towers, props, UI and level backgrounds. Use when the user asks to create, draw, render or design an image, a character or a game asset. Animation (walk, attack, death ...) is not drawn here: it is made from these stills by the video-sprite skill.
 ---
 
 # Generate stills with fal.ai
@@ -58,10 +58,11 @@ paid call, in `--auto` mode too. Take them from the flags or the words of the re
   sheets, the matrix the frame size; `format.md` sets the style, the view prompts (by `{body}`: biped,
   quadruped, blob, flyer), files and checklist. If the level or archetype is not given, use Level 1 and the
   archetype that fits.
-  1. `brief.md` with class, tier and the filled slots, then the **master** (3/4 front) into `<asset>/design/`. Mode (`format.md` §5): no `--auto`
+  1. `brief.md` with class, tier and the filled slots, then the **master** (side view, format.md §3) into `<asset>/design/`. Mode (`format.md` §5): no `--auto`
      → stop after the master and ask the user to approve a version; `--auto` → approve it yourself (>= 8).
-  2. The **standard views** and stills the class needs, from the approved master (`format.md` §3): side,
-     front, back, 3/4 back, icon (+ projectile; optional `pose_<action>`, `turnaround`). Show them; get approval.
+  2. The other stills the class needs, from the approved master (`format.md` §3): enemy and boss: front and
+     back; every class: icon (+ projectile when ranged; optional `pose_<action>`). Heroes and allies have no
+     other view. Show them; get approval.
   3. **Animation request** (move, attack, death, hurt, idle ...) or "làm tiếp phần chuyển động": hand over
      to the `video-sprite` skill with the approved stills. Missing views are made here first.
   - Keep `brief.md` and `history.md` of the asset up to date (one history row per still).

@@ -91,58 +91,73 @@ it the first masters came back with buckles, pouches, bandages and fabric textur
 Proportions drift taller: ask for half a head less than wanted ("about 3 heads tall" came back near 4), and
 a long upright weapon (glaive, staff, spear) held diagonally so its tip does not reach the top edge.
 
-## 3. Standard views of a character (the "forms" video-sprite animates)
-A top-down game moves in 8 directions; 5 views are generated, the 3 left-facing ones are mirrors.
-| Still (`design/`) | View | Animated by video-sprite as | Required |
-|---|---|---|---|
-| `master_vNN` | three-quarter FRONT, facing down-right (the design reference) | `*_down_side` (+ mirror down-left) | yes |
-| `view_side_vNN` | true side profile, facing right | `*_side` (+ mirror left) | yes |
-| `view_front_vNN` | straight front, facing the viewer | `walk_down` | yes |
-| `view_back_vNN` | straight back, facing away | `walk_up` | yes |
-| `view_up_side_vNN` | three-quarter BACK, facing up-right | `walk_up_side` (+ mirror up-left) | yes |
-| `icon_vNN` | portrait badge | `ui/icon` (packed with `sprite_pack.py`) | yes |
-| `pose_<action>_vNN` | the character in the start pose of one action (ready, run, attack, death ...), same view as the sheet it starts | optional start still when the neutral pose reads wrong for that action | optional |
-| `turnaround_vNN` | the 5 views side by side (`templates.md` "turn") | review only, never animated | optional |
-Which views and sheets a character needs is set by its class file. Make and approve them in this order:
-master, then side, front, back, up_side (each with `--ref <master>`), then the icon.
+## 3. Directions and views (measured 2026-10-17 on 112 reference characters)
+The references draw far fewer directions than an 8-way game would suggest, and never a diagonal:
+| Class (references) | Directions drawn | What is drawn in each |
+|---|---|---|
+| hero (22), ally (9) | **1: side** (left = mirror) | everything: idle, run, attack, death, skills, level-up, respawn |
+| enemy (60 of 68), boss (7 of 16) | **3: side, down, up** (left = mirror) | side: walk, idle, attack, death, specials; down: walk only; up: walk only |
+| exceptions | a ranged hero aiming in 3 directions; flyers and skaters with a walk set per direction | - |
+Heroes and allies fight standing on the road, so one side view is enough; enemies follow the path, which
+also runs up and down the screen; a diagonal stretch uses the nearest of the three.
+
+**"Side" is not a flat profile**: in every reference the side sprite faces right with the body turned about
+30 degrees toward the camera (high top-down view), the face and the front of the torso visible, the far arm
+and leg partly hidden. "Down" is a straight front view, "up" a straight back view.
+
+**The master IS the side view.** It is the direction the game shows most, so it gets the best drawing, and
+every other view is redrawn from it with `--ref`. A diagonal (3/4 down or up) view is never made.
+| Still (`design/`) | View | Animated by video-sprite as | hero, ally | enemy, boss |
+|---|---|---|---|---|
+| `master_vNN` | side: facing right, body turned ~30° toward the camera | idle (the still itself, see below), `walk_side`/`run_side`, `attack_side`, `death_side`, specials (+ mirror left) | yes | yes |
+| `view_front_vNN` | straight front, facing the viewer | `walk_down` | - | yes |
+| `view_back_vNN` | straight back, facing away | `walk_up` | - | yes |
+| `icon_vNN` | portrait badge | `ui/icon` | yes | yes |
+| `projectile_vNN` | the shot of a ranged character | `projectile` | if ranged | if ranged |
+| `pose_<action>_vNN` | the start pose of one action, side view | optional start still when the neutral pose reads wrong for that action | optional | optional |
+Asset count per character: hero or ally **2 stills** (master, icon), enemy or boss **4** (master, front, back,
+icon), plus a projectile when ranged. Make and approve them in this order: master, then front and back (each
+`--ref <master>`), then the icon.
 
 ### View prompts (every class)
 `{kind}` is the class word ("enemy", "hero", "friendly soldier"). Every view prompt is:
 `Use the reference image only for the character design; redraw it in the style described. Single game
 {kind} sprite: {design}. <VIEW> Neutral standing pose, full body, centered, filling about 70% of the frame.
 {SIMPLE} {BG} {STYLE}`. The master has no `--ref` and starts directly with "Single game {kind} sprite: {design}.".
-`<VIEW>` comes from the table of the character's `{body}`. The model pulls every view back toward the 3/4
-master: name the angle in capitals, say what must and must not be visible (eyes, face, which side the
-weapon or the asymmetric mark is on), and end with "Not a three-quarter view". A `pose_<action>` still uses
-the same skeleton with its view, the pose instead of "Neutral standing pose", and `--ref <master>`.
+`<VIEW>` comes from the table of the character's `{body}`. The model pulls front and back views back toward
+the turned master: name the angle in capitals, say what must and must not be visible (eyes, face, which side
+the weapon or the asymmetric mark is on), and end with "Not a side view". A `pose_<action>` still uses the
+same skeleton with the master's view, the pose instead of "Neutral standing pose", and `--ref <master>`.
 
-**biped** (two legs; tested on bandit 2026-10-13/14 and centaur's upper body 2026-10-16). `{weapon hand}` is
-the hand that holds the weapon (or the staff, the book ...).
+**biped** (two legs; front and back tested on bandit 2026-10-13/14). `{weapon hand}` is the hand that holds
+the weapon (or the staff, the book ...).
 | Still | `<VIEW>` |
 |---|---|
-| `master` | Three-quarter view facing down-right, as if walking toward the bottom-right of the screen. Neutral ready pose. |
-| `view_side` | FLAT SIDE PROFILE like a paper cutout, facing exactly right: chest and belly pointing to the right edge, the back of the head pointing left, only one eye visible, the weapon held out in front to the right, legs one in front of the other along the ground. Not a three-quarter view. |
-| `view_front` | Straight FRONT view, perfectly facing the viewer, mirror-symmetric body: both eyes visible, both shoulders the same size, feet side by side, the weapon held upright in its {weapon hand} (on the left side of the image for a right hand). Not a three-quarter view. |
-| `view_back` | Straight BACK view, seen from directly behind, walking away from the viewer: the back of the head, NO face and NO eyes visible, mirror-symmetric body, feet side by side with the heels toward the viewer, the weapon held upright in its {weapon hand} (on the RIGHT side of the image for a right hand). Not a three-quarter view, not a front view. |
-| `view_up_side` | Three-quarter BACK view, turned 45 degrees to face the TOP-RIGHT of the screen, walking away from the viewer toward the upper right: the back and the left side visible, only the edge of one ear, NO eyes and no face visible, the weapon held upright in its {weapon hand}. Not a side profile, not a front view. |
-| `pose_ready_side` (example of `pose_<action>`) | FLAT SIDE PROFILE facing exactly right in a combat-ready stance: knees bent, weight forward, the weapon raised and ready to strike. Not a three-quarter view. |
+| `master` | SIDE VIEW from a high top-down camera: facing RIGHT, as if walking toward the right edge of the screen, the body turned about 30 degrees toward the viewer so the face and the front of the chest are visible, the far arm and leg partly hidden behind the body, the weapon held in front on the right side. Neutral ready pose. Not a flat profile, not a front view. |
+| `view_front` | Straight FRONT view, perfectly facing the viewer, walking toward the bottom of the screen, mirror-symmetric body: both eyes visible, both shoulders the same size, feet side by side, the weapon held upright in its {weapon hand} (on the left side of the image for a right hand). Not a side view. |
+| `view_back` | Straight BACK view, seen from directly behind, walking away toward the top of the screen: the back of the head, NO face and NO eyes visible, mirror-symmetric body, feet side by side with the heels toward the viewer, the weapon held upright in its {weapon hand} (on the RIGHT side of the image for a right hand). Not a side view, not a front view. |
+| `pose_ready_side` (example of `pose_<action>`) | The master's SIDE VIEW (facing right, turned toward the viewer) in a combat-ready stance: knees bent, weight forward, the weapon raised and ready to strike. |
 
-**quadruped** (four legs, incl. centaurs and beasts; *untested as a full set*): as biped, with these changes.
-- `view_side`: the whole body long and flat across the frame, head and chest to the right, tail to the left, all four legs visible as two pairs, one eye visible.
+**quadruped** (four legs, incl. centaurs and beasts; *untested*): as biped, with these changes.
+- `master`: the long body across the frame, head and chest to the right, tail to the left, turned toward the viewer so the near flank and both pairs of legs show, the face visible.
 - `view_front` / `view_back`: the body foreshortened to a short block, front legs side by side (front) or hindquarters and tail (back); the long body is hidden behind the head or the rump.
-- `view_up_side`: rump and tail toward the viewer, the back and the left flank visible, the head turned away.
 
 **blob** (no legs: slimes, oozes; *untested*): no `{weapon hand}`, no feet; "standing" becomes "resting on
 a wide flat base on the ground". `{design}` must name one asymmetric mark and its side ("a drip on its RIGHT
-side"): that mark tells the views apart. Front: eyes and mouth visible, the mark on the image left. Back:
-no face, only a highlight arc, the mark on the image right. Side: one eye, the body bulging to the right.
-up_side: the back and right flank, face hidden, mark visible. The top-left highlight never moves with the body.
+side"): that mark tells the views apart. Master: facing right, eyes and mouth shifted to the right. Front:
+eyes and mouth centred, the mark on the image left. Back: no face, only a highlight arc, the mark on the image
+right. The top-left highlight never moves with the body.
 Blob and flyer have no head count: `{design}` gives a width-to-height ratio instead of "2.5 to 4 heads tall"
 ("about 1.3 times as wide as it is tall").
 
 **flyer** (wings, floats; *untested*): no feet on the ground; "standing" becomes "hovering in place, wings
-spread level". Side: wings seen edge-on, one above the other; front/back: wings spread symmetrically, face
-visible / hidden. The body is drawn with no shadow below; video-sprite uses its `flying` profile.
+spread level". Master: facing right, wings spread, the near wing in front; front/back: wings spread
+symmetrically, face visible / hidden. In the references a flyer floats with its body about a third of the
+canvas above the ground line; video-sprite uses its `flying` profile.
+
+**Idle is the master itself**: in the references idle is one still frame for 15 of 15 heroes, 8 of 8 allies
+and most enemies (median 1 frame). The game shows the side still while the character waits; a looping
+breathing idle is optional (video-sprite) and asked for only when the user wants it.
 
 ### Icon and projectile (every class)
 **icon** (`--ref <master>`):
@@ -161,8 +176,8 @@ creature without shoulders: "ONLY the upper half of {design} with its face".
 Let `A=out/<class>/{id}` (class folder from the class file) and `M=A/design/master_vNN.png` (approved master).
 ```
 python scripts/gen_image.py "<master prompt>" --size 1024x1024 --png --name master --versioned --out A/design
-python scripts/gen_image.py "<view prompt>"   --size 1024x1024 --png --ref M --name view_side --versioned --out A/design
-# ... view_front, view_back, view_up_side, pose_*, icon (and projectile) the same way; independent stills run in parallel
+python scripts/gen_image.py "<view prompt>"   --size 1024x1024 --png --ref M --name view_front --versioned --out A/design
+# ... view_back (enemies, bosses), pose_*, icon (and projectile) the same way; independent stills run in parallel
 python scripts/sprite_pack.py A/design/icon_vNN.png --asset A --kind <kind> --id {id} --state icon --dir none --grid 1x1 --frames 1 --cell 128 --center --own-scale --fill 0.95
 ```
 Then the animations: `video-sprite` skill, with the frame size of the class file.
@@ -176,14 +191,14 @@ out/<class>/<id>/                         e.g. out/heroes/centaur/
   brief.md                                request, class/level, filled slots, approved design stills and poses
   history.md                              one row per still or video take: version, score, verdict, issue, change
   meta.json                               engine metadata: one canvas, pivot and body size for every action
-  design/                                 the ORIGINAL DESIGN (this skill), every version: master_v03.png, view_side_v01.png, pose_run_v01.png ... (+ .json)
+  design/                                 the ORIGINAL DESIGN (this skill), every version: master_v03.png, view_front_v01.png, pose_run_v01.png ... (+ .json)
   raw/                                    SOURCE videos (video-sprite), every take, saved as soon as the model returns
-    run_down_side_run_t02.mp4 (+ .json)   <action>_<set>_tNN: the .json holds model, prompt, cost, request id
+    run_side_run_t02.mp4 (+ .json)   <action>_<set>_tNN: the .json holds model, prompt, cost, request id
   idle/ move/ attack/ death/ ...          STATE folders (category, scripts/asset_layout.py): ONE final version each
-    move/run_down_side/                   one folder per sheet
+    move/run_side/                        one folder per sheet
       preview.gif                         look here first
       sheet.png                           horizontal sheet @2x
-      frames/@2x/hero_centaur_run_down_side_01.png ...   frames for the game (also @1x)
+      frames/@2x/hero_centaur_run_side_01.png ...   frames for the game (also @1x)
       check/                              motioncheck.txt, transitions.png, legcheck.png, take_review.png
   ui/icon/                                packed icon (sprite_pack.py from design/icon_vNN.png)
   .work/                                  tools only, not in git (video-sprite sets pruned to their decisions)
@@ -240,8 +255,8 @@ re-animate only the actions that start from it.
 
 ## 6. Review checklist for stills (score 1-10, redo below 8)
 - Same character as the master: colors, gear, proportions, the weapon's shape and the hand that holds it.
-- The view is exact (§3 table of its `{body}`): side = true profile facing right (one eye); front =
-  mirror-symmetric, face visible; back = no face; 3/4 front faces down-right; 3/4 back faces up-right, face hidden.
+- The view is exact (§3 table of its `{body}`): master = facing right, body turned ~30° toward the viewer,
+  face visible (not a flat profile, not a front view); front = mirror-symmetric, face visible; back = no face.
 - Neutral pose (or the requested `pose_*`), full body and weapon inside the frame with margin, nothing touching the edges.
 - Style (§1): simple big shapes and a clear silhouette at `{H}` px; no fine detail on face, hands or clothes;
   stylized proportions as `{design}` says; flat fills with 2-3 hard tones per colour, no gradient or blur;

@@ -28,28 +28,33 @@ Icon: `{rim}` = muted stone-grey, `{badge}` = muted khaki.
 | Archetypes | `melee` (fights soldiers that block the road), `ranged` (shoots from a distance) |
 | Move speed | `move_speed` in `meta.json`, px/s at 1x: a default from the stride, tuned in the playtest (feet must not slide) |
 
-### What a Level 1 enemy needs
-| Category | Sheet | From still | Loop | Melee | Ranged |
-|---|---|---|---|---|---|
-| move | `walk_side` (+ mirror `walk_left`) | `view_side` | yes | yes | yes |
-| move | `walk_down_side` (+ mirror `walk_down_left`) | `master` | yes | yes | yes |
-| move | `walk_up_side` (+ mirror `walk_up_left`) | `view_up_side` | yes | yes | yes |
-| move | `walk_down` | `view_front` | yes | yes | yes |
-| move | `walk_up` | `view_back` | yes | yes | yes |
-| attack | `attack_side` (+ mirror `attack_left`), hit frame exported | `view_side` | no | strike | shoot (release = hit, no projectile in the clip) |
-| death | `death_side` (+ mirror), holds the last frame | `view_side` | no | yes | yes |
-| ui | `icon` | `icon` still, packed with `sprite_pack.py` | - | yes | yes |
-| projectile | `projectile` | `projectile` still | - | - | yes |
-The engine picks the walk sheet from the movement angle in 45° sectors (a little hysteresis so a curve
-does not flicker). Attack and death are side only (+ mirror): fights happen on the road, facing the target.
-Optional: `hurt_side`, `idle_side` (category hurt, idle).
+### What an enemy needs (states measured on 68 reference enemies and 16 bosses, 2026-10-17)
+Durations are the reference's (30 fps); video-sprite retimes to its own fps but keeps the duration.
+| Category | Sheet | From still | Loop | Reference | Melee | Ranged |
+|---|---|---|---|---|---|---|
+| idle | `idle_side` = the master still, 1 frame | `master` | hold | 65/68 enemies, 1 frame | yes | yes |
+| move | `walk_side` (+ mirror `walk_left`) | `master` | yes | 63/68, ~22 frames, 0.7 s | yes | yes |
+| move | `walk_down` | `view_front` | yes | 62/68, same length as side | yes | yes |
+| move | `walk_up` | `view_back` | yes | 63/68, same length as side | yes | yes |
+| attack | `attack_side` (+ mirror), hit frame exported | `master` | no | 56/68, ~19 frames, 0.65 s (bosses ~32, 1.05 s) | strike | - |
+| attack | `shoot_side` (+ mirror), release frame exported | `master` | no | 8/68, ~24 frames, 0.8 s | - | shoot (no projectile in the clip) |
+| death | `death_side` (+ mirror), holds the last frame | `master` | no | 63/68, ~16 frames, 0.55 s (bosses ~35, 1.2 s) | yes | yes |
+| ui | `icon` | `icon` still, packed with `sprite_pack.py` | - | - | yes | yes |
+| projectile | `projectile` | `projectile` still | - | - | - | yes |
+Optional, only when the game needs them (reference counts): `trapped_side` + `trapped_free_side` (43/68:
+held by a tower's root or thorn trap, a short struggle loop and a ~5-frame release), `spawn_side` (15/68:
+rises from the ground or a portal, ~34 frames, 1.1 s), `special_side` (heal, summon, ~1 s, rare). No
+reference enemy has a hurt state. Bosses: the enemy list plus **1 to 3 special moves** (smash, breath,
+freeze, heal, spores, summon, transform: 30-48 frames, 1-1.6 s each), side only.
+The engine picks the walk sheet from the movement angle (right/left = side, down = front, up = back, a
+diagonal uses the nearest; a little hysteresis so a curve does not flicker). Everything else is side only.
 
-Cost of a melee enemy at `low`: 7 stills (master, 4 views, icon, maybe 1 retry) ~USD 0.10 + 7 clips
-(5 walks, attack, death) with `h3-max-turbo` ~USD 0.55, more with retakes.
+Cost of a melee enemy at `low`: 4 stills (master, front, back, icon) ~USD 0.06 + 5 clips (3 walks, attack,
+death; idle is the master) with `h3-max-turbo` ~USD 0.40, more with retakes.
 
 ## Enemy-specific review points (in addition to format.md §6)
 - The weapon (or the asymmetric mark of a blob) is on the same side, with the same shape and size, in every view.
-- The 5 views together cover the 8 directions: side faces right, 3/4 front faces down-right, 3/4 back faces
-  up-right, front shows the face, back hides it.
+- The 3 views cover every direction: master faces right (turned toward the viewer), front shows the face,
+  back hides it.
 - Every view stands on the same kind of neutral pose, so the walk clips start alike.
 - Reads as an enemy next to the heroes: muted main colour, one warning accent.

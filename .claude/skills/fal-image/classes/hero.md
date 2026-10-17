@@ -24,7 +24,8 @@ Record in `brief.md`: the approved master and every approved `pose_*` still (cen
 purple outlines, format.md §1).
 
 ## Master and poses
-- The master is the hero in its idle stance, three-quarter front facing down-right (format.md §3).
+- The master is the hero in its idle stance, in the side view (facing right, turned ~30° toward the camera;
+  format.md §3). Heroes have no front or back view: the references draw every hero action from the side only.
 - When an action needs a different hold or stance (`{poses}`), make a `pose_<action>` still from the master
   (`--ref M`, same view as the sheet). video-sprite starts that action from it.
 
@@ -33,17 +34,23 @@ Profile `hero` of the size matrix (`../format.md` §7): tier S 104x92, **M 156x1
 1x, feet at y 0.88. The canvas leaves about 2 x `{H}` above the feet for casts, level-up and respawn; big skill
 effects (storms, rains, beams) are separate vfx assets. A small mage is S, most heroes M, a robot or golem L.
 
-## What a hero needs
-| Category | Sheet | From still | Loop | Status |
+## What a hero needs (states measured on 22 reference heroes and 9 allies, 2026-10-17)
+Every sheet is side only (+ mirror left). Durations are the reference's (30 fps).
+| Category | Sheet | From still | Loop | Reference |
 |---|---|---|---|---|
-| idle | `idle_down_side` (+ mirror) | `master` (idle stance) | yes | tested (centaur) |
-| move | `run_down_side` or `walk_down_side` (+ mirror) | `master` or `pose_run` | yes | tested (centaur) |
-| attack | `attack_down_side` (+ mirror), hit frame exported | `master` or `pose_attack` | no | tested (centaur) |
-| death | `death_down_side` (+ mirror), holds the last frame | `master` or `pose_death` | no | tested (centaur) |
-| move | `*_side`, `*_up_side`, `*_down`, `*_up` | the other standard views | yes | *to confirm*: whether heroes need all 8 directions |
-| attack | `cast_down_side` per skill | `master` or `pose_cast` | no | *to confirm* |
-| ui | `icon` | `icon` still | - | *to confirm* (none made yet) |
-Centaur's sheets face down-side only (the 3/4 master), not the enemy's side profile.
+| idle | `idle_side` = the master still, 1 frame (a breathing loop only on request) | `master` | hold | 15/15 heroes, 1 frame |
+| move | `run_side` | `master` or `pose_run` | yes | 15/15, ~6 frames, 0.2 s: a short, fast loop |
+| attack | `attack_side`, hit frame exported | `master` or `pose_attack` | no | 14/15, ~22 frames, 0.75 s |
+| attack | `attack2_side` (a second melee move) or `shoot_side` (ranged) | `master` | no | 4/15 each, ~22-27 frames |
+| death | `death_side`, holds the last frame | `master` or `pose_death` | no | 13/15, ~9 frames, 0.3 s: short |
+| spawn | `respawn_side` (appears on the map again) | `master` | no | 13/15, ~18 frames, 0.6 s |
+| level | `levelup_side` (a short flourish) | `master` | no | 13/15, ~18-23 frames, 0.7 s |
+| skill | `skill_<name>_side`, one per skill | `master` or `pose_<skill>` | no | **2-4 skills per hero**, 28-68 frames, 1-2 s |
+| ui | `icon` | `icon` still | - | - |
+Skills: the body's motion only; a big effect (rain, storm, beam, summon) is a separate vfx asset (format.md §7).
+Allies (`out/allies/`, `classes/enemy.md` slots) use this list without respawn, level-up and skills: idle
+(still), `run_side` (~8 frames), `attack_side` (~20), `death_side` (~15); a summoned ally adds `spawn_side`,
+an elite ally 1-2 specials (heal, holy strike: ~30 frames).
 
 ## Hero-specific review points (in addition to format.md §6)
 - Reads as a hero next to the enemies: brighter main colour, one bright accent, a clear role silhouette.

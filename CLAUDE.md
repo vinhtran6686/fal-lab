@@ -5,8 +5,8 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 
 - Generator: `scripts/gen_image.py` (run `python scripts/gen_image.py --help`)
 - Two skills, one job each:
-  - `fal-image` (`.claude/skills/fal-image/`): stills only: a character's approved master and its standard
-    views (side, front, back, 3/4 front and back), icon, projectile; towers, props, UI, maps. Format, style
+  - `fal-image` (`.claude/skills/fal-image/`): stills only: a character's approved master (side view) plus,
+    for enemies and bosses, front and back views (`format.md` §3: no diagonals), icon, projectile; towers, props, UI, maps. Format, style
     and views in `format.md`, per-class specs in `classes/` (`enemy.md`, `hero.md`), size matrix (class x tier) in
     `format.md` §7 (asked with AskUserQuestion when missing), other assets in `templates.md`, example
     requests in `examples.md` (`/fal-image --example --hero`); `--creative` proposes designs from a short idea. A `style.md` at the project root, if present, overrides the default style block.
