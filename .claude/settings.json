@@ -6,6 +6,8 @@
       "Bash(python scripts/gen_image.py:*)",
       "Bash(python3 scripts/gen_image.py:*)",
       "Bash(python scripts/cost_report.py:*)",
+      "Bash(python scripts/asset_status.py:*)",
+      "Bash(python3 scripts/asset_status.py:*)",
       "Bash(python3 scripts/cost_report.py:*)",
       "Read(out/**)",
       "Read(.claude/skills/**)",

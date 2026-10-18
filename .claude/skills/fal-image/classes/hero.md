@@ -46,11 +46,11 @@ loops take their length from the stride.
 | death | `death_side`, holds the last frame | `master` or `pose_death` | no | 13/15, ~9 frames, 0.3 s: short |
 | spawn | `respawn_side` (appears on the map again) | `master` | no | 13/15, ~18 frames, 0.6 s |
 | level | `levelup_side` (a short flourish) | `master` | no | 13/15, ~18-23 frames, 0.7 s |
-| skill | `skill_<name>_side`, one per skill | `master` or `pose_<skill>` | no | **2-4 skills per hero**, 28-68 frames, 1-2 s |
+| skill | per skill: `pose_skill_<name>` (fal-image, the skill's peak) + `skill_<name>_side` (from the master to the pose) + `fx_<name>` when the effect is big | `master` → `pose_skill_<name>` | no | **2-3 skills per hero** (2-9 in the references), 28-68 frames, 1-2 s |
 | ui | `icon` | `icon` still | - | - |
 Skills: the body's motion only; a big effect (rain, storm, beam, summon) is a separate vfx asset (format.md §7).
-Allies (`out/allies/`, `classes/enemy.md` slots) use this list without respawn, level-up and skills: idle
-(still), `run_side` (~8 frames), `attack_side` (~20), `death_side` (~15); a summoned ally adds `spawn_side`,
+Allies (`out/allies/`, slots as here, palette of heroes) use this list without respawn, level-up and skills: idle
+(still), `run_side` (~8 frames), `attack_side` (~20), `death_side` (~15); a summoned ally adds `raise_side`,
 an elite ally 1-2 specials (heal, holy strike: ~30 frames).
 
 ## Hero-specific review points (in addition to format.md §6)

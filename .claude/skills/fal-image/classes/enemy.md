@@ -42,11 +42,18 @@ their length from the stride, so a reference length does not carry over directly
 | death | `death_side` (+ mirror), holds the last frame | `master` | no | 63/68, ~16 frames, 0.55 s (bosses ~35, 1.2 s) | yes | yes |
 | ui | `icon` | `icon` still, packed with `sprite_pack.py` | - | - | yes | yes |
 | projectile | `projectile` | `projectile` still | - | - | - | yes |
-Optional, only when the game needs them (reference counts): `trapped_side` + `trapped_free_side` (43/68:
-held by a tower's root or thorn trap, a short struggle loop and a ~5-frame release), `spawn_side` (15/68:
-rises from the ground or a portal, ~34 frames, 1.1 s), `special_side` (heal, summon, ~1 s, rare). No
-reference enemy has a hurt state. Bosses: the enemy list plus **1 to 3 special moves** (smash, breath,
-freeze, heal, spores, summon, transform: 30-48 frames, 1-1.6 s each), side only.
+Role rows (format.md §8): `summoned` adds `raise_side` (15/68 references: rises from the ground, ~34
+frames, 1.1 s); `thorn_side` + `thorn_free_side` (43/68: held by a tower's binding vines, a struggle loop and
+a ~5-frame release) are **later** (⏭) until the game has such a tower. Specials (heal, summon, ~1 s) are
+rare. No reference enemy has a hurt state. Bosses: the enemy list plus **0 to 3 special moves** (smash,
+breath, freeze, heal, spores, summon, transform: 30-48 frames, 1-1.6 s each), each a pose + a side clip + a
+vfx when the effect is big; a two-phase death adds `death_end_side` (format.md §9).
+
+**Flying enemies** (`--enemy-flying`, role `flying`; references: gargoyle, witch, imp-like flyers): the master
+hovers (wings spread, body above the ground line), front and back hover too; the clips are `fly_side`,
+`fly_down`, `fly_up` (~14 frames) and an animated `idle_fly` loop (the only animated idle); `death_side`
+(~12 frames: falls to the ground); `shoot_side` when ranged; no melee attack, no thorn.
+
 The engine picks the walk sheet from the movement angle (right/left = side, down = front, up = back, a
 diagonal uses the nearest; a little hysteresis so a curve does not flicker). Everything else is side only.
 

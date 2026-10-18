@@ -12,6 +12,7 @@ content. Sizes and canvases come from `format.md` §7; never name a commercial g
 | `--enemy-small` | Quái nhỏ | XS* | 56x48 |
 | `--enemy` | Quái thường | S*, M | 92x80, 136x120 |
 | `--enemy-large` | Quái lớn | L* | 192x168 |
+| `--enemy-flying` | Quái bay | S, M* | 136x120, 192x168 |
 | `--boss` | Boss | XL, XXL* | 308x204, 436x292 |
 
 ## --creative (any class)
@@ -19,6 +20,15 @@ Give only the idea; the skill proposes 3 concepts and asks shape, weapon, palett
 - `/fal-image hero nữ có biệt tài sử dụng gió --creative`
 - `/fal-image quái rừng nhỏ biết ẩn mình --creative`
 - `/fal-image --boss chúa tể dưới lòng đất --creative`
+
+## Role and skills (any class)
+Add `--role` and `skill:` to skip those questions; leave them out and the skill asks.
+- `/fal-image --hero --tier M --role melee nữ kiếm sĩ gió, cầm song kiếm; skill: lốc xoáy - xoay người tạo lốc cuốn quái (vfx); skill: lướt chém - lướt tới chém một đường`
+- `/fal-image --hero --tier S --role ranged pháp sư băng nhỏ; skill: mưa băng - giơ trượng lên trời (vfx mưa băng); skill: đóng băng - chĩa trượng tới trước`
+- `/fal-image --enemy-flying --tier S dơi quỷ tím, cánh rách; --role flying`
+- `/fal-image --enemy --tier S --role ranged goblin ném rìu`
+- `/fal-image --boss --tier XXL --role melee golem dung nham; skill: đập đất - giơ hai tay đập xuống (vfx sóng chấn động)`
+- Status: `/fal-image --status`, `/fal-image --status wind_dancer`, or just "trạng thái tới đâu rồi"
 
 ## --hero
 - **S (40 px)**: `/fal-image --hero --tier S nữ pháp sư băng nhỏ nhắn, áo choàng xanh nhạt có mũ trùm, cầm quyền trượng pha lê tay phải; attack: phóng một mảnh băng ngắn về phía trước; death: ngã quỵ, quyền trượng rơi`

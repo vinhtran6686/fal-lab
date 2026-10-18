@@ -10,11 +10,14 @@ This skill makes **stills**: the raw source images, one fixed design per charact
 motion sheet. Animation comes from the `video-sprite` skill, which animates the approved stills.
 
 ## Arguments
-- `--example [--hero | --ally | --enemy-small | --enemy | --enemy-large | --boss]`: only print the matching
+- `--example [--hero | --ally | --enemy-small | --enemy | --enemy-large | --enemy-flying | --boss]`: only print the matching
   section of `examples.md` (no flag: the overview and one example per class). No API call, no size question,
   nothing written.
-- Class flags (`--hero`, `--ally`, `--enemy-small`, `--enemy`, `--enemy-large`, `--boss`) and `--tier
-  XS|S|M|L|XL|XXL` may also come with a real request; plain words work too ("hero size L", "boss cỡ XXL").
+- Class flags (`--hero`, `--ally`, `--enemy-small`, `--enemy`, `--enemy-large`, `--enemy-flying`, `--boss`),
+  `--tier XS|S|M|L|XL|XXL`, `--role melee|ranged|flying|summoned` and `skill: <name> - <what it does>` (one
+  or more) may come with a real request; plain words work too ("hero size L", "quái bay", "đánh xa").
+- `--status [<id>]` or "trạng thái tới đâu rồi", "xem manifest của <id>": run `python scripts/asset_status.py
+  [<id>]` and show its table (every character, or one character's manifest). No API call, nothing written.
 - `--auto`: format.md §5.
 - `--creative`: design-suggestion mode (next section). The user gives only the idea; you propose, they pick.
 
@@ -34,22 +37,32 @@ turn it into a few designs and the user only chooses. No API call until the choi
    - "Bảng màu" (header `Palette`): 3 palettes (main + accent), all within format.md §1.
    - "Size" (header `Size`): the class's tiers with `{H}`, canvas and an example (as below), the tier the
      concept fits first "(Recommended)".
+   Each concept also names its role and, for a hero or boss, 2-3 skills; a second AskUserQuestion call asks
+   "Chọn kỹ năng" (`multiSelect`) from the chosen concept's skills.
    The user may mix (concept A with weapon from B) or type their own with "Other".
 4. **Compose** `{design}` (one dense sentence, format.md §1) and the other slots from the choices; write
    `brief.md` with the idea in the user's words, the 3 concepts offered, the choices made, class and tier.
 5. Continue in the normal mode (default: master, then stop for approval; with `--auto` too, if given).
    Show the composed `{design}` sentence in the master report so the user sees what was drawn from.
 
-## Ask for class and size (every character, before anything else; `--creative` asks the size together with its design questions)
-A character needs a **class** and a **size tier** from the matrix (`format.md` §7) before `brief.md` or any
-paid call, in `--auto` mode too. Take them from the flags or the words of the request; never guess a missing one.
+## Ask for class, size, role and skills (every character, before anything else; `--creative` asks them with its design questions)
+A character needs a **class** and a **size tier** (`format.md` §7), a **role** and, for heroes and bosses,
+its **skills** (`format.md` §8) before `brief.md` or any paid call, in `--auto` mode too. Take them from the
+flags or the words of the request; never guess a missing one. Ask only what is missing.
 1. Class missing: AskUserQuestion "Nhân vật thuộc class nào?" with the options Hero, Quân phe ta (ally),
    Quái (enemy), Boss; the one the description suggests first, marked "(Recommended)".
 2. Tier missing: AskUserQuestion "Chọn size cho <class>" with that class's tiers only (hero: S, M, L; ally:
    S, M, L; enemy: XS, S, M, L; boss: XL, XXL). Each option: tier, `{H}` and canvas, with a typical example
    ("L: 84 px, canvas 220x196 — robot, golem"). The tier that fits the description first, "(Recommended)".
    Both missing: ask the class first, then the tier, in two calls (the tier options depend on the class).
-3. Record class, tier, `{H}` and canvas in `brief.md`; `{H}` goes into `{STYLE}`.
+   Role and skills go in the SAME call as the tier (up to 4 questions):
+   - Role missing: "Vai trò?" with that class's roles (§8), the one the description suggests first.
+   - Skills missing (hero; boss: specials): "Chọn kỹ năng" with `multiSelect: true`, 3-4 skills you propose
+     from the description, each "<name>: <the body's move>; <the effect, marked vfx when big>". Hero: pick 2-3.
+     Allies and enemies get no skill question (none by default; the user may add them).
+3. Record class, tier, `{H}`, canvas, role and skills in `brief.md`; `{H}` goes into `{STYLE}`.
+4. Write the **Asset manifest** (`format.md` §8) from class, role and skills, with the cost estimate, and show
+   it to the user with the master report (they may add or drop rows).
 
 ## Pick the route
 - **Character** (hero, ally, enemy, boss; `format.md` §7 says which class file holds its slots and sheets:
@@ -58,14 +71,17 @@ paid call, in `--auto` mode too. Take them from the flags or the words of the re
   sheets, the matrix the frame size; `format.md` sets the style, the view prompts (by `{body}`: biped,
   quadruped, blob, flyer), files and checklist. If the level or archetype is not given, use Level 1 and the
   archetype that fits.
-  1. `brief.md` with class, tier and the filled slots, then the **master** (side view, format.md §3) into `<asset>/design/`. Mode (`format.md` §5): no `--auto`
+  1. `brief.md` with class, tier, role, skills, the filled slots and the **Asset manifest**, then the **master** (side view, format.md §3) into `<asset>/design/`. Mode (`format.md` §5): no `--auto`
      → stop after the master and ask the user to approve a version; `--auto` → approve it yourself (>= 8).
-  2. The other stills the class needs, from the approved master (`format.md` §3): enemy and boss: front and
-     back; every class: icon (+ projectile when ranged; optional `pose_<action>`). Heroes and allies have no
-     other view. Show them; get approval.
-  3. **Animation request** (move, attack, death, hurt, idle ...) or "làm tiếp phần chuyển động": hand over
-     to the `video-sprite` skill with the approved stills. Missing views are made here first.
-  - Keep `brief.md` and `history.md` of the asset up to date (one history row per still).
+  2. Every `fal-image` row of the manifest, from the approved master (`--ref`): front and back (enemies,
+     bosses), icon, projectile (ranged), `pose_skill_<name>` (one per skill, the skill's peak), then the
+     `fx_<name>` vfx stills (`templates.md` vfx). Show them; get approval; mark each row ✅ or ⏳.
+     Heroes and allies have no other view.
+  3. **Animation request** or "làm tiếp phần chuyển động": hand over to the `video-sprite` skill, which makes
+     the manifest's `video-sprite` rows marked ❌. Missing stills are made here first.
+  - Keep `brief.md` (manifest status), and `history.md` (one row per still) up to date.
+  - Extensions (a second attack, a two-phase death, a transformation, walk and fly ...): `format.md` §9; add
+    their rows to the manifest first.
   - Restyle ("restyle bandit sang ..."), edit ("đổi vũ khí", "góc sau bị lộ mặt"): `format.md` §5.
 - **Character animation** asked directly ("tạo attack cho bandit"): use the `video-sprite` skill; it uses
   this skill only for a missing still.

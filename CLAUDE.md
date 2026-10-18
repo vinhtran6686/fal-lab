@@ -28,6 +28,9 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - `ref/` holds style reference assets: look only, never send to the API.
 - Output: images, `.json` sidecars (prompt, settings, estimated cost) and `costs.csv` go to `out/`.
 - Spend summary: `python scripts/cost_report.py [--today]`.
+- Progress: every character's `brief.md` holds an Asset manifest (`fal-image/format.md` §8: class + role +
+  skills -> every still, clip and vfx it needs, with ✅/⏳/❌/⏭). `python scripts/asset_status.py [<id>]`
+  answers "trạng thái tới đâu rồi"; guide in `docs/asset-manifest.md`.
 - Secrets: `FAL_KEY` is in `.env` (git-ignored). Never read it, print it, log it, or commit it.
   Cloud sessions: `FAL_KEY` comes from the environment's settings (Network secrets or an environment
   variable), never pasted into chat. Network policy must allow the fal API hosts and `*.fal.media` (image

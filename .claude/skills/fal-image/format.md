@@ -219,7 +219,7 @@ Game-ready frames (the same for every action of an asset):
 | File type | PNG-32 RGBA, transparent; `@2x` master and `@1x` in-game |
 | Canvas | **one canvas for every action of an asset** (`meta.json` "cell"), from the size matrix (§7) by class and tier. No action gets a bigger or smaller frame, so the engine never rescales one action against another |
 | Body | **one body height for every action**: `2 x {H}` at @2x (video-sprite `--target-height`), recorded as `meta.json` "body_height_2x"; a sheet whose body differs by more than 4% is rescaled on export |
-| Pivot | feet, x 0.5, y 0.88 of the canvas (`meta.json` "pivot"; fixed in `video_to_sheet.py`); icons are centered |
+| Pivot | feet, x 0.5, y 0.88 of the canvas (`meta.json` "pivot"; fixed in `video_to_sheet.py`); icons are centered. The reference game sets the anchor per character (0.10-0.25 of the canvas above the bottom, median 0.18) and the engine reads it per character; this project fixes it at 0.88 for every asset and records it in `meta.json`, the size matrix (§7) already includes the room below the feet |
 | Motion | `move_speed` (px/s at 1x) in `meta.json`, tuned in the playtest so the feet do not slide |
 Frame size: §7.
 
@@ -296,12 +296,14 @@ profile canvas; the rest are wide death falls and skill moves, which our prompts
 | Class | Example flag | Folder, kind | Profile | Sheets | Tiers -> canvas @1x |
 |---|---|---|---|---|---|
 | hero | `--hero` | `out/heroes/`, `hero` | hero | `classes/hero.md` | S 104x92, **M* 156x140**, L 220x196 |
-| ally (friendly soldier) | `--ally` | `out/allies/`, `ally` | unit | `classes/enemy.md` list (5 walks, attack, death), icon rim gold | **S* 92x80**, M 136x120, L 192x168 |
+| ally (friendly soldier) | `--ally` | `out/allies/`, `ally` | unit | `classes/hero.md` ally list (run, attack, death), icon rim gold | **S* 92x80**, M 136x120, L 192x168 |
 | enemy, small | `--enemy-small` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **XS* 56x48** |
 | enemy | `--enemy` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **S* 92x80**, M 136x120 |
 | enemy, large | `--enemy-large` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **L* 192x168** |
+| enemy, flying | `--enemy-flying` | `out/enemies/`, `enemy` | unit, one tier up (body floats above the ground line) | `classes/enemy.md` flying list | S (canvas of M) 136x120, **M* (canvas of L) 192x168** |
 | boss | `--boss` | `out/bosses/`, `boss` | boss | `classes/enemy.md` list + one sheet per special move | XL 308x204, **XXL* 436x292** |
-When asking, enemies are one class with tiers XS, S, M, L; bosses XL, XXL.
+When asking, enemies are one class with tiers XS, S, M, L (a flying enemy S or M); bosses XL, XXL.
+The class with its role (§8) is what decides the asset list; the tier only decides the size.
 
 Rules that come with the matrix:
 - Pass the canvas to video-sprite as `--cell <W>x<H>` (1x) and `--target-height <2 x {H}>`; record class,
@@ -319,3 +321,82 @@ Rules that come with the matrix:
 - Flyers (*to confirm*): the references float their body well above the canvas bottom (feet line about
   0.55-0.65); until a flyer is made, use the `unit` canvas one tier up and note it in `brief.md`.
 - `{H}` replaces "64" in `{STYLE}` (§1).
+
+## 8. Asset manifest: what a character needs (fixed; from the reference game's code and atlas, 2026-10-18)
+Every character's `brief.md` holds an **Asset manifest**: the list of every still, clip and effect the
+character needs, with its status. It is written with the brief (from class, role and skills), shown to the
+user before the master, and kept up to date by both skills: fal-image fills the stills and effects,
+video-sprite the clips. `python scripts/asset_status.py` reads every manifest ("trạng thái tới đâu rồi").
+
+**Rules of the reference game (from its code):**
+- Only **movement** has several directions: walking and flying enemies and bosses draw 3 (side, up, down);
+  heroes and allies 1 (`run`). Every other state (idle, attack, death, skills) is drawn once, from the
+  side, and flipped left/right to face the target.
+- The game picks the walk sheet by quadrant: 315-45° side, 45-135° up (back), 135-225° side flipped,
+  225-315° down (front), with 10° of stickiness so a diagonal near 45° does not flicker between two sheets.
+  Up and down sheets must still look right when the character actually moves up to 45° off vertical.
+- `idle` is a single still frame (the master) for walking enemies, bosses, heroes and allies; a flying
+  enemy's idle is an animated hover.
+- 30 fps, mostly drawn "on twos" (each drawing held 2 frames: about 15 drawings a second).
+
+**Roles** (asked with the class, §SKILL "Ask"):
+| Class | Roles |
+|---|---|
+| hero | `melee`, `ranged` |
+| ally | `melee`, `ranged`, `summoned` |
+| enemy | `melee` (walks, strikes), `ranged` (walks, shoots), `flying` (flies, usually no melee), `summoned` (rises from the ground) |
+| boss | `melee`, `ranged` |
+
+**Rows by class and role** (`F` = fal-image still, `V` = video-sprite clip, `X` = vfx effect still):
+| Row | Hero | Ally | Enemy (walking) | Enemy (flying) | Boss |
+|---|---|---|---|---|---|
+| `master` (= idle, side) F | yes | yes | yes | yes, hovering | yes |
+| `icon` F | yes | yes | yes | yes | yes |
+| `view_front`, `view_back` F | - | - | yes | yes | yes |
+| `projectile` F | ranged | ranged | ranged | ranged | ranged |
+| `run_side` V (loop) | yes | yes | - | - | - |
+| `walk_side`, `walk_down`, `walk_up` V (loop) | - | - | yes | `fly_*` instead | yes |
+| `idle_fly` V (loop) | - | - | - | yes | - |
+| `attack_side` V | melee | melee | melee | - | melee |
+| `shoot_side` V | ranged | ranged | ranged | ranged | ranged |
+| `death_side` V | yes | yes | yes | yes | yes |
+| `respawn_side`, `levelup_side` V | yes | - | - | - | - |
+| `raise_side` V | - | summoned | summoned | - | - |
+| `thorn_side`, `thorn_free_side` V | - | - | ⏭ later (only if the game has a binding tower) | - | - |
+| per skill: `pose_skill_<name>` F + `skill_<name>_side` V + `fx_<name>` X | 2-3 skills | 0-2 (elite) | rare | rare | 0-3 specials |
+Skills follow three parts: the **pose** (the skill's peak, one still, the end the clip moves to), the
+**body clip** (video-sprite, effects touching the body included) and, when the effect is big (rain, storm,
+beam, summon, shockwave), a separate **vfx** asset (`templates.md` vfx, `out/vfx/<name>/`). A basic attack
+has no pose by default; add `pose_attack` only when the master's stance reads wrong for it.
+
+**Manifest table** (in `brief.md`, heading exactly `## Asset manifest`; one row per asset; the tool reads
+the status column):
+```
+## Asset manifest
+| Asset | Từ | Loại | Trạng thái | Ghi chú |
+|---|---|---|---|---|
+| master (= idle) | fal-image | ảnh tĩnh | ✅ v03 | chốt 2026-10-18 |
+| icon | fal-image | ảnh tĩnh | ❌ | |
+| pose_skill_gale | fal-image | ảnh tĩnh | ❌ | đỉnh chiêu lốc xoáy |
+| run_side | video-sprite | loop | ❌ | |
+| attack_side | video-sprite | one-shot | ❌ | |
+| death_side | video-sprite | one-shot | ❌ | |
+| respawn_side | video-sprite | one-shot | ❌ | |
+| levelup_side | video-sprite | one-shot | ❌ | |
+| skill_gale_side | video-sprite | one-shot | ❌ | |
+| fx_gale | fal-image vfx | hiệu ứng | ❌ | lốc xoáy, asset riêng |
+```
+Status: `✅ vNN` / `✅ tNN` done and approved; `⏳` made, waiting for the user's approval; `❌` not made yet;
+`⏭` later or skipped (say why in Ghi chú). Update the row the moment its state changes, in the same commit
+as the still or the clip. Under the table, one line of estimated cost: stills x ~USD 0.014 + clips x ~USD 0.08.
+
+## 9. Extension patterns (from the reference game; add their rows to the manifest when asked)
+| Pattern | Rows to add | Example request |
+|---|---|---|
+| Variant to avoid repetition | `attack2_side` (and `idle2`) | "thêm đòn đánh thứ 2" |
+| Two-phase death (bosses) | `death_end_side` (lying, or fading out) | "boss chết 2 pha" |
+| Transformation | a second `master_<form>` F and its own rows (idle, run or walk, attack ...), plus `to_<form>_side` and `to_<base>_side` V | "biến thành gấu" |
+| Walk and fly | the walking set, the `fly_*` set, and `take_off_<dir>` + `land_<dir>` V for each of the 3 directions | "đi bộ rồi bay lên" |
+| Speed variant | `walk_<dir>_fast` V | "chạy nhanh khi tăng tốc" |
+| Aimed shot in 3 directions | `shoot_side`, `shoot_up`, `shoot_down` V (+ `view_front`/`view_back` F for a hero) | "bắn lên xuống" |
+A new direction, state or skill is a new row: the size, style and pivot never change for it.
