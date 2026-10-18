@@ -80,9 +80,8 @@ flags or the words of the request; never guess a missing one. Ask only what is m
      bosses), icon, projectile (ranged), `pose_skill_<name>` (one per skill, the skill's peak), then the
      `fx_<name>` vfx stills (`templates.md` vfx). Show them; get approval; mark each row ✅ or ⏳.
      Heroes and allies have no other view.
-  3. **Animation request** or "làm tiếp phần chuyển động": hand over to the `video-sprite` skill the manifest's
-     `video-sprite` rows marked ❌, by name (video-sprite reading the manifest itself is pending; until then name
-     the rows in the handoff). Missing stills are made here first.
+  3. **Animation request** or "làm tiếp phần chuyển động": hand over to the `video-sprite` skill, which makes
+     the manifest's `video-sprite` rows marked ❌. Missing stills are made here first.
   - Keep `brief.md` (manifest status), and `history.md` (one row per still) up to date.
   - Extensions (a second attack, a two-phase death, a transformation, walk and fly ...): `format.md` §9; add
     their rows to the manifest first.

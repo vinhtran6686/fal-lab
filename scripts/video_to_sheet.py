@@ -163,9 +163,9 @@ def main() -> None:
     frames_dir = set_dir / finished["framesDir"]
     files = sorted(frames_dir.glob("*.png"))
     indices, durations, selection = timeline(read_json(set_dir / selection_stage["selection"]))
-    rest_index = indices[0]   # the take's first frame is the master pose, also when it is played backwards
+    rest_index = indices[0]   # the first shown frame before any reversal: the rest pose of a one-shot
     if a.rest_frame:   # idle = the master still, as in the reference game (1 frame)
-        indices, durations = [rest_index], [1000]
+        indices, durations = [0], [1000]   # source frame 0 of the take: the master pose (a loop window starts mid-stride)
         selection = {"loopPolicy": "cycle"}
     elif a.reverse:
         indices, durations = indices[::-1], durations[::-1]

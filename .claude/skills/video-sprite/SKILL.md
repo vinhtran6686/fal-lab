@@ -60,7 +60,7 @@ Left is always the mirror of the side (`--flip-to left`); there are no diagonal 
 idle, no feet gate), `boss`, `hero` or `mob` otherwise.
 | Manifest row | Set (`A/.work/`) | Master (`make_master.py`) | Plan `--actions` / `--views` | Export (`video_to_sheet.py --sheet ...`) |
 |---|---|---|---|---|
-| `master (= idle)` | `side` | `master`, `--facing right` | (no clip of its own) | `--action <any side action> --sheet idle_side --rest-frame`: frame 0 of a side take = the master pose, 1 frame |
+| `master (= idle)` | `side` | `master`, `--facing right` | (no clip of its own) | `--action <any side action> --sheet idle_side --rest-frame --flip-to left`: frame 0 of a side take = the master pose, 1 frame |
 | `walk_side` (enemy, boss) | `side` | `master`, `right` | `walk` / `side` | `--action walk --sheet walk_side --flip-to left` |
 | `run_side` (hero, ally) | `side` | `master`, `right` | `run` / `side` | `--action run --sheet run_side --flip-to left` |
 | `walk_down` | `down` | `view_front`, `--facing front` | `walk` / `front` (id `front-walk`) | `--action front-walk --sheet walk_down` |

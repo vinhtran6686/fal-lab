@@ -75,7 +75,7 @@ MEDIA_FAKE_ENV = "FORGE_ROUTE_MEDIA_FAKE"     # tests: path of a fake media CLI 
 FINISH_ENV = "FORGE_FINISH_FRAMES"           # 'standin' forces the private stand-in; a path names a finisher
 EXIT_NO_ROUTE = 3
 TOOL_TIMEOUT = 1800.0
-DEFAULT_ACTIONS = ("idle", "walk", "run", "attack", "jump", "hurt")
+DEFAULT_ACTIONS = ("walk", "attack", "death")   # fal-image-lab: pass --actions from the asset manifest
 VIEWS = ("side", "front", "back")
 FACINGS = ("left", "right", "front", "back", "down-right", "up-right")
 RIGHTWARD = ("right", "down-right", "up-right")   # facings whose action leads to screen right
@@ -1375,6 +1375,11 @@ def default_gates(action: str, preset: ActionPreset, klass: str, view: str) -> d
         gates["timing"] = {"maxSeconds": 2.5, "maxHoldSeconds": 1.2 if action in ("cast", "guard") else 0.5}
     if preset.airborne:
         gates["feet"]["mode"] = "start-end"
+    if action == "despawn":   # the body sinks out of the frame on purpose: size, head and feet only hold at the start
+        gates["area"].update(min=0.0, maxBadShare=1.0)
+        gates["identity"].update(min=0.0, severeShare=1.0)
+        gates["feet"]["mode"] = "start-end"
+        gates["feet"]["max"] = 1.0
     if klass in HOVER_CLASSES:
         gates["feet"]["max"] = max(gates["feet"]["max"], 0.08)
     if view in ("front", "back"):
