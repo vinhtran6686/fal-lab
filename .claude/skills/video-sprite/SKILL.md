@@ -65,14 +65,14 @@ idle, no feet gate), `boss`, `hero` or `mob` otherwise.
 | `run_side` (hero, ally) | `side` | `master`, `right` | `run` / `side` | `--action run --sheet run_side --flip-to left` |
 | `walk_down` | `down` | `view_front`, `--facing front` | `walk` / `front` (id `front-walk`) | `--action front-walk --sheet walk_down` |
 | `walk_up` | `up` | `view_back`, `--facing back` | `walk` / `back` (id `back-walk`) | `--action back-walk --sheet walk_up` |
-| `fly_side`, `fly_down`, `fly_up` (flying) | `side`, `down`, `up` | as walk, `--class flying` | `fly` / `side`, `front`, `back` | `--sheet fly_side --flip-to left` / `fly_down` / `fly_up` |
+| `fly_side`, `fly_down`, `fly_up` (flying) | `side`, `down`, `up` | as walk, `--class flying` | `fly` / `side`, `front`, `back` (ids `fly`, `front-fly`, `back-fly`) | `--action fly --sheet fly_side --flip-to left` / `--action front-fly --sheet fly_down` / `--action back-fly --sheet fly_up` |
 | `idle_fly` (flying) | `side` | `master`, `--class flying` | `idle` (hover template) | `--action idle --sheet idle_fly --flip-to left` |
 | `attack_side` | `side_attack` | `master` (or `pose_attack`) | `attack` | `--sheet attack_side --flip-to left` |
 | `shoot_side` | `side_attack` | `master` | `shoot` | `--sheet shoot_side --flip-to left` |
 | `death_side` | `side_death` | `master` | `death` | `--sheet death_side --flip-to left` |
 | `levelup_side` (hero) | `side_extra` | `master` | `levelup` | `--sheet levelup_side --flip-to left` |
 | `respawn_side` (hero), `raise_side` (summoned) | `side_extra` | `master` | `despawn` (sinks into the ground) | `--action despawn --sheet respawn_side --reverse --flip-to left` (or `raise_side`) |
-| `skill_<name>_side` | `side_skills` | `master` | `skill` (rename the plan entry id to `skill_<name>`; one entry per skill) | `--action skill_<name> --sheet skill_<name>_side --flip-to left` |
+| `skill_<name>_side` | `side_skill_<name>` (one set per skill) | `master` | `skill` | `--action skill --sheet skill_<name>_side --flip-to left` |
 | `fx_<name>`, `thorn_*`, rows marked ⏭ | - | - | not this skill (fx: fal-image vfx; ⏭: later) | - |
 Front and back MUST be planned with `--views front` / `--views back` (their action ids become
 `front-walk` / `back-walk`): that turns off the turn-around gate, which cannot work on a symmetric view.
