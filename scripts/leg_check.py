@@ -2,14 +2,14 @@
 """Make a zoomed "legs only" contact sheet of a packed walk, so the leading leg of every
 frame can be read reliably (at full-sheet size the legs are too small to tell apart).
 
-Usage: python scripts/leg_check.py out/enemies/bandit/walk_down_side/v02 [--flip]
+Usage: python scripts/leg_check.py out/enemies/bandit/move/walk_down [--flip]
        python scripts/leg_check.py --observed LL?RRRLL [--expected LL-RRR-L] [--bad 7]   # suggest an --order fix
 
 Reads <version dir>/frames/@2x/*.png, crops each frame from the thighs down (hands and
 weapons above stay out of the way), enlarges it, numbers it, lays the frames out 4 per row
 and writes <version dir>/check/legcheck.png. Open that image and write down, per frame,
 which leg is in front (see the leg standard in classes/enemy.md). --flip previews a mirrored
-direction (e.g. walk_down_left from walk_down_side): left and right legs swap.
+direction (e.g. walk_left from walk_side): left and right legs swap.
 
 --observed takes the lead foot seen in each frame (L/R, ? = unreadable) and --expected the
 pattern from the sheet's blueprint.md (L/R, - = passing frame where either foot is fine; the

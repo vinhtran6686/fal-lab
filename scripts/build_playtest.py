@@ -3,7 +3,7 @@
 
 Usage: python scripts/build_playtest.py [--out out/playtest]
 
-Reads out/enemies/*/meta.json (the final version of each sheet), copies the @2x frames,
+Reads out/{enemies,bosses,allies,heroes}/*/meta.json (the final version of each sheet), copies the @2x frames,
 icons, the valley map and the footman soldier when present in out/ (both optional), writes manifest.json and copies
 tools/playtest/index.html next to them. Publish out/playtest/index.html with all files
 in that folder as an Artifact to watch the animations in a game-like scene, and
@@ -31,12 +31,14 @@ def main() -> None:
     (out / "assets").mkdir(parents=True)
 
     man = {"enemies": {}}
-    for meta_path in sorted((ROOT / "out" / "enemies").glob("*/meta.json")):
+    # every character class (fal-image/format.md §7); the page walks them all along the road
+    metas = [m for folder in ("enemies", "bosses", "allies", "heroes") for m in sorted((ROOT / "out" / folder).glob("*/meta.json"))]
+    for meta_path in metas:
         asset = meta_path.parent
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
         eid = meta["id"]
         brief = asset / "brief.md"
-        title = re.search(r"^# Brief: enemy `(.+?)`", brief.read_text(encoding="utf-8"), re.M) if brief.exists() else None
+        title = re.search(r"^# Brief: \w+ `(.+?)`", brief.read_text(encoding="utf-8"), re.M) if brief.exists() else None
         anims, icon = {}, False
         for key, st in meta["states"].items():
             src = asset / (st.get("dir") or pathlib.Path(st["files"]).parents[2].as_posix()) / "frames" / "@2x"
@@ -55,7 +57,7 @@ def main() -> None:
                                "pivot": meta["pivot"], "move_speed": meta.get("move_speed"),
                                "mirrored": meta.get("mirrored", {}), "icon": icon, "anims": anims}
     if not man["enemies"]:
-        sys.exit("no packed enemies found in out/enemies")
+        sys.exit("no packed characters found in out/enemies, bosses, allies or heroes")
 
     # optional scenery: without them the page draws a plain field with the road and a placeholder soldier
     map_img, foot_img = first("map_valley-*.jpg"), first("footman-*.png")

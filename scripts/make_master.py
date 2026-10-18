@@ -3,7 +3,7 @@
 master.json that the video-sprite skill animates (.claude/skills/video-sprite/SKILL.md).
 
 Usage:
-  python scripts/make_master.py out/enemies/bandit/design/view_side_v01.png
+  python scripts/make_master.py out/enemies/bandit/design/master_v01.png
                                 --out-dir out/enemies/bandit/.work/masters/side
                                 --name bandit --facing right --recap "<{design} from brief.md>"
                                 [--class mob] [--height 0.56] [--canvas 1024]
@@ -15,7 +15,7 @@ What it does:
      above the head for raised weapons
   3. writes master.png and master.json (schema generate2dsprite.master.v1: identity recap, facing,
      class, key colour, style, framing, sha256)
-Facing: right (true profile), left, front (walk down), back (walk up), down-right (3/4 front),
+Facing: right (the side master: three-quarter view facing right), left, front (walk down), back (walk up), down-right (3/4 front),
 up-right (3/4 back). One master per view; the left diagonals are mirrors and are never generated.
 Prints the master.json path.
 """

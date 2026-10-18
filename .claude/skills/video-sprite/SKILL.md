@@ -9,13 +9,17 @@ Port of `video2dsprite` from agent-sprite-forge 0.4.0 (MIT, see `LICENSE`, `VEND
 project: clips come from `scripts/fal_video.py` (fal.ai, `FAL_KEY` in `.env`), frames are exported into the
 asset folder by `scripts/video_to_sheet.py`, and a top-down tower-defense game needs 1 view for heroes and allies, 3 for enemies and bosses (fal-image/format.md §3).
 
-**Division of work.** The `fal-image` skill makes the stills: one approved master per character and its
-standard views (`fal-image/format.md` §3), all in `A/design/`. This skill animates them: one image-to-video
+**Division of work.** The `fal-image` skill makes the stills: one approved master per character (the side
+view) and, for enemies and bosses, front and back, plus a pose per skill, all in `A/design/`. Every
+character's `A/brief.md` holds the **Asset manifest** (`fal-image/format.md` §8): the list of every still,
+clip and effect it needs, from its class, role and skills. **This skill makes the manifest's `video-sprite`
+rows marked ❌, and nothing else**: never invent a direction or a state the manifest does not list (no
+diagonals, no hurt, no idle loop unless listed), and mark each row ✅ `tNN` in the same commit as its export. This skill animates them: one image-to-video
 clip per action and view, then deterministic tools cut the frames. A video model moves ONE character
 continuously from ONE still, so identity and motion stay consistent (an image model drawing a sheet repeated
 poses, swapped legs and froze the upper body). A missing still: ask fal-image for it first.
 
-`A = out/enemies/<id>`. Run every tool from the project root (Python 3.10+, numpy, scipy, Pillow, ffmpeg 5.1+
+`A = out/<class>/<id>` (enemies, bosses, heroes, allies). Run every tool from the project root (Python 3.10+, numpy, scipy, Pillow, ffmpeg 5.1+
 on PATH; in Git Bash use the real Python, see `CLAUDE.md`).
 
 ## Tools
@@ -50,30 +54,52 @@ bigger or smaller than another:
   more than 4% by silhouette area (a height-based check misread weapons and was replaced, 2026-10-16).
 - **Pivot**: feet at x 0.5, y 0.88; one fixed transform per clip, so bob, lean, a fall or a spin are kept.
 
-## Views and sets (fal-image/format.md §3: hero/ally 1 direction, enemy/boss 3, no diagonals)
-One set per view (or per view and action group); left is the mirror of the side (`--flip-to left`).
-The side still is the `master` (a three-quarter view facing right); idle is that still itself (no clip)
-unless a breathing loop is asked for.
-| Set (`A/.work/`) | Still | `--facing` | `--views` | Actions -> sheets (category/sheet, `--flip-to`) | Classes |
-|---|---|---|---|---|---|
-| `side` | `master` | `right` | `side` | walk -> `move/walk_side` (heroes, allies: run -> `move/run_side`) left | all |
-| `side_attack`, `side_death` | `master` (or `pose_<action>`) | `right` | `side` | attack -> `attack/attack_side` left; death -> `death/death_side` left | all |
-| `down` | `view_front` | `front` | `front` | front-walk -> `move/walk_down` | enemy, boss |
-| `up` | `view_back` | `back` | `back` | back-walk -> `move/walk_up` | enemy, boss |
+## Manifest rows -> sets and exports (fal-image/format.md §8; hero/ally 1 direction, enemy/boss 3)
+Left is always the mirror of the side (`--flip-to left`); there are no diagonal sheets. The side still is the
+`master` (a three-quarter view facing right). `make_master.py --class`: `flying` for flying enemies (hover
+idle, no feet gate), `boss`, `hero` or `mob` otherwise.
+| Manifest row | Set (`A/.work/`) | Master (`make_master.py`) | Plan `--actions` / `--views` | Export (`video_to_sheet.py --sheet ...`) |
+|---|---|---|---|---|
+| `master (= idle)` | `side` | `master`, `--facing right` | (no clip of its own) | `--action <any side action> --sheet idle_side --rest-frame`: frame 0 of a side take = the master pose, 1 frame |
+| `walk_side` (enemy, boss) | `side` | `master`, `right` | `walk` / `side` | `--action walk --sheet walk_side --flip-to left` |
+| `run_side` (hero, ally) | `side` | `master`, `right` | `run` / `side` | `--action run --sheet run_side --flip-to left` |
+| `walk_down` | `down` | `view_front`, `--facing front` | `walk` / `front` (id `front-walk`) | `--action front-walk --sheet walk_down` |
+| `walk_up` | `up` | `view_back`, `--facing back` | `walk` / `back` (id `back-walk`) | `--action back-walk --sheet walk_up` |
+| `fly_side`, `fly_down`, `fly_up` (flying) | `side`, `down`, `up` | as walk, `--class flying` | `fly` / `side`, `front`, `back` | `--sheet fly_side --flip-to left` / `fly_down` / `fly_up` |
+| `idle_fly` (flying) | `side` | `master`, `--class flying` | `idle` (hover template) | `--action idle --sheet idle_fly --flip-to left` |
+| `attack_side` | `side_attack` | `master` (or `pose_attack`) | `attack` | `--sheet attack_side --flip-to left` |
+| `shoot_side` | `side_attack` | `master` | `shoot` | `--sheet shoot_side --flip-to left` |
+| `death_side` | `side_death` | `master` | `death` | `--sheet death_side --flip-to left` |
+| `levelup_side` (hero) | `side_extra` | `master` | `levelup` | `--sheet levelup_side --flip-to left` |
+| `respawn_side` (hero), `raise_side` (summoned) | `side_extra` | `master` | `despawn` (sinks into the ground) | `--action despawn --sheet respawn_side --reverse --flip-to left` (or `raise_side`) |
+| `skill_<name>_side` | `side_skills` | `master` | `skill` (rename the plan entry id to `skill_<name>`; one entry per skill) | `--action skill_<name> --sheet skill_<name>_side --flip-to left` |
+| `fx_<name>`, `thorn_*`, rows marked ⏭ | - | - | not this skill (fx: fal-image vfx; ⏭: later) | - |
 Front and back MUST be planned with `--views front` / `--views back` (their action ids become
 `front-walk` / `back-walk`): that turns off the turn-around gate, which cannot work on a symmetric view.
-The category folder comes from the sheet name (`scripts/asset_layout.py`: walk/run -> move, attack/cast ->
-attack, death, hurt, idle, icon -> ui).
+Skills: put the skill's body move from `brief.md` in the entry's `motion` and set `"endStill":
+"<path to A/design/pose_skill_<name>_vNN.png from the set folder>"`: the clip runs from the master to the
+approved peak pose and the game switches back to idle after the last frame. The big effect is the vfx row.
+The category folder comes from the sheet name (`scripts/asset_layout.py`: walk/run/fly -> move,
+attack/attack2/shoot/cast -> attack, skill, respawn/raise -> spawn, levelup -> level, death, idle, icon -> ui).
+Reference lengths (30 fps, `fal-image/classes/*.md`): one-shots are retimed to them (shoot 0.8 s, skill 1.2
+s, level-up 0.7 s, respawn 0.6 s, attack 0.7 s, death 0.9 s); loops (walk, run, fly) take their length
+from the stride, so a hero run of the reference's 0.2 s does not carry over: keep one clean stride.
 
 ## Workflow
-1. **Stills.** The approved master and the views the actions need, from `fal-image` (`A/design/`).
+0. **Manifest.** `python scripts/asset_status.py <id>`: the rows to make are the `video-sprite` rows marked
+   ❌ (or the ones the user names). A row whose still is missing or not approved (a skill without its
+   `pose_skill_*`, an enemy without `view_front`) goes back to `fal-image` first.
+1. **Stills.** The approved master and the views the rows need, from `fal-image` (`A/design/`).
 2. **Masters.** `make_master.py` per view, with `--recap` = the `{design}` slot of `brief.md` verbatim (the
    long recap is repeated in every motion prompt; short recaps let the model redesign the character).
-3. **Plan** each set. Read every action's `prompt` in `set_plan.json` and edit `motion` there for this
-   character: the attack from `{attack}`, the death from `{death}` of `brief.md` (keep "then lies completely
-   still"). One action per clip; no effects in character clips (the game adds FX).
-4. **Ask before paying.** Show the user the clip count and the estimate (default `h3-max-turbo` 480P 5 s
-   = ~USD 0.08 per clip; a melee enemy of 7 clips ~USD 0.55 + retakes) and wait for a yes, unless they
+3. **Plan** the sets the rows need (table above). Read every action's `prompt` in `set_plan.json` and edit
+   `motion` there for this character: the attack from `{attack}`, the death from `{death}`, each skill from
+   its line in `brief.md` (keep "then lies completely still" for deaths). One action per clip; no effects in
+   character clips (the game adds FX; big ones are the manifest's vfx rows).
+4. **Ask before paying.** Show the user the manifest rows you will make, the clip count and the estimate
+   (default `h3-max-turbo` 480P 5 s = ~USD 0.08 per clip; a melee enemy: walk x3, attack, death = 5 clips
+   ~USD 0.40, idle is free; a hero with 2 skills: run, attack, death, levelup, respawn, 2 skills = 7 clips
+   ~USD 0.56; + retakes) and wait for a yes, unless they
    already approved this run. `FAL_VIDEO_MAX_USD` (default 0.60) caps every clip; `FAL_VIDEO_MODEL` picks
    another model (`kling-3-std` keeps a weapon's pose best but costs ~USD 0.70 a clip).
 5. **Run**, then **review**: Read every take's sheet. The gates measure size, feet, zoom, turning, edges,
@@ -83,13 +109,15 @@ attack, death, hurt, idle, icon -> ui).
    `F5-F10 pink smear`), **Fail** (1-4). Fix: `accept --window` (a gate that misreads a correct motion),
    `retake --fix <clause id or sentence>` (clause ids in `references/motion-prompts.md`), or plan options.
    Default mode: stop here and show the user (see "Run modes"); `--auto` continues.
-6. **Export** each accepted action with `video_to_sheet.py` (one canvas, one body size, see above). Each
-   export replaces the sheet's state folder `A/<category>/<sheet>/` (one final version). Log one row per take in
-   `history.md` (`model` column = the fal model).
+6. **Export** each accepted action with `video_to_sheet.py` (one canvas, one body size, see above), then
+   `idle_side --rest-frame` from the first side take. Each export replaces the sheet's state folder
+   `A/<category>/<sheet>/` (one final version). Log one row per take in `history.md` (`model` column = the
+   fal model) and mark the manifest row ✅ `tNN` (⏳ while it waits for the user).
 7. **Check**: `motion_check.py` on every sheet, `leg_check.py` on walks; anything only visible in motion is
    unverified until seen in Motion Lab (`python scripts/build_playtest.py`, republish, see `CLAUDE.md`).
 8. **Prune** every set once its actions are exported (always; no need to ask).
-Report: the state folder of every sheet, the model and takes, the cost (`python scripts/cost_report.py --today`).
+Report: the manifest after the run (`python scripts/asset_status.py <id>`), the state folder of every sheet,
+the model and takes, the cost (`python scripts/cost_report.py --today`).
 
 ## Run modes (like fal-image: preview by default)
 Read the mode from the request. Every paid clip still needs the cost agreed first (Workflow step 4).
@@ -157,10 +185,15 @@ exports from its finished frames.
 | Action | Kind | Canvas of the clip | Cut |
 |---|---|---|---|
 | walk, run | loop | square | `gait_loop` picks the cleanest cycle by measurement (never ping-pong) |
-| idle | loop, end frame pinned | square | idle loop |
+| fly, idle (flying) | loop, end frame pinned | square | hover loop |
+| idle (walking, hero, ally, boss) | no clip | - | `--rest-frame`: the master pose, 1 frame |
 | attack | one-shot, end frame pinned | 16:9 | retimed to 0.7 s, hit at 40% (exported as `hit_frame`) |
+| shoot | one-shot, end frame pinned | 16:9 | retimed to 0.8 s, release at 45% (`hit_frame`) |
+| skill | one-shot, end pinned to `pose_skill_*` | 16:9 | retimed to 1.2 s, peak pose held at the end |
+| levelup | one-shot, end frame pinned | 3:4 | retimed to 0.7 s |
+| despawn (-> respawn, raise) | one-shot | square | retimed to 0.6 s, exported `--reverse` |
 | death | one-shot, holds the last frame | 16:9 | retimed to 0.9 s, lying still at 80% |
-| hurt | one-shot | square | 0.5 s |
+| hurt, jump, cast, guard ... | one-shot | - | kept in the tool, never made for this game (not in any manifest) |
 Video models play one-shots in slow motion; the retime cuts frozen holds and compresses to game length.
 (The clip canvas only frames the video; every export lands on the asset's one canvas.)
 

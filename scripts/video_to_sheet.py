@@ -7,7 +7,7 @@ Usage:
   python scripts/video_to_sheet.py --set out/enemies/bandit/.work/side --action walk
                                    --asset out/enemies/bandit --id bandit --sheet walk_side
                                    [--kind enemy] [--cell 256x128] [--flip-to left] [--move-speed 60]
-                                   [--despill]
+                                   [--despill] [--reverse] [--rest-frame]
 
 What it does:
   1. reads the set's set_state.json: the chosen take of --action, its finished frames (one canvas,
@@ -142,10 +142,15 @@ def main() -> None:
     p.add_argument("--asset", required=True, help="asset folder, e.g. out/enemies/bandit")
     p.add_argument("--id", required=True)
     p.add_argument("--kind", default="enemy")
-    p.add_argument("--sheet", required=True, help="our sheet name: walk_side, walk_down_side, attack_side ...")
+    p.add_argument("--sheet", required=True, help="manifest sheet name: walk_side, walk_down, run_side, attack_side, skill_<name>_side ...")
     p.add_argument("--cell", help="canvas WxH at 1x for a NEW asset (fal-image/format.md §7 matrix by class and tier; default 256x128 is legacy); an existing asset keeps its own")
     p.add_argument("--flip-to", help="direction produced by mirroring this one, e.g. left")
     p.add_argument("--move-speed", type=float, help="walking speed in px/s at 1x (stored in meta.json)")
+    p.add_argument("--rest-frame", action="store_true",
+                   help="export only the take's first frame (the master pose) as a 1-frame sheet: idle_side, on the "
+                        "same canvas and scale as the clips")
+    p.add_argument("--reverse", action="store_true",
+                   help="play the take backwards: a despawn (sinking into the ground) becomes respawn_side or raise_side")
     p.add_argument("--despill", action="store_true",
                    help="turn magenta-tinted motion smears neutral grey (a fast blade the key left pink)")
     a = p.parse_args()
@@ -158,6 +163,13 @@ def main() -> None:
     frames_dir = set_dir / finished["framesDir"]
     files = sorted(frames_dir.glob("*.png"))
     indices, durations, selection = timeline(read_json(set_dir / selection_stage["selection"]))
+    rest_index = indices[0]   # the take's first frame is the master pose, also when it is played backwards
+    if a.rest_frame:   # idle = the master still, as in the reference game (1 frame)
+        indices, durations = [rest_index], [1000]
+        selection = {"loopPolicy": "cycle"}
+    elif a.reverse:
+        indices, durations = indices[::-1], durations[::-1]
+        selection = {k: v for k, v in selection.items() if k not in ("impactMs", "events")}
     anchor = finish.get("anchor") or finished.get("anchor")
     if not files or anchor is None:
         sys.exit(f"{a.action}: no finished frames or no anchor in {frames_dir}")
@@ -188,7 +200,7 @@ def main() -> None:
     # one body size per asset, compared by silhouette area (pose-independent); rest frames = the first frame of
     # a one-shot (it starts on the still), every frame of a loop. Every set is already finished at the same
     # --target-height, so this only catches a set finished from a still drawn at another scale
-    rest = list(dict.fromkeys(indices if loop else indices[:1]))
+    rest = list(dict.fromkeys(indices if loop else [rest_index]))
     area = float(np.median([body_area(images[i]) for i in rest]))
     height = float(np.median([body_height(images[i]) for i in rest]))
     scale, note = 1.0, ""

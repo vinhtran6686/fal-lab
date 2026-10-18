@@ -162,6 +162,63 @@ is struck by a heavy unseen blow from the front, jolts backward {away}, staggers
 Constant character size. No dissolving body, no fragments, no ghosts, no blood, no dust, no effects.
 ```
 
+### shoot (one-shot, 16:9 canvas, end frame pinned, release tick; ranged characters)
+
+```template shoot
+starts in {pos} ready stance, raises and aims {pos} ranged weapon {toward}, draws or charges it for a short moment, releases ONE shot with a small recoil, then lowers the weapon back into the exact same ready stance as the start and holds still. Only one shot; the feet stay planted.
+```
+
+```negatives shoot
+No arrow, bolt, bullet or projectile leaves the weapon (the game adds it), no muzzle flash, no trails, no effects.
+```
+
+### skill (one-shot that ends on the skill's peak pose, 16:9 canvas; heroes and bosses)
+
+Replace this action's `motion` in `set_plan.json` with the skill's body move from `brief.md`, and set
+`"endStill"` to the approved `design/pose_skill_<name>_vNN.png`: the clip runs from the master to that
+pose. The big effect is a separate vfx asset; the game switches back to idle after the last frame.
+
+```template skill
+gathers strength with a short, clear anticipation, then performs ONE powerful signature special move {toward} with the whole body and ends in a strong, readable peak pose, holding it still at the end. The feet stay on the same ground line unless the move lifts them.
+```
+
+```negatives skill
+The game adds the magic: no particles, no glow, no beams, no energy, no new objects, no effects. Constant character size.
+```
+
+### levelup (one-shot, 3:4 canvas, end frame pinned; heroes)
+
+```template levelup
+straightens up proudly and performs ONE short triumphant flourish, such as raising the weapon or a fist high for a moment, then returns to exactly the same ready stance as the start and holds still. No jumping, no spinning.
+```
+
+```negatives levelup
+The game adds the level-up light: no glow, no stars, no particles, no effects.
+```
+
+### despawn (one-shot, square canvas; exported REVERSED as respawn or raise)
+
+`respawn_side` (heroes) and `raise_side` (summoned enemies and allies) are this clip played backwards
+(`video_to_sheet.py --reverse`): the character rises out of the ground into the master pose.
+
+```template despawn
+slowly sinks straight down into the ground in place as if into a hole, the legs first, then the body, then the head, until nothing is left above the ground line, then the empty ground stays still for the rest of the clip. No falling over, no turning.
+```
+
+```negatives despawn
+No smoke, no dust, no portal, no glow, no effects. The ground line stays where it is.
+```
+
+### fly (loop, square canvas, end frame pinned; flying enemies, class flying)
+
+```template fly
+flies in place as a looping game flight cycle: strong, regular wing beats, the body bobbing a little up and down with each beat, hair, cloth and the tail trailing behind. The character stays in the same spot and never moves across the frame, always at the same height and the same size.
+```
+
+```negatives fly
+No dust, no wind lines, no motion trails, no effects.
+```
+
 ## Failure-to-negative clause library
 
 Each clause is the wording that fixed (or was written to fix) a rejected game-opus55 take. The

@@ -231,14 +231,15 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); border:
     }
   }
 
-  // 8-way view selection: angle sector -> generated sheet + flip, with fallbacks.
-  const SECTORS = ["side", "down_side", "down", "down_side", "side", "up_side", "up", "up_side"]; // 0°, 45°, ... (screen y down)
+  // The reference game's rule (fal-image/format.md §8): 4 quadrants, side (flipped for left), down = front,
+  // up = back; no diagonals. Sector 0 right, 1 down, 2 left, 3 up (screen y down).
+  const SECTORS = ["side", "down", "side", "up"];
   function walkAnim(id, sector) {
     const has = a => !!M.enemies[id].anims[a];
     let view = SECTORS[sector];
-    if (!has("walk_" + view)) view = "side";            // asset without diagonals / up / down: fall back to the side walk
-    const left = sector >= 3 && sector <= 5;
-    return { anim: "walk_" + view, flip: view === "up" || view === "down" ? false : left };
+    const move = has("walk_side") ? "walk_" : has("run_side") ? "run_" : "fly_";      // heroes and allies have one run_side sheet
+    if (!has(move + view)) view = "side";                  // only one movement sheet: used for every direction
+    return { anim: move + view, flip: view === "side" && sector === 2 };
   }
   const animLabel = (a, flip) => flip ? a.replace("_side", "_left") : a;
 
@@ -310,10 +311,10 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); border:
   }
   function sectorOf(angle, current) {
     const deg = ((angle * 180 / Math.PI) + 360) % 360;
-    const raw = Math.round(deg / 45) % 8;
+    const raw = Math.round(deg / 90) % 4;
     if (current < 0) return raw;
-    const centre = current * 45, diff = Math.abs(((deg - centre + 540) % 360) - 180);
-    return diff > 22.5 + 8 ? raw : current;   // hysteresis: leave a sector only when clearly outside it
+    const centre = current * 90, diff = Math.abs(((deg - centre + 540) % 360) - 180);
+    return diff > 45 + 10 ? raw : current;   // stickiness 10°, as in the reference game: no flicker on a 45° diagonal
   }
   function update(dt) {
     if (st.auto) { st.spawnT += dt; if (st.spawnT >= 3) { st.spawnT = 0; spawn(IDS[st.next % IDS.length]); st.next++; } }
@@ -353,7 +354,7 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); border:
         if (e.state !== "death") {
           e.hp -= TOWER.dmg;
           if (e.hp <= 0) {
-            if (e.state !== "attack") e.flip = e.sector >= 3 && e.sector <= 5;   // death is a side sheet: face the way it was walking
+            if (e.state !== "attack") e.flip = e.sector === 2;   // death is a side sheet: face the way it was walking
             e.hp = 0; e.state = "death";
           }
         }
@@ -528,7 +529,7 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); border:
   }
   function strideInfo() {
     const info = M.enemies[ins.id].anims[ins.anim], cyc = info.frames / ins.fps, v = speedOf[ins.id];
-    document.getElementById("stride-info").innerHTML = ins.anim.startsWith("walk")
+    document.getElementById("stride-info").innerHTML = /^(walk|run|fly)_/.test(ins.anim)
       ? `1 chu kỳ = <b>${cyc.toFixed(2)} s</b> (2 bước) → đi được <b>${(v * cyc).toFixed(0)} px</b>, mỗi bước <b>${(v * cyc / 2).toFixed(0)} px</b>. Bước chân trên hình dài hơn số này thì chân sẽ trượt.`
       : "Nền chỉ trôi khi xem animation walk.";
   }
@@ -559,16 +560,16 @@ flip_h   = ${ins.flip}
       ins.sp.step(dt, ins.fps);
       if (!info.loop && ins.sp.done) { ins.hold += dt; if (ins.hold > 1) { ins.sp.t = 0; ins.sp.done = false; ins.hold = 0; } }
     }
-    const walk = ins.anim.startsWith("walk");
+    const walk = /^(walk|run|fly)_/.test(ins.anim);
     if (ins.tread && ins.playing && walk) ins.ground += speedOf[ins.id] * ins.zoom * dt;
     ix.clearRect(0, 0, W, H);
     ix.fillStyle = "#2b3a2c"; ix.fillRect(0, 0, W, H);
     ix.fillStyle = "#a88a5c"; ix.fillRect(0, gy - 14 * ins.zoom, W, H);
     ix.fillStyle = "#8a6d42";
     // ground marks scroll against the movement direction
-    const view = ins.anim.replace("walk_", "");
+    const view = ins.anim.replace(/^(walk|run|fly)_/, "");
     const mx = !walk ? 0 : view === "side" || view.endsWith("_side") ? (ins.flip ? 1 : -1) : 0;
-    const my = !walk ? 0 : view === "up" || view === "up_side" ? 1 : view === "down" || view === "down_side" ? -1 : 0;
+    const my = !walk ? 0 : view === "up" ? 1 : view === "down" ? -1 : 0;
     const norm = Math.hypot(mx, my) || 1, tile = 56 * ins.zoom;
     const ox = (((mx / norm) * ins.ground) % tile + tile) % tile, oy = (((my / norm) * ins.ground * 0.5) % tile + tile) % tile;
     for (let y = gy - 14 * ins.zoom - tile + oy; y < H + tile; y += tile * 0.5)

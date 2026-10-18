@@ -127,6 +127,16 @@ ACTION_PRESETS: dict[str, ActionPreset] = {
     # fal-image-lab: enemy death (knocked down, ends lying still; the game holds the last frame)
     "death": ActionPreset("oneshot", None, None, "defeat", "wide", False, "none", False, False, False, 0.05,
                           "defeat"),
+    # fal-image-lab asset manifest (fal-image/format.md §8): ranged attack, skills, level-up, spawn, flight
+    "shoot": ActionPreset("oneshot", None, None, "attack", "wide", True, "feet", False, True, True, 0.02, "attack"),
+    # a skill ends on its approved peak pose: set "endStill" to design/pose_skill_<name>_vNN.png in set_plan.json
+    "skill": ActionPreset("oneshot", None, None, "cast", "wide", False, "feet", False, False, False, 0.03, "cast"),
+    "levelup": ActionPreset("oneshot", None, None, "cast", "tall", True, "feet", False, False, True, 0.02, "cast"),
+    # respawn / raise: generated as a sink into the ground and exported reversed (video_to_sheet.py --reverse)
+    "despawn": ActionPreset("oneshot", None, None, "defeat", "square", False, "none", False, False, False, 0.05,
+                            "other"),
+    # flying enemies: flying in place (wing beats), looped like a hover idle
+    "fly": ActionPreset("loop", "idle", None, "idle", "square", True, "none", True, False, True, 0.02, "hover"),
 }
 
 # Game lengths of one-shots (the generator plays them in slow motion: a 6 s clip for a 0.7 s attack). retime.py
@@ -142,6 +152,11 @@ ONESHOT_TIMING: dict[str, dict[str, Any]] = {
     "defeat": {"mode": "source"},
     # the largest pose change (lying on the ground) lands at 80%; the rest settles and the game holds the end
     "death": {"mode": "auto", "durationMs": 900, "keys": {"peak": {"at": 0.80}}},
+    # reference lengths (fal-image/classes): shoot ~0.8 s, skill 1-2 s, level-up ~0.7 s, respawn ~0.6 s
+    "shoot": {"mode": "auto", "durationMs": 800, "keys": {"hit": {"at": 0.45, "holdMs": 80}}},
+    "skill": {"mode": "auto", "durationMs": 1200, "keys": {"peak": {"at": 0.85, "holdMs": 150}}},
+    "levelup": {"mode": "auto", "durationMs": 700, "keys": {"peak": {"at": 0.45, "holdMs": 120}}},
+    "despawn": {"mode": "auto", "durationMs": 600, "keys": {"peak": {"at": 0.85}}},
 }
 # Feet clauses that would freeze locomotion: a walk, run or jump never gets "feet stay planted"; its feet fix
 # keeps the ground line instead (motion-prompts.md clause feet-ground-line).
@@ -1356,7 +1371,7 @@ def default_gates(action: str, preset: ActionPreset, klass: str, view: str) -> d
     if action == "run":
         gates["feet"]["max"] = 0.10
         gates["feet"]["mode"] = "median"
-    if action in ("jump", "victory", "defeat", "death", "cast", "guard"):
+    if action in ("jump", "victory", "defeat", "death", "cast", "guard", "skill", "levelup", "despawn"):
         gates["timing"] = {"maxSeconds": 2.5, "maxHoldSeconds": 1.2 if action in ("cast", "guard") else 0.5}
     if preset.airborne:
         gates["feet"]["mode"] = "start-end"

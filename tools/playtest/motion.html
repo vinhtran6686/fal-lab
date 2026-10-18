@@ -176,10 +176,11 @@ pre.summary { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); bord
   const DIRS = {           // movement vector, generated view, mirrored?
     right:      { v: [1, 0],  view: "side",      flip: false, label: "→ phải" },
     left:       { v: [-1, 0], view: "side",      flip: true,  label: "← trái" },
-    down_right: { v: [0.7071, 0.7071],  view: "down_side", flip: false, label: "↘ xuống phải" },
-    down_left:  { v: [-0.7071, 0.7071], view: "down_side", flip: true,  label: "↙ xuống trái" },
-    up_right:   { v: [0.7071, -0.7071], view: "up_side",   flip: false, label: "↗ lên phải" },
-    up_left:    { v: [-0.7071, -0.7071], view: "up_side",  flip: true,  label: "↖ lên trái" },
+    // no diagonal sheets (fal-image/format.md §8): a 45° move shows the down or up sheet, which must still look right
+    down_right: { v: [0.7071, 0.7071],  view: "down", flip: false, label: "↘ xuống phải (hình xuống)" },
+    down_left:  { v: [-0.7071, 0.7071], view: "down", flip: false, label: "↙ xuống trái (hình xuống)" },
+    up_right:   { v: [0.7071, -0.7071], view: "up",   flip: false, label: "↗ lên phải (hình lên)" },
+    up_left:    { v: [-0.7071, -0.7071], view: "up",  flip: false, label: "↖ lên trái (hình lên)" },
     down:       { v: [0, 1],  view: "down",      flip: false, label: "↓ xuống" },
     up:         { v: [0, -1], view: "up",        flip: false, label: "↑ lên" },
   };
@@ -226,8 +227,9 @@ pre.summary { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); bord
     const e = M.enemies[S.id], [kind, which] = S.key.split(":");
     if (kind === "walk") {
       const d = DIRS[which];
-      let anim = "walk_" + d.view, fallback = false;
-      if (!e.anims[anim]) { anim = "walk_side"; fallback = true; }
+      const move = e.anims.walk_side ? "walk_" : e.anims.run_side ? "run_" : "fly_";   // heroes and allies: run_side only
+      let anim = move + d.view, fallback = false;
+      if (!e.anims[anim]) { anim = move + "side"; fallback = true; }
       const flip = (d.view === "up" || d.view === "down") && !fallback ? false : d.v[0] < 0;
       return { anim, flip, dir: d, moving: true, label: `walk ${d.label}`, fallback };
     }
@@ -244,7 +246,7 @@ pre.summary { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); bord
     S.id = id;
     const st = $("states"); st.innerHTML = "";
     const anims = M.enemies[id].anims;
-    for (const a of Object.keys(anims).filter(a => !a.startsWith("walk"))) {
+    for (const a of Object.keys(anims).filter(a => !/^(walk|run|fly)_/.test(a))) {
       for (const side of ["right", "left"]) {
         const b = document.createElement("button"); b.type = "button"; b.className = "btn";
         b.dataset.key = `${a}:${side}`; b.textContent = `${a.replace("_side", "")} ${side === "right" ? "→" : "←"}`;
@@ -252,7 +254,7 @@ pre.summary { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); bord
       }
     }
     document.querySelectorAll("#dirs [data-dir]").forEach(b => {
-      const d = DIRS[b.dataset.dir], has = !!anims["walk_" + d.view];
+      const d = DIRS[b.dataset.dir], has = !!(anims["walk_" + d.view] || anims["run_" + d.view] || anims["fly_" + d.view]);
       b.title = `${d.label}${has ? "" : " (chưa có sheet, dùng walk_side)"}`;
       b.style.opacity = has ? "" : "0.55";
     });
@@ -334,7 +336,7 @@ pre.summary { margin: 0; font: 12px/1.5 var(--mono); background: var(--bg); bord
       if (!k.startsWith(S.id + "/")) continue;
       const [kind, which] = k.slice(S.id.length + 1).split(":");
       const label = kind === "walk" ? `walk ${DIRS[which].label}` : `${kind} ${which === "left" ? "←" : "→"}`;
-      const anim = kind === "walk" ? "walk_" + DIRS[which].view : kind;
+      const anim = kind === "walk" ? (anims => (anims["walk_side"] ? "walk_" : anims["run_side"] ? "run_" : "fly_"))(M.enemies[S.id].anims) + DIRS[which].view : kind;
       const ver = e.anims[anim]?.version || "";
       const items = Object.entries(notes).filter(([, v]) => v.bad || v.text).sort((a, b) => a[0] - b[0]);
       if (!items.length) continue;
