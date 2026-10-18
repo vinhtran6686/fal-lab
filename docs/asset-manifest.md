@@ -78,7 +78,7 @@ Hỏi trong chat: **"trạng thái tới đâu rồi"** hoặc `/fal-image --sta
 ```
 | Nhân vật | Class | Xong | Chờ duyệt | Còn lại | Để sau | Bước tiếp |
 |---|---|---|---|---|---|---|
-| goblin | enemies | 4/9 | 0 | 5 | 1 | walk_side, walk_down, walk_up ... |
+| goblin | enemies | 4/9 | 0 | 5 | 2 | walk_side, walk_down, walk_up ... |
 | wind_dancer | heroes | 1/12 | 1 | 10 | 0 | duyệt: icon |
 ```
 Xem một nhân vật: **"xem manifest của wind_dancer"** hoặc `/fal-image --status wind_dancer`.

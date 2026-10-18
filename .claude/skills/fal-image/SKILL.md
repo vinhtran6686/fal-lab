@@ -55,6 +55,9 @@ flags or the words of the request; never guess a missing one. Ask only what is m
    S, M, L; enemy: XS, S, M, L; boss: XL, XXL). Each option: tier, `{H}` and canvas, with a typical example
    ("L: 84 px, canvas 220x196 — robot, golem"). The tier that fits the description first, "(Recommended)".
    Both missing: ask the class first, then the tier, in two calls (the tier options depend on the class).
+   A flying enemy (`--enemy-flying`, "quái bay") is offered only its tiers S and M with the flying canvases
+   (format.md §7); if `flying` is picked as the role in the same call as another tier, ask the tier again with
+   S and M only and record the flying canvas.
    Role and skills go in the SAME call as the tier (up to 4 questions):
    - Role missing: "Vai trò?" with that class's roles (§8), the one the description suggests first.
    - Skills missing (hero; boss: specials): "Chọn kỹ năng" with `multiSelect: true`, 3-4 skills you propose
@@ -77,8 +80,9 @@ flags or the words of the request; never guess a missing one. Ask only what is m
      bosses), icon, projectile (ranged), `pose_skill_<name>` (one per skill, the skill's peak), then the
      `fx_<name>` vfx stills (`templates.md` vfx). Show them; get approval; mark each row ✅ or ⏳.
      Heroes and allies have no other view.
-  3. **Animation request** or "làm tiếp phần chuyển động": hand over to the `video-sprite` skill, which makes
-     the manifest's `video-sprite` rows marked ❌. Missing stills are made here first.
+  3. **Animation request** or "làm tiếp phần chuyển động": hand over to the `video-sprite` skill the manifest's
+     `video-sprite` rows marked ❌, by name (video-sprite reading the manifest itself is pending; until then name
+     the rows in the handoff). Missing stills are made here first.
   - Keep `brief.md` (manifest status), and `history.md` (one row per still) up to date.
   - Extensions (a second attack, a two-phase death, a transformation, walk and fly ...): `format.md` §9; add
     their rows to the manifest first.

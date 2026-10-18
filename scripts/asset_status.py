@@ -53,6 +53,8 @@ def read_manifest(brief: pathlib.Path) -> list[dict] | None:
 def characters() -> list[tuple[str, str, pathlib.Path, list[dict] | None]]:
     found = []
     for brief in sorted(OUT.glob("*/*/brief.md")):
+        if brief.parent.parent.name not in ("heroes", "allies", "enemies", "bosses"):
+            continue   # towers, props, vfx ... have no character manifest
         found.append((brief.parent.parent.name, brief.parent.name, brief, read_manifest(brief)))
     return found
 

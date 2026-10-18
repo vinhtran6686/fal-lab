@@ -6,8 +6,10 @@ attack_side -> attack, death_side -> death, icon -> ui.
 """
 import pathlib
 
-CATEGORIES = {"walk": "move", "run": "move", "idle": "idle", "attack": "attack", "cast": "attack",
-              "hurt": "hurt", "death": "death", "icon": "ui", "projectile": "projectile"}
+CATEGORIES = {"walk": "move", "run": "move", "fly": "move", "idle": "idle", "attack": "attack", "attack2": "attack",
+              "cast": "attack", "shoot": "attack", "skill": "skill", "respawn": "spawn", "raise": "spawn",
+              "levelup": "level", "thorn": "react", "hurt": "hurt", "death": "death", "icon": "ui",
+              "projectile": "projectile"}   # sheet names of the asset manifest (fal-image/format.md §8)
 
 
 def category(sheet: str) -> str:
