@@ -25,7 +25,7 @@ The canvas leaves about 2 x `{H}` above the feet for casts, level-up and respawn
 
 ## 4. Directions and master
 **1 direction: side** (left = mirror). The master is the hero in its idle stance, side view (`../format.md`
-§3: three-quarter facing right, turned 30-45° toward the camera). **No front or back view.** Idle is the
+§3: three-quarter facing right, turned about 30° toward the camera). **No front or back view.** Idle is the
 master still itself.
 The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertical, the feet on one horizontal ground line, the weapon at rest; never a diagonal stride toward a corner.
 

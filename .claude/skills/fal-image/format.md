@@ -250,7 +250,7 @@ re-animate only the actions that start from it.
 
 ## 6. Review checklist for stills (score 1-10, redo below 8)
 - Same character as the master: colors, gear, proportions, the weapon's shape and the hand that holds it.
-- The view is exact (§3 table of its `{body}`): master = three-quarter view facing right, body turned 30-45° toward the viewer,
+- The view is exact (§3 table of its `{body}`): master = three-quarter view facing right, body turned about 30° toward the viewer,
   face visible (not a flat profile, not a front view); front = mirror-symmetric, face visible; back = no face.
 - Neutral pose (or the requested `pose_*`), full body and weapon inside the frame with margin, nothing touching the edges.
 - Master and front/back views: the body upright (its vertical axis vertical, not leaning along a diagonal),
