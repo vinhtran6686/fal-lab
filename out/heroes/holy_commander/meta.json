@@ -1,0 +1,63 @@
+{
+  "id": "holy_commander",
+  "kind": "hero",
+  "cell": [
+    156,
+    140
+  ],
+  "scale_2x": 2,
+  "pivot": [
+    0.5,
+    0.88
+  ],
+  "states": {
+    "run_side": {
+      "version": "t01-w0-124",
+      "dir": "move/run_side",
+      "source": "raw/run_side_t01.mp4",
+      "frames": 8,
+      "fps": 15,
+      "loop": true,
+      "files": "move/run_side/frames/@1x/hero_holy_commander_run_side_NN.png",
+      "sheet": "move/run_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/side",
+        "action": "run",
+        "take": 1,
+        "route": "supplied"
+      },
+      "despill": true
+    },
+    "idle_side": {
+      "version": "t01-w0-124",
+      "dir": "idle/idle_side",
+      "source": "raw/run_side_t01.mp4",
+      "frames": 1,
+      "fps": 1,
+      "loop": true,
+      "files": "idle/idle_side/frames/@1x/hero_holy_commander_idle_side_NN.png",
+      "sheet": "idle/idle_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/side",
+        "action": "run",
+        "take": 1,
+        "route": "supplied"
+      },
+      "body_rescale": 1.0919
+    }
+  },
+  "body_area_2x": 6083,
+  "body_height_2x": 111,
+  "shadow": {
+    "w_2x": 83,
+    "h_2x": 25,
+    "color": "#000000",
+    "alpha": 0.35
+  },
+  "mirrored": {
+    "run_left": "run_side",
+    "idle_left": "idle_side"
+  }
+}

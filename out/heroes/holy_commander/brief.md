@@ -36,7 +36,7 @@
 | pose_skill_holy_banner | fal-image | ảnh tĩnh | ✅ v01 | kiếm cắm đất, cờ vàng |
 | pose_skill_radiant_slash | fal-image | ảnh tĩnh | ✅ v01 | đỉnh nhát chém từ trên xuống |
 | pose_skill_charge | fal-image | ảnh tĩnh | ✅ v01 | cúi người, kiếm đưa ngang người |
-| run_side | video-sprite | loop | ❌ | |
+| run_side | video-sprite | loop | ✅ t01 | export --despill --kind hero (colour gate fail là vết màu key bleed, hết sau despill); 8 hình, 15fps, canvas 156x140, body 111px@2x |
 | attack_side | video-sprite | one-shot | ❌ | |
 | death_side | video-sprite | one-shot | ❌ | |
 | respawn_side | video-sprite | one-shot | ❌ | |

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sprite Compare: holy_commander</title>
+<style>
+  :root { --bg:#16181d; --panel:#1e2128; --panel2:#252933; --line:#323744; --text:#e4e6eb; --muted:#8b91a0; --accent:#f0b429; --bad:#e5534b; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:13px/1.4 system-ui, sans-serif; }
+  header { position: sticky; top:0; z-index:3; display:flex; gap:16px; align-items:center; padding:10px 16px; background:var(--panel); border-bottom:1px solid var(--line); }
+  header h1 { font-size:15px; margin:0; color:var(--accent); }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  .col { border-right:1px solid var(--line); min-width:0; }
+  .col:last-child { border-right:none; }
+  .colhead { position:sticky; top:41px; z-index:2; background:var(--panel2); padding:10px 16px; border-bottom:1px solid var(--line); font-weight:600; }
+  .colhead .sub { color:var(--muted); font-weight:400; font-size:12px; }
+  .sec { padding:14px 16px; border-bottom:1px solid var(--line); }
+  .sec h3 { margin:0 0 10px; font-size:12px; text-transform:uppercase; color:var(--muted); letter-spacing:.04em; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:10px; }
+  .cell { background:var(--panel); border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+  .cell .cv-wrap { height:150px; display:flex; align-items:center; justify-content:center; background-color:#0c0d10; background-image:linear-gradient(45deg,#1a1c21 25%,transparent 25%,transparent 75%,#1a1c21 75%),linear-gradient(45deg,#1a1c21 25%,transparent 25%,transparent 75%,#1a1c21 75%); background-size:16px 16px; background-position:0 0,8px 8px; }
+  .cell .nm { padding:5px 7px; font-size:12px; border-top:1px solid var(--line); }
+  .cell .nm .meta { color:var(--muted); display:block; font-size:11px; }
+  .cell.missing { opacity:.55; }
+  .cell.missing .cv-wrap { display:flex; align-items:center; justify-content:center; }
+  .cell.missing .cv-wrap span { color:var(--bad); font-size:12px; text-align:center; padding:0 10px; }
+  .cell .note { padding:5px 7px; font-size:10.5px; color:var(--muted); border-top:1px dashed var(--line); }
+  label.flip { color:var(--muted); cursor:pointer; margin-left:auto; }
+  .stage { width:100%; max-width:380px; display:block; border-radius:6px; background:#20252b; }
+  .movehud { color:var(--muted); font-size:11px; font-family:ui-monospace,monospace; white-space:pre; margin-top:6px; }
+  .movehint { color:var(--muted); font-size:11px; margin-top:4px; }
+  @media (max-width: 900px) { .cols { grid-template-columns:1fr; } .col { border-right:none; border-bottom:1px solid var(--line); } }
+</style>
+</head>
+<body>
+<header>
+  <h1>So sánh: hero_malik (KR1) &harr; holy_commander (fal-lab)</h1>
+  <span id="stat" style="color:var(--muted)">Đang tải manifest…</span>
+  <label class="flip"><input type="checkbox" id="flip"> Lật ngang (hướng trái, chỉ áp dụng cho lưới trạng thái)</label>
+</header>
+<div class="cols" id="cols"></div>
+<script>
+const CATEGORY = [['movement','Di chuyển'], ['core','Lõi'], ['role','Theo vai trò'], ['skill','Kỹ năng riêng']];
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, ...kids) => { const e = document.createElement(tag); for (const [k,v] of Object.entries(attrs)) { if (k==='on') for (const [ev,fn] of Object.entries(v)) e.addEventListener(ev,fn); else if (k==='html') e.innerHTML=v; else e.setAttribute(k,v); } for (const c of kids) e.append(c); return e; };
+let M, flip = false;
+const imgCache = new Map();
+let imgErrors = 0, imgLoaded = 0;
+function img(root, name) {
+  const key = root + name;
+  if (!imgCache.has(key)) {
+    const i = new Image();
+    i.onerror = () => { imgErrors++; console.error('lỗi tải ảnh:', i.src); updateStat(); };
+    i.onload = () => { imgLoaded++; updateStat(); };
+    i.src = root + name + '.png';
+    imgCache.set(key, i);
+  }
+  return imgCache.get(key);
+}
+function updateStat() {
+  const base = M.characters.map(c => `${c.id}: ${Object.values(c.states).reduce((a, s) => a + s.frames.length, 0)} frame`).join(' · ');
+  const extra = imgErrors ? ` · ${imgLoaded} ảnh tải được, ${imgErrors} ảnh LỖI (xem Console, F12)` : (imgLoaded ? ` · ${imgLoaded} ảnh đã tải` : '');
+  $('#stat').textContent = base + extra;
+  $('#stat').style.color = imgErrors ? 'var(--bad)' : 'var(--muted)';
+}
+
+fetch('manifest.json').then(r => r.json()).then(m => {
+  M = m;
+  updateStat();
+  $('#flip').addEventListener('change', e => { flip = e.target.checked; });
+  render();
+}).catch(e => { $('#stat').textContent = 'Lỗi tải manifest.json: ' + e; });
+
+// shared keyboard control: both characters move together, so their gait is easy to compare side by side.
+// Published pages render inside an iframe and start without keyboard focus, so arrow keys do nothing
+// until the viewer clicks inside the page once; grab focus eagerly and on every click to cover that.
+const keys = new Set();
+const KEYMAP = { ArrowUp:'u', w:'u', W:'u', ArrowDown:'d', s:'d', S:'d', ArrowLeft:'l', a:'l', A:'l', ArrowRight:'r', d:'r', D:'r' };
+document.body.tabIndex = -1;
+addEventListener('keydown', e => { const k = KEYMAP[e.key]; if (k) { keys.add(k); e.preventDefault(); } });
+addEventListener('keyup', e => { const k = KEYMAP[e.key]; if (k) keys.delete(k); });
+addEventListener('click', () => document.body.focus());
+window.focus(); document.body.focus();
+
+function movementSection(c) {
+  const W = 360, H = 200, groundY = H - 34;
+  const canvas = el('canvas', { width: W, height: H, class: 'stage' });
+  const hud = el('div', { class: 'movehud' });
+  const moveEntry = Object.entries(c.states).find(([, s]) => s.category === 'movement' && s.frames.length);
+  const idleState = c.states.idle;
+  const sim = { x: W / 2, y: groundY, flip: false, t: 0 };
+  let last = performance.now();
+  // scheduled via rAF instead of called immediately: called immediately, canvas.isConnected below would
+  // still be false (the caller appends it to the DOM only after this function returns), so the loop would
+  // draw one empty frame and never schedule another
+  function loop(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    const vx = (keys.has('r') ? 1 : 0) - (keys.has('l') ? 1 : 0);
+    const vy = (keys.has('u') ? 1 : 0) - (keys.has('d') ? 1 : 0);
+    const moving = !!(vx || vy) && !!moveEntry;
+    if (moving) {
+      const len = Math.hypot(vx, vy);
+      sim.x = Math.min(W - 24, Math.max(24, sim.x + vx / len * c.speed * dt));
+      sim.y = Math.min(groundY + 16, Math.max(groundY - 40, sim.y - vy / len * c.speed * dt * 0.4));
+      if (vx) sim.flip = vx < 0; // KR rule: a single movement drawing only flips left/right (characters.js pickMove)
+    }
+    const [stateName, state] = moving ? moveEntry : ['idle', idleState];
+    if (sim.state !== stateName) { sim.state = stateName; sim.t = 0; }
+    sim.t += dt;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = '#323744'; ctx.beginPath(); ctx.moveTo(0, groundY); ctx.lineTo(W, groundY); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(sim.x, sim.y + 2, 16, 5, 0, 0, 7); ctx.fill();
+    const n = state.frames.length;
+    if (n) {
+      const i = Math.floor(sim.t * c.fps) % n;
+      const f = state.frames[i], im = img(c.sprite_root, f.name);
+      if (im.complete && im.naturalWidth) {
+        const [ax, ay] = c.anchor; // KR convention: origin = (ax*w, (1-ay)*h) from the frame's top-left
+        ctx.save(); ctx.translate(sim.x, sim.y); ctx.scale(sim.flip ? -1 : 1, 1);
+        ctx.drawImage(im, -ax * f.w, -(1 - ay) * f.h);
+        ctx.restore();
+      }
+    }
+    hud.textContent = `${stateName}${sim.flip ? ' (lật)' : ''} · tốc độ demo ${c.speed}px/s`;
+    if (canvas.isConnected) requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  return el('div', { class: 'sec' },
+    el('h3', {}, 'Thử di chuyển (phím WASD / mũi tên — điều khiển chung cho cả hai cột)'),
+    el('div', { class: 'movehint' }, 'Bấm một lần vào trang (ví dụ vào khung hình dưới đây) trước khi dùng phím — trang chạy trong khung nhúng nên chưa có focus bàn phím lúc mới mở.'),
+    canvas, hud,
+    !moveEntry ? el('div', { class: 'movehint' }, 'chưa có trạng thái di chuyển thật, sẽ đứng yên ở idle') : '');
+}
+
+function render() {
+  const cols = $('#cols'); cols.innerHTML = '';
+  for (const c of M.characters) {
+    const col = el('div', { class: 'col' });
+    col.append(el('div', { class: 'colhead' }, c.id, el('div', { class: 'sub' }, c.label)));
+    col.append(movementSection(c));
+    for (const [cat, label] of CATEGORY) {
+      const states = Object.entries(c.states).filter(([, s]) => s.category === cat);
+      if (!states.length) continue;
+      const grid = el('div', { class: 'grid' });
+      for (const [state, s] of states) grid.append(stateCell(c, state, s));
+      col.append(el('div', { class: 'sec' }, el('h3', {}, label), grid));
+    }
+    cols.append(col);
+  }
+}
+
+function stateCell(c, state, s) {
+  const n = s.frames.length;
+  if (!n) {
+    return el('div', { class: 'cell missing' },
+      el('div', { class: 'cv-wrap' }, el('span', {}, 'chưa có')),
+      el('div', { class: 'nm' }, state),
+      s.note ? el('div', { class: 'note' }, s.note) : '');
+  }
+  const cv = el('canvas', { width: 150, height: 150 });
+  const nmEl = el('div', { class: 'nm' }, state + ' ', el('span', { class: 'meta' }, `${n} frame · ${(n / c.fps).toFixed(2)}s @ ${c.fps}fps`));
+  const cell = el('div', { class: 'cell' }, el('div', { class: 'cv-wrap' }, cv), nmEl);
+  const maxW = Math.max(...s.frames.map(f => f.w)), maxH = Math.max(...s.frames.map(f => f.h));
+  const scale = Math.min(130 / maxW, 130 / maxH, 1);
+  let i = 0, acc = 0, last = performance.now();
+  // scheduled via rAF, not called immediately (see the comment in movementSection): the caller appends
+  // this canvas to the DOM only after stateCell() returns, so an immediate call would always find
+  // cv.isConnected false and never schedule a second frame
+  function loop(now) {
+    const dt = now - last; last = now; acc += dt;
+    const frameMs = 1000 / c.fps;
+    while (acc >= frameMs) { acc -= frameMs; i = (i + 1) % n; }
+    const ctx = cv.getContext('2d'); ctx.clearRect(0, 0, 150, 150);
+    const f = s.frames[i], im = img(c.sprite_root, f.name);
+    if (im.complete && im.naturalWidth) {
+      ctx.save(); ctx.translate(75, 75); ctx.scale(flip ? -scale : scale, scale);
+      ctx.drawImage(im, -f.w / 2, -f.h / 2);
+      ctx.restore();
+    }
+    if (cv.isConnected) requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  return cell;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,945 @@
+{
+ "characters": [
+  {
+   "id": "hero_malik",
+   "label": "hero_malik (KR1, m\u1ed9c nh\u00e2n gi\u00e1p d\u00e0y, c\u1eadn chi\u1ebfn + s\u1ea5m \u0111\u1ea5t)",
+   "sprite_root": "sprites/hero_malik/",
+   "fps": 30,
+   "states": {
+    "attack": {
+     "category": "core",
+     "frames": [
+      {
+       "name": "hero_reinforce_0008",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0009",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0010",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0011",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0012",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0013",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0014",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0015",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0016",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0017",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0018",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0019",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0020",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0021",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0022",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0023",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0024",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0025",
+       "w": 136,
+       "h": 142
+      }
+     ]
+    },
+    "attack2": {
+     "category": "core",
+     "frames": [
+      {
+       "name": "hero_reinforce_0026",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0027",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0028",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0029",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0030",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0031",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0032",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0033",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0034",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0035",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0036",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0037",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0038",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0039",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0040",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0041",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0042",
+       "w": 136,
+       "h": 142
+      }
+     ]
+    },
+    "death": {
+     "category": "core",
+     "frames": [
+      {
+       "name": "hero_reinforce_0131",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0132",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0133",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0134",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0135",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0136",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0137",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0138",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0139",
+       "w": 136,
+       "h": 142
+      }
+     ]
+    },
+    "fissure": {
+     "category": "skill",
+     "frames": [
+      {
+       "name": "hero_reinforce_0043",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0044",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0045",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0046",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0047",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0048",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0049",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0050",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0051",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0052",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0053",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0054",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0055",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0056",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0057",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0058",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0059",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0060",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0061",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0062",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0063",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0064",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0065",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0066",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0067",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0068",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0069",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0070",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0071",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0072",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0073",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0074",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0075",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0076",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0077",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0078",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0079",
+       "w": 136,
+       "h": 142
+      }
+     ]
+    },
+    "idle": {
+     "category": "core",
+     "frames": [
+      {
+       "name": "hero_reinforce_0001",
+       "w": 136,
+       "h": 142
+      }
+     ]
+    },
+    "levelup": {
+     "category": "role",
+     "frames": [
+      {
+       "name": "hero_reinforce_0108",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0109",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0110",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0111",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0112",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0113",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0114",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0115",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0116",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0117",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0118",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0119",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0120",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0121",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0122",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0123",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0124",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0125",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0126",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0127",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0128",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0129",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0130",
+       "w": 136,
+       "h": 142
+      }
+     ]
+    },
+    "respawn": {
+     "category": "role",
+     "frames": [
+      {
+       "name": "hero_reinforce_0112",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0113",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0114",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0115",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0116",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0117",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0118",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0119",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0120",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0121",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0122",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0123",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0124",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0125",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0126",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0127",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0128",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0129",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0130",
+       "w": 136,
+       "h": 142
+      }
+     ]
+    },
+    "running": {
+     "category": "movement",
+     "frames": [
+      {
+       "name": "hero_reinforce_0002",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0003",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0004",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0005",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0006",
+       "w": 136,
+       "h": 142
+      }
+     ]
+    },
+    "smash": {
+     "category": "skill",
+     "frames": [
+      {
+       "name": "hero_reinforce_0080",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0081",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0082",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0083",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0084",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0085",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0086",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0087",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0088",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0089",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0090",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0091",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0092",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0093",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0094",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0095",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0096",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0097",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0098",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0099",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0100",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0101",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0102",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0103",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0104",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0105",
+       "w": 136,
+       "h": 142
+      },
+      {
+       "name": "hero_reinforce_0106",
+       "w": 136,
+       "h": 142
+      }
+     ]
+    }
+   },
+   "anchor": [
+    0.5,
+    0.1
+   ],
+   "speed": 84
+  },
+  {
+   "id": "holy_commander",
+   "label": "holy_commander (fal-lab, dang lam)",
+   "sprite_root": "sprites/holy_commander/",
+   "fps": 15,
+   "states": {
+    "idle": {
+     "category": "core",
+     "frames": [
+      {
+       "name": "idle_side/hero_holy_commander_idle_side_01",
+       "w": 156,
+       "h": 140
+      }
+     ]
+    },
+    "running": {
+     "category": "movement",
+     "frames": [
+      {
+       "name": "run_side/hero_holy_commander_run_side_01",
+       "w": 156,
+       "h": 140
+      },
+      {
+       "name": "run_side/hero_holy_commander_run_side_02",
+       "w": 156,
+       "h": 140
+      },
+      {
+       "name": "run_side/hero_holy_commander_run_side_03",
+       "w": 156,
+       "h": 140
+      },
+      {
+       "name": "run_side/hero_holy_commander_run_side_04",
+       "w": 156,
+       "h": 140
+      },
+      {
+       "name": "run_side/hero_holy_commander_run_side_05",
+       "w": 156,
+       "h": 140
+      },
+      {
+       "name": "run_side/hero_holy_commander_run_side_06",
+       "w": 156,
+       "h": 140
+      },
+      {
+       "name": "run_side/hero_holy_commander_run_side_07",
+       "w": 156,
+       "h": 140
+      },
+      {
+       "name": "run_side/hero_holy_commander_run_side_08",
+       "w": 156,
+       "h": 140
+      }
+     ]
+    },
+    "attack": {
+     "category": "core",
+     "frames": [],
+     "note": "raw/attack_side_attack_t01.mp4 dinh vet chem hong - can quay lai truoc khi export"
+    },
+    "death": {
+     "category": "core",
+     "frames": [],
+     "note": "raw/death_side_death_t01.mp4 dat (score 8) - chua export"
+    },
+    "respawn": {
+     "category": "role",
+     "frames": [],
+     "note": "raw/despawn_side_extra_t01.mp4 dat (score 8), export --reverse - chua export"
+    },
+    "levelup": {
+     "category": "role",
+     "frames": [],
+     "note": "raw/levelup_side_extra_t01.mp4 dinh vet chem xanh + bui - can quay lai"
+    },
+    "holy_banner": {
+     "category": "skill",
+     "frames": [],
+     "note": "raw/skill_side_skill_holy_banner_t01.mp4 dinh vong sang hong/vang - can quay lai"
+    },
+    "radiant_slash": {
+     "category": "skill",
+     "frames": [],
+     "note": "raw/skill_side_skill_radiant_slash_t01.mp4 dinh vet chem hong lon - can quay lai"
+    },
+    "charge": {
+     "category": "skill",
+     "frames": [],
+     "note": "raw/skill_side_skill_charge_t01.mp4 dat (score 8) - chua export"
+    }
+   },
+   "anchor": [
+    0.5,
+    0.12
+   ],
+   "speed": 84
+  }
+ ]
+}
