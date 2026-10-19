@@ -338,10 +338,14 @@ lengths. Rows are named `<state>_<direction>` (`walk_side`, `walk_down`, `run_si
 `skill_<name>_side` ...), stills by their file stem (`master`, `view_front`, `pose_skill_<name>`, `icon`),
 effects `fx_<name>`; mark a row the class has but the game does not need yet as `⏭` (e.g. `thorn_*`).
 
-Skills follow three parts: the **pose** (the skill's peak, one still, the end the clip moves to), the
-**body clip** (video-sprite, effects touching the body included) and, when the effect is big (rain, storm,
-beam, summon, shockwave), a separate **vfx** asset (`templates.md` vfx, `out/vfx/<name>/`). A basic attack
-has no pose by default; add `pose_attack` only when the master's stance reads wrong for it.
+Skills follow three parts, as in the reference game: the **pose** (the skill's peak, one still, the end the
+clip moves to), the **body clip** (video-sprite: the body ONLY, never a painted effect) and the **effect
+layers** (`fx_<name>`: a recipe of small flat layers, `scripts/fx_layers.py`, no video model: smear, ground
+ring, burst, bolt, pillar, particles, and tweened keyframe stills). A keyframe still is ONE flat element (a
+cloud alone, a banner alone, a crystal alone; `templates.md` "fx part"), never a finished picture of the
+whole effect: a cloud drawn with its lightning cannot be animated. A basic attack has no pose by default; its
+smear is a `slash` layer. Respawn and raise use a kneeling `pose_respawn` still (the body rises from it into
+the master) plus a pillar and ring recipe.
 
 **Manifest table** (in `brief.md`, heading exactly `## Asset manifest`; one row per asset; the tool reads
 the status column):
@@ -358,7 +362,7 @@ the status column):
 | respawn_side | video-sprite | one-shot | ❌ | |
 | levelup_side | video-sprite | one-shot | ❌ | |
 | skill_gale_side | video-sprite | one-shot | ❌ | |
-| fx_gale | fal-image vfx | hiệu ứng | ❌ | lốc xoáy, asset riêng |
+| fx_gale | fx-layers | hiệu ứng | ❌ | lốc xoáy: công thức lớp (scripts/fx_layers.py) |
 ```
 Status: `✅ vNN` / `✅ tNN` done and approved; `⏳` made, waiting for the user's approval; `❌` not made yet;
 `⏭` later or skipped (say why in Ghi chú). Update the row the moment its state changes, in the same commit

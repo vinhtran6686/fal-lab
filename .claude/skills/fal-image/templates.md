@@ -52,10 +52,13 @@ side by side and is never animated. `--ref <approved master>`.
 
 ## Effects and UI
 
-### vfx — Effect key frame (one still)
-`{fx}` default: a fiery cannonball explosion at its peak, with smoke and sparks
+### fx part — ONE element of a layered effect (a `sprite` layer of `scripts/fx_layers.py`)
+Rings, smears, bursts, bolts, light columns and particles are drawn by `fx_layers.py` itself: never make
+a still for them. Make a still only for a shaped element the tool cannot draw, ONE element per still, nothing
+else in it: `{part}` = "a dark storm cloud" (no lightning), "a holy banner on a pole" (no rays, no sparkles),
+"an ice crystal", "a flaming meteor rock". Name: `fx_<skill>_<part>_vNN`, folder `out/vfx/<skill>/design/`.
 
-> Single VFX sprite of {fx}, centered, filling about 70% of the frame: stacked layers of flat single-colour shapes (flame tongues, smoke puffs, spark shards), each with an outline that follows its form, no soft blur and no gradient glow. {BG} {STYLE}
+> Single game effect element: {part}, alone, centered, filling about 70% of the frame, seen from the same high top-down camera as the characters: big flat shapes, 2-3 hard-edged tones of its colour, a thick dark outline of the same hue, no other effect around it: no glow, no rays, no sparkles, no lightning, no smoke unless the element IS smoke. {BG} {STYLE}
 
 ### icon — Ability icon
 `{skill}` default: rain of fire arrows

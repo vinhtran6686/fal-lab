@@ -179,7 +179,7 @@ Replace this action's `motion` in `set_plan.json` with the skill's body move fro
 pose. The big effect is a separate vfx asset; the game switches back to idle after the last frame.
 
 ```template skill
-gathers strength with a short, clear anticipation, then performs ONE powerful signature special move {toward} with the whole body and ends in a strong, readable peak pose, holding it still at the end. The feet stay on the same ground line unless the move lifts them.
+gathers strength with a short, clear anticipation, then moves quickly into ONE strong, readable peak pose {toward} and HOLDS that pose completely still for the rest of the clip. The feet stay on the same ground line unless the move lifts them.
 ```
 
 ```negatives skill
@@ -196,7 +196,23 @@ straightens up proudly and performs ONE short triumphant flourish, such as raisi
 The game adds the level-up light: no glow, no stars, no particles, no effects.
 ```
 
-### despawn (one-shot, square canvas; exported REVERSED as respawn or raise)
+### rise (one-shot, 3:4 canvas; respawn of heroes, raise of summoned units)
+
+Plan the set from the kneeling `pose_respawn` still (`make_master.py`) and set `"endStill"` to the master: the
+character rises from that pose into the idle stance. The light column and the ground ring are fx layers
+(`scripts/fx_layers.py`), never part of this clip.
+
+```template rise
+starts kneeling low with {pos} head bowed, then pushes up in one smooth, strong motion and straightens into {pos} upright ready stance, ending exactly in the standing pose of the end frame and holding still.
+```
+
+```negatives rise
+No light, no glow, no pillar, no particles, no smoke, no effects. Constant character size; the feet stay on the same ground line.
+```
+
+### despawn (superseded by `rise`: the video model does not sink a character into the ground)
+
+#### despawn (one-shot, square canvas; exported REVERSED as respawn or raise)
 
 `respawn_side` (heroes) and `raise_side` (summoned enemies and allies) are this clip played backwards
 (`video_to_sheet.py --reverse`): the character rises out of the ground into the master pose.

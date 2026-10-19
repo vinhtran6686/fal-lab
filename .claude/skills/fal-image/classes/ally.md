@@ -43,7 +43,8 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 | attack_side | video-sprite | one-shot | melee | 8/8, ~20 frames, 0.67 s |
 | shoot_side | video-sprite | one-shot | ranged | 3/8, ~16 frames, 0.53 s |
 | death_side | video-sprite | one-shot | all | 8/8, ~15 frames, 0.5 s |
-| raise_side | video-sprite | one-shot | summoned | 3/8, ~20 frames, 0.67 s |
+| pose_respawn | fal-image | ảnh tĩnh | summoned | kneeling start pose |
+| raise_side | video-sprite | one-shot | summoned | 3/8, ~20 frames, 0.67 s (rise from `pose_respawn`) |
 Optional: `attack2_side` (2/8), 1-2 specials for an elite unit (heal, holy strike: ~30 frames, 1 s).
 Cost, melee ally: 2 stills (~USD 0.03) + 3 clips (~USD 0.24) + retakes.
 

@@ -34,8 +34,10 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 2. `icon` (`../format.md` §3 icon; `{rim}` bright gold-yellow, `{badge}` the hero's main colour, lighter)
 3. `projectile` (ranged)
 4. `pose_skill_<name>`: one per skill, the skill's peak pose, side view, `--ref` the master
-5. `fx_<name>` (vfx, `../templates.md` vfx): one per skill whose effect is big
-6. `pose_attack` / `pose_run` only when the master's stance reads wrong for that action
+5. `pose_respawn`: kneeling, head bowed, the weapon at its side (the respawn clip rises from it into the master)
+6. `fx_<name>` parts only when a skill's effect needs a shaped element (`../templates.md` fx part); the effect
+   itself is a recipe of layers (`scripts/fx_layers.py`)
+7. `pose_attack` / `pose_run` only when the master's stance reads wrong for that action
 
 ## 6. Asset manifest rows (`../format.md` §8 table format)
 | Asset | Từ | Loại | Role | Reference (30 fps) |
@@ -44,14 +46,17 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 | icon | fal-image | ảnh tĩnh | all | - |
 | projectile | fal-image | ảnh tĩnh | ranged | - |
 | run_side | video-sprite | loop | all | 15/15, ~6 frames, 0.2 s: short, fast loop |
-| attack_side | video-sprite | one-shot | melee | 14/15, ~22 frames, 0.75 s |
+| attack_side | video-sprite | one-shot | melee | 14/15, ~22 frames, 0.75 s (smear: an `fx_attack` slash layer) |
 | shoot_side | video-sprite | one-shot | ranged | 4/15, ~22 frames, 0.75 s |
 | death_side | video-sprite | one-shot | all | 13/15, ~9 frames, 0.3 s: short |
-| respawn_side | video-sprite | one-shot | all | 13/15, ~18 frames, 0.6 s |
+| pose_respawn | fal-image | ảnh tĩnh | all | - |
+| respawn_side | video-sprite | one-shot | all | 13/15, ~18 frames, 0.6 s (rise from `pose_respawn`) |
+| fx_respawn | fx-layers | hiệu ứng | all | pillar + ground ring |
+| fx_levelup | fx-layers | hiệu ứng | all | pillar or burst |
 | levelup_side | video-sprite | one-shot | all | 13/15, ~18-23 frames, 0.7 s |
 | pose_skill_`<name>` | fal-image | ảnh tĩnh | per skill | - |
 | skill_`<name>`_side | video-sprite | one-shot | per skill | 28-68 frames, 1-2 s |
-| fx_`<name>` | fal-image vfx | hiệu ứng | per big skill effect | separate object in the reference |
+| fx_`<name>` | fx-layers | hiệu ứng | per skill (+ its fx part stills, if any) | separate small objects in the reference |
 Optional (`../format.md` §9): `attack2_side` (4/15 heroes have a second melee move), a transformation.
 Cost, melee hero with 2 skills: 4 stills (master, icon, 2 poses) + 2 vfx (~USD 0.10) + 7 clips (~USD 0.56) + retakes.
 

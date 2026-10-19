@@ -50,7 +50,8 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 | attack_side | video-sprite | one-shot | melee | 56/68, ~19 frames, 0.65 s |
 | shoot_side | video-sprite | one-shot | ranged | 8/68, ~24 frames, 0.8 s |
 | death_side | video-sprite | one-shot | all | 63/68, ~16 frames, 0.55 s |
-| raise_side | video-sprite | one-shot | summoned | 15/68, ~34 frames, 1.1 s |
+| pose_respawn | fal-image | ảnh tĩnh | summoned | crouched start pose |
+| raise_side | video-sprite | one-shot | summoned | 15/68, ~34 frames, 1.1 s (rise from `pose_respawn`) |
 | thorn_side, thorn_free_side | video-sprite | loop + one-shot | all | 43/68 (bound by a tower's vines); **⏭ later**, until the game has such a tower |
 No reference enemy has a hurt state. Cost, melee enemy: 4 stills (~USD 0.06) + 5 clips (~USD 0.40) + retakes.
 

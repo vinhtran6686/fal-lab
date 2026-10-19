@@ -7,6 +7,8 @@
       "Bash(python3 scripts/gen_image.py:*)",
       "Bash(python scripts/cost_report.py:*)",
       "Bash(python scripts/asset_status.py:*)",
+      "Bash(python scripts/fx_layers.py:*)",
+      "Bash(python3 scripts/fx_layers.py:*)",
       "Bash(python3 scripts/asset_status.py:*)",
       "Bash(python3 scripts/cost_report.py:*)",
       "Read(out/**)",

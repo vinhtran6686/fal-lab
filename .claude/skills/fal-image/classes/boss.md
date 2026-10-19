@@ -30,7 +30,7 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 2. `view_front`, `view_back` (`--ref` the master)
 3. `icon` (`{rim}` dark iron with one warning-colour band, `{badge}` muted dark red)
 4. `projectile` (ranged)
-5. per special: `pose_skill_<name>` + `fx_<name>` when the effect is big
+5. per special: `pose_skill_<name>`; its effect is an `fx_<name>` recipe (`scripts/fx_layers.py`) with fx part stills only for shaped elements
 
 ## 6. Asset manifest rows (`../format.md` §8 table format)
 | Asset | Từ | Loại | Role | Reference (30 fps, 16 bosses) |
@@ -48,7 +48,7 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 | death_side | video-sprite | one-shot | all | 11/16, ~35 frames, 1.2 s (up to 5 s) |
 | pose_skill_`<name>` | fal-image | ảnh tĩnh | per special | - |
 | skill_`<name>`_side | video-sprite | one-shot | per special | 30-48 frames, 1-1.6 s |
-| fx_`<name>` | fal-image vfx | hiệu ứng | per big special effect | - |
+| fx_`<name>` | fx-layers | hiệu ứng | per special | separate small objects in the reference |
 Optional (`../format.md` §9): `death_end_side` (two-phase death: lying, or fading out), a transformation
 (a second form with its own rows). Cost, melee boss with 1 special: 5 stills (master, front, back, icon, pose) + 1 vfx (~USD 0.08) + 6 clips
 (~USD 0.48) + retakes.

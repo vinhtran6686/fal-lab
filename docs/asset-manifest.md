@@ -25,7 +25,7 @@ mục §6 của file đó liệt kê đủ các dòng manifest của class. Form
 | levelup_side | video-sprite | one-shot | ❌ | |
 | skill_gale_side | video-sprite | one-shot | ❌ | từ master tới pose |
 | skill_dash_side | video-sprite | one-shot | ❌ | từ master tới pose |
-| fx_gale | fal-image vfx | hiệu ứng | ❌ | lốc xoáy, asset riêng |
+| fx_gale | fx-layers | hiệu ứng | ❌ | lốc xoáy: công thức lớp (scripts/fx_layers.py) |
 Ước tính: 5 ảnh x ~0.014 + 7 clip x ~0.08 ≈ USD 0.63
 ```
 

@@ -1,0 +1,48 @@
+{
+ "skill": "thunderstorm",
+ "canvas_2x": [
+  504,
+  552
+ ],
+ "pivot_2x": [
+  126,
+  497
+ ],
+ "fps": 15,
+ "frames": 21,
+ "body": "skill_thunderstorm_side",
+ "layers": [
+  {
+   "id": "cloud",
+   "type": "sprite",
+   "z": "back",
+   "start": 0.0,
+   "length": 1.4,
+   "files": "fx/thunderstorm/cloud/frames/@2x/cloud_NN.png"
+  },
+  {
+   "id": "bolt",
+   "type": "bolt",
+   "z": "front",
+   "start": 0.35,
+   "length": 0.45,
+   "files": "fx/thunderstorm/bolt/frames/@2x/bolt_NN.png"
+  },
+  {
+   "id": "impact",
+   "type": "burst",
+   "z": "front",
+   "start": 0.45,
+   "length": 0.4,
+   "files": "fx/thunderstorm/impact/frames/@2x/impact_NN.png"
+  },
+  {
+   "id": "ground_ring",
+   "type": "ring",
+   "z": "back",
+   "start": 0.45,
+   "length": 0.7,
+   "files": "fx/thunderstorm/ground_ring/frames/@2x/ground_ring_NN.png"
+  }
+ ]
+}

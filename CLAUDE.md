@@ -21,6 +21,9 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   take, saved as soon as they are generated), state folders `idle/`, `move/`, `attack/`, `death/` ... (ONE final
   version per sheet: `preview.gif`, `frames/`, `check/`), `.work/` (tools only, not in git). `format.md` §4.
 - Icon packing: `scripts/sprite_pack.py` (single stills into `ui/icon/`).
+- Effects (skills, attack smears, respawn, level-up): `scripts/fx_layers.py A/fx/<skill>.json`, a recipe of small flat
+  layers (slash, ring, burst, bolt, pillar, particles, tweened fx part stills) on one canvas anchored at the
+  feet, the reference game's method; no video model. Character clips are body only (`video-sprite` SKILL.md).
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe`. Video tools need ffmpeg on PATH.
 - Playtest: `python scripts/build_playtest.py` builds `out/playtest/` from `tools/playtest/index.html`;

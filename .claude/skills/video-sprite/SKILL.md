@@ -26,12 +26,13 @@ on PATH; in Git Bash use the real Python, see `CLAUDE.md`).
 | Step | Command |
 |---|---|
 | Still -> master.json | `python scripts/make_master.py A/design/<still>.png --out-dir A/.work/masters/<view> --name <id> --facing <facing> --recap "<{design}>"` |
-| Plan a set | `python .claude/skills/video-sprite/scripts/sprite_set.py plan --master A/.work/masters/<view>/master.json --views <side\|front\|back> --output-dir A/.work/<set> --actions <list> --duration 5 --resolution 480p --fps 12 --target-height <2x{H}> --formats png --max-takes 1` |
+| Plan a set | `python .claude/skills/video-sprite/scripts/sprite_set.py plan --master A/.work/masters/<view>/master.json --views <side\|front\|back> --output-dir A/.work/<set> --actions <list> --duration 4 --resolution 480p --fps 15 --target-height <2x{H}> --formats png --max-takes 1` |
 | Cost before paying | clips x takes x price (`python scripts/fal_video.py models`), or `fal_video.py video ... --dry-run` |
 | Generate + process | `python .claude/skills/video-sprite/scripts/sprite_set.py run --plan A/.work/<set>/set_plan.json` |
 | Review | `sprite_set.py review --plan ...`, then **Read** every `review/<action>/tNN-sheet.png` |
 | Accept / retake | `sprite_set.py accept --plan ... --action walk --take 1 [--window 0:124]` / `retake ... --action attack --fix weapon-shape` |
 | Export | `python scripts/video_to_sheet.py --set A/.work/<set> --action <action> --asset A --id <id> --sheet <sheet> [--flip-to <dir>] [--despill]` |
+| Effect layers (free) | `python scripts/fx_layers.py A/fx/<skill>.json` (`--check` validates only) |
 | Checks | `python scripts/motion_check.py A/<category>/<sheet>`, `python scripts/leg_check.py ...` (walks), Motion Lab |
 | Prune (after export; always) | `python scripts/video_prune.py prune --set A/.work/<set>` |
 | Rebuild a pruned action | `python scripts/video_prune.py rebuild --set A/.work/<set> --action <action>` (from the clip, no API call) |
@@ -39,6 +40,38 @@ on PATH; in Git Bash use the real Python, see `CLAUDE.md`).
 A paid clip that timed out is recovered with `python scripts/fal_video.py fetch --job <job.json>` (no new charge).
 On Windows a stage can fail with `[WinError 5] Access is denied` while a scanner holds a new folder: run
 the same command again (run sets one after another, not in parallel, when it happens).
+
+## Body clips and effect layers (fixed; the reference game's method, measured 2026-10-19)
+Everything a character does is two separate things, as in the reference game:
+1. **The body clip** (this skill's video): the character only. The prompt never names an effect;
+   `sprite_set.py` strips any clause that does (glow, light, lightning, energy, magic, sparks ...) and adds
+   "body motion only ... the camera never moves or zooms". Takes with painted glows, rings, starbursts or a
+   changing body size are rejected, never kept. The size of the character never changes.
+2. **The effect layers** (`scripts/fx_layers.py`, no video model, free): small flat objects on ONE effect
+   canvas anchored at the character's feet, each 4-18 drawings, played over the body:
+   | Layer | Use | Reference example |
+   |---|---|---|
+   | `slash` | the smear of a swing (a flat crescent, never a blurred trail) | the knight's sword arc |
+   | `ring` | ground decal: a perspective ellipse that grows and fades | a smash, a respawn, a ground hit |
+   | `burst` | impact flash where a hit lands | a hammer hit, a bolt's end |
+   | `bolt` | lightning from the sky or between two points, a new zigzag every drawing | a thunderclap |
+   | `pillar` | light column (respawn, level-up, a buff) | a respawn |
+   | `particles` | small shards or sparks thrown out | embers, ice shards |
+   | `sprite` | a keyframe still from fal-image (one flat element: a cloud, a banner, a crystal) tweened in scale, alpha and position | a summoned banner, a storm cloud |
+   One recipe per skill (`A/fx/<skill>.json`: body sheet, canvas and pivot in units of `{H}`, layers with
+   `start`/`length` in seconds, z back or front of the body). The tool writes each layer's frames on the shared
+   canvas, `fx.json` for the engine and a composite `preview.gif`/`sheet.png`; Read the sheet to review it,
+   tune the numbers, run again (free). Before the body clip exists, `"body_still"` previews over the pose.
+   Example recipes: `out/heroes/holy_commander/fx/radiant_slash.json`, `out/heroes/thunder_sage/fx/thunderstorm.json`.
+
+**Timing, "on twos"** (the reference: 30 fps, each drawing held 2 frames): plan at `--fps 15`. Drawings per
+sheet: run 5-6, walk ~12, attack ~10, death 7-9, level-up ~16, respawn ~16. A skill is a short move into its
+pose and a long HOLD (reference skills: 39 frames from 4-13 drawings) while the layers play: the `skill`
+timing puts the pose at 40% and holds it. Fewer, cleaner drawings read smoother than many wobbling frames.
+Clips are 4 s (`--duration 4`): longer takes drift and zoom.
+
+**Respawn and raise**: never the reversed `despawn` (the model does not sink a body into the ground). Use the
+`rise` action from a kneeling `pose_respawn` still to the master (`endStill`), plus a `pillar` + `ring` recipe.
 
 ## One canvas and one body size for every action (fixed)
 The engine draws every action of a character in the same frame with the same pivot, so no action may be
@@ -71,9 +104,10 @@ idle, no feet gate), `boss`, `hero` or `mob` otherwise.
 | `shoot_side` | `side_attack` | `master` | `shoot` | `--sheet shoot_side --flip-to left` |
 | `death_side` | `side_death` | `master` | `death` | `--sheet death_side --flip-to left` |
 | `levelup_side` (hero) | `side_extra` | `master` | `levelup` | `--sheet levelup_side --flip-to left` |
-| `respawn_side` (hero), `raise_side` (summoned) | `side_extra` | `master` | `despawn` (sinks into the ground) | `--action despawn --sheet respawn_side --reverse --flip-to left` (or `raise_side`) |
+| `respawn_side` (hero), `raise_side` (summoned) | `side_rise` | `pose_respawn` (kneeling; fal-image), `--facing right` | `rise`, `"endStill"` = the master | `--action rise --sheet respawn_side --flip-to left` (or `raise_side`); its light column + ground ring are an fx recipe |
 | `skill_<name>_side` | `side_skill_<name>` (one set per skill) | `master` | `skill` | `--action skill --sheet skill_<name>_side --flip-to left` |
-| `fx_<name>`, `thorn_*`, rows marked ⏭ | - | - | not this skill (fx: fal-image vfx; ⏭: later) | - |
+| `fx_<name>` | - | - | no video: `python scripts/fx_layers.py A/fx/<name>.json` (layers below) | `A/fx/<name>/` |
+| `thorn_*`, rows marked ⏭ | - | - | later | - |
 Front and back MUST be planned with `--views front` / `--views back` (their action ids become
 `front-walk` / `back-walk`): that turns off the turn-around gate, which cannot work on a symmetric view.
 Skills: put the skill's body move from `brief.md` in the entry's `motion` and set `"endStill":
@@ -189,9 +223,9 @@ exports from its finished frames.
 | idle (walking, hero, ally, boss) | no clip | - | `--rest-frame`: the master pose, 1 frame |
 | attack | one-shot, end frame pinned | 16:9 | retimed to 0.7 s, hit at 40% (exported as `hit_frame`) |
 | shoot | one-shot, end frame pinned | 16:9 | retimed to 0.8 s, release at 45% (`hit_frame`) |
-| skill | one-shot, end pinned to `pose_skill_*` | 16:9 | retimed to 1.2 s, peak pose held at the end |
+| skill | one-shot, end pinned to `pose_skill_*` | 16:9 | retimed to 1.2 s: the pose at 40%, then held while the fx layers play |
 | levelup | one-shot, end frame pinned | 3:4 | retimed to 0.7 s |
-| despawn (-> respawn, raise) | one-shot | square | retimed to 0.6 s, exported `--reverse` |
+| rise (-> respawn, raise) | one-shot, from `pose_respawn`, end pinned to the master | 3:4 | retimed to 0.6 s |
 | death | one-shot, holds the last frame | 16:9 | retimed to 0.9 s, lying still at 80% |
 | hurt, jump, cast, guard ... | one-shot | - | kept in the tool, never made for this game (not in any manifest) |
 Video models play one-shots in slow motion; the retime cuts frozen holds and compresses to game length.

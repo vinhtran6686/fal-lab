@@ -135,6 +135,9 @@ ACTION_PRESETS: dict[str, ActionPreset] = {
     # respawn / raise: generated as a sink into the ground and exported reversed (video_to_sheet.py --reverse)
     "despawn": ActionPreset("oneshot", None, None, "defeat", "square", False, "none", False, False, False, 0.05,
                             "other"),
+    # respawn / raise (2026-10-19): set master = pose_respawn (kneeling or crouched), "endStill" = the master: the
+    # character rises into the idle pose; the light pillar and ground ring are fx layers. Replaces "despawn".
+    "rise": ActionPreset("oneshot", None, None, "cast", "tall", False, "feet", False, False, False, 0.03, "cast"),
     # flying enemies: flying in place (wing beats), looped like a hover idle
     "fly": ActionPreset("loop", "idle", None, "idle", "square", True, "none", True, False, True, 0.02, "hover"),
 }
@@ -154,7 +157,9 @@ ONESHOT_TIMING: dict[str, dict[str, Any]] = {
     "death": {"mode": "auto", "durationMs": 900, "keys": {"peak": {"at": 0.80}}},
     # reference lengths (fal-image/classes): shoot ~0.8 s, skill 1-2 s, level-up ~0.7 s, respawn ~0.6 s
     "shoot": {"mode": "auto", "durationMs": 800, "keys": {"hit": {"at": 0.45, "holdMs": 80}}},
-    "skill": {"mode": "auto", "durationMs": 1200, "keys": {"peak": {"at": 0.85, "holdMs": 150}}},
+    # a skill is a short move into its pose and a long HOLD while the fx layers play (reference: 39 frames, 4-13 drawings)
+    "skill": {"mode": "auto", "durationMs": 1200, "keys": {"peak": {"at": 0.4, "holdMs": 600}}},
+    "rise": {"mode": "auto", "durationMs": 600, "keys": {"peak": {"at": 0.85}}},
     "levelup": {"mode": "auto", "durationMs": 700, "keys": {"peak": {"at": 0.45, "holdMs": 120}}},
     "despawn": {"mode": "auto", "durationMs": 600, "keys": {"peak": {"at": 0.85}}},
 }
@@ -521,6 +526,25 @@ def moves_feet(entry: dict) -> bool:
             or entry.get("loopKind") == "gait")
 
 
+EFFECT_WORDS = re.compile(r"\b(glow\w*|light(?:s|ning)?|radian\w*|beam\w*|energ\w*|magic\w*|spark\w*|aura\w*|"
+                          r"flash\w*|shin\w*|halo\w*|flame\w*|fire|thunder\w*|bolt\w*|rays?|particl\w*|holy light)\b", re.I)
+
+
+def strip_effect_words(text: str) -> str:
+    """Drop every clause (between , ; .) that names an effect: the body clip must describe the body only."""
+    head, sep, rest = text.partition(", facing ")
+    if not sep:
+        return text
+    lock, sep2, motion = rest.partition(", ")
+    pieces = re.split(r"(?<=[,;.])\s+|\s+(?=(?:while|as|with|making|so that|and (?:a|the|his|her|its|their)) )", motion)
+    kept = [p for p in pieces if not EFFECT_WORDS.search(p)]
+    out = " ".join(kept or pieces[:1]).strip()
+    out = re.sub(r"\s+([,;.])", r"\1", out)
+    if out and out[-1] not in ".;,":
+        out += "."
+    return f"{head}, facing {lock}, {out}"
+
+
 def build_prompt(entry: dict, plan: dict, fixes: Sequence[str]) -> str:
     """The game-opus55 prompt shape: 'The same <identity>' + facing lock + ONE action + same start
     and end pose + negatives and fix clauses + locked camera, flat key background, exact style."""
@@ -538,6 +562,13 @@ def build_prompt(entry: dict, plan: dict, fixes: Sequence[str]) -> str:
     parts = [f"The same {identity_phrase(master['identityRecap'])}, {lock}, {fill(entry['motion'], words).strip()}"]
     if entry["returnsToRest"]:
         parts.append("The clip starts AND ends in exactly the same pose as the still.")
+    # fal-image-lab: character clips are BODY ONLY; every effect is a separate layer (scripts/fx_layers.py). A motion
+    # that names an effect (glow, light, lightning ...) made the model paint soft glows and starbursts into the body
+    # (holy_commander, thunder_sage, 2026-10-19): strip those sentences and say it once, plainly.
+    parts[0] = strip_effect_words(parts[0])
+    parts.append("Body motion only: no light, glow, sparks, lightning, energy, magic, trails or particles anywhere; "
+                 "the game draws every effect as a separate layer. The camera never moves or zooms: the character "
+                 "keeps exactly the same size in every frame.")
     seen = set()
     for clause in [entry.get("negatives") or "", *fixes]:
         text = fill(str(clause), words).strip()
@@ -1374,7 +1405,7 @@ def default_gates(action: str, preset: ActionPreset, klass: str, view: str) -> d
     if action == "run":
         gates["feet"]["max"] = 0.10
         gates["feet"]["mode"] = "median"
-    if action in ("jump", "victory", "defeat", "death", "cast", "guard", "skill", "levelup", "despawn"):
+    if action in ("jump", "victory", "defeat", "death", "cast", "guard", "skill", "levelup", "despawn", "rise"):
         gates["timing"] = {"maxSeconds": 2.5, "maxHoldSeconds": 1.2 if action in ("cast", "guard") else 0.5}
     if preset.airborne:
         gates["feet"]["mode"] = "start-end"
