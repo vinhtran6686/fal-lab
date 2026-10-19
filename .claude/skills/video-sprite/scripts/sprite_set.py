@@ -392,7 +392,7 @@ def run_tool(script: Path, args: Sequence[Any], *, timeout: float = TOOL_TIMEOUT
 
 def end_still_frame(still: Path, start: Path, out: Path, key: str) -> Path:
     """fal-image-lab: an action whose clip must END on another approved still (a death ending lying down):
-    place that still on the start frame's canvas: same key backdrop, same scale as the start still, its lowest
+    place that still on the start frame's canvas: same key backdrop, the same body size (silhouette area) as the start figure, its lowest
     pixel on the start figure's ground line, centred on the start figure. Written once to job/end.png."""
     if out.exists():
         return out
@@ -409,7 +409,10 @@ def end_still_frame(still: Path, start: Path, out: Path, key: str) -> Path:
     sy, sx = np.nonzero(smask)
     crop = img.crop((int(sx.min()), int(sy.min()), int(sx.max()) + 1, int(sy.max()) + 1))
     mask = Image.fromarray((smask[sy.min():sy.max() + 1, sx.min():sx.max() + 1] * 255).astype(np.uint8))
-    scale = H / img.height   # both stills were drawn at the same framing (1024 squares) as the start's source
+    # same BODY size as the start figure, by silhouette area (weapon included; it barely changes with the pose).
+    # The stills are not drawn at one framing: a pose fills its square differently, and a pose placed at the
+    # square's scale made the model zoom in to meet it (holy_commander, thunder_sage skills, 2026-10-19)
+    scale = math.sqrt(float(fg.sum()) / max(1.0, float(smask.sum())))
     if crop.width * scale > W * 0.95:
         scale = W * 0.95 / crop.width
     size = (max(1, round(crop.width * scale)), max(1, round(crop.height * scale)))
