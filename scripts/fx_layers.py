@@ -27,7 +27,7 @@ Layer types (all flat: 2-3 tones of one colour and a dark outline of the same hu
   sprite    a keyframe still (fal-image, magenta key) tweened          image, height, keys [{t, scale, alpha, dx, dy, rot}]
 Common: id, type, z (back|front of the body), start, length, color, alpha (peak), ease (out|in|inout|linear).
 
-Writes <asset>/fx/<skill>/: <layer>/frames/@2x/NN.png (each layer on the shared effect canvas),
+Writes <asset>/fx/<skill>/: <layer>/frames/@2x and @1x/<layer>_NN.png (each layer on the shared effect canvas),
 preview.gif and sheet.png (body + every layer), fx.json (canvas, pivot @2x, fps, layer list and timing for
 the engine), and records the skill under "fx" in <asset>/meta.json when that file exists.
 """
@@ -324,8 +324,12 @@ def main():
         d = out / lid / "frames" / "@2x"; d.mkdir(parents=True, exist_ok=True)
         for old in d.glob("*.png"):
             old.unlink()
+        d1 = out / lid / "frames" / "@1x"; d1.mkdir(parents=True, exist_ok=True)
+        for old in d1.glob("*.png"):
+            old.unlink()
         for i, im in enumerate(frames, 1):
             im.save(d / f"{lid}_{i:02d}.png")
+            im.resize((max(1, cw // 2), max(1, ch // 2)), Image.LANCZOS).save(d1 / f"{lid}_{i:02d}.png")
     bg = (58, 74, 46, 255)
     gif = [Image.alpha_composite(Image.new("RGBA", (cw, ch), bg), c).convert("P", palette=Image.ADAPTIVE) for c in composite]
     gif[0].save(out / "preview.gif", save_all=True, append_images=gif[1:], duration=round(1000 / fps), loop=0, disposal=2)
@@ -336,7 +340,7 @@ def main():
     info = {"skill": recipe["skill"], "canvas_2x": [cw, ch], "pivot_2x": [round(pivot[0]), round(pivot[1])],
             "fps": fps, "frames": n, "body": recipe.get("body"),
             "layers": [{"id": ly["id"], "type": ly["type"], "z": ly.get("z", "front"), "start": ly["start"],
-                        "length": ly["length"], "files": f"fx/{recipe['skill']}/{ly['id']}/frames/@2x/{ly['id']}_NN.png"}
+                        "length": ly["length"], "files": f"fx/{recipe['skill']}/{ly['id']}/frames/@2x/{ly['id']}_NN.png (also @1x)"}
                        for ly in recipe["layers"]]}
     (out / "fx.json").write_text(json.dumps(info, indent=1), encoding="utf-8")
     meta_path = asset / "meta.json"

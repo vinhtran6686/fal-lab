@@ -18,7 +18,7 @@
    "z": "back",
    "start": 0.0,
    "length": 1.4,
-   "files": "fx/thunderstorm/cloud/frames/@2x/cloud_NN.png"
+   "files": "fx/thunderstorm/cloud/frames/@2x/cloud_NN.png (also @1x)"
   },
   {
    "id": "bolt",
@@ -26,7 +26,7 @@
    "z": "front",
    "start": 0.35,
    "length": 0.45,
-   "files": "fx/thunderstorm/bolt/frames/@2x/bolt_NN.png"
+   "files": "fx/thunderstorm/bolt/frames/@2x/bolt_NN.png (also @1x)"
   },
   {
    "id": "impact",
@@ -34,7 +34,7 @@
    "z": "front",
    "start": 0.45,
    "length": 0.4,
-   "files": "fx/thunderstorm/impact/frames/@2x/impact_NN.png"
+   "files": "fx/thunderstorm/impact/frames/@2x/impact_NN.png (also @1x)"
   },
   {
    "id": "ground_ring",
@@ -42,7 +42,7 @@
    "z": "back",
    "start": 0.45,
    "length": 0.7,
-   "files": "fx/thunderstorm/ground_ring/frames/@2x/ground_ring_NN.png"
+   "files": "fx/thunderstorm/ground_ring/frames/@2x/ground_ring_NN.png (also @1x)"
   }
  ]
 }

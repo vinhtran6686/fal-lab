@@ -34,10 +34,9 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 2. `icon` (`../format.md` §3 icon; `{rim}` bright gold-yellow, `{badge}` the hero's main colour, lighter)
 3. `projectile` (ranged)
 4. `pose_skill_<name>`: one per skill, the skill's peak pose, side view, `--ref` the master
-5. `pose_respawn`: kneeling, head bowed, the weapon at its side (the respawn clip rises from it into the master)
-6. `fx_<name>` parts only when a skill's effect needs a shaped element (`../templates.md` fx part); the effect
+5. `fx_<name>` parts only when a skill's effect needs a shaped element (`../templates.md` fx part); the effect
    itself is a recipe of layers (`scripts/fx_layers.py`)
-7. `pose_attack` / `pose_run` only when the master's stance reads wrong for that action
+6. `pose_attack` / `pose_run` only when the master's stance reads wrong for that action
 
 ## 6. Asset manifest rows (`../format.md` §8 table format)
 | Asset | Từ | Loại | Role | Reference (30 fps) |
@@ -49,8 +48,7 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 | attack_side | video-sprite | one-shot | melee | 14/15, ~22 frames, 0.75 s (smear: an `fx_attack` slash layer) |
 | shoot_side | video-sprite | one-shot | ranged | 4/15, ~22 frames, 0.75 s |
 | death_side | video-sprite | one-shot | all | 13/15, ~9 frames, 0.3 s: short |
-| pose_respawn | fal-image | ảnh tĩnh | all | - |
-| respawn_side | video-sprite | one-shot | all | 13/15, ~18 frames, 0.6 s (rise from `pose_respawn`) |
+| respawn_side | video-sprite | one-shot | all | 13/15, ~18 frames, 0.6 s (despawn clip played in reverse) |
 | fx_respawn | fx-layers | hiệu ứng | all | pillar + ground ring |
 | fx_levelup | fx-layers | hiệu ứng | all | pillar or burst |
 | levelup_side | video-sprite | one-shot | all | 13/15, ~18-23 frames, 0.7 s |

@@ -196,7 +196,7 @@ straightens up proudly and performs ONE short triumphant flourish, such as raisi
 The game adds the level-up light: no glow, no stars, no particles, no effects.
 ```
 
-### rise (one-shot, 3:4 canvas; respawn of heroes, raise of summoned units)
+### rise (one-shot, 3:4 canvas; an alternative respawn, untested)
 
 Plan the set from the kneeling `pose_respawn` still (`make_master.py`) and set `"endStill"` to the master: the
 character rises from that pose into the idle stance. The light column and the ground ring are fx layers
@@ -210,9 +210,8 @@ starts kneeling low with {pos} head bowed, then pushes up in one smooth, strong 
 No light, no glow, no pillar, no particles, no smoke, no effects. Constant character size; the feet stay on the same ground line.
 ```
 
-### despawn (superseded by `rise`: the video model does not sink a character into the ground)
 
-#### despawn (one-shot, square canvas; exported REVERSED as respawn or raise)
+### despawn (one-shot, square canvas; exported REVERSED as respawn or raise; the default, works)
 
 `respawn_side` (heroes) and `raise_side` (summoned enemies and allies) are this clip played backwards
 (`video_to_sheet.py --reverse`): the character rises out of the ground into the master pose.

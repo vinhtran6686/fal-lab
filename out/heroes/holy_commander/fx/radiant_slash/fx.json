@@ -18,7 +18,7 @@
    "z": "front",
    "start": 0.05,
    "length": 0.4,
-   "files": "fx/radiant_slash/smear/frames/@2x/smear_NN.png"
+   "files": "fx/radiant_slash/smear/frames/@2x/smear_NN.png (also @1x)"
   },
   {
    "id": "ground_ring",
@@ -26,7 +26,7 @@
    "z": "back",
    "start": 0.3,
    "length": 0.55,
-   "files": "fx/radiant_slash/ground_ring/frames/@2x/ground_ring_NN.png"
+   "files": "fx/radiant_slash/ground_ring/frames/@2x/ground_ring_NN.png (also @1x)"
   },
   {
    "id": "hit_burst",
@@ -34,7 +34,7 @@
    "z": "front",
    "start": 0.3,
    "length": 0.35,
-   "files": "fx/radiant_slash/hit_burst/frames/@2x/hit_burst_NN.png"
+   "files": "fx/radiant_slash/hit_burst/frames/@2x/hit_burst_NN.png (also @1x)"
   },
   {
    "id": "sparks",
@@ -42,7 +42,7 @@
    "z": "front",
    "start": 0.32,
    "length": 0.55,
-   "files": "fx/radiant_slash/sparks/frames/@2x/sparks_NN.png"
+   "files": "fx/radiant_slash/sparks/frames/@2x/sparks_NN.png (also @1x)"
   }
  ]
 }

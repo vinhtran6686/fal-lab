@@ -25,9 +25,10 @@ from PIL import Image
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from sprite_pack import key_out, has_alpha, bbox, BASELINE  # noqa: E402
 
-STYLE = ("flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone "
-         "hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, "
-         "light from the top-left")
+# fal-image format.md §1 (2026-10-16): outlines in a dark shade of the neighbouring colour, the palette of the still
+STYLE = ("flat vector 2D cartoon game art: thick clean outlines in a dark shade of the neighbouring colour, flat colour "
+         "fills with 2-3 tone hard-edged cel shading, the exact palette of the still, big simple readable shapes, "
+         "high top-down camera, light from the top-left")
 FACINGS = ("right", "left", "front", "back", "down-right", "up-right")
 
 

@@ -344,8 +344,8 @@ layers** (`fx_<name>`: a recipe of small flat layers, `scripts/fx_layers.py`, no
 ring, burst, bolt, pillar, particles, and tweened keyframe stills). A keyframe still is ONE flat element (a
 cloud alone, a banner alone, a crystal alone; `templates.md` "fx part"), never a finished picture of the
 whole effect: a cloud drawn with its lightning cannot be animated. A basic attack has no pose by default; its
-smear is a `slash` layer. Respawn and raise use a kneeling `pose_respawn` still (the body rises from it into
-the master) plus a pillar and ring recipe.
+smear is a `slash` layer. Respawn and raise are the body sinking into the ground played in reverse, plus a pillar
+and ring recipe.
 
 **Manifest table** (in `brief.md`, heading exactly `## Asset manifest`; one row per asset; the tool reads
 the status column):

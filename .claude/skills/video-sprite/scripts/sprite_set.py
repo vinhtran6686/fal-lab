@@ -135,8 +135,9 @@ ACTION_PRESETS: dict[str, ActionPreset] = {
     # respawn / raise: generated as a sink into the ground and exported reversed (video_to_sheet.py --reverse)
     "despawn": ActionPreset("oneshot", None, None, "defeat", "square", False, "none", False, False, False, 0.05,
                             "other"),
-    # respawn / raise (2026-10-19): set master = pose_respawn (kneeling or crouched), "endStill" = the master: the
-    # character rises into the idle pose; the light pillar and ground ring are fx layers. Replaces "despawn".
+    # alternative respawn / raise, untested: master = a kneeling pose_respawn, "endStill" = the master. Its frame 0 is
+    # the kneeling pose, so finish it with --scale-ref from a side set (the rest measure would oversize the body).
+    # The default is "despawn" exported --reverse (works: holy_commander despawn t01, 2026-10-19).
     "rise": ActionPreset("oneshot", None, None, "cast", "tall", False, "feet", False, False, False, 0.03, "cast"),
     # flying enemies: flying in place (wing beats), looped like a hover idle
     "fly": ActionPreset("loop", "idle", None, "idle", "square", True, "none", True, False, True, 0.02, "hover"),
@@ -566,9 +567,9 @@ def build_prompt(entry: dict, plan: dict, fixes: Sequence[str]) -> str:
     # that names an effect (glow, light, lightning ...) made the model paint soft glows and starbursts into the body
     # (holy_commander, thunder_sage, 2026-10-19): strip those sentences and say it once, plainly.
     parts[0] = strip_effect_words(parts[0])
-    parts.append("Body motion only: no light, glow, sparks, lightning, energy, magic, trails or particles anywhere; "
-                 "the game draws every effect as a separate layer. The camera never moves or zooms: the character "
-                 "keeps exactly the same size in every frame.")
+    parts.append("Body motion only: no NEW light, glow, sparks, lightning, energy, magic, trails or particles beyond the "
+                 "shapes already drawn on the still; the game draws every effect as a separate layer. The camera never "
+                 "moves or zooms: the character keeps exactly the same size in every frame.")
     seen = set()
     for clause in [entry.get("negatives") or "", *fixes]:
         text = fill(str(clause), words).strip()
