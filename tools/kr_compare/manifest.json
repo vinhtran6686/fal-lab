@@ -1138,8 +1138,400 @@
     },
     "death": {
      "category": "core",
-     "frames": [],
-     "note": "raw/death_side_death_t01.mp4 dat (score 8) - chua export"
+     "frames": [
+      {
+       "name": "death/death_001",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_002",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_003",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_004",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_005",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_006",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_007",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_008",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_009",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_010",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_011",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_012",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_013",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_014",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_015",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_016",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_017",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_018",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_019",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_020",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_021",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_022",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_023",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_024",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_025",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_026",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_027",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_028",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_029",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_030",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_031",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_032",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_033",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_034",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_035",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_036",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_037",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_038",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_039",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_040",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_041",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_042",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_043",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_044",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_045",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_046",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_047",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_048",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_049",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_050",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_051",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_052",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_053",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_054",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_055",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_056",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_057",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_058",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_059",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_060",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_061",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_062",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_063",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_064",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_065",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_066",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_067",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_068",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_069",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_070",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_071",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_072",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_073",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_074",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_075",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_076",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_077",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death/death_078",
+       "w": 832,
+       "h": 480
+      }
+     ],
+     "note": "Phien ban 1 (t01 goc, du frame): quy xuong, nga nguoi ve truoc, kiem roi ben canh, nam im - dong tac ro rang, khong dinh vat the la. History.md: \"feet/turn gates misread the fall\" (gate doc sai do tu the nga, khong phai loi that). Clip raw 5.18s (124 frame @24fps) - cung van de nhu attack t01: xem rat cham. Phien ban 2 (death_fast_frames) la ban bot frame, DUYET de dung.",
+     "pending_export": true
     },
     "respawn": {
      "category": "role",
@@ -1286,7 +1678,209 @@
       }
      ],
      "pending_export": true,
-     "note": "CHOT (user, 2026-10-20: \"cuc ky on va dep\"): phien ban 2 cua attack, lam tu chinh t04 bang cach giu 1 trong 2 frame (xen ke) thay vi tao video moi - 46 frame -> 23 frame, nhanh gap doi (3.07s -> 1.53s @15fps). Day la phien ban duoc chon cho attack_side; con thieu buoc video_to_sheet.py de dua ve canvas 156x140 chuan cua game (retime ve ~0.7s theo classes/hero.md). Vien mau vang hoac/amber tren trang nay chi co nghia \"chua export sang canvas game\", khong phai gate QC that bao fail."
+     "note": "CHOT (user, 2026-10-20: \"cuc ky on va dep\"): phien ban 2 cua attack, duoc chon de export. Lam tu chinh \"attack\" bang cach giu 1 trong 2 frame (xen ke) thay vi tao video moi - 46 frame -> 23 frame, nhanh gap 2x (3.07s -> 1.53s @15fps). Con thieu buoc video_to_sheet.py de dua ve canvas 156x140 chuan cua game (retime theo classes/hero.md). Vien mau vang/amber tren trang nay chi co nghia \"chua export sang canvas game\", khong phai gate QC that bao fail."
+    },
+    "death_fast_frames": {
+     "category": "core",
+     "frames": [
+      {
+       "name": "death_fast_frames/death_fast_frames_001",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_002",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_003",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_004",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_005",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_006",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_007",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_008",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_009",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_010",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_011",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_012",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_013",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_014",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_015",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_016",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_017",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_018",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_019",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_020",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_021",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_022",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_023",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_024",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_025",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_026",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_027",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_028",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_029",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_030",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_031",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_032",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_033",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_034",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_035",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_036",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_037",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_038",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "death_fast_frames/death_fast_frames_039",
+       "w": 832,
+       "h": 480
+      }
+     ],
+     "pending_export": true,
+     "note": "DUYET (user, 2026-10-20: dong tac ro rang): phien ban 2 cua death, duoc chon de export. Lam tu chinh \"death\" bang cach giu 1 trong 2 frame (xen ke) thay vi tao video moi - 78 frame -> 39 frame, nhanh gap 2x (5.20s -> 2.60s @15fps). Con thieu buoc video_to_sheet.py de dua ve canvas 156x140 chuan cua game (retime theo classes/hero.md). Vien mau vang/amber tren trang nay chi co nghia \"chua export sang canvas game\", khong phai gate QC that bao fail."
     }
    },
    "anchor": [

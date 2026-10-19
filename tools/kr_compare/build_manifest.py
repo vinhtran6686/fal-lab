@@ -170,7 +170,12 @@ def load_holy_commander():
                            'phien ban 2 (attack_fast_frames) - phien ban 2 moi la ban duoc CHOT de export.',
                    'raw_clip': 'raw/attack_side_attack_t04.mp4'},
         'death': {'category': 'core', 'frames': [],
-                  'note': 'raw/death_side_death_t01.mp4 dat (score 8) - chua export'},
+                  'note': 'Phien ban 1 (t01 goc, du frame): quy xuong, nga nguoi ve truoc, kiem roi ben '
+                          'canh, nam im - dong tac ro rang, khong dinh vat the la. History.md: "feet/turn '
+                          'gates misread the fall" (gate doc sai do tu the nga, khong phai loi that). Clip '
+                          'raw 5.18s (124 frame @24fps) - cung van de nhu attack t01: xem rat cham. Phien ban '
+                          '2 (death_fast_frames) la ban bot frame, DUYET de dung.',
+                  'raw_clip': 'raw/death_side_death_t01.mp4'},
         'respawn': {'category': 'role', 'frames': [],
                     'note': 'raw/despawn_side_extra_t01.mp4 dat (score 8), export --reverse - chua export'},
         'levelup': {'category': 'role', 'frames': [],
@@ -188,19 +193,24 @@ def load_holy_commander():
             s['frames'] = extract_raw_clip(name, rel)
             s['pending_export'] = True
 
-    # phien ban 2: t04 voi bot frame (giu 1/2, bo xen ke) - xu ly ngay tren frame da co, khong quay video moi
-    attack_frames = states['attack']['frames']
-    fast_frames = decimate('attack_fast_frames', 'attack', attack_frames, stride=2)
-    states['attack_fast_frames'] = {
-        'category': 'core', 'frames': fast_frames, 'pending_export': True,
-        'note': f'CHOT (user, 2026-10-20: "cuc ky on va dep"): phien ban 2 cua attack, lam tu chinh t04 bang '
-                f'cach giu 1 trong 2 frame (xen ke) thay vi tao video moi - {len(attack_frames)} frame -> '
-                f'{len(fast_frames)} frame, nhanh gap doi ({len(attack_frames)/15:.2f}s -> '
-                f'{len(fast_frames)/15:.2f}s @15fps). Day la phien ban duoc chon cho attack_side; con thieu '
-                f'buoc video_to_sheet.py de dua ve canvas 156x140 chuan cua game (retime ve ~0.7s theo '
-                f'classes/hero.md). Vien mau vang hoac/amber tren trang nay chi co nghia "chua export sang '
-                f'canvas game", khong phai gate QC that bao fail.',
-    }
+    # phien ban 2: bot frame (giu 1/N, bo xen ke) - xu ly ngay tren frame da co, khong quay video moi
+    def fast_version(src_state, dst_state, stride, chot_note):
+        src_frames = states[src_state]['frames']
+        fast_frames = decimate(dst_state, src_state, src_frames, stride=stride)
+        states[dst_state] = {
+            'category': states[src_state]['category'], 'frames': fast_frames, 'pending_export': True,
+            'note': f'{chot_note} Lam tu chinh "{src_state}" bang cach giu 1 trong {stride} frame (xen ke) '
+                    f'thay vi tao video moi - {len(src_frames)} frame -> {len(fast_frames)} frame, nhanh gap '
+                    f'{stride}x ({len(src_frames)/15:.2f}s -> {len(fast_frames)/15:.2f}s @15fps). Con thieu '
+                    f'buoc video_to_sheet.py de dua ve canvas 156x140 chuan cua game (retime theo '
+                    f'classes/hero.md). Vien mau vang/amber tren trang nay chi co nghia "chua export sang '
+                    f'canvas game", khong phai gate QC that bao fail.',
+        }
+
+    fast_version('attack', 'attack_fast_frames', 2,
+                 'CHOT (user, 2026-10-20: "cuc ky on va dep"): phien ban 2 cua attack, duoc chon de export.')
+    fast_version('death', 'death_fast_frames', 2,
+                 'DUYET (user, 2026-10-20: dong tac ro rang): phien ban 2 cua death, duoc chon de export.')
 
     return {
         'id': 'holy_commander',

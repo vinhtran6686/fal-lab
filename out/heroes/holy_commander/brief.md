@@ -38,7 +38,7 @@
 | pose_skill_charge | fal-image | ảnh tĩnh | ✅ v01 | cúi người, kiếm đưa ngang người |
 | run_side | video-sprite | loop | ✅ t01 | export --despill --kind hero (colour gate fail là vết màu key bleed, hết sau despill); 8 hình, 15fps, canvas 156x140, body 111px@2x |
 | attack_side | video-sprite | one-shot | ⏳ t04 accepted, chốt bản bớt frame | combo 2 chém (chéo xuống + ngang, 3s, dồn người về trước); accepted bỏ qua gate area/feet/turn (vệt lưỡi liềm làm méo silhouette, user đã xem frame thật và duyệt). Quay 2s (t05) và prompt chặt hơn vẫn 2s (t06) đều làm model gộp mất 1 nhát — không quay thêm. User chốt: giữ frame của t04, bớt 1/2 số frame (xen kẽ) để animation tự nhanh hơn (46→23 hình, 3.07s→1.53s); CHƯA export sang canvas 156x140 (cần `video_to_sheet.py`, chọn đúng tập frame đã bớt khi retime) |
-| death_side | video-sprite | one-shot | ❌ | |
+| death_side | video-sprite | one-shot | ⏳ t01 duyệt, chốt bản bớt frame | quỳ xuống, ngã người về trước, kiếm rơi bên cạnh, nằm im; động tác rõ ràng, không vật thể lạ (gate `feet`/`turn` từng đọc sai do tư thế ngã, không phải lỗi thật). User duyệt: "animation rõ ràng". Clip raw 5.18s đọc chậm (như attack t01) — áp dụng đúng kỹ thuật đã dùng cho attack: bớt 1/2 số frame (xen kẽ) từ clip đã tách, không quay lại video (78→39 hình, 5.20s→2.60s). CHƯA export sang canvas 156x140 |
 | respawn_side | video-sprite | one-shot | ❌ | |
 | levelup_side | video-sprite | one-shot | ❌ | |
 | skill_holy_banner_side | video-sprite | one-shot | ❌ | |

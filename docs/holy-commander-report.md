@@ -18,6 +18,7 @@ bài học rút ra từ 2 asset này được tổng hợp ở mục 5 thành **
 | **`run_side` t01** | ✅ **export chính thức** | 8 hình thật, 15fps, canvas 156×140, body 111px@2x, `--despill --kind hero`; mọi gate pass trừ `colour` (sửa bằng despill) |
 | **`idle_side` t01** | ✅ **export chính thức** | miễn phí, frame 0 của `run_side` (`--rest-frame`), cùng canvas/tỉ lệ với `run_side` |
 | **`attack_side` — t04 bớt frame (chốt)** | ⏳ **chốt, chưa export** | combo 2 chém; `sprite_set.py accept --window 0:73` trên t04 gốc; user chốt dùng bản đã bớt 1/2 frame (46→23 hình, 1.53s@15fps) làm animation nhanh hơn — xem mục 6-7; còn thiếu bước `video_to_sheet.py` trên đúng tập frame đã bớt |
+| **`death_side` — t01 bớt frame (duyệt)** | ⏳ **duyệt, chưa export** | quỳ → ngã → nằm im, rõ ràng, không vật thể lạ; clip raw 5.18s đọc chậm như attack t01 — áp dụng đúng kỹ thuật bớt frame (78→39 hình, 2.60s@15fps), xem mục 8; còn thiếu bước `video_to_sheet.py` |
 
 ## 2. Chưa xong / chưa chốt
 
@@ -168,3 +169,26 @@ ngay trong `tools/kr_compare`, không tốn thêm phí sinh video.
 (Ghi chú UI: viền màu trong `tools/kr_compare` ban đầu dùng màu đỏ cho mọi state "chưa export sang canvas
 game", khiến dễ hiểu nhầm là lỗi QC — đã đổi sang màu vàng hổ phách cho đúng nghĩa "đang chờ export", tách
 biệt khỏi lỗi QC thật.)
+
+## 8. `death_side` — áp dụng kỹ thuật bớt frame, DUYỆT (2026-10-20)
+
+Clip raw của `death_side` t01 (5.18s, 124 frame gốc @24fps) có đúng vấn đề như `attack` t01/t04: đọc rất chậm
+khi xem thẳng clip raw, dù nội dung chuyển động (quỳ → ngã → nằm im) đã đúng và sạch từ lần quay đầu (history.md
+2026-10-19: score 8, gate `feet`/`turn` từng đọc sai do tư thế ngã, không phải lỗi thật — chưa từng cần quay lại).
+
+**Không quay video mới** — áp dụng thẳng kỹ thuật đã dùng cho `attack_fast_frames`:
+1. Tách + key nền toàn bộ clip raw bằng `ffmpeg` + `sprite_pack.key_out()` (giống `attack`, không qua
+   `sprite_set.py`/`video_to_sheet.py` — chỉ là xem trước trong `tools/kr_compare`): 78 hình @15fps (5.20s).
+2. `decimate()` giữ 1 trong 2 hình (xen kẽ), không quay lại video: 78 → 39 hình (2.60s@15fps), nhanh gấp đôi.
+3. Đọc lại từng hình quan trọng (frame 5/10/15/20/25/35) để chắc chắn không mất pha nào của cú ngã — vẫn thấy
+   rõ: đứng → quỳ, đầu cúi, kiếm cắm đất → nằm sấp hẳn, không bị giật/thiếu khung hình chuyển tiếp.
+
+**Kết quả**: user duyệt vì animation rõ ràng. `death_side` giờ ở cùng trạng thái với `attack_side` — đã chọn
+xong tập frame cuối (`death_fast_frames`, 39 hình), còn thiếu bước `video_to_sheet.py` để đưa vào canvas
+156×140 chuẩn game (retime còn lại ~0.3s theo `classes/hero.md`, tương tự attack).
+
+**Vì sao kỹ thuật này dùng lại được cho cả 2 state**: khác với `attack` (phải quay 2-3 lần vì nội dung
+chuyển động - đủ bao nhiêu nhát chém - phụ thuộc đúng `--duration` lúc sinh video), `death` chỉ có 1 động tác
+liên tục (ngã), không có nguy cơ bị "gộp mất 1 pha" như combo nhiều nhát của attack. Nên bớt frame sau khi
+quay xong là an toàn và đủ cho state này ngay từ lần quay đầu, không cần thử lại `--duration` ngắn hơn ở bước
+sinh video.
