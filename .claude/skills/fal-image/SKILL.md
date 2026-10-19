@@ -46,34 +46,33 @@ turn it into a few designs and the user only chooses. No API call until the choi
    Show the composed `{design}` sentence in the master report so the user sees what was drawn from.
 
 ## Ask for class, size, role and skills (every character, before anything else; `--creative` asks them with its design questions)
-A character needs a **class** and a **size tier** (`format.md` §7), a **role** and, for heroes and bosses,
-its **skills** (`format.md` §8) before `brief.md` or any paid call, in `--auto` mode too. Take them from the
+A character needs a **class** (one file in `classes/`: hero, ally, enemy, enemy-flying, boss), a **size
+tier**, a **role** and, for heroes and bosses, its **skills** (each from the class file: §3 Size, §2 Roles,
+§7 Skills) before `brief.md` or any paid call, in `--auto` mode too. Take them from the
 flags or the words of the request; never guess a missing one. Ask only what is missing.
 1. Class missing: AskUserQuestion "Nhân vật thuộc class nào?" with the options Hero, Quân phe ta (ally),
    Quái (enemy), Boss; the one the description suggests first, marked "(Recommended)".
-2. Tier missing: AskUserQuestion "Chọn size cho <class>" with that class's tiers only (hero: S, M, L; ally:
-   S, M, L; enemy: XS, S, M, L; boss: XL, XXL). Each option: tier, `{H}` and canvas, with a typical example
+2. Tier missing: AskUserQuestion "Chọn size cho <class>" with the tiers of the class file's §3 only. Each option: tier, `{H}` and canvas, with a typical example
    ("L: 84 px, canvas 220x196 — robot, golem"). The tier that fits the description first, "(Recommended)".
    Both missing: ask the class first, then the tier, in two calls (the tier options depend on the class).
-   A flying enemy (`--enemy-flying`, "quái bay") is offered only its tiers S and M with the flying canvases
-   (format.md §7); if `flying` is picked as the role in the same call as another tier, ask the tier again with
-   S and M only and record the flying canvas.
+   "Quái" covers `enemy.md` (walking) and `enemy-flying.md`: a flying enemy ("quái bay", `--enemy-flying`) is
+   offered the flying tiers (S, M); if the description does not say whether it flies, ask it as its role
+   in the same call (walking roles, plus "bay") and re-ask the tier with S and M if "bay" is picked.
    Role and skills go in the SAME call as the tier (up to 4 questions):
-   - Role missing: "Vai trò?" with that class's roles (§8), the one the description suggests first.
+   - Role missing: "Vai trò?" with the class file's §2 roles, the one the description suggests first.
    - Skills missing (hero; boss: specials): "Chọn kỹ năng" with `multiSelect: true`, 3-4 skills you propose
      from the description, each "<name>: <the body's move>; <the effect, marked vfx when big>". Hero: pick 2-3.
      Allies and enemies get no skill question (none by default; the user may add them).
 3. Record class, tier, `{H}`, canvas, role and skills in `brief.md`; `{H}` goes into `{STYLE}`.
-4. Write the **Asset manifest** (`format.md` §8) from class, role and skills, with the cost estimate, and show
+4. Write the **Asset manifest** (table format `format.md` §8; rows from the class file's §6) from role and skills, with the cost estimate, and show
    it to the user with the master report (they may add or drop rows).
 
 ## Pick the route
-- **Character** (hero, ally, enemy, boss; `format.md` §7 says which class file holds its slots and sheets:
-  `classes/hero.md` or `classes/enemy.md`): read `format.md` and the class file next to this file and follow
-  them exactly. The user gives content ("đạo tặc đầu trọc, dùng đao"); the class file sets the slots and
-  sheets, the matrix the frame size; `format.md` sets the style, the view prompts (by `{body}`: biped,
-  quadruped, blob, flyer), files and checklist. If the level or archetype is not given, use Level 1 and the
-  archetype that fits.
+- **Character**: read its class file (`classes/<class>.md`: role in the game, roles, size, directions,
+  stills, manifest rows, skills, slots, review points) and `format.md` (shared rules: style, view prompts by
+  `{body}`, files, manifest format, checklist), and follow them exactly. The class file is the only place
+  for class-specific facts; `reference.md` holds the measurements behind them. The user gives content
+  ("đạo tặc đầu trọc, dùng đao"); the class file says what to make of it.
   1. `brief.md` with class, tier, role, skills, the filled slots and the **Asset manifest**, then the **master** (side view, format.md §3) into `<asset>/design/`. Mode (`format.md` §5): no `--auto`
      → stop after the master and ask the user to approve a version; `--auto` → approve it yourself (>= 8).
   2. Every `fal-image` row of the manifest, from the approved master (`--ref`): front and back (enemies,

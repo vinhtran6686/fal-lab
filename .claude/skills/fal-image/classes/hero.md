@@ -1,59 +1,78 @@
 # Class: Hero
 
-Inherits everything in `../format.md` (style, generation rules, view prompts, commands, folders, checklist).
-Kind tag for files and `{kind}`: `hero`. Folder: `out/heroes/{id}/`.
-Heroes are the player's named characters: one each, controlled on the map, with idle, move, attack, death
-and later skills. Built from the two heroes made so far (`centaur`, `inferno_monk`, 2026-10-16); rows
-marked *to confirm* have no tested asset yet.
+Everything a hero needs, in one file. Shared rules (style, view prompt wording, files, manifest format) are
+in `../format.md`, cited by section. Kind tag and `{kind}`: `hero`. Folder: `out/heroes/{id}/`.
+video-sprite `make_master.py --class hero`.
 
-## Content slots (flexible, filled from the user's request)
-| Slot | Meaning | Example |
-|---|---|---|
-| `{id}` | short snake_case id | `centaur`, `inferno_monk` |
-| `{design}` | one dense sentence that locks the look, as for enemies; palette (format.md §1): saturated main colour and one bright accent. Reused verbatim in every prompt | centaur: `a heavy-metal centaur warrior: the upper body of a broad-shouldered man rising from ... the outlines are dark purple ...` |
-| `{body}` | biped / quadruped / blob / flyer (format.md §3) | centaur `quadruped`, inferno_monk `biped` |
-| `{idle}` | the idle stance, if it is not the neutral pose (the master is then drawn in it) | inferno_monk: `stands on ONE leg like an old tree, ... both hands pressed lightly together in front of the chest` |
-| `{idle_motion}` | the looping micro-motion of idle, for video-sprite | inferno_monk: `chest rising and falling with the breath, ... the standing leg and the balance pose never change` |
-| `{poses}` | how the weapon is held per action (idle / walk / run / attack), when it changes | centaur: `idle: the scythe planted upright ...; run: scythe held diagonally across the body with both hands` |
-| `{attack}` | the attack motion; stays inside the frame (strike forward or upward, not a wide sweep across the canvas) | centaur: `a two-handed horizontal scythe sweep from behind to the front ...` |
-| `{death}` | how the hero falls | centaur: `the horse buckles on its front legs and topples onto its side ...` |
-| `{skills}` | *to confirm*: each skill's cast motion and its effect, drawn as flat layered shapes inside the frame | - |
-Icon: `{rim}` = bright gold-yellow, `{badge}` = the hero's main colour, lighter.
-Record in `brief.md`: the approved master and every approved `pose_*` still (centaur: idle `master_v03`, run
-`pose_run_v01`, attack `pose_attack_v01`, death `pose_death_v04`), and any per-hero style choice (centaur:
-purple outlines, format.md §1).
+## 1. Role in the game
+The player's named character: one of each, sent to a point on the road where it blocks enemies, fights in
+melee or shoots, uses 2-3 skills, levels up and respawns after death. Short moves to a blocking point, so
+it has **one movement sheet** (run), drawn from the side.
 
-## Master and poses
-- The master is the hero in its idle stance, in the side view (facing right, turned 30-45° toward the camera;
-  format.md §3). Heroes have no front or back view: the references draw every hero action from the side only.
-- When an action needs a different hold or stance (`{poses}`), make a `pose_<action>` still from the master
-  (`--ref M`, same view as the sheet). video-sprite starts that action from it.
+## 2. Roles (ask when missing)
+| Role | Adds |
+|---|---|
+| `melee` (default) | `attack_side` |
+| `ranged` | `shoot_side` and a `projectile` still |
 
-## Frame size
-Profile `hero` of the size matrix (`../format.md` §7): tier S 104x92, **M 156x140 (default)**, L 220x196 at
-1x, feet at y 0.88. The canvas leaves about 2 x `{H}` above the feet for casts, level-up and respawn; big skill
-effects (storms, rains, beams) are separate vfx assets. A small mage is S, most heroes M, a robot or golem L.
+## 3. Size (`../format.md` §7, profile `hero`: canvas 2.6 x 2.3 `{H}`, feet at y 0.88)
+| Tier | `{H}` @1x | Canvas @1x | Typical |
+|---|---|---|---|
+| S | 40 | 104x92 | small mage, archer, child |
+| **M (default)** | 60 | 156x140 | most heroes: knight, monk, warrior |
+| L | 84 | 220x196 | robot, golem, beast rider |
+The canvas leaves about 2 x `{H}` above the feet for casts, level-up and respawn.
 
-## What a hero needs (states measured on 22 reference heroes and 9 allies, 2026-10-17)
-Every sheet is side only (+ mirror left). Durations are the reference's (30 fps): one-shots aim at them;
-loops take their length from the stride.
-| Category | Sheet | From still | Loop | Reference |
+## 4. Directions and master
+**1 direction: side** (left = mirror). The master is the hero in its idle stance, side view (`../format.md`
+§3: three-quarter facing right, turned 30-45° toward the camera). **No front or back view.** Idle is the
+master still itself.
+
+## 5. Stills (fal-image), in order
+1. `master` (side, idle stance; `{idle}` when not the neutral pose)
+2. `icon` (`../format.md` §3 icon; `{rim}` bright gold-yellow, `{badge}` the hero's main colour, lighter)
+3. `projectile` (ranged)
+4. `pose_skill_<name>`: one per skill, the skill's peak pose, side view, `--ref` the master
+5. `fx_<name>` (vfx, `../templates.md` vfx): one per skill whose effect is big
+6. `pose_attack` / `pose_run` only when the master's stance reads wrong for that action
+
+## 6. Asset manifest rows (`../format.md` §8 table format)
+| Asset | Từ | Loại | Role | Reference (30 fps) |
 |---|---|---|---|---|
-| idle | `idle_side` = the master still, 1 frame (a breathing loop only on request) | `master` | hold | 15/15 heroes, 1 frame |
-| move | `run_side` | `master` or `pose_run` | yes | 15/15, ~6 frames, 0.2 s: a short, fast loop |
-| attack | `attack_side`, hit frame exported | `master` or `pose_attack` | no | 14/15, ~22 frames, 0.75 s |
-| attack | `attack2_side` (a second melee move) or `shoot_side` (ranged) | `master` | no | 4/15 each, ~22-27 frames |
-| death | `death_side`, holds the last frame | `master` or `pose_death` | no | 13/15, ~9 frames, 0.3 s: short |
-| spawn | `respawn_side` (appears on the map again) | `master` | no | 13/15, ~18 frames, 0.6 s |
-| level | `levelup_side` (a short flourish) | `master` | no | 13/15, ~18-23 frames, 0.7 s |
-| skill | per skill: `pose_skill_<name>` (fal-image, the skill's peak) + `skill_<name>_side` (from the master to the pose) + `fx_<name>` when the effect is big | `master` → `pose_skill_<name>` | no | **2-3 skills per hero** (2-9 in the references), 28-68 frames, 1-2 s |
-| ui | `icon` | `icon` still | - | - |
-Skills: the body's motion only; a big effect (rain, storm, beam, summon) is a separate vfx asset (format.md §7).
-Allies (`out/allies/`, slots as here, palette of heroes) use this list without respawn, level-up and skills: idle
-(still), `run_side` (~8 frames), `attack_side` (~20), `death_side` (~15); a summoned ally adds `raise_side`,
-an elite ally 1-2 specials (heal, holy strike: ~30 frames).
+| master (= idle) | fal-image | ảnh tĩnh | all | 15/15 heroes: idle is 1 frame |
+| icon | fal-image | ảnh tĩnh | all | - |
+| projectile | fal-image | ảnh tĩnh | ranged | - |
+| run_side | video-sprite | loop | all | 15/15, ~6 frames, 0.2 s: short, fast loop |
+| attack_side | video-sprite | one-shot | melee | 14/15, ~22 frames, 0.75 s |
+| shoot_side | video-sprite | one-shot | ranged | 4/15, ~22 frames, 0.75 s |
+| death_side | video-sprite | one-shot | all | 13/15, ~9 frames, 0.3 s: short |
+| respawn_side | video-sprite | one-shot | all | 13/15, ~18 frames, 0.6 s |
+| levelup_side | video-sprite | one-shot | all | 13/15, ~18-23 frames, 0.7 s |
+| pose_skill_`<name>` | fal-image | ảnh tĩnh | per skill | - |
+| skill_`<name>`_side | video-sprite | one-shot | per skill | 28-68 frames, 1-2 s |
+| fx_`<name>` | fal-image vfx | hiệu ứng | per big skill effect | separate object in the reference |
+Optional (`../format.md` §9): `attack2_side` (4/15 heroes have a second melee move), a transformation.
+Cost, melee hero with 2 skills: 5 stills + 2 vfx (~USD 0.10) + 7 clips (~USD 0.56) + retakes.
 
-## Hero-specific review points (in addition to format.md §6)
+## 7. Skills
+**2-3 per hero** (the references: 2-9, median 2-3). Asked with the tier (`multiSelect`). Each skill has three
+parts: the **pose** (peak, one still), the **body clip** (master → pose, video-sprite) and a **vfx** when the
+effect is big. Kinds seen in the references: area rain or storm, ground smash or shockwave, summon,
+transformation, buff or support, special weapon strike (sawblade, multishot, counter, chain), teleport.
+
+## 8. Slots (`brief.md`)
+| Slot | Meaning |
+|---|---|
+| `{id}` | short snake_case id |
+| `{design}` | one dense sentence (`../format.md` §1): body and what it exaggerates, costume, the weapon and the hand that holds it, palette **saturated main colour + one bright accent**, effects as flat layers. Reused verbatim in every prompt |
+| `{body}` | biped / quadruped / blob / flyer (`../format.md` §3 view wording) |
+| `{idle}` | the idle stance, when not the neutral ready pose (the master is drawn in it) |
+| `{poses}` | how the weapon is held per action, when it changes |
+| `{attack}` | the attack motion; stays inside the canvas (strike forward or upward) |
+| `{death}` | how the hero falls (short: ~0.3 s) |
+| `{skills}` | per skill: `<name>: <the body's move>; <the effect>` |
+
+## 9. Review points (in addition to `../format.md` §6)
 - Reads as a hero next to the enemies: brighter main colour, one bright accent, a clear role silhouette.
-- Every `pose_*` still is the same character as the master (gear, colours, proportions); only the stance changes.
+- Every `pose_*` still is the same character as the master; only the stance changes.
 - No "heroic" extras the style forbids: no rim light, no aura, no ornate trim.

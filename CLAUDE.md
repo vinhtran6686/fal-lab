@@ -7,8 +7,9 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - Two skills, one job each:
   - `fal-image` (`.claude/skills/fal-image/`): stills only: a character's approved master (side view) plus,
     for enemies and bosses, front and back views (`format.md` §3: no diagonals), icon, projectile; towers, props, UI, maps. Format, style
-    and views in `format.md`, per-class specs in `classes/` (`enemy.md`, `hero.md`), size matrix (class x tier) in
-    `format.md` §7 (asked with AskUserQuestion when missing), other assets in `templates.md`, example
+    and views in `format.md`, one file per class in `classes/` (`hero`, `ally`, `enemy`,
+    `enemy-flying`, `boss`: roles, size, directions, stills, manifest rows, skills; asked with AskUserQuestion
+    when missing), reference measurements in `reference.md`, other assets in `templates.md`, example
     requests in `examples.md` (`/fal-image --example --hero`); `--creative` proposes designs from a short idea. A `style.md` at the project root, if present, overrides the default style block.
   - `video-sprite` (`.claude/skills/video-sprite/`): every character animation (move, attack, death ...) from
     the approved stills: image-to-video on fal.ai (`scripts/fal_video.py`) -> keyed, registered, looped or
@@ -28,7 +29,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - `ref/` holds style reference assets: look only, never send to the API.
 - Output: images, `.json` sidecars (prompt, settings, estimated cost) and `costs.csv` go to `out/`.
 - Spend summary: `python scripts/cost_report.py [--today]`.
-- Progress: every character's `brief.md` holds an Asset manifest (`fal-image/format.md` §8: class + role +
+- Progress: every character's `brief.md` holds an Asset manifest (rows from `fal-image/classes/<class>.md` §6, format in `format.md` §8: class + role +
   skills -> every still, clip and vfx it needs, with ✅/⏳/❌/⏭). `python scripts/asset_status.py [<id>]`
   answers "trạng thái tới đâu rồi"; guide in `docs/asset-manifest.md`.
 - Secrets: `FAL_KEY` is in `.env` (git-ignored). Never read it, print it, log it, or commit it.

@@ -37,12 +37,14 @@ Hai skill, mỗi skill một việc:
 - `fal-image`: **ảnh tĩnh** (ảnh gốc): nhân vật đã chốt và các góc chuẩn (side, trước, sau, 3/4 trước, 3/4 sau), icon, tháp, map… Chọn template → viết prompt → chạy script → xem ảnh → chấm điểm → sửa prompt, tối đa 3 vòng.
 - `video-sprite`: **animation** (move, attack, death…) từ các ảnh tĩnh đã chốt: image-to-video trên fal.ai → tách frame → xuất vào thư mục asset, **cùng một khung và một kích thước thân cho mọi action**. Claude hỏi trước khi tốn tiền video.
 
-## Nhân vật theo class (enemy)
+## Nhân vật theo class
 
-Cấu trúc: **format chung → class → level → archetype**.
-
-- `.claude/skills/fal-image/format.md`: style (rút ra từ `ref/`), bộ góc nhìn chuẩn, cấu trúc thư mục, khung/pivot, checklist ảnh tĩnh.
-- `.claude/skills/fal-image/classes/enemy.md`: class Enemy, **Level 1**: các góc cần có, prompt từng góc, khung **256×128** cho mọi action, thân cao 69 px (138 px @2x), danh sách animation (move 5 hướng + 3 lật, attack, death, icon).
+Mỗi class một file trong `.claude/skills/fal-image/classes/`, cùng một khuôn 9 mục (vai trò trong game, role,
+size, hướng, ảnh tĩnh, dòng manifest, skill, slot, điểm review):
+- `hero.md` · `ally.md` (quân phe ta) · `enemy.md` (quái đi bộ) · `enemy-flying.md` (quái bay) · `boss.md`
+- `.claude/skills/fal-image/format.md`: luật chung (style, cách vẽ góc nhìn, thư mục, tier size, format manifest).
+- `.claude/skills/fal-image/reference.md`: số liệu đo từ game tham chiếu (nguồn của các con số trong class).
+- `docs/asset-manifest.md`: cách đọc manifest và xem tiến độ.
 - `.claude/skills/video-sprite/SKILL.md`: quy trình tạo animation từ ảnh tĩnh.
 - Playtest: `python scripts/build_playtest.py` rồi nhờ Claude publish `out/playtest/` để xem quái đi trên map.
 

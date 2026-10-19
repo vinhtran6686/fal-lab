@@ -91,35 +91,22 @@ it the first masters came back with buckles, pouches, bandages and fabric textur
 Proportions drift taller: ask for half a head less than wanted ("about 3 heads tall" came back near 4), and
 a long upright weapon (glaive, staff, spear) held diagonally so its tip does not reach the top edge.
 
-## 3. Directions and views (measured 2026-10-17 on 112 reference characters)
-The references draw far fewer directions than an 8-way game would suggest, and never a diagonal:
-| Class (references) | Directions drawn | What is drawn in each |
-|---|---|---|
-| hero (22), ally (9) | **1: side** (left = mirror) | everything: idle, run, attack, death, skills, level-up, respawn |
-| enemy (60 of 68), boss (7 of 16) | **3: side, down, up** (left = mirror) | side: walk, idle, attack, death, specials; down: walk only; up: walk only |
-| exceptions | a ranged hero aiming in 3 directions; flyers and skaters with a walk set per direction | - |
-Heroes and allies fight standing on the road, so one side view is enough; enemies follow the path, which
-also runs up and down the screen; a diagonal stretch uses the nearest of the three.
+## 3. Directions and views
+**Only movement has several directions** (the reference game's code, `reference.md`): a class either has one
+movement sheet seen from the side (heroes, allies) or three (side, down, up: enemies, flying enemies, bosses).
+Every other state (idle, attack, death, skills) is drawn once from the side; left is always the mirror of
+the side, and a diagonal view is never made. Each class file (§4 "Directions and master") says which.
 
-**"Side" is not a flat profile**: in the references checked (bandit, knight hero, ogre, orc, demon, wolf) the
-side sprite is a three-quarter view facing right, the body turned about 30-45 degrees toward the camera (high
-top-down view), the face and the front of the torso visible, the far arm and leg partly hidden; four-legged
-beasts sit closer to a profile but still turn the head toward the camera. *Master wording untested*: the first
-master made with it is the test. "Down" is a straight front view, "up" a straight back view.
+**"Side" is not a flat profile**: the side sprite is a three-quarter view facing right, the body turned about
+30-45 degrees toward the camera (high top-down view), the face and the front of the torso visible, the far
+arm and leg partly hidden; four-legged beasts sit closer to a profile but still turn the head toward the
+camera. "Down" is a straight front view, "up" a straight back view. *Master wording untested*: the first
+master made with it is the test.
 
-**The master IS the side view.** It is the direction the game shows most, so it gets the best drawing, and
-every other view is redrawn from it with `--ref`. A diagonal (3/4 down or up) view is never made.
-| Still (`design/`) | View | Animated by video-sprite as | hero, ally | enemy, boss |
-|---|---|---|---|---|
-| `master_vNN` | side: three-quarter view facing right, body turned 30-45° toward the camera | idle (the still itself, see below), `walk_side`/`run_side`, `attack_side`, `death_side`, specials (+ mirror left) | yes | yes |
-| `view_front_vNN` | straight front, facing the viewer | `walk_down` | - | yes |
-| `view_back_vNN` | straight back, facing away | `walk_up` | - | yes |
-| `icon_vNN` | portrait badge | `ui/icon` | yes | yes |
-| `projectile_vNN` | the shot of a ranged character | `projectile` | if ranged | if ranged |
-| `pose_<action>_vNN` | the start pose of one action, side view | optional start still when the neutral pose reads wrong for that action | optional | optional |
-Asset count per character: hero or ally **2 stills** (master, icon), enemy or boss **4** (master, front, back,
-icon), plus a projectile when ranged. Make and approve them in this order: master, then front and back (each
-`--ref <master>`), then the icon.
+**The master IS the side view.** It is the direction the game shows most, so it gets the best drawing; every
+other still (`view_front`, `view_back`, `pose_*`, icon) is redrawn from it with `--ref`. Idle is the master
+still itself, except for flying enemies (an animated hover). Still names in `design/`: `master_vNN`,
+`view_front_vNN`, `view_back_vNN`, `icon_vNN`, `projectile_vNN`, `pose_<action>_vNN`, `pose_skill_<name>_vNN`.
 
 ### View prompts (every class)
 `{kind}` is the class word ("enemy", "hero", "friendly soldier"). Every view prompt is:
@@ -156,10 +143,6 @@ Blob and flyer have no head count: `{design}` gives a width-to-height ratio inst
 spread level". Master: facing right, wings spread, the near wing in front; front/back: wings spread
 symmetrically, face visible / hidden. In the references a flyer floats with its body about a third of the
 canvas above the ground line; video-sprite uses its `flying` profile.
-
-**Idle is the master itself**: in the references idle is one still frame for 15 of 15 heroes, 8 of 8 allies
-and most enemies (median 1 frame). The game shows the side still while the character waits; a looping
-breathing idle is optional (video-sprite) and asked for only when the user wants it.
 
 ### Icon and projectile (every class)
 **icon** (`--ref <master>`):
@@ -286,24 +269,21 @@ idle pose shows, a weapon held upright included; the same box video-sprite measu
 **Frame profiles** (canvas in units of `{H}`, feet at x 0.5, y 0.88):
 | Profile | Canvas W x H | Used by | Why |
 |---|---|---|---|
-| `unit` | 2.25 x 2.0 | allies, enemies | references: reach from the feet (85th percentile) up 1.56H, sideways 1.12H, below 0.24H (deaths fall toward the viewer) |
-| `hero` | 2.6 x 2.3 | heroes | up 2.0H (level-up, respawn, casts above the head), sideways 1.29H |
-| `boss` | 2.55 x 1.7 | bosses | up 1.48H, sideways 1.27H: wide, low frames |
-Back-test on 107 reference characters (heroes, allies, enemies, bosses; flyers excluded): 78 (73%) fit their
-profile canvas; the rest are wide death falls and skill moves, which our prompts keep inside the frame.
+| `unit` | 2.25 x 2.0 | allies, enemies | room for strikes and a death falling toward the viewer |
+| `hero` | 2.6 x 2.3 | heroes | room above the head for casts, level-up and respawn |
+| `boss` | 2.55 x 1.7 | bosses | wide, low frames |
+Measured on the references (`reference.md`): 73% of them fit their profile canvas; the rest are wide death
+falls and skill moves, which our prompts keep inside the frame.
 
-**Matrix** (canvas at 1x, rounded up to 4 px; @2x doubles it; default tier marked *):
-| Class | Example flag | Folder, kind | Profile | Sheets | Tiers -> canvas @1x |
-|---|---|---|---|---|---|
-| hero | `--hero` | `out/heroes/`, `hero` | hero | `classes/hero.md` | S 104x92, **M* 156x140**, L 220x196 |
-| ally (friendly soldier) | `--ally` | `out/allies/`, `ally` | unit | `classes/hero.md` ally list (run, attack, death), icon rim gold | **S* 92x80**, M 136x120, L 192x168 |
-| enemy, small | `--enemy-small` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **XS* 56x48** |
-| enemy | `--enemy` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **S* 92x80**, M 136x120 |
-| enemy, large | `--enemy-large` | `out/enemies/`, `enemy` | unit | `classes/enemy.md` | **L* 192x168** |
-| enemy, flying | `--enemy-flying` | `out/enemies/`, `enemy` | unit, one tier up (body floats above the ground line) | `classes/enemy.md` flying list | S (canvas of M) 136x120, **M* (canvas of L) 192x168** |
-| boss | `--boss` | `out/bosses/`, `boss` | boss | `classes/enemy.md` list + one sheet per special move | XL 308x204, **XXL* 436x292** |
-When asking, enemies are one class with tiers XS, S, M, L (a flying enemy S or M); bosses XL, XXL.
-The class with its role (§8) is what decides the asset list; the tier only decides the size.
+**Classes** (each file holds its tiers with the canvases, rounded up to 4 px; @2x doubles them):
+| Class | File | Folder | Profile | Tiers (default *) |
+|---|---|---|---|---|
+| hero | `classes/hero.md` | `out/heroes/` | hero | S, M*, L |
+| ally | `classes/ally.md` | `out/allies/` | unit | S*, M, L |
+| enemy (walking) | `classes/enemy.md` | `out/enemies/` | unit | XS, S*, M, L |
+| enemy (flying) | `classes/enemy-flying.md` | `out/enemies/` | unit, one tier up | S, M* |
+| boss | `classes/boss.md` | `out/bosses/` | boss | XL, XXL* |
+A new class is a new file in `classes/` with the same nine sections, and a row here.
 
 Rules that come with the matrix:
 - Pass the canvas to video-sprite as `--cell <W>x<H>` (1x) and `--target-height <2 x {H}>`; record class,
@@ -316,8 +296,7 @@ Rules that come with the matrix:
 - **A frame that does not fit**: first re-prompt that action to stay inside the canvas (shorter reach, fall
   in place); if it still does not fit, use the next tier's canvas of the same profile, keep `{H}`, and record
   it in `brief.md`. Never shrink the body.
-- Allies use the hero palette (§1: saturated main colour, bright accent), not the enemy one, and skip the
-  "reads as an enemy" review point of `classes/enemy.md`.
+- Class-specific palettes, rims and review points are in each class file.
 - Flyers (*to confirm*): the references float their body well above the canvas bottom (feet line about
   0.55-0.65); until a flyer is made, use the `unit` canvas one tier up and note it in `brief.md`.
 - `{H}` replaces "64" in `{STYLE}` (§1).
@@ -339,31 +318,11 @@ video-sprite the clips. `python scripts/asset_status.py` reads every manifest ("
   enemy's idle is an animated hover.
 - 30 fps, mostly drawn "on twos" (each drawing held 2 frames: about 15 drawings a second).
 
-**Roles** (asked with the class, §SKILL "Ask"):
-| Class | Roles |
-|---|---|
-| hero | `melee`, `ranged` |
-| ally | `melee`, `ranged`, `summoned` |
-| enemy | `melee` (walks, strikes), `ranged` (walks, shoots), `flying` (flies, usually no melee), `summoned` (rises from the ground) |
-| boss | `melee`, `ranged` |
+**Roles and rows**: each class file lists its roles (§2) and its manifest rows (§6), with the reference
+lengths. Rows are named `<state>_<direction>` (`walk_side`, `walk_down`, `run_side`, `attack_side`,
+`skill_<name>_side` ...), stills by their file stem (`master`, `view_front`, `pose_skill_<name>`, `icon`),
+effects `fx_<name>`; mark a row the class has but the game does not need yet as `⏭` (e.g. `thorn_*`).
 
-**Rows by class and role** (`F` = fal-image still, `V` = video-sprite clip, `X` = vfx effect still):
-| Row | Hero | Ally | Enemy (walking) | Enemy (flying) | Boss |
-|---|---|---|---|---|---|
-| `master` (= idle, side) F | yes | yes | yes | yes, hovering | yes |
-| `icon` F | yes | yes | yes | yes | yes |
-| `view_front`, `view_back` F | - | - | yes | yes | yes |
-| `projectile` F | ranged | ranged | ranged | ranged | ranged |
-| `run_side` V (loop) | yes | yes | - | - | - |
-| `walk_side`, `walk_down`, `walk_up` V (loop) | - | - | yes | `fly_*` instead | yes |
-| `idle_fly` V (loop) | - | - | - | yes | - |
-| `attack_side` V | melee | melee | melee | - | melee |
-| `shoot_side` V | ranged | ranged | ranged | ranged | ranged |
-| `death_side` V | yes | yes | yes | yes | yes |
-| `respawn_side`, `levelup_side` V | yes | - | - | - | - |
-| `raise_side` V | - | summoned | summoned | - | - |
-| `thorn_side`, `thorn_free_side` V | - | - | ⏭ later (only if the game has a binding tower) | - | - |
-| per skill: `pose_skill_<name>` F + `skill_<name>_side` V + `fx_<name>` X | 2-3 skills | 0-2 (elite) | rare | rare | 0-3 specials |
 Skills follow three parts: the **pose** (the skill's peak, one still, the end the clip moves to), the
 **body clip** (video-sprite, effects touching the body included) and, when the effect is big (rain, storm,
 beam, summon, shockwave), a separate **vfx** asset (`templates.md` vfx, `out/vfx/<name>/`). A basic attack

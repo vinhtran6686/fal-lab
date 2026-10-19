@@ -11,7 +11,7 @@ asset folder by `scripts/video_to_sheet.py`, and a top-down tower-defense game n
 
 **Division of work.** The `fal-image` skill makes the stills: one approved master per character (the side
 view) and, for enemies and bosses, front and back, plus a pose per skill, all in `A/design/`. Every
-character's `A/brief.md` holds the **Asset manifest** (`fal-image/format.md` §8): the list of every still,
+character's `A/brief.md` holds the **Asset manifest** (rows from `fal-image/classes/<class>.md` §6): the list of every still,
 clip and effect it needs, from its class, role and skills. **This skill makes the manifest's `video-sprite`
 rows marked ❌, and nothing else**: never invent a direction or a state the manifest does not list (no
 diagonals, no hurt, no idle loop unless listed), and mark each row ✅ `tNN` in the same commit as its export. This skill animates them: one image-to-video
@@ -54,7 +54,7 @@ bigger or smaller than another:
   more than 4% by silhouette area (a height-based check misread weapons and was replaced, 2026-10-16).
 - **Pivot**: feet at x 0.5, y 0.88; one fixed transform per clip, so bob, lean, a fall or a spin are kept.
 
-## Manifest rows -> sets and exports (fal-image/format.md §8; hero/ally 1 direction, enemy/boss 3)
+## Manifest rows -> sets and exports (fal-image/classes/<class>.md; hero/ally 1 direction, enemy/flying/boss 3)
 Left is always the mirror of the side (`--flip-to left`); there are no diagonal sheets. The side still is the
 `master` (a three-quarter view facing right). `make_master.py --class`: `flying` for flying enemies (hover
 idle, no feet gate), `boss`, `hero` or `mob` otherwise.

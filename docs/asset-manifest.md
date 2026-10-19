@@ -5,7 +5,8 @@ vật cần (ảnh tĩnh, clip animation, hiệu ứng), mỗi dòng có trạng
 `fal-image` làm các dòng ảnh tĩnh và hiệu ứng, `video-sprite` làm các dòng clip. Nhìn bảng là biết đã xong
 gì, còn thiếu gì, bước tiếp theo là gì.
 
-Quy tắc đầy đủ (bảng nào sinh ra dòng nào): `.claude/skills/fal-image/format.md` §8 và §9.
+Mỗi class có một file riêng trong `.claude/skills/fal-image/classes/` (hero, ally, enemy, enemy-flying, boss);
+mục §6 của file đó liệt kê đủ các dòng manifest của class. Format bảng: `format.md` §8; mở rộng: §9.
 
 ## Ví dụ: hero cận chiến, 2 skill
 
