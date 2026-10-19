@@ -1,0 +1,37 @@
+time,file,model,quality,size,transparent,seconds,cost_usd,approx
+2026-10-19 17:28:31,out/heroes/holy_commander/design/master_v01.png,gpt-image-2,low,1024x1024,False,19.8,0.0132,True
+2026-10-19 17:36:44,out/heroes/holy_commander/design/master_v02.png,gpt-image-2,low,1024x1024,False,21.1,0.0134,True
+2026-10-19 17:36:49,out/heroes/holy_commander/design/master_v03.png,gpt-image-2,low,1024x1024,False,26.5,0.0134,True
+2026-10-19 17:42:21,out/heroes/holy_commander/design/master_v04.png,gpt-image-2,low,1024x1024,False,22.5,0.0136,True
+2026-10-19 17:42:22,out/heroes/holy_commander/design/master_v05.png,gpt-image-2,low,1024x1024,False,22.6,0.0136,True
+2026-10-19 17:45:34,out/heroes/holy_commander/design/master_v06.png,gpt-image-2,low,1024x1024,False,20.0,0.0139,True
+2026-10-19 17:45:36,out/heroes/holy_commander/design/master_v07.png,gpt-image-2,low,1024x1024,False,22.8,0.0139,True
+2026-10-19 17:46:26,out/heroes/thunder_sage/design/master_v01.png,gpt-image-2,low,1024x1024,False,29.2,0.0138,True
+2026-10-19 17:46:27,out/heroes/thunder_sage/design/master_v02.png,gpt-image-2,low,1024x1024,False,30.2,0.0138,True
+2026-10-19 17:49:34,out/vfx/radiant_slash/design/fx_radiant_slash_v01.png,gpt-image-2,low,1024x1024,False,12.9,0.0116,True
+2026-10-19 17:49:45,out/vfx/holy_banner/design/fx_holy_banner_v01.png,gpt-image-2,low,1024x1024,False,13.4,0.0116,True
+2026-10-19 17:49:45,out/heroes/holy_commander/design/pose_skill_radiant_slash_v01.png,gpt-image-2,low,1024x1024,False,21.8,0.0136,True
+2026-10-19 17:49:45,out/heroes/holy_commander/design/icon_v01.png,gpt-image-2,low,1024x1024,False,25.0,0.0125,True
+2026-10-19 17:49:46,out/heroes/holy_commander/design/pose_skill_charge_v01.png,gpt-image-2,low,1024x1024,False,20.7,0.0135,True
+2026-10-19 17:49:47,out/heroes/holy_commander/design/pose_skill_holy_banner_v01.png,gpt-image-2,low,1024x1024,False,20.1,0.0136,True
+2026-10-19 17:50:56,out/vfx/chain_lightning/design/fx_chain_lightning_v01.png,gpt-image-2,low,1024x1024,False,14.1,0.0122,True
+2026-10-19 17:50:57,out/vfx/thunderstorm/design/fx_thunderstorm_v01.png,gpt-image-2,low,1024x1024,False,15.1,0.0122,True
+2026-10-19 17:50:57,out/heroes/thunder_sage/design/projectile_v01.png,gpt-image-2,low,1024x1024,False,15.8,0.0120,True
+2026-10-19 17:50:59,out/heroes/thunder_sage/design/pose_skill_chain_lightning_v01.png,gpt-image-2,low,1024x1024,False,18.2,0.0137,True
+2026-10-19 17:51:00,out/heroes/thunder_sage/design/pose_skill_thunder_step_v01.png,gpt-image-2,low,1024x1024,False,18.9,0.0136,True
+2026-10-19 17:51:01,out/heroes/thunder_sage/design/icon_v01.png,gpt-image-2,low,1024x1024,False,19.9,0.0128,True
+2026-10-19 17:51:05,out/heroes/thunder_sage/design/pose_skill_thunderstorm_v01.png,gpt-image-2,low,1024x1024,False,23.8,0.0136,True
+2026-10-19 17:53:36,out/heroes/holy_commander/.work/side/actions/run/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,2.9,0.0750,True
+2026-10-19 17:54:30,out/enemies/goblin_miner/design/master_v01.png,gpt-image-2,low,1024x1024,False,14.9,0.0136,True
+2026-10-19 17:54:37,out/heroes/thunder_sage/.work/side/actions/run/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.1,0.0750,True
+2026-10-19 17:54:47,out/enemies/goblin_miner/design/master_v02.png,gpt-image-2,low,1024x1024,False,14.5,0.0136,True
+2026-10-19 17:54:52,out/heroes/thunder_sage/.work/side_attack/actions/shoot/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.2,0.0750,True
+2026-10-19 17:54:54,out/heroes/holy_commander/.work/side_attack/actions/attack/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.1,0.0750,True
+2026-10-19 17:55:08,out/heroes/thunder_sage/.work/side_skill_chain_lightning/actions/skill/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.3,0.0750,True
+2026-10-19 17:56:07,out/heroes/holy_commander/.work/side_death/actions/death/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,2.9,0.0750,True
+2026-10-19 17:57:08,out/heroes/holy_commander/.work/side_extra/actions/levelup/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.2,0.0750,True
+2026-10-19 17:57:08,out/heroes/holy_commander/.work/side_extra/actions/despawn/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,2.8,0.0750,True
+2026-10-19 17:58:39,out/enemies/goblin_miner/design/view_front_v01.png,gpt-image-2,low,1024x1024,False,21.2,0.0137,True
+2026-10-19 17:58:39,out/enemies/goblin_miner/design/view_back_v01.png,gpt-image-2,low,1024x1024,False,21.3,0.0138,True
+2026-10-19 17:58:40,out/enemies/goblin_miner/design/icon_v01.png,gpt-image-2,low,1024x1024,False,22.2,0.0124,True
+2026-10-19 17:59:50,out/heroes/holy_commander/.work/side_skill_holy_banner/actions/skill/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 5s,False,3.8,0.0750,True

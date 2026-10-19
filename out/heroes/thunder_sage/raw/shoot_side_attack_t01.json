@@ -1,0 +1,27 @@
+{
+  "prompt": "The same hunched, thin old thunder mage about 2.5 heads tall (small head, huge flowing white beard drawn as two or three flat layered shapes, long sleeves, short legs), wearing a long deep indigo robe and a wide pointed indigo hat; one tall ancient gnarled wooden staff of dark knotted brown wood with a forked two-pronged top stands upright in his right hand, with one flat bright electric yellow lightning-bolt shape between the two prongs, the staff reaching about as high as the hat tip; saturated deep indigo main colour, bright electric yellow accent, brown wood, white beard, facing RIGHT the entire time and never turning around, starts in his upright ready stance holding the staff, then swings the staff forward to the right and points its forked top at the enemy with his arm extended, holds the aim for a short moment, releases ONE shot with a small recoil of the body, then lowers the staff back into the exact same upright stance as the start and holds still. Only one shot; the feet stay planted. The tall wooden staff stays one rigid gnarled shape with its forked top in every frame; it never bends, stretches or changes. The clip starts AND ends in exactly the same pose as the still. No arrow, bolt, bullet or projectile leaves the weapon (the game adds it), no muzzle flash, no trails, no effects. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaeff18/H37rnJsDhHHbUtQ6jJJz__input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aaeff18/eEzTzeB6ac5pRpaw9aqDE_input.png"
+  },
+  "seconds": 5,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.075,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\heroes\\thunder_sage\\.work\\side_attack\\actions\\shoot\\job\\input.png",
+  "lastFrame": "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\heroes\\thunder_sage\\.work\\side_attack\\actions\\shoot\\job\\input.png",
+  "requestId": "01a153cc-b615-7aa0-975a-b664cd38b0da",
+  "seconds_elapsed": 3.2,
+  "source_url": "https://v3b.fal.media/files/b/0aaeff18/4mOHQzUanLG97wZGF3Rsx_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

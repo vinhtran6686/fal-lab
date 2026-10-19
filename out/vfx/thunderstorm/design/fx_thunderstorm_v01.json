@@ -1,0 +1,12 @@
+{
+  "prompt": "Single VFX sprite of a small dark indigo storm cloud made of flat layered puffs with three jagged bright electric yellow lightning bolts striking straight down from it onto a small flat yellow impact burst, centered, filling about 70% of the frame: stacked layers of flat single-colour shapes, each with an outline that follows its form, no soft blur and no gradient glow. Background: one flat solid pure magenta color (#FF00FF) everywhere, no gradient, no ground, no shadow, no scenery, no text, no border. Do not use magenta or pink anywhere on the subject. Stylized 2D vector cartoon game art for a top-down fantasy tower defense game, designed to read at about 60 pixels tall. Simple design: big clear shapes and a strong silhouette; small details are left out or merged into larger shapes; faces, hands, armour and clothing are suggested with a few lines, never rendered in fine detail. Stylized, exaggerated cartoon proportions, not realistic anatomy (about 2.5 to 4 heads tall): the parts that express the character's role are enlarged and the rest is shrunk, so the silhouette reads at 60 pixels. Colour: flat solid fills only, no gradients, no airbrush, no painterly texture, no noise, no realistic rendering. Volume and shadow come from 2-3 hard-edged tones of the same colour (shadow, base, light), plus a few small highlight shapes. Thick clean outlines in a dark shade of the neighbouring colour. Effects (fire, ice, magic, poison, glow, energy) are drawn as stacked layers of flat single-colour vector shapes with an outline that follows the effect's form (flame tongues, ice shards, drips, sparks), never as soft blur or gradient glow. High top-down camera tilted about 60 degrees; light comes from the top-left.",
+  "model": "openai/gpt-image-2",
+  "quality": "low",
+  "size": "1024x1024",
+  "refs": [],
+  "transparent": false,
+  "seconds": 15.1,
+  "cost_usd": 0.0122,
+  "cost_is_estimate": true,
+  "source_url": "https://v3b.fal.media/files/b/0aaeff00/BALvvwDL5HEibgdYSEU-Q_KOgvnbdJ.png"
+}

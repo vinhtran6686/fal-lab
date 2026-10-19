@@ -1,0 +1,30 @@
+{
+  "id": "goblin_miner",
+  "kind": "enemy",
+  "cell": [
+    128,
+    128
+  ],
+  "scale_2x": 2,
+  "pivot": [
+    0.5,
+    0.88
+  ],
+  "states": {
+    "icon": {
+      "version": "v01",
+      "source": "design/icon_v01.png",
+      "frames": 1,
+      "fps": 12,
+      "loop": true,
+      "dir": "ui/icon",
+      "files": "ui/icon/frames/@1x/enemy_goblin_miner_icon_NN.png",
+      "sheet": "ui/icon/sheet.png",
+      "split": "gaps",
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    }
+  }
+}
