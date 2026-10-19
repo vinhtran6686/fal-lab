@@ -1133,8 +1133,8 @@
        "h": 480
       }
      ],
-     "note": "QC FAIL that (khong phai export chinh thuc), nhung user danh gia dang nhin dep: t04 la combo 2 chem (cheo xuong + ngang), 3s; gate area/feet/turn deu fail dung luc co vet trang mo hinh luoi liem xuat hien (frame ~13-39) - rat co the gate doc sai vi vet do lam meo silhouette, khong han la nhan vat quay lung that. Chua accept/export, dang cho quyet dinh co quay lai sua vet luoi liem hay giu ban nay.",
-     "qc_fail": true
+     "note": "Phien ban 1 (t04 goc, du frame): ACCEPTED (sprite_set.py accept --window 0:73), combo 2 chem (cheo xuong + ngang), 3s; gate area/feet/turn van fail dung luc co vet trang mo hinh luoi liem (frame ~12-41) nhung da xem frame that va xac nhan khong phai loi that - user duyet bang mat (\"kha dep... giu nhe\"). Quay 2s (t05) va prompt chat hon van 2s (t06) deu lam model gop mat 1 nhat. Nguon goc cua phien ban 2 (attack_fast_frames) - phien ban 2 moi la ban duoc CHOT de export.",
+     "pending_export": true
     },
     "death": {
      "category": "core",
@@ -1165,6 +1165,128 @@
      "category": "skill",
      "frames": [],
      "note": "raw/skill_side_skill_charge_t01.mp4 dat (score 8) - chua export"
+    },
+    "attack_fast_frames": {
+     "category": "core",
+     "frames": [
+      {
+       "name": "attack_fast_frames/attack_fast_frames_001",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_002",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_003",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_004",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_005",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_006",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_007",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_008",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_009",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_010",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_011",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_012",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_013",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_014",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_015",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_016",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_017",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_018",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_019",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_020",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_021",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_022",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack_fast_frames/attack_fast_frames_023",
+       "w": 832,
+       "h": 480
+      }
+     ],
+     "pending_export": true,
+     "note": "CHOT (user, 2026-10-20: \"cuc ky on va dep\"): phien ban 2 cua attack, lam tu chinh t04 bang cach giu 1 trong 2 frame (xen ke) thay vi tao video moi - 46 frame -> 23 frame, nhanh gap doi (3.07s -> 1.53s @15fps). Day la phien ban duoc chon cho attack_side; con thieu buoc video_to_sheet.py de dua ve canvas 156x140 chuan cua game (retime ve ~0.7s theo classes/hero.md). Vien mau vang hoac/amber tren trang nay chi co nghia \"chua export sang canvas game\", khong phai gate QC that bao fail."
     }
    },
    "anchor": [

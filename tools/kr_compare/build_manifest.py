@@ -54,6 +54,26 @@ def span(a, b):
     return list(range(a, b + 1))
 
 
+def decimate(state, src_state, src_frames, stride):
+    """A faster-reading version of an already-extracted state made by dropping frames (keep 1 of
+    every `stride`), not by generating a new clip: same source footage, fewer frames played at the
+    same fps, so it plays back in 1/stride of the time. Pure local post-process, no API call."""
+    src_dir = os.path.join(SPRITES_OUT, 'holy_commander', src_state)
+    dst_dir = os.path.join(SPRITES_OUT, 'holy_commander', state)
+    if os.path.isdir(dst_dir):
+        shutil.rmtree(dst_dir)
+    os.makedirs(dst_dir)
+    frames = []
+    for i, f in enumerate(src_frames):
+        if i % stride:
+            continue
+        src_name = os.path.basename(f['name']) + '.png'
+        dst_name = f'{state}_{len(frames) + 1:03d}.png'
+        shutil.copyfile(os.path.join(src_dir, src_name), os.path.join(dst_dir, dst_name))
+        frames.append({'name': f'{state}/{os.path.splitext(dst_name)[0]}', 'w': f['w'], 'h': f['h']})
+    return frames
+
+
 def load_malik():
     """hero_malik's own animations from the KR1 data tables, real frame sizes from the sprite index."""
     index = json.load(open(os.path.join(REVERSE_KR1, 'sprites', 'fullhd', '_index.json'), encoding='utf-8'))
@@ -142,11 +162,12 @@ def load_holy_commander():
                        'raw/run_side_t01.mp4 da quay (124 frame, 24fps); qc pass tru mau lem o chan '
                        '(28/124 frame) - chua export sheet that (can ffmpeg + sprite_set.py run, dang cho duyet)'),
         'attack': {'category': 'core', 'frames': [],
-                   'note': 'QC FAIL that (khong phai export chinh thuc), nhung user danh gia dang nhin dep: '
-                           't04 la combo 2 chem (cheo xuong + ngang), 3s; gate area/feet/turn deu fail dung luc '
-                           'co vet trang mo hinh luoi liem xuat hien (frame ~13-39) - rat co the gate doc sai '
-                           'vi vet do lam meo silhouette, khong han la nhan vat quay lung that. Chua accept/export, '
-                           'dang cho quyet dinh co quay lai sua vet luoi liem hay giu ban nay.',
+                   'note': 'Phien ban 1 (t04 goc, du frame): ACCEPTED (sprite_set.py accept --window 0:73), '
+                           'combo 2 chem (cheo xuong + ngang), 3s; gate area/feet/turn van fail dung luc co '
+                           'vet trang mo hinh luoi liem (frame ~12-41) nhung da xem frame that va xac nhan '
+                           'khong phai loi that - user duyet bang mat ("kha dep... giu nhe"). Quay 2s (t05) '
+                           'va prompt chat hon van 2s (t06) deu lam model gop mat 1 nhat. Nguon goc cua '
+                           'phien ban 2 (attack_fast_frames) - phien ban 2 moi la ban duoc CHOT de export.',
                    'raw_clip': 'raw/attack_side_attack_t04.mp4'},
         'death': {'category': 'core', 'frames': [],
                   'note': 'raw/death_side_death_t01.mp4 dat (score 8) - chua export'},
@@ -165,7 +186,21 @@ def load_holy_commander():
         rel = s.pop('raw_clip', None)
         if rel:
             s['frames'] = extract_raw_clip(name, rel)
-            s['qc_fail'] = True
+            s['pending_export'] = True
+
+    # phien ban 2: t04 voi bot frame (giu 1/2, bo xen ke) - xu ly ngay tren frame da co, khong quay video moi
+    attack_frames = states['attack']['frames']
+    fast_frames = decimate('attack_fast_frames', 'attack', attack_frames, stride=2)
+    states['attack_fast_frames'] = {
+        'category': 'core', 'frames': fast_frames, 'pending_export': True,
+        'note': f'CHOT (user, 2026-10-20: "cuc ky on va dep"): phien ban 2 cua attack, lam tu chinh t04 bang '
+                f'cach giu 1 trong 2 frame (xen ke) thay vi tao video moi - {len(attack_frames)} frame -> '
+                f'{len(fast_frames)} frame, nhanh gap doi ({len(attack_frames)/15:.2f}s -> '
+                f'{len(fast_frames)/15:.2f}s @15fps). Day la phien ban duoc chon cho attack_side; con thieu '
+                f'buoc video_to_sheet.py de dua ve canvas 156x140 chuan cua game (retime ve ~0.7s theo '
+                f'classes/hero.md). Vien mau vang hoac/amber tren trang nay chi co nghia "chua export sang '
+                f'canvas game", khong phai gate QC that bao fail.',
+    }
 
     return {
         'id': 'holy_commander',

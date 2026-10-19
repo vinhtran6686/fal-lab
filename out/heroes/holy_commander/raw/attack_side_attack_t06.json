@@ -1,0 +1,27 @@
+{
+  "prompt": "The same top-heavy holy knight commander about 2.5 heads tall (huge rounded silver shoulder plates, small head, short legs), wearing sleek silver plate armour with a gold cross emblem on the chest and a simple engraved gold swirl pattern (a few big flat swooping lines) on each shoulder plate and the hip armour, and a tall silver helmet with an angular T-shaped visor and one tall swept-back red plume crest; a big broad heavy VERY LONG longsword (blade as tall as from the ground to his chest) with a wide silver blade, a gold crossguard, a long grip and a gold EAGLE-HEAD pommel, held in both mitten-shaped hands; no shield; a long plain red cape behind him; saturated silver main colour, bright gold accent, red cape, facing RIGHT the entire time and never turning around, starts in their ready stance holding the longsword upright in both hands, then performs EXACTLY TWO separate, complete sword strikes back to back with no pause and no third strike, both finishing within this short clip: STRIKE ONE happens first - one fast overhead diagonal chop, the blade travelling from high above the left shoulder down to the lower right, the front foot stepping forward, the torso leaning forward into the strike; STRIKE TWO happens immediately after, with no pause - one fast wide horizontal sweep, the blade travelling from left to right at waist height, the other foot stepping forward too, the hips and shoulders rotating forward into the swing. The blade must visibly complete BOTH the diagonal path of strike one AND the horizontal path of strike two: two distinct, clearly separate sword paths, never blended or merged into a single swing, never only one strike. Both strikes drive the body forward only: no backward step at any point, no leaning backward at any point, the character always stays facing right and is never seen from the back or the side of the head. After strike two, returns to the exact same upright standing ready pose as the start, both feet together, the sword held vertical in both hands, and holds still. The clip starts AND ends in exactly the same pose as the still. Body motion only: no NEW light, glow, sparks, lightning, energy, magic, trails or particles beyond the shapes already drawn on the still; the game draws every effect as a separate layer. The camera never moves or zooms: the character keeps exactly the same size in every frame. Exactly two strikes: never collapse them into one swing, never show only one strike. The weapon stays one single weapon of the same length and shape. Constant character size. No motion trails, no slash effects, no sparks, no effects, no glowing arc, no white or pale crescent shape near the blade, no afterimage or ghost copy of the blade. No slow motion: both strikes happen at fast, natural speed, one immediately after the other. The character keeps exactly the same size and proportions as the still in every frame; arms, legs and the weapon never grow longer. Locked camera and constant character size: no zoom, no push-in, no pull-out, no pan; the character is exactly the same size in every frame, before and after the action. The character keeps facing RIGHT the whole time: never turns around, never shows their back and never faces the camera. One continuous, fluid motion at natural speed: no pauses, no frozen poses, no hovering, no slow motion. Both feet stay planted on the same ground line and the body stays centered in the frame; no stepping away, no sliding, no drifting. The character stays in the same spot and never travels across the frame; the game moves the sprite. The colours stay exactly as in the still in every frame: no tint, no colour shift, no darkening and no glow on the character. Only one attack: no repeats, no second strike, no spinning, no jumping, no leaving the frame. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 2,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaf0b21/oqdTce15cFL5gf0Ely1wF_input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aaf0b21/5jCelQa39GH5FcHqyyY5T_input.png"
+  },
+  "seconds": 2,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.03,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "E:\\work\\fal-lab\\out\\heroes\\holy_commander\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "lastFrame": "E:\\work\\fal-lab\\out\\heroes\\holy_commander\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "requestId": "01a155a2-de35-7130-9f69-963a03493a14",
+  "seconds_elapsed": 3.5,
+  "source_url": "https://v3b.fal.media/files/b/0aaf0b22/ZuMphOG6Wnf7Jw20CEKUm_minimax-h3.mp4",
+  "cost_is_estimate": true
+}
