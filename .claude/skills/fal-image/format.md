@@ -111,36 +111,46 @@ still itself, except for flying enemies (an animated hover). Still names in `des
 ### View prompts (every class)
 `{kind}` is the class word ("enemy", "hero", "friendly soldier"). Every view prompt is:
 `Use the reference image only for the character design; redraw it in the style described. Single game
-{kind} sprite: {design}. <VIEW> Neutral standing pose, full body, centered, filling about 70% of the frame.
+{kind} sprite: {design}. <VIEW> {UPRIGHT} Full body, centered, filling about 70% of the frame.
 {SIMPLE} {BG} {STYLE}`. The master has no `--ref` and starts directly with "Single game {kind} sprite: {design}.".
+`{UPRIGHT}` (in the master and every front/back view, all classes; learned 2026-10-19: without it the master came
+back leaning along a diagonal, one foot higher than the other, the sword raised, reading as the old 3/4 view):
+> Standing UPRIGHT in a calm neutral idle stance: the body vertical, not leaning and not walking diagonally,
+> both feet side by side on ONE horizontal ground line, the weapon held at rest (lowered or upright in front of
+> the body, not raised to strike), a shield or off-hand item held at the side.
+
+Flyers replace it with: "Hovering UPRIGHT and level in place, not diving or climbing diagonally, wings spread
+level, the body at one steady height". Blobs: "Resting upright and level, the flat base on ONE horizontal
+ground line".
+
 `<VIEW>` comes from the table of the character's `{body}`. The model pulls front and back views back toward
 the turned master: name the angle in capitals, say what must and must not be visible (eyes, face, which side
 the weapon or the asymmetric mark is on), and end with "Not a side view". A `pose_<action>` still uses the
-same skeleton with the master's view, the pose instead of "Neutral standing pose", and `--ref <master>`.
+same skeleton with the master's view, the pose instead of `{UPRIGHT}`, and `--ref <master>`.
 
 **biped** (two legs; front and back tested on bandit 2026-10-13/14). `{weapon hand}` is the hand that holds
 the weapon (or the staff, the book ...).
 | Still | `<VIEW>` |
 |---|---|
-| `master` | SIDE VIEW from a high top-down camera: a three-quarter view facing RIGHT, as if walking toward the right edge of the screen, the body turned about 30-45 degrees toward the viewer so the face and the front of the chest are visible, the far arm and leg partly hidden behind the body, the weapon held in front on the right side. Neutral ready pose. Not a flat profile, not a front view. |
+| `master` | SIDE VIEW from a high top-down camera: facing RIGHT toward the right edge of the screen, the body turned only about 30 degrees toward the viewer so the face and the front of the chest are visible, the far arm and leg partly hidden behind the body. Not a flat profile, not a front view, not a diagonal three-quarter view toward the bottom-right. |
 | `view_front` | Straight FRONT view, perfectly facing the viewer, walking toward the bottom of the screen, mirror-symmetric body: both eyes visible, both shoulders the same size, feet side by side, the weapon held upright in its {weapon hand} (on the left side of the image for a right hand). Not a side view. |
 | `view_back` | Straight BACK view, seen from directly behind, walking away toward the top of the screen: the back of the head, NO face and NO eyes visible, mirror-symmetric body, feet side by side with the heels toward the viewer, the weapon held upright in its {weapon hand} (on the RIGHT side of the image for a right hand). Not a side view, not a front view. |
 | `pose_ready_side` (example of `pose_<action>`) | The master's SIDE VIEW (facing right, turned toward the viewer) in a combat-ready stance: knees bent, weight forward, the weapon raised and ready to strike. |
 
 **quadruped** (four legs, incl. centaurs and beasts; *untested*): as biped, with these changes.
-- `master`: the long body across the frame, head and chest to the right, tail to the left, turned toward the viewer so the near flank and both pairs of legs show, the face visible.
+- `master`: the long body level across the frame, head and chest to the right, tail to the left, turned toward the viewer so the near flank and both pairs of legs show, the face visible; all four feet on one horizontal ground line, the back level (not climbing or walking diagonally), the weapon at rest.
 - `view_front` / `view_back`: the body foreshortened to a short block, front legs side by side (front) or hindquarters and tail (back); the long body is hidden behind the head or the rump.
 
 **blob** (no legs: slimes, oozes; *untested*): no `{weapon hand}`, no feet; "standing" becomes "resting on
 a wide flat base on the ground". `{design}` must name one asymmetric mark and its side ("a drip on its RIGHT
-side"): that mark tells the views apart. Master: facing right, eyes and mouth shifted to the right. Front:
+side"): that mark tells the views apart. Master: facing right, eyes and mouth shifted to the right, the flat base level on one horizontal ground line. Front:
 eyes and mouth centred, the mark on the image left. Back: no face, only a highlight arc, the mark on the image
 right. The top-left highlight never moves with the body.
 Blob and flyer have no head count: `{design}` gives a width-to-height ratio instead of "2.5 to 4 heads tall"
 ("about 1.3 times as wide as it is tall").
 
 **flyer** (wings, floats; *untested*): no feet on the ground; "standing" becomes "hovering in place, wings
-spread level". Master: facing right, wings spread, the near wing in front; front/back: wings spread
+spread level". Master: facing right, the body upright and level (not diving or climbing diagonally), wings spread, the near wing in front; front/back: wings spread
 symmetrically, face visible / hidden. In the references a flyer floats with its body about a third of the
 canvas above the ground line; video-sprite uses its `flying` profile.
 
@@ -243,6 +253,9 @@ re-animate only the actions that start from it.
 - The view is exact (§3 table of its `{body}`): master = three-quarter view facing right, body turned 30-45° toward the viewer,
   face visible (not a flat profile, not a front view); front = mirror-symmetric, face visible; back = no face.
 - Neutral pose (or the requested `pose_*`), full body and weapon inside the frame with margin, nothing touching the edges.
+- Master and front/back views: the body upright (its vertical axis vertical, not leaning along a diagonal),
+  the feet (or base, or all four feet) on ONE horizontal ground line, the weapon at rest, not raised to strike;
+  a figure that reads as walking diagonally toward a corner is the old 3/4 master: redo it (learned 2026-10-19).
 - Style (§1): simple big shapes and a clear silhouette at `{H}` px; no fine detail on face, hands or clothes;
   stylized proportions as `{design}` says; flat fills with 2-3 hard tones per colour, no gradient or blur;
   thick outlines in a dark shade (or the hue set in the brief); effects as flat layered shapes, not glow.

@@ -28,6 +28,7 @@ other state is side only and flipped to face its target.
 **3 directions: side, down, up** (left = mirror; no diagonals; the game picks by quadrant with 10° of
 stickiness, `../format.md` §8). Master = side view (`../format.md` §3), neutral ready pose; front and back are
 redrawn from it and must still look right when the enemy walks up to 45° off vertical. Idle is the master.
+The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertical, the feet on one horizontal ground line, the weapon at rest; never a diagonal stride toward a corner.
 
 ## 5. Stills (fal-image), in order
 1. `master` (side)

@@ -25,6 +25,7 @@ side only.
 ## 4. Directions and master
 **1 direction: side** (left = mirror). Master = side view (`../format.md` §3), neutral ready pose. No front or
 back view. Idle is the master still.
+The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertical, the feet on one horizontal ground line, the weapon at rest; never a diagonal stride toward a corner.
 
 ## 5. Stills (fal-image), in order
 1. `master` (side)

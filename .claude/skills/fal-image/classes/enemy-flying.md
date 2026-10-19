@@ -25,6 +25,7 @@ attack (it passes over the soldiers), sometimes shoots. **Three fly sheets** (si
 **3 directions: side, down, up** (left = mirror; no diagonals). Master = side view (`../format.md` §3)
 **hovering**: wings spread level, the near wing in front, no feet on the ground (`{body}` flyer wording).
 Front and back hover too.
+The master is upright and calm (`../format.md` §3 `{UPRIGHT}` flyer variant): the body vertical, hovering level, the weapon at rest; never a diagonal stride toward a corner.
 
 ## 5. Stills (fal-image), in order
 1. `master` (side, hovering)
