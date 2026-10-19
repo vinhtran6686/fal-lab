@@ -134,7 +134,7 @@ the weapon (or the staff, the book ...).
 |---|---|
 | `master` | SIDE VIEW from a high top-down camera: facing RIGHT toward the right edge of the screen, the body turned only about 30 degrees toward the viewer so the face and the front of the chest are visible, the far arm and leg partly hidden behind the body. Not a flat profile, not a front view, not a diagonal three-quarter view toward the bottom-right. |
 | `view_front` | Straight FRONT view, perfectly facing the viewer, walking toward the bottom of the screen, mirror-symmetric body: both eyes visible, both shoulders the same size, feet side by side, the weapon held upright in its {weapon hand} (on the left side of the image for a right hand). Not a side view. |
-| `view_back` | Straight BACK view, seen from directly behind, walking away toward the top of the screen: the back of the head, NO face and NO eyes visible, mirror-symmetric body, feet side by side with the heels toward the viewer, the weapon held upright in its {weapon hand} (on the RIGHT side of the image for a right hand). Not a side view, not a front view. |
+| `view_back` | Straight BACK view, seen from directly behind, walking away toward the top of the screen: the back of the head, NO face and NO eyes visible, mirror-symmetric body, feet side by side with the heels toward the viewer, the weapon held upright in its {weapon hand} (on the RIGHT side of the image for a right hand). Everything worn on the FRONT (a helmet lamp, a visor, an emblem, a belt buckle) is hidden; everything worn on the BACK (a sack, a quiver, a cape, wings) is in full view and covers the back. Not a side view, not a front view. |
 | `pose_ready_side` (example of `pose_<action>`) | The master's SIDE VIEW (facing right, turned toward the viewer) in a combat-ready stance: knees bent, weight forward, the weapon raised and ready to strike. |
 
 **quadruped** (four legs, incl. centaurs and beasts; *untested*): as biped, with these changes.
@@ -253,6 +253,8 @@ re-animate only the actions that start from it.
 - The view is exact (§3 table of its `{body}`): master = three-quarter view facing right, body turned about 30° toward the viewer,
   face visible (not a flat profile, not a front view); front = mirror-symmetric, face visible; back = no face.
 - Neutral pose (or the requested `pose_*`), full body and weapon inside the frame with margin, nothing touching the edges.
+- Back view: no front-worn item shows (a lamp, a visor, an emblem); back-worn items (a sack, a quiver, a cape)
+  cover the back. A back view that shows the front of the gear is a front view with the face removed: redo it.
 - Master and front/back views: the body upright (its vertical axis vertical, not leaning along a diagonal),
   the feet (or base, or all four feet) on ONE horizontal ground line, the weapon at rest, not raised to strike;
   a figure that reads as walking diagonally toward a corner is the old 3/4 master: redo it (learned 2026-10-19).
