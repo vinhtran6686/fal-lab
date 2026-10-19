@@ -44,7 +44,7 @@ the same command again (run sets one after another, not in parallel, when it hap
 The engine draws every action of a character in the same frame with the same pivot, so no action may be
 bigger or smaller than another:
 - **Canvas**: `meta.json` "cell", set by the first export and shared by every later one. Read class and tier
-  from the asset's `brief.md` and pass that canvas from the size matrix (`fal-image/format.md` §7) as
+  from the asset's `brief.md` and pass that canvas from the class file's §3 (`fal-image/classes/<class>.md`) as
   `--cell <W>x<H>` on the first export (e.g. hero M: `--cell 156x140`; enemy S: `--cell 92x80`). `video_to_sheet.py` never widens it for one action and
   never shrinks a body to fit; a state that does not fit is refused: delete `meta.json` and re-export every
   sheet with a larger `--cell` (all actions move to the new canvas together).

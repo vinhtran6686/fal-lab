@@ -37,7 +37,9 @@ Trạng thái:
 | ❌ | chưa làm |
 | ⏭ | để sau hoặc bỏ qua (lý do ở Ghi chú) |
 
-## Mỗi class có những dòng nào
+## Mỗi class có những dòng nào (tóm tắt)
+
+Bảng dưới chỉ là tóm tắt để đọc nhanh; nguồn chính là §6 của từng file `classes/<class>.md`.
 
 | Dòng | Hero | Quân ta | Quái đi bộ | Quái bay | Boss |
 |---|---|---|---|---|---|

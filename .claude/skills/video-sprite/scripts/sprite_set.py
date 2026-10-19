@@ -127,7 +127,7 @@ ACTION_PRESETS: dict[str, ActionPreset] = {
     # fal-image-lab: enemy death (knocked down, ends lying still; the game holds the last frame)
     "death": ActionPreset("oneshot", None, None, "defeat", "wide", False, "none", False, False, False, 0.05,
                           "defeat"),
-    # fal-image-lab asset manifest (fal-image/format.md §8): ranged attack, skills, level-up, spawn, flight
+    # fal-image-lab asset manifest (fal-image/classes/<class>.md §6): ranged attack, skills, level-up, spawn, flight
     "shoot": ActionPreset("oneshot", None, None, "attack", "wide", True, "feet", False, True, True, 0.02, "attack"),
     # a skill ends on its approved peak pose: set "endStill" to design/pose_skill_<name>_vNN.png in set_plan.json
     "skill": ActionPreset("oneshot", None, None, "cast", "wide", False, "feet", False, False, False, 0.03, "cast"),

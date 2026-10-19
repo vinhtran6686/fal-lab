@@ -49,7 +49,7 @@ neutral ready pose; front and back redrawn from it. Idle is the master still.
 | skill_`<name>`_side | video-sprite | one-shot | per special | 30-48 frames, 1-1.6 s |
 | fx_`<name>` | fal-image vfx | hiệu ứng | per big special effect | - |
 Optional (`../format.md` §9): `death_end_side` (two-phase death: lying, or fading out), a transformation
-(a second form with its own rows). Cost, melee boss with 1 special: 5 stills + 1 vfx (~USD 0.08) + 6 clips
+(a second form with its own rows). Cost, melee boss with 1 special: 5 stills (master, front, back, icon, pose) + 1 vfx (~USD 0.08) + 6 clips
 (~USD 0.48) + retakes.
 
 ## 7. Skills

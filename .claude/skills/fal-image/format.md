@@ -200,7 +200,7 @@ Game-ready frames (the same for every action of an asset):
 | Item | Value |
 |---|---|
 | File type | PNG-32 RGBA, transparent; `@2x` master and `@1x` in-game |
-| Canvas | **one canvas for every action of an asset** (`meta.json` "cell"), from the size matrix (§7) by class and tier. No action gets a bigger or smaller frame, so the engine never rescales one action against another |
+| Canvas | **one canvas for every action of an asset** (`meta.json` "cell"), from the class file's §3 (class and tier, §7). No action gets a bigger or smaller frame, so the engine never rescales one action against another |
 | Body | **one body height for every action**: `2 x {H}` at @2x (video-sprite `--target-height`), recorded as `meta.json` "body_height_2x"; a sheet whose body differs by more than 4% is rescaled on export |
 | Pivot | feet, x 0.5, y 0.88 of the canvas (`meta.json` "pivot"; fixed in `video_to_sheet.py`); icons are centered. The reference game sets the anchor per character (0.10-0.25 of the canvas above the bottom, median 0.18) and the engine reads it per character; this project fixes it at 0.88 for every asset and records it in `meta.json`, the size matrix (§7) already includes the room below the feet |
 | Motion | `move_speed` (px/s at 1x) in `meta.json`, tuned in the playtest so the feet do not slide |
@@ -250,7 +250,7 @@ re-animate only the actions that start from it.
 - Flat magenta background only; no magenta or pink on the subject, no ground, shadow or text.
 - Class-specific points in the class file.
 
-## 7. Size: class x tier matrix (fixed; measured 2026-10-17)
+## 7. Size: tiers and profiles (fixed; measured 2026-10-17)
 Every character has a **class** and a **size tier** before anything is drawn (SKILL.md "Ask for class and
 size"). The tier fixes the body height `{H}`; the class fixes the frame profile; together they give the canvas
 that every action of the asset shares.
@@ -285,7 +285,7 @@ falls and skill moves, which our prompts keep inside the frame.
 | boss | `classes/boss.md` | `out/bosses/` | boss | XL, XXL* |
 A new class is a new file in `classes/` with the same nine sections, and a row here.
 
-Rules that come with the matrix:
+Rules that come with the size:
 - Pass the canvas to video-sprite as `--cell <W>x<H>` (1x) and `--target-height <2 x {H}>`; record class,
   tier, `{H}` and canvas in `brief.md`.
 - `{attack}`, `{death}` and casts are written to stay inside the canvas (strike forward or upward, fall

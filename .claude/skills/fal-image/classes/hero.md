@@ -52,7 +52,7 @@ master still itself.
 | skill_`<name>`_side | video-sprite | one-shot | per skill | 28-68 frames, 1-2 s |
 | fx_`<name>` | fal-image vfx | hiệu ứng | per big skill effect | separate object in the reference |
 Optional (`../format.md` §9): `attack2_side` (4/15 heroes have a second melee move), a transformation.
-Cost, melee hero with 2 skills: 5 stills + 2 vfx (~USD 0.10) + 7 clips (~USD 0.56) + retakes.
+Cost, melee hero with 2 skills: 4 stills (master, icon, 2 poses) + 2 vfx (~USD 0.10) + 7 clips (~USD 0.56) + retakes.
 
 ## 7. Skills
 **2-3 per hero** (the references: 2-9, median 2-3). Asked with the tier (`multiSelect`). Each skill has three
@@ -67,6 +67,7 @@ transformation, buff or support, special weapon strike (sawblade, multishot, cou
 | `{design}` | one dense sentence (`../format.md` §1): body and what it exaggerates, costume, the weapon and the hand that holds it, palette **saturated main colour + one bright accent**, effects as flat layers. Reused verbatim in every prompt |
 | `{body}` | biped / quadruped / blob / flyer (`../format.md` §3 view wording) |
 | `{idle}` | the idle stance, when not the neutral ready pose (the master is drawn in it) |
+| `{idle_motion}` | optional: a looping breathing idle, only when the user asks for one (adds an `idle_loop_side` row; video-sprite `idle`) |
 | `{poses}` | how the weapon is held per action, when it changes |
 | `{attack}` | the attack motion; stays inside the canvas (strike forward or upward) |
 | `{death}` | how the hero falls (short: ~0.3 s) |
