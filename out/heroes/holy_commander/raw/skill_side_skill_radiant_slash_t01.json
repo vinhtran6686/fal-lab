@@ -1,0 +1,27 @@
+{
+  "prompt": "The same top-heavy holy knight commander about 2.5 heads tall (huge rounded silver shoulder plates, small head, short legs), wearing sleek silver plate armour with a gold cross emblem on the chest and a simple engraved gold swirl pattern (a few big flat swooping lines) on each shoulder plate and the hip armour, and a tall silver helmet with an angular T-shaped visor and one tall swept-back red plume crest; a big broad heavy VERY LONG longsword (blade as tall as from the ground to his chest) with a wide silver blade, a gold crossguard, a long grip and a gold EAGLE-HEAD pommel, held in both mitten-shaped hands; no shield; a long plain red cape behind him; saturated silver main colour, bright gold accent, red cape, facing RIGHT the entire time and never turning around, raises the long sword high behind his right shoulder with both hands (clear anticipation), then performs ONE powerful downward chop in front of him and ends leaning forward with the blade low and pointing forward and down, holding that peak pose still at the end. The feet stay on the same ground line. The very long broad longsword keeps exactly the same rigid straight shape and length in every frame and never bends, stretches or melts; both mitten hands stay on its grip. The game adds the magic: no particles, no glow, no beams, no energy, no new objects, no effects. Constant character size. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaeff40/fXVKFgv5X6QJzRtRvar2W_input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aaeff41/a1wzo0cXpfM7g7ogSO5jY_end.png"
+  },
+  "seconds": 5,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.075,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\heroes\\holy_commander\\.work\\side_skill_radiant_slash\\actions\\skill\\job\\input.png",
+  "lastFrame": "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\heroes\\holy_commander\\.work\\side_skill_radiant_slash\\actions\\skill\\job\\end.png",
+  "requestId": "01a153d2-e183-74f2-9575-0dbd0d5bbf7f",
+  "seconds_elapsed": 3.5,
+  "source_url": "https://v3b.fal.media/files/b/0aaeff41/FuDGVQAsFtxuon31vSlnR_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

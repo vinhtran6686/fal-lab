@@ -11,3 +11,11 @@
 | 2026-10-19 | pose_skill_holy_banner | v01 | gpt-image-2 low | 8.5 | approved | raised fist, sword planted at his side, differs from idle | - | user: "chốt v07, tiếp tục" |
 | 2026-10-19 | pose_skill_radiant_slash | v01 | gpt-image-2 low | 8.5 | approved | end of the chop, blade low and forward, tip inside frame | - | user: "chốt v07, tiếp tục" |
 | 2026-10-19 | pose_skill_charge | v01 | gpt-image-2 low | 8 | approved | leaning dash, sword low behind the hip, cape streaming; eagle pommel faces forward | - | user: "chốt v07, tiếp tục" |
+| 2026-10-19 | run_side | t01 | fal:minimax/h3-max-turbo | 6 | awaiting user | motion good, sword rigid; pink/violet colour bleed on legs (gate colour 28/124 frames) | export with --despill | pipeline: video-sprite |
+| 2026-10-19 | attack_side | t01 | fal:minimax/h3-max-turbo | 6 | awaiting user | good chop, but the model added a big pink-white slash arc (extra object); turn gate frames 28-51 | retake: no effects, no trails | pipeline: video-sprite |
+| 2026-10-19 | death_side | t01 | fal:minimax/h3-max-turbo | 8 | awaiting user | kneels, falls forward, sword beside him, lies still; feet/turn gates misread the fall | accept with window | pipeline: video-sprite |
+| 2026-10-19 | levelup_side | t01 | fal:minimax/h3-max-turbo | 6 | awaiting user | salute with raised sword fine, but a horizontal swing with green slash effect and dust puffs at the end | retake: no effects, no swing | pipeline: video-sprite |
+| 2026-10-19 | respawn_side (despawn) | t01 | fal:minimax/h3-max-turbo | 8 | awaiting user | sinks into the ground cleanly, gate pass | export --reverse | pipeline: video-sprite |
+| 2026-10-19 | skill_holy_banner_side | t01 | fal:minimax/h3-max-turbo | 3 | rejected | large pink/gold rings and sparks (extra objects, background gate), area 2.9x; end pose raised fist is right | retake: no effects | pipeline: video-sprite |
+| 2026-10-19 | skill_radiant_slash_side | t01 | fal:minimax/h3-max-turbo | 4 | rejected | huge pink slash arc, identity 0.45 mid-clip; end pose right | retake: no effects | pipeline: video-sprite |
+| 2026-10-19 | skill_charge_side | t01 | fal:minimax/h3-max-turbo | 8 | awaiting user | draws sword, leans into dash and holds pose; no gate failed | accept | pipeline: video-sprite |
