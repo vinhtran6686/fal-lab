@@ -185,7 +185,34 @@ def load_holy_commander():
         'radiant_slash': {'category': 'skill', 'frames': [],
                           'note': 'raw/skill_side_skill_radiant_slash_t01.mp4 dinh vet chem hong lon - can quay lai'},
         'charge': {'category': 'skill', 'frames': [],
-                   'note': 'raw/skill_side_skill_charge_t01.mp4 dat (score 8) - chua export'},
+                   'note': 'THIET KE CU (xung phong/dash), DA THAY THE boi charge_v4 (xem ben duoi): area '
+                           'median 2.54x master (gate that fail nang - review cu "score 8" la sai, chua doc '
+                           'ky qc.json). Bo khoi artifact de nhuong cho so file (gioi han 511 file/version); '
+                           'frame goc van con trong raw/skill_side_skill_charge_t01.mp4 va history.md.'},
+        'charge_v2': {'category': 'skill', 'frames': [],
+                      'note': 'THIET KE MOI (2026-10-20, user mo ta): van suc vao kiem (rut kiem tu duoi dat, '
+                              'keo ve sau vai, xiet chat, cang nguoi), roi vung kiem 1 duong cung manh tu duoi '
+                              'len cao, giu pose cuoi. Lua tren kiem la vfx rieng (fx_charge, chua lam), KHONG '
+                              've vao body clip. Sua them cau chong zoom rat manh ("locked tripod"). Ket qua: '
+                              'gate area PASS (median 1.21x, max 2.38x o dinh vung - truoc la median 2.54x, '
+                              'max 3.07x). Con 1 vet mo nho luc vung (frame ~39-44, nho hon nhieu ban cu) va '
+                              'edge-touch 2 frame cuoi dinh vung (mui kiem cham canh khung). Identity warn '
+                              '(min 0.29) nhung phan lon la do pose cuoi (kiem gio cao) khac han master dung '
+                              'yen, khong phai loi ve sai ty le. CHUA accept, dang cho user duyet.',
+                      'raw_clip': 'raw/skill_side_skill_charge_v2_t01.mp4'},
+        'charge_v4': {'category': 'skill', 'frames': [],
+                      'note': 'CHOT (user, 2026-10-20: "ok dep roi -> chot v4"). Tu charge_v2, them 2 buoc: '
+                              '(v3) kiem boc lua (vector do+vang) luc cui nguoi van suc + 1 vet chem phang '
+                              'mau hong-trang luc vung len (blade-flash, giong anh tham khao); (v4) them nhan '
+                              'vat lao nguoi ve phia truoc luc vung (khong con dung yen 1 cho). Con 1 diem '
+                              'chua sach: 1 vong tron lua lon xuat hien ~frame 46-72/107 (dung 2 lan lien '
+                              'tiep o v3 va v4, bat chap cau cam ro rang - xem phan tich trong '
+                              'docs/holy-commander-report.md). User da xem va chot ca doan nay, chua yeu cau '
+                              'cat bo. Day la clip gop hieu ung (lua + blade-flash) truc tiep vao body, KHAC '
+                              'quy uoc thong thuong cua du an (body-only, hieu ung tach rieng fx_layers) - '
+                              'can ban tay doi khi export that (video_to_sheet.py se tach fx that bang tay, '
+                              'hoac giu nguyen hieu ung bake-in neu chap nhan duoc).',
+                      'raw_clip': 'raw/skill_side_skill_charge_v4_t01.mp4'},
     }
     for name, s in states.items():
         rel = s.pop('raw_clip', None)

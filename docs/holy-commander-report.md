@@ -192,3 +192,111 @@ chuyển động - đủ bao nhiêu nhát chém - phụ thuộc đúng `--durati
 liên tục (ngã), không có nguy cơ bị "gộp mất 1 pha" như combo nhiều nhát của attack. Nên bớt frame sau khi
 quay xong là an toàn và đủ cho state này ngay từ lần quay đầu, không cần thử lại `--duration` ngắn hơn ở bước
 sinh video.
+
+## 9. Cả 3 skill cũ đều bị zoom nặng + nhân vật không ổn định — số liệu thật
+
+User xem lại 3 clip `holy_banner`, `radiant_slash`, `charge` (bản gốc t01) và nhận ra 2 vấn đề chung: (1)
+animation bị **zoom** vào nhân vật, (2) so với `hero_malik`, nhân vật **không ổn định** (tỉ lệ/dáng trôi theo
+thời gian). Đọc lại đúng số trong `qc.json` của cả 3 (không chỉ nhìn sheet) xác nhận cả hai, nặng hơn cả ấn
+tượng ban đầu:
+
+| Clip (t01 gốc) | `area` median (ngưỡng pass: 0.72–1.32) | `area` max | `identity` min (ngưỡng warn <0.5) |
+|---|---|---|---|
+| `charge` | **2.535x** | 3.067x | 0.470 |
+| `holy_banner` | **2.927x** | 4.008x | 0.554 |
+| `radiant_slash` | **2.411x** | 3.260x | 0.452 |
+
+Cả 3 đều zoom **sustained** (median đã ~2.4-2.9x, không phải 1 đỉnh nhọn thoáng qua) — tức phần lớn clip
+nhân vật to hơn hẳn master, không phải lỗi đo ở 1-2 frame. `charge` từng được review cũ chấm "8 điểm, no gate
+failed" — **verdict đó sai**, vì người review hồi đó chỉ nhìn sheet bằng mắt chứ không đọc `qc.json`; con số
+thật cho thấy nó fail nặng ngang 2 clip kia.
+
+**Nguyên nhân gốc (xác định qua thử nghiệm ở mục 10 bên dưới)**: cả 3 clip này đều có **hiệu ứng (ring,
+sparks, slash arc) vẽ thẳng vào clip thân** — và chính hiệu ứng đó kéo theo zoom + mất ổn định, không phải 2
+vấn đề tách rời. Logic: khi model vẽ thêm 1 vật thể lớn (vòng tròn sáng, vệt chém khổng lồ) đè lên nhân vật,
+(a) diện tích pixel-không-trong-suốt tăng vọt → gate `area` đọc thành "zoom", và (b) silhouette bị hiệu ứng
+che/biến dạng → gate `identity` so khớp với master kém đi → đọc thành "không ổn định". Thử nghiệm trực tiếp
+(mục 10) tách riêng được: nhấc hiệu ứng ra khỏi prompt thì `area` trở lại bình thường ngay (xem `charge_v2`),
+đưa hiệu ứng vào lại thì cả `area` lẫn `identity` cùng hỏng lại.
+
+So với `hero_malik`: KR vẽ tay từng frame, không có khái niệm "camera" hay "hiệu ứng cháy nổ" trong frame thân
+— nhân vật tuyệt đối không đổi kích thước giữa các trạng thái. Pipeline video-generation của chúng ta mô
+phỏng một "cú quay phim" từ 1 ảnh tĩnh, và model có xu hướng tự thêm kịch tính (phóng to, hiệu ứng bùng nổ)
+cho các hành động mang tính "quyền năng" (skill/charge) — đây là khác biệt về bản chất công cụ, không sửa
+được 100% bằng cách viết prompt, chỉ giảm thiểu được.
+
+## 10. Thiết kế lại `charge` — toàn bộ quá trình, từ v1 tới v4 (chốt)
+
+### Tóm tắt kết quả
+
+| Bản | Hiệu ứng trong prompt? | `area` median / max | Vấn đề | Trạng thái |
+|---|---|---|---|---|
+| v1 (gốc, "xung phong") | không (nhưng vẫn zoom) | 2.535x / 3.067x | thiết kế cũ (dash), zoom nặng, review cũ sai | thay thế hoàn toàn |
+| v2 | **không** (body-only, đúng quy ước) | **1.212x / 2.381x** | sạch, chỉ còn 1 vệt mờ nhỏ + edge-touch 2 frame | giữ làm bằng chứng "bỏ hiệu ứng thì hết zoom" |
+| v3 | **có** (lửa + blade-flash) | 1.317x / **6.135x** | vòng tròn lửa lớn tái xuất (~frame 46-72/107), giống hệt lỗi `holy_banner` cũ | user thích tổng thể, xin sửa thêm 1 điểm |
+| v4 (**chốt**) | có (giữ nguyên v3) + nhân vật lao về trước | 1.421x / 6.732x | vòng tròn lửa **vẫn còn y hệt** (lần thứ 2 liên tiếp) | **user duyệt, chấp nhận giữ vòng tròn** |
+
+### Diễn biến từng bước
+
+1. **v1 → v2 (bỏ hiệu ứng khỏi prompt)**: đổi hẳn thiết kế theo mô tả tiếng Việt của user (cúi người vận sức
+   → vung kiếm từ dưới lên), **cố tình không nhắc gì tới lửa/hiệu ứng** trong `motion`/`negatives` (đúng quy
+   ước body-only của dự án: hiệu ứng là `fx_layers.py` riêng), thêm câu chống zoom rất mạnh ("camera như máy
+   quay cố định trên chân máy, không bao giờ zoom"). Kết quả: gate `area` **pass** hẳn (1.212x so với 2.535x
+   cũ) — xác nhận: bỏ hiệu ứng khỏi prompt là cách chắc chắn nhất để hết zoom.
+2. **v2 → v3 (user muốn xem cả hiệu ứng để đánh giá tổng thể)**: user gửi 1 ảnh tham khảo kiểu vệt chém phẳng
+   màu hồng-trắng (blade effect), yêu cầu thêm lửa trên kiếm lúc vận sức + vệt chém khi vung. Đưa hẳn mô tả
+   hiệu ứng vào lại `motion`, kèm giới hạn kích thước rất cụ thể ("lửa chỉ bám theo cạnh lưỡi kiếm, không bao
+   giờ to thành vòng tròn/quầng sáng quanh người"). Kết quả: đoạn vung kiếm (frame 6-46) và pose cuối (73-106)
+   đẹp, đúng ý — nhưng đúng giữa clip (frame ~46-72) model tự vẽ **1 vòng tròn lửa lớn**, dù đã cấm rất rõ.
+3. **v3 → v4 (thêm lao người về trước)**: giữ nguyên toàn bộ phần hiệu ứng của v3 (user duyệt phần này),
+   chỉ sửa 1 điểm: nhân vật đứng yên 1 chỗ không giống đang tấn công. Thêm cụm "explodes upward AND FORWARD
+   out of the crouch... as if closing the distance to strike a target just ahead of him" vào đúng đoạn vung
+   kiếm. Kết quả: nhân vật dịch chuyển về phía trước rõ rệt — nhưng vòng tròn lửa **tái xuất hiện ở đúng vị
+   trí tương đối trong clip** (~frame 46-72/107) lần thứ 2 liên tiếp, xác nhận đây là thói quen khó trị của
+   model với mô-típ "chém + lửa", không liên quan gì tới câu lệnh lao người mới thêm.
+4. **Quyết định**: user xem bản v4 trong `tools/kr_compare` (đã tách + key nền, animation thật) và duyệt
+   ngay ("ok đẹp rồi → chốt v4"), **chấp nhận giữ vòng tròn** thay vì tiếp tục quay thử hoặc cắt frame loại
+   bỏ đoạn đó (phương án mình đề xuất nhưng user không chọn).
+
+### Cách mô tả hiệu ứng cho model để ra đúng ý — những gì có tác dụng và không
+
+Rút từ 3 lần thử (v2 sạch hẳn, v3/v4 vẫn dính vòng tròn), đây là công thức đã dùng và mức độ hiệu quả của
+từng phần:
+
+1. **Tách DUY NHẤT 1 hành động thành các nhịp (beat) rõ ràng, có thứ tự** — hiệu quả tốt cho phần chuyển
+   động thân, không ảnh hưởng tới hiệu ứng:
+   > "...quickly pulls the sword up out of the ground, lowers his whole body into a low crouched coiled
+   > stance... while he holds this low crouch in place for a beat, the blade catches fire... then he
+   > explodes upward AND FORWARD out of the crouch... swinging the burning sword in ONE fast, powerful arc...
+   > finishing with the blade held high... and HOLDS that final pose completely still."
+
+   Viết đúng thứ tự "cúi → giữ → bật lên → giữ pose cuối" giúp model theo khá sát bố cục thời gian (dù đôi
+   khi vẫn đảo thứ tự nhẹ, xem sheet v3: swing xuất hiện trước đoạn cúi người giữ lửa dọc).
+
+2. **Mô tả hiệu ứng bằng từ ngữ "vector phẳng" đúng phong cách dự án, không dùng từ mơ hồ** — có tác dụng về
+   màu sắc/hình dạng khi hiệu ứng CÓ xuất hiện đúng như mong muốn (đoạn vung kiếm ở v3/v4 nhìn khá giống ảnh
+   tham khảo), nhưng KHÔNG ngăn được model tự thêm phần thừa (vòng tròn):
+   > "the blade catches fire, small flat red-and-gold flames appearing along the blade's edge only" /
+   > "a single flat bright pink-white blade-shaped flash releasing along the swing path... no wider than the
+   > character's own height"
+
+3. **Giới hạn kích thước + cấm rõ hình dạng cụ thể (ring/burst/halo/circle), lặp lại ở cả `motion` lẫn
+   `negatives`** — đây là phần **không có tác dụng đáng kể**: dù lặp "never grows into a ring, a burst, a
+   cloud or a halo around the character" ở cả 2 chỗ, vòng tròn vẫn xuất hiện y hệt ở cả v3 và v4. Rút ra:
+   **với hành động kiểu "chém + lửa/quyền năng", mô tả phủ định (negative) về hình dạng hiệu ứng không đáng
+   tin cậy với model này** — khác với các action khác (`run`, `attack`, `death`) nơi câu cấm "no effects, no
+   trails" tỏ ra khá hiệu quả khi hiệu ứng không được MỜI vào prompt ngay từ đầu.
+
+4. **Câu chống zoom rất mạnh, lặp lại, ví von cụ thể** — có tác dụng rõ rệt NHƯNG chỉ khi hiệu ứng không có
+   trong prompt (v2); khi hiệu ứng có mặt (v3/v4), câu này không đủ sức giữ `area` trong ngưỡng vì chính
+   hiệu ứng (vòng tròn) mới là nguồn gốc tăng diện tích, không phải "camera zoom" theo nghĩa đen:
+   > "No camera zoom, no push-in, no pull-out, no dolly movement... the camera is fixed like a locked tripod
+   > the entire time, exactly the same framing and the same character size from the first frame to the last."
+
+**Kết luận thực dụng**: cách đáng tin cậy nhất để có 1 clip thân sạch, ổn định là **không nhắc tới hiệu ứng
+trong prompt** (đúng quy ước body-only gốc của dự án — bằng chứng là `v2`, `run`, `attack`, `death` đều sạch
+theo cách này). Khi cần hiệu ứng ngay trong clip để đánh giá ý tưởng tổng thể (như lần này), có thể đạt được
+phần lớn ý muốn (lửa đúng chỗ, vệt chém đúng hình) nhưng phải **chấp nhận rủi ro model tự thêm 1 vật thể lớn
+không mời** (ở đây là vòng tròn) — prompt viết chặt cỡ nào cũng chưa chặn được, đã thử 2 lần liên tiếp. Khi
+chốt, có 2 lựa chọn còn mở: giữ nguyên (đã chọn, user chấp nhận) hoặc tách lại thành body-only (dùng `v2`) +
+hiệu ứng lửa/blade-flash làm `fx_charge` riêng qua `fx_layers.py` sau này.

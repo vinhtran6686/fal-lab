@@ -1556,7 +1556,691 @@
     "charge": {
      "category": "skill",
      "frames": [],
-     "note": "raw/skill_side_skill_charge_t01.mp4 dat (score 8) - chua export"
+     "note": "THIET KE CU (xung phong/dash), DA THAY THE boi charge_v4 (xem ben duoi): area median 2.54x master (gate that fail nang - review cu \"score 8\" la sai, chua doc ky qc.json). Bo khoi artifact de nhuong cho so file (gioi han 511 file/version); frame goc van con trong raw/skill_side_skill_charge_t01.mp4 va history.md."
+    },
+    "charge_v2": {
+     "category": "skill",
+     "frames": [
+      {
+       "name": "charge_v2/charge_v2_001",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_002",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_003",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_004",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_005",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_006",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_007",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_008",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_009",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_010",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_011",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_012",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_013",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_014",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_015",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_016",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_017",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_018",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_019",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_020",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_021",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_022",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_023",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_024",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_025",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_026",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_027",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_028",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_029",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_030",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_031",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_032",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_033",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_034",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_035",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_036",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_037",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_038",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_039",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_040",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_041",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_042",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_043",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_044",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_045",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_046",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_047",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_048",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_049",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_050",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_051",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_052",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_053",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_054",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_055",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_056",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_057",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_058",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_059",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_060",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_061",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_062",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_063",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_064",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_065",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_066",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v2/charge_v2_067",
+       "w": 832,
+       "h": 480
+      }
+     ],
+     "note": "THIET KE MOI (2026-10-20, user mo ta): van suc vao kiem (rut kiem tu duoi dat, keo ve sau vai, xiet chat, cang nguoi), roi vung kiem 1 duong cung manh tu duoi len cao, giu pose cuoi. Lua tren kiem la vfx rieng (fx_charge, chua lam), KHONG ve vao body clip. Sua them cau chong zoom rat manh (\"locked tripod\"). Ket qua: gate area PASS (median 1.21x, max 2.38x o dinh vung - truoc la median 2.54x, max 3.07x). Con 1 vet mo nho luc vung (frame ~39-44, nho hon nhieu ban cu) va edge-touch 2 frame cuoi dinh vung (mui kiem cham canh khung). Identity warn (min 0.29) nhung phan lon la do pose cuoi (kiem gio cao) khac han master dung yen, khong phai loi ve sai ty le. CHUA accept, dang cho user duyet.",
+     "pending_export": true
+    },
+    "charge_v4": {
+     "category": "skill",
+     "frames": [
+      {
+       "name": "charge_v4/charge_v4_001",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_002",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_003",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_004",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_005",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_006",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_007",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_008",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_009",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_010",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_011",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_012",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_013",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_014",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_015",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_016",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_017",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_018",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_019",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_020",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_021",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_022",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_023",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_024",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_025",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_026",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_027",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_028",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_029",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_030",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_031",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_032",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_033",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_034",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_035",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_036",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_037",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_038",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_039",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_040",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_041",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_042",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_043",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_044",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_045",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_046",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_047",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_048",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_049",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_050",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_051",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_052",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_053",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_054",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_055",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_056",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_057",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_058",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_059",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_060",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_061",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_062",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_063",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_064",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_065",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_066",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "charge_v4/charge_v4_067",
+       "w": 832,
+       "h": 480
+      }
+     ],
+     "note": "CHOT (user, 2026-10-20: \"ok dep roi -> chot v4\"). Tu charge_v2, them 2 buoc: (v3) kiem boc lua (vector do+vang) luc cui nguoi van suc + 1 vet chem phang mau hong-trang luc vung len (blade-flash, giong anh tham khao); (v4) them nhan vat lao nguoi ve phia truoc luc vung (khong con dung yen 1 cho). Con 1 diem chua sach: 1 vong tron lua lon xuat hien ~frame 46-72/107 (dung 2 lan lien tiep o v3 va v4, bat chap cau cam ro rang - xem phan tich trong docs/holy-commander-report.md). User da xem va chot ca doan nay, chua yeu cau cat bo. Day la clip gop hieu ung (lua + blade-flash) truc tiep vao body, KHAC quy uoc thong thuong cua du an (body-only, hieu ung tach rieng fx_layers) - can ban tay doi khi export that (video_to_sheet.py se tach fx that bang tay, hoac giu nguyen hieu ung bake-in neu chap nhan duoc).",
+     "pending_export": true
     },
     "attack_fast_frames": {
      "category": "core",

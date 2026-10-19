@@ -43,7 +43,7 @@
 | levelup_side | video-sprite | one-shot | ❌ | |
 | skill_holy_banner_side | video-sprite | one-shot | ❌ | |
 | skill_radiant_slash_side | video-sprite | one-shot | ❌ | |
-| skill_charge_side | video-sprite | one-shot | ❌ | |
+| skill_charge_side | video-sprite | one-shot | ⏳ v4 chốt, chưa export | THIẾT KẾ LẠI (2026-10-20, không còn là "xung phong/dash" cũ): cúi người vận sức (kiếm bốc lửa đỏ+vàng) → lao người về trước + vung kiếm từ dưới lên (vệt chém hồng-trắng) → giữ pose cuối kiếm cháy. Hiệu ứng lửa/vệt chém nằm thẳng trong body clip (khác quy ước body-only thường dùng — xem docs/holy-commander-report.md §10). Còn 1 lỗi đã biết: 1 vòng tròn lửa lớn xuất hiện ~frame 46-72/107, user đã xem và chốt dù còn lỗi này. CHƯA export sang canvas 156x140 |
 | fx_holy_banner | fal-image vfx | hiệu ứng | ✅ v01 | cờ hiệu, asset riêng |
 | fx_radiant_slash | fal-image vfx | hiệu ứng | ✅ v01 | vệt chém vàng, asset riêng |
 

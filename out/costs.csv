@@ -41,3 +41,7 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-20 01:59:04,out/heroes/holy_commander/.work/side_attack/actions/attack/takes/t04/media/clip.mp4,h3-max-turbo,video,480P 3s,False,3.9,0.0450,True
 2026-10-20 02:17:39,out/heroes/holy_commander/.work/side_attack/actions/attack/takes/t05/media/clip.mp4,h3-max-turbo,video,480P 2s,False,3.4,0.0300,True
 2026-10-20 02:28:22,out/heroes/holy_commander/.work/side_attack/actions/attack/takes/t06/media/clip.mp4,h3-max-turbo,video,480P 2s,False,3.5,0.0300,True
+2026-10-20 03:04:56,out/heroes/holy_commander/.work/side_skill_charge/actions/skill/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 4s,False,4.4,0.0600,True
+2026-10-20 03:05:33,out/heroes/holy_commander/.work/side_skill_charge_v2/actions/skill/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 4s,False,3.0,0.0600,True
+2026-10-20 03:14:52,out/heroes/holy_commander/.work/side_skill_charge_v3/actions/skill/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 4s,False,3.6,0.0600,True
+2026-10-20 03:21:09,out/heroes/holy_commander/.work/side_skill_charge_v4/actions/skill/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 4s,False,3.3,0.0600,True
