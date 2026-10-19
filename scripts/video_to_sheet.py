@@ -7,7 +7,7 @@ Usage:
   python scripts/video_to_sheet.py --set out/enemies/bandit/.work/side --action walk
                                    --asset out/enemies/bandit --id bandit --sheet walk_side
                                    [--kind enemy] [--cell 256x128] [--flip-to left] [--move-speed 60]
-                                   [--despill] [--reverse] [--rest-frame]
+                                   [--despill] [--reverse] [--rest-frame] [--no-shadow]
 
 What it does:
   1. reads the set's set_state.json: the chosen take of --action, its finished frames (one canvas,
@@ -146,6 +146,10 @@ def main() -> None:
     p.add_argument("--cell", help="canvas WxH at 1x for a NEW asset (fal-image/format.md §7 matrix by class and tier; default 256x128 is legacy); an existing asset keeps its own")
     p.add_argument("--flip-to", help="direction produced by mirroring this one, e.g. left")
     p.add_argument("--move-speed", type=float, help="walking speed in px/s at 1x (stored in meta.json)")
+    p.add_argument("--no-shadow", action="store_true",
+                   help="no ground shadow under the feet (flying enemies: their shadow is a separate decal)")
+    p.add_argument("--shadow-color", default="#000000",
+                   help="ground shadow colour (default black at 35%%; a hero may use its own colour, e.g. #1aa0d6)")
     p.add_argument("--rest-frame", action="store_true",
                    help="export only the take's first frame (the master pose) as a 1-frame sheet: idle_side, on the "
                         "same canvas and scale as the clips")
@@ -238,13 +242,32 @@ def main() -> None:
     d2, d1 = vdir / "frames" / "@2x", vdir / "frames" / "@1x"
     for d in (d2, d1):
         d.mkdir(parents=True, exist_ok=True)
+    # ground shadow (the reference game bakes a soft-edged flat ellipse under the feet into every frame of a
+    # walking character; flyers get a separate decal): one size per asset, set by the first export, in meta.json
+    shadow = None
+    if not a.no_shadow:
+        sh = meta.get("shadow")
+        if sh is None:
+            rest_box = images[rest[0]].getchannel("A").point(lambda v: 255 if v > ALPHA else 0).getbbox()
+            body_w = (rest_box[2] - rest_box[0]) * scale if rest_box else height * 0.6
+            w = round(min(body_w * 0.8, height * scale * 0.75))
+            sh = meta["shadow"] = {"w_2x": w, "h_2x": max(4, round(w * 0.3)), "color": a.shadow_color, "alpha": 0.35}
+        rgb = tuple(int(sh["color"].lstrip("#")[k:k + 2], 16) for k in (0, 2, 4))
+        big = Image.new("RGBA", (c2w * 4, c2 * 4), (0, 0, 0, 0))
+        from PIL import ImageDraw
+        ImageDraw.Draw(big).ellipse([(px - sh["w_2x"] / 2) * 4, (py - sh["h_2x"] / 2) * 4,
+                                     (px + sh["w_2x"] / 2) * 4, (py + sh["h_2x"] / 2) * 4],
+                                    fill=rgb + (round(255 * sh["alpha"]),))
+        shadow = big.resize((c2w, c2), Image.LANCZOS)
     cells = []
     for n, i in enumerate(order, 1):
         im = images[i]
         if scale != 1.0:
             im = im.resize((max(1, round(im.width * scale)), max(1, round(im.height * scale))), Image.LANCZOS)
-        cell = Image.new("RGBA", (c2w, c2), (0, 0, 0, 0))
-        cell.paste(im, (round(px - ax * scale), round(py - ay * scale)))   # empty cell: a plain copy
+        cell = shadow.copy() if shadow is not None else Image.new("RGBA", (c2w, c2), (0, 0, 0, 0))
+        body = Image.new("RGBA", (c2w, c2), (0, 0, 0, 0))
+        body.paste(im, (round(px - ax * scale), round(py - ay * scale)))
+        cell.alpha_composite(body)   # the shadow stays behind the body
         cell.save(d2 / f"{tagname}_{n:02d}.png")
         cell.resize((c2w // 2, c2 // 2), Image.LANCZOS).save(d1 / f"{tagname}_{n:02d}.png")
         cells.append(cell)

@@ -71,6 +71,14 @@ pose and a long HOLD (reference skills: 39 frames from 4-13 drawings) while the 
 timing puts the pose at 40% and holds it. Fewer, cleaner drawings read smoother than many wobbling frames.
 Clips are 4 s (`--duration 4`): longer takes drift and zoom.
 
+**Ground shadow**: every export draws a flat 35% black ellipse under the feet, behind the body, in every frame
+(the reference game bakes it into each walking character's frames); its size is set by the first export and kept
+in `meta.json` "shadow". `--shadow-color` for a hero's own colour; `--no-shadow` for flying enemies, whose shadow
+is a separate decal. Stills stay shadowless (the magenta key needs a clean background).
+
+**Projectiles**: the `projectile` still flies as an fx recipe (`sprite` layer turning or flickering over 2-4
+drawings, plus a `burst` hit of 4-8 drawings): manifest rows `projectile_fly`, `projectile_hit`.
+
 **Respawn and raise**: the `despawn` clip (the body sinks into the ground; tested on holy_commander) exported
 `--reverse`, plus a `pillar` + `ring` recipe. `rise` (from a kneeling `pose_respawn` to the master) is an
 untested alternative; finish it with `--scale-ref` from a side set.

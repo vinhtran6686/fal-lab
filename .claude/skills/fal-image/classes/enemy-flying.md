@@ -41,6 +41,7 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}` flyer variant): t
 | view_back | fal-image | ảnh tĩnh | all | - |
 | icon | fal-image | ảnh tĩnh | all | - |
 | projectile | fal-image | ảnh tĩnh | ranged | - |
+| projectile_fly, projectile_hit | fx-layers | hiệu ứng | ranged | flying 2-4 drawings (the still turned or flickered, a `sprite` layer), hit 4-8 drawings (`burst`); reference `bolt_*_flying` / `bolt_*_hit` |
 | idle_fly | video-sprite | loop | all | animated hover (the reference flyers' idle moves) |
 | fly_side | video-sprite | loop | all | ~14 frames, 0.45 s |
 | fly_down | video-sprite | loop | all | same length as side |

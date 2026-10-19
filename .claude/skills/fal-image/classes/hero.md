@@ -44,6 +44,7 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 | master (= idle) | fal-image | ảnh tĩnh | all | 15/15 heroes: idle is 1 frame |
 | icon | fal-image | ảnh tĩnh | all | - |
 | projectile | fal-image | ảnh tĩnh | ranged | - |
+| projectile_fly, projectile_hit | fx-layers | hiệu ứng | ranged | flying 2-4 drawings (the still turned or flickered, a `sprite` layer), hit 4-8 drawings (`burst`); reference `bolt_*_flying` / `bolt_*_hit` |
 | run_side | video-sprite | loop | all | 15/15, ~6 frames, 0.2 s: short, fast loop |
 | attack_side | video-sprite | one-shot | melee | 14/15, ~22 frames, 0.75 s (smear: an `fx_attack` slash layer) |
 | shoot_side | video-sprite | one-shot | ranged | 4/15, ~22 frames, 0.75 s |

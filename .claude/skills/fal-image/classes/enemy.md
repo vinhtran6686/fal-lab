@@ -44,6 +44,7 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 | view_back | fal-image | ảnh tĩnh | all | - |
 | icon | fal-image | ảnh tĩnh | all | - |
 | projectile | fal-image | ảnh tĩnh | ranged | - |
+| projectile_fly, projectile_hit | fx-layers | hiệu ứng | ranged | flying 2-4 drawings (the still turned or flickered, a `sprite` layer), hit 4-8 drawings (`burst`); reference `bolt_*_flying` / `bolt_*_hit` |
 | walk_side | video-sprite | loop | all | 63/68, ~22 frames, 0.7 s |
 | walk_down | video-sprite | loop | all | 62/68, same length as side |
 | walk_up | video-sprite | loop | all | 63/68, same length as side |
