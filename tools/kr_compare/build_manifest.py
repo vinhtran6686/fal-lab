@@ -7,9 +7,12 @@ are left with frames: [] (the viewer shows "chua co" for those).
 
 Usage: python tools/kr_compare/build_manifest.py
 """
+import glob
 import json
 import os
 import shutil
+import subprocess
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FAL_LAB = os.path.abspath(os.path.join(HERE, '..', '..'))
@@ -17,6 +20,34 @@ REVERSE_KR1 = r"E:\work\reverse\games\kr1"  # read-only reference repo; look onl
 HOLY_COMMANDER = os.path.join(FAL_LAB, 'out', 'heroes', 'holy_commander')
 
 SPRITES_OUT = os.path.join(HERE, 'sprites')
+
+sys.path.insert(0, os.path.join(FAL_LAB, 'scripts'))
+
+
+def extract_raw_clip(state, rel_mp4, fps=15):  # matches holy_commander's displayed fps below
+    """A raw video-sprite clip (never exported: a rejected take, for review only), turned into
+    real keyed frames the same way the finished sheets are: ffmpeg cuts the frames, sprite_pack's
+    own key_out() removes the flat magenta background (format.md SS1). Not registered, not
+    retimed, not cropped to the asset's canvas/body scale: this is the model's raw output, exactly
+    as `sprite_set.py review` already showed it, just played instead of a single contact sheet."""
+    import static_ffmpeg
+    from PIL import Image
+    from sprite_pack import key_out
+
+    ffmpeg, _ = static_ffmpeg.run.get_or_fetch_platform_executables_else_raise()
+    dst_dir = os.path.join(SPRITES_OUT, 'holy_commander', state)
+    if os.path.isdir(dst_dir):
+        shutil.rmtree(dst_dir)
+    os.makedirs(dst_dir)
+    subprocess.run([ffmpeg, '-y', '-i', os.path.join(HOLY_COMMANDER, rel_mp4), '-vf', f'fps={fps}',
+                    os.path.join(dst_dir, f'{state}_%03d.png')],
+                   check=True, capture_output=True)
+    frames = []
+    for path in sorted(glob.glob(os.path.join(dst_dir, '*.png'))):
+        im = key_out(Image.open(path).convert('RGBA'))
+        im.save(path)
+        frames.append({'name': f'{state}/{os.path.splitext(os.path.basename(path))[0]}', 'w': im.width, 'h': im.height})
+    return frames
 
 
 def span(a, b):
@@ -111,7 +142,12 @@ def load_holy_commander():
                        'raw/run_side_t01.mp4 da quay (124 frame, 24fps); qc pass tru mau lem o chan '
                        '(28/124 frame) - chua export sheet that (can ffmpeg + sprite_set.py run, dang cho duyet)'),
         'attack': {'category': 'core', 'frames': [],
-                   'note': 'raw/attack_side_attack_t01.mp4 dinh vet chem hong - can quay lai truoc khi export'},
+                   'note': 'QC FAIL that (khong phai export chinh thuc), nhung user danh gia dang nhin dep: '
+                           't04 la combo 2 chem (cheo xuong + ngang), 3s; gate area/feet/turn deu fail dung luc '
+                           'co vet trang mo hinh luoi liem xuat hien (frame ~13-39) - rat co the gate doc sai '
+                           'vi vet do lam meo silhouette, khong han la nhan vat quay lung that. Chua accept/export, '
+                           'dang cho quyet dinh co quay lai sua vet luoi liem hay giu ban nay.',
+                   'raw_clip': 'raw/attack_side_attack_t04.mp4'},
         'death': {'category': 'core', 'frames': [],
                   'note': 'raw/death_side_death_t01.mp4 dat (score 8) - chua export'},
         'respawn': {'category': 'role', 'frames': [],
@@ -125,6 +161,12 @@ def load_holy_commander():
         'charge': {'category': 'skill', 'frames': [],
                    'note': 'raw/skill_side_skill_charge_t01.mp4 dat (score 8) - chua export'},
     }
+    for name, s in states.items():
+        rel = s.pop('raw_clip', None)
+        if rel:
+            s['frames'] = extract_raw_clip(name, rel)
+            s['qc_fail'] = True
+
     return {
         'id': 'holy_commander',
         'label': 'holy_commander (fal-lab, dang lam)',

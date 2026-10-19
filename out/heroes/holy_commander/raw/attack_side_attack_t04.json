@@ -1,0 +1,27 @@
+{
+  "prompt": "The same top-heavy holy knight commander about 2.5 heads tall (huge rounded silver shoulder plates, small head, short legs), wearing sleek silver plate armour with a gold cross emblem on the chest and a simple engraved gold swirl pattern (a few big flat swooping lines) on each shoulder plate and the hip armour, and a tall silver helmet with an angular T-shaped visor and one tall swept-back red plume crest; a big broad heavy VERY LONG longsword (blade as tall as from the ground to his chest) with a wide silver blade, a gold crossguard, a long grip and a gold EAGLE-HEAD pommel, held in both mitten-shaped hands; no shield; a long plain red cape behind him; saturated silver main colour, bright gold accent, red cape, facing RIGHT the entire time and never turning around, starts in their ready stance holding the longsword upright in both hands, then performs ONE continuous, fast, fluid two-strike combo at natural real-time speed with no slow motion and no pause between the two strikes: first, steps the front foot forward and swings the sword in one fast overhead diagonal chop, from high above the left shoulder down to the lower right, leaning the torso forward into the strike; second, without any pause, immediately continues into a fast wide horizontal sweep of the blade from left to right at waist height, stepping the other foot forward too and rotating the hips and shoulders into the swing for visible power. The two strikes have clearly different silhouettes (one a steep downward diagonal, one a wide horizontal arc), no repeats of the same motion, no third strike. Both strikes drive the body forward only: no backward step at any point, no leaning backward at any point, the character always stays facing right and is never seen from the back or the side of the head. After the second strike, returns to the exact same upright standing ready pose as the start, both feet together, the sword held vertical in both hands, and holds still. The clip starts AND ends in exactly the same pose as the still. Body motion only: no NEW light, glow, sparks, lightning, energy, magic, trails or particles beyond the shapes already drawn on the still; the game draws every effect as a separate layer. The camera never moves or zooms: the character keeps exactly the same size in every frame. The weapon stays one single weapon of the same length and shape. Constant character size. No motion trails, no slash effects, no sparks, no effects, no glowing arc, no white or pale crescent shape near the blade, no afterimage or ghost copy of the blade. No slow motion: the strikes happen at fast, natural speed. The character keeps exactly the same size and proportions as the still in every frame; arms, legs and the weapon never grow longer. Locked camera and constant character size: no zoom, no push-in, no pull-out, no pan; the character is exactly the same size in every frame, before and after the action. The character keeps facing RIGHT the whole time: never turns around, never shows their back and never faces the camera. One continuous, fluid motion at natural speed: no pauses, no frozen poses, no hovering, no slow motion. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, muted earthy palette, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 3,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaf0a71/P2Z3BttVt1E5zE968Rwo4_input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aaf0a71/Xpj2_hssyxcr7m5bz78wH_input.png"
+  },
+  "seconds": 3,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.045,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "E:\\work\\fal-lab\\out\\heroes\\holy_commander\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "lastFrame": "E:\\work\\fal-lab\\out\\heroes\\holy_commander\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "requestId": "01a15588-0897-7c72-b317-96d4f3da5b94",
+  "seconds_elapsed": 3.9,
+  "source_url": "https://v3b.fal.media/files/b/0aaf0a72/CeBVWXVNAtYgvqGgnL86w_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

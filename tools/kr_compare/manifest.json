@@ -901,8 +901,240 @@
     },
     "attack": {
      "category": "core",
-     "frames": [],
-     "note": "raw/attack_side_attack_t01.mp4 dinh vet chem hong - can quay lai truoc khi export"
+     "frames": [
+      {
+       "name": "attack/attack_001",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_002",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_003",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_004",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_005",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_006",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_007",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_008",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_009",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_010",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_011",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_012",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_013",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_014",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_015",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_016",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_017",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_018",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_019",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_020",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_021",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_022",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_023",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_024",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_025",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_026",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_027",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_028",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_029",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_030",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_031",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_032",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_033",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_034",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_035",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_036",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_037",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_038",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_039",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_040",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_041",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_042",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_043",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_044",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_045",
+       "w": 832,
+       "h": 480
+      },
+      {
+       "name": "attack/attack_046",
+       "w": 832,
+       "h": 480
+      }
+     ],
+     "note": "QC FAIL that (khong phai export chinh thuc), nhung user danh gia dang nhin dep: t04 la combo 2 chem (cheo xuong + ngang), 3s; gate area/feet/turn deu fail dung luc co vet trang mo hinh luoi liem xuat hien (frame ~13-39) - rat co the gate doc sai vi vet do lam meo silhouette, khong han la nhan vat quay lung that. Chua accept/export, dang cho quyet dinh co quay lai sua vet luoi liem hay giu ban nay.",
+     "qc_fail": true
     },
     "death": {
      "category": "core",
