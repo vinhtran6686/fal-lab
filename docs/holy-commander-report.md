@@ -321,3 +321,12 @@ hiệu ứng lửa/blade-flash làm `fx_charge` riêng qua `fx_layers.py` sau n�
    chưa chốt, cần bàn với user trước khi quay.
 6. Quy ước chung chưa đổi: `.work/` không có trong git, công thức cắt frame sẽ ghi ở
    `docs/issue-frame-recipe-sync.md` (user sẽ cập nhật); phiên này không cắt frame thêm.
+
+## 12. Respawn: pose_respawn_v02 và clip rise t01 (2026-10-20)
+
+Thiết kế respawn mới (mục 11.3) đã có ảnh đầu và take đầu. Chi tiết cách tạo, lý do chọn v02 và lý do ổn: `out/heroes/holy_commander/brief.md`, mục "Respawn pose".
+
+1. Ảnh: 3 bản nháp (~0.042 USD), user chọn v02: "đẹp, ổn".
+2. Clip: take `rise` t01 (h3-max-turbo, 4 s, 480P, ảnh đầu v02, ảnh cuối master_v07, ~0.06 USD). Xám giữ ~0.5 s, màu hồi xong ~1.2 s khi còn quỳ, đứng lên từ ~1.5 s, kết ở tư thế master. Không có vòng hay vật lạ, kích thước ổn định.
+3. Cách viết prompt đã hiệu quả: nhịp đúng thứ tự (quỳ xám, hồi màu, ngẩng đầu, đứng lên, giữ), câu "locked tripod" của charge_v2, và chỉ nhắc một thay đổi ngoài chuyển động là chuyển màu. Model làm được chuyển xám sang màu, không cần hậu kỳ.
+4. Còn lại: user duyệt t01, export `respawn_side` 176x140, `fx_respawn` nếu cần. Frame chưa cắt.
