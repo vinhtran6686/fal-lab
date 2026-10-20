@@ -167,3 +167,11 @@ skill sau này (ví dụ v08 vòng bay lên hợp respawn, v07 trụ sáng hợp
 3. Hỏi user sau mỗi vòng; góp ý của user ("chi tiết nhỏ làm rối, dùng lớp rộng") đổi hẳn hướng và là lý do bộ 10 đẹp.
 4. Bài học chi phí: clip thân (0.045 USD) + script = vô số phiên bản fx. Gen video có fx chỉ khi Python không đủ chi tiết.
 5. Ghi toàn bộ số đo (feet, BODY, nắm đấm, nhịp) trước khi vẽ; đặt đúng chỗ ngay lần đầu.
+
+## 10. Hành động rõ ràng quyết định chất lượng (bài học skill holy_banner, 2026-10-20)
+
+Fx Python chỉ đẹp khi clip thân đúng. Khi user tự viết hành động bằng từng bước vật lý (đứng như idle và lùi một chân; nâng kiếm hai tay và găm mạnh;
+kiếm chìm khoảng một nửa, khuỵu quỳ một gối, hai tay nắm chặt cán, gồng), clip thân ra "quá đẹp" và việc đo clip (frame găm kiếm 32, mũi kiếm tại (475, 455)) cho
+fx đúng khoảnh khắc. Công thức mô tả hành động đầy đủ (khoá hướng, tư thế đầu, các nhịp đánh số theo bộ phận cơ thể, tư thế cuối, câu thứ tự, điều cấm,
+một fx hẹp nếu có): `out/heroes/holy_commander/brief.md`, mục "Skill 2 holy_banner". Làm skill mới: **viết hành động thật cụ thể trước**, rồi mới quay và vẽ fx.
+Mã tham chiếu cho ripple dưới đất: `out/heroes/holy_commander/fx/holy_banner_ripple.py` (ripple elip trên mặt phẳng đất, nửa sau ở sau thân và nửa trước đè lên chân).

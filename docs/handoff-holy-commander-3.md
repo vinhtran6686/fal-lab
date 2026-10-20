@@ -86,3 +86,6 @@ Xong thì đưa lên 1 artifact riêng (không đụng artifact compare) để m
 ### Quyết định user sau cùng (2026-10-20)
 - **Không export** `levelup_side` hay `respawn_side` lúc này: chỉ review đầy đủ. Chưa cần sửa `CLAUDE.md` hay trỏ tới recipe; cần **ghi chú kỹ trong các tài liệu** (`docs/python-fx-recipe.md`, `brief.md`, `history.md`, report) để cuối dự án có cơ sở cập nhật skill.
 - Nguồn của chuyển động levelup: clip thân A do model sinh (0.045 USD, từ master_v07 -> pose_levelup_v02). Python chỉ vẽ fx lên clip đó, không tạo chuyển động; đo vị trí chân, nắm đấm, frame đỉnh từ clip để đặt fx. Đổi động tác = quay clip thân mới; đổi fx = miễn phí.
+
+### Cập nhật: skill holy_banner đã chốt (2026-10-20)
+Take chốt: `raw/skill_side_skill_holy_banner_v4_t02` (model vẽ cả ripple). Python (`fx/holy_banner_ripple.py`) là phương án thay thế. Bài học: mô tả hành động rõ ràng, từng bước, theo bộ phận cơ thể (xem `brief.md`, mục "Skill 2 holy_banner"). Còn lại: `radiant_slash`. Chưa export, không cắt frame.

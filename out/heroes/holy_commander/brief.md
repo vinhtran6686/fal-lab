@@ -42,7 +42,7 @@
 | death_side | video-sprite | one-shot | ✅ exported | 39 hình (t01 bớt 1/2 frame), 2.60 s @15fps, canvas 176x140 |
 | respawn_side | video-sprite | one-shot | ⏳ clip t01 quay xong, chờ user duyệt | `pose_respawn_v02` (quỳ xám) -> `master_v07`, 4.46 s raw (`raw/respawn_side_rise_t01`): xám -> hồi màu -> đứng lên. Chưa export 176x140, chưa fx_respawn. Bản đảo despawn cũ bị loại |
 | levelup_side | video-sprite | one-shot | ⏳ thân + fx đã chốt, chưa export | thân: `raw/levelup_side_extra_v2_t01` (`pose_levelup_v02`, 3 s, 46 hình). **fx: v03 "hào quang xung nhịp"** vẽ bằng Python (`fx/levelup_variants.py`, 0 USD), user chọn 2026-10-20. Chưa export 176x140; xem mục Levelup fx v03 |
-| skill_holy_banner_side | video-sprite | one-shot | ❌ thiết kế lại | t01 zoom 2.9x + tia sáng; pose cuối giơ nắm đấm đúng. Thiết kế lại hoàn toàn theo bài học charge_v4 (hiệu ứng nhỏ, sát vũ khí/nắm đấm, câu locked tripod); chờ user chốt ý tưởng |
+| skill_holy_banner_side | video-sprite | one-shot | ✅ chốt (chưa export) | **Thiết kế mới "cắm kiếm quỳ gối"**: đứng idle, chân sau trượt lùi, nâng kiếm hai tay lên cao rồi găm mạnh xuống đất, khuỵu quỳ một gối, hai tay nắm chặt cán, gồng, giữ pose; sóng xung kích lan trên đất từ mũi kiếm. **Bản chốt: take do model vẽ cả ripple** `raw/skill_side_skill_holy_banner_v4_t02` (prompt: `.prompt.txt` cạnh nó). Thân sạch `v4_t01` + ripple Python (`fx/holy_banner_ripple.py`) cũng đẹp, giữ làm phương án thay thế. 4 s, 67 hình. Chưa export, chưa cắt frame |
 | skill_radiant_slash_side | video-sprite | one-shot | ❌ thiết kế lại | t01 zoom + vệt chém lớn, pose cuối đúng. Thiết kế lại hoàn toàn theo bài học charge_v4; chờ user chốt ý tưởng |
 | skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 67 hình, 4.47 s @15fps, giữ vòng lửa lớn frame ~46-72 theo quyết định user (user đồng ý đó là lỗi; lần sau dùng hiệu ứng vừa khung hơn, xem report §11); canvas 176x140 |
 | fx_holy_banner | fal-image vfx | hiệu ứng | ✅ v01 | cờ hiệu, asset riêng |
@@ -151,3 +151,32 @@ Ra frame PNG đủ 46 hình, `v03.mp4` xem thử, `v03_peak.png`.
 **Quyết định user (2026-10-20): chưa export, chỉ review đầy đủ.** Chuyển động đấm do clip thân A (model sinh) có sẵn; Python chỉ vẽ ánh sáng lên đó và đo clip để đặt fx. Nếu sau này export, việc cần làm: quyết định cách xuất lớp trong suốt (screen trên nền tối khác nền sáng; kiểm tra trên nền sáng), kiểm tra fx vừa canvas 176x140, rồi export `levelup_side` (body 111@2x, pivot (0.5, 0.88)). Không cắt frame.
 
 **Quy tắc cho fx của hero này về sau** (từ các góp ý của user): lớp bao quanh thân bằng màu và độ trong suốt, mép mềm; lớp rộng, dễ thấy, không chi tiết nhỏ làm rối; không viền nét, không vector phẳng chồng lên thân. Python trước; gen video + cắt frame chỉ khi fx cần chi tiết mà Python không làm được.
+
+## Skill 2 holy_banner (chốt 2026-10-20): mô tả hành động rõ ràng là điều quyết định
+
+**Kết quả**: sau 3 vòng quay, user chốt take do model vẽ cả ripple (`raw/skill_side_skill_holy_banner_v4_t02`); user nhận xét "quá đẹp", cả bản model lẫn bản Python (`v4_t01` + `fx/holy_banner_ripple.py`) đều đẹp, model đẹp hơn. Không cắt frame, chưa export. Take chốt vẫn có lỗi nhỏ đã ghi ở `history.md` (khối nón sáng thừa, ripple lan ra mép khung); user vẫn chọn.
+
+**Bài học chính: phải mô tả hành động của nhân vật rõ ràng, cụ thể, không chung chung.**
+Cùng một skill, cùng model, cùng giá (0.06 USD/clip), chất lượng đổi hẳn theo độ cụ thể của mô tả hành động:
+| Vòng | Mô tả hành động | Kết quả |
+|---|---|---|
+| 1 | chung chung: "nâng kiếm, cắm xuống, giơ nắm đấm", kèm fx do model vẽ (cờ, ánh sáng) | bị chê: khối nón cam đục phủ hero, cử chỉ thừa (khoanh tay) |
+| 2 | thêm mô tả thân, chân, đầu, áo choàng theo từng nhịp, nhưng ý tưởng vẫn do mình nghĩ | nhịp rõ hơn nhưng user vẫn chê "không đẹp" |
+| **3** | **user tự viết hành động bằng từng bước vật lý**: đứng như idle, lùi một chân; nâng kiếm hai tay rồi găm mạnh xuống đất; kiếm chìm khoảng một nửa, người khuỵu quỳ một gối, hai tay nắm chặt cán, gồng mạnh | **quá đẹp**, cả bản model và bản Python |
+
+**Khi đã có hành động đủ tốt thì fx Python cũng chạy tốt theo**: video thân rõ nhịp (đo được frame găm kiếm và vị trí mũi kiếm) thì fx đặt chính xác đúng khoảnh khắc va chạm. Fx đẹp chỉ khi thân đúng.
+
+**Công thức mô tả hành động (dùng cho mọi skill còn lại và hero khác)**
+1. **Khoá hướng**: "facing RIGHT the entire time and never turning around: his hips, shoulders and face stay turned to the right in every frame". Bắt buộc, nhất là khi có động tác chân ra sau (model đọc "lùi chân" thành xoay người; chỉ cho chân sau trượt lùi).
+2. **Tư thế đầu**: nói rõ giống idle (chân, kiếm, tay), đứng yên một nhịp chỉ thở.
+3. **Các nhịp đánh số** (Beat 1, 2, 3...): mỗi nhịp một động tác vật lý, nói **bộ phận nào làm gì**: chân (gối, hông, bàn chân, trọng tâm), thân (nghiêng, thẳng, ưỡn ngực), đầu (ngẩng, cúi), tay (từng tay, nắm ở đâu), vũ khí (thẳng đứng, mũi hướng đâu, chìm bao nhiêu), áo choàng (hất rồi rũ).
+4. **Nói rõ trạng thái kết thúc** (quỳ một gối, hai tay nắm chặt cán, đầu cúi, gồng) rồi "HOLDS this pose completely still for the rest of the clip".
+5. **Câu thứ tự**: "The order is always: stand, step back, lift, drive down while dropping to one knee, hold". Một lần nâng, một lần găm.
+6. **Liệt kê điều không được làm**: không đi, không xoay, không đứng lên lại, không cử chỉ khác (không khoanh tay, không chào).
+7. **Fx**: hoặc cấm hẳn (clip thân), hoặc cho **đúng một** hiệu ứng, kèm hình dạng, vị trí, thời điểm cụ thể ("thin concentric elliptical rings of pale gold light spreading along the ground from where the sword is buried"). Lần cho hiệu ứng hẹp và đúng mặt phẳng (mặt đất) cho kết quả đẹp hơn lần để model tự sáng tạo ánh sáng.
+8. **Không ghim ảnh cuối** khi ảnh cuối chưa đúng tư thế bạn mô tả: ở vòng 3 chỉ dùng ảnh đầu (master), tư thế cuối theo mô tả đã đúng.
+9. Câu "locked tripod" như mọi clip.
+
+**Tham chiếu prompt chốt**: `raw/skill_side_skill_holy_banner_v4_t02.prompt.txt` (take chốt) và `v4_t01.prompt.txt` (thân sạch). Phần "Beat 1-5" là mẫu dùng lại.
+
+**Điều model vẫn làm dù đã cấm** (cần dự trù): vệt trắng/hồng bắn ra ở chỗ vũ khí chạm đất; khối nón ánh sáng khi có ripple; nâng vũ khí cao hơn yêu cầu (mũi kiếm chạm mép trên khung); thân xoay nhẹ về camera khi giơ vũ khí. Python xoá được vệt (xem `fx/holy_banner_ripple.py`, hàm `clean`).
