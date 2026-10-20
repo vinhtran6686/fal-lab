@@ -12,22 +12,20 @@ Artifact so sánh với hero tham chiếu (malik): https://claude.ai/artifact/Mx
 - Artifact có khoảng 468/511 file; mỗi version tối đa 511. Trước khi thêm state mới, bỏ các state không
   còn dùng: `attack` (bản đủ frame), `death` (bản đủ frame), `charge_v2`.
 
-## 0. Việc phải làm TRƯỚC (chặn mọi thứ khác)
+## 0. Skill 1 (`charge_v4`): đã có trong git (commit c897f40, kiểm 2026-10-20)
 
-**Skill 1 (`charge_v4`) đã được user chốt nhưng CHƯA có trong git.**
-- Repo hiện chỉ có `raw/skill_side_skill_charge_t01.*` (thiết kế cũ, area 2.54x, bỏ).
-- Báo cáo `docs/holy-commander-report.md` mục 2 vẫn ghi "charge t01 đạt, chưa export". Dòng đó đã cũ:
-  ghi chú trong artifact mới hơn và là bản đúng.
-- Trên máy đã làm charge v2-v4, cần push:
-  - các take raw (`.mp4` + `.json`);
-  - plan/prompt đã dùng (`.work/side_skill_charge/set_plan.json` hoặc bản chép prompt);
-  - thay đổi của `tools/kr_compare/build_manifest.py`;
-  - các dòng `history.md` và `brief.md` cho charge v2-v4.
-- Nếu không lấy lại được: frame `charge_v4` (67 hình, đã key) vẫn tải được từ artifact
-  (`sprites/holy_commander/charge_v4/charge_v4_NNN.png`). Khi đó mất clip gốc và prompt, nên không
-  `rebuild` hay quay lại được.
-
-Session mới: `git pull`, kiểm tra charge v2-v4 đã có trong `raw/` và `history.md`. Nếu chưa có, dừng lại và hỏi user.
+- Clip gốc: `raw/skill_side_skill_charge_v2_t01`, `_v3_t01`, `_v4_t01` (`.mp4` + `.json`; prompt đầy đủ
+  nằm trong `.json`). Bản chốt: **v4** (4 s).
+- `history.md`: có đủ dòng v2, v3, v4 (t01 cũ đánh dấu superseded). `brief.md`: dòng charge = "v4 chốt, chưa export".
+- `docs/holy-commander-report.md`: từ §9-§10 phân tích charge (vì sao v2 sạch, vì sao v3/v4 có vòng lửa).
+  Bảng ở mục 1-2 của report là bản cũ hơn; khi lệch nhau, tin `history.md` và các mục cuối của report.
+- `tools/kr_compare/build_manifest.py` đã dựng state `charge_v2`, `charge_v4`.
+- Thư mục set (`.work/side_skill_charge_v4/`) không lên git. Muốn export, dựng lại set từ clip trong `raw/`
+  (route "supplied"), không quay lại clip.
+- Câu chống zoom "locked tripod" nằm trong prompt v2 (`raw/skill_side_skill_charge_v2_t01.json`) và trong report.
+- Lưu ý: đuôi style trong prompt v2-v4 vẫn là style cũ ("muted earthy palette", "near-black outlines").
+  Style hiện tại ở `fal-image/format.md` §1. Clip mới nên dùng style hiện tại; kiểm tra xem đuôi này do
+  plan local sinh ra hay do `sprite_set.py`.
 
 ## 1. Trạng thái hiện tại
 
@@ -38,7 +36,7 @@ Session mới: `git pull`, kiểm tra charge v2-v4 đã có trong `raw/` và `hi
 | `run_side` | ✅ đã export | t01, 8 hình, `--despill --kind hero` | - |
 | `attack_side` | ⏳ chốt, chưa export | `attack_fast_frames` = t04 (accept `--window 0:73`) bỏ 1/2 frame: 23 hình, 1.53 s @15 fps | export lên canvas game |
 | `death_side` | ⏳ duyệt, chưa export | `death_fast_frames` = t01 bỏ 1/2 frame: 39 hình, 2.60 s @15 fps | export |
-| `skill_charge_side` (skill 1) | ⏳ chốt, chưa export, **chưa có trong git** | `charge_v4`: 67 hình, có lửa + blade-flash vẽ thẳng vào thân | push (mục 0), export, quyết định về vòng lửa (mục 3) |
+| `skill_charge_side` (skill 1) | ⏳ chốt, chưa export | `charge_v4` (`raw/skill_side_skill_charge_v4_t01`): 67 hình, có lửa + blade-flash vẽ thẳng vào thân | export, quyết định về vòng lửa (mục 3) |
 | `respawn_side` | ❌ | `raw/despawn_side_extra_t01` đạt (score 8) | export `--reverse` (miễn phí) + `fx_respawn` |
 | `levelup_side` | ❌ | t01 có vệt chém xanh và bụi | quay lại + `fx_levelup` |
 | `skill_holy_banner_side` (skill 2) | ❌ | t01 có vòng sáng hồng/vàng, area 2.9x | quay lại + fx |
@@ -68,7 +66,8 @@ Session mới: `git pull`, kiểm tra charge v2-v4 đã có trong `raw/` và `hi
      và chân không trượt, user duyệt bằng mắt thì `accept --window`.
 5. **Combo 2 nhát khác dáng** (chéo xuống + ngang) đọc nhanh và bớt cứng hơn 1 nhát đứng yên; ổn định hơn combo 3 nhát.
 6. **Chống zoom:** câu "locked tripod" của charge_v2 đưa area từ median 2.54x xuống 1.21x. Lấy nguyên văn
-   câu đó từ plan hoặc history của charge (sau khi push, mục 0) và dùng cho mọi skill còn lại.
+   từ `raw/skill_side_skill_charge_v2_t01.json` và dùng cho mọi skill còn lại. Câu này chỉ hiệu quả khi prompt
+   KHÔNG mời hiệu ứng; v3/v4 có mô tả lửa nên vẫn sinh vòng lửa lớn (report §10).
 7. **Death và các động tác liền một mạch** (ngã, chìm) không bị mất pha khi bớt frame, nên quay 1 lần là đủ.
 
 ## 3. Hai quyết định phải hỏi user TRƯỚC khi chạy clip trả phí
@@ -100,7 +99,7 @@ Kèm câu hỏi phụ: giữ vòng lửa lớn trong charge_v4 hay cắt các fr
 
 | # | Việc | Chi phí |
 |---|---|---|
-| 1 | Mục 0: kiểm tra charge v2-v4 có trong git | 0 |
+| 1 | Đọc mục 0 (charge v4 đã có trong git) | 0 |
 | 2 | Hỏi user 2 quyết định ở mục 3 | 0 |
 | 3 | Export attack, death, charge_v4 lên canvas 156x140, body 111 (mục 3B); cập nhật manifest, kr_compare | 0 |
 | 4 | `respawn_side` = despawn t01 `--reverse`; recipe `fx/respawn.json` (pillar + ring) | 0 |
