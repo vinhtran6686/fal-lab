@@ -300,3 +300,24 @@ phần lớn ý muốn (lửa đúng chỗ, vệt chém đúng hình) nhưng ph�
 không mời** (ở đây là vòng tròn) — prompt viết chặt cỡ nào cũng chưa chặn được, đã thử 2 lần liên tiếp. Khi
 chốt, có 2 lựa chọn còn mở: giữ nguyên (đã chọn, user chấp nhận) hoặc tách lại thành body-only (dùng `v2`) +
 hiệu ứng lửa/blade-flash làm `fx_charge` riêng qua `fx_layers.py` sau này.
+
+## 11. Phản hồi sau khi export (2026-10-20)
+
+Đánh giá lại các trạng thái sau khi export attack, death, charge_v4, respawn lên canvas 176x140.
+
+1. **charge_v4, vòng lửa**: user đồng ý đó là lỗi, vẫn giữ bản này. Lần sau tránh: hiệu ứng phải vừa khung hình
+   (không vòng lớn quanh thân; bám lưỡi kiếm, nằm trong canvas). Khi làm lại, thử hiệu ứng nhỏ hơn hoặc fx_layers.
+   Cũng thấy một hình lạ cạnh vai ở ~frame 5.
+2. **attack, vệt chém trắng**: user thấy vệt này đọc như một đòn chém thật và thích. Ghi nhận ngược với mục 4/5 ở
+   trên (đang coi là lỗi): với attack, vệt này chấp nhận được và không cần quay lại vì nó. Skill video-sprite sẽ do
+   user sửa để cho phép; session này không sửa `SKILL.md`.
+3. **respawn**: bản đảo despawn đúng về kỹ thuật nhưng đọc như một pho tượng cứng nhắc, không phải hero. Thiết kế
+   lại hoàn toàn: quỳ, gục đầu vào thanh kiếm dựng đứng, cả hero màu xám; rồi hồi màu và đứng lên, như vừa được
+   khôi phục. Cần clip mới (trả phí).
+4. **levelup**: thiết kế mới, hero đứng và đấm một tay lên trời như chiến thắng/đạt thành tựu, ánh sáng chớp quanh
+   người theo nhịp vung tay. Clip t01 cũ (giơ kiếm chào) không dùng.
+5. **holy_banner, radiant_slash**: thiết kế lại hoàn toàn dựa trên bài học charge_v4 (mục 10): tách nhịp có thứ tự,
+   chỉ dồn về trước, câu locked tripod, hiệu ứng nhỏ sát vũ khí hoặc nắm đấm. Ý tưởng chi tiết của từng skill
+   chưa chốt, cần bàn với user trước khi quay.
+6. Quy ước chung chưa đổi: `.work/` không có trong git, công thức cắt frame sẽ ghi ở
+   `docs/issue-frame-recipe-sync.md` (user sẽ cập nhật); phiên này không cắt frame thêm.

@@ -39,11 +39,11 @@
 | run_side | video-sprite | loop | ✅ t01 | export --despill --kind hero (colour gate fail là vết màu key bleed, hết sau despill); 8 hình, 15fps, canvas 176x140 (was 156x140; padded), body 111px@2x |
 | attack_side | video-sprite | one-shot | ✅ exported | 23 hình (t04 bớt 1/2 frame), 1.53 s @15fps, hit frame 10, canvas 176x140, body rescale x1.094 |
 | death_side | video-sprite | one-shot | ✅ exported | 39 hình (t01 bớt 1/2 frame), 2.60 s @15fps, canvas 176x140 |
-| respawn_side | video-sprite | one-shot | ⏳ exported 78 hình (5.2 s, chưa bớt frame) | despawn t01 --reverse; chờ user duyệt tốc độ; fx_respawn chưa làm |
-| levelup_side | video-sprite | one-shot | ❌ | |
-| skill_holy_banner_side | video-sprite | one-shot | ❌ | |
-| skill_radiant_slash_side | video-sprite | one-shot | ❌ | |
-| skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 67 hình, 4.47 s @15fps, giữ vòng lửa lớn frame ~46-72 theo quyết định user; canvas 176x140 |
+| respawn_side | video-sprite | one-shot | ❌ thiết kế lại | bản đảo despawn (đã export, 78 hình) bị chê giống tượng cứng nhắc. Thiết kế mới (user): bắt đầu quỳ, gục đầu vào thanh kiếm dựng đứng, cả hero xám; sau đó hồi màu và đứng lên (vừa được khôi phục). Cần clip mới + có thể fx_respawn |
+| levelup_side | video-sprite | one-shot | ❌ thiết kế lại | thiết kế mới (user): hero đứng, đấm một tay lên trời như vừa chiến thắng/đạt thành tựu; ánh sáng chớp quanh người theo nhịp vung tay. Clip t01 cũ (giơ kiếm chào) không dùng |
+| skill_holy_banner_side | video-sprite | one-shot | ❌ thiết kế lại | t01 zoom 2.9x + tia sáng; pose cuối giơ nắm đấm đúng. Thiết kế lại hoàn toàn theo bài học charge_v4 (hiệu ứng nhỏ, sát vũ khí/nắm đấm, câu locked tripod); chờ user chốt ý tưởng |
+| skill_radiant_slash_side | video-sprite | one-shot | ❌ thiết kế lại | t01 zoom + vệt chém lớn, pose cuối đúng. Thiết kế lại hoàn toàn theo bài học charge_v4; chờ user chốt ý tưởng |
+| skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 67 hình, 4.47 s @15fps, giữ vòng lửa lớn frame ~46-72 theo quyết định user (user đồng ý đó là lỗi; lần sau dùng hiệu ứng vừa khung hơn, xem report §11); canvas 176x140 |
 | fx_holy_banner | fal-image vfx | hiệu ứng | ✅ v01 | cờ hiệu, asset riêng |
 | fx_radiant_slash | fal-image vfx | hiệu ứng | ✅ v01 | vệt chém vàng, asset riêng |
 
