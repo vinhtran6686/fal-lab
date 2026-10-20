@@ -73,7 +73,10 @@ const el = (t, a = {}, ...k) => { const e = document.createElement(t); for (cons
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 2600); };
 
 let DATA, MODE = 'artifact', STORE = {}, CUR = null, dirty = {};
-const sheets = {}, edits = {};          // sheets: id -> Image; edits: id -> {keep:Set, ms:{idx:ms}, hit:idx|null}
+const sheets = {}, fxSheets = {}, edits = {};
+let showFx = true;
+/* the cell geometry and sheet image to draw: the Python fx composite (when the state has one and it is on) or the clean body */
+function geom(s) { return (showFx && s.fx) ? { img: fxSheets[s.id], url: s.fx.sheet, cols: s.fx.cols, cellW: s.fx.cellW, cellH: s.fx.cellH } : { img: sheets[s.id], url: s.sheet, cols: s.cols, cellW: s.cellW, cellH: s.cellH }; }          // sheets: id -> Image; edits: id -> {keep:Set, ms:{idx:ms}, hit:idx|null}
 let playing = true, playT = 0, rafId = 0, lastTs = 0, step = null;
 
 const base = (s) => Math.round(1000 / s.fps);
@@ -133,16 +136,16 @@ function refreshNav() {
   }
 }
 function thumbStyle(s, i) {      // percentages, so the thumbnail shows exactly one cell whatever width the grid gives it
-  const rows = Math.ceil(s.n / s.cols), col = i % s.cols, row = Math.floor(i / s.cols);
-  const px = s.cols > 1 ? col / (s.cols - 1) * 100 : 0, py = rows > 1 ? row / (rows - 1) * 100 : 0;
-  return `background-image:url(${s.sheet});background-size:${s.cols * 100}% ${rows * 100}%;background-position:${px}% ${py}%`;
+  const g = geom(s), rows = Math.ceil(s.n / g.cols), col = i % g.cols, row = Math.floor(i / g.cols);
+  const px = g.cols > 1 ? col / (g.cols - 1) * 100 : 0, py = rows > 1 ? row / (rows - 1) * 100 : 0;
+  return `background-image:url(${g.url});background-size:${g.cols * 100}% ${rows * 100}%;background-position:${px}% ${py}%`;
 }
 function select(id) { CUR = id; playT = 0; lastTs = 0; render(); }
 
 function render() {
   const s = DATA.states.find(x => x.id === CUR), e = edits[s.id], main = $('#main'); main.replaceChildren();
   main.append(el('div', { class: 'row' }, el('strong', { text: s.label }), el('span', { class: 'hint', text: s.note + ' · clip ' + s.clip })));
-  const cvO = el('canvas', { width: s.cellW, height: s.cellH }), cvE = el('canvas', { width: s.cellW, height: s.cellH });
+  const g0 = geom(s), cvO = el('canvas', { width: g0.cellW, height: g0.cellH }), cvE = el('canvas', { width: g0.cellW, height: g0.cellH });
   const stO = el('div', { class: 'stat', id: 'statO' }), stE = el('div', { class: 'stat', id: 'statE' });
   main.append(el('div', { class: 'stages' },
     el('div', { class: 'stage' }, el('h3', {}, el('span', { text: 'Gốc: đủ ' + s.n + ' hình' }), el('span', { text: s.fps + ' fps' })), cvO, stO),
@@ -155,6 +158,7 @@ function render() {
     el('button', { class: 'b', type: 'button', on: { click: () => stepBy(-1) } }, '< hình trước'),
     el('button', { class: 'b', type: 'button', on: { click: () => stepBy(1) } }, 'hình sau >'),
     el('label', {}, 'Tốc độ xem ', speed),
+    ...(s.fx ? [el('label', {}, el('input', { type: 'checkbox', id: 'fxChk', ...(showFx ? { checked: '' } : {}), on: { change: (ev) => { showFx = ev.target.checked; render(); } } }), ' Hiện fx: ' + s.fx.label)] : []),
     el('span', { class: 'hint', text: 'Phím: Space chạy/dừng, ← → đi từng hình' })));
   // quick actions
   const nIn = el('input', { type: 'number', id: 'nIn', min: '1', max: '10', value: '2' });
@@ -190,7 +194,7 @@ function showJson() { const t = $('#json'); if (t) t.value = allRecipeJson(); }
 let lastClick = null;
 function renderStrip() {
   const s = DATA.states.find(x => x.id === CUR), e = edits[s.id], strip = $('#strip'); strip.replaceChildren();
-  const W = 96, ar = s.cellW / s.cellH;
+  const ar = geom(s).cellW / geom(s).cellH;
   for (let i = 0; i < s.n; i++) {
     const keep = e.keep.has(i);
     const img = el('div', { class: 'img', style: `--ar:${ar};${thumbStyle(s, i)}`, title: 'Click: bật/tắt hình ' + i, on: { click: (ev) => {
@@ -208,12 +212,12 @@ function updateStats() {
   $('#statE').textContent = `${e.keep.size} hình · ${(totalMs(s) / 1000).toFixed(2)} s · nhanh x${(s.n / s.fps / Math.max(0.001, totalMs(s) / 1000)).toFixed(2)}` + (e.hit != null ? ` · va chạm: hình ${e.hit}` : '');
   refreshNav();
 }
-function stepBy(d) { playing = false; const b = $('#pp'); if (b) b.textContent = 'Chạy'; const s = DATA.states.find(x => x.id === CUR), q = seq(s); if (!q.length) return; step = ((step ?? 0) + d + q.length) % q.length; draw(s, q[step], null); }
+function stepBy(d) { playing = false; const b = $('#pp'); if (b) b.textContent = 'Chạy'; const s = DATA.states.find(x => x.id === CUR), q = seq(s); if (!q.length) return; step = ((step ?? 0) + d + q.length) % q.length; draw(s, q[step], q[step]); }       // stepping shows the same source frame in both panels
 
 /* ---------- playback ---------- */
 function drawCell(cv, s, i) {
-  const ctx = cv.getContext('2d'), im = sheets[s.id]; ctx.clearRect(0, 0, cv.width, cv.height);
-  ctx.drawImage(im, (i % s.cols) * s.cellW, Math.floor(i / s.cols) * s.cellH, s.cellW, s.cellH, 0, 0, s.cellW, s.cellH);
+  const g = geom(s), ctx = cv.getContext('2d'); ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.drawImage(g.img, (i % g.cols) * g.cellW, Math.floor(i / g.cols) * g.cellH, g.cellW, g.cellH, 0, 0, g.cellW, g.cellH);
 }
 function draw(s, iE, iO) {
   const cvs = document.querySelectorAll('.stage canvas'); if (cvs.length < 2) return;
@@ -225,7 +229,7 @@ function draw(s, iE, iO) {
 }
 function tick(ts) {
   rafId = requestAnimationFrame(tick);
-  const s = DATA.states.find(x => x.id === CUR); if (!s || !sheets[s.id] || !$('#statO')) return;
+  const s = DATA.states.find(x => x.id === CUR); if (!s || !geom(s).img || !$('#statO')) return;
   if (!lastTs) lastTs = ts; const dt = (ts - lastTs) * +($('#speed')?.value || 1); lastTs = ts;
   if (!playing) return; playT += dt;
   const e = edits[s.id], q = seq(s); if (!q.length) return;
@@ -249,6 +253,7 @@ async function boot() {
   $('#hero').textContent = DATA.hero;
   STORE = await loadRecipes();
   await Promise.all(DATA.states.map(s => new Promise((res, rej) => { const im = new Image(); im.onload = res; im.onerror = () => rej(new Error('không tải được ' + s.sheet)); im.src = s.sheet; sheets[s.id] = im; })));
+  await Promise.all(DATA.states.filter(s => s.fx).map(s => new Promise((res, rej) => { const im = new Image(); im.onload = res; im.onerror = () => rej(new Error('không tải được ' + s.fx.sheet)); im.src = s.fx.sheet; fxSheets[s.id] = im; })));
   for (const s of DATA.states) edits[s.id] = fromRecipe(s, STORE[s.id]);
   buildNav(); select(DATA.states[0].id); rafId = requestAnimationFrame(tick);
 }

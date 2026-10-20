@@ -54,7 +54,12 @@
         "stride": 1,
         "hit": 22
       },
-      "note": "thân sạch; fx Python v03 vẽ lên sau, đỉnh cú đấm ở hình 22"
+      "note": "thân sạch; fx Python v03 vẽ lên sau, đỉnh cú đấm ở hình 22",
+      "fx": {
+        "module": "levelup_variants",
+        "fn": "V03",
+        "label": "fx Python v03 (hào quang xung nhịp)"
+      }
     },
     {
       "id": "banner",
@@ -80,7 +85,11 @@
         "stride": 1,
         "hit": 43
       },
-      "note": "duỗi hết ở hình 43; tia Python vẽ lên sau"
+      "note": "duỗi hết ở hình 43; tia Python vẽ lên sau",
+      "fx": {
+        "module": "radiant_slash_beam",
+        "label": "tia sáng Python"
+      }
     },
     {
       "id": "respawn",

@@ -20,6 +20,7 @@ Tool để bật/tắt từng frame, chỉnh thời gian mỗi frame và đặt 
 - **Ô số dưới hình** = thời gian (ms) của hình đó. Giữ lâu hơn = chậm lại ở hình đó (pipeline lặp frame để ra fps đều).
 - **"H"** = hình va chạm (state có hit, như attack).
 - Nút nhanh: Giữ tất cả, Về bản đã chốt, Giữ 1 trong N, Cắt đoạn, Thời gian đều (ms hoặc fps).
+- **Hiện fx**: state có fx Python (levelup v03, slash) có công tắc "Hiện fx": hiệu ứng được vẽ sẵn lên **từng frame nguồn** của clip, nên bỏ hoặc giữ frame thì fx theo đúng frame đó. Tắt để xem thân sạch.
 - Bên trái là bản gốc (đủ frame, 15 fps), bên phải là bản sửa; dưới mỗi bên có số hình, thời lượng và hệ số nhanh hơn.
 - Phím: Space chạy/dừng, ← → đi từng hình.
 
@@ -47,7 +48,7 @@ với bản đã export trong repo (23/23, 39/39, 67/67). Vậy công thức tá
 
 ## Giới hạn
 - Chỉ **giữ, bỏ, lặp (giữ lâu hơn)** các frame đã có; không tạo frame mới (nội suy cần công cụ khác).
-- Tool xem thân sạch của clip; fx Python (levelup, banner, slash) vẽ lên sau và chưa nằm trong tool này. Hình va chạm giúp đặt fx đúng nhịp.
+- `apply_recipe.py` chỉ export **thân** theo công thức. Fx (levelup, slash) hiện chỉ ghép sẵn để **xem** trong tool; xuất fx thành lớp riêng cho đúng các frame đã chọn là việc tiếp theo (cần chốt cách xuất lớp trong suốt, xem docs/python-fx-recipe.md mục 7).
 - Game có thể chỉ chơi fps cố định: pipeline ra fps đều bằng cách lặp frame (`even_fps`), xác nhận với engine trước khi dùng thời gian lệch nhiều.
 - Chưa export gì từ công thức của session này (user chưa muốn export).
 
