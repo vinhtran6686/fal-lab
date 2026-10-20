@@ -7,6 +7,8 @@ trạng thái hay skill nào, đọc file này là làm được mà **không ph
 
 ## 1. Tóm tắt một đoạn
 
+**Nguồn chuyển động:** động tác của nhân vật (ví dụ cú đấm lên trời) luôn nằm trong **clip thân do model sinh** (trả phí, ~0.045 USD). Python không tạo hay sửa chuyển động, chỉ vẽ ánh sáng lên clip đó và đo clip để đặt fx. Đổi động tác = quay clip mới; đổi fx = miễn phí.
+
 Quay **một** clip thân sạch (không mời hiệu ứng), tách **toàn bộ** frame, rồi dùng Python (numpy + Pillow) **vẽ ánh sáng
 bằng màu và độ trong suốt** chồng lên từng frame theo thứ tự lớp: lớp sau thân, thân, lớp trước thân. Đổi màu, độ đậm, nhịp,
 kích thước chỉ là đổi tham số và chạy lại (~50 giây mỗi phiên bản). Không gọi model, không tốn phí. Nhờ vậy ta làm được 10

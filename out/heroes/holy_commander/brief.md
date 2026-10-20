@@ -148,6 +148,6 @@ Ra frame PNG đủ 46 hình, `v03.mp4` xem thử, `v03_peak.png`.
 
 **Đã bị thay thế, đừng dùng lại**: `fx/levelup.json` + `fx/levelup/` (bản A1 qua `fx_layers`, bị chê thô) và `fx/levelup_soft_glow.py` (A2 bản đầu có lưỡi sáng nhỏ ở đáy). Entry `fx` trong `meta.json` đã gỡ vì chưa có asset fx v03 đã export; **thêm entry `fx` cho levelup khi export v03**.
 
-**Việc còn lại trước khi export** (chưa làm): quyết định cách xuất lớp trong suốt (screen trên nền tối khác nền sáng; kiểm tra trên nền sáng), kiểm tra fx vừa canvas 176x140, rồi export `levelup_side` (body 111@2x, pivot (0.5, 0.88)). Không cắt frame.
+**Quyết định user (2026-10-20): chưa export, chỉ review đầy đủ.** Chuyển động đấm do clip thân A (model sinh) có sẵn; Python chỉ vẽ ánh sáng lên đó và đo clip để đặt fx. Nếu sau này export, việc cần làm: quyết định cách xuất lớp trong suốt (screen trên nền tối khác nền sáng; kiểm tra trên nền sáng), kiểm tra fx vừa canvas 176x140, rồi export `levelup_side` (body 111@2x, pivot (0.5, 0.88)). Không cắt frame.
 
 **Quy tắc cho fx của hero này về sau** (từ các góp ý của user): lớp bao quanh thân bằng màu và độ trong suốt, mép mềm; lớp rộng, dễ thấy, không chi tiết nhỏ làm rối; không viền nét, không vector phẳng chồng lên thân. Python trước; gen video + cắt frame chỉ khi fx cần chi tiết mà Python không làm được.

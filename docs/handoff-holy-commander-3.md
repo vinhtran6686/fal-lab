@@ -82,3 +82,7 @@ Xong thì đưa lên 1 artifact riêng (không đụng artifact compare) để m
 - Levelup: thân clip A (`raw/levelup_side_extra_v2_t01`) + fx **v03** (user chọn). Chưa export (xem `brief.md` "Levelup fx v03").
 - Respawn: pose `pose_respawn_v02` đã duyệt; clip `rise` t01 **chờ user duyệt**, chưa export.
 - Còn lại: export levelup/respawn, holy_banner, radiant_slash (thiết kế lại; fx cho skill cũng nên theo recipe Python). Không sửa `SKILL.md`, không cắt frame.
+
+### Quyết định user sau cùng (2026-10-20)
+- **Không export** `levelup_side` hay `respawn_side` lúc này: chỉ review đầy đủ. Chưa cần sửa `CLAUDE.md` hay trỏ tới recipe; cần **ghi chú kỹ trong các tài liệu** (`docs/python-fx-recipe.md`, `brief.md`, `history.md`, report) để cuối dự án có cơ sở cập nhật skill.
+- Nguồn của chuyển động levelup: clip thân A do model sinh (0.045 USD, từ master_v07 -> pose_levelup_v02). Python chỉ vẽ fx lên clip đó, không tạo chuyển động; đo vị trí chân, nắm đấm, frame đỉnh từ clip để đặt fx. Đổi động tác = quay clip thân mới; đổi fx = miễn phí.
