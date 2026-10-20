@@ -55,3 +55,5 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-20 07:32:08,out/heroes/holy_commander/design/pose_levelup_v02.png,gpt-image-2,low,1024x1024,False,19.5,0.0138,True
 2026-10-20 07:32:29,clip.mp4,h3-max-turbo,video,480P 3s,False,2.7,0.0450,True
 2026-10-20 07:32:39,clip.mp4,h3-max-turbo,video,480P 3s,False,6.3,0.0450,True
+2026-10-20 08:35:33,clip.mp4,h3-max-turbo,video,480P 4s,False,2.7,0.0600,True
+2026-10-20 08:35:40,clip.mp4,h3-max-turbo,video,480P 4s,False,2.8,0.0600,True
