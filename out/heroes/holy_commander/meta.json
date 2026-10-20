@@ -2,7 +2,7 @@
   "id": "holy_commander",
   "kind": "hero",
   "cell": [
-    156,
+    176,
     140
   ],
   "scale_2x": 2,
@@ -46,6 +46,79 @@
         "route": "supplied"
       },
       "body_rescale": 1.0919
+    },
+    "attack_side": {
+      "version": "t01",
+      "dir": "attack/attack_side",
+      "source": "raw/attack_side_attack_t04.mp4",
+      "frames": 23,
+      "fps": 15,
+      "loop": false,
+      "files": "attack/attack_side/frames/@1x/hero_holy_commander_attack_side_NN.png",
+      "sheet": "attack/attack_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/side_export",
+        "action": "attack",
+        "take": 1,
+        "route": "supplied"
+      },
+      "hit_frame": 10,
+      "body_rescale": 1.0941
+    },
+    "death_side": {
+      "version": "t01",
+      "dir": "death/death_side",
+      "source": "raw/death_side_death_t01.mp4",
+      "frames": 39,
+      "fps": 15,
+      "loop": false,
+      "files": "death/death_side/frames/@1x/hero_holy_commander_death_side_NN.png",
+      "sheet": "death/death_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/side_export",
+        "action": "death",
+        "take": 1,
+        "route": "supplied"
+      },
+      "body_rescale": 1.0903
+    },
+    "skill_charge_side": {
+      "version": "t01",
+      "dir": "skill/skill_charge_side",
+      "source": "raw/skill_side_skill_charge_v4_t01.mp4",
+      "frames": 67,
+      "fps": 15,
+      "loop": false,
+      "files": "skill/skill_charge_side/frames/@1x/hero_holy_commander_skill_charge_side_NN.png",
+      "sheet": "skill/skill_charge_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/side_export",
+        "action": "skill",
+        "take": 1,
+        "route": "supplied"
+      },
+      "body_rescale": 1.0931
+    },
+    "respawn_side": {
+      "version": "t01",
+      "dir": "spawn/respawn_side",
+      "source": "raw/despawn_side_extra_t01.mp4",
+      "frames": 78,
+      "fps": 15,
+      "loop": false,
+      "files": "spawn/respawn_side/frames/@1x/hero_holy_commander_respawn_side_NN.png",
+      "sheet": "spawn/respawn_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/side_export",
+        "action": "despawn",
+        "take": 1,
+        "route": "supplied"
+      },
+      "body_rescale": 1.0923
     }
   },
   "body_area_2x": 6083,

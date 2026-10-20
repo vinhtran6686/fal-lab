@@ -13,7 +13,7 @@
 - Skills: Cờ hiệu thánh, Chém sáng, Xung phong
 
 ## Class / size
-- Class: hero (`classes/hero.md`), tier M, `{H}` 60 px, canvas 156x140 @1x (312x280 @2x), body 120 @2x
+- Class: hero (`classes/hero.md`), tier M, `{H}` 60 px, canvas 176x140 @1x (352x280 @2x; was 156x140 until the attack swing needed more width), body 111 @2x (area-matched)
 - Role: melee
 
 ## Slots
@@ -36,14 +36,14 @@
 | pose_skill_holy_banner | fal-image | ảnh tĩnh | ✅ v01 | kiếm cắm đất, cờ vàng |
 | pose_skill_radiant_slash | fal-image | ảnh tĩnh | ✅ v01 | đỉnh nhát chém từ trên xuống |
 | pose_skill_charge | fal-image | ảnh tĩnh | ✅ v01 | cúi người, kiếm đưa ngang người |
-| run_side | video-sprite | loop | ✅ t01 | export --despill --kind hero (colour gate fail là vết màu key bleed, hết sau despill); 8 hình, 15fps, canvas 156x140, body 111px@2x |
-| attack_side | video-sprite | one-shot | ⏳ t04 accepted, chốt bản bớt frame | combo 2 chém (chéo xuống + ngang, 3s, dồn người về trước); accepted bỏ qua gate area/feet/turn (vệt lưỡi liềm làm méo silhouette, user đã xem frame thật và duyệt). Quay 2s (t05) và prompt chặt hơn vẫn 2s (t06) đều làm model gộp mất 1 nhát — không quay thêm. User chốt: giữ frame của t04, bớt 1/2 số frame (xen kẽ) để animation tự nhanh hơn (46→23 hình, 3.07s→1.53s); CHƯA export sang canvas 156x140 (cần `video_to_sheet.py`, chọn đúng tập frame đã bớt khi retime) |
-| death_side | video-sprite | one-shot | ⏳ t01 duyệt, chốt bản bớt frame | quỳ xuống, ngã người về trước, kiếm rơi bên cạnh, nằm im; động tác rõ ràng, không vật thể lạ (gate `feet`/`turn` từng đọc sai do tư thế ngã, không phải lỗi thật). User duyệt: "animation rõ ràng". Clip raw 5.18s đọc chậm (như attack t01) — áp dụng đúng kỹ thuật đã dùng cho attack: bớt 1/2 số frame (xen kẽ) từ clip đã tách, không quay lại video (78→39 hình, 5.20s→2.60s). CHƯA export sang canvas 156x140 |
-| respawn_side | video-sprite | one-shot | ❌ | |
+| run_side | video-sprite | loop | ✅ t01 | export --despill --kind hero (colour gate fail là vết màu key bleed, hết sau despill); 8 hình, 15fps, canvas 176x140 (was 156x140; padded), body 111px@2x |
+| attack_side | video-sprite | one-shot | ✅ exported | 23 hình (t04 bớt 1/2 frame), 1.53 s @15fps, hit frame 10, canvas 176x140, body rescale x1.094 |
+| death_side | video-sprite | one-shot | ✅ exported | 39 hình (t01 bớt 1/2 frame), 2.60 s @15fps, canvas 176x140 |
+| respawn_side | video-sprite | one-shot | ⏳ exported 78 hình (5.2 s, chưa bớt frame) | despawn t01 --reverse; chờ user duyệt tốc độ; fx_respawn chưa làm |
 | levelup_side | video-sprite | one-shot | ❌ | |
 | skill_holy_banner_side | video-sprite | one-shot | ❌ | |
 | skill_radiant_slash_side | video-sprite | one-shot | ❌ | |
-| skill_charge_side | video-sprite | one-shot | ⏳ v4 chốt, chưa export | THIẾT KẾ LẠI (2026-10-20, không còn là "xung phong/dash" cũ): cúi người vận sức (kiếm bốc lửa đỏ+vàng) → lao người về trước + vung kiếm từ dưới lên (vệt chém hồng-trắng) → giữ pose cuối kiếm cháy. Hiệu ứng lửa/vệt chém nằm thẳng trong body clip (khác quy ước body-only thường dùng — xem docs/holy-commander-report.md §10). Còn 1 lỗi đã biết: 1 vòng tròn lửa lớn xuất hiện ~frame 46-72/107, user đã xem và chốt dù còn lỗi này. CHƯA export sang canvas 156x140 |
+| skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 67 hình, 4.47 s @15fps, giữ vòng lửa lớn frame ~46-72 theo quyết định user; canvas 176x140 |
 | fx_holy_banner | fal-image vfx | hiệu ứng | ✅ v01 | cờ hiệu, asset riêng |
 | fx_radiant_slash | fal-image vfx | hiệu ứng | ✅ v01 | vệt chém vàng, asset riêng |
 
