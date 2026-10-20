@@ -41,7 +41,7 @@
 | attack_side | video-sprite | one-shot | ✅ exported | 23 hình (t04 bớt 1/2 frame), 1.53 s @15fps, hit frame 10, canvas 176x140, body rescale x1.094 |
 | death_side | video-sprite | one-shot | ✅ exported | 39 hình (t01 bớt 1/2 frame), 2.60 s @15fps, canvas 176x140 |
 | respawn_side | video-sprite | one-shot | ⏳ clip t01 quay xong, chờ user duyệt | `pose_respawn_v02` (quỳ xám) -> `master_v07`, 4.46 s raw (`raw/respawn_side_rise_t01`): xám -> hồi màu -> đứng lên. Chưa export 176x140, chưa fx_respawn. Bản đảo despawn cũ bị loại |
-| levelup_side | video-sprite | one-shot | ⏳ 2 take, chờ user duyệt | `pose_levelup_v02` (đấm lên trời, tay kia trên báng kiếm). A: thân sạch `raw/levelup_side_extra_v2_t01` + `fx/levelup.json` (fx_layers); B: `..._t02`, chớp vàng nhỏ vẽ vào clip. 3 s, 46 hình, chưa export 176x140 |
+| levelup_side | video-sprite | one-shot | ⏳ thân + fx đã chốt, chưa export | thân: `raw/levelup_side_extra_v2_t01` (`pose_levelup_v02`, 3 s, 46 hình). **fx: v03 "hào quang xung nhịp"** vẽ bằng Python (`fx/levelup_variants.py`, 0 USD), user chọn 2026-10-20. Chưa export 176x140; xem mục Levelup fx v03 |
 | skill_holy_banner_side | video-sprite | one-shot | ❌ thiết kế lại | t01 zoom 2.9x + tia sáng; pose cuối giơ nắm đấm đúng. Thiết kế lại hoàn toàn theo bài học charge_v4 (hiệu ứng nhỏ, sát vũ khí/nắm đấm, câu locked tripod); chờ user chốt ý tưởng |
 | skill_radiant_slash_side | video-sprite | one-shot | ❌ thiết kế lại | t01 zoom + vệt chém lớn, pose cuối đúng. Thiết kế lại hoàn toàn theo bài học charge_v4; chờ user chốt ý tưởng |
 | skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 67 hình, 4.47 s @15fps, giữ vòng lửa lớn frame ~46-72 theo quyết định user (user đồng ý đó là lỗi; lần sau dùng hiệu ứng vừa khung hơn, xem report §11); canvas 176x140 |
@@ -115,4 +115,37 @@ master_v07 approved by user ("v07 đẹp nhất, chốt"). `{design}` and `{idle
 - Nhịp ăn khớp động tác: chớp/bùng ở frame nắm đấm lên đỉnh (frame ~22 của clip 46 frame).
 - Giữ fx trong canvas; cú đấm đã sát mép trên khung nên dải sáng trên đầu mờ dần chứ không dừng gắt.
 
-**Trạng thái**: 10 phiên bản Python của levelup (`fx/levelup_variants.py`, v01-v10) đang chờ user chọn; phiên bản chốt và tham số sẽ ghi bổ sung ở đây. Bản A1 (`fx/levelup.json` qua `fx_layers`) bị loại vì thô.
+**Trạng thái**: 10 phiên bản Python của levelup (`fx/levelup_variants.py`, v01-v10). User chọn **v03** (mục bên dưới); v02 và v04 không đẹp (bỏ), các bản còn lại "cực đẹp" và giữ làm kho ý tưởng. Bản A1 (`fx/levelup.json` qua `fx_layers`) bị loại vì thô. **Công thức làm từng bước, bộ công cụ và các lỗi đã gặp: `docs/python-fx-recipe.md`.**
+
+## Levelup fx v03, "hào quang xung nhịp" (chốt 2026-10-20)
+
+**Chọn**: user xem 10 phiên bản Python và chọn v03 là đẹp nhất cho levelup của holy_commander ("cực kỳ đẹp, đẹp nhất"). Chi phí fx: 0 USD.
+
+**Ý tưởng**: ba đợt hào quang ánh sáng lan ra từ chính hình người (không phải hình hộp hay vòng chồng lên), lúc nắm đấm lên trời; ánh sáng viền ngay mép thân, chớp trắng ở nắm đấm, quầng sáng ấm dưới chân. Hợp ý user: "ánh sáng chớp quanh người theo nhịp vung tay".
+
+**Thân (clip A)**: `raw/levelup_side_extra_v2_t01.mp4`, 3 s, tách 15 fps = 46 hình; đứng, hạ người, đấm lên trời (đỉnh ở **frame 22**), giữ pose. Ảnh đầu master_v07, ảnh cuối `pose_levelup_v02`.
+
+**Số đo dùng để đặt fx** (trong khung clip 832x480): chân `(370, 453)`, chiều cao thân `425 px`, nắm đấm ở đỉnh lệch `-0.08` chiều cao thân so với chân và cao `~0.93-0.95`. Canvas vẽ 700x720, chân tại `(350, 630)`.
+
+**Các lớp, theo thứ tự** (hàm `V03` trong `fx/levelup_variants.py`; `e = env(i, 18, 24, 32, 41)`: hiện từ frame 18, đầy ở 24, giữ tới 32, tắt ở 41):
+| Lớp | Vị trí so với thân | Màu | Chế độ | Độ đục | Chi tiết |
+|---|---|---|---|---|---|
+| Quầng sáng dưới chân `ground(e, 0.9, 0.55)` | sau | vàng (255,201,60) | screen | 0.85 x 0.9 x e | elip rộng 0.55 chiều cao thân mỗi bên, dẹt 0.1 |
+| Đợt 1 hào quang | sau | vàng | screen | 0.85 x (1-t)^1.2 | bắt đầu frame 19, dài 13 frame; `aura(grow = 4 + 56 t^0.7, blur = 8 + 12 t)` |
+| Đợt 2 hào quang | sau | kem (255,244,200) | screen | như trên | bắt đầu frame 23 |
+| Đợt 3 hào quang | sau | hổ phách (255,158,38) | screen | như trên | bắt đầu frame 27 |
+| Hào quang nền `aura(8, 12)` | sau | vàng | screen | 0.45 x e | luôn có khi `e > 0` |
+| Viền sáng trong thân `rimlight(sil, 1.0)` | trước | kem | screen | 0.8 x e | mép trong của hình bóng thân |
+| Chớp ở nắm đấm `flash_fist(t = 22, k = 0.7)` | trước | trắng (255,255,240) | screen | 0.7 x (1 - abs(i-22)/4) | bán kính 0.42 chiều cao thân tại nắm đấm; tắt trong ±4 frame |
+
+`t` của mỗi đợt = `ramp(i, s, s+13)`; đợt chỉ vẽ khi `0 < t < 1`. `aura()`: blur hình bóng thân sigma `grow*0.75`, nhân 2.6 rồi cắt 0..1, blur thêm `blur` (xem lý do trong `docs/python-fx-recipe.md` mục 5: bản đầu nở bằng bộ lọc vuông ra hào quang vuông).
+
+**Lệnh dựng lại**:
+```
+python out/heroes/holy_commander/fx/levelup_variants.py out/heroes/holy_commander/raw/levelup_side_extra_v2_t01.mp4 <thư_mục_ra> v03
+```
+Ra frame PNG đủ 46 hình, `v03.mp4` xem thử, `v03_peak.png`.
+
+**Việc còn lại trước khi export** (chưa làm): quyết định cách xuất lớp trong suốt (screen trên nền tối khác nền sáng; kiểm tra trên nền sáng), kiểm tra fx vừa canvas 176x140, rồi export `levelup_side` (body 111@2x, pivot (0.5, 0.88)). Không cắt frame.
+
+**Quy tắc cho fx của hero này về sau** (từ các góp ý của user): lớp bao quanh thân bằng màu và độ trong suốt, mép mềm; lớp rộng, dễ thấy, không chi tiết nhỏ làm rối; không viền nét, không vector phẳng chồng lên thân. Python trước; gen video + cắt frame chỉ khi fx cần chi tiết mà Python không làm được.

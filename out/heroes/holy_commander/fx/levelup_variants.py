@@ -1,4 +1,5 @@
-"""Ten Python-drawn fx variants for levelup (free, no model). Every variant is drawn over the same clean body clip.
+"""FINAL for holy_commander levelup: v03 (user choice 2026-10-20). Recipe: docs/python-fx-recipe.md.
+Ten Python-drawn fx variants for levelup (free, no model). Every variant is drawn over the same clean body clip.
 Usage: python levelup_variants.py <body_clip.mp4> <out_dir> [variant ...]
 Colour + opacity layers only (soft, wide); no outlines, no small busy particles unless the variant is about them."""
 import sys, os, subprocess, glob, math, random, tempfile
