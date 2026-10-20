@@ -1,0 +1,98 @@
+{
+  "hero": "holy_commander",
+  "asset": "out/heroes/holy_commander",
+  "fps": 15,
+  "states": [
+    {
+      "id": "attack",
+      "label": "Attack (t04)",
+      "sheet": "attack_side",
+      "clip": "raw/attack_side_attack_t04.mp4",
+      "loop": false,
+      "hasHit": true,
+      "approved": {
+        "stride": 2,
+        "hit": 18
+      },
+      "note": "đã chốt: bớt 1/2 frame (46 -> 23), hit ở hình 10 của bản đã bớt (hình 18 của clip)",
+      "bodyPx": 268
+    },
+    {
+      "id": "death",
+      "label": "Death (t01)",
+      "sheet": "death_side",
+      "clip": "raw/death_side_death_t01.mp4",
+      "loop": false,
+      "hasHit": false,
+      "approved": {
+        "stride": 2
+      },
+      "note": "đã chốt: bớt 1/2 frame (78 -> 39)",
+      "bodyPx": 268
+    },
+    {
+      "id": "charge",
+      "label": "Skill 1: Xung phong (v4)",
+      "sheet": "skill_charge_side",
+      "clip": "raw/skill_side_skill_charge_v4_t01.mp4",
+      "loop": false,
+      "hasHit": false,
+      "approved": {
+        "stride": 1
+      },
+      "note": "đã chốt: giữ đủ 67 hình",
+      "bodyPx": 268
+    },
+    {
+      "id": "levelup",
+      "label": "Levelup (thân clip A)",
+      "sheet": "levelup_side",
+      "clip": "raw/levelup_side_extra_v2_t01.mp4",
+      "loop": false,
+      "hasHit": true,
+      "approved": {
+        "stride": 1,
+        "hit": 22
+      },
+      "note": "thân sạch; fx Python v03 vẽ lên sau, đỉnh cú đấm ở hình 22"
+    },
+    {
+      "id": "banner",
+      "label": "Skill 2: Cờ hiệu thánh (bản chốt)",
+      "sheet": "skill_holy_banner_side",
+      "clip": "raw/skill_side_skill_holy_banner_v4_t02.mp4",
+      "loop": false,
+      "hasHit": true,
+      "approved": {
+        "stride": 1,
+        "hit": 32
+      },
+      "note": "kiếm găm xuống ở hình 32"
+    },
+    {
+      "id": "slash",
+      "label": "Skill 3: Chém sáng (thân sạch)",
+      "sheet": "skill_radiant_slash_side",
+      "clip": "raw/skill_side_skill_radiant_slash_v2_t01.mp4",
+      "loop": false,
+      "hasHit": true,
+      "approved": {
+        "stride": 1,
+        "hit": 43
+      },
+      "note": "duỗi hết ở hình 43; tia Python vẽ lên sau"
+    },
+    {
+      "id": "respawn",
+      "label": "Respawn (rise t01, chờ duyệt)",
+      "sheet": "respawn_side",
+      "clip": "raw/respawn_side_rise_t01.mp4",
+      "loop": false,
+      "hasHit": false,
+      "approved": {
+        "stride": 1
+      },
+      "note": "clip chờ user duyệt"
+    }
+  ]
+}

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frame Tuner</title>
+<style>
+/* layout: header, state list on the left, preview + controls + frame strip on the right; one file serves the local tool (saves into the repo) and the artifact (saves in the page) */
+:root{--bg:#16181d;--panel:#1e2128;--panel2:#252933;--line:#323744;--fg:#e4e6eb;--mute:#8b91a0;--accent:#f0b429;--ok:#52b788;--bad:#e5534b;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:13px/1.45 system-ui,sans-serif;padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{font-size:15px;margin:0;color:var(--accent)}
+.badge{font:11px ui-monospace,monospace;padding:2px 8px;border-radius:4px;background:var(--panel2);color:var(--mute)}
+.badge.local{color:var(--ok)}
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 46px)}
+nav{border-right:1px solid var(--line);background:var(--panel);padding:8px}
+nav button{display:block;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:6px;color:var(--fg);padding:8px 10px;cursor:pointer;font:inherit}
+nav button:hover{background:var(--panel2)}
+nav button.on{border-color:var(--accent);background:var(--panel2)}
+nav small{display:block;color:var(--mute)}
+nav .dirty{color:var(--accent)}
+main{padding:14px 16px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;min-width:0}
+.stage h3{margin:0;padding:6px 10px;font-size:12px;color:var(--mute);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px}
+.stage canvas{display:block;width:100%;height:300px;background-color:#0c0d10;background-image:linear-gradient(45deg,#1a1c21 25%,transparent 25%,transparent 75%,#1a1c21 75%),linear-gradient(45deg,#1a1c21 25%,transparent 25%,transparent 75%,#1a1c21 75%);background-size:16px 16px;background-position:0 0,8px 8px}
+.stage .stat{padding:6px 10px;font:12px ui-monospace,monospace;color:var(--mute)}
+button.b,select,input[type=number]{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font:inherit}
+button.b{cursor:pointer}
+button.b:hover{border-color:var(--accent)}
+button.b.primary{background:var(--accent);color:#1b1500;border-color:var(--accent);font-weight:600}
+input[type=number]{width:70px}
+label{color:var(--mute)}
+.strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.th{background:var(--panel);border:2px solid var(--line);border-radius:6px;overflow:hidden;font:11px ui-monospace,monospace;user-select:none}
+.th.keep{border-color:var(--ok)}
+.th.play{outline:2px solid var(--accent)}
+.th.hit{border-color:var(--accent)}
+.th .img{width:100%;aspect-ratio:var(--ar);background-color:#0c0d10;background-repeat:no-repeat;cursor:pointer}
+.th:not(.keep) .img{opacity:.28;filter:grayscale(1)}
+.th .cap{display:flex;justify-content:space-between;align-items:center;padding:2px 5px;color:var(--mute)}
+.th .cap button{background:none;border:none;color:var(--mute);cursor:pointer;padding:0 2px;font:inherit}
+.th.hit .cap .h{color:var(--accent)}
+.th .ms{width:100%;border:none;border-top:1px solid var(--line);border-radius:0;background:var(--panel2);text-align:center;padding:2px}
+.th:not(.keep) .ms{visibility:hidden}
+textarea{width:100%;height:150px;background:#0c0d10;color:var(--fg);border:1px solid var(--line);border-radius:6px;font:11px ui-monospace,monospace;padding:8px}
+.toast{position:fixed;right:16px;bottom:16px;background:var(--panel2);border:1px solid var(--accent);padding:8px 14px;border-radius:6px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+.hint{color:var(--mute);font-size:12px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:820px){.layout{grid-template-columns:1fr}nav{border-right:none;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:4px}nav button{width:auto}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Frame Tuner</h1>
+  <span id="hero" class="badge"></span>
+  <span id="mode" class="badge">đang kiểm tra...</span>
+  <span class="hint">Bật/tắt từng hình, chỉnh thời gian mỗi hình, đặt hình va chạm, xem bản gốc cạnh bản sửa, lưu công thức.</span>
+</header>
+<div class="layout">
+  <nav id="nav" aria-label="Danh sách state"></nav>
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const el = (t, a = {}, ...k) => { const e = document.createElement(t); for (const [n, v] of Object.entries(a)) { if (n === 'on') for (const [ev, fn] of Object.entries(v)) e.addEventListener(ev, fn); else if (n === 'text') e.textContent = v; else e.setAttribute(n, v); } for (const c of k) e.append(c); return e; };
+const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 2600); };
+
+let DATA, MODE = 'artifact', STORE = {}, CUR = null, dirty = {};
+const sheets = {}, edits = {};          // sheets: id -> Image; edits: id -> {keep:Set, ms:{idx:ms}, hit:idx|null}
+let playing = true, playT = 0, rafId = 0, lastTs = 0, step = null;
+
+const base = (s) => Math.round(1000 / s.fps);
+function defaults(s) { const d = s.default; return { keep: new Set(d.keep), ms: Object.fromEntries(d.keep.map((i, k) => [i, d.durationsMs[k]])), hit: d.hit == null ? null : d.keep[d.hit] }; }
+function fromRecipe(s, r) { if (!r || !r.keep || !r.keep.length) return defaults(s); return { keep: new Set(r.keep), ms: Object.fromEntries(r.keep.map((i, k) => [i, r.durationsMs[k]])), hit: r.hit == null ? null : r.keep[r.hit] }; }
+function toRecipe(s) {
+  const e = edits[s.id], keep = [...e.keep].sort((a, b) => a - b);
+  return { clip: s.clip, fps: s.fps, loop: s.loop, keep, durationsMs: keep.map(i => e.ms[i] ?? base(s)), hit: e.hit == null ? null : keep.indexOf(e.hit), savedAt: new Date().toISOString() };
+}
+const seq = (s) => { const e = edits[s.id]; return [...e.keep].sort((a, b) => a - b); };
+const totalMs = (s) => seq(s).reduce((t, i) => t + (edits[s.id].ms[i] ?? base(s)), 0);
+
+/* ---------- storage: local server (repo) or the artifact's db / localStorage ---------- */
+async function detectMode() {
+  try { const r = await fetch('api/ping', { cache: 'no-store' }); const j = await r.json(); if (j && j.ok) { MODE = 'local'; return j; } } catch (e) {}
+  return null;
+}
+async function loadRecipes() {
+  if (MODE === 'local') { try { const j = await (await fetch('api/recipes', { cache: 'no-store' })).json(); return j.states || {}; } catch (e) { return {}; } }
+  const out = {};
+  try { const raw = localStorage.getItem('frame_tuner_recipes_' + DATA.hero); if (raw) Object.assign(out, JSON.parse(raw)); } catch (e) {}
+  try {
+    const db = window.claude && await claude.use('db');
+    if (db) for (const s of DATA.states) { const snap = await db.doc('recipes/' + s.id).get(); if (snap.exists) { const j = snap.data().json; if (j) out[s.id] = JSON.parse(j); } }
+  } catch (e) { console.warn('db read', e); }
+  return out;
+}
+async function saveRecipe(s) {
+  const rec = toRecipe(s);
+  if (MODE === 'local') {
+    const r = await fetch('api/recipe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ state: s.id, recipe: rec }) });
+    const j = await r.json(); if (!j.ok) throw new Error(j.error || 'lỗi lưu'); STORE[s.id] = rec; return 'Đã lưu vào ' + j.file;
+  }
+  STORE[s.id] = rec; let where = 'trình duyệt này';
+  try { localStorage.setItem('frame_tuner_recipes_' + DATA.hero, JSON.stringify(STORE)); } catch (e) {}
+  try { const db = window.claude && await claude.use('db'); if (db) { await db.doc('recipes/' + s.id).set({ json: JSON.stringify(rec), savedAt: rec.savedAt }); where = 'trang (db), Claude đọc được'; } } catch (e) { console.warn('db write', e); }
+  return 'Đã lưu: ' + where;
+}
+const allRecipeJson = () => JSON.stringify({ version: 1, hero: DATA.hero, states: Object.fromEntries(DATA.states.map(s => [s.id, edits[s.id] ? toRecipe(s) : STORE[s.id]]).filter(x => x[1])) }, null, 1);
+
+/* ---------- UI ---------- */
+function buildNav() {
+  const nav = $('#nav'); nav.replaceChildren();
+  for (const s of DATA.states) {
+    const b = el('button', { type: 'button', 'data-id': s.id, on: { click: () => select(s.id) } }, s.label, el('small', { text: '' }));
+    nav.append(b);
+  }
+  refreshNav();
+}
+function refreshNav() {
+  for (const b of $('#nav').children) {
+    const s = DATA.states.find(x => x.id === b.dataset.id), e = edits[s.id]; if (!e) continue;
+    b.classList.toggle('on', s.id === CUR);
+    const sm = b.querySelector('small'); sm.replaceChildren();
+    sm.append(`${e.keep.size}/${s.n} hình · ${(totalMs(s) / 1000).toFixed(2)} s`);
+    if (dirty[s.id]) sm.append(el('span', { class: 'dirty', text: ' · chưa lưu' })); else if (STORE[s.id]) sm.append(' · đã lưu');
+  }
+}
+function thumbStyle(s, i) {      // percentages, so the thumbnail shows exactly one cell whatever width the grid gives it
+  const rows = Math.ceil(s.n / s.cols), col = i % s.cols, row = Math.floor(i / s.cols);
+  const px = s.cols > 1 ? col / (s.cols - 1) * 100 : 0, py = rows > 1 ? row / (rows - 1) * 100 : 0;
+  return `background-image:url(${s.sheet});background-size:${s.cols * 100}% ${rows * 100}%;background-position:${px}% ${py}%`;
+}
+function select(id) { CUR = id; playT = 0; lastTs = 0; render(); }
+
+function render() {
+  const s = DATA.states.find(x => x.id === CUR), e = edits[s.id], main = $('#main'); main.replaceChildren();
+  main.append(el('div', { class: 'row' }, el('strong', { text: s.label }), el('span', { class: 'hint', text: s.note + ' · clip ' + s.clip })));
+  const cvO = el('canvas', { width: s.cellW, height: s.cellH }), cvE = el('canvas', { width: s.cellW, height: s.cellH });
+  const stO = el('div', { class: 'stat', id: 'statO' }), stE = el('div', { class: 'stat', id: 'statE' });
+  main.append(el('div', { class: 'stages' },
+    el('div', { class: 'stage' }, el('h3', {}, el('span', { text: 'Gốc: đủ ' + s.n + ' hình' }), el('span', { text: s.fps + ' fps' })), cvO, stO),
+    el('div', { class: 'stage' }, el('h3', {}, el('span', { text: 'Bản sửa' }), el('span', { id: 'curFrame', text: '' })), cvE, stE)));
+  // transport
+  const speed = el('select', { id: 'speed' }, ...[['0.25', '0.25x'], ['0.5', '0.5x'], ['1', '1x'], ['2', '2x']].map(([v, t]) => el('option', { value: v, text: t })));
+  speed.value = '1';
+  main.append(el('div', { class: 'row' },
+    el('button', { class: 'b', type: 'button', id: 'pp', on: { click: () => { playing = !playing; $('#pp').textContent = playing ? 'Dừng' : 'Chạy'; } } }, playing ? 'Dừng' : 'Chạy'),
+    el('button', { class: 'b', type: 'button', on: { click: () => stepBy(-1) } }, '< hình trước'),
+    el('button', { class: 'b', type: 'button', on: { click: () => stepBy(1) } }, 'hình sau >'),
+    el('label', {}, 'Tốc độ xem ', speed),
+    el('span', { class: 'hint', text: 'Phím: Space chạy/dừng, ← → đi từng hình' })));
+  // quick actions
+  const nIn = el('input', { type: 'number', id: 'nIn', min: '1', max: '10', value: '2' });
+  const fpsIn = el('input', { type: 'number', id: 'fpsIn', min: '1', max: '60', value: String(s.fps) });
+  const msIn = el('input', { type: 'number', id: 'msIn', min: '10', max: '2000', value: String(base(s)) });
+  const fromIn = el('input', { type: 'number', id: 'fromIn', min: '0', max: String(s.n - 1), value: '0' }), toIn = el('input', { type: 'number', id: 'toIn', min: '0', max: String(s.n - 1), value: String(s.n - 1) });
+  const act = (fn) => () => { fn(); markDirty(); renderStrip(); updateStats(); };
+  main.append(el('div', { class: 'row' },
+    el('button', { class: 'b', type: 'button', on: { click: act(() => { e.keep = new Set(Array.from({ length: s.n }, (_, i) => i)); resetMs(s); }) } }, 'Giữ tất cả'),
+    el('button', { class: 'b', type: 'button', on: { click: act(() => { Object.assign(e, defaults(s)); }) } }, 'Về bản đã chốt'),
+    el('label', {}, 'Giữ 1 trong ', nIn, el('button', { class: 'b', type: 'button', on: { click: act(() => { const n = Math.max(1, +nIn.value | 0); e.keep = new Set(Array.from({ length: s.n }, (_, i) => i).filter(i => i % n === 0)); resetMs(s); }) } }, 'Áp dụng')),
+    el('label', {}, 'Cắt: giữ hình ', fromIn, ' đến ', toIn, el('button', { class: 'b', type: 'button', on: { click: act(() => { const a = +fromIn.value, b = +toIn.value; e.keep = new Set([...e.keep].filter(i => i >= a && i <= b)); }) } }, 'Áp dụng')),
+    el('label', {}, 'Thời gian đều ', msIn, ' ms', el('button', { class: 'b', type: 'button', on: { click: act(() => { const v = Math.max(10, +msIn.value | 0); for (const i of e.keep) e.ms[i] = v; }) } }, 'Áp dụng')),
+    el('label', {}, 'hoặc ', fpsIn, ' fps', el('button', { class: 'b', type: 'button', on: { click: act(() => { const v = Math.round(1000 / Math.max(1, +fpsIn.value)); for (const i of e.keep) e.ms[i] = v; }) } }, 'Áp dụng'))));
+  // save
+  const ta = el('textarea', { id: 'json', readonly: '', 'aria-label': 'Công thức JSON' });
+  const saveRow = el('div', { class: 'row' },
+    el('button', { class: 'b primary', type: 'button', on: { click: async () => { try { const m = await saveRecipe(s); dirty[s.id] = false; refreshNav(); toast(m); showJson(); } catch (err) { toast('Lỗi: ' + err.message); } } } }, 'Lưu công thức'),
+    el('button', { class: 'b', type: 'button', on: { click: async () => { try { for (const x of DATA.states) if (dirty[x.id]) { await saveRecipe(x); dirty[x.id] = false; } refreshNav(); toast('Đã lưu tất cả state đã sửa'); showJson(); } catch (err) { toast('Lỗi: ' + err.message); } } } }, 'Lưu tất cả'));
+  if (MODE !== 'local') {
+    saveRow.append(el('button', { class: 'b', type: 'button', on: { click: async () => { const txt = allRecipeJson(); try { const d = window.claude && await claude.use('downloads'); if (!d) throw new Error('unavailable'); await d.save({ filename: 'export_recipe.json', data: txt }); } catch (err) { try { await navigator.clipboard.writeText(txt); toast('Không tải được, đã sao chép JSON'); } catch (e2) { $('#json').select(); toast('Hãy copy JSON ở ô bên dưới'); } } } } }, 'Tải JSON'));
+    saveRow.append(el('button', { class: 'b', type: 'button', on: { click: async () => { try { await navigator.clipboard.writeText(allRecipeJson()); toast('Đã sao chép JSON'); } catch (err) { $('#json').select(); toast('Hãy copy JSON ở ô bên dưới'); } } } }, 'Sao chép JSON'));
+  }
+  main.append(saveRow);
+  main.append(el('div', { class: 'hint', text: 'Viền xanh = hình được giữ, mờ = bỏ. Click hình để bật/tắt (Shift+click: cả đoạn). Ô số dưới hình = ms hình đó (giữ lâu hơn = chậm lại). "H" = hình va chạm.' }));
+  main.append(el('div', { class: 'strip', id: 'strip' }));
+  main.append(el('div', { class: 'hint', text: 'Công thức (JSON) của tất cả state:' }), ta);
+  renderStrip(); updateStats(); showJson(); refreshNav();
+}
+function resetMs(s) { const e = edits[s.id]; e.ms = Object.fromEntries([...e.keep].map(i => [i, base(s)])); if (e.hit != null && !e.keep.has(e.hit)) e.hit = null; }
+function markDirty() { dirty[CUR] = true; refreshNav(); showJson(); }
+function showJson() { const t = $('#json'); if (t) t.value = allRecipeJson(); }
+let lastClick = null;
+function renderStrip() {
+  const s = DATA.states.find(x => x.id === CUR), e = edits[s.id], strip = $('#strip'); strip.replaceChildren();
+  const W = 96, ar = s.cellW / s.cellH;
+  for (let i = 0; i < s.n; i++) {
+    const keep = e.keep.has(i);
+    const img = el('div', { class: 'img', style: `--ar:${ar};${thumbStyle(s, i)}`, title: 'Click: bật/tắt hình ' + i, on: { click: (ev) => {
+      if (ev.shiftKey && lastClick != null) { const a = Math.min(lastClick, i), b = Math.max(lastClick, i), on = !e.keep.has(i); for (let k = a; k <= b; k++) { if (on) { e.keep.add(k); e.ms[k] ??= base(s); } else e.keep.delete(k); } }
+      else { if (e.keep.has(i)) e.keep.delete(i); else { e.keep.add(i); e.ms[i] ??= base(s); } }
+      if (e.hit != null && !e.keep.has(e.hit)) e.hit = null; lastClick = i; markDirty(); renderStrip(); updateStats(); } } });
+    const hBtn = s.hasHit ? el('button', { type: 'button', class: 'h', title: 'Đặt hình va chạm', on: { click: () => { if (!e.keep.has(i)) { e.keep.add(i); e.ms[i] ??= base(s); } e.hit = e.hit === i ? null : i; markDirty(); renderStrip(); updateStats(); } } }, 'H') : el('span');
+    const ms = el('input', { type: 'number', class: 'ms', min: '10', max: '3000', value: String(e.ms[i] ?? base(s)), 'aria-label': 'ms hình ' + i, on: { change: (ev) => { e.ms[i] = Math.max(10, +ev.target.value | 0); markDirty(); updateStats(); } } });
+    strip.append(el('div', { class: 'th' + (keep ? ' keep' : '') + (e.hit === i ? ' hit' : ''), 'data-i': String(i) }, img, el('div', { class: 'cap' }, el('span', { text: '#' + i }), hBtn), ms));
+  }
+}
+function updateStats() {
+  const s = DATA.states.find(x => x.id === CUR), e = edits[s.id]; if (!$('#statO')) return;
+  $('#statO').textContent = `${s.n} hình · ${(s.n / s.fps).toFixed(2)} s`;
+  $('#statE').textContent = `${e.keep.size} hình · ${(totalMs(s) / 1000).toFixed(2)} s · nhanh x${(s.n / s.fps / Math.max(0.001, totalMs(s) / 1000)).toFixed(2)}` + (e.hit != null ? ` · va chạm: hình ${e.hit}` : '');
+  refreshNav();
+}
+function stepBy(d) { playing = false; const b = $('#pp'); if (b) b.textContent = 'Chạy'; const s = DATA.states.find(x => x.id === CUR), q = seq(s); if (!q.length) return; step = ((step ?? 0) + d + q.length) % q.length; draw(s, q[step], null); }
+
+/* ---------- playback ---------- */
+function drawCell(cv, s, i) {
+  const ctx = cv.getContext('2d'), im = sheets[s.id]; ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.drawImage(im, (i % s.cols) * s.cellW, Math.floor(i / s.cols) * s.cellH, s.cellW, s.cellH, 0, 0, s.cellW, s.cellH);
+}
+function draw(s, iE, iO) {
+  const cvs = document.querySelectorAll('.stage canvas'); if (cvs.length < 2) return;
+  if (iO != null) drawCell(cvs[0], s, iO);
+  drawCell(cvs[1], s, iE);
+  const cf = $('#curFrame'); if (cf) cf.textContent = 'hình ' + iE;
+  document.querySelectorAll('.th.play').forEach(n => n.classList.remove('play'));
+  const t = document.querySelector(`.th[data-i="${iE}"]`); if (t) t.classList.add('play');
+}
+function tick(ts) {
+  rafId = requestAnimationFrame(tick);
+  const s = DATA.states.find(x => x.id === CUR); if (!s || !sheets[s.id] || !$('#statO')) return;
+  if (!lastTs) lastTs = ts; const dt = (ts - lastTs) * +($('#speed')?.value || 1); lastTs = ts;
+  if (!playing) return; playT += dt;
+  const e = edits[s.id], q = seq(s); if (!q.length) return;
+  const per = q.map(i => e.ms[i] ?? base(s)), tot = per.reduce((a, b) => a + b, 0) + 500;      // 0.5 s rest on the last frame before looping
+  const tt = playT % tot; let acc = 0, k = q.length - 1; for (let j = 0; j < q.length; j++) { if (tt < acc + per[j]) { k = j; break; } acc += per[j]; }
+  step = k;
+  const totO = s.n * base(s) + 500, to = playT % totO, iO = Math.min(s.n - 1, Math.floor(to / base(s)));
+  draw(s, q[k], iO);
+}
+document.addEventListener('keydown', (ev) => {
+  if (/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
+  if (ev.code === 'Space') { ev.preventDefault(); $('#pp')?.click(); }
+  else if (ev.code === 'ArrowLeft') stepBy(-1); else if (ev.code === 'ArrowRight') stepBy(1);
+});
+
+/* ---------- boot ---------- */
+async function boot() {
+  const info = await detectMode();
+  const m = $('#mode'); m.textContent = MODE === 'local' ? 'Chạy cục bộ: lưu thẳng vào repo' : 'Bản artifact: lưu trong trang'; m.classList.toggle('local', MODE === 'local');
+  DATA = await (await fetch('data/states.json', { cache: 'no-store' })).json();
+  $('#hero').textContent = DATA.hero;
+  STORE = await loadRecipes();
+  await Promise.all(DATA.states.map(s => new Promise((res, rej) => { const im = new Image(); im.onload = res; im.onerror = () => rej(new Error('không tải được ' + s.sheet)); im.src = s.sheet; sheets[s.id] = im; })));
+  for (const s of DATA.states) edits[s.id] = fromRecipe(s, STORE[s.id]);
+  buildNav(); select(DATA.states[0].id); rafId = requestAnimationFrame(tick);
+}
+boot().catch((err) => { document.body.append(el('pre', { text: 'Lỗi: ' + err.message + '\nNếu mở trực tiếp file index.html thì trình duyệt chặn tải dữ liệu: hãy chạy frame_tuner.bat.' })); });
+</script>
+</body>
+</html>

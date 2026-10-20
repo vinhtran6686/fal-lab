@@ -92,3 +92,8 @@ Take chốt: `raw/skill_side_skill_holy_banner_v4_t02` (model vẽ cả ripple).
 
 ### Cập nhật: skill radiant_slash đã chốt (2026-10-20)
 Bản chốt: thân sạch `raw/skill_side_skill_radiant_slash_v2_t01` + tia Python `fx/radiant_slash_beam.py`. Hai skill (banner, slash) đã chốt, levelup chốt (thân + fx v03), respawn: pose chốt, clip `rise` t01 chờ duyệt. Chưa export gì, không cắt frame, chưa chạy gate.
+
+### Cập nhật: Frame Tuner (2026-10-20)
+`tools/frame_tuner/`: tool chỉnh frame (bật/tắt, thời gian mỗi hình, hình va chạm), chạy cục bộ bằng `frame_tuner.bat` (lưu thẳng vào `export_recipe.json`)
+hoặc bản artifact (https://claude.ai/artifact/Muk4MBy5XYCwm8KneNSRKU, lưu trong db của trang). `apply_recipe.py` áp dụng công thức vào export; đã kiểm tái lập đúng
+attack, death, charge. Xem `tools/frame_tuner/README.md`. Chưa export gì theo công thức mới.

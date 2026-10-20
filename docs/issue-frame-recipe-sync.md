@@ -37,3 +37,11 @@ Mã: `tools/kr_compare/export_frames.py` (đọc frame từ `tools/kr_compare/sp
 
 - `docs/handoff-holy-commander-2.md` mục 0 ("dựng lại set từ clip trong raw/, route supplied") và 3B.
 - `out/heroes/holy_commander/history.md` (các dòng export ngày 2026-10-20).
+
+## Cập nhật 2026-10-20: đã có công cụ (tools/frame_tuner)
+
+- Đã có `export_recipe.json` (`out/heroes/holy_commander/`) do **Frame Tuner** ghi (`tools/frame_tuner/`), và `tools/frame_tuner/apply_recipe.py` đọc recipe,
+  dựng set tạm từ clip trong `raw/` rồi export bằng `video_to_sheet.py`. Mục 1 và 2 ở trên (recipe + script một lệnh) đã làm cho holy_commander.
+- Đã kiểm mục 5: chạy lại recipe mặc định (đã chốt) cho attack, death, charge ra frame **trùng từng pixel** với bản đã export (23/23, 39/39, 67/67), cùng `hit_frame` và `body_rescale`.
+- Còn mở: (3) `build_manifest.py` chưa đọc recipe (còn `decimate` riêng); (4) chưa quyết ghi vào `SKILL.md`; hash đầu ra chưa ghi trong recipe; chưa áp dụng cho run/idle.
+- Thang tỉ lệ: attack/death/charge dùng cố định `120/268` (khớp bản đã duyệt); clip mới đo theo chiều cao thân hình 0.
