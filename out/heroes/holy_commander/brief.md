@@ -83,3 +83,36 @@ master_v07 approved by user ("v07 đẹp nhất, chốt"). `{design}` and `{idle
 - User xem và duyệt: "đẹp, ổn".
 
 **Lưu ý**: kiếm trong pose ngắn hơn master; clip không bị "kiếm dài ra" đáng kể nhưng nếu thấy thì xử lý ở bước export.
+
+## FX policy: vẽ bằng Python trước, gen video + cắt frame chỉ khi cần (chốt 2026-10-20)
+
+**Quy tắc (user):** hiệu ứng (fx) của hero làm bằng **Python tự vẽ chồng lên clip thân sạch** là mặc định vì không tốn phí. Chỉ khi cần hiệu ứng phức tạp, chi tiết hơn mức Python vẽ được thì mới dùng gen video (trả phí) + cắt frame.
+
+**Vì sao Python là mặc định**
+- Miễn phí và chạy lại vô hạn: chỉnh màu, độ đậm, nhịp, kích thước là sửa tham số, không phải quay lại clip. Clip gen video tốn ~0.045 USD/take (3 s, h3-max-turbo) và mỗi lần muốn đổi là một take mới.
+- Ổn định: clip thân luôn sạch (không vòng lớn, không zoom, gate `area`/`identity` không bị fx làm sai). Fx vẽ vào clip đã gây vòng lửa ở charge_v4 và zoom 2.4-2.9x ở ba skill cũ.
+- Tái lập được: nguồn là clip trong `raw/` + một script; không cần `.work`.
+- Khớp cách game tham chiếu làm: fx là lớp riêng, thân không đổi.
+
+**Khi nào mới gen video + cắt frame**
+- Fx có hình dạng phức tạp hoặc hoạ tiết thật sự (xoáy năng lượng có kết cấu, tia sét nhiều nhánh, lửa có hình, khói, chữ rune), mà Python tạo ra sẽ thô.
+- Fx phải ăn khớp với hình dạng/chuyển động của thân hoặc vũ khí từng frame (đường chém bám lưỡi kiếm, lửa bám lưỡi) mà một lớp đặt cố định không làm được.
+- Khi đó: quay một take có mô tả fx nhỏ, sát vũ khí hoặc nắm đấm, kèm câu "locked tripod", chấp nhận rủi ro model vẽ thêm vòng lớn; rồi cắt frame (bớt frame của take đã đạt, không quay lại). Báo giá và chờ user ok trước mỗi take.
+- Thứ tự thử: Python trước; chỉ khi user thấy chưa đủ chi tiết mới sang gen video.
+
+**Cách làm (Python)**
+1. Quay clip thân sạch: prompt không mời hiệu ứng nào, có câu "locked tripod" (clip A của levelup: `raw/levelup_side_extra_v2_t01`).
+2. Tách **toàn bộ** frame bằng `ffmpeg fps=15` và key nền bằng `sprite_pack.key_out()`. Không bỏ frame nào (lỗi đã gặp: script chỉ ghép `[:45]` trên 46 frame nên mất frame cuối).
+3. Vẽ fx **theo từng frame** bằng `fx/levelup_variants.py` (numpy + PIL), thứ tự lớp: lớp sau thân, thân, lớp trước thân.
+4. Ánh sáng dùng chế độ **screen** (màu sáng cộng lên nền), lớp bóng/đục dùng chế độ thường. Tất cả bằng màu + độ trong suốt.
+5. Export: neo chân vào pivot (0.5, 0.88), canvas 176x140, body 111@2x như các state khác; fx rộng hơn canvas thì cắt theo canvas hoặc xuất riêng như `fx_layers`.
+
+**Quy tắc thẩm mỹ rút ra (user + đối chiếu hero_malik)**
+- Fx là các **lớp bao quanh thân**: cột/vầng sáng trong suốt (thân nhìn xuyên qua), không phải vector phẳng đặt chồng lên nhân vật. Vòng, cột, bùng nổ phẳng từ `fx_layers` (bản A1) bị chê thô và xấu.
+- **Màu + độ trong suốt**, mép mềm (blur), không có viền nét đậm. Dùng gradient độ trong suốt: đậm ở chân, nhạt dần lên đầu.
+- **Lớp rộng, dễ thấy.** Các chi tiết nhỏ (6 lưỡi sáng bo tròn ở đáy cột, A2 bản đầu) làm rối và không đẹp: bỏ hoặc thay bằng lớp rộng.
+- Cấu trúc tham chiếu từ levelup của hero_malik: cột sáng bao thân (mọc từ chân lên), dải sáng cao trên đầu mờ dần lên trên, quầng sáng ấm dưới chân, viền sáng mảnh, rồi thân sạch giữ pose. Nhịp: hiện cùng lúc cú đấm lên đỉnh, đầy, mờ dần, kết thúc trước khi clip hết.
+- Nhịp ăn khớp động tác: chớp/bùng ở frame nắm đấm lên đỉnh (frame ~22 của clip 46 frame).
+- Giữ fx trong canvas; cú đấm đã sát mép trên khung nên dải sáng trên đầu mờ dần chứ không dừng gắt.
+
+**Trạng thái**: 10 phiên bản Python của levelup (`fx/levelup_variants.py`, v01-v10) đang chờ user chọn; phiên bản chốt và tham số sẽ ghi bổ sung ở đây. Bản A1 (`fx/levelup.json` qua `fx_layers`) bị loại vì thô.
