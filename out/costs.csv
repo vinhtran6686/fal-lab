@@ -48,3 +48,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-20 07:01:57,out/heroes/holy_commander/design/pose_respawn_v01.png,gpt-image-2,low,1024x1024,False,20.6,0.0141,True
 2026-10-20 07:01:57,out/heroes/holy_commander/design/pose_respawn_v02.png,gpt-image-2,low,1024x1024,False,20.6,0.0141,True
 2026-10-20 07:01:58,out/heroes/holy_commander/design/pose_respawn_v03.png,gpt-image-2,low,1024x1024,False,20.6,0.0141,True
+2026-10-20 07:17:56,clip.mp4,h3-max-turbo,video,480P 4s,False,2.6,0.0600,True
