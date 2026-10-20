@@ -1,0 +1,14 @@
+{"asset": "out/heroes/holy_commander", "skill": "levelup",
+ "canvas": [2.4, 2.2], "pivot": [0.5, 0.88], "fps": 15, "duration": 3.0,
+ "layers": [
+  {"id": "gather_ring", "type": "ring", "z": "back", "start": 0.95, "length": 0.4, "color": "#ffd23f",
+   "at": [0.0, 0.0], "radius": [0.5, 0.15], "width": 0.08},
+  {"id": "punch_pillar", "type": "pillar", "z": "back", "start": 1.4, "length": 0.5, "color": "#fff0a0",
+   "alpha": 0.6, "at": [0.0, 0.0], "width": 0.55, "height": 1.25},
+  {"id": "ground_ring", "type": "ring", "z": "back", "start": 1.4, "length": 0.6, "color": "#ffd23f",
+   "at": [0.0, 0.0], "radius": [0.15, 0.8], "width": 0.1},
+  {"id": "fist_burst", "type": "burst", "z": "front", "start": 1.4, "length": 0.35, "color": "#fff0a0",
+   "at": [-0.08, 0.95], "radius": 0.3, "spikes": 8},
+  {"id": "fist_sparks", "type": "particles", "z": "front", "start": 1.42, "length": 0.7, "color": "#ffd23f",
+   "at": [-0.08, 0.95], "count": 10, "speed": 1.1, "size": 0.045, "spread": 200}
+ ]}

@@ -41,7 +41,7 @@
 | attack_side | video-sprite | one-shot | ✅ exported | 23 hình (t04 bớt 1/2 frame), 1.53 s @15fps, hit frame 10, canvas 176x140, body rescale x1.094 |
 | death_side | video-sprite | one-shot | ✅ exported | 39 hình (t01 bớt 1/2 frame), 2.60 s @15fps, canvas 176x140 |
 | respawn_side | video-sprite | one-shot | ⏳ clip t01 quay xong, chờ user duyệt | `pose_respawn_v02` (quỳ xám) -> `master_v07`, 4.46 s raw (`raw/respawn_side_rise_t01`): xám -> hồi màu -> đứng lên. Chưa export 176x140, chưa fx_respawn. Bản đảo despawn cũ bị loại |
-| levelup_side | video-sprite | one-shot | ❌ thiết kế lại | thiết kế mới (user): hero đứng, đấm một tay lên trời như vừa chiến thắng/đạt thành tựu; ánh sáng chớp quanh người theo nhịp vung tay. Clip t01 cũ (giơ kiếm chào) không dùng |
+| levelup_side | video-sprite | one-shot | ⏳ 2 take, chờ user duyệt | `pose_levelup_v02` (đấm lên trời, tay kia trên báng kiếm). A: thân sạch `raw/levelup_side_extra_v2_t01` + `fx/levelup.json` (fx_layers); B: `..._t02`, chớp vàng nhỏ vẽ vào clip. 3 s, 46 hình, chưa export 176x140 |
 | skill_holy_banner_side | video-sprite | one-shot | ❌ thiết kế lại | t01 zoom 2.9x + tia sáng; pose cuối giơ nắm đấm đúng. Thiết kế lại hoàn toàn theo bài học charge_v4 (hiệu ứng nhỏ, sát vũ khí/nắm đấm, câu locked tripod); chờ user chốt ý tưởng |
 | skill_radiant_slash_side | video-sprite | one-shot | ❌ thiết kế lại | t01 zoom + vệt chém lớn, pose cuối đúng. Thiết kế lại hoàn toàn theo bài học charge_v4; chờ user chốt ý tưởng |
 | skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 67 hình, 4.47 s @15fps, giữ vòng lửa lớn frame ~46-72 theo quyết định user (user đồng ý đó là lỗi; lần sau dùng hiệu ứng vừa khung hơn, xem report §11); canvas 176x140 |

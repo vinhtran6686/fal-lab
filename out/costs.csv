@@ -49,3 +49,9 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-20 07:01:57,out/heroes/holy_commander/design/pose_respawn_v02.png,gpt-image-2,low,1024x1024,False,20.6,0.0141,True
 2026-10-20 07:01:58,out/heroes/holy_commander/design/pose_respawn_v03.png,gpt-image-2,low,1024x1024,False,20.6,0.0141,True
 2026-10-20 07:17:56,clip.mp4,h3-max-turbo,video,480P 4s,False,2.6,0.0600,True
+2026-10-20 07:30:57,out/heroes/holy_commander/design/pose_levelup_v01.png,gpt-image-2,low,1024x1024,False,22.4,0.0101,True
+2026-10-20 07:31:16,out/heroes/holy_commander/design/pose_levelup_v02.png,gpt-image-2,low,1024x1024,False,17.9,0.0101,True
+2026-10-20 07:31:47,out/heroes/holy_commander/design/pose_levelup_v01.png,gpt-image-2,low,1024x1024,False,18.1,0.0138,True
+2026-10-20 07:32:08,out/heroes/holy_commander/design/pose_levelup_v02.png,gpt-image-2,low,1024x1024,False,19.5,0.0138,True
+2026-10-20 07:32:29,clip.mp4,h3-max-turbo,video,480P 3s,False,2.7,0.0450,True
+2026-10-20 07:32:39,clip.mp4,h3-max-turbo,video,480P 3s,False,6.3,0.0450,True
