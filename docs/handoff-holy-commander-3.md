@@ -89,3 +89,6 @@ Xong thì đưa lên 1 artifact riêng (không đụng artifact compare) để m
 
 ### Cập nhật: skill holy_banner đã chốt (2026-10-20)
 Take chốt: `raw/skill_side_skill_holy_banner_v4_t02` (model vẽ cả ripple). Python (`fx/holy_banner_ripple.py`) là phương án thay thế. Bài học: mô tả hành động rõ ràng, từng bước, theo bộ phận cơ thể (xem `brief.md`, mục "Skill 2 holy_banner"). Còn lại: `radiant_slash`. Chưa export, không cắt frame.
+
+### Cập nhật: skill radiant_slash đã chốt (2026-10-20)
+Bản chốt: thân sạch `raw/skill_side_skill_radiant_slash_v2_t01` + tia Python `fx/radiant_slash_beam.py`. Hai skill (banner, slash) đã chốt, levelup chốt (thân + fx v03), respawn: pose chốt, clip `rise` t01 chờ duyệt. Chưa export gì, không cắt frame, chưa chạy gate.

@@ -175,3 +175,13 @@ kiếm chìm khoảng một nửa, khuỵu quỳ một gối, hai tay nắm ch�
 fx đúng khoảnh khắc. Công thức mô tả hành động đầy đủ (khoá hướng, tư thế đầu, các nhịp đánh số theo bộ phận cơ thể, tư thế cuối, câu thứ tự, điều cấm,
 một fx hẹp nếu có): `out/heroes/holy_commander/brief.md`, mục "Skill 2 holy_banner". Làm skill mới: **viết hành động thật cụ thể trước**, rồi mới quay và vẽ fx.
 Mã tham chiếu cho ripple dưới đất: `out/heroes/holy_commander/fx/holy_banner_ripple.py` (ripple elip trên mặt phẳng đất, nửa sau ở sau thân và nửa trước đè lên chân).
+
+## 11. Ví dụ thứ ba: tia sáng từ mũi kiếm (radiant_slash, 2026-10-20)
+
+Mã: `out/heroes/holy_commander/fx/radiant_slash_beam.py`; bảng lớp và tham số: `out/heroes/holy_commander/brief.md`, mục "Skill 3 radiant_slash".
+Điểm mới so với levelup và banner:
+- **Đo mũi vũ khí từng hình** (điểm phải nhất của hình bóng) để ánh sáng gom bám theo kiếm lúc kéo sát người; tới hình duỗi hết thì dùng điểm cố định đã đo (tránh nhiễu khi chân hay tay vào vùng đo).
+- **Tia sáng = ba lớp gaussian theo trục dọc** (lõi trắng sigma 7, thân vàng sigma 20, quầng hổ phách sigma 52), mờ dần theo khoảng cách, đầu tia chạy tới mép trong 4 hình, nhịp phồng nhẹ.
+- **Canvas mở rộng về phía tia bắn** (1500x600, khung clip lệch trái), để tia không bị cắt ở mép khung clip.
+- **Hào quang theo hình bóng gồm cả vũ khí** (cùng hàm `aura` đã sửa cho tròn), phía sau thân.
+- Bản Python đẹp hơn bản model vẽ tia (model thêm vòng không yêu cầu); nhưng với ripple mặt đất của banner, user lại chọn bản model. Thử cả hai cho mỗi skill, vì Python không tốn tiền.

@@ -335,3 +335,9 @@ Thiết kế respawn mới (mục 11.3) đã có ảnh đầu và take đầu. C
 
 Fx của levelup được làm bằng Python (0 USD) lên clip thân sạch; user duyệt 10 phiên bản và chọn v03. Quy trình đầy đủ: `docs/python-fx-recipe.md`;
 tham số v03: `out/heroes/holy_commander/brief.md`. Chưa export, chưa cắt frame, chưa chạy gate `qc.json` cho levelup.
+
+## 14. Kết quả cuối phiên (2026-10-20)
+- **Chốt:** pose_respawn_v02; levelup = thân clip A + fx Python v03; skill holy_banner = take do model vẽ ripple (`v4_t02`), bản Python là phương án thay thế; skill radiant_slash = thân `v2_t01` + tia Python. 
+- **Chờ duyệt:** clip respawn `rise` t01.
+- **Bài học:** mô tả hành động rõ ràng từng bước theo bộ phận cơ thể quyết định chất lượng (`brief.md`, mục "Skill 2 holy_banner"); fx Python miễn phí, mỗi skill nên thử cả bản model và bản Python (`docs/python-fx-recipe.md`).
+- **Chưa làm (theo ý user):** export, cắt frame, gate `qc.json`, sửa `SKILL.md`, trỏ `CLAUDE.md`.

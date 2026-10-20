@@ -43,7 +43,7 @@
 | respawn_side | video-sprite | one-shot | ⏳ clip t01 quay xong, chờ user duyệt | `pose_respawn_v02` (quỳ xám) -> `master_v07`, 4.46 s raw (`raw/respawn_side_rise_t01`): xám -> hồi màu -> đứng lên. Chưa export 176x140, chưa fx_respawn. Bản đảo despawn cũ bị loại |
 | levelup_side | video-sprite | one-shot | ⏳ thân + fx đã chốt, chưa export | thân: `raw/levelup_side_extra_v2_t01` (`pose_levelup_v02`, 3 s, 46 hình). **fx: v03 "hào quang xung nhịp"** vẽ bằng Python (`fx/levelup_variants.py`, 0 USD), user chọn 2026-10-20. Chưa export 176x140; xem mục Levelup fx v03 |
 | skill_holy_banner_side | video-sprite | one-shot | ✅ chốt (chưa export) | **Thiết kế mới "cắm kiếm quỳ gối"**: đứng idle, chân sau trượt lùi, nâng kiếm hai tay lên cao rồi găm mạnh xuống đất, khuỵu quỳ một gối, hai tay nắm chặt cán, gồng, giữ pose; sóng xung kích lan trên đất từ mũi kiếm. **Bản chốt: take do model vẽ cả ripple** `raw/skill_side_skill_holy_banner_v4_t02` (prompt: `.prompt.txt` cạnh nó). Thân sạch `v4_t01` + ripple Python (`fx/holy_banner_ripple.py`) cũng đẹp, giữ làm phương án thay thế. 4 s, 67 hình. Chưa export, chưa cắt frame |
-| skill_radiant_slash_side | video-sprite | one-shot | ⏳ 3 take, chờ user duyệt | **Thiết kế mới "tia thánh xuyên" (hướng A)**: rút kiếm đưa ngang ngực, kéo sát người, bước dài đâm thẳng, giữ pose, tia sáng ngang bắn từ mũi kiếm. `raw/skill_side_skill_radiant_slash_v2_t01` (thân), `_t02` (model vẽ tia), + Python `fx/radiant_slash_beam.py`. Mô tả hành động viết từng bước theo công thức của holy_banner. Chưa export |
+| skill_radiant_slash_side | video-sprite | one-shot | ✅ chốt (chưa export) | **"Tia thánh xuyên"**: rút kiếm đưa ngang ngực, kéo sát người, bước dài đâm thẳng, giữ pose. **Bản chốt: thân sạch `raw/skill_side_skill_radiant_slash_v2_t01` + tia sáng vẽ bằng Python `fx/radiant_slash_beam.py`** (user: đẹp nhất). Take `_t02` (model vẽ tia) là phương án thay thế. 4 s, 67 hình, chưa export, không cắt frame |
 | skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 67 hình, 4.47 s @15fps, giữ vòng lửa lớn frame ~46-72 theo quyết định user (user đồng ý đó là lỗi; lần sau dùng hiệu ứng vừa khung hơn, xem report §11); canvas 176x140 |
 | fx_holy_banner | fal-image vfx | hiệu ứng | ✅ v01 | cờ hiệu, asset riêng |
 | fx_radiant_slash | fal-image vfx | hiệu ứng | ✅ v01 | vệt chém vàng, asset riêng |
@@ -180,3 +180,29 @@ Cùng một skill, cùng model, cùng giá (0.06 USD/clip), chất lượng đ�
 **Tham chiếu prompt chốt**: `raw/skill_side_skill_holy_banner_v4_t02.prompt.txt` (take chốt) và `v4_t01.prompt.txt` (thân sạch). Phần "Beat 1-5" là mẫu dùng lại.
 
 **Điều model vẫn làm dù đã cấm** (cần dự trù): vệt trắng/hồng bắn ra ở chỗ vũ khí chạm đất; khối nón ánh sáng khi có ripple; nâng vũ khí cao hơn yêu cầu (mũi kiếm chạm mép trên khung); thân xoay nhẹ về camera khi giơ vũ khí. Python xoá được vệt (xem `fx/holy_banner_ripple.py`, hàm `clean`).
+
+## Skill 3 radiant_slash "tia thánh xuyên" (chốt 2026-10-20)
+
+**Kết quả**: user chốt **video 3 = thân sạch (video 1) + tia sáng vẽ bằng Python** ("hiệu ứng từ Python là đẹp nhất"). Chi phí: 2 clip x 0.06 USD (một clip thân + một clip để so với bản model vẽ tia); bản chốt chỉ cần clip thân, fx Python 0 USD. Không cắt frame, chưa export, chưa chạy gate.
+
+**Hành động** (mô tả từng bước, theo công thức ở mục "Skill 2 holy_banner"): khoá hướng nhìn sang phải; đứng idle kiếm cắm đất; rút kiếm bằng hai tay, đưa ngang ngực, mũi chỉ sang phải; gối chùng, hông sụp, hai tay kéo cán sát người, lưỡi vẫn ngang ngực; một bước dài về phía trước bên phải, chân sau thẳng, hai tay đẩy kiếm thẳng ra; giữ pose lao tới. Cấm: xoay, nhảy, vung, cử chỉ khác; chỉ rút một lần, đâm một lần. Không ghim ảnh cuối. Prompt: `raw/skill_side_skill_radiant_slash_v2_t01.prompt.txt` (thân) và `_t02.prompt.txt` (kèm tia).
+
+**Kết quả quay**: mọi nhịp đọc rõ, kích thước ổn định, mũi kiếm trong khung (cách mép phải ~30 px), không có vệt splash. Lỗi nhỏ còn lại: thân hơi xoay về camera khi kéo kiếm sát người; lúc rút kiếm, kiếm vung chéo lên cao hơn mức "ngang ngực".
+
+**Số đo clip** (15 fps, 67 hình, 832x480): rút kiếm hình 6-18; kéo sát người 21-38; đâm 39-43; **duỗi hết ở hình 43**, mũi kiếm tại **(803, 202.5)**; giữ pose tới hết.
+
+**Fx Python (`fx/radiant_slash_beam.py`, canvas 1500x600, khung clip đặt tại (100, 60))**, màu + độ trong suốt, screen blend, `t = i - 43`:
+| Lớp | Thời điểm | Chi tiết |
+|---|---|---|
+| Ánh sáng gom ở mũi kiếm | hình 21-38, tắt 38-41 | vàng, `radial` bán kính 70 + 40 g, độ đục 0.75 g, bám mũi kiếm đo từng hình (điểm phải nhất của hình bóng) |
+| Tia sáng ngang | t 0-22 | đi tới mép phải trong 4 hình (`reach`), lõi trắng (sigma 7 px, 1.0), thân vàng (sigma 20 px, 0.85), quầng ngoài hổ phách (sigma 52 px, 0.35), mờ dần theo khoảng cách (^0.5), nhịp phồng +-12%; vào 0-2, ra 12-22 |
+| 2 vòng sóng ở mũi kiếm | trễ 0 và 3 hình, dài 14 | vòng tròn (hướng về người xem), bán kính (0.10 + 0.60 u^0.8) x 425, kem rồi vàng |
+| Chớp ở mũi kiếm | 6 hình | trắng 110 px + vàng 220x160 |
+| 2 đợt hào quang quanh hình bóng (cả kiếm) | trễ 0 và 4, dài 14 | vàng rồi kem, phía sau thân, `aura(grow 4 + 50 u^0.7)` |
+Kết thúc sạch (không còn fx) để game về idle.
+
+**Rút ra**
+1. Công thức mô tả hành động của holy_banner dùng lại ngay lần đầu cho skill khác và đạt: thân đọc rõ nhịp, không cần quay lại.
+2. Mũi kiếm đo **từng hình** từ clip, nên fx bám đúng vũ khí; tia không bắt đầu từ chỗ đoán.
+3. Với tia sáng (hình dạng đơn giản, cần mềm và nhiều lớp), Python cho kết quả đẹp hơn model: model thêm vòng không yêu cầu chạy ra mép khung, Python điều khiển được từng lớp. Với ripple trên mặt đất của banner thì user chọn bản model. Cả hai đều dùng được; mỗi skill nên thử cả hai (Python đã miễn phí).
+4. Canvas fx phải rộng về phía hướng tia bắn (ở đây sang phải): khung clip đặt lệch trái canvas.
