@@ -128,6 +128,8 @@ python out/heroes/holy_commander/fx/levelup_variants.py out/heroes/holy_commande
 # bỏ tên variant để chạy cả 10; có thể truyền nhiều tên: v01 v05 v10
 ```
 
+> Đã thay thế, đừng dùng lại: `fx/levelup.json`, `fx/levelup/` (A1 qua `fx_layers`, bị chê thô) và `fx/levelup_soft_glow.py` (A2 bản đầu). Dùng `fx/levelup_variants.py`.
+
 ## 7. Chuyển sang asset game (việc còn mở: ghi rõ để khỏi quên)
 
 Bản xem thử ghép lên nền xanh đậm bằng **screen**. Game cần lớp **trong suốt**:

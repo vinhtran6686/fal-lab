@@ -79,8 +79,8 @@ master_v07 approved by user ("v07 đẹp nhất, chốt"). `{design}` and `{idle
 - Xám sạch hoàn toàn, không sót màu vàng hay đỏ, nên đoạn hồi màu có điểm xuất phát rõ.
 
 **Vì sao ổn (đã kiểm bằng clip)**
-- Dùng làm ảnh đầu của `rise` (ảnh cuối `master_v07`, take t01): hero giữ nguyên kích thước suốt clip, màu hồi từ vàng rồi tới đỏ, đứng lên đúng tư thế master, không có vật thể lạ.
-- User xem và duyệt: "đẹp, ổn".
+- Dùng làm ảnh đầu của `rise` (ảnh cuối `master_v07`, take t01): hero giữ nguyên kích thước suốt clip, màu hồi từ vàng rồi tới đỏ, đứng lên đúng tư thế master, không có vật thể lạ (đánh giá của mình khi xem frame; clip `rise` vẫn chờ user duyệt).
+- User duyệt **pose** (ảnh tĩnh): "đẹp, ổn". Clip `rise` t01 chưa được user duyệt.
 
 **Lưu ý**: kiếm trong pose ngắn hơn master; clip không bị "kiếm dài ra" đáng kể nhưng nếu thấy thì xử lý ở bước export.
 
@@ -145,6 +145,8 @@ master_v07 approved by user ("v07 đẹp nhất, chốt"). `{design}` and `{idle
 python out/heroes/holy_commander/fx/levelup_variants.py out/heroes/holy_commander/raw/levelup_side_extra_v2_t01.mp4 <thư_mục_ra> v03
 ```
 Ra frame PNG đủ 46 hình, `v03.mp4` xem thử, `v03_peak.png`.
+
+**Đã bị thay thế, đừng dùng lại**: `fx/levelup.json` + `fx/levelup/` (bản A1 qua `fx_layers`, bị chê thô) và `fx/levelup_soft_glow.py` (A2 bản đầu có lưỡi sáng nhỏ ở đáy). Entry `fx` trong `meta.json` đã gỡ vì chưa có asset fx v03 đã export; **thêm entry `fx` cho levelup khi export v03**.
 
 **Việc còn lại trước khi export** (chưa làm): quyết định cách xuất lớp trong suốt (screen trên nền tối khác nền sáng; kiểm tra trên nền sáng), kiểm tra fx vừa canvas 176x140, rồi export `levelup_side` (body 111@2x, pivot (0.5, 0.88)). Không cắt frame.
 

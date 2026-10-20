@@ -132,8 +132,5 @@
   "mirrored": {
     "run_left": "run_side",
     "idle_left": "idle_side"
-  },
-  "fx": {
-    "levelup": "fx/levelup/fx.json"
   }
 }

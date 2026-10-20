@@ -330,3 +330,8 @@ Thiết kế respawn mới (mục 11.3) đã có ảnh đầu và take đầu. C
 2. Clip: take `rise` t01 (h3-max-turbo, 4 s, 480P, ảnh đầu v02, ảnh cuối master_v07, ~0.06 USD). Xám giữ ~0.5 s, màu hồi xong ~1.2 s khi còn quỳ, đứng lên từ ~1.5 s, kết ở tư thế master. Không có vòng hay vật lạ, kích thước ổn định.
 3. Cách viết prompt đã hiệu quả: nhịp đúng thứ tự (quỳ xám, hồi màu, ngẩng đầu, đứng lên, giữ), câu "locked tripod" của charge_v2, và chỉ nhắc một thay đổi ngoài chuyển động là chuyển màu. Model làm được chuyển xám sang màu, không cần hậu kỳ.
 4. Còn lại: user duyệt t01, export `respawn_side` 176x140, `fx_respawn` nếu cần. Frame chưa cắt.
+
+## 13. Fx bằng Python (2026-10-20)
+
+Fx của levelup được làm bằng Python (0 USD) lên clip thân sạch; user duyệt 10 phiên bản và chọn v03. Quy trình đầy đủ: `docs/python-fx-recipe.md`;
+tham số v03: `out/heroes/holy_commander/brief.md`. Chưa export, chưa cắt frame, chưa chạy gate `qc.json` cho levelup.

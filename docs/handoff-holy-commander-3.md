@@ -73,3 +73,12 @@ Việc đầu tiên: làm respawn mới (quỳ gục đầu vào kiếm dựng �
 Báo giá trước khi chạy ảnh/clip trả phí và chờ mình ok. Không sửa SKILL.md, không cắt frame thêm.
 Xong thì đưa lên 1 artifact riêng (không đụng artifact compare) để mình xem.
 ```
+
+## 8. Cập nhật cuối phiên (2026-10-20): đọc trước khi làm fx
+
+- **Fx làm bằng Python, 0 USD, là mặc định.** Đọc `docs/python-fx-recipe.md` (công thức từng bước, bộ công cụ, số đo, lỗi đã gặp) trước khi
+  dùng `fx_layers.py` hay quay clip có fx. `CLAUDE.md` mục Effects vẫn nói `fx_layers.py`; với holy_commander hãy theo recipe Python. Gen video + cắt frame
+  chỉ khi fx cần chi tiết mà Python không đủ (và báo giá, chờ ok).
+- Levelup: thân clip A (`raw/levelup_side_extra_v2_t01`) + fx **v03** (user chọn). Chưa export (xem `brief.md` "Levelup fx v03").
+- Respawn: pose `pose_respawn_v02` đã duyệt; clip `rise` t01 **chờ user duyệt**, chưa export.
+- Còn lại: export levelup/respawn, holy_banner, radiant_slash (thiết kế lại; fx cho skill cũng nên theo recipe Python). Không sửa `SKILL.md`, không cắt frame.
