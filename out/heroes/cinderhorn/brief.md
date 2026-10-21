@@ -48,7 +48,7 @@ Chung: facing RIGHT the entire time, bắt đầu từ idle của master (một 
 | death_side | video-sprite | one-shot | ❌ | |
 | respawn_side | video-sprite | one-shot | ❌ | |
 | levelup_side | video-sprite | one-shot | ❌ | |
-| skill_cinder_slam_side | video-sprite | one-shot | ⏳ t01 | clip 4 s, $0.06; đủ nhịp, chờ user duyệt; chưa export |
+| skill_cinder_slam_side | video-sprite | one-shot | ❌ | t01 bị user chấm 7/10 (tay chưa vật lý); chờ duyệt mô tả mới để retake t02 |
 | skill_horn_charge_side | video-sprite | one-shot | ❌ | |
 | skill_ember_armor_side | video-sprite | one-shot | ❌ | |
 | fx_attack | fx-layers | hiệu ứng | ❌ | |
