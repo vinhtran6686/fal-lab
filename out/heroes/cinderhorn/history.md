@@ -6,3 +6,4 @@
 | 2026-10-21 | pose_skill_cinder_slam | v01 | gpt-image-2 low | 7 | approved | face hidden by shoulder, horns fold to the side, flames fused into two columns | name "face and visor visible, horns upright" | user: "thiết kế 3 skill" |
 | 2026-10-21 | pose_skill_horn_charge | v01 | gpt-image-2 low | 7 | approved | horns point up, not forward; face hidden by shoulder | "horns point forward-right, visor visible" | user: "thiết kế 3 skill" |
 | 2026-10-21 | pose_skill_ember_armor | v01 | gpt-image-2 low | 8.5 | approved | fills 95% of height again | none | user: "thiết kế 3 skill" |
+| 2026-10-21 | skill_cinder_slam_side | t01 | h3-max-turbo 480P 4s | 7.5 | awaiting user | chưa soi được mặt và sừng ở cỡ nhỏ; nắm đấm giơ ngang đỉnh sừng | none yet | user: "chạy với skill đầu tiên" |
