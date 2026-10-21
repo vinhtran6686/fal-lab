@@ -7,7 +7,7 @@ content. Sizes and canvases come from `format.md` §7; never name a commercial g
 ## Overview
 | Flag | Class | Tiers (default *) | Canvas @1x |
 |---|---|---|---|
-| `--hero` | Hero | S, M*, L | 104x92, 156x140, 220x196 |
+| `--hero` | Hero | S, M*, L | 104x92, 176x140, 220x196 |
 | `--ally` | Quân phe ta | S*, M, L | 92x80, 136x120, 192x168 |
 | `--enemy-small` | Quái nhỏ | XS* | 56x48 |
 | `--enemy` | Quái thường | S*, M | 92x80, 136x120 |

@@ -6,6 +6,7 @@ Usage:
                               [--size 1024x1024|1024x1536|1536x1024] [--transparent]
                               [--name goblin_walk] [--n 1] [--out out]
                               [--ref master.png ...] [--png] [--versioned]
+                              [--prompt-file prompt.txt]   (long prompt from a file instead of the argument)
 
 --transparent needs gpt-image-1.5 (gpt-image-2 rejects it on fal), so the script
 switches model automatically.  --ref sends local image(s) to the model's edit
@@ -98,7 +99,8 @@ def next_version(folder: pathlib.Path, stem: str) -> int:
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("prompt")
+    p.add_argument("prompt", nargs="?", default="")
+    p.add_argument("--prompt-file", help="read the prompt from this UTF-8 file (long prompts; avoids shell quoting)")
     p.add_argument("--model", default="gpt-image-2", choices=MODELS.keys())
     p.add_argument("--quality", default="low", choices=["low", "medium", "high"])
     p.add_argument("--size", default="1024x1024")
@@ -111,6 +113,13 @@ def main() -> None:
     p.add_argument("--versioned", action="store_true",
                    help="name files <name>_vNN.<ext> with the next free NN in --out (asset pipeline)")
     a = p.parse_args()
+    if a.prompt_file:
+        if a.prompt:
+            sys.exit("give the prompt either as the argument or with --prompt-file, not both")
+        a.prompt = pathlib.Path(a.prompt_file).read_text(encoding="utf-8").strip()
+    if not a.prompt:
+        sys.exit("no prompt: pass it as the first argument or with --prompt-file")
+    print(f"prompt: {a.prompt[:60]!r}... ({len(a.prompt)} chars)", file=sys.stderr)
     if a.versioned and not a.name:
         sys.exit("--versioned needs --name")
 

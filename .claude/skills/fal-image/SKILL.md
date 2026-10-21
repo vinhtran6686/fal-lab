@@ -42,6 +42,10 @@ turn it into a few designs and the user only chooses. No API call until the choi
    The user may mix (concept A with weapon from B) or type their own with "Other".
 4. **Compose** `{design}` (one dense sentence, format.md §1) and the other slots from the choices; write
    `brief.md` with the idea in the user's words, the 3 concepts offered, the choices made, class and tier.
+   **Actions**: once the character is approved, each skill (and any action the user has not described) gets 2-3 proposed action
+   descriptions written by the `video-sprite` formula (`references/motion-prompts.md` "Writing the action"): beats by body part, facing lock,
+   end state, suggested clip length, risks, price; the user picks or edits one before any clip is paid. Use the model-habit table there
+   to enrich, never to fix the design to one hero.
 5. Continue in the normal mode (default: master, then stop for approval; with `--auto` too, if given).
    Show the composed `{design}` sentence in the master report so the user sees what was drawn from.
 
@@ -63,6 +67,9 @@ flags or the words of the request; never guess a missing one. Ask only what is m
    - Skills missing (hero; boss: specials): "Chọn kỹ năng" with `multiSelect: true`, 3-4 skills you propose
      from the description, each "<name>: <the body's move>; <the effect, marked vfx when big>". Hero: pick 2-3.
      Allies and enemies get no skill question (none by default; the user may add them).
+   **Design details** the description leaves out (size of a held weapon against the body, hands, where it rests when idle, stance width, cape or
+   hair): detect them from the description and ask them in the same call or a following one, as the class file's "Design details" table says
+   (hero §7b). Never fill them with a guess; a wrong weapon size is the most expensive master loop seen.
 3. Record class, tier, `{H}`, canvas, role and skills in `brief.md`; `{H}` goes into `{STYLE}`.
 4. Write the **Asset manifest** (table format `format.md` §8; rows from the class file's §6) from role and skills, with the cost estimate, and show
    it to the user with the master report (they may add or drop rows).
@@ -98,6 +105,8 @@ flags or the words of the request; never guess a missing one. Ask only what is m
   Every other asset uses the magenta background too, except opaque maps.
 - `--ref` sends a local image as visual reference (edit endpoint): every view uses `--ref <approved master>`.
 - Only use `--quality medium` or `high` after the user asks.
+- Long prompt: write it to a file and pass `--prompt-file <file>` (a shell-quoted `$(cat file)` once sent the literal text and wasted two images). After the first image of a command, open its `.json` sidecar and check the first 60 characters of `prompt`; the script also prints them on stderr.
+- Style bans (`format.md` §1) are defaults: when the user asks for something they forbid, allow it for that asset and note it in `brief.md`.
 - stdout lists saved image paths; stderr has a `cost:` line. Independent stills can run in parallel.
 - Put any in-image text in double quotes and say it must render exactly as written.
 

@@ -44,7 +44,7 @@ shapes, a 170 px boss may show a few more.
 shoulders and arms, small head, short legs"), costume and gear, the weapon and the hand that holds it, the
 dominant colour family and one accent, any effect and its colours ("yellow flame layers around an orange body").
 
-**What a character may and may not change** (every class, every asset):
+**What a character may and may not change** (every class, every asset). These bans are the **default**: the user may override one for a character or an asset in words ("soft glow on the blade", "a gradient sky"); then record the override in `brief.md` and keep the rest of the style. Never lift a ban on your own. (Soft light around a body is normally made later, in the animation step, as a separate fx layer: `video-sprite` "Effect layers"; the still stays flat.)
 | May set per character (in `{design}` or `brief.md`) | Never, whatever the request |
 |---|---|
 | dominant colour family and one accent | gradients, airbrush, soft glow, blur, painterly texture |
@@ -285,7 +285,7 @@ idle pose shows, a weapon held upright included; the same box video-sprite measu
 | Profile | Canvas W x H | Used by | Why |
 |---|---|---|---|
 | `unit` | 2.25 x 2.0 | allies, enemies | room for strikes and a death falling toward the viewer |
-| `hero` | 2.6 x 2.3 | heroes | room above the head for casts, level-up and respawn |
+| `hero` | 2.6 x 2.3 (M: 2.93 x 2.3 = 176x140) | heroes | room above the head for casts, level-up and respawn; M is wider for long weapon strikes |
 | `boss` | 2.55 x 1.7 | bosses | wide, low frames |
 Measured on the references (`reference.md`): 73% of them fit their profile canvas; the rest are wide death
 falls and skill moves, which our prompts keep inside the frame.
@@ -378,3 +378,16 @@ as the still or the clip. Under the table, one line of estimated cost: stills x 
 | Speed variant | `walk_<dir>_fast` V | "chạy nhanh khi tăng tốc" |
 | Aimed shot in 3 directions | `shoot_side`, `shoot_up`, `shoot_down` V (+ `view_front`/`view_back` F for a hero) | "bắn lên xuống" |
 A new direction, state or skill is a new row: the size, style and pivot never change for it.
+
+## 10. State stills and effects longer than the cell (learned on a hero, 2026-10-21)
+- **Pose stills for states**: `pose_respawn` (the character kneeling or fallen, the start of a rise) and `pose_levelup`
+  are ordinary stills (`--ref` the master, same view prompt, only the stance changes). A final pose that can be told in
+  words does not need a still: a skill clip can end on a pose described in the motion prompt (the model matched it at once).
+- **Grey (lifeless) state still**: the wording that came out grey on the first try for all three drafts:
+  "THE WHOLE {subject} IS DESATURATED GREY: every part (armour, cloth, skin, weapon) in flat shades of cool grey (light, mid and
+  dark only), no {colours} anywhere; outlines stay near-black." and, in place of "Do not use magenta on the subject",
+  "the subject has no colour at all, only grey". A clip that goes grey -> colour needs no post-process: write "the colour comes
+  back gradually" in the motion.
+- **Effects longer than the cell** (a beam, a long arc, a banner's ripple): separate fx layers on their own canvas, pivot
+  at the feet (`video-sprite` "Effect layers"). The body canvas stays the tier's canvas.
+- **Why chosen**: every approved still gets 2-3 lines in `brief.md`: how it was made, why it was chosen, what it was checked with.

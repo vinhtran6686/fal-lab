@@ -46,8 +46,9 @@ Everything a character does is two separate things, as in the reference game:
 1. **The body clip** (this skill's video): the character only. The prompt never names an effect;
    `sprite_set.py` strips any clause that does (glow, light, lightning, energy, magic, sparks ...) and adds
    "body motion only ... the camera never moves or zooms". Takes with painted glows, rings, starbursts or a
-   changing body size are retaken, never kept: a size change is caught by the `area` gate, a painted glow only
-   by your review of the sheet. The size of the character never changes.
+   changing body size are retaken unless the user prefers that take (a hero's banner skill kept the model's own ripple at the
+   user's choice): a size change is caught by the `area` gate, a painted glow only by your review of the sheet. The size of
+   the character never changes.
 2. **The effect layers** (`scripts/fx_layers.py`, no video model, free): small flat objects on ONE effect
    canvas anchored at the character's feet, each 4-18 drawings, played over the body:
    | Layer | Use | Reference example |
@@ -65,6 +66,17 @@ Everything a character does is two separate things, as in the reference game:
    tune the numbers, run again (free). Before the body clip exists, `"body_still"` previews over the pose.
    Example recipes: `out/heroes/holy_commander/fx/radiant_slash.json`, `out/heroes/thunder_sage/fx/thunderstorm.json`.
 
+   **Soft light around a body (level-up, buff, beam, ripple): Python first** (`docs/python-fx-recipe.md`, examples in
+   `out/heroes/holy_commander/fx/*.py`; numpy + Pillow, no model, $0). Flat vector layers (`fx_layers.py`) read as coarse when laid over a
+   body (rejected once); use them for small shaped objects (sprite, projectile). The soft recipe: a wide soft layer that wraps the
+   silhouette (blur-and-lift of the body mask, not a max-filter: that gives square halos), additive "screen" light, a `back` and a
+   `front` layer, no fine particles that clutter. Make 3-10 variants, let the user pick (a 10-variant round got one clear winner),
+   then export the winner as RGBA layers (`tools/frame_tuner/export_fx.py`) placed through the exact chain the body goes through
+   (finish scale, feet on the pivot, rescale): re-placed body vs exported body IoU 0.985-0.993. Ship a preview gif and sheet with
+   the layers: without one the user cannot see the fx. Clean body clip + Python fx is the default; a model-drawn fx take is
+   allowed as a second version when it is cheap and the user wants to compare (it adds stray cones/rings, see motion habits).
+   An effect longer than the cell (a beam) is its own canvas, never a wider body canvas.
+
 **Timing, "on twos"** (the reference: 30 fps, each drawing held 2 frames): plan at `--fps 15`. Drawings per
 sheet: run 5-6, walk ~12, attack ~10, death 7-9, level-up ~16, respawn ~16. A skill is a short move into its
 pose and a long HOLD (reference skills: 39 frames from 4-13 drawings) while the layers play: the `skill`
@@ -79,16 +91,17 @@ is a separate decal. Stills stay shadowless (the magenta key needs a clean backg
 **Projectiles**: the `projectile` still flies as an fx recipe (`sprite` layer turning or flickering over 2-4
 drawings, plus a `burst` hit of 4-8 drawings): manifest rows `projectile_fly`, `projectile_hit`.
 
-**Respawn and raise**: the `despawn` clip (the body sinks into the ground; tested on holy_commander) exported
-`--reverse`, plus a `pillar` + `ring` recipe. `rise` (from a kneeling `pose_respawn` to the master) is an
-untested alternative; finish it with `--scale-ref` from a side set.
+**Respawn and raise**: `rise` (from a kneeling `pose_respawn` to the master) is tested and preferred for heroes: a grey, lifeless
+pose that regains colour and stands, ~4 s clip, no post-process for the colour; export it with `--rest-last` (below). The
+`despawn` clip (the body sinks into the ground) exported `--reverse` stays the fallback (a statue-like result was criticised),
+plus a `pillar` + `ring` recipe or a Python fx.
 
 ## One canvas and one body size for every action (fixed)
 The engine draws every action of a character in the same frame with the same pivot, so no action may be
 bigger or smaller than another:
 - **Canvas**: `meta.json` "cell", set by the first export and shared by every later one. Read class and tier
   from the asset's `brief.md` and pass that canvas from the class file's §3 (`fal-image/classes/<class>.md`) as
-  `--cell <W>x<H>` on the first export (e.g. hero M: `--cell 156x140`; enemy S: `--cell 92x80`). `video_to_sheet.py` never widens it for one action and
+  `--cell <W>x<H>` on the first export (e.g. hero M: `--cell 176x140`; enemy S: `--cell 92x80`). `video_to_sheet.py` never widens it for one action and
   never shrinks a body to fit; a state that does not fit is refused: delete `meta.json` and re-export every
   sheet with a larger `--cell` (all actions move to the new canvas together).
 - **Body**: every set is finished at `--target-height <2 x {H}>` (the tier's body height at @2x, format.md §7:
@@ -96,6 +109,8 @@ bigger or smaller than another:
   records the measured body height (`body_height_2x`) and later exports are rescaled when they differ by
   more than 4% by silhouette area (a height-based check misread weapons and was replaced, 2026-10-16).
 - **Pivot**: feet at x 0.5, y 0.88; one fixed transform per clip, so bob, lean, a fall or a spin are kept.
+- **`--rest-last`**: a clip that ENDS on the master pose (a rise from kneeling) takes its body size and feet from its last frame, not
+  the first (the first frame is kneeling and made the standing end 4% too small). Use it for such a clip.
 
 ## Manifest rows -> sets and exports (fal-image/classes/<class>.md; hero/ally 1 direction, enemy/flying/boss 3)
 Left is always the mirror of the side (`--flip-to left`); there are no diagonal sheets. The side still is the
@@ -140,26 +155,41 @@ from the stride, so a hero run of the reference's 0.2 s does not carry over: kee
    `motion` there for this character: the attack from `{attack}`, the death from `{death}`, each skill from
    its line in `brief.md` (keep "then lies completely still" for deaths). One action per clip; no effects in
    character clips (the game adds FX; big ones are the manifest's vfx rows).
-4. **Ask before paying.** Show the user the manifest rows you will make, the clip count and the estimate
+4. **Describe the action first, in detail, and get it approved** (the biggest lever on quality and on cost; `references/motion-prompts.md`
+   "Writing the action"). For each clip write the action beat by beat, body part by body part, with the facing lock and an end
+   state; work out the clip length from the number of beats (below); show the user the description (in `--creative`/`--example`
+   2-3 options with their risks) and wait for "ok". Only then price and run. On the reference hero, rounds that used a generic or
+   self-invented action were rejected twice; the user's step-by-step description was accepted at once and the next skill reused
+   the formula and passed first time. Rejected rounds are what made the hero cost ~USD 1.8 instead of the ~0.75 first quoted.
+   **Clip length decides the number of motions**: plan about 0.7-1 s per distinct beat plus about 1 s of final hold, 3-5 s in total.
+   Two strikes in 2 s were merged into one by the model; the same two in 3 s were both made. A shorter clip drops beats, it does
+   not speed them up; 5 s tends to drift. Say which beat should be longest (the model splits time unevenly).
+   **Motion quality** that makes an action lively, to add when you complete the user's words (never against them): anticipation before the
+   strike, follow-through after, knees giving on impact, cape or cloth thrown up and settling; **tremor** (gripping, straining) and
+   **losing balance** (channeling a big move) when the move is heavy. A tremor asked in the prompt stays tiny (peak-to-peak ~2.4 px
+   at 480P, below 1 px at game size; asking "violent shaking" tripled it and it was still under 1 px at game size): if it must be
+   seen, add it in the export (`shake` in the frame recipe, below) and ask the model only for the braced pose.
+5. **Ask before paying.** Show the user the manifest rows you will make, the clip count and the estimate
    (default `h3-max-turbo` 480P 5 s = ~USD 0.08 per clip; a melee enemy: walk x3, attack, death = 5 clips
    ~USD 0.40, idle is free; a hero with 2 skills: run, attack, death, levelup, respawn, 2 skills = 7 clips
    ~USD 0.56; + retakes) and wait for a yes, unless they
    already approved this run. `FAL_VIDEO_MAX_USD` (default 0.60) caps every clip; `FAL_VIDEO_MODEL` picks
    another model (`kling-3-std` keeps a weapon's pose best but costs ~USD 0.70 a clip).
-5. **Run**, then **review**: Read every take's sheet. The gates measure size, feet, zoom, turning, edges,
+6. **Run**, then **review**: Read every take's sheet. The gates measure size, feet, zoom, turning, edges,
    background, extra objects, motion, colour and timing; they cannot see identity, a changed weapon, the
    wrong leg order or a covered face. Never accept an action you have not looked at. Classify each take:
    **Pass** (8-10, coherent motion, same character), **Needs Revision** (5-7, name the frames, e.g.
    `F5-F10 pink smear`), **Fail** (1-4). Fix: `accept --window` (a gate that misreads a correct motion),
    `retake --fix <clause id or sentence>` (clause ids in `references/motion-prompts.md`), or plan options.
    Default mode: stop here and show the user (see "Run modes"); `--auto` continues.
-6. **Export** each accepted action with `video_to_sheet.py` (one canvas, one body size, see above), then
+7. **Export** each accepted action with `video_to_sheet.py` (one canvas, one body size, see above; for a state with a frame recipe use
+   `apply_recipe.py`, "Choosing the frames"), then
    `idle_side --rest-frame` from the first side take. Each export replaces the sheet's state folder
    `A/<category>/<sheet>/` (one final version). Log one row per take in `history.md` (`model` column = the
    fal model) and mark the manifest row ✅ `tNN` (⏳ while it waits for the user).
-7. **Check**: `motion_check.py` on every sheet, `leg_check.py` on walks; anything only visible in motion is
+8. **Check**: `motion_check.py` on every sheet, `leg_check.py` on walks; anything only visible in motion is
    unverified until seen in Motion Lab (`python scripts/build_playtest.py`, republish, see `CLAUDE.md`).
-8. **Prune** every set once its actions are exported (always; no need to ask).
+9. **Prune** every set once its actions are exported (always; no need to ask).
 Report: the manifest after the run (`python scripts/asset_status.py <id>`), the state folder of every sheet,
 the model and takes, the cost (`python scripts/cost_report.py --today`).
 
@@ -199,6 +229,26 @@ Turn the feedback into short, concrete, physical sentences; keep the rest of the
 Apply: `sprite_set.py retake --plan ... --action <a> --fix "<sentence>"` (repeatable; clause ids allowed),
 and/or edit the action's `motion` in `set_plan.json` for a bigger change; then `run` (1 clip per take).
 Log the user's words and the translated fix in `history.md`.
+
+## Choosing the frames: Frame Tuner and frame recipes (`tools/frame_tuner/`, free)
+The user picks the smoothest frames, per-frame durations and the hit frame of each clip by eye. The tool shows EVERY frame of the clip
+(with the Python fx composited), saves a **recipe** (`A/export_recipe.json`: per state `clip`, `fps`, `keep`, `durationsMs`, `hit`
+= index in the kept list, optional `shake`), and `apply_recipe.py <state> --write` exports it through `video_to_sheet.py` (one canvas,
+one body size, `--rest-last` where the state asks); `export_fx.py` exports the fx for the same kept frames. Run it as an artifact
+(recipes saved in its db; the first Claude-side copy is `export_recipe.json`) or locally with `frame_tuner.bat` + `serve.py`.
+- Recipes replace `retime --auto-oneshot` for a state that has one. `hit_frame` in `meta.json` counts from 1.
+- **Source rate**: the tuner offers the project's 15 fps and the clip's native 24 fps (about 1.6x the frames to choose from); the recipe
+  stores the rate it used and `apply_recipe`/`export_fx` read it; the fx counts its beats in 15 fps frames and is mapped by 15/fps.
+- **The tuner only chooses among rendered frames**: it cannot repair a blurry, off-size or flickering frame. Check the clip BEFORE it
+  goes in: sharp, constant body size (locked tripod), no flicker, facing held, no stray object covering the body. Retake the clip rather
+  than tune around a defect. Optional: render at 1080P (same price per second in the model table, sharper visor/face lines, key-edge
+  pixels halved, but ~2x slower, ~5x bigger files and a slower `key_out`): default stays 480P; use 1080P on request or for a final
+  take of a state that is hard to key.
+- **`shake`** `{"from": a, "to": b, "amp": 2.5, "seed": 1}` (indices in the kept list): a deterministic post-process tremor, an offset of
+  a few @2x px per frame, eased in and out. About 2-3 px reads clearly at game size where a prompted tremor does not. Demo:
+  `tools/frame_tuner/shake_demo.py`.
+- The tools carry a hero's `sources.json` (clips, states, fx modules). For a new character copy and edit it; they stay in `tools/` until a
+  second character has used them.
 
 ## Changing existing sprites
 | Request | What to do | Cost |

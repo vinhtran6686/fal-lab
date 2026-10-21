@@ -38,6 +38,43 @@ Rules behind it:
   key and belong to the game's own FX layer.
 - A fix is a sentence added to the next take, never a rewrite of the whole prompt.
 
+## Writing the action (the formula that worked; use it for every hand-written action)
+
+A generic one-line action gets a generic, often wrong motion. Describe the move the way an animator's instruction sheet would, body
+part by body part. Placeholders in braces; the content comes from the user's words or from `--creative`/`--example`, never from a
+fixed hero.
+
+1. **Facing lock**: "facing {RIGHT} the entire time and never turning around: hips, shoulders and face stay turned that way in every
+   frame". Always when there is a step, a back foot or a pulled object.
+2. **Start**: "starts in the calm idle stance of the first still", with what the feet, the held item and the hands are doing; one
+   still beat of breathing.
+3. **Beats**, numbered, one action each, naming the part: legs (which knee bends, which foot moves, where the weight goes), torso
+   (leans FORWARD, straightens, chest out), head (up, bowed), hands (each hand, where it grips), held item ({weapon}: direction,
+   depth, height), cape or other soft parts (thrown up, then settles).
+4. **End state** in words, then "HOLDS that pose completely still for the rest of the clip".
+5. **Order sentence**: "The order is always: {beat 1}, {beat 2}, ..., hold."
+6. **Count and bans**: "{item} is {raised} once; {he} does not walk, turn around or make any other gesture."
+7. **Effects**: none (clean body clip, the default), or exactly ONE with its shape, place and moment ("this is the ONLY effect").
+8. **End still**: pin the last frame (`endStill`) only when the final pose is hard to put in words; a pose described in words matched
+   at once without a still.
+9. Keep the "locked tripod, no zoom" sentence.
+Length: about 0.7-1 s per beat plus about 1 s of final hold, 3-5 s in total (SKILL.md Workflow step 4).
+
+**Seen with h3-max-turbo** (measured on one hero with a large weapon; other classes, e.g. casters or flyers, are untested; use this table
+when you enrich a user's description, in `--creative` and `--example`, never to bend a character):
+| Situation | What the model tends to do | Write |
+|---|---|---|
+| a step or a step back | reads it as turning round | the facing lock, only the named foot slides |
+| leaning back | turns the whole body | describe lean and weight forward only |
+| item raised high | leaves the top of the frame | "never rises above the head", check `bbox.top` |
+| item hits the ground or swings hard | adds splash, streaks, a light arc though forbidden | accept, or remove it in post |
+| ONE narrow fx allowed | adds extra cones or rings | make that fx in Python, or accept |
+| pulling or lifting the item | torso turns slightly to the camera | accept; retake only if obvious |
+| grey -> colour | fades smoothly | "the colour comes back gradually", no post-process |
+| too short for the beats | drops beats | lengthen the clip |
+| straining, gripping | braced pose yes, tremor tiny | pose in the prompt, tremor in the export (`shake`) |
+| heavy swing "losing balance" | overswung, dynamic move, not a literal stumble | fine; describe the recovery |
+
 ## Action templates
 
 The template continues the sentence that starts "The same <identity>, facing <FACING> the entire
@@ -174,9 +211,9 @@ No arrow, bolt, bullet or projectile leaves the weapon (the game adds it), no mu
 
 ### skill (one-shot that ends on the skill's peak pose, 16:9 canvas; heroes and bosses)
 
-Replace this action's `motion` in `set_plan.json` with the skill's body move from `brief.md`, and set
-`"endStill"` to the approved `design/pose_skill_<name>_vNN.png`: the clip runs from the master to that
-pose. The big effect is a separate vfx asset; the game switches back to idle after the last frame.
+Replace this action's `motion` in `set_plan.json` with the skill's body move from `brief.md`, written by the formula in "Writing the action"
+(4-5 beats = 4 s), and set `"endStill"` to the approved `design/pose_skill_<name>_vNN.png`: the clip runs from the master to that
+pose. When the final pose is described in words, omit `endStill`. The big effect is a separate vfx asset; the game switches back to idle after the last frame.
 
 ```template skill
 gathers strength with a short, clear anticipation, then moves quickly into ONE strong, readable peak pose {toward} and HOLDS that pose completely still for the rest of the clip. The feet stay on the same ground line unless the move lifts them.
@@ -188,6 +225,8 @@ The game adds the magic: no particles, no glow, no beams, no energy, no new obje
 
 ### levelup (one-shot, 3:4 canvas, end frame pinned; heroes)
 
+Default template; for a better result write the beats by the formula in "Writing the action" (e.g. 1. stands calm; 2. knees bend and the body sinks; 3. one strong {punch / weapon thrust}; 4. holds braced). 3 s were enough for four beats.
+
 ```template levelup
 straightens up proudly and performs ONE short triumphant flourish, such as raising the weapon or a fist high for a moment, then returns to exactly the same ready stance as the start and holds still. No jumping, no spinning.
 ```
@@ -196,7 +235,7 @@ straightens up proudly and performs ONE short triumphant flourish, such as raisi
 The game adds the level-up light: no glow, no stars, no particles, no effects.
 ```
 
-### rise (one-shot, 3:4 canvas; an alternative respawn, untested)
+### rise (one-shot, 3:4 canvas; the hero respawn, tested)
 
 Plan the set from the kneeling `pose_respawn` still (`make_master.py`) and set `"endStill"` to the master: the
 character rises from that pose into the idle stance. The light column and the ground ring are fx layers
@@ -211,7 +250,7 @@ No light, no glow, no pillar, no particles, no smoke, no effects. Constant chara
 ```
 
 
-### despawn (one-shot, square canvas; exported REVERSED as respawn or raise; the default, works)
+### despawn (one-shot, square canvas; exported REVERSED as respawn or raise; the fallback: a user found the result statue-like)
 
 `respawn_side` (heroes) and `raise_side` (summoned enemies and allies) are this clip played backwards
 (`video_to_sheet.py --reverse`): the character rises out of the ground into the master pose.

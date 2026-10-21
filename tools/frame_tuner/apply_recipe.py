@@ -31,6 +31,19 @@ def frames_of(clip, fps=None):
     ims = [key_out(Image.open(f).convert('RGBA')) for f in sorted(glob.glob(d + '/*.png'))]
     shutil.rmtree(d, ignore_errors=True); return ims
 
+def shake_offsets(n, cfg):
+    """Post-process tremor: per kept frame (dx, dy) in finished-canvas px (about @2x px), zero outside cfg['from']..cfg['to'] (indices in the KEPT list),
+    eased in and out, deterministic from cfg['seed']. cfg = {"from": 8, "to": 20, "amp": 2.5, "seed": 1}; amp 2-3 reads as a clear tremor at game size."""
+    import random, math
+    if not cfg: return [(0, 0)] * n
+    rnd = random.Random(cfg.get('seed', 1)); a, b, amp = cfg['from'], cfg['to'], cfg.get('amp', 2.5); out = []
+    for k in range(n):
+        if a <= k <= b and b > a:
+            env = math.sin(math.pi * (k - a) / (b - a)) ** 0.5
+            out.append((round(rnd.uniform(-1, 1) * amp * env), round(rnd.uniform(-1, 1) * amp * 0.7 * env)))
+        else: out.append((0, 0))
+    return out
+
 def plan_for(st, saved, use_default, n):
     if use_default or st['id'] not in saved:
         stride = st['approved'].get('stride', 1); keep = list(range(0, n, stride)); ms = round(1000 / CFG['fps'])
@@ -52,9 +65,10 @@ def apply(st, saved, use_default, write, asset_out):
     S = TARGET_H / (st.get('bodyPx') or (b[3] - b[1]))      # the approved clips of this hero used the master's 268 px in the clip
     work = pathlib.Path(tempfile.mkdtemp(prefix='ar_set_')); act = 'skill' if st['sheet'].startswith('skill_') else st['id']
     d = work / 'fin' / act; d.mkdir(parents=True)
+    offs = shake_offsets(len(keep), (rec or {}).get('shake'))        # optional post-process tremor, recipe field "shake"
     for k, i in enumerate(keep):
         im = ims[i]; sm = im.resize((round(im.width * S), round(im.height * S)), Image.LANCZOS)
-        c = Image.new('RGBA', (CW, CH), (0, 0, 0, 0)); c.paste(sm, (round(AX - fx * S), round(AY - fy * S))); c.save(d / f'f_{k:03d}.png')
+        c = Image.new('RGBA', (CW, CH), (0, 0, 0, 0)); c.paste(sm, (round(AX - fx * S) + offs[k][0], round(AY - fy * S) + offs[k][1])); c.save(d / f'f_{k:03d}.png')
     sel = {'start': 0, 'endExclusive': len(keep), 'durationsMs': dur, 'loopPolicy': 'loop' if st['loop'] else 'oneshot', 'fps': CFG['fps']}
     if hit is not None: sel['impactMs'] = int(sum(dur[:hit]))
     (work / f'sel_{act}.json').write_text(json.dumps(sel)); (work / f'fin_{act}.json').write_text(json.dumps({'anchor': [AX, AY]}))
