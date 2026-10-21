@@ -28,6 +28,12 @@
   - horn_charge: cúi đầu lao tới húc bằng cặp sừng, hai tay lửa hất ra sau; vệt lửa kéo sau lưng (vfx)
   - ember_armor: khoanh hai tay lửa trước ngực, lửa bùng phủ vai và giáp (buff, vfx)
 
+## Actions chosen (2026-10-21; clip chưa chạy, chờ user đồng ý chi phí)
+Chung: facing RIGHT the entire time, bắt đầu từ idle của master (một nhịp thở), kết bằng pose_skill đã chốt rồi HOLD yên, locked tripod, không hiệu ứng (vfx làm sau bằng fx-layers).
+- cinder_slam (1a, 4 s): 1. thở; 2. gối gập, hai nắm đấm lửa giơ cao qua đầu (không vượt đỉnh sừng); 3. bổ cả hai xuống đất trước chân, người gập về trước; 4. giữ pose.
+- horn_charge (2a, 4 s): 1. thở; 2. hạ thấp, gối trước gập sâu, hai tay lửa kéo ra sau, đầu cúi (visor hướng phải); 3. bật lao về phải; 4. giữ pose (chỉ chân được nêu mới trượt).
+- ember_armor (3a, 4 s): 1. thở; 2. hai tay nâng chéo trước ngực, đầu hơi cúi; 3. siết nắm đấm vào vai, lửa trên tay phồng leo lên giáp vai; 4. giữ pose; chân đứng yên.
+
 ## Asset manifest
 | Asset | Từ | Loại | Trạng thái | Ghi chú |
 |---|---|---|---|---|
