@@ -1,6 +1,6 @@
 ---
 name: fal-image
-description: Generate still images with OpenAI GPT Image via fal.ai: a game character's approved master (side view) and, for enemies, its front and back views, icons, projectiles, towers, props, UI and level backgrounds. Use when the user asks to create, draw, render or design an image, a character or a game asset. Animation (walk, attack, death ...) is not drawn here: it is made from these stills by the video-sprite skill.
+description: Generate still images with OpenAI GPT Image via fal.ai: a game character's approved master (side view) and, for enemies, its front and back views, icons, projectiles, towers, props, UI and level backgrounds. Use when the user asks to create, draw, render or design an image, a character or a game asset. Animation (walk, attack, death ...) is not drawn here: it is made from these stills by the video-sprite skill. With --manual it writes the prompts for the user to run in ChatGPT instead of calling fal, then reviews and files the images the user approves.
 ---
 
 # Generate stills with fal.ai
@@ -19,6 +19,7 @@ motion sheet. Animation comes from the `video-sprite` skill, which animates the 
 - `--status [<id>]` or "trạng thái tới đâu rồi", "xem manifest của <id>": run `python scripts/asset_status.py
   [<id>]` and show its table (every character, or one character's manifest). No API call, nothing written.
 - `--auto`: format.md §5.
+- `--manual`: no API call and no fal cost; the user carries the prompts to ChatGPT (or another image tool) and brings the images back ("Manual mode" below). Everything else works as without the flag.
 - `--creative`: design-suggestion mode (next section). The user gives only the idea; you propose, they pick.
 
 ## Creative mode (`--creative`)
@@ -48,6 +49,33 @@ turn it into a few designs and the user only chooses. No API call until the choi
    to enrich, never to fix the design to one hero.
 5. Continue in the normal mode (default: master, then stop for approval; with `--auto` too, if given).
    Show the composed `{design}` sentence in the master report so the user sees what was drawn from.
+
+## Manual mode (`--manual`)
+Same standards, different hand: you are the art director who writes the requests, the user is the courier who sends them to ChatGPT and
+brings images back; no `gen_image.py` call, no fal cost. Used to test ideas for free and to save the stills' cost. Without the flag
+nothing in this skill changes. Class, tier, role, skills and the design questions (below) are asked exactly as usual, with these differences:
+1. **Nothing is written until something is approved.** No folder, `brief.md` or manifest is created for a candidate; they appear when
+   the user says "chốt" for the first image (idea testing costs nothing and leaves nothing behind).
+2. **The prompt pack** replaces the generator call. For each still show, in ONE code block the user can copy: (a) a line "Đính kèm: ..."
+   naming exactly which image(s) to attach (the approved master `vNN`, or the concept image; none for a first master from words), (b) the
+   message, **fully expanded**: the real `{design}`, `{STYLE}`, `{BG}`, `{UPRIGHT}`, `{SIMPLE}` and the view text from `format.md` (§1-§3,
+   §10) with `{H}` filled in, no `[ ]` or `{ }` left (an unfilled slot is read by the model as text and it invents the design), ending
+   "Output: one image, 1024x1024, one character only". Each message must stand alone (the chat has no memory we rely on): one still per
+   message; a new chat per still is safest. Save the same text as `A/design/prompts/<still>_pNN.txt` once the asset exists.
+   Patterns already written out: `docs/prompt-style-transfer.md` (from a concept image: A convert only, B optional changes) and
+   `docs/prompt-assets-from-master.md` (front, back, icon, projectile, poses, fx part, ability icon). Use them, adapted, instead of inventing a new shape.
+3. **From a concept image**: the prompt says what to KEEP (count limbs and features), what to CHANGE, and what must NOT be added (a weapon the
+   concept does not have). The two failures seen: all extra arms dropped, and a staff added to empty hands.
+4. **Review** what the user sends (a path in the chat, usually `.../images/N.webp`): open it with Read, score it 1-10 with `format.md` §6, and for
+   a candidate run `python scripts/ingest_image.py <image> --check` (size, flat magenta border, margins, share of the frame, magenta tint).
+   Report scores and warnings in Vietnamese, recommend one, write the next prompt as a one-fix retry. The user's words are the brief: translate
+   their feedback into prompt lines yourself.
+5. **File only what the user approves**: `python scripts/ingest_image.py <image> --out <asset>/design --name <still> --prompt-file <the pack text> --note "<why chosen>"`
+   (PNG 1024x1024, next free `<still>_vNN`, sidecar `.json` with source `manual`, the prompt and cost 0; `costs.csv` is not touched).
+   Rejected candidates are never saved. Then `brief.md` (approved stills, "why chosen"), `history.md` (model column: `chatgpt (manual)`, cost 0) and the manifest row as usual.
+6. Never ask the user to attach anything from `ref/` (look-only style anchors), and no confidential material.
+7. After this the asset is an ordinary asset: the same names, folders and numbering, so `video-sprite` and every tool work unchanged. A still may be
+   made through the API later for the same character (the numbering continues); `--auto` does not apply (a human carries every prompt).
 
 ## Ask for class, size, role and skills (every character, before anything else; `--creative` asks them with its design questions)
 A character needs a **class** (one file in `classes/`: hero, ally, enemy, enemy-flying, boss), a **size
@@ -98,7 +126,7 @@ flags or the words of the request; never guess a missing one. Ask only what is m
   `{BG}` from `format.md`, into `out/<kind>s/<id>/design/` (`format.md` §4). They are stills too.
 - **Anything else**: write a concrete prompt (subject, composition, camera, lighting, style, palette).
 
-## Running the generator (project root)
+## Running the generator (project root; not used in `--manual`)
 `python scripts/gen_image.py "<prompt>" --size <size> [--ref <image>] [--png] --name <name> [--versioned] [--out <dir>]`
 - Defaults: `--model gpt-image-2 --quality low` (cheap drafts). Class stills: `--size 1024x1024 --png` on a
   flat magenta background (no `--transparent`; the tools key it out), `--versioned --out <asset>/design`.
@@ -117,7 +145,7 @@ capitals, say what must not be visible) and regenerate that image only. Max 3 ro
 output paths, scores, what changed each round, and the cost from the `cost:` lines.
 
 ## Costs
-- Each run logs to `out/costs.csv`. Spend summary: `python scripts/cost_report.py` (add `--today`).
+- Each run logs to `out/costs.csv` (manual stills cost nothing and are not logged). Spend summary: `python scripts/cost_report.py` (add `--today`).
   Mention the session total when you finish a task.
 - `~` means the cost is approximate (no exact fal price, or reference images were sent).
 

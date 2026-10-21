@@ -11,6 +11,8 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
     `enemy-flying`, `boss`: roles, size, directions, stills, manifest rows, skills; asked with AskUserQuestion
     when missing), reference measurements in `reference.md`, other assets in `templates.md`, example
     requests in `examples.md` (`/fal-image --example --hero`); `--creative` proposes designs from a short idea. A `style.md` at the project root, if present, overrides the default style block.
+    `--manual`: no fal call: you write fully expanded prompts for the user to run in ChatGPT, review what they bring back and file only the approved
+    images with `scripts/ingest_image.py` (checks + next `_vNN`, cost 0, `costs.csv` untouched).
   - `video-sprite` (`.claude/skills/video-sprite/`): every character animation (move, attack, death ...) from
     the approved stills: image-to-video on fal.ai (`scripts/fal_video.py`) -> keyed, registered, looped or
     retimed frames -> `scripts/video_to_sheet.py` exports them into `out/<class>/<id>/<category>/<sheet>/`
