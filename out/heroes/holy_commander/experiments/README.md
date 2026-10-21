@@ -1,6 +1,6 @@
 # Thí nghiệm (2026-10-21) cho phần cập nhật skill
 
-Bốn clip thử, không thuộc bộ assets đã export, để kiểm các đề xuất của `docs/skill-update-proposal-from-holy-commander.md`. Mỗi clip 4 s từ `master_v07`, h3-max-turbo, ~0,06 USD (ước tính).
+Bốn clip thử, không thuộc bộ assets đã export, để kiểm các đề xuất cập nhật skill (đã áp dụng vào `.claude/skills/`). Mỗi clip 4 s từ `master_v07`, h3-max-turbo, ~0,06 USD (ước tính).
 | File | Thử gì | Kết quả ngắn |
 |---|---|---|
 | `test_1080p_slash_body.mp4` | cùng prompt và ảnh đầu với take slash 480P, nhưng 1080P | 1920x1080, 24 fps, cùng chuỗi chuyển động; sắc hơn, viền bán trong suốt khi key giảm một nửa; file ~5 lần lớn hơn |

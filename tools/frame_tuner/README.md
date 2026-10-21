@@ -2,7 +2,7 @@
 
 Tool để bật/tắt từng frame, chỉnh thời gian mỗi frame và đặt hình va chạm cho animation của hero, xem bản gốc cạnh bản sửa, rồi lưu
 "công thức" và áp dụng vào export. Không gọi model, không tốn phí. Thay cho `decimate` rải rác trong `tools/kr_compare/build_manifest.py`
-(issue: `docs/issue-frame-recipe-sync.md`).
+(issue resolved: 15 fps recipes export byte-identical).
 
 ## Hai cách dùng
 

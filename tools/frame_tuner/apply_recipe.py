@@ -8,7 +8,7 @@ Usage (from the repo root or anywhere):
 
 The recipe (export_recipe.json, written by the frame tuner) has per state: keep (indices of the 15 fps frames of the clip),
 durationsMs (one per kept frame), hit (index in the kept list or null). The route is the one used for the approved exports
-(docs/issue-frame-recipe-sync.md): ffmpeg fps=15 -> sprite_pack.key_out -> finish scale 120/<body height of frame 0> -> feet of frame 0
+(the route of the approved exports): ffmpeg fps=15 -> sprite_pack.key_out -> finish scale 120/<body height of frame 0> -> feet of frame 0
 at (256, 400) on a 512x512 canvas -> synthetic set -> video_to_sheet.py (it matches the body size to the asset and keeps one canvas).
 Needs python, numpy, Pillow, ffmpeg on PATH. Same-day recipes never touch SKILL.md; no model is called (free)."""
 import sys, os, json, glob, shutil, subprocess, tempfile, pathlib, argparse

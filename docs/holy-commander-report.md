@@ -320,7 +320,7 @@ hiệu ứng lửa/blade-flash làm `fx_charge` riêng qua `fx_layers.py` sau n�
    chỉ dồn về trước, câu locked tripod, hiệu ứng nhỏ sát vũ khí hoặc nắm đấm. Ý tưởng chi tiết của từng skill
    chưa chốt, cần bàn với user trước khi quay.
 6. Quy ước chung chưa đổi: `.work/` không có trong git, công thức cắt frame sẽ ghi ở
-   `docs/issue-frame-recipe-sync.md` (user sẽ cập nhật); phiên này không cắt frame thêm.
+   một tài liệu issue đã xoá sau khi giải quyết; phiên này không cắt frame thêm.
 
 ## 12. Respawn: pose_respawn_v02 và clip rise t01 (2026-10-20)
 
