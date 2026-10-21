@@ -22,7 +22,7 @@ it has **one movement sheet** (run), drawn from the side.
 | **M (default)** | 60 | 176x140 | most heroes: knight, monk, warrior |
 | L | 84 | 220x196 | robot, golem, beast rider |
 The canvas leaves about 2 x `{H}` above the feet for casts, level-up and respawn.
-M is 176 wide, not 156 (measured on a hero with a body-high weapon, 2026-10-21): the long strikes and thrusts of a big weapon did not fit 156x140 and every sheet had to be padded. S and L keep their canvas until a hero of that tier shows the same; a beam or arc longer than the cell is a separate fx layer (`../format.md` §10), never a reason to enlarge the body canvas.
+M is 176 wide, not 156 (measured on a hero with a body-high weapon, 2026-10-21): the long strikes and thrusts of a big weapon did not fit 156x140 and every sheet had to be padded. S and L keep their canvas until a hero of that tier shows the same; a beam or arc longer than the cell is an fx layer (`../format.md` §10).
 
 ## 4. Directions and master
 **1 direction: side** (left = mirror). The master is the hero in its idle stance, side view (`../format.md`

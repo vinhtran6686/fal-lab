@@ -81,7 +81,7 @@ Everything a character does is two separate things, as in the reference game:
 sheet: run 5-6, walk ~12, attack ~10, death 7-9, level-up ~16, respawn ~16. A skill is a short move into its
 pose and a long HOLD (reference skills: 39 frames from 4-13 drawings) while the layers play: the `skill`
 timing puts the pose at 40% and holds it. Fewer, cleaner drawings read smoother than many wobbling frames.
-Clips are 4 s (`--duration 4`): longer takes drift and zoom.
+Clips are 4 s by default (`--duration 4`, up to 5 for many beats): longer takes drift and zoom.
 
 **Ground shadow**: every export draws a flat 35% black ellipse under the feet, behind the body, in every frame
 (the reference game bakes it into each walking character's frames); its size is set by the first export and kept
@@ -140,7 +140,8 @@ Skills: put the skill's body move from `brief.md` in the entry's `motion` and se
 approved peak pose and the game switches back to idle after the last frame. The big effect is the vfx row.
 The category folder comes from the sheet name (`scripts/asset_layout.py`: walk/run/fly -> move,
 attack/attack2/shoot/cast -> attack, skill, respawn/raise -> spawn, levelup -> level, death, idle, icon -> ui).
-Reference lengths (30 fps, `fal-image/classes/*.md`): one-shots are retimed to them (shoot 0.8 s, skill 1.2
+Reference lengths (30 fps, `fal-image/classes/*.md`; the old `sprite_set` retime defaults; a state with a user-tuned frame recipe keeps the
+length the user chose, e.g. one hero: attack 1.2 s, death 2.1 s, level-up 1.8 s, skills 2.3-2.9 s, respawn 2.0 s): one-shots are retimed to them (shoot 0.8 s, skill 1.2
 s, level-up 0.7 s, respawn 0.6 s, attack 0.7 s, death 0.9 s); loops (walk, run, fly) take their length
 from the stride, so a hero run of the reference's 0.2 s does not carry over: keep one clean stride.
 
@@ -159,8 +160,8 @@ from the stride, so a hero run of the reference's 0.2 s does not carry over: kee
    "Writing the action"). For each clip write the action beat by beat, body part by body part, with the facing lock and an end
    state; work out the clip length from the number of beats (below); show the user the description (in `--creative`/`--example`
    2-3 options with their risks) and wait for "ok". Only then price and run. On the reference hero, rounds that used a generic or
-   self-invented action were rejected twice; the user's step-by-step description was accepted at once and the next skill reused
-   the formula and passed first time. Rejected rounds are what made the hero cost ~USD 1.8 instead of the ~0.75 first quoted.
+   self-invented action were rejected twice (one-shot hero actions only; loops were not studied); the user's step-by-step description was accepted at once and the next skill reused
+   the formula and passed first time; rejected rounds are where the money goes.
    **Clip length decides the number of motions**: plan about 0.7-1 s per distinct beat plus about 1 s of final hold, 3-5 s in total.
    Two strikes in 2 s were merged into one by the model; the same two in 3 s were both made. A shorter clip drops beats, it does
    not speed them up; 5 s tends to drift. Say which beat should be longest (the model splits time unevenly).
@@ -170,11 +171,19 @@ from the stride, so a hero run of the reference's 0.2 s does not carry over: kee
    at 480P, below 1 px at game size; asking "violent shaking" tripled it and it was still under 1 px at game size): if it must be
    seen, add it in the export (`shake` in the frame recipe, below) and ask the model only for the braced pose.
 5. **Ask before paying.** Show the user the manifest rows you will make, the clip count and the estimate
-   (default `h3-max-turbo` 480P 5 s = ~USD 0.08 per clip; a melee enemy: walk x3, attack, death = 5 clips
+   (default `h3-max-turbo` 480P ~USD 0.015 per second: 4 s = ~USD 0.06, 5 s = ~0.08; a melee enemy: walk x3, attack, death = 5 clips
    ~USD 0.40, idle is free; a hero with 2 skills: run, attack, death, levelup, respawn, 2 skills = 7 clips
    ~USD 0.56; + retakes) and wait for a yes, unless they
    already approved this run. `FAL_VIDEO_MAX_USD` (default 0.60) caps every clip; `FAL_VIDEO_MODEL` picks
    another model (`kling-3-std` keeps a weapon's pose best but costs ~USD 0.70 a clip).
+   **Written-prompt route.** A hand-written action (formula) is NOT sent through `sprite_set.py plan/run`: its `build_prompt` strips every
+   effect word, appends "starts AND ends in exactly the same pose" to any `returnsToRest` action and adds a "same size" tail, which
+   contradicts an action that ends in another pose or is allowed one fx. Send it directly:
+   `python scripts/fal_video.py video --prompt-file <P.txt> --reference <start.png> [--last-frame <end.png>] --duration 4 --resolution 480p --out-dir <dir>`,
+   where `start.png` (and `end.png`) is the keyed still centred on one magenta canvas (the reference hero used 1820x1024, body 268 px;
+   no helper script exists yet: place it by hand and keep the same canvas for every clip of the hero). Save the mp4, `.json` and the
+   prompt as `A/raw/<action>_<set>_tNN.*` at once. Frames then come from the recipe route ("Choosing the frames"). The `sprite_set`
+   route stays for loops (walk, run, fly), which need its gait gates and loop cutting.
 6. **Run**, then **review**: Read every take's sheet. The gates measure size, feet, zoom, turning, edges,
    background, extra objects, motion, colour and timing; they cannot see identity, a changed weapon, the
    wrong leg order or a covered face. Never accept an action you have not looked at. Classify each take:
@@ -194,7 +203,7 @@ Report: the manifest after the run (`python scripts/asset_status.py <id>`), the 
 the model and takes, the cost (`python scripts/cost_report.py --today`).
 
 ## Run modes (like fal-image: preview by default)
-Read the mode from the request. Every paid clip still needs the cost agreed first (Workflow step 4).
+Read the mode from the request. Every paid clip still needs the cost agreed first (Workflow step 5).
 - **Default: preview checkpoint.** After `run` + `review`, do your own review (Pass / Needs Revision / Fail)
   but **do not export**. Stop and show the user, per action: the clip
   (`A/raw/<action>_<set>_tNN.mp4`), the review sheet
@@ -235,7 +244,8 @@ The user picks the smoothest frames, per-frame durations and the hit frame of ea
 (with the Python fx composited), saves a **recipe** (`A/export_recipe.json`: per state `clip`, `fps`, `keep`, `durationsMs`, `hit`
 = index in the kept list, optional `shake`), and `apply_recipe.py <state> --write` exports it through `video_to_sheet.py` (one canvas,
 one body size, `--rest-last` where the state asks); `export_fx.py` exports the fx for the same kept frames. Run it as an artifact
-(recipes saved in its db; the first Claude-side copy is `export_recipe.json`) or locally with `frame_tuner.bat` + `serve.py`.
+(recipes saved in its db; the first Claude-side copy is `export_recipe.json`) or locally with `frame_tuner.bat` + `serve.py`. Offer it after a
+one-shot is accepted; with no recipe, the old `retime` default applies.
 - Recipes replace `retime --auto-oneshot` for a state that has one. `hit_frame` in `meta.json` counts from 1.
 - **Source rate**: the tuner offers the project's 15 fps and the clip's native 24 fps (about 1.6x the frames to choose from); the recipe
   stores the rate it used and `apply_recipe`/`export_fx` read it; the fx counts its beats in 15 fps frames and is mapped by 15/fps.

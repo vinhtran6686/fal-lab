@@ -29,13 +29,14 @@ Rules behind it:
 - One action per clip. A combo is two clips.
 - State the facing as a lock, not a description. Turning around was the most common rejection.
 - Pin the start and the end pose to the still. Idle and attack also get the still as the last
-  frame when the route takes one (`--last-frame`).
+  frame when the route takes one (`--last-frame`). (A formula-written action instead ends on the pose it
+  describes, item 8 below, and is sent by the written-prompt route in SKILL.md.)
 - Name the backdrop and the style last, every time. The model forgets them otherwise.
 - Never ask for a numeric pixel grid, a work region or slow motion; the input image already
   frames the shot, and weak words ("tiny", "barely", "very slow") make the motion invisible at
   game size (prepare_i2v_input lint).
-- Keep effects out of character clips. Dust, sparks, trails and flashes cover the body, fail the
-  key and belong to the game's own FX layer.
+- Keep effects out of character clips by default. Dust, sparks, trails and flashes cover the body, fail the
+  key and belong to the fx layer (one narrow allowed effect: formula item 7).
 - A fix is a sentence added to the next take, never a rewrite of the whole prompt.
 
 ## Writing the action (the formula that worked; use it for every hand-written action)
