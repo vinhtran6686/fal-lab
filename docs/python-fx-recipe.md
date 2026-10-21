@@ -185,3 +185,13 @@ Mã: `out/heroes/holy_commander/fx/radiant_slash_beam.py`; bảng lớp và tham
 - **Canvas mở rộng về phía tia bắn** (1500x600, khung clip lệch trái), để tia không bị cắt ở mép khung clip.
 - **Hào quang theo hình bóng gồm cả vũ khí** (cùng hàm `aura` đã sửa cho tròn), phía sau thân.
 - Bản Python đẹp hơn bản model vẽ tia (model thêm vòng không yêu cầu); nhưng với ripple mặt đất của banner, user lại chọn bản model. Thử cả hai cho mỗi skill, vì Python không tốn tiền.
+
+## 12. Xuất fx thành lớp riêng trong suốt (2026-10-21)
+
+`tools/frame_tuner/export_fx.py` biến fx Python (levelup v03, slash beam) thành **lớp RGBA riêng** khớp từng frame thân đã export, để repo khác dùng.
+- Vẽ fx trên canvas của clip, tách hai lớp: **back** (sau thân) và **front** (trước thân). Mỗi lớp là ánh sáng cộng (screen) trên nền đen.
+- Lưu: màu = màu ánh sáng, alpha = cường độ (kênh lớn nhất), alpha thẳng. Pha trộn tốt nhất bằng screen hoặc additive; alpha-over vẫn dùng được nhưng tối hơn trên nền sáng.
+- **Căn khớp đúng với thân**: fx đi qua đúng chuỗi biến đổi của thân (thang hoàn thiện `120 / chiều cao thân`, đặt chân tại (256, 400) trên khung 512, nhân `body_rescale`, đặt chân vào pivot (176, 246) @2x), kể cả các bước làm tròn.
+  Đo lại: đặt lại thân bằng chuỗi này và so với frame đã export cho IoU 0,985-0,993 (levelup, slash, banner, attack). Nếu chỉ xấp xỉ bằng một hệ số thì lệch 1 pixel (IoU 0,957).
+- Cắt canvas theo phần fx thật sự có (tia slash dài hơn ô hero); ghi `pivot_1x/2x` trong `fx.json`. Số hình fx bằng số hình thân (lặp theo `even_fps` nếu công thức giữ lâu một hình).
+- Chạy: `python tools/frame_tuner/export_fx.py` (sau `apply_recipe.py --write`). Xem trước bản đã xuất: `python tools/frame_tuner/preview_export.py`.

@@ -1,48 +1,38 @@
 {
- "skill": "radiant_slash",
- "canvas_2x": [
-  432,
-  312
+ "state": "skill_radiant_slash_side",
+ "fx": "radiant_slash",
+ "source": "tia sáng Python",
+ "frames": 43,
+ "fps": 15,
+ "loop": false,
+ "blend": "screen (additive light on black; straight alpha = strength, alpha-over is a little dimmer)",
+ "size_2x": [
+  418,
+  184
+ ],
+ "size_1x": [
+  209,
+  92
  ],
  "pivot_2x": [
-  173,
-  265
+  108,
+  162
  ],
- "fps": 15,
- "frames": 15,
- "body": "skill_radiant_slash_side",
+ "pivot_1x": [
+  54,
+  81
+ ],
+ "note": "place the fx image so its pivot sits on the hero pivot (feet, x 0.5, y 0.88 of the 176x140 cell); frame n goes with body frame n of the same state",
  "layers": [
   {
-   "id": "smear",
-   "type": "slash",
-   "z": "front",
-   "start": 0.05,
-   "length": 0.4,
-   "files": "fx/radiant_slash/smear/frames/@2x/smear_NN.png (also @1x)"
+   "id": "back",
+   "z": "behind the body",
+   "files": "fx/radiant_slash/back/frames/@2x/hero_holy_commander_fx_radiant_slash_back_NN.png (also @1x)"
   },
   {
-   "id": "ground_ring",
-   "type": "ring",
-   "z": "back",
-   "start": 0.3,
-   "length": 0.55,
-   "files": "fx/radiant_slash/ground_ring/frames/@2x/ground_ring_NN.png (also @1x)"
-  },
-  {
-   "id": "hit_burst",
-   "type": "burst",
-   "z": "front",
-   "start": 0.3,
-   "length": 0.35,
-   "files": "fx/radiant_slash/hit_burst/frames/@2x/hit_burst_NN.png (also @1x)"
-  },
-  {
-   "id": "sparks",
-   "type": "particles",
-   "z": "front",
-   "start": 0.32,
-   "length": 0.55,
-   "files": "fx/radiant_slash/sparks/frames/@2x/sparks_NN.png (also @1x)"
+   "id": "front",
+   "z": "in front of the body",
+   "files": "fx/radiant_slash/front/frames/@2x/hero_holy_commander_fx_radiant_slash_front_NN.png (also @1x)"
   }
  ]
 }

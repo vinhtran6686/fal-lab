@@ -153,6 +153,9 @@ def main() -> None:
     p.add_argument("--rest-frame", action="store_true",
                    help="export only the take's first frame (the master pose) as a 1-frame sheet: idle_side, on the "
                         "same canvas and scale as the clips")
+    p.add_argument("--rest-last", action="store_true",
+                   help="measure the body size on the LAST shown frame instead of the first: for a clip that ends on the "
+                        "master pose (a respawn that rises from kneeling), so the standing pose matches the idle")
     p.add_argument("--reverse", action="store_true",
                    help="play the take backwards: a despawn (sinking into the ground) becomes respawn_side or raise_side")
     p.add_argument("--despill", action="store_true",
@@ -167,7 +170,7 @@ def main() -> None:
     frames_dir = set_dir / finished["framesDir"]
     files = sorted(frames_dir.glob("*.png"))
     indices, durations, selection = timeline(read_json(set_dir / selection_stage["selection"]))
-    rest_index = indices[0]   # the first shown frame before any reversal: the rest pose of a one-shot
+    rest_index = indices[-1] if a.rest_last else indices[0]   # the first shown frame before any reversal: the rest pose of a one-shot (--rest-last: the last)
     if a.rest_frame:   # idle = the master still, as in the reference game (1 frame)
         indices, durations = [0], [1000]   # source frame 0 of the take: the master pose (a loop window starts mid-stride)
         selection = {"loopPolicy": "cycle"}

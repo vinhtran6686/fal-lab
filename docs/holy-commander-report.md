@@ -341,3 +341,8 @@ tham số v03: `out/heroes/holy_commander/brief.md`. Chưa export, chưa cắt f
 - **Chờ duyệt:** clip respawn `rise` t01.
 - **Bài học:** mô tả hành động rõ ràng từng bước theo bộ phận cơ thể quyết định chất lượng (`brief.md`, mục "Skill 2 holy_banner"); fx Python miễn phí, mỗi skill nên thử cả bản model và bản Python (`docs/python-fx-recipe.md`).
 - **Chưa làm (theo ý user):** export, cắt frame, gate `qc.json`, sửa `SKILL.md`, trỏ `CLAUDE.md`.
+
+## 15. Trích xuất bộ assets hoàn chỉnh (2026-10-21)
+User chốt mục tiêu: một bộ assets đầy đủ cho holy_commander để dùng ở repo khác (session này không liên quan game).
+Đã làm: áp dụng 7 công thức frame; sửa cỡ thân respawn (`--rest-last`); xuất 2 lớp fx riêng (levelup, radiant_slash); đóng gói icon; viết `EXPORT_README.md` và `export_manifest.json`; kiểm 746 file frame.
+Chi tiết: `out/heroes/holy_commander/EXPORT_README.md`, `history.md` (dòng 2026-10-21), `docs/python-fx-recipe.md` §12. Còn mở: clip respawn chờ duyệt, chưa có stats, chưa chạy gate `qc.json`.

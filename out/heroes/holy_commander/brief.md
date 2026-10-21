@@ -38,13 +38,13 @@
 | pose_skill_charge | fal-image | ảnh tĩnh | ✅ v01 | cúi người, kiếm đưa ngang người |
 | pose_respawn | fal-image | ảnh tĩnh | ✅ v02 | quỳ xám, gục đầu vào báng kiếm dựng đứng; ảnh đầu của clip `rise`. Lý do chọn: xem mục Respawn pose bên dưới |
 | run_side | video-sprite | loop | ✅ t01 | export --despill --kind hero (colour gate fail là vết màu key bleed, hết sau despill); 8 hình, 15fps, canvas 176x140 (was 156x140; padded), body 111px@2x |
-| attack_side | video-sprite | one-shot | ✅ exported | 23 hình (t04 bớt 1/2 frame), 1.53 s @15fps, hit frame 10, canvas 176x140, body rescale x1.094 |
-| death_side | video-sprite | one-shot | ✅ exported | 39 hình (t01 bớt 1/2 frame), 2.60 s @15fps, canvas 176x140 |
-| respawn_side | video-sprite | one-shot | ⏳ clip t01 quay xong, chờ user duyệt | `pose_respawn_v02` (quỳ xám) -> `master_v07`, 4.46 s raw (`raw/respawn_side_rise_t01`): xám -> hồi màu -> đứng lên. Chưa export 176x140, chưa fx_respawn. Bản đảo despawn cũ bị loại |
-| levelup_side | video-sprite | one-shot | ⏳ thân + fx đã chốt, chưa export | thân: `raw/levelup_side_extra_v2_t01` (`pose_levelup_v02`, 3 s, 46 hình). **fx: v03 "hào quang xung nhịp"** vẽ bằng Python (`fx/levelup_variants.py`, 0 USD), user chọn 2026-10-20. Chưa export 176x140; xem mục Levelup fx v03 |
-| skill_holy_banner_side | video-sprite | one-shot | ✅ chốt (chưa export) | **Thiết kế mới "cắm kiếm quỳ gối"**: đứng idle, chân sau trượt lùi, nâng kiếm hai tay lên cao rồi găm mạnh xuống đất, khuỵu quỳ một gối, hai tay nắm chặt cán, gồng, giữ pose; sóng xung kích lan trên đất từ mũi kiếm. **Bản chốt: take do model vẽ cả ripple** `raw/skill_side_skill_holy_banner_v4_t02` (prompt: `.prompt.txt` cạnh nó). Thân sạch `v4_t01` + ripple Python (`fx/holy_banner_ripple.py`) cũng đẹp, giữ làm phương án thay thế. 4 s, 67 hình. Chưa export, chưa cắt frame |
-| skill_radiant_slash_side | video-sprite | one-shot | ✅ chốt (chưa export) | **"Tia thánh xuyên"**: rút kiếm đưa ngang ngực, kéo sát người, bước dài đâm thẳng, giữ pose. **Bản chốt: thân sạch `raw/skill_side_skill_radiant_slash_v2_t01` + tia sáng vẽ bằng Python `fx/radiant_slash_beam.py`** (user: đẹp nhất). Take `_t02` (model vẽ tia) là phương án thay thế. 4 s, 67 hình, chưa export, không cắt frame |
-| skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 67 hình, 4.47 s @15fps, giữ vòng lửa lớn frame ~46-72 theo quyết định user (user đồng ý đó là lỗi; lần sau dùng hiệu ứng vừa khung hơn, xem report §11); canvas 176x140 |
+| attack_side | video-sprite | one-shot | ✅ exported | 18 hình theo công thức user (1,20 s), hit 10, canvas 176x140 |
+| death_side | video-sprite | one-shot | ✅ exported | 32 hình theo công thức user (2,13 s) |
+| respawn_side | video-sprite | one-shot | ✅ exported (chờ user duyệt clip) | `rise` t01, 30 hình, 2,00 s, cỡ thân đo theo hình cuối (đứng) để khớp idle (`--rest-last`). Chưa có fx_respawn |
+| levelup_side | video-sprite | one-shot | ✅ exported | 27 hình, 1,80 s, hit 13; fx `fx/levelup` (v03) xuất thành lớp riêng back/front |
+| skill_holy_banner_side | video-sprite | one-shot | ✅ exported | 39 hình, 2,60 s, hit 18; take chốt `v4_t02` (ripple do model vẽ nằm trong frame) |
+| skill_radiant_slash_side | video-sprite | one-shot | ✅ exported | 43 hình, 2,87 s, hit 27; thân sạch `v2_t01` + fx `fx/radiant_slash` (tia Python) lớp riêng |
+| skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 34 hình theo công thức user (2,27 s); vòng lửa lớn là lỗi đã biết |
 | fx_holy_banner | fal-image vfx | hiệu ứng | ✅ v01 | cờ hiệu, asset riêng |
 | fx_radiant_slash | fal-image vfx | hiệu ứng | ✅ v01 | vệt chém vàng, asset riêng |
 
@@ -206,3 +206,8 @@ Kết thúc sạch (không còn fx) để game về idle.
 2. Mũi kiếm đo **từng hình** từ clip, nên fx bám đúng vũ khí; tia không bắt đầu từ chỗ đoán.
 3. Với tia sáng (hình dạng đơn giản, cần mềm và nhiều lớp), Python cho kết quả đẹp hơn model: model thêm vòng không yêu cầu chạy ra mép khung, Python điều khiển được từng lớp. Với ripple trên mặt đất của banner thì user chọn bản model. Cả hai đều dùng được; mỗi skill nên thử cả hai (Python đã miễn phí).
 4. Canvas fx phải rộng về phía hướng tia bắn (ở đây sang phải): khung clip đặt lệch trái canvas.
+
+## Bộ assets đã trích xuất (2026-10-21)
+Trích xuất hoàn chỉnh theo yêu cầu (repo khác sẽ dùng, không liên quan game ở session này): `EXPORT_README.md` (cho người) và `export_manifest.json` (cho máy) trong thư mục này.
+Đủ 10 state (idle, run, attack, death, respawn, levelup, 3 skill, icon), 2 lớp fx tách (levelup, radiant_slash), 7 ảnh tĩnh. Frame theo `export_recipe.json` (công thức user lưu trong Frame Tuner).
+Kiểm: `python tools/frame_tuner/build_export_manifest.py` (746 file frame, đúng số lượng, kích thước, alpha, fx khớp thân).

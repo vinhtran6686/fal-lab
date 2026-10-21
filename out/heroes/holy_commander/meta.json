@@ -51,14 +51,14 @@
       "version": "t01",
       "dir": "attack/attack_side",
       "source": "raw/attack_side_attack_t04.mp4",
-      "frames": 23,
+      "frames": 18,
       "fps": 15,
       "loop": false,
       "files": "attack/attack_side/frames/@1x/hero_holy_commander_attack_side_NN.png",
       "sheet": "attack/attack_side/sheet.png",
       "split": "video",
       "video": {
-        "set": ".work/side_export",
+        "set": "/tmp/ar_set_oc1h9zr4",
         "action": "attack",
         "take": 1,
         "route": "supplied"
@@ -70,14 +70,14 @@
       "version": "t01",
       "dir": "death/death_side",
       "source": "raw/death_side_death_t01.mp4",
-      "frames": 39,
+      "frames": 32,
       "fps": 15,
       "loop": false,
       "files": "death/death_side/frames/@1x/hero_holy_commander_death_side_NN.png",
       "sheet": "death/death_side/sheet.png",
       "split": "video",
       "video": {
-        "set": ".work/side_export",
+        "set": "/tmp/ar_set_js6n2upy",
         "action": "death",
         "take": 1,
         "route": "supplied"
@@ -88,37 +88,113 @@
       "version": "t01",
       "dir": "skill/skill_charge_side",
       "source": "raw/skill_side_skill_charge_v4_t01.mp4",
-      "frames": 67,
+      "frames": 34,
       "fps": 15,
       "loop": false,
       "files": "skill/skill_charge_side/frames/@1x/hero_holy_commander_skill_charge_side_NN.png",
       "sheet": "skill/skill_charge_side/sheet.png",
       "split": "video",
       "video": {
-        "set": ".work/side_export",
+        "set": "/tmp/ar_set_725jsc22",
         "action": "skill",
         "take": 1,
         "route": "supplied"
       },
-      "body_rescale": 1.0931
+      "body_rescale": 1.0932
     },
     "respawn_side": {
       "version": "t01",
       "dir": "spawn/respawn_side",
-      "source": "raw/despawn_side_extra_t01.mp4",
-      "frames": 78,
+      "source": "raw/respawn_side_rise_t01.mp4",
+      "frames": 30,
       "fps": 15,
       "loop": false,
       "files": "spawn/respawn_side/frames/@1x/hero_holy_commander_respawn_side_NN.png",
       "sheet": "spawn/respawn_side/sheet.png",
       "split": "video",
       "video": {
-        "set": ".work/side_export",
-        "action": "despawn",
+        "set": "/tmp/ar_set_gaq_fzgh",
+        "action": "respawn",
         "take": 1,
         "route": "supplied"
       },
-      "body_rescale": 1.0923
+      "body_rescale": 1.0948
+    },
+    "levelup_side": {
+      "version": "t01",
+      "dir": "level/levelup_side",
+      "source": "raw/levelup_side_extra_v2_t01.mp4",
+      "frames": 27,
+      "fps": 15,
+      "loop": false,
+      "files": "level/levelup_side/frames/@1x/hero_holy_commander_levelup_side_NN.png",
+      "sheet": "level/levelup_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": "/tmp/ar_set_xzkbjtjy",
+        "action": "levelup",
+        "take": 1,
+        "route": "supplied"
+      },
+      "hit_frame": 13,
+      "body_rescale": 1.0943
+    },
+    "skill_holy_banner_side": {
+      "version": "t01",
+      "dir": "skill/skill_holy_banner_side",
+      "source": "raw/skill_side_skill_holy_banner_v4_t02.mp4",
+      "frames": 39,
+      "fps": 15,
+      "loop": false,
+      "files": "skill/skill_holy_banner_side/frames/@1x/hero_holy_commander_skill_holy_banner_side_NN.png",
+      "sheet": "skill/skill_holy_banner_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": "/tmp/ar_set_mid4qqmi",
+        "action": "skill",
+        "take": 1,
+        "route": "supplied"
+      },
+      "hit_frame": 18,
+      "body_rescale": 1.0942
+    },
+    "skill_radiant_slash_side": {
+      "version": "t01",
+      "dir": "skill/skill_radiant_slash_side",
+      "source": "raw/skill_side_skill_radiant_slash_v2_t01.mp4",
+      "frames": 43,
+      "fps": 15,
+      "loop": false,
+      "files": "skill/skill_radiant_slash_side/frames/@1x/hero_holy_commander_skill_radiant_slash_side_NN.png",
+      "sheet": "skill/skill_radiant_slash_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": "/tmp/ar_set_8q8i_2a2",
+        "action": "skill",
+        "take": 1,
+        "route": "supplied"
+      },
+      "hit_frame": 27,
+      "body_rescale": 1.0955
+    },
+    "icon": {
+      "version": "v01",
+      "source": "design/icon_v01.png",
+      "frames": 1,
+      "fps": 12,
+      "loop": true,
+      "dir": "ui/icon",
+      "files": "ui/icon/frames/@1x/hero_holy_commander_icon_NN.png",
+      "sheet": "ui/icon/sheet.png",
+      "split": "gaps",
+      "cell": [
+        128,
+        128
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
     }
   },
   "body_area_2x": 6083,
@@ -132,5 +208,9 @@
   "mirrored": {
     "run_left": "run_side",
     "idle_left": "idle_side"
+  },
+  "fx": {
+    "levelup": "fx/levelup/fx.json",
+    "radiant_slash": "fx/radiant_slash/fx.json"
   }
 }

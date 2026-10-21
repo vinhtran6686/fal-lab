@@ -97,3 +97,7 @@ Bản chốt: thân sạch `raw/skill_side_skill_radiant_slash_v2_t01` + tia Pyt
 `tools/frame_tuner/`: tool chỉnh frame (bật/tắt, thời gian mỗi hình, hình va chạm), chạy cục bộ bằng `frame_tuner.bat` (lưu thẳng vào `export_recipe.json`)
 hoặc bản artifact (https://claude.ai/artifact/Muk4MBy5XYCwm8KneNSRKU, lưu trong db của trang). `apply_recipe.py` áp dụng công thức vào export; đã kiểm tái lập đúng
 attack, death, charge. Xem `tools/frame_tuner/README.md`. Chưa export gì theo công thức mới.
+
+### Cập nhật 2026-10-21: bộ assets đã trích xuất đầy đủ
+Mục tiêu của user: một bộ assets hoàn chỉnh cho holy_commander, dùng ở repo khác (không liên quan game). Đã export đủ 10 state, 2 lớp fx, icon, ảnh tĩnh; xem `out/heroes/holy_commander/EXPORT_README.md` và `export_manifest.json`.
+Việc còn lại: user duyệt clip respawn, chốt cách dùng fx (blend), stats nếu cần. Lệnh tái lập: `apply_recipe.py --write`, `export_fx.py`, `build_export_manifest.py`.

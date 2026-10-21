@@ -1,56 +1,38 @@
 {
- "skill": "levelup",
- "canvas_2x": [
-  266,
-  244
+ "state": "levelup_side",
+ "fx": "levelup",
+ "source": "fx Python v03 (hào quang xung nhịp)",
+ "frames": 27,
+ "fps": 15,
+ "loop": false,
+ "blend": "screen (additive light on black; straight alpha = strength, alpha-over is a little dimmer)",
+ "size_2x": [
+  144,
+  198
+ ],
+ "size_1x": [
+  72,
+  99
  ],
  "pivot_2x": [
-  133,
-  215
+  78,
+  176
  ],
- "fps": 15,
- "frames": 45,
- "body": null,
+ "pivot_1x": [
+  39,
+  88
+ ],
+ "note": "place the fx image so its pivot sits on the hero pivot (feet, x 0.5, y 0.88 of the 176x140 cell); frame n goes with body frame n of the same state",
  "layers": [
   {
-   "id": "gather_ring",
-   "type": "ring",
-   "z": "back",
-   "start": 0.95,
-   "length": 0.4,
-   "files": "fx/levelup/gather_ring/frames/@2x/gather_ring_NN.png (also @1x)"
+   "id": "back",
+   "z": "behind the body",
+   "files": "fx/levelup/back/frames/@2x/hero_holy_commander_fx_levelup_back_NN.png (also @1x)"
   },
   {
-   "id": "punch_pillar",
-   "type": "pillar",
-   "z": "back",
-   "start": 1.4,
-   "length": 0.5,
-   "files": "fx/levelup/punch_pillar/frames/@2x/punch_pillar_NN.png (also @1x)"
-  },
-  {
-   "id": "ground_ring",
-   "type": "ring",
-   "z": "back",
-   "start": 1.4,
-   "length": 0.6,
-   "files": "fx/levelup/ground_ring/frames/@2x/ground_ring_NN.png (also @1x)"
-  },
-  {
-   "id": "fist_burst",
-   "type": "burst",
-   "z": "front",
-   "start": 1.4,
-   "length": 0.35,
-   "files": "fx/levelup/fist_burst/frames/@2x/fist_burst_NN.png (also @1x)"
-  },
-  {
-   "id": "fist_sparks",
-   "type": "particles",
-   "z": "front",
-   "start": 1.42,
-   "length": 0.7,
-   "files": "fx/levelup/fist_sparks/frames/@2x/fist_sparks_NN.png (also @1x)"
+   "id": "front",
+   "z": "in front of the body",
+   "files": "fx/levelup/front/frames/@2x/hero_holy_commander_fx_levelup_front_NN.png (also @1x)"
   }
  ]
 }

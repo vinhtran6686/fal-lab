@@ -1,0 +1,55 @@
+out/heroes/holy_commander/death/death_side  frames=32  cyclic
+  F  height  ground  torso_x  change_in
+  1     145     259     -1.0        4.5
+  2     146     259     -1.0        0.1
+  3     145     259     -1.0        0.0
+  4     145     259     -1.0        0.0
+  5     145     259     -1.0        0.0
+  6     145     259     -1.0        0.0
+  7     145     259     -1.2        0.2
+  8     145     259     -3.1        0.9
+  9     144     259     -6.1        1.3
+ 10     143     259     -8.4        1.1
+ 11     142     259    -10.2        0.8
+ 12     141     259    -10.7        0.5
+ 13     140     259    -10.4        0.4
+ 14     140     259     -9.1        0.7
+ 15     139     259     -6.9        0.9
+ 16     138     259     -2.7        1.5
+ 17     136     259      1.7        1.8
+ 18     133     259     10.4        2.7
+ 19     125     259     23.2        3.2
+ 20     111     259     33.7        3.3
+ 21      66     259     43.8        3.7
+ 22      65     259     30.8        1.7
+ 23      58     259     31.0        1.7
+ 24      57     259     39.3        1.1
+ 25      57     259     39.3        0.2
+ 26      56     259     39.2        0.0
+ 27      56     259     39.3        0.0
+ 28      56     259     39.3        0.1
+ 29      56     259     39.2        0.1
+ 30      57     259     39.2        0.0
+ 31      56     259     39.3        0.0
+ 32      56     259     39.2        0.0
+bob (height range): 90px = 61.6% of the body; lowest F26, highest F2
+loop 8->1 style check: 32->1 change 4.5 vs median 0.6
+flags:
+FROZEN  1->2: almost no change (0.1); a held pose reads as a stutter
+FROZEN  2->3: almost no change (0.0); a held pose reads as a stutter
+FROZEN  3->4: almost no change (0.0); a held pose reads as a stutter
+FROZEN  4->5: almost no change (0.0); a held pose reads as a stutter
+FROZEN  5->6: almost no change (0.0); a held pose reads as a stutter
+FROZEN  6->7: almost no change (0.2); a held pose reads as a stutter
+FROZEN  11->12: almost no change (0.5); a held pose reads as a stutter
+FROZEN  12->13: almost no change (0.4); a held pose reads as a stutter
+FROZEN  24->25: almost no change (0.2); a held pose reads as a stutter
+FROZEN  25->26: almost no change (0.0); a held pose reads as a stutter
+FROZEN  26->27: almost no change (0.0); a held pose reads as a stutter
+FROZEN  27->28: almost no change (0.1); a held pose reads as a stutter
+FROZEN  28->29: almost no change (0.1); a held pose reads as a stutter
+FROZEN  29->30: almost no change (0.0); a held pose reads as a stutter
+FROZEN  30->31: almost no change (0.0); a held pose reads as a stutter
+FROZEN  31->32: almost no change (0.0); a held pose reads as a stutter
+SPIKE   32->1: change 4.5 vs median 0.6; check pose continuity
+DRIFT   torso x moves 55px across the cycle; pack with --align torso or check for whole-sprite sliding

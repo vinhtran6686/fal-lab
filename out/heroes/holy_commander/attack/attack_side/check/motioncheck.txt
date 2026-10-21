@@ -1,0 +1,32 @@
+out/heroes/holy_commander/attack/attack_side  frames=18  cyclic
+  F  height  ground  torso_x  change_in
+  1     145     259      0.1        0.5
+  2     146     259     -0.1        0.2
+  3     178     259    -11.9        2.9
+  4     150     259    -14.7        3.3
+  5     182     259     -3.9        7.5
+  6     196     259     62.8       14.7
+  7     190     261     75.7       18.0
+  8     128     260      5.4       14.0
+  9     127     259      6.1        3.8
+ 10     127     259     15.4        3.2
+ 11     125     259     40.7        8.2
+ 12     126     259     39.2        8.7
+ 13     126     259     33.7        3.1
+ 14     127     259     30.8        1.4
+ 15     140     259     30.9        4.2
+ 16     145     259      1.1        4.6
+ 17     145     259      0.2        2.6
+ 18     145     259      0.3        0.5
+bob (height range): 71px = 36.2% of the body; lowest F11, highest F6
+loop 8->1 style check: 18->1 change 0.5 vs median 3.6
+flags:
+FROZEN  1->2: almost no change (0.2); a held pose reads as a stutter
+SPIKE   5->6: change 14.7 vs median 3.6; check pose continuity
+SPIKE   6->7: change 18.0 vs median 3.6; check pose continuity
+SPIKE   7->8: change 14.0 vs median 3.6; check pose continuity
+SPIKE   10->11: change 8.2 vs median 3.6; check pose continuity
+SPIKE   11->12: change 8.7 vs median 3.6; check pose continuity
+FROZEN  17->18: almost no change (0.5); a held pose reads as a stutter
+FROZEN  18->1: almost no change (0.5); a held pose reads as a stutter
+DRIFT   torso x moves 90px across the cycle; pack with --align torso or check for whole-sprite sliding

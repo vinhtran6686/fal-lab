@@ -58,7 +58,8 @@
       "fx": {
         "module": "levelup_variants",
         "fn": "V03",
-        "label": "fx Python v03 (hào quang xung nhịp)"
+        "label": "fx Python v03 (hào quang xung nhịp)",
+        "name": "levelup"
       }
     },
     {
@@ -88,7 +89,8 @@
       "note": "duỗi hết ở hình 43; tia Python vẽ lên sau",
       "fx": {
         "module": "radiant_slash_beam",
-        "label": "tia sáng Python"
+        "label": "tia sáng Python",
+        "name": "radiant_slash"
       }
     },
     {
@@ -101,7 +103,8 @@
       "approved": {
         "stride": 1
       },
-      "note": "clip chờ user duyệt"
+      "note": "clip rise: quỳ xám -> đứng; cỡ thân đo theo hình cuối (đứng)",
+      "restFrame": "last"
     }
   ]
 }

@@ -45,7 +45,8 @@ def apply(st, saved, use_default, write, asset_out):
     total = sum(dur)
     print(f"{st['id']:8s} {src:16s} {len(keep):3d}/{n} frames  {total / 1000:.2f} s  hit={'-' if hit is None else keep[hit]}  -> {st['sheet']}")
     if not write: return
-    b = ims[0].getchannel('A').point(lambda v: 255 if v > 24 else 0).getbbox(); fx, fy = (b[0] + b[2]) / 2, b[3]
+    ref = ims[keep[-1]] if st.get('restFrame') == 'last' else ims[0]     # respawn rises to the master pose: size and feet come from its last frame
+    b = ref.getchannel('A').point(lambda v: 255 if v > 24 else 0).getbbox(); fx, fy = (b[0] + b[2]) / 2, b[3]
     S = TARGET_H / (st.get('bodyPx') or (b[3] - b[1]))      # the approved clips of this hero used the master's 268 px in the clip
     work = pathlib.Path(tempfile.mkdtemp(prefix='ar_set_')); act = 'skill' if st['sheet'].startswith('skill_') else st['id']
     d = work / 'fin' / act; d.mkdir(parents=True)
@@ -59,7 +60,7 @@ def apply(st, saved, use_default, write, asset_out):
              'stages': {'finished': {'framesDir': f'fin/{act}', 'metadata': f'fin_{act}.json'}, 'selection': {'selection': f'sel_{act}.json'}}}]}}}
     (work / 'set_state.json').write_text(json.dumps(state, indent=1))
     cmd = [sys.executable, str(ROOT / 'scripts' / 'video_to_sheet.py'), '--set', str(work), '--action', act, '--asset', str(asset_out), '--id', CFG['hero'],
-           '--kind', 'hero', '--sheet', st['sheet']]
+           '--kind', 'hero', '--sheet', st['sheet']] + (['--rest-last'] if st.get('restFrame') == 'last' else [])
     r = subprocess.run(cmd, capture_output=True, text=True); print(r.stdout.strip()[-400:]);
     if r.returncode: print(r.stderr[-800:]); raise SystemExit(f"{st['id']}: video_to_sheet failed")
     shutil.rmtree(work, ignore_errors=True)

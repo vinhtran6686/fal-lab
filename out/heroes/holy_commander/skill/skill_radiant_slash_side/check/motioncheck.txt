@@ -1,0 +1,76 @@
+out/heroes/holy_commander/skill/skill_radiant_slash_side  frames=43  cyclic
+  F  height  ground  torso_x  change_in
+  1     145     259      0.0        5.2
+  2     145     259      0.0        0.1
+  3     145     259      0.2        0.1
+  4     144     259      3.1        1.3
+  5     146     259      8.6        1.9
+  6     147     259     16.7        2.5
+  7     147     259     17.1        1.6
+  8     152     259     11.6        1.6
+  9     152     259      4.5        1.0
+ 10     152     259      4.4        3.5
+ 11     141     259      3.3        2.1
+ 12     138     259     -2.7        2.5
+ 13     138     259     -6.4        1.5
+ 14     136     259     -6.7        0.7
+ 15     136     259     -6.6        0.1
+ 16     136     259     -6.5        0.2
+ 17     136     259     -6.5        0.0
+ 18     136     259     -6.6        0.0
+ 19     136     259     -6.6        0.0
+ 20     136     259     -6.6        0.0
+ 21     136     259     -6.9        0.2
+ 22     136     259     -8.1        0.8
+ 23     136     259    -10.0        1.4
+ 24     133     259      2.0        3.7
+ 25     131     259     20.7        4.3
+ 26     129     259     20.7        3.3
+ 27     129     259      4.8        4.3
+ 28     130     259      2.0        0.7
+ 29     130     259      2.4        0.3
+ 30     130     259      5.2        0.4
+ 31     130     259      6.8        0.2
+ 32     129     259     10.9        0.5
+ 33     129     259     15.9        0.6
+ 34     129     259     19.0        0.3
+ 35     129     259     23.7        0.5
+ 36     129     259     23.8        0.2
+ 37     129     259     23.5        0.4
+ 38     129     259     22.6        0.3
+ 39     129     259     21.9        0.2
+ 40     129     259     20.3        0.3
+ 41     129     259     19.7        0.2
+ 42     129     259     18.3        0.3
+ 43     129     259     16.5        0.4
+bob (height range): 23px = 15.1% of the body; lowest F26, highest F8
+loop 8->1 style check: 43->1 change 5.2 vs median 0.5
+flags:
+FROZEN  1->2: almost no change (0.1); a held pose reads as a stutter
+FROZEN  2->3: almost no change (0.1); a held pose reads as a stutter
+FROZEN  14->15: almost no change (0.1); a held pose reads as a stutter
+FROZEN  15->16: almost no change (0.2); a held pose reads as a stutter
+FROZEN  16->17: almost no change (0.0); a held pose reads as a stutter
+FROZEN  17->18: almost no change (0.0); a held pose reads as a stutter
+FROZEN  18->19: almost no change (0.0); a held pose reads as a stutter
+FROZEN  19->20: almost no change (0.0); a held pose reads as a stutter
+FROZEN  20->21: almost no change (0.2); a held pose reads as a stutter
+SPIKE   24->25: change 4.3 vs median 0.5; check pose continuity
+SPIKE   26->27: change 4.3 vs median 0.5; check pose continuity
+FROZEN  28->29: almost no change (0.3); a held pose reads as a stutter
+FROZEN  29->30: almost no change (0.4); a held pose reads as a stutter
+FROZEN  30->31: almost no change (0.2); a held pose reads as a stutter
+FROZEN  31->32: almost no change (0.5); a held pose reads as a stutter
+FROZEN  32->33: almost no change (0.6); a held pose reads as a stutter
+FROZEN  33->34: almost no change (0.3); a held pose reads as a stutter
+FROZEN  34->35: almost no change (0.5); a held pose reads as a stutter
+FROZEN  35->36: almost no change (0.2); a held pose reads as a stutter
+FROZEN  36->37: almost no change (0.4); a held pose reads as a stutter
+FROZEN  37->38: almost no change (0.3); a held pose reads as a stutter
+FROZEN  38->39: almost no change (0.2); a held pose reads as a stutter
+FROZEN  39->40: almost no change (0.3); a held pose reads as a stutter
+FROZEN  40->41: almost no change (0.2); a held pose reads as a stutter
+FROZEN  41->42: almost no change (0.3); a held pose reads as a stutter
+FROZEN  42->43: almost no change (0.4); a held pose reads as a stutter
+SPIKE   43->1: change 5.2 vs median 0.5; check pose continuity
+DRIFT   torso x moves 34px across the cycle; pack with --align torso or check for whole-sprite sliding
