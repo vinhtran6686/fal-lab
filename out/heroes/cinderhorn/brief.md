@@ -49,7 +49,7 @@ Chung: facing RIGHT the entire time, bắt đầu từ idle của master (một 
 | respawn_side | video-sprite | one-shot | ❌ | |
 | levelup_side | video-sprite | one-shot | ❌ | |
 | skill_cinder_slam_side | video-sprite | one-shot | ⏳ t02 | user chốt t02 (2026-10-21, 7.5/10); export chung với 2 skill còn lại. .work/ có registration_job.json đã sửa dở (bản gốc /tmp/reg_job_orig.json): khi export, clip này dùng thân 268 px nên cần khớp referenceScale/padding hoặc làm lại input bằng job/input.png |
-| skill_horn_charge_side | video-sprite | one-shot | ❌ | |
+| skill_horn_charge_side | video-sprite | one-shot | ⏳ t01 | 5 s, $0.075, 8/10; chờ user duyệt; export chung |
 | skill_ember_armor_side | video-sprite | one-shot | ❌ | |
 | fx_attack | fx-layers | hiệu ứng | ❌ | |
 | fx_respawn | fx-layers | hiệu ứng | ❌ | |
