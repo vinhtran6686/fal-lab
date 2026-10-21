@@ -76,6 +76,32 @@ when you enrich a user's description, in `--creative` and `--example`, never to 
 | straining, gripping | braced pose yes, tremor tiny | pose in the prompt, tremor in the export (`shake`) |
 | heavy swing "losing balance" | overswung, dynamic move, not a literal stumble | fine; describe the recovery |
 
+## Physical motion: write every skill and attack as five phases (added 2026-10-21, from a hero's slam and charge)
+
+A move that only "enters the pose and stays" reads as a pose change, not an attack. Two takes showed it: a slam whose arms rose in a
+straight line, and a charge that crouched and then froze in place (the user: "just gets into the pose and stays, no charge at all").
+Write the beats so the body does what a body does:
+1. **Anticipation (wind-up)**: the part that will strike goes AWAY from the target first, with joint angles named (elbows bent and
+   pointing down, upper arms level with the shoulders, torso folded forward, knees bent, weight low). It is the longest beat (about
+   1-1.5 s) and the user's physical description wins over any default.
+2. **Load**: a short hold of tension at the end of the wind-up (one beat), so the release reads as a burst.
+3. **Release**: ONE explosive motion, both sides at once when the move is symmetric (both fists, both feet), named by what drives it
+   (legs push, hips and torso follow, arms last). Say "fast" and "powerful"; never "slightly" or "gently".
+4. **Travel or impact**: a move that goes somewhere (charge, lunge, leap, dash) must TRAVEL: say how far in body widths and which way
+   ("the whole body surges forward to the right by about half a body width"), and the end frame of the clip is the pose placed at that
+   displaced position (see "Travel and the end still"). A move that lands (slam, stomp) ends on the ground contact, with the knees
+   giving.
+5. **Follow-through and short hold**: the soft parts and limbs overshoot and settle; the final hold is short (about 0.5 s), never
+   the second half of the clip.
+Do not write a beat the body cannot do in its time: 4-5 beats in 5 s. Keep the shoulders at the view's 30 degree turn in every beat
+(a crouch makes the model square the shoulders to the camera: say it).
+
+### Travel and the end still
+`endStill` pins the last frame. Placed on the same spot as the start, it makes a charge crouch and freeze. For a move that travels, place
+the pose still on the clip canvas displaced in the travel direction (about 0.3-0.5 body widths for a hero cell that is 2.9 body widths
+wide) and make sure the registration job expects that displacement. If the pose still itself does not show the intent (a charge whose
+horns point up), redraw that pose first (fal-image `pose_skill_<name>`): the clip cannot invent what its end still contradicts.
+
 ## Action templates
 
 The template continues the sentence that starts "The same <identity>, facing <FACING> the entire

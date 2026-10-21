@@ -162,6 +162,8 @@ from the stride, so a hero run of the reference's 0.2 s does not carry over: kee
    2-3 options with their risks) and wait for "ok". Only then price and run. On the reference hero, rounds that used a generic or
    self-invented action were rejected twice (one-shot hero actions only; loops were not studied); the user's step-by-step description was accepted at once and the next skill reused
    the formula and passed first time; rejected rounds are where the money goes.
+   **Physical motion**: write each action as the five phases of `references/motion-prompts.md` "Physical motion" (wind-up, load, release,
+   travel or impact, short hold) and, for a move that travels, put the end still at the displaced position.
    **Clip length decides the number of motions**: plan about 0.7-1 s per distinct beat plus about 1 s of final hold, 3-5 s in total.
    Two strikes in 2 s were merged into one by the model; the same two in 3 s were both made. A shorter clip drops beats, it does
    not speed them up; 5 s tends to drift. Say which beat should be longest (the model splits time unevenly).

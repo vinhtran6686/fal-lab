@@ -46,7 +46,9 @@ turn it into a few designs and the user only chooses. No API call until the choi
    **Actions**: once the character is approved, each skill (and any action the user has not described) gets 2-3 proposed action
    descriptions written by the `video-sprite` formula (`references/motion-prompts.md` "Writing the action"): beats by body part, facing lock,
    end state, suggested clip length, risks, price; the user picks or edits one before any clip is paid. Use the model-habit table there
-   to enrich, never to fix the design to one hero.
+   to enrich, never to fix the design to one hero. **Physical motion** (same file, "Physical motion: five phases"): every proposed action is
+   written as wind-up (joint angles named, longest beat), load, one explosive release, travel or impact, short hold; a move that goes
+   somewhere says how far and which way. Design the `pose_skill_<name>` still to show that intent (a charge: horns forward, body low).
 5. Continue in the normal mode (default: master, then stop for approval; with `--auto` too, if given).
    Show the composed `{design}` sentence in the master report so the user sees what was drawn from.
 

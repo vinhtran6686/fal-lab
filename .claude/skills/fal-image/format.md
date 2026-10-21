@@ -231,6 +231,8 @@ Frame size: §7.
 
 **`--auto`**: as above, but approve the master and the views yourself (score >= 8), then continue with
 `video-sprite` (it still asks before paying for video unless the request already approved the cost).
+In `--auto` too, every skill or attack action you write for `video-sprite` follows its "Physical motion: five phases" (wind-up with joint
+angles, load, one release, travel or impact, short hold) and the matching `pose_skill_*` still shows the move's intent.
 
 **Restyle a character** (same character, new look: "restyle bandit sang ...", a new `style.md`):
 1. Write the new style block (into `style.md` if it should apply to every asset, else into `brief.md`
