@@ -67,3 +67,6 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-21 09:39:25,clip.mp4,h3-max-turbo,video,480P 4s,False,3.5,0.0600,True
 2026-10-21 09:39:30,clip.mp4,h3-max-turbo,video,480P 4s,False,3.2,0.0600,True
 2026-10-21 10:10:56,clip.mp4,h3-max-turbo,video,480P 4s,False,2.7,0.0600,True
+2026-10-21 11:29:54,out/heroes/cinderhorn/design/pose_skill_ember_armor_v01.png,gpt-image-2,low,1024x1024,False,14.6,0.0131,True
+2026-10-21 11:29:55,out/heroes/cinderhorn/design/pose_skill_cinder_slam_v01.png,gpt-image-2,low,1024x1024,False,15.8,0.0129,True
+2026-10-21 11:29:56,out/heroes/cinderhorn/design/pose_skill_horn_charge_v01.png,gpt-image-2,low,1024x1024,False,16.9,0.0129,True
