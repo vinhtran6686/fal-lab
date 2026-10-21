@@ -1,0 +1,26 @@
+{
+  "prompt": "The same tall menacing horned fire demon, top-heavy, with a small dark helmet head, two huge long curved dark horns, huge spiked shoulder pauldrons, a narrow dark torso with a ragged hanging cloth, dark armoured greaves, and two long arms made of flat layered orange and yellow flame ending in big flame hands; dark charcoal-grey armour, orange main flame colour, bright yellow accent; hands empty, no weapon, facing RIGHT the entire time and never turning around, runs in place in a SLOW, heavy, powerful trot like a looping game run cycle, one full stride (right foot, then left foot) every 1.2 seconds, each foot lifted clearly and stomped down firmly on the same ground line; the body stays facing RIGHT the whole time, never turning. The upper body leans a little forward and the head stays level with the two horns upright. The arms work like a runner's, one at a time, on the next step they swap, the forearms staying bent and close to the body in a smooth pumping motion, never flailing wide. with a yellow core and flows behind the arm as it moves. The armour, helmet and horns stay dark charcoal grey. The clip starts AND ends in exactly the same pose as the still. Body motion only: no NEW light, glow, sparks, lightning, energy, magic, trails or particles beyond the shapes already drawn on the still; the game draws every effect as a separate layer. The camera never moves or zooms: the character keeps exactly the same size in every frame. Constant character size. No dust, no speed lines, no motion trails, no effects. The colours stay exactly as in the still in every frame: no tint, no colour shift, no darkening and no glow on the character. No motion-blur smears, no afterimages, no colour fringing on the weapon. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick clean outlines in a dark shade of the neighbouring colour, flat colour fills with 2-3 tone hard-edged cel shading, the exact palette of the still, big simple readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaf4bd7/7XAJ1uhitIi6gAV97o8dV_input.png"
+  },
+  "seconds": 4,
+  "resolution": "480P",
+  "size": [
+    1024,
+    1024
+  ],
+  "estimateUsd": 0.06,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "E:\\work\\fal-lab\\out\\heroes\\diablo\\.work\\side\\actions\\run\\job\\input.png",
+  "lastFrame": null,
+  "requestId": "01a15f82-8f91-7a42-8b95-69b40ef130ea",
+  "seconds_elapsed": 4.5,
+  "source_url": "https://v3b.fal.media/files/b/0aaf4bd7/ZOEnQ-lVS_hZFqrp82qs__minimax-h3.mp4",
+  "cost_is_estimate": true
+}

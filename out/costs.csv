@@ -74,3 +74,35 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-21 12:19:04,clip.mp4,h3-max-turbo,video,480P 5s,False,5.8,0.0750,True
 2026-10-21 12:32:44,clip.mp4,h3-max-turbo,video,480P 5s,False,2.6,0.0750,True
 2026-10-21 12:49:59,clip.mp4,h3-max-turbo,video,480P 5s,False,2.5,0.0750,True
+2026-10-22 00:04:59,out/heroes/diablo/design/master_v01.png,gpt-image-2,low,1024x1024,False,22.3,0.0144,True
+2026-10-22 00:05:10,out/heroes/diablo/design/master_v02.png,gpt-image-2,low,1024x1024,False,33.5,0.0144,True
+2026-10-22 00:05:53,out/heroes/diablo/design/master_v03.png,gpt-image-2,low,1024x1024,False,22.8,0.0150,True
+2026-10-22 00:05:58,out/heroes/diablo/design/master_v04.png,gpt-image-2,low,1024x1024,False,28.0,0.0150,True
+2026-10-22 00:13:37,out/heroes/diablo/design/pose_skill_horn_charge_v01.png,gpt-image-2,low,1024x1024,False,18.8,0.0129,True
+2026-10-22 00:13:39,out/heroes/diablo/design/pose_skill_ember_armor_v01.png,gpt-image-2,low,1024x1024,False,20.6,0.0128,True
+2026-10-22 00:13:41,out/heroes/diablo/design/icon_v01.png,gpt-image-2,low,1024x1024,False,21.8,0.0113,True
+2026-10-22 00:13:41,out/heroes/diablo/design/pose_respawn_v01.png,gpt-image-2,low,1024x1024,False,22.5,0.0127,True
+2026-10-22 00:13:43,out/heroes/diablo/design/pose_skill_flame_slam_v01.png,gpt-image-2,low,1024x1024,False,24.7,0.0128,True
+2026-10-22 00:22:50,out/heroes/diablo/.work/side/actions/run/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 4s,False,5.1,0.0600,True
+2026-10-22 00:26:04,out/heroes/diablo/.work/side/actions/run/takes/t02/media/clip.mp4,h3-max-turbo,video,480P 4s,False,2.8,0.0600,True
+2026-10-22 00:29:19,out/heroes/diablo/.work/side/actions/run/takes/t03/media/clip.mp4,h3-max-turbo,video,480P 4s,False,4.5,0.0600,True
+2026-10-22 00:31:15,out/heroes/diablo/.work/side/actions/run/takes/t04/media/clip.mp4,h3-max-turbo,video,480P 4s,False,3.9,0.0600,True
+2026-10-22 00:45:18,out/heroes/diablo/.work/side_attack/actions/attack/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 4s,False,3.2,0.0600,True
+2026-10-22 00:49:58,out/heroes/diablo/.work/side_attack/actions/attack/takes/t02/media/clip.mp4,h3-max-turbo,video,480P 4s,False,3.2,0.0600,True
+2026-10-22 00:56:35,out/heroes/diablo/.work/death_t01/clip.mp4,h3-max-turbo,video,480P 4s,False,7.0,0.0600,True
+2026-10-22 00:58:47,out/heroes/diablo/.work/respawn_t01/clip.mp4,h3-max-turbo,video,480P 4s,False,3.2,0.0600,True
+2026-10-22 01:17:10,out/heroes/diablo/.work/slam_t01/clip.mp4,h3-max-turbo,video,480P 4s,False,7.6,0.0600,True
+2026-10-22 01:24:47,out/heroes/diablo/design/pose_skill_flame_slam_start_v01.png,gpt-image-2,low,1024x1024,False,18.2,0.0132,True
+2026-10-22 01:25:09,out/heroes/diablo/design/pose_skill_flame_slam_v02.png,gpt-image-2,low,1024x1024,False,18.5,0.0130,True
+2026-10-22 01:27:52,out/heroes/diablo/design/pose_skill_flame_slam_v03.png,gpt-image-2,low,1024x1024,False,20.0,0.0134,True
+2026-10-22 01:29:26,out/heroes/diablo/design/pose_skill_flame_slam_v04.png,gpt-image-2,low,1024x1024,False,19.1,0.0137,True
+2026-10-22 01:30:56,out/heroes/diablo/.work/slam_t02/clip.mp4,h3-max-turbo,video,480P 4s,False,7.1,0.0600,True
+2026-10-22 01:35:28,out/heroes/diablo/design/pose_skill_horn_charge_windup_v01.png,gpt-image-2,low,1024x1024,False,21.1,0.0129,True
+2026-10-22 01:35:50,out/heroes/diablo/design/pose_skill_horn_charge_load_v01.png,gpt-image-2,low,1024x1024,False,19.3,0.0130,True
+2026-10-22 01:36:14,out/heroes/diablo/design/pose_skill_horn_charge_lunge_v01.png,gpt-image-2,low,1024x1024,False,20.9,0.0130,True
+2026-10-22 01:41:49,out/heroes/diablo/design/pose_skill_fire_breath_crouch_v01.png,gpt-image-2,low,1024x1024,False,17.5,0.0128,True
+2026-10-22 01:42:11,out/heroes/diablo/design/pose_skill_fire_breath_lean_v01.png,gpt-image-2,low,1024x1024,False,18.2,0.0129,True
+2026-10-22 01:42:33,out/heroes/diablo/design/pose_skill_fire_breath_v01.png,gpt-image-2,low,1024x1024,False,18.9,0.0131,True
+2026-10-22 01:44:18,out/heroes/diablo/design/pose_skill_fire_breath_v02.png,gpt-image-2,low,1024x1024,False,21.5,0.0131,True
+2026-10-22 01:44:44,out/heroes/diablo/.work/fb_t01/clip.mp4,h3-max-turbo,video,480P 4s,False,3.4,0.0600,True
+2026-10-22 02:00:02,out/heroes/diablo/.work/ea_t01/clip.mp4,h3-max-turbo,video,480P 4s,False,3.2,0.0600,True

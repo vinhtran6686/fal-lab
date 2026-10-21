@@ -1,0 +1,27 @@
+{
+  "prompt": "The same tall menacing horned fire demon, top-heavy, with a small dark helmet head, two huge long curved dark horns, huge spiked shoulder pauldrons, a narrow dark torso with a ragged hanging cloth, dark armoured greaves, and two long arms made of flat layered orange and yellow flame ending in big flame hands; dark charcoal-grey armour, orange main flame colour, bright yellow accent; hands empty, no weapon, facing RIGHT the entire time and never turning around, starts standing upright in the calm ready stance, facing an enemy standing in front of him on the RIGHT. Beat 1 (about 1 second, the longest, the wind-up): he drops into a fighting stance: the knees bend deep, the feet spread wide with the back foot planted, the weight sinks onto the back leg, the torso twists and leans back away from the enemy, the shoulders turn back, straight, Beat 2 (a short pause of 0.3 second): he coils and trembles slightly, braced, the head lowered, the horns pointing at the enemy. Beat 3 (a very fast third of a second, the release): the power starts from the back foot: the hips drive forward, the torso uncoils, the front foot steps forward, the shoulder follows, the claw swiping through the enemy at chest height. Beat 4 (about 1 second, the impact and hold): the body is low and leaning far forward, the weight on the front leg, the arm fully stretched forward, straight and rigid, with the talons spread wide as if tearing, the horns forward. Beat 5 (about 1.2 seconds): he slowly straightens, the arm swings back down along the body, the hand relaxes, and he returns to the exact same upright ready stance as the start and holds still. Only one claw strike: no second strike, no spinning, no jumping, no leaving the frame. never bent at the elbow. Armour, helmet and horns stay dark charcoal grey; The clip starts AND ends in exactly the same pose as the still. Body motion only: no NEW light, glow, sparks, lightning, energy, magic, trails or particles beyond the shapes already drawn on the still; the game draws every effect as a separate layer. The camera never moves or zooms: the character keeps exactly the same size in every frame. The weapon stays one single weapon of the same length and shape. Constant character size. No motion trails, no slash effects, no sparks, no effects. the flame hand is a clawed hand with long curved flame talons. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick clean outlines in a dark shade of the neighbouring colour, flat colour fills with 2-3 tone hard-edged cel shading, the exact palette of the still, big simple readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaf4c53/nnXtsrAB7Qh07yTF_Dfbf_input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aaf4c53/PW5ejZIrwMQAoCFbCNt-4_input.png"
+  },
+  "seconds": 4,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.06,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "E:\\work\\fal-lab\\out\\heroes\\diablo\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "lastFrame": "E:\\work\\fal-lab\\out\\heroes\\diablo\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "requestId": "01a15f95-7ab1-7630-bfef-041d13635e4e",
+  "seconds_elapsed": 3.2,
+  "source_url": "https://v3b.fal.media/files/b/0aaf4c53/G9tQvacc_aHxRc7do3jV3_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

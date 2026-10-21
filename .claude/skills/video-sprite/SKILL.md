@@ -146,33 +146,51 @@ s, level-up 0.7 s, respawn 0.6 s, attack 0.7 s, death 0.9 s); loops (walk, run, 
 from the stride, so a hero run of the reference's 0.2 s does not carry over: keep one clean stride.
 
 ## Workflow
+Two phases, in this order, for the whole batch of rows this request covers: **Phase A generates and
+confirms every pose first** (one row at a time, no exports); **Phase B exports everything once**, after
+every row in the batch is accepted. Never export a row and then go back to generate the next one - that
+interleaving is the mistake this structure exists to prevent.
+
+### Phase A - describe, generate and accept every pose (repeat per row, export nothing yet)
 0. **Manifest.** `python scripts/asset_status.py <id>`: the rows to make are the `video-sprite` rows marked
-   ❌ (or the ones the user names). A row whose still is missing or not approved (a skill without its
-   `pose_skill_*`, an enemy without `view_front`) goes back to `fal-image` first.
+   ❌ (or the ones the user names) - this whole list is the batch for steps 1-6 below. A row whose still is
+   missing or not approved (a skill without its `pose_skill_*`, an enemy without `view_front`) goes back to
+   `fal-image` first.
 1. **Stills.** The approved master and the views the rows need, from `fal-image` (`A/design/`).
 2. **Masters.** `make_master.py` per view, with `--recap` = the `{design}` slot of `brief.md` verbatim (the
    long recap is repeated in every motion prompt; short recaps let the model redesign the character).
-3. **Plan** the sets the rows need (table above). Read every action's `prompt` in `set_plan.json` and edit
-   `motion` there for this character: the attack from `{attack}`, the death from `{death}`, each skill from
-   its line in `brief.md` (keep "then lies completely still" for deaths). One action per clip; no effects in
-   character clips (the game adds FX; big ones are the manifest's vfx rows).
-4. **Describe the action first, in detail, and get it approved** (the biggest lever on quality and on cost; `references/motion-prompts.md`
-   "Writing the action"). For each clip write the action beat by beat, body part by body part, with the facing lock and an end
-   state; work out the clip length from the number of beats (below); show the user the description (in `--creative`/`--example`
-   2-3 options with their risks) and wait for "ok". Only then price and run. On the reference hero, rounds that used a generic or
-   self-invented action were rejected twice (one-shot hero actions only; loops were not studied); the user's step-by-step description was accepted at once and the next skill reused
-   the formula and passed first time; rejected rounds are where the money goes.
-   **Physical motion**: write each action as the five phases of `references/motion-prompts.md` "Physical motion" (wind-up, load, release,
-   travel or impact, short hold) and, for a move that travels, put the end still at the displaced position.
-   **Clip length decides the number of motions**: plan about 0.7-1 s per distinct beat plus about 1 s of final hold, 3-5 s in total.
-   Two strikes in 2 s were merged into one by the model; the same two in 3 s were both made. A shorter clip drops beats, it does
-   not speed them up; 5 s tends to drift. Say which beat should be longest (the model splits time unevenly).
-   **Motion quality** that makes an action lively, to add when you complete the user's words (never against them): anticipation before the
-   strike, follow-through after, knees giving on impact, cape or cloth thrown up and settling; **tremor** (gripping, straining) and
-   **losing balance** (channeling a big move) when the move is heavy. A tremor asked in the prompt stays tiny (peak-to-peak ~2.4 px
-   at 480P, below 1 px at game size; asking "violent shaking" tripled it and it was still under 1 px at game size): if it must be
-   seen, add it in the export (`shake` in the frame recipe, below) and ask the model only for the braced pose.
-5. **Ask before paying.** Show the user the manifest rows you will make, the clip count and the estimate
+3. **Plan** the set for the row you are on now (table above). Read the action's `prompt` in `set_plan.json`;
+   `motion` there is what step 4 writes and gets approved, not a generic default. One action per clip; no
+   effects in character clips (the game adds FX; big ones are the manifest's vfx rows).
+4. **Describe the action, get it approved in a loop, THEN price and run - before touching the next row.**
+   This is the biggest lever on quality and on cost (`references/motion-prompts.md` "Writing the action").
+   Skipped entirely in `--auto` mode (see "Run modes"): there, write the description yourself from the
+   template below and the character's `brief.md`, with no stop, and go straight to step 5.
+   a. Write the full action, beat by beat, body part by body part, each beat with its time range, e.g.
+      "0-0.8 s, <beat name>: <what the body, weapon and any effect physically do>" ... down to the short
+      hold at the end; for a move that travels, say where it ends up. This is the actual text you will send
+      to the model (translated into the model's prompt language), not a summary of it - show it to the user
+      in full and ask them to review it (in `--creative`/`--example`, 2-3 options with their risks).
+   b. Wait for the user:
+      - **Feedback** (a correction, a different idea, "làm theo kiểu X"): rewrite the WHOLE description
+        from scratch around their feedback, at the same beat-by-beat, timed, physical level of detail as
+        (a) - a full replacement, never a diff or a note appended to the old text. Show the new full
+        description and go back to (a).
+      - **Confirm** ("ok", "duyệt", "chốt"): this description becomes the action's `motion`; go to step 5.
+      Repeat (a)-(b) until confirmed - do not price or run on an unconfirmed description.
+   **Physical motion**: the five phases of `references/motion-prompts.md` "Physical motion" (wind-up, load,
+   release, travel or impact, short hold) are the beats (a) breaks the action into.
+   **Clip length decides the number of motions**: plan about 0.7-1 s per distinct beat plus about 1 s of
+   final hold, 3-5 s in total. Two strikes in 2 s were merged into one by the model; the same two in 3 s
+   were both made. A shorter clip drops beats, it does not speed them up; 5 s tends to drift. Say which beat
+   should be longest (the model splits time unevenly).
+   **Motion quality** that makes an action lively, to add when you complete the user's words (never against
+   them): anticipation before the strike, follow-through after, knees giving on impact, cape or cloth thrown
+   up and settling; **tremor** (gripping, straining) and **losing balance** (channeling a big move) when the
+   move is heavy. A tremor asked in the prompt stays tiny (peak-to-peak ~2.4 px at 480P, below 1 px at game
+   size; asking "violent shaking" tripled it and it was still under 1 px at game size): if it must be seen,
+   add it in the export (`shake` in the frame recipe, below) and ask the model only for the braced pose.
+5. **Ask before paying.** Show the user this one row's clip count and the estimate
    (default `h3-max-turbo` 480P ~USD 0.015 per second: 4 s = ~USD 0.06, 5 s = ~0.08; a melee enemy: walk x3, attack, death = 5 clips
    ~USD 0.40, idle is free; a hero with 2 skills: run, attack, death, levelup, respawn, 2 skills = 7 clips
    ~USD 0.56; + retakes) and wait for a yes, unless they
@@ -193,6 +211,10 @@ from the stride, so a hero run of the reference's 0.2 s does not carry over: kee
    `F5-F10 pink smear`), **Fail** (1-4). Fix: `accept --window` (a gate that misreads a correct motion),
    `retake --fix <clause id or sentence>` (clause ids in `references/motion-prompts.md`), or plan options.
    Default mode: stop here and show the user (see "Run modes"); `--auto` continues.
+   **Once this row's take is accepted, do not export it yet.** Go back to step 3 for the next row in the
+   batch. Only start Phase B once every row planned for this request has an accepted take.
+
+### Phase B - export every accepted row, once
 7. **Export** each accepted action with `video_to_sheet.py` (one canvas, one body size, see above; for a state with a frame recipe use
    `apply_recipe.py`, "Choosing the frames"), then
    `idle_side --rest-frame` from the first side take. Each export replaces the sheet's state folder
@@ -205,18 +227,27 @@ Report: the manifest after the run (`python scripts/asset_status.py <id>`), the 
 the model and takes, the cost (`python scripts/cost_report.py --today`).
 
 ## Run modes (like fal-image: preview by default)
-Read the mode from the request. Every paid clip still needs the cost agreed first (Workflow step 5).
-- **Default: preview checkpoint.** After `run` + `review`, do your own review (Pass / Needs Revision / Fail)
-  but **do not export**. Stop and show the user, per action: the clip
-  (`A/raw/<action>_<set>_tNN.mp4`), the review sheet
-  (`review/<action>/tNN-sheet.png`), your verdict with the frames at fault, and the next options. Wait.
-  - "ok" / "chốt" → accept (with `--window` if a gate misread it), export, check, prune, log.
-  - Natural-language feedback ("liềm bị méo khi chạy", "đánh chậm quá", "ngựa không phi") → **Retake
-    translation** below, show the user the new prompt lines and the cost of the retake, then run it and come
-    back to this checkpoint with the new take next to the old one.
-- **`--auto`**: no stop after review: accept takes that score >= 8 yourself, retake the others with your own
-  translated fix up to `--max-takes`, then export, check and prune, and report. The cost must still be
-  agreed (the request can carry it: "--auto, tối đa 0.5 USD").
+Read the mode from the request. Every paid clip still needs the cost agreed first (Workflow step 5). Both
+modes still follow the two-phase structure (Workflow): every row in the batch gets accepted in Phase A
+before Phase B exports any of them.
+- **Default: two checkpoints per row, Phase A only; Phase B runs once at the end.**
+  - **Checkpoint 1 (step 4, before any clip is paid for): the description.** Show the full beat-by-beat
+    text, wait for "ok"/"chốt" (go to step 5, price, then run) or feedback (rewrite the whole description,
+    show it again, same checkpoint). Never run a clip on an unconfirmed description.
+  - **Checkpoint 2 (step 6, after `run` + `review`): the take.** Do your own review (Pass / Needs Revision /
+    Fail) but **do not export**. Stop and show the user, per action: the clip
+    (`A/raw/<action>_<set>_tNN.mp4`), the review sheet (`review/<action>/tNN-sheet.png`), your verdict with
+    the frames at fault, and the next options. Wait.
+    - "ok" / "chốt" → accept (with `--window` if a gate misread it); this row is done - go back to step 3
+      for the next row in the batch, or to Phase B if this was the last row. Do not export here.
+    - Natural-language feedback ("liềm bị méo khi chạy", "đánh chậm quá", "ngựa không phi") → **Retake
+      translation** below, show the user the new prompt lines and the cost of the retake, then run it and
+      come back to this checkpoint with the new take next to the old one.
+- **`--auto`**: no stop at either checkpoint. Write each row's description yourself (step 4a's template,
+  from `brief.md`) with no approval loop, accept takes that score >= 8 yourself, retake the others with your
+  own translated fix up to `--max-takes` - across every row in the batch - then run Phase B (export, check,
+  prune) once at the end and report. The cost must still be agreed (the request can carry it: "--auto, tối
+  đa 0.5 USD").
 - **Re-export only** (frames cut wrong, loop length, smear colour, size): free, no checkpoint needed
   (`rebuild` + export), see "Changing existing sprites".
 

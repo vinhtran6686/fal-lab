@@ -1,0 +1,27 @@
+{
+  "prompt": "The same tall menacing horned fire demon, top-heavy, with a small dark helmet head, two huge long curved dark horns, huge spiked shoulder pauldrons, a narrow dark torso with a ragged hanging cloth, dark armoured greaves, and two long arms made of flat layered orange and yellow flame ending in big flame hands; dark charcoal-grey armour, orange main flame colour, bright yellow accent; hands empty, no weapon, facing RIGHT the entire time and never turning around, starts standing upright in the calm ready stance. Beat 1 (about 1 second, with no elbow bend, while the torso leans back a little and the knees bend slightly. still straight and rigid like a long whip, the torso turns and leans into it, the front foot steps a small step forward. Beat 3 (about 1 second): holds the stroke with the arm stretched out to the right at chest height. Beat 4 (about 1.5 seconds): the arm swings back down along the body and the demon returns to the exact same upright ready stance as the start and holds still. Only one attack: no second strike, no spinning, no jumping, no leaving the frame. The back foot stays planted. Armour, helmet and horns stay dark charcoal grey; The clip starts AND ends in exactly the same pose as the still. Body motion only: no NEW light, glow, sparks, lightning, energy, magic, trails or particles beyond the shapes already drawn on the still; the game draws every effect as a separate layer. The camera never moves or zooms: the character keeps exactly the same size in every frame. The weapon stays one single weapon of the same length and shape. Constant character size. No motion trails, no slash effects, no sparks, no effects. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick clean outlines in a dark shade of the neighbouring colour, flat colour fills with 2-3 tone hard-edged cel shading, the exact palette of the still, big simple readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaf4c36/6H9fUClW2nf0WVjQTa0hX_input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aaf4c36/3mwRZtN96_G4XiQma9kdv_input.png"
+  },
+  "seconds": 4,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.06,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "E:\\work\\fal-lab\\out\\heroes\\diablo\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "lastFrame": "E:\\work\\fal-lab\\out\\heroes\\diablo\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "requestId": "01a15f91-27b5-7d83-b339-c3de4843a1e7",
+  "seconds_elapsed": 3.2,
+  "source_url": "https://v3b.fal.media/files/b/0aaf4c37/Ha9nzKtP3SmYpiUv3PGbN_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

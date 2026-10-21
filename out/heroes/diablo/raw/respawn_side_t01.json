@@ -1,0 +1,27 @@
+{
+  "prompt": "The same tall menacing horned fire demon, top-heavy, with a small dark helmet head, two huge long curved dark horns, huge spiked shoulder pauldrons, a narrow dark torso with a ragged hanging cloth, dark armoured greaves, and two long arms made of flat layered orange and yellow flame ending in big flame hands; dark charcoal-grey armour, orange main flame colour, bright yellow accent; hands empty, no weapon, facing RIGHT the entire time and never turning around toward the camera. He starts crouched low on the ground as in the first still, head bowed, the flame arms drawn in close and very small. Beat 1 (about 1 second): the flames of both arms flare up from the hands along the arms and grow back into the normal flat orange and yellow flame arms, staying inside the shape of the arms. Beat 2 (about 1.2 seconds, the longest): the flame arms press straight and rigid against the ground, the legs push, the knees straighten bit by bit and the body rises slowly, the back straightens, the head lifts, the horns rise. Beat 3 (about 0.8 second): the body reaches full height, the pauldrons square up, the flame arms lift off the ground and hang down along the body. Beat 4 (about 1 second): he stands upright in the calm ready stance exactly as in the last still, balanced, flame arms hanging relaxed, and holds completely still until the end. The flame arms stay straight, never bent at the elbow. Armour, helmet and horns stay dark charcoal grey. Body motion only: no new light, glow, sparks, smoke, lightning, energy, magic, trails or particles beyond the shapes already drawn on the stills. The character keeps the same size in every frame; the camera never moves or zooms. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick clean outlines in a dark shade of the neighbouring colour, flat colour fills with 2-3 tone hard-edged cel shading, the exact palette of the stills, big simple readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the stills; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaf4c88/KilYXL7LnrnCNZrrH2gAi_respawn_start.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aaf4c88/lCSda4BWoW0M5E6-CMFPs_input.png"
+  },
+  "seconds": 4,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.06,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "E:\\work\\fal-lab\\out\\heroes\\diablo\\.work\\respawn_start.png",
+  "lastFrame": "E:\\work\\fal-lab\\out\\heroes\\diablo\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "requestId": "01a15f9d-93d2-7012-892d-101e9aaddf7a",
+  "seconds_elapsed": 3.2,
+  "source_url": "https://v3b.fal.media/files/b/0aaf4c88/0Loz_tSkjs-GrzLG_fpq9_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

@@ -1,0 +1,27 @@
+{
+  "prompt": "A 2D game character animation, side view, the camera is static and never moves or zooms. The dark-armoured horned fire demon with two long flame arms keeps the same size, design and colours all through the clip. He faces RIGHT the whole time; both feet stay flat on the ground in place, he never jumps, never steps and never turns.\n0.0-0.8 s: He stands in the calm master stance, both flame arms hanging relaxed along the body.\n0.8-2.0 s (longest beat): He leans slightly back, the chest pushed out and the head raised. Both flame arms stay straight and rigid, separate from each other, and are drawn back and spread wide out to both sides at shoulder height, with no elbow bend. The whole body is flexed and tense, almost still.\n2.0-2.6 s (fastest beat): Both flame arms snap in to the front of the chest and cross over each other, the shoulders shrug in, the knees sink a little and the head bows.\n2.6-4.0 s: He holds the guarded pose with the arms crossed over the chest, slightly flexed, almost still.\nFlat 2D vector cartoon style, flat colours, thick outlines, magenta background stays flat. No new effects: no extra fire, no ring, no sparks, no smoke, no glow around the body.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaf4df7/TMZXgjV2WaAB4WzQLJXsD_input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aaf4df7/62E4speh5G_aN0vR0TLqT_ea_end.png"
+  },
+  "seconds": 4,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.06,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "E:\\work\\fal-lab\\out\\heroes\\diablo\\.work\\side_attack\\actions\\attack\\job\\input.png",
+  "lastFrame": "E:\\work\\fal-lab\\out\\heroes\\diablo\\.work\\ea_end.png",
+  "requestId": "01a15fd5-aa36-7640-81f0-b4fbfd95f4d3",
+  "seconds_elapsed": 3.2,
+  "source_url": "https://v3b.fal.media/files/b/0aaf4df8/Nr6q9YGg2w1pimHxo1-CI_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

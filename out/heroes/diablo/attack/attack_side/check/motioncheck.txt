@@ -1,0 +1,18 @@
+out\heroes\diablo\attack\attack_side  frames=10  cyclic
+  F  height  ground  torso_x  change_in
+  1     128     253     -3.2        0.2
+  2     126     253    -10.3        1.3
+  3     127     253    -11.1        0.3
+  4     123     253     -3.8        2.0
+  5     126     253     51.7        3.0
+  6     126     253     42.7        0.8
+  7     126     253     36.8        1.0
+  8     127     253      2.7        2.2
+  9     128     253     -2.4        1.6
+ 10     128     253     -2.8        0.8
+bob (height range): 5px = 3.9% of the body; lowest F4, highest F1
+loop 8->1 style check: 10->1 change 0.2 vs median 1.2
+flags:
+FROZEN  2->3: almost no change (0.3); a held pose reads as a stutter
+FROZEN  10->1: almost no change (0.2); a held pose reads as a stutter
+DRIFT   torso x moves 63px across the cycle; pack with --align torso or check for whole-sprite sliding

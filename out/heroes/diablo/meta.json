@@ -1,0 +1,44 @@
+{
+  "id": "diablo",
+  "kind": "enemy",
+  "cell": [
+    176,
+    140
+  ],
+  "scale_2x": 2,
+  "pivot": [
+    0.5,
+    0.88
+  ],
+  "states": {
+    "attack_side": {
+      "version": "t01",
+      "dir": "attack/attack_side",
+      "source": "raw/attack_side_attack_t01.mp4",
+      "frames": 10,
+      "fps": 15,
+      "loop": false,
+      "files": "attack/attack_side/frames/@1x/enemy_diablo_attack_side_NN.png",
+      "sheet": "attack/attack_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/side_attack",
+        "action": "attack",
+        "take": 1,
+        "route": "fal:minimax/h3-max-turbo/image-to-video"
+      },
+      "hit_frame": 5
+    }
+  },
+  "body_area_2x": 3693,
+  "body_height_2x": 120,
+  "shadow": {
+    "w_2x": 46,
+    "h_2x": 14,
+    "color": "#000000",
+    "alpha": 0.35
+  },
+  "mirrored": {
+    "attack_left": "attack_side"
+  }
+}
