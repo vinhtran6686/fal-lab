@@ -73,3 +73,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-21 11:35:20,clip.mp4,h3-max-turbo,video,480P 4s,False,2.5,0.0600,True
 2026-10-21 12:19:04,clip.mp4,h3-max-turbo,video,480P 5s,False,5.8,0.0750,True
 2026-10-21 12:32:44,clip.mp4,h3-max-turbo,video,480P 5s,False,2.6,0.0750,True
+2026-10-21 12:49:59,clip.mp4,h3-max-turbo,video,480P 5s,False,2.5,0.0750,True
