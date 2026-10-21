@@ -33,9 +33,9 @@
 |---|---|---|---|---|
 | master (= idle) | fal-image | ảnh tĩnh | ✅ v01 | ảnh user gửi, chốt 2026-10-21 |
 | icon | fal-image | ảnh tĩnh | ❌ | |
-| pose_skill_cinder_slam | fal-image | ảnh tĩnh | ⏳ v01 | 7/10: mặt bị vai che, sừng cụp sang bên; chờ user |
-| pose_skill_horn_charge | fal-image | ảnh tĩnh | ⏳ v01 | 7/10: sừng hướng lên chứ chưa chĩa trước, mặt bị vai che; chờ user |
-| pose_skill_ember_armor | fal-image | ảnh tĩnh | ⏳ v01 | 8.5/10; chờ user |
+| pose_skill_cinder_slam | fal-image | ảnh tĩnh | ✅ v01 | 7/10: mặt bị vai che, sừng cụp sang bên; chốt 2026-10-21 |
+| pose_skill_horn_charge | fal-image | ảnh tĩnh | ✅ v01 | 7/10: sừng hướng lên, mặt bị vai che; chốt 2026-10-21 |
+| pose_skill_ember_armor | fal-image | ảnh tĩnh | ✅ v01 | 8.5/10; chốt 2026-10-21 |
 | pose_respawn | fal-image | ảnh tĩnh | ❌ | |
 | run_side | video-sprite | loop | ❌ | |
 | attack_side | video-sprite | one-shot | ❌ | |
