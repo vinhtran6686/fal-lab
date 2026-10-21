@@ -55,6 +55,7 @@ def build():
         fx.append({'id': name, 'for_state': f['state'], 'frames': n, 'fps': f['fps'], 'blend': f['blend'], 'size_2x': f['size_2x'], 'size_1x': f['size_1x'], 'pivot_2x': f['pivot_2x'], 'pivot_1x': f['pivot_1x'],
                    'back_2x': f"{d}/back/frames/@2x/hero_holy_commander_fx_{name}_back_01..{n:02d}.png", 'front_2x': f"{d}/front/frames/@2x/hero_holy_commander_fx_{name}_front_01..{n:02d}.png",
                    'back_1x': f"{d}/back/frames/@1x/hero_holy_commander_fx_{name}_back_01..{n:02d}.png", 'front_1x': f"{d}/front/frames/@1x/hero_holy_commander_fx_{name}_front_01..{n:02d}.png",
+                   'previews': f.get('previews'),
                    'how': 'draw back behind the body, front over it; put the fx image so its pivot is on the hero pivot; frame n goes with body frame n of for_state'})
     man = {'hero': 'holy_commander', 'name': 'Thánh Kỵ Sĩ Chỉ Huy', 'class': 'hero', 'tier': 'M', 'role': 'melee', 'facing': 'right',
            'canvas_1x': cell, 'canvas_2x': [cell[0] * 2, cell[1] * 2], 'pivot_frac': meta['pivot'], 'pivot_px_1x': [cell[0] / 2, round(cell[1] * meta['pivot'][1])],
@@ -82,6 +83,8 @@ def verify(man):
     for f in man['fx']:
         n = f['frames']; st = next(x for x in man['states'] if x['id'] == f['for_state'])
         if n != st['frames']: bad.append(f"fx {f['id']}: {n} frames vs body {st['frames']}")
+        for k, rel in (f.get('previews') or {}).items():
+            if k != 'note' and not (A / rel).exists(): bad.append(f"fx {f['id']}: preview missing {rel}")
         for z in ('back', 'front'):
             for scale in ('@1x', '@2x'):
                 fs = sorted((A / 'fx' / f['id'] / z / 'frames' / scale).glob('*.png')); total += len(fs)

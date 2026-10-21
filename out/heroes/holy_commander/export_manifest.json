@@ -537,6 +537,13 @@
    "front_2x": "fx/levelup/front/frames/@2x/hero_holy_commander_fx_levelup_front_01..27.png",
    "back_1x": "fx/levelup/back/frames/@1x/hero_holy_commander_fx_levelup_back_01..27.png",
    "front_1x": "fx/levelup/front/frames/@1x/hero_holy_commander_fx_levelup_front_01..27.png",
+   "previews": {
+    "fx_only_gif": "fx/levelup/preview_fx_only.gif",
+    "with_body_gif": "fx/levelup/preview_with_body.gif",
+    "sheet": "fx/levelup/sheet.png",
+    "state_folder_gif": "level/levelup_side/preview_with_fx.gif",
+    "note": "previews only (dark ground, screen blend); the game uses the PNG layers"
+   },
    "how": "draw back behind the body, front over it; put the fx image so its pivot is on the hero pivot; frame n goes with body frame n of for_state"
   },
   {
@@ -565,6 +572,13 @@
    "front_2x": "fx/radiant_slash/front/frames/@2x/hero_holy_commander_fx_radiant_slash_front_01..43.png",
    "back_1x": "fx/radiant_slash/back/frames/@1x/hero_holy_commander_fx_radiant_slash_back_01..43.png",
    "front_1x": "fx/radiant_slash/front/frames/@1x/hero_holy_commander_fx_radiant_slash_front_01..43.png",
+   "previews": {
+    "fx_only_gif": "fx/radiant_slash/preview_fx_only.gif",
+    "with_body_gif": "fx/radiant_slash/preview_with_body.gif",
+    "sheet": "fx/radiant_slash/sheet.png",
+    "state_folder_gif": "skill/skill_radiant_slash_side/preview_with_fx.gif",
+    "note": "previews only (dark ground, screen blend); the game uses the PNG layers"
+   },
    "how": "draw back behind the body, front over it; put the fx image so its pivot is on the hero pivot; frame n goes with body frame n of for_state"
   }
  ],

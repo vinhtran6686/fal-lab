@@ -116,3 +116,6 @@ if __name__ == '__main__':
     out = pathlib.Path(a.asset) if a.asset else ROOT / ar.CFG['asset']
     todo = [s for s in ar.CFG['states'] if s.get('fx') and (not a.states or s['id'] in a.states) and s['id'] in saved]
     for st in todo: run(st, saved, out)
+    if a.asset is None:                                  # previews of the real asset only
+        import preview_fx
+        for st in todo: preview_fx.build(st['fx'].get('name', st['id']))

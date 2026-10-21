@@ -31,6 +31,10 @@ Không cần: `raw/`, `review/`, `fx/*.py`, `brief.md`, `history.md`, `export_re
 | icon | ui/icon | 1 | - | - | 128x128 (@2x 256x256) |
 
 ## Lớp hiệu ứng (fx) riêng
+**Xem fx ở đâu:** thư mục `preview.gif` của state levelup và slash chỉ có **thân**. Hiệu ứng nằm trong mục riêng `fx/`, mỗi fx có `preview_fx_only.gif` (chỉ lớp fx), `preview_with_body.gif` (fx và thân),
+`sheet.png` (8 hình fx). Cạnh `preview.gif` của state có thêm `preview_with_fx.gif` (thân + fx). Đây chỉ là bản xem (nền tối, screen); game dùng các PNG `back/` và `front/`.
+Các hình đầu của fx để trống vì hiệu ứng chỉ bắt đầu khi động tác tới nhịp đó (levelup từ hình đấm lên, slash từ lúc kéo kiếm sát người).
+
 Hai skill có lớp fx tách khỏi thân: `fx/levelup/` (hào quang xung nhịp) và `fx/radiant_slash/` (tia sáng bắn từ mũi kiếm). Mỗi fx có `back/` (vẽ **sau** thân) và `front/` (vẽ **trước** thân),
 mỗi thư mục `frames/@1x` và `@2x`, số hình **bằng đúng** số hình thân của state, và `fx.json`.
 - Đặt ảnh fx sao cho **pivot của nó** (`pivot_1x` hoặc `pivot_2x` trong `fx.json`) trùng pivot của hero. Hình n của fx đi với hình n của thân. Kích thước fx khác ô hero (tia slash dài hơn ô).

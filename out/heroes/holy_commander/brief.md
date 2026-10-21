@@ -211,3 +211,6 @@ Kết thúc sạch (không còn fx) để game về idle.
 Trích xuất hoàn chỉnh theo yêu cầu (repo khác sẽ dùng, không liên quan game ở session này): `EXPORT_README.md` (cho người) và `export_manifest.json` (cho máy) trong thư mục này.
 Đủ 10 state (idle, run, attack, death, respawn, levelup, 3 skill, icon), 2 lớp fx tách (levelup, radiant_slash), 7 ảnh tĩnh. Frame theo `export_recipe.json` (công thức user lưu trong Frame Tuner).
 Kiểm: `python tools/frame_tuner/build_export_manifest.py` (746 file frame, đúng số lượng, kích thước, alpha, fx khớp thân).
+
+### Xem lớp fx (2026-10-21)
+`preview.gif` của state levelup và slash chỉ có thân; fx là lớp riêng trong `fx/levelup/` và `fx/radiant_slash/`. Đã thêm bản xem: `fx/<tên>/preview_fx_only.gif`, `preview_with_body.gif`, `sheet.png` và `<state>/preview_with_fx.gif` (script `tools/frame_tuner/preview_fx.py`, gọi tự động cuối `export_fx.py`).

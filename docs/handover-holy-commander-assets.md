@@ -58,6 +58,9 @@ Mô tả hành động từng state:
 - **skill 3 Chém sáng (tia thánh xuyên)**: rút kiếm ngang ngực, kéo sát người, bước dài đâm thẳng, giữ pose. Tia sáng là lớp fx `radiant_slash`.
 
 ### Lớp fx tách riêng
+Xem trước fx (chỉ để xem, không dùng trong game): `fx/<tên>/preview_fx_only.gif` (chỉ lớp fx), `preview_with_body.gif` (thân + fx), `sheet.png`; và `<thư mục state>/preview_with_fx.gif`
+(`preview.gif` của state levelup và slash chỉ có thân, nên fx nằm ở mục `fx/` riêng).
+
 | fx | Cho state | Hình | Kích thước @1x | Pivot (điểm đặt) |
 |---|---|---|---|---|
 | `levelup` | `levelup_side` | 27 | 72x99 (@2x 144x198) | [39, 88] (@2x [78, 176]) |
