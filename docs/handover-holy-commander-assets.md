@@ -32,7 +32,7 @@ Việc của bạn: ... (điền mục tiêu của repo đích, ví dụ nạp a
 ### Các state (thân)
 | Vai trò | `sheet` | Thư mục | Hình | Thời gian | Kiểu | hit (từ 1) | fx riêng | Trạng thái |
 |---|---|---|---|---|---|---|---|---|
-| idle | `idle_side` | `idle/idle_side/` | 1 | - | lặp | - | - | final |
+| idle | `idle_side` | `idle/idle_side/` | 1 | - | 1 hình | - | - | final |
 | di chuyển | `run_side` | `move/run_side/` | 8 | 0.53 s | lặp | - | - | final |
 | đánh thường | `attack_side` | `attack/attack_side/` | 18 | 1.20 s | một lần | 10 | - | final |
 | chết | `death_side` | `death/death_side/` | 32 | 2.13 s | một lần | - | - | final |
