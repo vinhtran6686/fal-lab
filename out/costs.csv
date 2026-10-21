@@ -71,3 +71,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-21 11:29:55,out/heroes/cinderhorn/design/pose_skill_cinder_slam_v01.png,gpt-image-2,low,1024x1024,False,15.8,0.0129,True
 2026-10-21 11:29:56,out/heroes/cinderhorn/design/pose_skill_horn_charge_v01.png,gpt-image-2,low,1024x1024,False,16.9,0.0129,True
 2026-10-21 11:35:20,clip.mp4,h3-max-turbo,video,480P 4s,False,2.5,0.0600,True
+2026-10-21 12:19:04,clip.mp4,h3-max-turbo,video,480P 5s,False,5.8,0.0750,True
