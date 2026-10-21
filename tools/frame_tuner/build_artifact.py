@@ -11,6 +11,7 @@ script = re.search(r'<script>(.*?)</script>', s, re.S).group(1)
 body = re.search(r'<body>(.*?)<script>', s, re.S).group(1)
 # side gutter for phones, as the artifact contract asks
 style += "\nheader,main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}\n"
-out = ('<title>Frame Tuner</title>\n<style>' + style + '</style>\n' + body + '<script>' + script + '</script>\n')
+TITLE = 'Frame Editor'          # the artifact's name (renamed by the user in the gallery; keep it)
+out = '<title>' + TITLE + '</title>\n<style>' + style + '</style>\n' + body + '<script>' + script + '</script>\n'
 (HERE / 'data').mkdir(exist_ok=True); (HERE / 'data' / 'artifact_index.html').write_text(out, encoding='utf-8')
 print('wrote data/artifact_index.html', len(out) // 1024, 'KB')

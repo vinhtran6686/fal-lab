@@ -72,11 +72,12 @@ def fx(i, body, sil):
         if 0 < u < 1: back.append((col, aura(sil, 4 + 50 * u ** .7, 8 + 10 * u) * .8 * (1 - u) ** 1.2))
     return back, front
 
-def render(frames):
+def render(frames, scale=1.0):
+    """scale = 15 / source fps: the beats above are counted in 15 fps frames, so a 24 fps source passes 0.625."""
     out = []
     for i, body in enumerate(frames):
         sil = silhouette(body); c = np.tile(BG, (H, W, 1)).astype(np.float32)
-        back, front = fx(i, body, sil)
+        back, front = fx(i * scale, body, sil)
         for col, a in back: c = screen(c, col, a)
         full = Image.new('RGBA', (W, H), (0, 0, 0, 0)); full.alpha_composite(body, (OX, OY))
         a = np.asarray(full, np.float32) / 255

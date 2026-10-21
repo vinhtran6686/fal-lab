@@ -68,7 +68,8 @@ def run(st, saved, asset_out):
     fx = st['fx']; meta_p = asset_out / 'meta.json'; meta = json.loads(meta_p.read_text())
     sheet = st['sheet']; sm = meta['states'][sheet]; rescale = sm.get('body_rescale', 1.0)
     rec = saved[st['id']]; keep, dur = rec['keep'], rec['durationsMs']
-    clip = ROOT / ar.CFG['asset'] / st['clip']; ims = ar.frames_of(clip)
+    rfps = rec.get('fps') or ar.CFG['fps']; fxscale = 15 / rfps       # the fx beats are counted in 15 fps frames
+    clip = ROOT / ar.CFG['asset'] / st['clip']; ims = ar.frames_of(clip, rfps)
     ref = ims[keep[-1]] if st.get('restFrame') == 'last' else ims[0]
     b = ref.getchannel('A').point(lambda v: 255 if v > 24 else 0).getbbox()
     S = ar.TARGET_H / (st.get('bodyPx') or (b[3] - b[1])); cell2 = (meta['cell'][0] * 2, meta['cell'][1] * 2)
@@ -78,7 +79,7 @@ def run(st, saved, asset_out):
     print(f"{st['id']}: {len(keep)} kept frames -> {len(order)} drawn (k={k:.4f})")
     raw = {'back': [], 'front': []}; cache = {}
     for i in keep:
-        back, front, off, shp = draw_layers(fx, i, ims[i]); cache[i] = (back, front, off, shp)
+        back, front, off, shp = draw_layers(fx, i * fxscale, ims[i]); cache[i] = (back, front, off, shp)
     for i in order:
         back, front, off, shp = cache[i]
         for z, rgb in (('back', back), ('front', front)): raw[z].append(to_export(rgb, off, pl, (PW, PH)))

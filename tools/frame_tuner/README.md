@@ -24,13 +24,18 @@ Tool để bật/tắt từng frame, chỉnh thời gian mỗi frame và đặt 
 - Bên trái là bản gốc (đủ frame, 15 fps), bên phải là bản sửa; dưới mỗi bên có số hình, thời lượng và hệ số nhanh hơn.
 - Phím: Space chạy/dừng, ← → đi từng hình.
 
+## Nguồn frame 15 hoặc 24 fps
+Clip render ở 24 fps. Mỗi state có công tắc **"Nguồn frame"** (15 hoặc 24 fps): 24 fps cho khoảng 1,6 lần số hình để chọn. Đổi nguồn thì lựa chọn được chuyển theo thời gian (hình i ở nguồn cũ thành round(i x mới / cũ)).
+Công thức lưu `fps` của nguồn đã chọn; `apply_recipe.py` và `export_fx.py` đọc `fps` đó (fx đếm nhịp theo 15 fps nên được nhân 15/fps). Công thức cũ (15 fps) không đổi.
+`build_states.py` dựng thêm `data/<id>_24.png` (và `<id>_fx_24.jpg`); lần dựng đầu mất vài phút vì `key_out` chạy nhiều frame hơn.
+
 ## Công thức (`export_recipe.json`)
 ```json
 {"version": 1, "hero": "holy_commander", "states": {
   "attack": {"clip": "raw/attack_side_attack_t04.mp4", "fps": 15, "loop": false,
              "keep": [0, 2, 4], "durationsMs": [67, 67, 67], "hit": 9, "savedAt": "..."}}}
 ```
-`keep` = chỉ số các frame (15 fps) của clip được giữ, `durationsMs` = một số cho mỗi frame giữ, `hit` = **chỉ số trong danh sách giữ** (0-based) hoặc null.
+`keep` = chỉ số các frame của clip (ở nguồn `fps` của công thức, 15 hoặc 24) được giữ, `durationsMs` = một số cho mỗi frame giữ, `hit` = **chỉ số trong danh sách giữ** (0-based) hoặc null.
 `video_to_sheet.py` đọc hit là hình thứ `hit + 1` (đếm từ 1), nên attack đã chốt có `hit_frame` 10 trong `meta.json`.
 
 ## Áp dụng vào export

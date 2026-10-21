@@ -76,12 +76,24 @@ let DATA, MODE = 'artifact', STORE = {}, CUR = null, dirty = {};
 const sheets = {}, fxSheets = {}, edits = {};
 let showFx = true;
 /* the cell geometry and sheet image to draw: the Python fx composite (when the state has one and it is on) or the clean body */
-function geom(s) { return (showFx && s.fx) ? { img: fxSheets[s.id], url: s.fx.sheet, cols: s.fx.cols, cellW: s.fx.cellW, cellH: s.fx.cellH } : { img: sheets[s.id], url: s.sheet, cols: s.cols, cellW: s.cellW, cellH: s.cellH }; }          // sheets: id -> Image; edits: id -> {keep:Set, ms:{idx:ms}, hit:idx|null}
+const vkey = (s) => s.id + '@' + s.fps;
+function geom(s) { return (showFx && s.fx) ? { img: fxSheets[vkey(s)], url: s.fx.sheet, cols: s.fx.cols, cellW: s.fx.cellW, cellH: s.fx.cellH } : { img: sheets[vkey(s)], url: s.sheet, cols: s.cols, cellW: s.cellW, cellH: s.cellH }; }
+/* a state has a source at the project rate (15 fps) and, when the clip allows, at its own rate (24 fps): more frames to choose from */
+const VF = ['n', 'fps', 'sheet', 'cols', 'cellW', 'cellH', 'fx', 'default'];
+function initVariants(s) { if (!s.alt) return; s.vs = {}; s.vs[s.fps] = Object.fromEntries(VF.filter(k => s[k] !== undefined).map(k => [k, s[k]])); s.vs[s.alt.fps] = s.alt; }
+function setVariant(s, fps) { const v = s.vs[fps]; for (const k of VF) { if (v[k] === undefined) delete s[k]; else s[k] = v[k]; } }
+/* move a selection to another source rate by time: frame i at the old rate -> round(i * new / old) */
+function convertEdits(s, oldFps, newFps) {
+  const e = edits[s.id], r = newFps / oldFps, nMax = s.vs[newFps].n, keep = [...e.keep].sort((a, b) => a - b), ms = {};
+  for (const i of keep) { const j = Math.min(nMax - 1, Math.round(i * r)); if (!(j in ms)) ms[j] = e.ms[i] ?? Math.round(1000 / oldFps); }
+  const hit = e.hit == null ? null : Math.min(nMax - 1, Math.round(e.hit * r)); if (hit != null && !(hit in ms)) ms[hit] = e.ms[e.hit] ?? Math.round(1000 / oldFps);
+  edits[s.id] = { keep: new Set(Object.keys(ms).map(Number)), ms, hit };
+}          // sheets: id -> Image; edits: id -> {keep:Set, ms:{idx:ms}, hit:idx|null}
 let playing = true, playT = 0, rafId = 0, lastTs = 0, step = null;
 
 const base = (s) => Math.round(1000 / s.fps);
 function defaults(s) { const d = s.default; return { keep: new Set(d.keep), ms: Object.fromEntries(d.keep.map((i, k) => [i, d.durationsMs[k]])), hit: d.hit == null ? null : d.keep[d.hit] }; }
-function fromRecipe(s, r) { if (!r || !r.keep || !r.keep.length) return defaults(s); return { keep: new Set(r.keep), ms: Object.fromEntries(r.keep.map((i, k) => [i, r.durationsMs[k]])), hit: r.hit == null ? null : r.keep[r.hit] }; }
+function fromRecipe(s, r) { if (r && r.fps && s.vs && s.vs[r.fps] && r.fps !== s.fps) setVariant(s, r.fps); if (!r || !r.keep || !r.keep.length) return defaults(s); return { keep: new Set(r.keep), ms: Object.fromEntries(r.keep.map((i, k) => [i, r.durationsMs[k]])), hit: r.hit == null ? null : r.keep[r.hit] }; }
 function toRecipe(s) {
   const e = edits[s.id], keep = [...e.keep].sort((a, b) => a - b);
   return { clip: s.clip, fps: s.fps, loop: s.loop, keep, durationsMs: keep.map(i => e.ms[i] ?? base(s)), hit: e.hit == null ? null : keep.indexOf(e.hit), savedAt: new Date().toISOString() };
@@ -157,6 +169,7 @@ function render() {
     el('button', { class: 'b', type: 'button', id: 'pp', on: { click: () => { playing = !playing; $('#pp').textContent = playing ? 'Dừng' : 'Chạy'; } } }, playing ? 'Dừng' : 'Chạy'),
     el('button', { class: 'b', type: 'button', on: { click: () => stepBy(-1) } }, '< hình trước'),
     el('button', { class: 'b', type: 'button', on: { click: () => stepBy(1) } }, 'hình sau >'),
+    ...(s.vs ? [el('label', {}, 'Nguồn frame ', el('select', { id: 'srcFps', on: { change: (ev) => { const nf = +ev.target.value, of = s.fps; convertEdits(s, of, nf); setVariant(s, nf); dirty[s.id] = true; playT = 0; lastTs = 0; step = null; render(); toast('Đổi nguồn sang ' + nf + ' fps: lựa chọn được chuyển theo thời gian'); } } }, ...Object.keys(s.vs).map(f => el('option', { value: f, ...(+f === s.fps ? { selected: '' } : {}), text: f + ' fps' }))))] : []),
     el('label', {}, 'Tốc độ xem ', speed),
     ...(s.fx ? [el('label', {}, el('input', { type: 'checkbox', id: 'fxChk', ...(showFx ? { checked: '' } : {}), on: { change: (ev) => { showFx = ev.target.checked; render(); } } }), ' Hiện fx: ' + s.fx.label)] : []),
     el('span', { class: 'hint', text: 'Phím: Space chạy/dừng, ← → đi từng hình' })));
@@ -252,8 +265,11 @@ async function boot() {
   DATA = await (await fetch('data/states.json', { cache: 'no-store' })).json();
   $('#hero').textContent = DATA.hero;
   STORE = await loadRecipes();
-  await Promise.all(DATA.states.map(s => new Promise((res, rej) => { const im = new Image(); im.onload = res; im.onerror = () => rej(new Error('không tải được ' + s.sheet)); im.src = s.sheet; sheets[s.id] = im; })));
-  await Promise.all(DATA.states.filter(s => s.fx).map(s => new Promise((res, rej) => { const im = new Image(); im.onload = res; im.onerror = () => rej(new Error('không tải được ' + s.fx.sheet)); im.src = s.fx.sheet; fxSheets[s.id] = im; })));
+  for (const s of DATA.states) initVariants(s);
+  const loadImg = (url, store, key) => new Promise((res, rej) => { const im = new Image(); im.onload = res; im.onerror = () => rej(new Error('không tải được ' + url)); im.src = url; store[key] = im; });
+  const jobs = [];
+  for (const s of DATA.states) for (const v of (s.vs ? Object.values(s.vs) : [s])) { const k = s.id + '@' + v.fps; jobs.push(loadImg(v.sheet, sheets, k)); if (v.fx) jobs.push(loadImg(v.fx.sheet, fxSheets, k)); }
+  await Promise.all(jobs);
   for (const s of DATA.states) edits[s.id] = fromRecipe(s, STORE[s.id]);
   buildNav(); select(DATA.states[0].id); rafId = requestAnimationFrame(tick);
 }

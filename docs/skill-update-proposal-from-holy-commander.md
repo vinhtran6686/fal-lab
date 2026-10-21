@@ -1,153 +1,148 @@
-# Đề xuất cập nhật skill `fal-image` và `video-sprite` từ quá trình làm holy_commander
+# Đề xuất cập nhật skill `fal-image` và `video-sprite` (bản 2, theo phản hồi của user)
 
-Viết 2026-10-21 từ tài liệu thiết kế của hero (`out/heroes/holy_commander/brief.md`, `history.md`, `docs/holy-commander-report.md`, `docs/python-fx-recipe.md`, `docs/handover-holy-commander-assets.md`)
-và từ chính quá trình làm. **Chưa sửa `SKILL.md` hay file nào trong `.claude/skills/`** (user tự sửa, hoặc duyệt từng mục rồi mới áp dụng).
-Mục tiêu: lần sau làm một hero (hoặc ally, boss) nhanh hơn, ít retake hơn, ít tốn tiền hơn.
+Viết 2026-10-21 từ tài liệu thiết kế holy_commander (`out/heroes/holy_commander/brief.md`, `history.md`, `docs/holy-commander-report.md`, `docs/python-fx-recipe.md`,
+`docs/handover-holy-commander-assets.md`) và từ ba clip thử mới (`out/heroes/holy_commander/experiments/`).
+**Chưa sửa `SKILL.md` hay file nào trong `.claude/skills/`.** Bản này thay bản 1: user góp ý rằng skill **không được đóng khuôn vào một hero**; holy_commander chỉ là
+**tham khảo** để chuyển động mượt. Vì vậy mọi mục dưới đây viết thành nguyên tắc chung (chỗ trống như `{vũ khí}`), còn ví dụ cụ thể đặt vào `--example`/`references/`.
+Đề xuất cũ ở `docs/holy-commander-report.md` §5 (chém, lùi, ngưỡng thời lượng) vẫn đúng nhưng nay thuộc "thư viện gợi ý" (mục V3).
 
-Đề xuất cũ ở `docs/holy-commander-report.md` §5 (các thói quen của model khi chém, quay lưng, ngưỡng thời lượng) vẫn đúng và chưa áp dụng; file này bổ sung và không lặp lại chúng.
+## 0. Cách sắp xếp lại
 
-## 0. Tóm tắt: 10 điều đáng sửa nhất
+| Lớp | Là gì | Đặt ở đâu |
+|---|---|---|
+| Nguyên tắc chung | quy tắc đúng với mọi nhân vật (mô tả hành động, thời lượng, fx, export) | `SKILL.md` và `references/` |
+| Ví dụ tham khảo | hành động và prompt thật của holy_commander | `--example` của skill (`examples.md`), không đưa vào quy tắc |
+| Thư viện gợi ý chuyển động | "tình huống nào model hay làm gì, nên mô tả thế nào" | chỉ dùng ở `--creative`, `--example` và lúc skill **bổ sung mô tả của user**, không ép lên nhân vật |
 
-| # | Điều rút ra | Skill | Mức |
+## 1. `video-sprite`
+
+### V1. Mô tả chuyển động thật kỹ (nguyên tắc trung tâm)
+Chuyển động càng được mô tả kỹ theo từng bộ phận cơ thể thì nhân vật càng chuyển động đúng ý. Bằng chứng: cùng model, cùng giá, vòng 1-2 (chung chung) bị chê, vòng 3 (user viết từng bước vật lý) "quá đẹp"; skill kế tiếp dùng lại cách viết này, đạt ngay lần đầu.
+Công thức chung (chỗ trống thay cho chi tiết của nhân vật, để dán vào `references/motion-prompts.md`, mục "Writing the action"):
+> 1. **Facing lock**: "facing {RIGHT} the entire time and never turning around: hips, shoulders and face stay turned that way in every frame". Bắt buộc khi có bước chân, chân sau, hoặc kéo vật cầm.
+> 2. **Start**: "starts in the calm idle stance of the first still" kèm chân, vật cầm, tay làm gì; đứng yên một nhịp, chỉ thở.
+> 3. **Beats** đánh số, mỗi nhịp một động tác, nêu **bộ phận nào làm gì**: chân (gối, hông, bàn chân nào, trọng tâm), thân (nghiêng về phía TRƯỚC, thẳng lên, ưỡn ngực), đầu (ngẩng, cúi), tay (từng tay, nắm ở đâu), vật cầm ({vũ khí/gậy/...}: hướng, độ sâu, độ cao), áo choàng hay vật mềm (hất rồi rũ).
+> 4. **End state** bằng lời (đang ở tư thế nào) rồi "HOLDS that pose completely still for the rest of the clip".
+> 5. **Câu thứ tự**: "The order is always: {beat 1}, {beat 2}, ... , hold".
+> 6. **Số lần và điều cấm**: "{vật cầm} is {lifted} once; he does not walk, turn around or make any other gesture."
+> 7. **Fx**: hoặc cấm hẳn (clip thân sạch), hoặc cho đúng MỘT fx, nêu hình, chỗ, lúc ("this is the ONLY effect").
+> 8. **Ảnh cuối**: chỉ ghim ảnh cuối khi tư thế khó mô tả; khi pose cuối đã mô tả bằng lời thì không ghim (model khớp ngay).
+> 9. Giữ câu "locked tripod" chống zoom.
+
+### V2. Thời lượng quyết định số chuyển động
+Một clip yêu cầu ngắn hay dài quyết định model sinh ra bao nhiêu chuyển động. Số liệu từ các take đã quay (cần kiểm lại ở hero khác):
+| Take | Số nhịp yêu cầu | Thời lượng | Kết quả |
 |---|---|---|---|
-| 1 | **Mô tả hành động cụ thể từng bước, theo bộ phận cơ thể** quyết định chất lượng clip. Cùng model, cùng giá: vòng 1-2 (chung chung) bị chê, vòng 3 (user viết từng bước) "quá đẹp" | video-sprite | cao |
-| 2 | Chốt mô tả hành động **trước** khi quay clip trả phí (đề xuất 2-3 phương án có nhịp từng giây, rủi ro, giá; user chọn và chỉnh) | cả hai | cao |
-| 3 | **Fx: Python trước (0 USD)**, lớp mềm, rộng, màu + độ trong suốt, bao quanh thân; không dùng vector phẳng chồng lên thân | video-sprite, fal-image | cao |
-| 4 | Quy tắc style "không glow, không mềm" của `format.md` chỉ áp cho **ảnh tĩnh nhân vật**, không áp cho lớp fx | fal-image | cao |
-| 5 | Xuất fx thành **lớp RGBA riêng back/front** khớp từng pixel với thân; đường biến đổi chính xác | video-sprite | cao |
-| 6 | Export **từ công thức frame** (`export_recipe.json`) khi `.work` không có trong git; Frame Tuner để user tự tăng giảm frame | video-sprite | cao |
-| 7 | Canvas hero tier M **156x140 không đủ** cho vũ khí dài (đòn chém, đâm); dùng 176x140 | fal-image | trung bình |
-| 8 | `respawn` mặc định nên là **`rise` từ ảnh quỳ xám** (đã chạy tốt), không phải despawn đảo ngược (bị chê là pho tượng) | cả hai | trung bình |
-| 9 | Danh sách thói quen model mới (xoay thân, vũ khí vượt khung, vệt trắng khi chạm đất, fx hẹp vẫn kéo theo vật thừa) | video-sprite | trung bình |
-| 10 | `gen_image.py` nhận prompt từ file (`--prompt-file`): mất 0,02 USD vì shell truyền nguyên chuỗi `$(cat ...)` thành prompt | fal-image | thấp |
+| attack t04 | 2 nhát chém + lấy đà | 3 s | đủ 2 nhát |
+| attack t05, t06 | 2 nhát chém | 2 s | gộp thành 1 nhát, dù prompt ép "đúng hai nhát" |
+| levelup | 3 nhịp (đứng, hạ người, đấm, giữ) | 3 s | đủ |
+| banner, slash | 4-5 nhịp | 4 s | đủ |
+| death | 1 hành động liền | 5 s | đọc chậm, phải bớt frame |
+Quy tắc đề xuất cho skill: **ước khoảng 0,7-1 s cho mỗi nhịp riêng biệt cộng khoảng 1 s giữ pose cuối, giới hạn 3-5 s**; thêm nhịp thì phải tăng thời lượng; ngắn hơn mức cần thì model **bỏ nhịp** chứ không chạy nhanh hơn; dài quá (5 s) dễ chậm và trôi. Model còn **chia thời gian không đều** giữa các nhịp (respawn: nhịp xám chỉ ~0,5 s trên 4,5 s): muốn nhịp nào dài hơn thì nói trong prompt. Skill nên tự tính thời lượng gợi ý từ số nhịp và báo user.
 
-## 1. Số liệu quá trình (để biết nên tối ưu ở đâu)
+### V3. Thư viện gợi ý chuyển động (theo tình huống, không theo hero)
+Dùng khi `--creative`, `--example` đề xuất chuyển động, và khi skill nhận mô tả của user rồi bổ sung cho chặt chẽ. **Ghi rõ nguồn kiểm chứng: hiện chỉ có hero cầm vũ khí lớn; các class khác (ví dụ pháp sư niệm phép, nhân vật bay) chưa có dữ liệu, không khẳng định.**
+Hai nhóm:
+- **Chất lượng chuyển động làm hoạt ảnh sinh động** (user đề xuất): gồng và run khi nắm chặt hoặc giữ vật nặng; mất thăng bằng khi tụ lực cho chưởng hoặc tung skill (rồi lấy lại); chuẩn bị trước khi đánh; theo đà sau cú đánh; chùng gối khi va chạm; áo choàng hất rồi rũ.
+- **Thói quen model theo tình huống:**
+  | Tình huống | Điều hay xảy ra | Cách mô tả |
+  |---|---|---|
+  | bước hoặc lùi một chân | model đọc thành xoay người | khoá hướng (V1.1), chỉ cho chân đó trượt |
+  | nghiêng về sau ("dồn lui") | model xoay cả người | chỉ mô tả nghiêng, dồn về TRƯỚC |
+  | giơ vật cầm cao | vật vượt mép trên khung | nói "never rises above the head" hoặc kiểm `bbox.top` |
+  | vật cầm chạm đất hoặc vung mạnh | model vẽ vệt hoặc tia bắn dù cấm | chấp nhận, hoặc xoá bằng hậu kỳ (Python) |
+  | cho phép đúng một fx hẹp | model thêm vật thừa (khối nón, vòng sáng) | để fx làm bằng Python, hoặc chấp nhận |
+  | kéo hoặc nâng vật cầm | thân xoay nhẹ về camera | chấp nhận, hoặc retake nếu user thấy rõ |
+  | cần pha màu (xám sang màu) | model làm mượt | dùng nguyên "colour comes back gradually", không cần hậu kỳ |
+  | thời lượng quá ngắn cho số nhịp | model bỏ nhịp | tăng thời lượng (V2) |
+  | vật rung hoặc run | xem kết quả thử bên dưới | |
 
-| Mục | Con số |
-|---|---|
-| Ảnh tĩnh | 16 ảnh giữ lại ~0,22 USD (master 7 bản, icon, 3 pose skill cũ, pose respawn x3, pose levelup x2) + vài ảnh nháp bỏ |
-| Clip | **26 clip** trong `raw/` ~**1,58 USD** (ước từ sidecar) |
-| Tổng ước | **~1,8 USD** cho cả hero; bảng ước tính ban đầu của manifest ~0,75 USD |
-| Take mỗi state | run 1, death 1, attack 5 (t01, t03-t06), charge 4 (v1-v4), levelup 3 (1 bị loại + 2), respawn 2 (despawn bị loại + rise), banner 7 clip (1 bị loại + 3 vòng x 2), slash 3 (1 cũ bị loại + 2) |
-| Nguyên nhân tốn thêm | thiết kế lại skill sau góp ý (banner 7 clip qua 4 lần quay, charge 4 bản, attack 5 take), mỗi lần quay lại ~0,05-0,08 USD |
-| Fx | 0 USD (Python); so sánh 10 phiên bản fx levelup không tốn gì |
+**Kết quả quay thử các chất lượng chuyển động (2026-10-21, `out/heroes/holy_commander/experiments/`):**
+- **Gồng run** (`test_strain`): model dựng được **tư thế gồng** (nghiêng về trước, vai khom, cúi đầu, siết tay) và có **run rất nhỏ**: dao động dọc khoảng 0,7 px (std, trên khổ clip 480P, thân ~432 px) trong nhịp gồng so với 0,01 px khi giữ yên. Ở cỡ game (thân ~65 px) nhỏ hơn 0,2 px: **không nhìn thấy**. Muốn run rõ phải **phóng đại trong prompt** ("violently", "large shaking movements") hoặc **thêm run ở hậu kỳ** (offset vài pixel mỗi frame bằng Python, trong tuner hay lúc export). Chưa thử cách phóng đại.
+- **Mất thăng bằng** (`test_offbalance`): model dựng cú vung lớn với thân chồm, hai tay vung ra, một chân dài ra phía trước rồi ổn định lại ở thế thấp; **không phải "vấp bước" đúng nghĩa đen** nhưng đọc được là cú vung quá đà. Có vệt chém nhạt quen thuộc.
+- **Độ phân giải** (`test_1080p_slash_body`): xem V6.
 
-Hệ quả: tiền không nằm ở ảnh, mà ở clip quay lại do **mô tả hành động chưa đúng ý user**. Chốt hành động trước khi quay là chỗ tiết kiệm nhất (mục 2).
+### V4. Quy trình: mô tả kỹ trước, chốt, rồi mới quay (SKILL.md "Workflow", thêm bước trước "Ask before paying")
+1. **Mô tả chuyển động thật kỹ** (V1): user viết bằng lời, hoặc skill đề xuất 2-3 phương án (mỗi cái 4-6 nhịp theo bộ phận cơ thể, fx dự kiến, rủi ro, giá, khuyến nghị), có bổ sung chất lượng chuyển động (V3) cho chặt chẽ.
+2. **Tính thời lượng** theo số nhịp (V2).
+3. **User chốt** mô tả.
+4. Mới quay (báo giá, chờ ok).
+Bằng chứng: tiền tốn ở clip quay lại do mô tả chưa đúng ý (cả hero ~1,8 USD so với ước tính ban đầu ~0,75 USD).
 
-## 2. `video-sprite`
+### V5. Quy ước fx
+Bản A1 (vector phẳng chồng lên thân) bị user chê thô; bản mềm bao quanh thân bằng màu và độ trong suốt được chọn; hero tham chiếu cũng làm levelup bằng cột sáng trong suốt.
+- Clip thân **sạch** là mặc định; fx **Python trước** (0 USD, làm nhiều phiên bản cho user chọn); lớp mềm, rộng, bao quanh thân, tránh hạt nhỏ làm rối.
+- `fx_layers.py` (vector phẳng) giữ cho vật nhỏ có hình (sprite, đạn).
+- Cho phép một take fx do model vẽ khi rẻ và user muốn so (một fx hẹp, V1.7); ghi cả hai bản.
+- Sửa câu "painted fx are retaken, never kept" thành "allowed when the user prefers that take".
+- Xuất fx thành lớp RGBA `back`/`front` khớp từng pixel với thân (đường biến đổi chính xác của thân; IoU 0,985-0,993), kèm preview gif và sheet, vì thiếu preview thì user không thấy fx (xảy ra thật). Đo nhịp bằng chuỗi `bbox.top` và điểm phải nhất của hình bóng.
 
-### V1. Công thức mô tả hành động (thêm vào `references/motion-prompts.md`, mục mới "Writing the action", và trỏ tới từ SKILL.md "Workflow" bước 3)
-Bằng chứng: skill banner. Vòng 1 (mô tả chung chung "nâng kiếm, cắm xuống, giơ nắm đấm" kèm fx do model vẽ) ra khối nón cam đục và cử chỉ khoanh tay thừa; vòng 2 (thêm mô tả thân, chân, đầu nhưng ý tưởng do mình nghĩ) vẫn bị chê; vòng 3 (user tự viết ba bước vật lý: đứng như idle và lùi một chân; nâng kiếm hai tay rồi găm mạnh xuống đất; kiếm chìm khoảng một nửa, người khuỵu quỳ một gối, hai tay nắm chặt cán, gồng) cho kết quả "quá đẹp". Skill chém sáng dùng lại công thức ngay lần đầu và đạt.
+### V6. Clip phải thật chuẩn vì Frame Tuner chỉ chọn trong các frame đã render
+Tuner (user chọn frame mượt nhất) không sửa được hình mờ, lệch cỡ hay nhấp nháy, nên chất lượng clip render quyết định giới hạn của kết quả.
+- **Kiểm clip trước khi đưa vào tuner:** frame sắc nét, cỡ thân ổn định (locked tripod), không nhấp nháy, giữ hướng, không vật thừa che thân.
+- **Nguồn frame 24 fps** (clip render ở 24 fps): tuner đã có công tắc "Nguồn frame 15/24 fps"; 24 fps cho khoảng 1,6 lần số hình để chọn; lựa chọn được chuyển theo thời gian khi đổi nguồn; công thức lưu `fps` của nguồn và `apply_recipe`, `export_fx` đọc `fps` đó (fx dùng thời gian 15 fps nên được ánh xạ theo 15/fps). Đã kiểm: công thức 15 fps vẫn ra đúng bản đã export (18/18 frame trùng), công thức 24 fps chạy trọn vẹn (thân và fx).
+- **Độ phân giải clip** (`test_1080p_slash_body`, cùng prompt và ảnh đầu với take slash 480P): 1080P hoạt động (1920x1080, 24 fps, 107 hình như 480P); **cùng chuỗi chuyển động** với bản 480P (model gần như tất định với cùng prompt); **sắc hơn rõ** (khe mắt, viền visor), số pixel viền bán trong suốt khi key giảm còn khoảng một nửa (570 so với 1150 ở cùng cỡ thân); giá theo bảng của `fal_video.py models` là **0,015 USD/giây cho cả 480P, 768P, 1080P** (ước tính của tool; hoá đơn thực của fal chưa kiểm). Đánh đổi: tạo lâu hơn (~5,3 s so với ~3 s), file mp4 lớn hơn ~5 lần (6,9 MB so với ~1,4 MB), `key_out` bằng vòng lặp Python chậm hơn nhiều ở khổ lớn (nên tối ưu bằng numpy nếu dùng 1080P thường xuyên). Đề xuất: **dùng 1080P cho clip sẽ vào tuner/export** (hoặc ít nhất thử), 480P cho thử ý tưởng.
+- Bước export: công thức frame (`export_recipe.json`) thay cho `retime --auto-oneshot`; `apply_recipe.py --write`; cờ `--rest-last` cho clip kết thúc ở tư thế master; `hit_frame` tính từ 1.
 
-Nội dung đề xuất (tiếng Anh, để dán vào skill):
-> **Writing the action (the biggest lever on quality).** Describe the motion in numbered physical beats, by body part, never in generic verbs. Template:
-> 1. **Facing lock**: "facing RIGHT the entire time and never turning around: his hips, shoulders and face stay turned to the right in every frame." Required for any step, backward foot or weapon pull (the model reads "step back" as a turn; let only the back foot slide).
-> 2. **Start**: "starts in the calm idle stance of the first still" and say what the feet, sword and hands do, still for a short beat with only a slow breath.
-> 3. **Beats**, one action each, in order ("Beat 1, gather", "Beat 2, drive"...). For each name: legs (knees, hips, which foot, where the weight is, "the feet never leave the ground and never slide"), torso (leans FORWARD only, straightens, chest out), head (up, down toward the weapon), arms (each hand, where it grips), the weapon (vertical, level, point direction, how deep), the cape (flicks once, settles).
-> 4. **End state** in words (kneeling on one knee, both hands tight on the hilt, head bowed) and "HOLDS this pose completely still for the rest of the clip".
-> 5. **Order sentence**: "The order is always: stand, step back, lift, drive down while dropping to one knee, hold."
-> 6. **Counts and forbidden gestures**: "the sword is lifted once and driven down once; he does not walk, turn around, stand up again or make any other gesture (no crossing of the arms, no salute)."
-> 7. **Effects**: either forbid them for a clean body clip, or allow exactly ONE, with its shape, place and moment ("thin concentric elliptical rings of pale gold light spreading along the ground from where the sword is buried") and "this is the ONLY effect".
-> 8. **Do not pin an end still** when the end pose is written in words and the still would be a guess: the written pose matched on the first take (kneel, lunge). Pin one only when the pose is hard to describe.
-> 9. Keep the "locked tripod" sentence from the anti-zoom wording.
-
-### V2. Quy trình thiết kế hành động với user (SKILL.md "Workflow", thêm bước 3a trước "Ask before paying")
-Bằng chứng: khi mình đề xuất hai phương án có mô tả nhịp từng giây, rủi ro và giá (Cờ hiệu thánh H1-H3, Chém sáng C1-C3), user chọn nhanh và viết lại bước theo ý mình; mô tả do user viết ra kết quả tốt nhất.
-Đề xuất: với skill, levelup, respawn, **trước mọi clip trả phí**: (a) hỏi user mô tả bằng lời, hoặc (b) đề xuất 2-3 phương án, mỗi phương án 4-6 nhịp theo bộ phận cơ thể (mẫu ở V1), pose cuối, fx dự kiến (Python), rủi ro với model, giá; có khuyến nghị; hỏi 3 câu (chọn hướng, chỉnh nhịp, thời lượng). Chỉ quay khi user duyệt mô tả.
-
-### V3. Quy ước fx (sửa mục "Body clips and effect layers")
-Bằng chứng: bản A1 (fx_layers vòng/cột/bùng nổ phẳng chồng lên hero) bị user chê "thô, xấu, đè lên nhân vật"; bản mềm bao quanh thân bằng màu và độ trong suốt (v03) được chọn "đẹp nhất". Hero tham chiếu cũng làm levelup bằng cột sáng trong suốt bao thân (đã đối chiếu 23 frame). Banner: bản model vẽ ripple được user chọn dù có khối nón thừa; slash: bản Python tia sáng được chọn.
-Đề xuất:
-- Clip thân vẫn **sạch** là mặc định. Fx **Python trước** (`out/<class>/<id>/fx/*.py` kiểu `levelup_variants.py`, 0 USD, làm nhiều phiên bản cho user chọn), vì điều khiển được từng lớp và không làm thân bị zoom, vòng.
-- Lớp fx **mềm, rộng, bao quanh thân**: màu và độ trong suốt, mép blur, đậm ở chân nhạt dần lên đầu, hào quang bám theo hình người, vòng lan trên mặt đất, tia dọc theo vũ khí. Tránh hạt nhỏ và lưỡi sáng nhỏ làm rối (bị chê ở bản A2 đầu).
-- `fx_layers.py` (vector phẳng) giữ cho các vật nhỏ có hình (sprite, đạn), không dùng cho hào quang, cột sáng, tia.
-- Cho phép một take có fx do model vẽ **chỉ khi rẻ và user muốn so** (một clip ~0,06 USD): mô tả đúng một fx hẹp (V1 mục 7); chấp nhận rủi ro vật thừa; ghi cả hai bản để user chọn.
-- Đề xuất cho SKILL.md: sửa câu "Takes with painted glows, rings, starbursts ... are retaken, never kept" thành "painted fx are allowed when the user prefers that take".
-
-### V4. Xuất fx thành lớp riêng, khớp thân (thêm vào "Export" hoặc mục mới "Effect layers export")
-Bằng chứng: `tools/frame_tuner/export_fx.py`; thân và fx qua cùng chuỗi biến đổi (thang `120/chiều cao thân` hoặc 268 với clip cũ, đặt chân tại (256, 400) trên khung 512, nhân `body_rescale`, đặt vào pivot, kể cả làm tròn): IoU thân đặt lại so với frame đã export 0,985-0,993 (xấp xỉ bằng một hệ số chỉ cho 0,957, lệch 1 pixel).
-- Lưu fx dạng RGBA: màu = màu ánh sáng, alpha = cường độ (kênh lớn nhất), alpha thẳng; hai lớp `back` (sau thân) và `front` (trước thân); số hình bằng số hình thân; `fx.json` có pivot.
-- Pha trộn tốt nhất bằng screen hoặc additive; alpha-over vẫn dùng được nhưng tối hơn.
-- Canvas fx cắt theo phần fx thật sự có (tia dài hơn ô hero); đừng cắt theo ô hero.
-- Làm kèm `preview_fx_only.gif`, `preview_with_body.gif`, `sheet.png` và `<state>/preview_with_fx.gif`: nếu không có preview, user không thấy fx ở thư mục state (xảy ra thật, đã sửa).
-- Đo nhịp từ clip: chuỗi `bbox.top` theo từng frame và vị trí điểm phải nhất của hình bóng cho biết hình va chạm, hình duỗi hết, vị trí mũi vũ khí (dùng để đặt fx đúng nhịp).
-
-### V5. Export từ công thức frame và Frame Tuner (sửa mục "Tools", "Timing defaults", "Where things are")
-Bằng chứng: `docs/issue-frame-recipe-sync.md`; `.work/` không có trong git nên phiên cloud phải dựng lại set; bản cũ dùng `retime --auto-oneshot` nén attack về ~0,7 s trái bản user đã duyệt (23 hình). Công thức do user chỉnh bằng Frame Tuner (bật/tắt hình, thời gian từng hình, hit) lưu trong `export_recipe.json`; `apply_recipe.py --write` export lại; **công thức mặc định tái lập đúng bản đã chốt trùng từng pixel** (attack 23/23, death 39/39, charge 67/67).
-Đề xuất:
-- Thêm bước "frame review" sau accept: user dùng Frame Tuner (cục bộ `.bat` hoặc artifact) để chọn frame; công thức lưu cạnh asset.
-- Route export khi không có `.work`: clip trong `raw/` -> `ffmpeg fps=15` -> `key_out` -> thang -> `video_to_sheet.py`, thay vì dựng lại set bằng `sprite_set.py`.
-- `hit_frame` trong `meta.json` tính từ 1; trong công thức `hit` là chỉ số 0 trong danh sách hình giữ.
-- Cờ `--rest-last` (đã thêm vào `video_to_sheet.py`): đo cỡ thân theo hình **cuối** khi clip kết thúc ở tư thế master (respawn `rise`); trước đó hình đứng cuối nhỏ hơn idle 4%.
-- Ghi chú: `body_height_2x` trong `meta.json` đo từ run (tư thế hơi cúi) nên thấp hơn idle (111 so với 131 px @2x với cùng thân); dùng diện tích (`body_area_2x`) để khớp, đừng so chiều cao.
-
-### V6. Thói quen model bổ sung (mở rộng "Retake translation" điểm 6 và "Known limits", cùng với đề xuất cũ §5)
-Bằng chứng ở `history.md` (dòng banner, slash, levelup):
-- "Lùi chân" bị đọc thành xoay người: thêm câu khoá hướng (V1 mục 1) và chỉ cho chân sau trượt.
-- Thân hơi xoay về camera khi nâng hoặc kéo vũ khí (banner, slash): xuất hiện cả khi đã khoá hướng; chấp nhận hoặc retake nếu user thấy rõ.
-- Vũ khí giơ cao vượt mép trên khung (mũi kiếm chạm `bbox.top = 0` khoảng 9 hình ở banner): mô tả "never rises above his head" hoặc kiểm `bbox.top` rồi báo user.
-- Kiếm chạm đất vẽ ra vệt trắng hoặc hồng bắn ra **dù cấm rõ** (banner, vòng 2 và 3): Python xoá được (vùng bên phải kiếm, dưới đường chân) hoặc chấp nhận.
-- Cho phép đúng một fx hẹp vẫn kéo theo vật thừa: ripple dưới đất kéo theo khối nón sáng phủ hero; tia kiếm kéo theo vòng sáng lớn chạy ra mép khung; fx cũng làm gate `area`, `feet` đọc sai.
-- Mô tả màu hồi dần (xám sang màu) model làm mượt, không cần hậu kỳ: dùng nguyên văn "the colour comes back gradually, spreading over the whole body".
-- Khi không ghim ảnh cuối và mô tả pose cuối bằng lời: model khớp ngay (quỳ, đâm thẳng).
-- Thời lượng đã dùng: 3 s cho levelup (đủ), 4 s cho skill nhiều nhịp; giá `h3-max-turbo` 480P: 3 s ~0,045 USD, 4 s ~0,06 USD, 5 s ~0,08 USD (SKILL.md chỉ ghi 5 s).
-
-### V7. Mẫu action template (sửa `references/motion-prompts.md`)
-- `levelup` (đấm lên trời, giữ pose) và `skill` (cắm kiếm quỳ gối; đâm thẳng) nên có bản mẫu dùng công thức V1 làm ví dụ (prompt thật nằm ở `raw/*.prompt.txt` của hero).
-- `rise` đổi nhãn từ "untested alternative" thành **tested, đạt** (holy_commander, respawn quỳ xám -> đứng). Mẫu: ảnh đầu = `pose_respawn` (quỳ xám), ảnh cuối = master, nhịp "quỳ xám giữ một nhịp -> màu hồi -> ngẩng đầu -> chống kiếm đứng -> giữ".
-- `despawn` (đảo ngược) vẫn chạy kỹ thuật nhưng user chê "pho tượng cứng nhắc": đưa xuống làm phương án phụ.
+### V7. Mẫu action template (`references/motion-prompts.md`)
+- `levelup`, `skill`, `rise`: thêm mẫu theo công thức V1 (prompt thật của hero nằm ở `raw/*.prompt.txt`, dùng làm ví dụ ở `--example`).
+- `rise` đổi nhãn "untested alternative" thành **tested, đạt**; `despawn` đảo ngược xuống làm phương án phụ (user chê "pho tượng cứng nhắc").
 
 ### V8. Duyệt và báo cáo (sửa "Run modes")
-Bằng chứng: user không có máy local, chỉ xem qua artifact; mỗi take cần artifact riêng (clip, sheet key pose, nhận xét thật); gate không phát hiện được fx vẽ trong clip (đọc `qc.json` không đủ).
-- Mặc định đăng một artifact cho mỗi vòng quay: video raw, sheet 10-12 hình, nhận xét thẳng (ưu, nhược, so với mô tả), giá; không chỉ dựa vào gate.
-- Sau khi chốt: một trang tổng quan mọi state (pose, key pose, video, trạng thái) để user duyệt cả bộ.
+User không có máy local: mỗi vòng quay một artifact (video raw, sheet 10-12 hình, nhận xét thẳng, giá); gate không đọc được fx vẽ trong clip nên phải xem frame thật; sau khi chốt, một trang tổng quan mọi state.
 
-## 3. `fal-image`
+## 2. `fal-image`
 
-### F1. Quy tắc style chỉ cho ảnh tĩnh (sửa `format.md` §1, bảng "May set / Never" và đoạn "Effects")
-Bằng chứng: style hiện cấm "gradient, soft glow, blur, aura" cho **mọi** tài sản; nhưng fx do game vẽ như lớp riêng (hero tham chiếu có cột sáng trong suốt khi levelup) và bản mềm được user chọn.
-Đề xuất: ghi rõ "These bans apply to the character STILLS drawn by the image model. Effect layers (separate assets, drawn in code) may be soft, translucent light layers with feathered edges, in colour and opacity." Giữ nguyên cấm "aura, rim light" trong ảnh tĩnh.
+### F1. Quy tắc style "không glow, không mềm" (CHỜ user giải thích)
+User nói không nên cứng nhắc như mình mô tả và chưa hiểu lời giải thích. Chưa sửa mục này cho tới khi user nói rõ ý.
 
-### F2. Canvas hero tier M (sửa `classes/hero.md` §3 và `format.md` §7)
-Bằng chứng: canvas 156x140 không chứa được đòn chém attack; toàn bộ asset phải đệm lại thành **176x140**; về sau đâm thẳng của slash dài ~2,3 lần thân. Đề xuất: hero M canvas **176x140** (@2x 352x280) mặc định cho hero cầm vũ khí dài; hoặc quy tắc "đo tầm với ngang lớn nhất của hành động trước lần export đầu và chọn canvas theo đó" (export đầu quyết định canvas cho cả hero, `meta.json`). Fx dài hơn ô (tia) là lớp riêng, không bắt canvas thân to hơn.
+### F2. Canvas hero M (user đồng ý)
+Hero tier M: **176x140** (@2x 352x280) thay vì 156x140, vì đòn chém và đâm của vũ khí dài không vừa 156x140 (cả asset phải đệm lại). Sửa `classes/hero.md` §3 và `format.md` §7. Fx dài hơn ô (tia) là lớp riêng, không bắt canvas thân to hơn.
 
-### F3. Ảnh pose và manifest (sửa `classes/hero.md` §5, §6)
-- Thêm hàng ảnh `pose_respawn` (quỳ, gục đầu vào kiếm, xám) và `pose_levelup` (đỉnh cú đấm) khi hero dùng thiết kế đó.
-- Hàng `pose_skill_<name>` đánh dấu **tuỳ chọn (⏭)** khi user mô tả pose cuối bằng lời: banner v4 và slash v2 chạy từ master không ảnh cuối và khớp mô tả; pose cũ (`pose_skill_holy_banner_v01`) từng bị thay cả thiết kế.
-- Hàng `respawn_side`: "rise từ pose_respawn (đã chạy tốt)" thay cho "despawn đảo ngược" làm mặc định; `fx_respawn`, `fx_levelup`, `fx_<skill>` trỏ tới fx Python (`out/<class>/<id>/fx/`).
-- Thêm hàng đóng gói cuối: `ui/icon` (`sprite_pack.py ... --state icon`), `export_manifest.json`, `EXPORT_README.md`. Hiện icon chỉ được pack khi nhớ làm.
+### F3. Pose và manifest (user đồng ý)
+- Thêm hàng ảnh `pose_respawn` (quỳ, gục đầu, xám) và `pose_levelup`; `pose_skill_*` thành **tuỳ chọn** khi user mô tả pose cuối bằng lời (ghi chú nhỏ: pose cuối mô tả bằng lời khớp ngay, không cần ảnh).
+- `respawn_side`: "rise từ pose_respawn (đã chạy tốt)" thay cho "despawn đảo ngược"; `fx_*` trỏ tới fx Python.
+- Thêm hàng đóng gói cuối: `ui/icon`, `export_manifest.json`, `EXPORT_README.md`.
 
-### F4. Vòng lặp master cho hero cầm vũ khí lớn (thêm vào `classes/hero.md` §9 và `format.md` §2)
-Bằng chứng: master mất 7 bản (v01-v07), mỗi bản sửa đúng một điểm; v05 bị loại vì một tay không thấy, mũi kiếm tụt dưới đường chân, báng bị che.
-Đề xuất mục kiểm cho vũ khí dài: (a) nói kích thước vũ khí **so với thân** ("blade as tall as from the ground to his chest", "whole sword above the waist"); (b) hai chân giang rộng trên một đường đất, mũi kiếm trong khung ở idle và ở mọi pose; (c) báng và hai tay thấy rõ; (d) mỗi vòng dùng `--ref <bản trước>` kèm "giữ X, đổi Y"; (e) quay 3 ảnh trong một lệnh (`--n 3`, ~0,04 USD) rồi chọn, thay vì từng ảnh.
+### F4. Kích thước vũ khí và các thông số thiết kế còn thiếu: **hỏi user** (thay mục "vòng lặp master" cũ)
+User chỉ ra gốc của vấn đề: ở bước mô tả nhân vật, mô tả ban đầu chưa nói kỹ kích thước vũ khí so với thân. Đề xuất: skill **phát hiện mô tả còn thiếu** và dùng `AskUserQuestion` để hỏi, thay vì đoán hay để vòng lặp master sửa dần.
+- Với nhân vật cầm vật: hỏi **kích thước so với thân** (ngắn như dao găm, vừa tới eo, dài tới ngực, cao bằng người), **cầm bằng tay nào hoặc hai tay**, **khi đứng yên đặt ở đâu** (cắm đất, đeo lưng, cầm sẵn), có cần thấy báng hay mũi trong khung hay không.
+- Tương tự cho các thông số hay bị bỏ sót: dáng đứng (chân giang bao nhiêu), phần được phóng đại, áo choàng hay vật mềm.
+- Mỗi câu hỏi đưa 3-4 lựa chọn có khuyến nghị (như các câu hỏi class và tier hiện có). Trả lời đi thẳng vào `{design}` và `{idle}` trong `brief.md`.
+Bằng chứng: master mất 7 bản vì thanh kiếm dài; v05 bị loại vì mũi kiếm tụt dưới đường chân, báng bị che, chỉ thấy một tay.
 
-### F5. Ảnh trạng thái đổi màu (thêm vào `format.md` §3 hoặc `templates.md`, ví dụ pose xám)
-Bằng chứng: `pose_respawn` ra xám sạch ở cả 3 ảnh nháp ngay lần đầu. Câu hiệu quả: "THE WHOLE HERO IS DESATURATED GREY: every part ... is drawn in flat shades of cool grey (light, mid and dark grey only), with no red, no gold and no colour anywhere on the subject; outlines stay near-black", và thay "Do not use magenta or pink on the subject" bằng "the subject has no colour at all, only grey".
+### F5. Ảnh trạng thái đổi màu
+Câu hiệu quả (xám sạch cả 3 ảnh nháp ngay lần đầu): "THE WHOLE {subject} IS DESATURATED GREY: every part ... in flat shades of cool grey (light, mid and dark only), no {colours} anywhere; outlines stay near-black", và thay "Do not use magenta on the subject" bằng "the subject has no colour at all, only grey". Đưa vào `format.md` §3 hoặc `templates.md`.
 
-### F6. Chạy generator với prompt dài (sửa "Running the generator")
-Bằng chứng: 2 ảnh hỏng (~0,02 USD): lệnh `gen_image.py "\$(cat file)"` gửi nguyên chuỗi lệnh làm prompt, model vẽ một thẻ nhân vật. Đề xuất: thêm `--prompt-file`; và bước "mở `.json` sidecar, xem 60 ký tự đầu của `prompt` sau ảnh đầu tiên của mỗi lệnh mới".
+### F6. `gen_image.py` nhận prompt từ file
+Thêm `--prompt-file`; sau ảnh đầu của mỗi lệnh mở `.json` sidecar xem 60 ký tự đầu của `prompt` (đã mất ~0,02 USD vì shell truyền nguyên chuỗi `$(cat ...)` làm prompt).
 
-### F7. Chế độ `--creative` cho skill và hành động (thêm vào "Creative mode")
-Bằng chứng: kiểu "đề xuất 3 phương án, mỗi phương án nhịp + rủi ro + giá, khuyến nghị, hỏi 3 câu" hoạt động tốt cho skill 2 và 3. Đề xuất bước 6 cho `--creative`: sau khi nhân vật chốt, mỗi skill được đề xuất 2-3 phương án hành động theo mẫu V1/V2.
+### F7. Chế độ `--creative` cho skill và hành động
+Sau khi nhân vật chốt, mỗi skill được đề xuất 2-3 phương án hành động theo công thức V1, có thời lượng gợi ý (V2), thư viện gợi ý (V3), rủi ro và giá.
 
-### F8. Ghi lý do chọn (sửa `format.md` §4 hoặc `brief.md` mẫu)
-Bằng chứng: user yêu cầu ghi "vì sao chọn v02 và vì sao ổn" vào tài liệu thiết kế. Đề xuất: mỗi ảnh được duyệt có mục ngắn "Cách tạo", "Vì sao chọn", "Vì sao ổn (đã kiểm bằng gì)" trong `brief.md`, kèm lệnh hoặc prompt dựng lại.
+### F8. Ghi lý do chọn
+Mỗi ảnh được duyệt có mục ngắn "Cách tạo / Vì sao chọn / Vì sao ổn (đã kiểm bằng gì)" trong `brief.md`.
 
-## 4. Công cụ nên đưa vào dự án chính thức (hiện nằm ở `tools/frame_tuner/`)
-| Công cụ | Việc | Đề xuất |
+## 3. Công cụ nên đưa vào dự án chính thức (hiện ở `tools/frame_tuner/`)
+| Công cụ | Việc | Ghi chú |
 |---|---|---|
-| `frame_tuner` (`index.html`, `serve.py`, `.bat`, `build_artifact.py`) | chỉnh frame, lưu công thức | dời hoặc trỏ từ `scripts/`; ghi vào SKILL.md "Tools" |
-| `apply_recipe.py` | export thân từ công thức | như trên; hiện gắn `sources.json` của holy_commander, cần tổng quát hoá theo asset |
-| `export_fx.py`, `preview_fx.py` | fx thành lớp riêng và preview | như trên |
-| `build_export_manifest.py` | manifest và kiểm gói | như trên; mô tả các state đang viết cứng cho holy_commander |
-| `fx/*.py` (levelup_variants, holy_banner_ripple, radiant_slash_beam) | fx Python | mẫu để copy cho hero khác (`docs/python-fx-recipe.md`) |
-| `scripts/video_to_sheet.py --rest-last` | cỡ thân theo hình cuối | đã thêm; ghi vào bảng "Tools" |
+| Frame Tuner (`index.html`, `serve.py`, `.bat`, `build_artifact.py`) | chỉnh frame, lưu công thức, nguồn 15 hoặc 24 fps | tên artifact hiện là "Frame Editor" |
+| `apply_recipe.py` | export thân theo công thức (đọc `fps` của công thức) | gắn `sources.json` của holy_commander, cần tổng quát hoá theo asset |
+| `export_fx.py`, `preview_fx.py` | fx thành lớp riêng, preview | như trên |
+| `build_export_manifest.py` | manifest và kiểm gói | mô tả state viết cứng cho holy_commander |
+| `fx/*.py` | fx Python mẫu | `docs/python-fx-recipe.md` |
+| `video_to_sheet.py --rest-last` | cỡ thân theo hình cuối | đã thêm |
+| `gen_image.py --prompt-file` | prompt dài từ file | chưa làm |
 
-## 5. Gợi ý thứ tự áp dụng
-1. V1 và V2 (công thức mô tả hành động, thiết kế hành động trước khi quay): tiết kiệm nhiều tiền nhất, sửa văn bản, không cần code.
-2. F1, V3 (quy ước fx) vì hai chỗ đang mâu thuẫn nhau trong skill.
-3. F2, F3 (canvas và manifest) trước khi làm hero tiếp theo, để khỏi làm lại canvas.
-4. V5 và V4 cùng Frame Tuner: đưa công cụ vào `scripts/` rồi sửa SKILL.md.
-5. V6 và đề xuất cũ §5, F4 đến F8: làm sau, cùng một lượt sửa tài liệu.
+## 4. Thứ tự áp dụng gợi ý
+1. V1, V2, V4 (mô tả kỹ, thời lượng theo số nhịp, quy trình): ít code, ảnh hưởng lớn nhất tới chất lượng và chi phí.
+2. F4 (hỏi user về vũ khí và thông số thiếu) cùng F2, F3 (canvas, manifest) trước hero tiếp theo.
+3. V5, V6 (fx Python, clip chuẩn cho tuner, 24 fps, 1080P).
+4. V3 (thư viện gợi ý) khi viết `--example` và `--creative`; V7, V8, F5-F8.
+5. F1 sau khi user giải thích ý.
 
-Việc cần user quyết trước khi sửa skill: (1) blend của fx khi xuất (alpha thường hay cộng sáng, dùng để viết chuẩn mục V4); (2) có chuyển công cụ vào `scripts/` không; (3) canvas M mặc định 176x140 hay giữ 156x140 kèm quy tắc đo.
+## 5. Cần user quyết
+1. F1: ý của user về quy tắc style (mình hỏi lại ở trả lời).
+2. Có chuyển 1080P thành mặc định cho clip vào tuner và export không (giá theo ước tính bằng nhau; cần kiểm hoá đơn thực).
+3. Có dời công cụ vào `scripts/` không.
+4. Có muốn thử một clip "run phóng đại" (~0,06 USD) và thử thêm run ở hậu kỳ bằng Python không.

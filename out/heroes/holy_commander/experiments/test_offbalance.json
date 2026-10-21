@@ -1,0 +1,26 @@
+{
+  "prompt": "The same top-heavy holy knight commander about 2.5 heads tall (huge rounded silver shoulder plates, small head, short legs), wearing sleek silver plate armour with a gold cross emblem on the chest and a simple engraved gold swirl pattern (a few big flat swooping lines) on each shoulder plate and the hip armour, and a tall silver helmet with an angular T-shaped visor and one tall swept-back red plume crest; a big broad heavy VERY LONG longsword (blade as tall as from the ground to his chest) with a wide silver blade, a gold crossguard, a long grip and a gold EAGLE-HEAD pommel, held in both mitten-shaped hands; no shield; a long plain red cape behind him; saturated silver main colour, bright gold accent, red cape, facing RIGHT the entire time and never turning around: his hips, shoulders and face stay turned to the right in every frame. He starts standing upright in the calm idle stance of the first still, feet planted wide apart on one ground line, the longsword planted point-down in the ground in front of him, both hands stacked on the pommel, still for a short beat with only a slow breath. Beat 1, wind-up: both hands grip the hilt and he pulls the longsword up out of the ground and swings it low beside his hip, the knees bending, the weight settling forward over his front foot. Beat 2, the heavy swing: in one big wide arc he swings the sword from low up to a high diagonal over his shoulder, and the sword is so heavy that its momentum drags his whole body forward off balance: his torso tips forward, his arms are flung out for a moment, and his front foot takes one quick stumbling step forward along the ground line to catch himself. Beat 3, recover: he catches his balance, plants both feet wide apart, brings the sword down in front of him and settles into a steady low stance, then HOLDS that final pose completely still for the rest of the clip. The order is always: stand, wind-up, heavy swing and stumble forward, catch the balance, hold. He swings the sword once, does not turn around, spin or make any other gesture. Body motion only: no light, glow, sparks, splash, flash, dust, lightning, energy, magic, trails or particles of any kind; the game draws every effect as a separate layer. The camera never moves or zooms: the character keeps exactly the same size in every frame. No camera zoom, no push-in, no pull-out, no dolly movement, no change in the character's size at any point in the clip, even while he swings and stumbles: the camera is fixed like a locked tripod the entire time, exactly the same framing and the same character size from the first frame to the last.  The sword stays the same very long length and the character keeps the same size in every frame. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action. The game adds the magic afterward: no particles, no glow, no beams, no energy, no fire, no light, no new objects of any kind, no effects of any kind on the character or around him.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aaf40d4/pNXVUsHau7lNECe1nq8I7_hb_start.png"
+  },
+  "seconds": 4,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.06,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/tmp/claude-0/-home-user-fal-lab/8eec0ad1-bf37-5e87-8eb3-7eb2a636e81f/scratchpad/hb/hb_start.png",
+  "lastFrame": null,
+  "requestId": "01a15dd4-765e-78f2-874b-5947170c0f4f",
+  "seconds_elapsed": 3.2,
+  "source_url": "https://v3b.fal.media/files/b/0aaf40d4/1ESPxg2_U58aOvP2XqBef_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

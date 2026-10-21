@@ -24,9 +24,10 @@ def default_recipe(st):
     ap = st['approved']; stride = ap.get('stride', 1)
     return {'stride': stride, 'hit_frame': ap.get('hit')}
 
-def frames_of(clip):
-    d = tempfile.mkdtemp(prefix='ar_')
-    subprocess.run(['ffmpeg', '-v', 'error', '-i', str(clip), '-vf', f"fps={CFG['fps']}", d + '/%03d.png'], check=True)
+def frames_of(clip, fps=None):
+    """All keyed frames of the clip at `fps` (default: the project rate; a saved recipe may name its own, e.g. 24, the clip's native rate)."""
+    fps = fps or CFG['fps']; d = tempfile.mkdtemp(prefix='ar_')
+    subprocess.run(['ffmpeg', '-v', 'error', '-i', str(clip), '-vf', f"fps={fps}", d + '/%03d.png'], check=True)
     ims = [key_out(Image.open(f).convert('RGBA')) for f in sorted(glob.glob(d + '/*.png'))]
     shutil.rmtree(d, ignore_errors=True); return ims
 
@@ -39,11 +40,12 @@ def plan_for(st, saved, use_default, n):
 
 def apply(st, saved, use_default, write, asset_out):
     asset = ROOT / CFG['asset']; clip = asset / st['clip']
-    ims = frames_of(clip); n = len(ims)
+    rec = None if use_default else saved.get(st['id']); rfps = (rec or {}).get('fps') or CFG['fps']
+    ims = frames_of(clip, rfps); n = len(ims)
     keep, dur, hit, src = plan_for(st, saved, use_default, n)
     if max(keep) >= n: raise SystemExit(f"{st['id']}: recipe keeps frame {max(keep)} but the clip has {n} frames")
     total = sum(dur)
-    print(f"{st['id']:8s} {src:16s} {len(keep):3d}/{n} frames  {total / 1000:.2f} s  hit={'-' if hit is None else keep[hit]}  -> {st['sheet']}")
+    print(f"{st['id']:8s} {src:16s} @{rfps} fps {len(keep):3d}/{n} frames  {total / 1000:.2f} s  hit={'-' if hit is None else keep[hit]}  -> {st['sheet']}")
     if not write: return
     ref = ims[keep[-1]] if st.get('restFrame') == 'last' else ims[0]     # respawn rises to the master pose: size and feet come from its last frame
     b = ref.getchannel('A').point(lambda v: 255 if v > 24 else 0).getbbox(); fx, fy = (b[0] + b[2]) / 2, b[3]
