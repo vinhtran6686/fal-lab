@@ -1,0 +1,327 @@
+{
+ "object": "fx_fire_breath_test",
+ "kind": "animation",
+ "fps": 30,
+ "exported": "2026-10-22T07:26:52",
+ "source": "design/sheet_v01.png",
+ "recipe_hash": "48f688e21243",
+ "mode": "raster",
+ "scale": 0.6,
+ "canvas": {
+  "@2x": [
+   296,
+   296
+  ],
+  "@1x": [
+   148,
+   148
+  ],
+  "ipad": [
+   105,
+   105
+  ]
+ },
+ "anchor": [
+  0.04,
+  0.53
+ ],
+ "anchor_note": "game anchor: x from the left, y from the BOTTOM of the canvas",
+ "loop": false,
+ "frames": {
+  "fx_fire_breath_test_0001": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    4,
+    53
+   ],
+   "content": [
+    57,
+    39
+   ],
+   "cell": 0,
+   "alias_of": null
+  },
+  "fx_fire_breath_test_0002": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    4,
+    53
+   ],
+   "content": [
+    57,
+    39
+   ],
+   "cell": 0,
+   "alias_of": "fx_fire_breath_test_0001"
+  },
+  "fx_fire_breath_test_0003": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    4,
+    48
+   ],
+   "content": [
+    89,
+    41
+   ],
+   "cell": 1,
+   "alias_of": null
+  },
+  "fx_fire_breath_test_0004": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    4,
+    48
+   ],
+   "content": [
+    89,
+    41
+   ],
+   "cell": 1,
+   "alias_of": "fx_fire_breath_test_0003"
+  },
+  "fx_fire_breath_test_0005": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    3,
+    45
+   ],
+   "content": [
+    131,
+    51
+   ],
+   "cell": 2,
+   "alias_of": null
+  },
+  "fx_fire_breath_test_0006": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    3,
+    45
+   ],
+   "content": [
+    131,
+    51
+   ],
+   "cell": 2,
+   "alias_of": "fx_fire_breath_test_0005"
+  },
+  "fx_fire_breath_test_0007": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    0,
+    45
+   ],
+   "content": [
+    134,
+    48
+   ],
+   "cell": 3,
+   "alias_of": null
+  },
+  "fx_fire_breath_test_0008": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    0,
+    45
+   ],
+   "content": [
+    134,
+    48
+   ],
+   "cell": 3,
+   "alias_of": "fx_fire_breath_test_0007"
+  },
+  "fx_fire_breath_test_0009": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    3,
+    42
+   ],
+   "content": [
+    138,
+    50
+   ],
+   "cell": 4,
+   "alias_of": null
+  },
+  "fx_fire_breath_test_0010": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    3,
+    42
+   ],
+   "content": [
+    138,
+    50
+   ],
+   "cell": 4,
+   "alias_of": "fx_fire_breath_test_0009"
+  },
+  "fx_fire_breath_test_0011": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    3,
+    42
+   ],
+   "content": [
+    142,
+    54
+   ],
+   "cell": 5,
+   "alias_of": null
+  },
+  "fx_fire_breath_test_0012": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    3,
+    42
+   ],
+   "content": [
+    142,
+    54
+   ],
+   "cell": 5,
+   "alias_of": "fx_fire_breath_test_0011"
+  },
+  "fx_fire_breath_test_0013": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    3,
+    44
+   ],
+   "content": [
+    142,
+    50
+   ],
+   "cell": 6,
+   "alias_of": null
+  },
+  "fx_fire_breath_test_0014": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    3,
+    44
+   ],
+   "content": [
+    142,
+    50
+   ],
+   "cell": 6,
+   "alias_of": "fx_fire_breath_test_0013"
+  },
+  "fx_fire_breath_test_0015": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    3,
+    47
+   ],
+   "content": [
+    144,
+    45
+   ],
+   "cell": 7,
+   "alias_of": null
+  },
+  "fx_fire_breath_test_0016": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    3,
+    47
+   ],
+   "content": [
+    144,
+    45
+   ],
+   "cell": 7,
+   "alias_of": "fx_fire_breath_test_0015"
+  },
+  "fx_fire_breath_test_0017": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    23,
+    51
+   ],
+   "content": [
+    125,
+    35
+   ],
+   "cell": 8,
+   "alias_of": null
+  },
+  "fx_fire_breath_test_0018": {
+   "size": [
+    148,
+    148
+   ],
+   "trim_offset": [
+    23,
+    51
+   ],
+   "content": [
+    125,
+    35
+   ],
+   "cell": 8,
+   "alias_of": "fx_fire_breath_test_0017"
+  }
+ },
+ "animations": {
+  "fx_fire_breath_test": {
+   "prefix": "fx_fire_breath_test",
+   "from": 1,
+   "to": 18
+  }
+ }
+}

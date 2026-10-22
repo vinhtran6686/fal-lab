@@ -26,8 +26,14 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - Effects (skills, attack smears, respawn, level-up): `scripts/fx_layers.py A/fx/<skill>.json`, a recipe of small flat
   layers (slash, ring, burst, bolt, pillar, particles, tweened fx part stills) on one canvas anchored at the
   feet, the reference game's method; no video model. Character clips are body only (`video-sprite` SKILL.md).
+- Fx Studio (`tools/fx_studio/fx_studio.bat`, engine `scripts/fx_studio.py`): a sprite sheet of a 2D effect -> `out/vfx/<id>/`
+  (recipe `fx.json`; `game/`: frames @2x, @1x = fullhd, ipad, manifest in the `ref/hero` format) -> `install` packs atlas
+  `go_fx_lab` into the Kingdom Rush 1 game (`KR1_GAME_DIR`, default `E:\work\reverse\games\kr1`, LOVE 0.10.2) and registers
+  animation + template; F6/F7 play it in a level. Raster (as drawn) by default; `mode: vector` traces the flat core with
+  vtracer and redraws the glow. Guide: `tools/fx_studio/README.md`.
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
-  `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe`. Video tools need ffmpeg on PATH.
+  `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
+  works). Video tools need ffmpeg on PATH.
 - Playtest: `python scripts/build_playtest.py` builds `out/playtest/` from `tools/playtest/index.html`;
   publish `index.html` (Sprite Playtest: https://claude.ai/artifact/75DbnF3Fne9dnYVuu9XaSV) and
   `motion.html` (Motion Lab: https://claude.ai/artifact/C4umJEeQjjmx6FAjpcyT1J) with the same files.

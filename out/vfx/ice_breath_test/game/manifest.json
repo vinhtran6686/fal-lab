@@ -1,0 +1,311 @@
+{
+ "object": "fx_ice_breath_test",
+ "kind": "animation",
+ "fps": 30,
+ "exported": "2026-10-22T07:33:02",
+ "source": "design/sheet_v01.png",
+ "recipe_hash": "66146ea2243c",
+ "mode": "raster",
+ "scale": 0.5,
+ "canvas": {
+  "@2x": [
+   246,
+   246
+  ],
+  "@1x": [
+   123,
+   123
+  ],
+  "ipad": [
+   87,
+   87
+  ]
+ },
+ "anchor": [
+  0.04,
+  0.53
+ ],
+ "anchor_note": "game anchor: x from the left, y from the BOTTOM of the canvas",
+ "loop": false,
+ "frames": {
+  "fx_ice_breath_test_0001": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    44
+   ],
+   "content": [
+    48,
+    32
+   ],
+   "cell": 0,
+   "alias_of": null
+  },
+  "fx_ice_breath_test_0002": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    44
+   ],
+   "content": [
+    48,
+    32
+   ],
+   "cell": 0,
+   "alias_of": "fx_ice_breath_test_0001"
+  },
+  "fx_ice_breath_test_0003": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    40
+   ],
+   "content": [
+    74,
+    34
+   ],
+   "cell": 1,
+   "alias_of": null
+  },
+  "fx_ice_breath_test_0004": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    40
+   ],
+   "content": [
+    74,
+    34
+   ],
+   "cell": 1,
+   "alias_of": "fx_ice_breath_test_0003"
+  },
+  "fx_ice_breath_test_0005": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    2,
+    38
+   ],
+   "content": [
+    109,
+    42
+   ],
+   "cell": 2,
+   "alias_of": null
+  },
+  "fx_ice_breath_test_0006": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    2,
+    38
+   ],
+   "content": [
+    109,
+    42
+   ],
+   "cell": 2,
+   "alias_of": "fx_ice_breath_test_0005"
+  },
+  "fx_ice_breath_test_0007": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    0,
+    38
+   ],
+   "content": [
+    112,
+    40
+   ],
+   "cell": 3,
+   "alias_of": null
+  },
+  "fx_ice_breath_test_0008": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    0,
+    38
+   ],
+   "content": [
+    112,
+    40
+   ],
+   "cell": 3,
+   "alias_of": "fx_ice_breath_test_0007"
+  },
+  "fx_ice_breath_test_0009": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    35
+   ],
+   "content": [
+    114,
+    41
+   ],
+   "cell": 4,
+   "alias_of": null
+  },
+  "fx_ice_breath_test_0010": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    35
+   ],
+   "content": [
+    114,
+    41
+   ],
+   "cell": 4,
+   "alias_of": "fx_ice_breath_test_0009"
+  },
+  "fx_ice_breath_test_0011": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    2,
+    35
+   ],
+   "content": [
+    118,
+    45
+   ],
+   "cell": 5,
+   "alias_of": null
+  },
+  "fx_ice_breath_test_0012": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    2,
+    35
+   ],
+   "content": [
+    118,
+    45
+   ],
+   "cell": 5,
+   "alias_of": "fx_ice_breath_test_0011"
+  },
+  "fx_ice_breath_test_0013": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    36
+   ],
+   "content": [
+    117,
+    42
+   ],
+   "cell": 6,
+   "alias_of": null
+  },
+  "fx_ice_breath_test_0014": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    36
+   ],
+   "content": [
+    117,
+    42
+   ],
+   "cell": 6,
+   "alias_of": "fx_ice_breath_test_0013"
+  },
+  "fx_ice_breath_test_0015": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    36
+   ],
+   "content": [
+    117,
+    42
+   ],
+   "cell": 6,
+   "alias_of": null
+  },
+  "fx_ice_breath_test_0016": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    36
+   ],
+   "content": [
+    117,
+    42
+   ],
+   "cell": 6,
+   "alias_of": "fx_ice_breath_test_0015"
+  },
+  "fx_ice_breath_test_0017": {
+   "size": [
+    123,
+    123
+   ],
+   "trim_offset": [
+    3,
+    36
+   ],
+   "content": [
+    117,
+    42
+   ],
+   "cell": 6,
+   "alias_of": "fx_ice_breath_test_0015"
+  }
+ },
+ "animations": {
+  "fx_ice_breath_test": {
+   "prefix": "fx_ice_breath_test",
+   "from": 1,
+   "to": 17
+  }
+ }
+}

@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fx Studio</title>
+<style>
+:root{--bg:#16181d;--panel:#1f2229;--line:#323743;--text:#e6e8ee;--muted:#9aa1b2;--accent:#f0a030;--ok:#5cc98a;--bad:#f06b6b;--chip:#2a2e38}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{font-size:16px;margin:0 8px 0 0;letter-spacing:.3px}
+select,input,button{font:inherit;color:var(--text);background:var(--chip);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+input[type=range]{padding:0;width:100%;accent-color:var(--accent);background:none;border:none}
+input[type=number]{width:74px}
+input[type=checkbox]{accent-color:var(--accent)}
+button{cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:#1b1205;border-color:var(--accent);font-weight:600}
+button:disabled{opacity:.45;cursor:default}
+main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px;padding:14px 16px}
+@media (max-width:980px){main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+.stage-wrap{position:relative}
+canvas#stage{width:100%;height:auto;display:block;border-radius:8px;background:#000;cursor:crosshair;image-rendering:auto}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.bar .grow{flex:1}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:14px 0 8px}
+h2:first-child{margin-top:0}
+.row{display:grid;grid-template-columns:96px 1fr 64px;align-items:center;gap:8px;margin:6px 0}
+.row output{font-variant-numeric:tabular-nums;text-align:right;color:var(--muted)}
+.seg{display:flex;gap:0}
+.seg button{border-radius:0}
+.seg button:first-child{border-radius:6px 0 0 6px}
+.seg button:last-child{border-radius:0 6px 6px 0}
+.seg button.on{background:var(--accent);color:#1b1205;border-color:var(--accent)}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.presets button{padding:3px 8px;font-size:12px}
+.strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.fr{flex:0 0 auto;width:136px;background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:6px;text-align:center}
+.fr.cur{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.fr canvas{width:100px;height:100px;background:#0d0f13;border-radius:4px;display:block;margin:0 auto 4px;cursor:pointer}
+.fr .ctl{display:flex;gap:3px;justify-content:center;align-items:center}
+.fr .ctl button{padding:1px 5px;font-size:12px}
+.fr input{width:38px;padding:2px 3px;font-size:12px}
+.fr.unused{opacity:.55}
+#log{white-space:pre-wrap;font:12px/1.4 ui-monospace,Consolas,monospace;background:#0f1115;border-radius:6px;padding:8px;max-height:150px;overflow:auto;margin:0}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+dialog{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:16px;width:min(560px,92vw)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog img{max-width:100%;max-height:260px;display:block;margin:8px auto;background:#000;border-radius:6px}
+.formgrid{display:grid;grid-template-columns:120px 1fr;gap:8px;align-items:center}
+.pill{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;background:var(--chip);border:1px solid var(--line)}
+.pill.on{border-color:var(--ok);color:var(--ok)}
+.pill.warn{border-color:var(--accent);color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Fx Studio</h1>
+  <select id="fxSel" aria-label="Hiệu ứng"></select>
+  <button id="btnImport">Nhập sheet mới…</button>
+  <span id="status" class="pill">—</span>
+  <span class="grow" style="flex:1"></span>
+  <span class="muted small" id="gameInfo"></span>
+</header>
+
+<main>
+  <section>
+    <div class="card">
+      <div class="stage-wrap"><canvas id="stage" width="960" height="540"></canvas></div>
+      <div class="bar">
+        <button id="btnPlay" title="Space">⏸ Dừng</button>
+        <button id="btnPrev" title="←">◀</button>
+        <button id="btnNext" title="→">▶</button>
+        <span id="frameInfo" class="muted small"></span>
+        <span class="grow"></span>
+        <div class="seg" id="viewSeg">
+          <button data-v="quick" class="on" title="Ô gốc, chỉnh màu và scale ngay trên trang (raster)">Xem nhanh</button>
+          <button data-v="render" title="Frame đã render (đúng như vào game, cả chế độ vector)">Bản render</button>
+        </div>
+        <label class="small"><input type="checkbox" id="optHero" checked> Hero so cỡ</label>
+        <label class="small"><input type="checkbox" id="optFlip"> Lật</label>
+        <select id="zoom" aria-label="Phóng"><option value="1">1x (cỡ game)</option><option value="2" selected>2x</option><option value="3">3x</option></select>
+      </div>
+      <p class="muted small" style="margin:8px 0 0">Bấm vào hình để đặt <b>điểm neo</b> (điểm phun, tâm nổ): điểm đó sẽ nằm đúng vị trí của entity trong game (dấu +).</p>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="bar" style="margin-top:0">
+        <h2 style="margin:0">Frame (game chạy 30 fps; “giữ” = số frame game mỗi hình)</h2>
+        <span class="grow"></span>
+        <button data-hold="1">Giữ 1</button><button data-hold="2">Giữ 2</button><button data-hold="3">Giữ 3</button>
+        <button id="btnRev">Đảo ngược</button><button id="btnPing">Ping-pong</button>
+      </div>
+      <div class="strip" id="strip" style="margin-top:10px"></div>
+      <div class="bar">
+        <label class="small muted" for="seqText">Thứ tự (ô:giữ)</label>
+        <input id="seqText" class="grow" spellcheck="false">
+        <button id="btnSeq">Áp dụng</button>
+      </div>
+      <h2>Ô chưa dùng</h2>
+      <div class="strip" id="unused"></div>
+    </div>
+  </section>
+
+  <aside>
+    <div class="card">
+      <h2>Chế độ</h2>
+      <div class="seg" id="modeSeg">
+        <button data-m="raster" class="on">Raster (như gốc)</button>
+        <button data-m="vector">Vector</button>
+      </div>
+      <p class="muted small" style="margin:6px 0 0" id="modeHint"></p>
+
+      <h2>Kích thước và neo</h2>
+      <div class="row"><label for="scale">Scale</label><input type="range" id="scale" min="0.1" max="3" step="0.01"><output id="scaleOut"></output></div>
+      <div class="row"><label>Neo x / y</label><span style="display:flex;gap:6px"><input type="number" id="ax" step="0.01" min="0" max="1" style="width:64px"><input type="number" id="ay" step="0.01" min="0" max="1" style="width:64px"></span><span></span></div>
+      <p class="muted small" id="sizeInfo" style="margin:0"></p>
+
+      <h2>Màu</h2>
+      <div class="presets" id="presets"></div>
+      <div class="row"><label for="hue">Hue</label><input type="range" id="hue" min="-180" max="180" step="1"><output id="hueOut"></output></div>
+      <div class="row"><label for="sat">Bão hòa</label><input type="range" id="sat" min="0" max="2" step="0.01"><output id="satOut"></output></div>
+      <div class="row"><label for="bri">Độ sáng</label><input type="range" id="bri" min="0" max="2" step="0.01"><output id="briOut"></output></div>
+      <div class="row"><label for="alp">Độ đục</label><input type="range" id="alp" min="0" max="1" step="0.01"><output id="alpOut"></output></div>
+
+      <h2>Nền của sheet</h2>
+      <div class="row"><label for="bg">Nền</label><select id="bg"><option value="black">đen (lửa, ánh sáng)</option><option value="alpha">trong suốt</option><option value="magenta">magenta</option></select><span></span></div>
+      <div class="row"><label for="floor">Ngưỡng đen</label><input type="range" id="floor" min="0" max="0.3" step="0.005"><output id="floorOut"></output></div>
+
+      <div id="vecBox">
+        <h2>Vector</h2>
+        <div class="row"><label for="vColors">Số màu</label><input type="range" id="vColors" min="2" max="8" step="1"><output id="vColorsOut"></output></div>
+        <div class="row"><label for="vCore">Ngưỡng lõi</label><input type="range" id="vCore" min="0.2" max="0.95" step="0.01"><output id="vCoreOut"></output></div>
+        <div class="row"><label for="vRad">Glow bán kính</label><input type="range" id="vRad" min="0" max="20" step="0.5"><output id="vRadOut"></output></div>
+        <div class="row"><label for="vStr">Glow độ mạnh</label><input type="range" id="vStr" min="0" max="4" step="0.05"><output id="vStrOut"></output></div>
+        <div class="row"><label for="vCol">Glow màu</label><span><input type="color" id="vCol"> <label class="small"><input type="checkbox" id="vAuto"> tự lấy</label></span><span></span></div>
+      </div>
+
+      <h2>Trong game</h2>
+      <div class="formgrid">
+        <label for="gName">Tên</label><input id="gName" spellcheck="false">
+        <label for="gZ">Lớp</label><select id="gZ"><option>Z_EFFECTS</option><option>Z_OBJECTS</option><option>Z_DECALS</option></select>
+        <label for="gLoop">Lặp</label><span><input type="checkbox" id="gLoop"> <span class="small muted">số lần chạy</span> <input type="number" id="gRuns" min="1" max="99" style="width:56px"></span>
+      </div>
+
+      <div class="bar" style="margin-top:14px">
+        <button id="btnSave">Lưu</button>
+        <button id="btnRender" class="primary">Render</button>
+        <button id="btnInstall">Cài vào game</button>
+        <button id="btnUninstall">Gỡ</button>
+      </div>
+      <div class="bar">
+        <button id="btnPlayGame">Chơi thử trong game</button>
+        <label class="small">level <input type="number" id="level" value="3" min="1" max="30" style="width:56px"></label>
+      </div>
+      <p class="muted small" style="margin:6px 0">Trong game: <b>F6</b> chọn hiệu ứng, <b>F7</b> phát tại chuột, <b>Shift+F7</b> lật. “Chơi thử” bật demo: mọi hiệu ứng đã cài phát giữa màn hình mỗi 2 giây.</p>
+      <h2>Nhật ký</h2>
+      <pre id="log"></pre>
+    </div>
+  </aside>
+</main>
+
+<dialog id="dlgImport">
+  <h2 style="margin-top:0">Nhập sprite sheet</h2>
+  <div class="formgrid">
+    <label for="impFile">Ảnh</label><input type="file" id="impFile" accept="image/*">
+    <label for="impId">Mã (id)</label><input id="impId" placeholder="fire_breath" spellcheck="false">
+    <label for="impGrid">Lưới</label><input id="impGrid" placeholder="tự tìm (vd 3x3)">
+    <label for="impBg">Nền</label><select id="impBg"><option value="auto">tự nhận</option><option value="black">đen</option><option value="alpha">trong suốt</option><option value="magenta">magenta</option></select>
+    <label for="impForce">Ghi đè</label><label class="small"><input type="checkbox" id="impForce"> nhập phiên bản sheet mới cho id đã có (giữ cài đặt)</label>
+  </div>
+  <img id="impPrev" alt="" hidden>
+  <div class="bar" style="justify-content:flex-end">
+    <button id="impCancel">Hủy</button>
+    <button id="impGo" class="primary">Nhập</button>
+  </div>
+</dialog>
+
+<script>
+const $ = s => document.querySelector(s);
+const FPS = 30;
+const PRESETS = [
+  ['Gốc', {hue: 0, saturation: 1, brightness: 1, alpha: 1}],
+  ['Băng', {hue: 180, saturation: 0.9, brightness: 1.05, alpha: 1}],
+  ['Độc', {hue: 85, saturation: 1, brightness: 0.95, alpha: 1}],
+  ['Hư không', {hue: -95, saturation: 0.9, brightness: 1, alpha: 1}],
+  ['Thánh', {hue: 12, saturation: 0.45, brightness: 1.12, alpha: 1}],
+  ['Bóng tối', {hue: -110, saturation: 0.7, brightness: 0.55, alpha: 1}],
+];
+let S = {id: null, info: null, recipe: null, cellImgs: [], tinted: [], rendered: [], view: 'quick', playing: true, gi: 0, dirty: false};
+let bgImg = null, heroImg = null;
+
+function log(lines, cls) {
+  const el = $('#log');
+  for (const l of [].concat(lines || [])) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = l; el.appendChild(d); }
+  el.scrollTop = el.scrollHeight;
+}
+async function api(path, body) {
+  const r = await fetch(path, body === undefined ? {} : {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+  const j = await r.json();
+  if (j.log) log(j.log);
+  if (!j.ok) { log(j.error || 'lỗi', 'bad'); throw new Error(j.error); }
+  return j;
+}
+const loadImg = src => new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = src; });
+
+// ---------------------------------------------------------------- colour: same maths as scripts/fx_studio.py recolor()
+function recolorCanvas(img, c) {
+  const cv = document.createElement('canvas'); cv.width = img.width; cv.height = img.height;
+  const g = cv.getContext('2d'); g.drawImage(img, 0, 0);
+  if (c.hue === 0 && c.saturation === 1 && c.brightness === 1 && c.alpha === 1) return cv;
+  const d = g.getImageData(0, 0, cv.width, cv.height), p = d.data, hs = c.hue / 360;
+  for (let i = 0; i < p.length; i += 4) {
+    if (!p[i + 3]) continue;
+    let r = p[i] / 255, gg = p[i + 1] / 255, b = p[i + 2] / 255;
+    const mx = Math.max(r, gg, b), mn = Math.min(r, gg, b), dd = mx - mn;
+    let h = 0;
+    if (dd > 1e-6) { if (mx === r) h = (((gg - b) / dd) % 6 + 6) % 6; else if (mx === gg) h = (b - r) / dd + 2; else h = (r - gg) / dd + 4; h /= 6; }
+    let s = mx > 1e-6 ? dd / mx : 0, v = mx;
+    h = ((h + hs) % 1 + 1) % 1; s = Math.min(1, s * c.saturation); v = Math.min(1, v * c.brightness);
+    const hh = h * 6, k = Math.floor(hh) % 6, f = hh - Math.floor(hh), P = v * (1 - s), Q = v * (1 - s * f), T = v * (1 - s * (1 - f));
+    [r, gg, b] = [[v, T, P], [Q, v, P], [P, v, T], [P, Q, v], [T, P, v], [v, P, Q]][k];
+    p[i] = r * 255 + .5; p[i + 1] = gg * 255 + .5; p[i + 2] = b * 255 + .5; p[i + 3] = Math.min(255, p[i + 3] * c.alpha + .5);
+  }
+  g.putImageData(d, 0, 0);
+  return cv;
+}
+let tintTimer = 0;
+function retint() { clearTimeout(tintTimer); tintTimer = setTimeout(() => { S.tinted = S.cellImgs.map(i => recolorCanvas(i, S.recipe.color)); drawStrips(); }, 60); }
+
+// ---------------------------------------------------------------- timeline
+function sequence() {   // quick view: one entry per game frame -> index into recipe.frames
+  const out = [];
+  S.recipe.frames.forEach((f, k) => { for (let j = 0; j < Math.max(1, f.hold | 0); j++) out.push(k); });
+  return out;
+}
+function frameCount() { return S.view === 'render' ? S.rendered.length : sequence().length; }
+
+// ---------------------------------------------------------------- stage
+const stage = $('#stage'), ctx = stage.getContext('2d');
+const PIVOT = [0.42, 0.55];   // where the entity stands on the stage (fraction of the visible map)
+let lastRect = null;
+function draw() {
+  if (!S.recipe) return;
+  const z = +$('#zoom').value, W = stage.width, H = stage.height;
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.clearRect(0, 0, W, H);
+  if (bgImg) { const sw = W / z, sh = H / z; ctx.drawImage(bgImg, (bgImg.width - sw) / 2, (bgImg.height - sh) / 2, sw, sh, 0, 0, W, H); }
+  const px = W * PIVOT[0], py = H * PIVOT[1], flip = $('#optFlip').checked;
+  if ($('#optHero').checked && heroImg) {   // a KR1 hero beside the pivot, for size
+    const hw = heroImg.width * z, hh = heroImg.height * z;
+    ctx.save(); ctx.translate(px, 0); if (flip) ctx.scale(-1, 1);
+    ctx.drawImage(heroImg, -hw + 18 * z, py - hh / 2, hw, hh); ctx.restore();
+  }
+  const n = frameCount(); if (!n) return;
+  const gi = S.gi % n;
+  let img, w, h, ax, ay;
+  if (S.view === 'render') {
+    img = S.rendered[gi]; const m = S.info.manifest;
+    if (!img || !m) return;
+    w = img.width * z; h = img.height * z; ax = m.anchor[0]; ay = 1 - m.anchor[1];
+  } else {
+    const f = S.recipe.frames[sequence()[gi]]; img = S.tinted[f.cell] || S.cellImgs[f.cell];
+    if (!img) return;
+    const [cw, ch] = S.info.cell_size;
+    w = cw * S.recipe.scale * z; h = ch * S.recipe.scale * z; [ax, ay] = S.recipe.anchor;
+  }
+  ctx.save(); ctx.translate(px, py); if (flip) ctx.scale(-1, 1);
+  ctx.drawImage(img, -ax * w, -ay * h, w, h); ctx.restore();
+  lastRect = {x: flip ? px - (1 - ax) * w : px - ax * w, y: py - ay * h, w, h, flip};
+  ctx.strokeStyle = 'rgba(0,255,255,.85)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(px - 7, py + .5); ctx.lineTo(px + 8, py + .5); ctx.moveTo(px + .5, py - 7); ctx.lineTo(px + .5, py + 8); ctx.stroke();
+  const shown = S.view === 'render' ? `frame game ${gi + 1}/${n}` : `frame game ${gi + 1}/${n} · hình ${sequence()[gi] + 1}/${S.recipe.frames.length}`;
+  $('#frameInfo').textContent = `${shown} · ${(n / FPS).toFixed(2)} s`;
+  document.querySelectorAll('#strip .fr').forEach((el, k) => el.classList.toggle('cur', S.view === 'quick' && k === sequence()[gi]));
+}
+let acc = 0, last = performance.now();
+function tick(t) {
+  const dt = Math.min(0.1, (t - last) / 1000); last = t;
+  if (S.playing && S.recipe) {
+    acc += dt;
+    while (acc >= 1 / FPS) {
+      acc -= 1 / FPS; S.gi++;
+      if (S.gi >= frameCount()) S.gi = 0;
+    }
+  }
+  draw(); requestAnimationFrame(tick);
+}
+stage.addEventListener('click', e => {   // the clicked point of the effect becomes its anchor
+  if (!lastRect || S.view !== 'quick') { if (S.view !== 'quick') log('Đặt neo trong chế độ Xem nhanh.'); return; }
+  const r = stage.getBoundingClientRect(), x = (e.clientX - r.left) * stage.width / r.width, y = (e.clientY - r.top) * stage.height / r.height;
+  let fx = (x - lastRect.x) / lastRect.w, fy = (y - lastRect.y) / lastRect.h;
+  if (lastRect.flip) fx = 1 - fx;
+  if (fx < 0 || fx > 1 || fy < 0 || fy > 1) return;
+  S.recipe.anchor = [+fx.toFixed(4), +fy.toFixed(4)]; markDirty(); syncForm();
+});
+
+// ---------------------------------------------------------------- frames strip
+function thumb(cell) {
+  const cv = document.createElement('canvas'); cv.width = 100; cv.height = 100;
+  const img = S.tinted[cell] || S.cellImgs[cell];
+  if (img) { const k = Math.min(100 / img.width, 100 / img.height); const g = cv.getContext('2d'); g.drawImage(img, (100 - img.width * k) / 2, (100 - img.height * k) / 2, img.width * k, img.height * k); }
+  return cv;
+}
+function drawStrips() {
+  const strip = $('#strip'); strip.innerHTML = '';
+  S.recipe.frames.forEach((f, k) => {
+    const d = document.createElement('div'); d.className = 'fr';
+    const cv = thumb(f.cell); cv.title = 'Xem hình này'; cv.onclick = () => { S.playing = false; S.view = 'quick'; setView(); S.gi = sequence().indexOf(k); updatePlay(); };
+    d.appendChild(cv);
+    const lab = document.createElement('div'); lab.className = 'small muted'; lab.textContent = `#${k + 1} · ô ${f.cell + 1}`; d.appendChild(lab);
+    const ctl = document.createElement('div'); ctl.className = 'ctl';
+    const b = (t, title, fn) => { const x = document.createElement('button'); x.textContent = t; x.title = title; x.onclick = fn; ctl.appendChild(x); };
+    b('◀', 'Lên trước', () => move(k, -1));
+    const hold = document.createElement('input'); hold.type = 'number'; hold.min = 1; hold.max = 60; hold.value = f.hold; hold.title = 'Giữ (frame game)';
+    hold.onchange = () => { f.hold = Math.max(1, Math.min(60, hold.value | 0)); markDirty(); syncSeq(); };
+    ctl.appendChild(hold);
+    b('▶', 'Ra sau', () => move(k, 1));
+    b('✕', 'Bỏ hình này', () => { if (S.recipe.frames.length > 1) { S.recipe.frames.splice(k, 1); changed(); } });
+    d.appendChild(ctl); strip.appendChild(d);
+  });
+  const un = $('#unused'); un.innerHTML = '';
+  const used = new Set(S.recipe.frames.map(f => f.cell));
+  S.cellImgs.forEach((_, c) => {
+    if (used.has(c)) return;
+    const d = document.createElement('div'); d.className = 'fr unused';
+    d.appendChild(thumb(c));
+    const bt = document.createElement('button'); bt.textContent = `+ ô ${c + 1}`; bt.onclick = () => { S.recipe.frames.push({cell: c, hold: 2}); changed(); };
+    d.appendChild(bt); un.appendChild(d);
+  });
+  if (!un.children.length) un.innerHTML = '<span class="muted small">Mọi ô đều đang dùng. Muốn dùng lại một ô (ví dụ ping-pong), sửa dòng “Thứ tự”.</span>';
+  syncSeq();
+}
+function move(k, d) { const j = k + d, F = S.recipe.frames; if (j < 0 || j >= F.length) return; [F[k], F[j]] = [F[j], F[k]]; changed(); }
+function changed() { markDirty(); S.gi = 0; drawStrips(); }
+function syncSeq() { $('#seqText').value = S.recipe.frames.map(f => `${f.cell + 1}:${f.hold}`).join(' '); }
+$('#btnSeq').onclick = () => {
+  const n = S.cellImgs.length, out = [];
+  for (const t of $('#seqText').value.trim().split(/[\s,]+/)) {
+    const m = t.match(/^(\d+)(?::(\d+))?$/); if (!m) { log(`không hiểu “${t}” (dạng ô:giữ, ví dụ 3:2)`, 'bad'); return; }
+    const c = +m[1] - 1; if (c < 0 || c >= n) { log(`không có ô ${m[1]} (sheet có ${n} ô)`, 'bad'); return; }
+    out.push({cell: c, hold: Math.max(1, Math.min(60, +(m[2] || 2)))});
+  }
+  if (out.length) { S.recipe.frames = out; changed(); }
+};
+document.querySelectorAll('[data-hold]').forEach(b => b.onclick = () => { S.recipe.frames.forEach(f => f.hold = +b.dataset.hold); changed(); });
+$('#btnRev').onclick = () => { S.recipe.frames.reverse(); changed(); };
+$('#btnPing').onclick = () => { const F = S.recipe.frames; S.recipe.frames = F.concat(F.slice(1, -1).reverse().map(f => ({...f}))); changed(); };
+
+// ---------------------------------------------------------------- form
+const sliders = [['scale', 'scale', v => v.toFixed(2)], ['hue', 'color.hue', v => `${v}°`], ['sat', 'color.saturation', v => v.toFixed(2)],
+  ['bri', 'color.brightness', v => v.toFixed(2)], ['alp', 'color.alpha', v => v.toFixed(2)], ['floor', 'black_floor', v => v.toFixed(3)],
+  ['vColors', 'vector.colors', v => v], ['vCore', 'vector.core', v => v.toFixed(2)], ['vRad', 'vector.glow_radius', v => v],
+  ['vStr', 'vector.glow_strength', v => v.toFixed(2)]];
+const getp = (o, p) => p.split('.').reduce((a, k) => a[k], o);
+const setp = (o, p, v) => { const ks = p.split('.'); const l = ks.pop(); ks.reduce((a, k) => a[k], o)[l] = v; };
+function syncForm() {
+  const r = S.recipe;
+  for (const [id, p, fmt] of sliders) { $('#' + id).value = getp(r, p); $('#' + id + 'Out').textContent = fmt(+getp(r, p)); }
+  $('#ax').value = r.anchor[0]; $('#ay').value = r.anchor[1];
+  $('#bg').value = r.bg;
+  $('#vAuto').checked = !r.vector.glow_color; $('#vCol').value = r.vector.glow_color || '#ff4010'; $('#vCol').disabled = !r.vector.glow_color;
+  $('#gName').value = r.game.name; $('#gZ').value = r.game.z || 'Z_EFFECTS'; $('#gLoop').checked = !!r.game.loop; $('#gRuns').value = r.game.runs || 1;
+  document.querySelectorAll('#modeSeg button').forEach(b => b.classList.toggle('on', b.dataset.m === r.mode));
+  $('#vecBox').style.display = r.mode === 'vector' ? '' : 'none';
+  $('#modeHint').textContent = r.mode === 'vector'
+    ? 'Lõi phẳng được trace bằng vtracer, glow vẽ lại. Xem nhanh vẫn là ô gốc; bấm Render rồi chọn “Bản render” để xem kết quả vector.'
+    : 'Giữ nguyên nét vẽ và glow mềm của sheet; chỉ cắt, bỏ nền, đổi màu, đổi cỡ.';
+  const [cw, ch] = S.info.cell_size, w1 = Math.round(cw * r.scale), h1 = Math.round(ch * r.scale);
+  $('#sizeInfo').textContent = `Khung trong game ${w1}×${h1} px (fullhd) · ipad ${Math.round(w1 * 768 / 1080)}×${Math.round(h1 * 768 / 1080)} · @2x ${w1 * 2}×${h1 * 2}`;
+}
+for (const [id, p, fmt] of sliders) $('#' + id).addEventListener('input', e => {
+  const v = +e.target.value; setp(S.recipe, p, v); $('#' + id + 'Out').textContent = fmt(v); markDirty();
+  if (p.startsWith('color.')) retint();
+  if (p === 'scale') syncForm();
+});
+$('#ax').onchange = () => { S.recipe.anchor[0] = Math.max(0, Math.min(1, +$('#ax').value)); markDirty(); };
+$('#ay').onchange = () => { S.recipe.anchor[1] = Math.max(0, Math.min(1, +$('#ay').value)); markDirty(); };
+$('#bg').onchange = () => { S.recipe.bg = $('#bg').value; markDirty(); log('Nền đổi: bấm Lưu để cắt lại các ô.'); };
+$('#floor').addEventListener('change', () => log('Ngưỡng đen đổi: bấm Lưu để cắt lại các ô.'));
+$('#vAuto').onchange = () => { S.recipe.vector.glow_color = $('#vAuto').checked ? null : $('#vCol').value; markDirty(); syncForm(); };
+$('#vCol').oninput = () => { S.recipe.vector.glow_color = $('#vCol').value; markDirty(); };
+$('#gName').onchange = () => { S.recipe.game.name = $('#gName').value.trim(); markDirty(); };
+$('#gZ').onchange = () => { S.recipe.game.z = $('#gZ').value; markDirty(); };
+$('#gLoop').onchange = () => { S.recipe.game.loop = $('#gLoop').checked; markDirty(); };
+$('#gRuns').onchange = () => { S.recipe.game.runs = Math.max(1, $('#gRuns').value | 0); markDirty(); };
+document.querySelectorAll('#modeSeg button').forEach(b => b.onclick = () => { S.recipe.mode = b.dataset.m; markDirty(); syncForm(); });
+PRESETS.forEach(([name, c]) => { const b = document.createElement('button'); b.textContent = name; b.onclick = () => { S.recipe.color = {...c}; markDirty(); syncForm(); retint(); }; $('#presets').appendChild(b); });
+
+function markDirty(v = true) { S.dirty = v; status(); }
+function status() {
+  const el = $('#status'), r = S.recipe; if (!r) { el.textContent = '—'; return; }
+  const inst = r.game.installed, stale = S.info.stale;
+  el.className = 'pill' + (S.dirty ? ' warn' : inst ? ' on' : '');
+  el.textContent = S.dirty ? 'chưa lưu' : (!S.info.manifest ? 'chưa render' : stale ? 'cần render lại' : inst ? 'đã cài vào game' : 'đã render');
+  $('#btnUninstall').disabled = !inst;
+}
+
+// ---------------------------------------------------------------- views and playback
+function setView() {
+  document.querySelectorAll('#viewSeg button').forEach(b => b.classList.toggle('on', b.dataset.v === S.view));
+  if (S.view === 'render' && !S.rendered.length) log('Chưa có bản render: bấm Render.');
+}
+document.querySelectorAll('#viewSeg button').forEach(b => b.onclick = () => { S.view = b.dataset.v; S.gi = 0; setView(); });
+function updatePlay() { $('#btnPlay').textContent = S.playing ? '⏸ Dừng' : '▶ Chạy'; }
+$('#btnPlay').onclick = () => { S.playing = !S.playing; updatePlay(); };
+$('#btnPrev').onclick = () => { S.playing = false; updatePlay(); S.gi = (S.gi - 1 + frameCount()) % frameCount(); };
+$('#btnNext').onclick = () => { S.playing = false; updatePlay(); S.gi = (S.gi + 1) % frameCount(); };
+addEventListener('keydown', e => {
+  if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+  if (e.code === 'Space') { e.preventDefault(); $('#btnPlay').click(); }
+  if (e.key === 'ArrowLeft') $('#btnPrev').click();
+  if (e.key === 'ArrowRight') $('#btnNext').click();
+});
+
+// ---------------------------------------------------------------- server actions
+async function openFx(id) {
+  const j = await api('/api/fx/' + encodeURIComponent(id));
+  S.id = id; S.info = j; S.recipe = structuredClone(j.recipe); S.gi = 0;
+  $('#fxSel').value = id;
+  S.cellImgs = await Promise.all(j.cells.map(u => loadImg(u + '?t=' + Date.now())));
+  S.tinted = S.cellImgs.map(i => recolorCanvas(i, S.recipe.color));
+  S.rendered = await Promise.all(j.rendered.map(u => loadImg(u)));
+  markDirty(false); syncForm(); drawStrips(); setView();
+  try { localStorage.setItem('fxstudio.last', id); } catch (e) {}
+}
+async function afterServer(j) {
+  S.info = j; S.recipe = structuredClone(j.recipe);
+  S.cellImgs = await Promise.all(j.cells.map(u => loadImg(u + '?t=' + Date.now())));
+  S.tinted = S.cellImgs.map(i => recolorCanvas(i, S.recipe.color));
+  S.rendered = await Promise.all(j.rendered.map(u => loadImg(u)));
+  markDirty(false); syncForm(); drawStrips(); refreshList();
+}
+async function busy(btn, fn) { const t = btn.textContent; btn.disabled = true; btn.textContent = '…'; try { await fn(); } catch (e) {} finally { btn.disabled = false; btn.textContent = t; status(); } }
+$('#btnSave').onclick = e => busy(e.target, async () => { await afterServer(await api('/api/save/' + S.id, {recipe: S.recipe})); log('Đã lưu fx.json', 'ok'); });
+$('#btnRender').onclick = e => busy(e.target, async () => { await afterServer(await api('/api/render/' + S.id, {recipe: S.recipe})); S.view = 'render'; S.gi = 0; setView(); });
+$('#btnInstall').onclick = e => busy(e.target, async () => {
+  if (S.dirty) await afterServer(await api('/api/save/' + S.id, {recipe: S.recipe}));
+  await afterServer(await api('/api/install/' + S.id, {})); log('Đã cài: chạy game (run.bat hoặc nút Chơi thử), vào level, F7 tại chuột.', 'ok');
+});
+$('#btnUninstall').onclick = e => busy(e.target, async () => { await afterServer(await api('/api/uninstall/' + S.id, {})); });
+$('#btnPlayGame').onclick = e => busy(e.target, async () => { await api('/api/play', {level: +$('#level').value}); });
+
+async function refreshList() {
+  const j = await api('/api/list');
+  $('#gameInfo').textContent = j.game_found ? `Game: ${j.game}` : `Không thấy game ở ${j.game} (đặt KR1_GAME_DIR)`;
+  const sel = $('#fxSel'), cur = S.id;
+  sel.innerHTML = j.fx.map(f => `<option value="${f.id}">${f.id} · ${f.drawings} hình · ${f.mode}${f.installed ? ' · trong game' : ''}</option>`).join('') || '<option value="">(chưa có hiệu ứng)</option>';
+  if (cur) sel.value = cur;
+  return j.fx;
+}
+$('#fxSel').onchange = async () => { if (S.dirty && !confirm('Có thay đổi chưa lưu. Bỏ qua?')) { $('#fxSel').value = S.id; return; } await openFx($('#fxSel').value); };
+
+// ---------------------------------------------------------------- import
+const dlg = $('#dlgImport');
+$('#btnImport').onclick = () => dlg.showModal();
+$('#impCancel').onclick = () => dlg.close();
+$('#impFile').onchange = () => {
+  const f = $('#impFile').files[0]; if (!f) return;
+  $('#impPrev').src = URL.createObjectURL(f); $('#impPrev').hidden = false;
+  if (!$('#impId').value) $('#impId').value = f.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') || 'fx';
+};
+$('#impGo').onclick = e => busy(e.target, async () => {
+  const f = $('#impFile').files[0]; if (!f) { log('Chọn một ảnh.', 'bad'); return; }
+  const data = await new Promise(ok => { const rd = new FileReader(); rd.onload = () => ok(rd.result); rd.readAsDataURL(f); });
+  const j = await api('/api/import', {id: $('#impId').value.trim(), name: f.name, data, grid: $('#impGrid').value.trim(), bg: $('#impBg').value, force: $('#impForce').checked});
+  dlg.close(); await refreshList(); $('#fxSel').value = j.id; await openFx(j.id);
+});
+
+// ---------------------------------------------------------------- start
+(async () => {
+  [bgImg, heroImg] = await Promise.all([loadImg('/bg.png').catch(() => null), loadImg('/hero.png').catch(() => null)]);
+  const list = await refreshList();
+  let last = null; try { last = localStorage.getItem('fxstudio.last'); } catch (e) {}
+  const want = new URLSearchParams(location.search).get('fx');
+  const pick = list.find(f => f.id === want) || list.find(f => f.id === last) || list[0];
+  if (pick) await openFx(pick.id); else dlg.showModal();
+  if (new URLSearchParams(location.search).get('view') === 'render') { S.view = 'render'; setView(); }
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

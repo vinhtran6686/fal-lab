@@ -3,4 +3,6 @@ requests>=2.31
 pillow>=10
 numpy>=1.26
 scipy>=1.11
+vtracer>=0.6      # fx_studio vector mode
+resvg-py>=0.5     # fx_studio: SVG -> PNG
 # video-sprite also needs ffmpeg 5.1+ (with ffprobe) on PATH, e.g. winget install Gyan.FFmpeg
