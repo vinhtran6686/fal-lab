@@ -3,7 +3,7 @@
  "id": "fire_breath_test",
  "source": "design/sheet_v01.png",
  "bg": "black",
- "black_floor": 0.05,
+ "black_floor": 0,
  "grid": [
   3,
   3
@@ -102,17 +102,17 @@
    "hold": 2
   }
  ],
- "scale": 0.6,
+ "scale": 2.36,
  "anchor": [
-  0.04,
-  0.47
+  0.065,
+  0.4675
  ],
  "mode": "raster",
  "color": {
-  "hue": 0,
-  "saturation": 1.0,
-  "brightness": 1.0,
-  "alpha": 1.0
+  "hue": -15,
+  "saturation": 0.95,
+  "brightness": 0.87,
+  "alpha": 0.46
  },
  "vector": {
   "colors": 4,

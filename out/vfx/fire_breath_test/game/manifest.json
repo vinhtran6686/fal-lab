@@ -2,316 +2,316 @@
  "object": "fx_fire_breath_test",
  "kind": "animation",
  "fps": 30,
- "exported": "2026-10-22T07:26:52",
+ "exported": "2026-10-22T21:43:39",
  "source": "design/sheet_v01.png",
- "recipe_hash": "48f688e21243",
+ "recipe_hash": "171ae92f72d8",
  "mode": "raster",
- "scale": 0.6,
+ "scale": 2.36,
  "canvas": {
   "@2x": [
-   296,
-   296
+   1162,
+   1162
   ],
   "@1x": [
-   148,
-   148
+   581,
+   581
   ],
   "ipad": [
-   105,
-   105
+   413,
+   413
   ]
  },
  "anchor": [
-  0.04,
-  0.53
+  0.065,
+  0.5325
  ],
  "anchor_note": "game anchor: x from the left, y from the BOTTOM of the canvas",
  "loop": false,
  "frames": {
   "fx_fire_breath_test_0001": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    4,
-    53
+    0,
+    0
    ],
    "content": [
-    57,
-    39
+    573,
+    368
    ],
    "cell": 0,
    "alias_of": null
   },
   "fx_fire_breath_test_0002": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    4,
-    53
+    0,
+    0
    ],
    "content": [
-    57,
-    39
+    573,
+    368
    ],
    "cell": 0,
    "alias_of": "fx_fire_breath_test_0001"
   },
   "fx_fire_breath_test_0003": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    4,
-    48
+    6,
+    187
    ],
    "content": [
-    89,
-    41
+    362,
+    190
    ],
    "cell": 1,
    "alias_of": null
   },
   "fx_fire_breath_test_0004": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    4,
-    48
+    6,
+    187
    ],
    "content": [
-    89,
-    41
+    362,
+    190
    ],
    "cell": 1,
    "alias_of": "fx_fire_breath_test_0003"
   },
   "fx_fire_breath_test_0005": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    3,
-    45
+    9,
+    156
    ],
    "content": [
-    131,
-    51
+    531,
+    224
    ],
    "cell": 2,
    "alias_of": null
   },
   "fx_fire_breath_test_0006": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    3,
-    45
+    9,
+    156
    ],
    "content": [
-    131,
-    51
+    531,
+    224
    ],
    "cell": 2,
    "alias_of": "fx_fire_breath_test_0005"
   },
   "fx_fire_breath_test_0007": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
     0,
-    45
+    174
    ],
    "content": [
-    134,
-    48
+    578,
+    194
    ],
    "cell": 3,
    "alias_of": null
   },
   "fx_fire_breath_test_0008": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
     0,
-    45
+    174
    ],
    "content": [
-    134,
-    48
+    578,
+    194
    ],
    "cell": 3,
    "alias_of": "fx_fire_breath_test_0007"
   },
   "fx_fire_breath_test_0009": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    3,
-    42
+    0,
+    140
    ],
    "content": [
-    138,
-    50
+    581,
+    227
    ],
    "cell": 4,
    "alias_of": null
   },
   "fx_fire_breath_test_0010": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    3,
-    42
+    0,
+    140
    ],
    "content": [
-    138,
-    50
+    581,
+    227
    ],
    "cell": 4,
    "alias_of": "fx_fire_breath_test_0009"
   },
   "fx_fire_breath_test_0011": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    3,
-    42
+    0,
+    140
    ],
    "content": [
-    142,
-    54
+    578,
+    259
    ],
    "cell": 5,
    "alias_of": null
   },
   "fx_fire_breath_test_0012": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    3,
-    42
+    0,
+    140
    ],
    "content": [
-    142,
-    54
+    578,
+    259
    ],
    "cell": 5,
    "alias_of": "fx_fire_breath_test_0011"
   },
   "fx_fire_breath_test_0013": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    3,
-    44
+    0,
+    163
    ],
    "content": [
-    142,
-    50
+    576,
+    226
    ],
    "cell": 6,
    "alias_of": null
   },
   "fx_fire_breath_test_0014": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    3,
-    44
+    0,
+    163
    ],
    "content": [
-    142,
-    50
+    576,
+    226
    ],
    "cell": 6,
    "alias_of": "fx_fire_breath_test_0013"
   },
   "fx_fire_breath_test_0015": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    3,
-    47
+    0,
+    163
    ],
    "content": [
-    144,
-    45
+    581,
+    226
    ],
    "cell": 7,
    "alias_of": null
   },
   "fx_fire_breath_test_0016": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    3,
-    47
+    0,
+    163
    ],
    "content": [
-    144,
-    45
+    581,
+    226
    ],
    "cell": 7,
    "alias_of": "fx_fire_breath_test_0015"
   },
   "fx_fire_breath_test_0017": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    23,
-    51
+    0,
+    199
    ],
    "content": [
-    125,
-    35
+    579,
+    152
    ],
    "cell": 8,
    "alias_of": null
   },
   "fx_fire_breath_test_0018": {
    "size": [
-    148,
-    148
+    581,
+    581
    ],
    "trim_offset": [
-    23,
-    51
+    0,
+    199
    ],
    "content": [
-    125,
-    35
+    579,
+    152
    ],
    "cell": 8,
    "alias_of": "fx_fire_breath_test_0017"

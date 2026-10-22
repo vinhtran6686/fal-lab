@@ -1,6 +1,6 @@
 {
   "id": "diablo",
-  "kind": "enemy",
+  "kind": "hero",
   "cell": [
     176,
     140
@@ -12,22 +12,110 @@
   ],
   "states": {
     "attack_side": {
-      "version": "t01",
+      "version": "t02",
       "dir": "attack/attack_side",
-      "source": "raw/attack_side_attack_t01.mp4",
-      "frames": 10,
+      "source": "raw/attack_side_attack_t02.mp4",
+      "frames": 20,
       "fps": 15,
       "loop": false,
-      "files": "attack/attack_side/frames/@1x/enemy_diablo_attack_side_NN.png",
+      "files": "attack/attack_side/frames/@1x/hero_diablo_attack_side_NN.png",
       "sheet": "attack/attack_side/sheet.png",
       "split": "video",
       "video": {
-        "set": ".work/side_attack",
+        "set": ".work/cut_attack_side",
         "action": "attack",
-        "take": 1,
-        "route": "fal:minimax/h3-max-turbo/image-to-video"
+        "take": 2,
+        "route": "supplied"
       },
-      "hit_frame": 5
+      "hit_frame": 12,
+      "despill": true
+    },
+    "death_side": {
+      "version": "t01",
+      "dir": "death/death_side",
+      "source": "raw/death_side_t01.mp4",
+      "frames": 25,
+      "fps": 15,
+      "loop": false,
+      "files": "death/death_side/frames/@1x/hero_diablo_death_side_NN.png",
+      "sheet": "death/death_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/cut_death_side",
+        "action": "death",
+        "take": 1,
+        "route": "supplied"
+      }
+    },
+    "respawn_side": {
+      "version": "t01",
+      "dir": "spawn/respawn_side",
+      "source": "raw/respawn_side_t01.mp4",
+      "frames": 39,
+      "fps": 15,
+      "loop": false,
+      "files": "spawn/respawn_side/frames/@1x/hero_diablo_respawn_side_NN.png",
+      "sheet": "spawn/respawn_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/cut_respawn_side",
+        "action": "respawn",
+        "take": 1,
+        "route": "supplied"
+      }
+    },
+    "run_side": {
+      "version": "t04",
+      "dir": "move/run_side",
+      "source": "raw/run_side_t04.mp4",
+      "frames": 19,
+      "fps": 15,
+      "loop": true,
+      "files": "move/run_side/frames/@1x/hero_diablo_run_side_NN.png",
+      "sheet": "move/run_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/cut_run_side",
+        "action": "run",
+        "take": 4,
+        "route": "supplied"
+      }
+    },
+    "skill_flame_slam_side": {
+      "version": "t02",
+      "dir": "skill/skill_flame_slam_side",
+      "source": "raw/skill_flame_slam_side_t02.mp4",
+      "frames": 38,
+      "fps": 15,
+      "loop": false,
+      "files": "skill/skill_flame_slam_side/frames/@1x/hero_diablo_skill_flame_slam_side_NN.png",
+      "sheet": "skill/skill_flame_slam_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/cut_skill_flame_slam_side",
+        "action": "skill",
+        "take": 2,
+        "route": "supplied"
+      },
+      "hit_frame": 15
+    },
+    "skill_fire_breath_side": {
+      "version": "t01",
+      "dir": "skill/skill_fire_breath_side",
+      "source": "raw/skill_fire_breath_side_t01.mp4",
+      "frames": 33,
+      "fps": 15,
+      "loop": false,
+      "files": "skill/skill_fire_breath_side/frames/@1x/hero_diablo_skill_fire_breath_side_NN.png",
+      "sheet": "skill/skill_fire_breath_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/cut_skill_fire_breath_side",
+        "action": "skill",
+        "take": 1,
+        "route": "supplied"
+      },
+      "hit_frame": 20
     }
   },
   "body_area_2x": 3693,
@@ -39,6 +127,9 @@
     "alpha": 0.35
   },
   "mirrored": {
-    "attack_left": "attack_side"
+    "attack_left": "attack_side",
+    "death_left": "death_side",
+    "respawn_left": "respawn_side",
+    "run_left": "run_side"
   }
 }

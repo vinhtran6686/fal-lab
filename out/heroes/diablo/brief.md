@@ -37,13 +37,13 @@
 | pose_skill_horn_charge | fal-image | ảnh tĩnh | ✅ v01 | chốt 2026-10-22; sừng chĩa trước, thân thấp (ảnh cuối) |
 | pose_skill_horn_charge_windup / _load / _lunge | fal-image | ảnh tĩnh | ⏳ v01 | 3 ảnh trung gian (gồng, nén, lao); chờ user duyệt |
 | pose_skill_ember_armor | fal-image | ảnh tĩnh | ✅ v01 | chốt 2026-10-22; hai tay lửa khoanh trước ngực |
-| run_side | video-sprite | loop | ⏳ t04 | t04 chốt nhưng gait_loop không cắt được vòng lặp; user bỏ qua, quay lại sau |
-| attack_side | video-sprite | one-shot | ⏳ t02 | user chốt t02 (vuốt cào); chưa cắt, bản export t01 sẽ bị thay |
-| death_side | video-sprite | one-shot | ⏳ t01 | user chốt t01; chưa cắt; giáp đổ thành đống |
-| respawn_side | video-sprite | one-shot | ⏳ t01 | user chốt t01; clip xong, chưa cắt; dùng --rest-last khi cắt |
+| run_side | video-sprite | loop | ✅ t04 | đã cắt 2026-10-22 (move/run_side, 19 hình @15 fps, vòng 2 bước chọn tay nguồn 52-88, mối nối sạch theo số đo); chưa xem chuyển động trong Motion Lab |
+| attack_side | video-sprite | one-shot | ✅ t02 | đã cắt 2026-10-22 (attack/attack_side, 20 hình @15 fps, hit 12); thay bản t01 |
+| death_side | video-sprite | one-shot | ✅ t01 | đã cắt 2026-10-22 (death/death_side, 25 hình @15 fps); giáp đổ thành đống |
+| respawn_side | video-sprite | one-shot | ⏳ t01 | đã cắt (spawn/respawn_side, 39 hình @15 fps, --rest-last); lỗi: hình 15-33 to hơn ~10-18% (model zoom giữa lúc đứng dậy) |
 | levelup_side | fx (python) | hiệu ứng | ⏳ v01 | user chốt v01; không quay clip: pose master + hào quang lửa xung nhịp, fx/levelup_v01; chưa xuất lớp RGBA |
-| skill_flame_slam_side | video-sprite | one-shot | ⏳ t02 | user chốt t02; chưa cắt (t01 bị loại); vòng lửa nằm trong clip |
-| skill_fire_breath_side (thay horn_charge) | video-sprite | one-shot | ⏳ t01 | clip xong, chưa cắt; user chuyển sang pose tiếp (chưa chốt chính thức); ảnh: _crouch (đầu), pose_skill_fire_breath v02 (cuối, không lửa) |
+| skill_flame_slam_side | video-sprite | one-shot | ✅ t02 | đã cắt 2026-10-22 (skill/skill_flame_slam_side, 38 hình @15 fps, hit 15); vòng lửa nằm trong clip |
+| skill_fire_breath_side (thay horn_charge) | video-sprite | one-shot | ⏳ t01 | đã cắt cho Fx Studio (skill/skill_fire_breath_side, 33 hình @15 fps, hit 20), chờ user duyệt chính thức; ảnh: _crouch (đầu), pose_skill_fire_breath v02 (cuối, không lửa) |
 | fx_fire_breath | fx (python) | hiệu ứng | ⏸ v04 | tạm dừng, user tách topic riêng làm fx sau (lửa là một phần); fx/fire_breath.py, luồng lửa từ miệng; chờ user duyệt, chưa gắn vị trí miệng thật |
 | skill_ember_armor_side | video-sprite | one-shot | ⏳ t01 | clip xong, chưa cắt; chỉ thân (không lửa); chờ user duyệt; ảnh cuối pose_skill_ember_armor_v01 |
 | fx_ember_armor | fx (python) | hiệu ứng | ❌ | vòng lửa bao quanh nhân vật lúc khoanh tay (buff tăng thủ + tăng dame); làm ở topic fx riêng |

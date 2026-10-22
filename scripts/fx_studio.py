@@ -7,6 +7,8 @@ Usage:
   python scripts/fx_studio.py render <id> [--set scale=0.6 --set mode=vector --set anchor=0.04,0.45 ...]
   python scripts/fx_studio.py install <id> [<id> ...] [--game DIR]   pack go_fx_lab (fullhd + ipad) and register in the game
   python scripts/fx_studio.py uninstall <id> [<id> ...] | --all      remove from the game (the last one removes every trace)
+  python scripts/fx_studio.py install-pack <key>.fxskill.zip [--game DIR]  a skill (or <id>.fxpack.zip, one effect) from the app
+  python scripts/fx_studio.py install-pack <assets dir> --skill skills/<key>.json  the same, from the app's saved data
   python scripts/fx_studio.py list
 
 Asset folder out/vfx/<id>/ (fal-image format.md section 4):
@@ -394,11 +396,13 @@ def hero_for_scale() -> Image.Image | None:
     return Image.open(p).convert("RGBA") if p.exists() else None
 
 
-def render(r: dict, log=print) -> dict:
+def render(r: dict, log=print, out: pathlib.Path | None = None) -> dict:
+    """Export the recipe into <asset>/game (or `out`, e.g. the page's vector preview in .work/preview)."""
     if not r["frames"]:
         sys.exit("the recipe has no frames")
-    a = asset(r["id"])
-    out = a / "game"
+    if r.get("pack"):
+        sys.exit(f"{r['id']} was made in the Fx Studio app: change it there and install its new pack")
+    out = out or asset(r["id"]) / "game"
     if out.exists():
         shutil.rmtree(out)
     pics, svgs = drawings(r, log)
@@ -431,22 +435,29 @@ def render(r: dict, log=print) -> dict:
     (out / "manifest.json").write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8")
     preview(r, pics["@1x"], out)
     log(f"render {r['id']}: {len(r['frames'])} drawings, {len(seq)} game frames ({len(seq) / FPS:.2f} s at {FPS} fps), "
-        f"@1x canvas {sizes['@1x'][0]}x{sizes['@1x'][1]}, mode {r['mode']} -> {out.relative_to(ROOT)}")
+        f"@1x canvas {sizes['@1x'][0]}x{sizes['@1x'][1]}, mode {r['mode']} -> {out}")
     return manifest
 
 
 def preview(r: dict, pics: dict, out: pathlib.Path) -> None:
-    """preview.gif at game size over a KR map, a KR hero beside the anchor for scale; sheet.png: the drawings in a row."""
+    """preview.gif at game size over a KR map, a KR hero standing on the anchor (where the game places the effect when
+    it is spawned at the hero's position); sheet.png: the drawings in a row."""
     w, h = canvas_sizes(r)["@1x"]
     hero = hero_for_scale()
     ax, ay = round(r["anchor"][0] * w), round(r["anchor"][1] * h)
-    pad = 40
-    hw = hero.width if hero else 0
-    W, H = w + 2 * pad + hw, max(h, hero.height if hero else 0) + 2 * pad
-    ox, oy = pad + hw, (H - h) // 2
+    # boxes around the pivot (0, 0): the effect, and the hero with its feet on the pivot (KR1 hero anchor 0.5, 0.1)
+    boxes = [(-ax, -ay, w - ax, h - ay)]
+    if hero:
+        hx, hy = -round(hero.width * 0.5), -round(hero.height * 0.9)
+        boxes.append((hx, hy, hx + hero.width, hy + hero.height))
+    pad = 30
+    x0, y0 = min(b[0] for b in boxes) - pad, min(b[1] for b in boxes) - pad
+    W, H = max(b[2] for b in boxes) + pad - x0, max(b[3] for b in boxes) + pad - y0
+    px, py = -x0, -y0
+    ox, oy = px - ax, py - ay
     base = backdrop((W, H))
-    if hero:   # the hero stands left of the anchor, its middle at the anchor's height
-        base.alpha_composite(hero, (max(0, ox + ax - hero.width + 18), max(0, oy + ay - hero.height // 2)))
+    if hero:
+        base.alpha_composite(hero, (px + hx, py + hy))
     frames, durs = [], []
     for f in r["frames"]:
         im = base.copy()
@@ -639,15 +650,21 @@ def mirror(game: pathlib.Path, tables: dict, pages: dict) -> None:
     idx_p.write_bytes(json.dumps(index, indent=0).replace("\n", "\r\n").encode())   # slice_sprites' own form: indent 0, CRLF
 
 
-RUNTIME = '''-- fx_lab: plays the effects installed by fal-lab (scripts/fx_studio.py install writes this file, uninstall removes it).
--- In a level: F6 picks the next effect, F7 plays it at the mouse, Shift+F7 mirrored.
--- KR_FX_LAB_DEMO=1 plays every installed effect in a column at the screen centre every 2 s (for scripted checks).
+RUNTIME = '''-- fx_lab: plays what fal-lab Fx Studio installed (scripts/fx_studio.py install writes this file, uninstall removes it).
+-- In a level: F7 plays the current effect at the mouse, F6 picks the next effect;
+-- F5 plays the current skill (the character's pose + its effects, each at its own frame), Ctrl+F5 picks the next skill.
+-- Shift mirrors (the character looking left). KR_FX_LAB_DEMO=1 plays every skill (or, without skills, every effect)
+-- at the screen centre every few seconds, mirrored every other time (for scripted checks).
 local log = require("klua.log"):new("fx_lab")
 local E = require("entity_db")
-local fx_lab = {idx = 1}
+local fx_lab = {idx = 1, sidx = 1, queue = {}}
 
 local function names()
 	return FX_LAB_LIST or {}
+end
+
+local function skills()
+	return FX_LAB_SKILLS or {}
 end
 
 local function screen_to_world(game, sx, sy)
@@ -672,62 +689,116 @@ function fx_lab.spawn(game, name, x, y, flip)
 	game.simulation:queue_insert_entity(e)
 end
 
+-- a skill: the pose now, each effect `at` game frames (1/30 s) later, all at the same feet position
+function fx_lab.play_skill(game, s, x, y, flip)
+	local now = game.store.tick_ts
+
+	if s.pose then
+		fx_lab.spawn(game, s.pose, x, y, flip)
+	end
+
+	for _, l in ipairs(s.layers) do
+		table.insert(fx_lab.queue, {at = now + l[2] / 30, name = l[1], x = x, y = y, flip = flip})
+	end
+end
+
 function fx_lab.keypressed(game, key, isrepeat)
-	if key ~= "f6" and key ~= "f7" then
+	if key ~= "f5" and key ~= "f6" and key ~= "f7" then
 		return false
 	end
 
-	local list = names()
-
-	if #list == 0 or not game.store or not game.game_gui then
+	if not game.store or not game.game_gui or isrepeat then
 		return true
 	end
 
-	if key == "f6" then
-		fx_lab.idx = fx_lab.idx % #list + 1
+	local x, y = screen_to_world(game, love.mouse.getPosition())
+	local shift = love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")
+	local ctrl = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
 
-		log.error("fx_lab: %s (%d/%d)", list[fx_lab.idx], fx_lab.idx, #list)
-	elseif not isrepeat then
-		local x, y = screen_to_world(game, love.mouse.getPosition())
-		local shift = love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")
+	if key == "f5" then
+		local list = skills()
 
-		fx_lab.spawn(game, list[math.min(fx_lab.idx, #list)], x, y, shift)
+		if #list > 0 then
+			if ctrl then
+				fx_lab.sidx = fx_lab.sidx % #list + 1
+
+				log.error("fx_lab skill: %s (%d/%d)", list[fx_lab.sidx].key, fx_lab.sidx, #list)
+			else
+				fx_lab.play_skill(game, list[math.min(fx_lab.sidx, #list)], x, y, shift)
+			end
+		end
+	else
+		local list = names()
+
+		if #list > 0 then
+			if key == "f6" then
+				fx_lab.idx = fx_lab.idx % #list + 1
+
+				log.error("fx_lab: %s (%d/%d)", list[fx_lab.idx], fx_lab.idx, #list)
+			else
+				fx_lab.spawn(game, list[math.min(fx_lab.idx, #list)], x, y, shift)
+			end
+		end
 	end
 
 	return true
 end
 
 function fx_lab.update(game, dt)
-	if not os.getenv("KR_FX_LAB_DEMO") or not game.store or not game.game_gui or not game.store.tick_ts then
+	if not game.store or not game.store.tick_ts then
 		return
 	end
 
-	local list = names()
+	local now = game.store.tick_ts
 
-	if #list == 0 or fx_lab.demo_ts and game.store.tick_ts - fx_lab.demo_ts < 2 then
+	for i = #fx_lab.queue, 1, -1 do
+		local q = fx_lab.queue[i]
+
+		if now >= q.at - 1e-4 then
+			table.remove(fx_lab.queue, i)
+			fx_lab.spawn(game, q.name, q.x, q.y, q.flip)
+		end
+	end
+
+	if not os.getenv("KR_FX_LAB_DEMO") or not game.game_gui then
 		return
 	end
 
-	fx_lab.demo_ts = game.store.tick_ts
+	local list, sk = names(), skills()
+	local every = 2
+
+	for _, s in ipairs(sk) do
+		every = math.max(every, s.length / 30 + 1)
+	end
+
+	if #list == 0 and #sk == 0 or fx_lab.demo_ts and now - fx_lab.demo_ts < every then
+		return
+	end
+
+	fx_lab.demo_ts = now
+	fx_lab.demo_flip = not fx_lab.demo_flip
 
 	local cx, cy = screen_to_world(game, love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
 
 	if not fx_lab.demo_logged then
 		fx_lab.demo_logged = true
 
-		log.error("fx_lab demo: %d effect(s) at world %.0f, %.0f every 2 s", #list, cx, cy)
+		log.error("fx_lab demo: %d skill(s), %d effect(s) at world %.0f, %.0f every %.1f s", #sk, #list, cx, cy, every)
 	end
 
-	-- every other cycle mirrored, and the first effect once more at a quarter of the screen (the mouse path of F7)
-	fx_lab.demo_flip = not fx_lab.demo_flip
+	if #sk > 0 then
+		for i, s in ipairs(sk) do
+			fx_lab.play_skill(game, s, cx + (i - (#sk + 1) / 2) * 220, cy, fx_lab.demo_flip)
+		end
+	else
+		for i, name in ipairs(list) do
+			fx_lab.spawn(game, name, cx, cy + ((#list + 1) / 2 - i) * 90, fx_lab.demo_flip)
+		end
 
-	for i, name in ipairs(list) do
-		fx_lab.spawn(game, name, cx, cy + ((#list + 1) / 2 - i) * 90, fx_lab.demo_flip)
+		local qx, qy = screen_to_world(game, love.graphics.getWidth() / 4, love.graphics.getHeight() / 4)
+
+		fx_lab.spawn(game, list[1], qx, qy, fx_lab.demo_flip)
 	end
-
-	local qx, qy = screen_to_world(game, love.graphics.getWidth() / 4, love.graphics.getHeight() / 4)
-
-	fx_lab.spawn(game, list[1], qx, qy, fx_lab.demo_flip)
 end
 
 return fx_lab
@@ -801,6 +872,24 @@ def apply_game(fxs: list, game: pathlib.Path, log=print) -> None:
                  f'tt.timed.runs = {int(g.get("runs", 1))}\n')
     if fxs:
         body += "FX_LAB_LIST = {\n" + "".join(f'\t{lua_str(r["game"]["name"])},\n' for r in fxs) + "}\n"
+    names = {r["game"]["name"] for r in fxs}
+    sk = [k for k in installed_skills() if all(n in names for n, _ in k["layers"])]
+    if sk:
+        lines = []
+        for i, k in enumerate(sk, 1):
+            pose = "nil"
+            if k.get("anim") and k.get("pivot"):   # the character's own animation, played by an fx entity at the feet
+                pose = lua_str(f"fx_lab_pose_{i}")
+                body += (f'tt = RT({pose}, "fx")\n'
+                         f'tt.render.sprites[1].name = {lua_str(k["anim"])}\n'
+                         f'tt.render.sprites[1].anchor.x = {k["pivot"][0]}\n'
+                         f'tt.render.sprites[1].anchor.y = {round(1 - k["pivot"][1], 4)}\n'
+                         f'tt.render.sprites[1].z = Z_OBJECTS\n'
+                         f'tt.render.sprites[1].loop = false\n')
+            layers = ", ".join(f"{{{lua_str(n)}, {int(at)}}}" for n, at in k["layers"])
+            lines.append(f'\t{{key = {lua_str(k["key"])}, pose = {pose}, length = {int(k.get("length", 30))}, layers = {{{layers}}}}},\n')
+        body += "FX_LAB_SKILLS = {\n" + "".join(lines) + "}\n"
+        log(f"skills: {', '.join(k['key'] for k in sk)}")
     write_text(f["templates"], put_block(text, body or None, None), nl)
     # game.lua hooks + the runtime module + the atlas group in both texture sizes
     text, nl = read_text(f["game"])
@@ -811,6 +900,11 @@ def apply_game(fxs: list, game: pathlib.Path, log=print) -> None:
             if i is None:
                 sys.exit(f"all/game.lua changed: line not found: {find}")
             lines.insert(i + 1, add)
+        # a skill plays its character's own animation: that character's atlas group must be loaded in every level,
+        # not only when the character is the selected hero
+        i = next(j for j, ln in enumerate(lines) if ln.strip() == "game.required_textures = {")
+        for group in sorted({g for g in (anim_group(game, k["anim"]) for k in sk if k.get("anim")) if g}):
+            lines.insert(i + 1, f'\t"{group}", -- {MARK}')
     write_text(f["game"], "\n".join(lines), nl)
     tables, pages = {}, {}
     if fxs:
@@ -850,10 +944,158 @@ def do_install(ids: list, game: pathlib.Path, on: bool, log=print) -> None:
         save(r)
     fxs = installed()
     for r in fxs:   # an installed effect whose recipe changed after its last render is rendered again
+        if r.get("pack"):
+            continue   # made in the Fx Studio app: its frames ARE the export, never re-rendered here
         man = asset(r["id"]) / "game" / "manifest.json"
         if not man.exists() or json.loads(man.read_text(encoding="utf-8")).get("recipe_hash") != recipe_hash(r):
             render(r, log)
     apply_game(fxs, game, log)
+
+
+def anim_group(game: pathlib.Path, anim: str) -> str | None:
+    """The atlas group (go_*.lua under the fullhd images) that holds the first frame of a game animation."""
+    text = (game / "src" / "kr1" / "data" / "game_animations.lua").read_text(encoding="utf-8")
+    m = re.search(rf"^\t(?:a\.)?{re.escape(anim)} = \{{(.*?)\n\t?\}}", text, re.M | re.S)
+    if not m:
+        return None
+    prefix = re.search(r'prefix\s*=\s*"(\w+)"', m.group(1)).group(1)
+    first = int(re.search(r"from\s*=\s*(\d+)", m.group(1)).group(1))
+    needle = f"\t{prefix}_{first:04d} = {{"
+    for lua in sorted((game_assets(game) / "fullhd").glob("go_*.lua")):
+        if needle in lua.read_text(encoding="utf-8", errors="ignore"):
+            return lua.stem
+    return None
+
+
+SKILLS = VFX / "_skills"   # one <key>.json per skill installed from the app: which effects, at which frame of which pose
+
+
+def installed_skills() -> list:
+    return [json.loads(p.read_text(encoding="utf-8")) for p in sorted(SKILLS.glob("*.json"))] if SKILLS.exists() else []
+
+
+def install_skill(skill: dict, layer_dirs: list, game: pathlib.Path, force: bool = False, log=print) -> str:
+    """A skill from the app: every layer is an fx pack (cut and installed as is), plus the timing that ties them to the
+    character's pose. Muted layers are installed but left out of the skill."""
+    key = skill["key"]
+    if not re.fullmatch(r"[a-z0-9_]+", key):
+        sys.exit(f"skill key {key!r}: lowercase letters, digits and _ only")
+    layers = []
+    for meta, folder in zip(skill["layers"], layer_dirs):
+        fx_id = install_pack(folder, game, force, log, apply=False)
+        if not meta.get("muted"):   # the game name comes from the pack itself (the saved document may not repeat it)
+            layers.append([load(fx_id)["game"]["name"], int(meta["start"])])
+    SKILLS.mkdir(parents=True, exist_ok=True)
+    rec = {"key": key, "title": skill.get("title", key), "character": skill.get("character"), "pose_id": skill.get("pose"),
+           "anim": skill.get("anim"), "pivot": skill.get("pivot"), "length": skill.get("length", 30), "layers": layers}
+    (SKILLS / f"{key}.json").write_text(json.dumps(rec, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    log(f"skill {key}: {len(layers)} effect(s) on " + (f"{skill.get('anim')}" if skill.get("anim") else "no game animation (effects only)"))
+    do_install([], game, True, log)
+    return key
+
+
+def pack_from_ids(ids: dict, assets_dir: pathlib.Path) -> pathlib.Path:
+    """A pack named by asset ids ({json, @2x, @1x, ipad}), the assets saved as <id>.json / <id>.png -> a pack folder."""
+    import tempfile
+    folder = pathlib.Path(tempfile.mkdtemp())
+    shutil.copyfile(next(assets_dir.glob(ids["json"] + ".*")), folder / "pack.json")
+    for k, f in json.loads((folder / "pack.json").read_text(encoding="utf-8"))["sheets"].items():
+        shutil.copyfile(next(assets_dir.glob(ids[k] + ".*")), folder / f)
+    return folder
+
+
+def pack_from_assets(project: pathlib.Path, assets_dir: pathlib.Path) -> pathlib.Path:
+    """The app's saved project (db document projects/<id>, read with ArtifactData) names its pack by asset ids; the
+    assets, read with the Artifact tool, are saved as <id>.json / <id>.png. -> a folder laid out as a pack."""
+    import tempfile
+    doc = json.loads(project.read_text(encoding="utf-8"))
+    ids = doc["pack"]
+    folder = pathlib.Path(tempfile.mkdtemp())
+    shutil.copyfile(next(assets_dir.glob(ids["json"] + ".*")), folder / "pack.json")
+    sheets = json.loads((folder / "pack.json").read_text(encoding="utf-8"))["sheets"]
+    for k, f in sheets.items():
+        shutil.copyfile(next(assets_dir.glob(ids[k] + ".*")), folder / f)
+    return folder
+
+
+def install_pack(src: pathlib.Path, game: pathlib.Path, force: bool = False, log=print, apply: bool = True) -> str:
+    """A pack exported by the Fx Studio app (tools/fx_studio/app.html): a .zip, or a folder (or its pack.json) holding
+    pack.json + sheet@2x.png, sheet@1x.png, sheet_ipad.png. The app's frames are the final frames: they are cut out of
+    the sheets into out/vfx/<id>/game/ exactly as render() lays it out, then installed. Nothing is re-rendered."""
+    import tempfile, zipfile
+    tmp = None
+    if src.suffix.lower() == ".zip":
+        tmp = pathlib.Path(tempfile.mkdtemp())
+        with zipfile.ZipFile(src) as z:
+            z.extractall(tmp)
+        folder = tmp
+    else:
+        folder = src.parent if src.is_file() else src
+    if (folder / "skill.json").exists():   # a skill zip from the app: skill.json + one pack folder per layer
+        skill = json.loads((folder / "skill.json").read_text(encoding="utf-8"))
+        key = install_skill(skill, [folder / L["dir"] for L in skill["layers"]], game, force, log)
+        if tmp:
+            shutil.rmtree(tmp, ignore_errors=True)
+        return key
+    pack = json.loads((folder / "pack.json").read_text(encoding="utf-8"))
+    if pack.get("format") != "fx-studio-pack":
+        sys.exit(f"{folder / 'pack.json'} is not an Fx Studio pack")
+    fx_id, name = pack["id"], pack["name"]
+    if not re.fullmatch(r"[a-z0-9_]+", fx_id):
+        sys.exit(f"pack id {fx_id!r}: lowercase letters, digits and _ only")
+    a = asset(fx_id)
+    if (a / "fx.json").exists() and not load(fx_id).get("pack") and not force:
+        sys.exit(f"{a} holds an effect made with the local tool: pass --force to replace it with the app's pack")
+    keep = (a / "fx.json").exists() and load(fx_id)["game"].get("installed")
+    rec = pack["recipe"]
+    r = {"version": 1, "id": fx_id, "pack": True, "title": pack.get("title", fx_id), "source": "app pack",
+         "mode": "raster", "bg": rec.get("bg"), "black_floor": rec.get("black_floor"), "grid": rec.get("grid"), "cells": [],
+         "frames": rec["frames"], "scale": rec["scale"], "anchor": pack["anchor"], "color": rec.get("color"),
+         "game": {"name": name, "z": pack.get("z", "Z_EFFECTS"), "loop": bool(pack.get("loop")), "runs": int(pack.get("runs", 1)),
+                  "installed": keep}}
+    check_game(r)
+    # keep the pack itself (what the app exported) next to the cut frames
+    (a / "pack").mkdir(parents=True, exist_ok=True)
+    for f in ["pack.json", *pack["sheets"].values()]:
+        shutil.copyfile(folder / f, a / "pack" / f)
+    out = a / "game"
+    if out.exists():
+        shutil.rmtree(out)
+    sheets = {k: Image.open(folder / f).convert("RGBA") for k, f in pack["sheets"].items()}
+    for k in SIZES:
+        (out / "frames" / k).mkdir(parents=True)
+    frames_meta = {}
+    for fr in pack["frames"]:
+        src_name = fr["alias_of"] or fr["name"]
+        for k in SIZES:
+            d = pack["drawings"][src_name][k]
+            x, y, w, h = d["rect"]
+            im = Image.new("RGBA", tuple(d["size"]), (0, 0, 0, 0))
+            im.paste(sheets[k].crop((x, y, x + w, y + h)), (d["trim"][0], d["trim"][1]))
+            im.save(out / "frames" / k / f"{fr['name']}.png", optimize=True)
+        d1 = pack["drawings"][src_name]["@1x"]
+        frames_meta[fr["name"]] = {"size": d1["size"], "trim_offset": d1["trim"][:2], "content": d1["rect"][2:],
+                                   "alias_of": fr["alias_of"]}
+    ax, ay = pack["anchor"]
+    manifest = {"object": name, "kind": "animation", "fps": pack.get("fps", FPS), "exported": pack.get("exported"),
+                "source": "Fx Studio app pack", "recipe_hash": recipe_hash(r), "mode": "raster", "scale": r["scale"],
+                "canvas": pack["canvas"], "anchor": [ax, round(1 - ay, 4)],
+                "anchor_note": "game anchor: x from the left, y from the BOTTOM of the canvas",
+                "loop": r["game"]["loop"], "frames": frames_meta,
+                "animations": {name: {"prefix": name, "from": 1, "to": len(pack["frames"])}}}
+    (out / "manifest.json").write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8")
+    save(r)
+    if len(sequence(r)) != len(pack["frames"]):
+        sys.exit("pack.json: frames and recipe holds disagree")
+    log(f"pack {fx_id}: {len(pack['frames'])} game frames ({len(pack['drawings'])} drawings) -> {out.relative_to(ROOT)}")
+    if tmp:
+        shutil.rmtree(tmp, ignore_errors=True)
+    if apply:
+        do_install([fx_id], game, True, log)
+    else:
+        r["game"]["installed"] = True
+        save(r)
+    return fx_id
 
 
 # ---------------------------------------------------------------- cli
@@ -868,6 +1110,11 @@ def main() -> None:
         s = sub.add_parser(name); s.add_argument("ids", nargs="*"); s.add_argument("--game", default=str(GAME_DIR))
         if name == "uninstall":
             s.add_argument("--all", action="store_true")
+    s = sub.add_parser("install-pack", help="install a pack exported by the Fx Studio app (.zip or folder with pack.json)")
+    s.add_argument("pack", help="a .zip, a folder with pack.json, or (with --project) the folder the app's assets were saved to")
+    s.add_argument("--project", help="the app's saved project document (projects/<id>.json): pack assets named by asset id")
+    s.add_argument("--skill", help="the app's saved skill document (skills/<key>.json): every layer's pack named by asset ids")
+    s.add_argument("--game", default=str(GAME_DIR)); s.add_argument("--force", action="store_true")
     sub.add_parser("list")
     a = p.parse_args()
     if a.cmd == "import":
@@ -886,7 +1133,16 @@ def main() -> None:
         do_install(a.ids, pathlib.Path(a.game), True)
     elif a.cmd == "uninstall":
         ids = [r["id"] for r in installed()] if a.all else a.ids
+        if a.all and SKILLS.exists():
+            shutil.rmtree(SKILLS)
         do_install(ids, pathlib.Path(a.game), False)
+    elif a.cmd == "install-pack":
+        if a.skill:
+            doc = json.loads(pathlib.Path(a.skill).read_text(encoding="utf-8"))
+            install_skill(doc, [pack_from_ids(L["pack"], pathlib.Path(a.pack)) for L in doc["layers"]], pathlib.Path(a.game), a.force)
+        else:
+            src = pack_from_assets(pathlib.Path(a.project), pathlib.Path(a.pack)) if a.project else pathlib.Path(a.pack)
+            install_pack(src, pathlib.Path(a.game), a.force)
     elif a.cmd == "list":
         for fx in sorted(VFX.glob("*/fx.json")):
             r = json.loads(fx.read_text(encoding="utf-8"))

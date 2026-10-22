@@ -1,0 +1,18 @@
+{
+ "key": "holy_commander__skill_radiant_slash_side",
+ "title": "Holy Commander · Radiant slash",
+ "character": "holy_commander",
+ "pose_id": "skill_radiant_slash_side",
+ "anim": "hero_holy_commander_radiant_slash",
+ "pivot": [
+  0.5,
+  0.88
+ ],
+ "length": 44,
+ "layers": [
+  [
+   "fx_holy_commander_radiant_slash_1",
+   26
+  ]
+ ]
+}

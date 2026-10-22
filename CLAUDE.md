@@ -31,6 +31,10 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   `go_fx_lab` into the Kingdom Rush 1 game (`KR1_GAME_DIR`, default `E:\work\reverse\games\kr1`, LOVE 0.10.2) and registers
   animation + template; F6/F7 play it in a level. Raster (as drawn) by default; `mode: vector` traces the flat core with
   vtracer and redraws the glow. Guide: `tools/fx_studio/README.md`.
+  The main tool is the browser app (`tools/fx_studio/app.html`, Artifact https://claude.ai/artifact/JUVk6cDVriDXhLXLTTQzVi):
+  pick character + pose, layer effects on a timeline at game frames (snap to the hit frame), drag to place, recolour, save.
+  "cài skill <char>__<pose> từ Fx Studio" = ArtifactData `get` skills/<key> -> Artifact `read` each asset id in
+  `layers[].pack` -> `python scripts/fx_studio.py install-pack <assets dir> --skill <doc.json>` (no re-render; F5 in a level).
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.

@@ -4,31 +4,61 @@
 rồi xuất frame đúng định dạng game (giống `ref/hero`). Bước cài sẽ đóng gói vào game KR1 (LÖVE 0.10.2) để xem ngay trong level.
 Không gọi model, không tốn phí.
 
-## Chạy
+## App (cách dùng chính): studio với timeline
+**https://claude.ai/artifact/JUVk6cDVriDXhLXLTTQzVi**: chạy trong trình duyệt, không cần server hay Python.
 
+1. **Thanh trên: Nhân vật → Pose** (Holy Commander 9 pose, Diablo, Ignus của KR1). "Không có" = chỉnh hiệu ứng tự do.
+   Pose có ✓ là skill đã lưu.
+2. **Timeline (dưới)**: thước tính bằng frame game (30 / giây); tầng đầu là pose của nhân vật (vạch đỏ **hit** = frame trúng
+   đòn), mỗi hiệu ứng là một tầng riêng. Bấm hoặc kéo trên thước để tua; **kéo một tầng sang ngang** để đổi lúc nó bắt đầu
+   (tự hít vào frame hit); ● ẩn/hiện, ✕ xóa.
+3. **+ Thêm hiệu ứng**: nhập sprite sheet, lửa mẫu, hoặc lấy từ thư viện (mỗi skill giữ một bản sao riêng, chỉnh không ảnh
+   hưởng skill khác). Hiệu ứng mới bắt đầu tại đầu phát: dừng ở frame muốn gắn rồi thêm.
+4. **Panel phải** chỉnh tầng đang chọn: *Bắt đầu ở frame* (nút **Gắn vào hit**, **Tại đầu phát**), vị trí (kéo trên khung
+   xem; số là px trong game từ chân nhân vật tới tâm hiệu ứng), kích thước, màu, các hình và tốc độ; mỗi mục có ↺.
+5. **Lưu**: lưu skill (mọi tầng, sheet, gói frame) vào app; sheet mới cũng vào thư viện. **Bỏ thay đổi** về bản đã lưu.
+6. Đưa vào game: nhắn Claude **“cài skill <nhân vật>__<pose> từ Fx Studio”**, hoặc **Tải gói .zip** rồi
+   `python scripts/fx_studio.py install-pack <key>.fxskill.zip`.
+
+Nhịp của pose lấy từ bảng animation của game khi nhân vật đã có trong game (mỗi frame atlas = 1 frame game, đúng như game
+chạy; holy_commander chạy nhanh gấp đôi con số 15 fps trong meta.json), còn không thì từ meta.json (tầng nhân vật ghi
+"game" hay "meta"). Khung xem hiện **đúng các frame sẽ vào game**: app render một lần, gói chứa chính các frame đó.
+
+### Trong game
+- `install-pack` cài từng tầng như một hiệu ứng (`fx_<nhân vật>_<pose>_<n>`), thêm một template phát chính animation của
+  nhân vật (`fx_lab_pose_<n>`), bảng `FX_LAB_SKILLS` (tầng nào, frame nào), và nạp atlas của nhân vật ở mọi level.
+- Trong level: **F5** phát skill (pose + hiệu ứng đúng frame) tại chuột, **Ctrl+F5** đổi skill, **Shift** = nhìn sang
+  trái; **F7 / F6** như trước cho từng hiệu ứng. `KR_FX_LAB_DEMO=1` phát mọi skill giữa màn hình.
+- Đã kiểm (2026-10-22): holy_commander radiant slash + lửa mẫu ở frame hit 26 → trong game lửa phun từ mũi kiếm đúng lúc chém.
+- Dùng trong code của hero: tạo entity `fx_..._1` tại `hero.pos` khi animation tới frame `start` (ghi trong
+  `out/vfx/_skills/<key>.json`), `flip_x` theo hướng hero.
+
+### Gói (pack) và cách Claude cài
+- Gói = `pack.json` (tên, anchor, canvas, từng frame và `alias_of`, vị trí từng hình trong sheet, công thức) + `sheet@2x.png`,
+  `sheet@1x.png` (= fullhd), `sheet_ipad.png`. Bản .zip chứa đúng 4 file đó.
+- App lưu dự án ở db `projects/<id>`: `{id, title, sheet, recipe, pack: {json, @2x, @1x, ipad}, savedAt}` (các giá trị là asset id).
+- Skill lưu ở db `skills/<nhân vật>__<pose>` (`free` khi không chọn nhân vật): `{key, character, pose, anim, pivot, length,
+  layers: [{lid, title, sheet, recipe, start, muted, pack: {json, @2x, @1x, ipad}}], savedAt}`; thư viện ở `projects/<id>`.
+- Claude cài skill: ArtifactData `get` `skills/<key>` (`out_dir`), Artifact `read` từng asset id trong `layers[].pack`
+  (mỗi lần một `path`), rồi `python scripts/fx_studio.py install-pack <thư mục asset> --skill <skills/<key>.json>`.
+  Một hiệu ứng lẻ từ `projects/<id>` (bản cũ): `install-pack <thư mục asset> --project <projects/<id>.json>`.
+- `install-pack` ghi `out/vfx/<id>/` (`fx.json` có `"pack": true`, `pack/`, `game/` như render) rồi cài như mọi hiệu ứng.
+  Hiệu ứng từ app không render lại bằng Python; muốn sửa thì sửa trong app và cài gói mới.
+- Đổi app: sửa `tools/fx_studio/app.html`, chạy `python tools/fx_studio/build_artifact.py`, publish `out/fx_studio_artifact/index.html`
+  (cùng `bg.png`, `hero.png`, `samples/fire_breath.png`) vào link trên với capabilities `{db: {}, assets: {}, downloads: true}`.
+
+## Bản chạy trên máy (vector, cài thẳng)
 | | |
 |---|---|
 | Trang chỉnh | double-click `tools/fx_studio/fx_studio.bat`, trình duyệt mở `http://127.0.0.1:8768/` (chỉ nghe 127.0.0.1) |
 | Dòng lệnh | `python scripts/fx_studio.py --help` |
 | Cần | python có numpy, Pillow, scipy, **vtracer**, **resvg-py** (`pip install -r requirements.txt`) |
-| Game | `E:\work\reverse\games\kr1`; máy khác đặt biến `KR1_GAME_DIR` |
+| Game | `E:\work
+everse\games\kr1`; máy khác đặt biến `KR1_GAME_DIR` |
 
-## Các bước trên trang
-1. **Nhập sheet mới…**: chọn ảnh, đặt mã (id, ví dụ `fire_breath`). Lưới và nền được tự nhận (nền đen, trong suốt hoặc magenta).
-   Sheet lệch lưới thì ghi rõ, ví dụ `3x3`.
-2. **Xem nhanh**: hiệu ứng chạy 30 fps trên map KR thật, cạnh một hero KR (Ignus) để so cỡ.
-   - **Bấm vào hình** để đặt điểm neo: điểm phun của hơi thở, tâm của vụ nổ. Điểm đó nằm đúng vị trí entity trong game (dấu +).
-   - **Scale**: px của sheet → px trong game (fullhd).
-   - **Màu**: hue, bão hòa, độ sáng, độ đục, có sẵn mẫu Băng, Độc, Hư không, Thánh, Bóng tối.
-3. **Frame**:
-   - "giữ" = số frame game mỗi hình (2 = vẽ "on twos" như KR).
-   - Dùng ◀ ▶ để đổi thứ tự, ✕ để bỏ một hình; có nút Đảo ngược và Ping-pong.
-   - Dòng **Thứ tự** (`ô:giữ`, ví dụ `1:2 2:2 3:3 2:2`) cho phép dùng lại một ô.
-4. **Render**: xuất `out/vfx/<id>/game/`. Chọn "Bản render" để xem đúng thứ sẽ vào game (kể cả chế độ vector).
-5. **Cài vào game**, rồi **Chơi thử trong game**:
-   - Nút Chơi thử mở level ở chế độ demo: mọi hiệu ứng đã cài phát giữa màn hình mỗi 2 giây.
-   - Chạy bằng `run.bat` thì dùng **F6** để chọn hiệu ứng, **F7** để phát tại chuột, **Shift+F7** để phát bản lật.
-   - **Gỡ** xóa hiệu ứng khỏi game. Gỡ cái cuối cùng sẽ xóa mọi dấu vết, các file game trở về đúng từng byte như trước.
+Cùng cách thao tác như app (kéo để đặt vị trí, ↺, trạng thái), thêm: kiểu nét **Vector** (nút *Tạo xem trước vector*),
+**Áp dụng vào game** (lưu + render + cài một lần), **Gỡ khỏi game**, **▶ Chơi thử** (mở level 3, mọi hiệu ứng đã cài tự phát
+giữa màn hình mỗi 2 giây). Trong game: **F7** phát tại chuột, **Shift+F7** nhìn sang trái, **F6** đổi hiệu ứng.
 
 ## Raster hay vector
 - **Raster (mặc định, như gốc)**: giữ nguyên nét vẽ và glow mềm của sheet; chỉ bỏ nền, đổi màu, đổi cỡ.

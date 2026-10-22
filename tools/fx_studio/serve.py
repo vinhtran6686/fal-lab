@@ -36,6 +36,8 @@ def list_fx() -> list:
     out = []
     for p in sorted(fx.VFX.glob("*/fx.json")):
         r = json.loads(p.read_text(encoding="utf-8"))
+        if r.get("pack"):
+            continue   # made in the Fx Studio app; edited there
         out.append({"id": r["id"], "mode": r["mode"], "drawings": len(r["frames"]), "installed": r["game"].get("installed", False),
                     "rendered": (p.parent / "game" / "manifest.json").exists()})
     return out
@@ -130,6 +132,23 @@ class H(SimpleHTTPRequestHandler):
                         fx.save(clean(body["recipe"], fx_id))
                     fx.render(fx.load(fx_id), log=logs.append)
                     return self._json({"ok": True, "log": logs, **fx_info(fx_id)})
+                if parts[:2] == ["api", "apply"]:   # the page's one button: save, render and install into the game
+                    old = fx.load(fx_id)
+                    r = clean(body["recipe"], fx_id)
+                    fx.save(r)
+                    if (old["bg"], old["black_floor"]) != (r["bg"], r["black_floor"]):
+                        fx.write_cells(r)
+                    fx.render(fx.load(fx_id), log=logs.append)
+                    if fx.GAME_DIR.exists():
+                        fx.do_install([fx_id], fx.GAME_DIR, True, log=logs.append)
+                    return self._json({"ok": True, "log": logs, **fx_info(fx_id)})
+                if parts[:2] == ["api", "preview"]:   # vector look of unsaved settings: rendered aside, nothing saved
+                    r = clean(body["recipe"], fx_id)
+                    out = fx.asset(fx_id) / ".work" / "preview"
+                    man = fx.render(r, log=logs.append, out=out)
+                    stamp = int((out / "manifest.json").stat().st_mtime * 1000)
+                    frames = [f"/vfx/{fx_id}/.work/preview/frames/@1x/{n}.png?t={stamp}" for n in man["frames"]]
+                    return self._json({"ok": True, "log": logs, "frames": frames})
                 if parts[:2] in (["api", "install"], ["api", "uninstall"]):
                     fx.do_install([fx_id], fx.GAME_DIR, parts[1] == "install", log=logs.append)
                     return self._json({"ok": True, "log": logs, **fx_info(fx_id)})

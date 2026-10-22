@@ -4,185 +4,226 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fx Studio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
-:root{--bg:#16181d;--panel:#1f2229;--line:#323743;--text:#e6e8ee;--muted:#9aa1b2;--accent:#f0a030;--ok:#5cc98a;--bad:#f06b6b;--chip:#2a2e38}
+:root{color-scheme:dark;--bg:#15161b;--panel:#1e2027;--line:#30333d;--text:#e8e9ee;--muted:#9a9fae;--accent:#f2a33a;--accent-ink:#1d1305;--ok:#5fcf8f;--warn:#f2a33a;--bad:#f07070;--chip:#272a33;--chip-hover:#2f333e}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
-header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
-header h1{font-size:16px;margin:0 8px 0 0;letter-spacing:.3px}
-select,input,button{font:inherit;color:var(--text);background:var(--chip);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+select,input,button{font:inherit;color:var(--text);background:var(--chip);border:1px solid var(--line);border-radius:6px;padding:5px 9px}
 input[type=range]{padding:0;width:100%;accent-color:var(--accent);background:none;border:none}
-input[type=number]{width:74px}
+input[type=number]{width:76px;font-variant-numeric:tabular-nums}
 input[type=checkbox]{accent-color:var(--accent)}
 button{cursor:pointer}
-button:hover{border-color:var(--accent)}
-button.primary{background:var(--accent);color:#1b1205;border-color:var(--accent);font-weight:600}
-button:disabled{opacity:.45;cursor:default}
-main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px;padding:14px 16px}
+button:hover:not(:disabled){background:var(--chip-hover)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+button.primary:hover:not(:disabled){filter:brightness(1.08);background:var(--accent)}
+button:disabled{opacity:.4;cursor:default}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.reset{padding:2px 7px;font-size:13px;line-height:1.2;color:var(--muted)}
+.reset:hover{color:var(--text)}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{font-size:16px;margin:0 6px 0 0;font-weight:600}
+.spacer{flex:1}
+.state{display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:99px;font-size:13px;border:1px solid var(--line);background:var(--chip)}
+.state::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.state.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}.state.ok::before{background:var(--ok)}
+.state.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}.state.warn::before{background:var(--warn)}
+
+main{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;padding:14px 16px 24px}
 @media (max-width:980px){main{grid-template-columns:1fr}}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
-.stage-wrap{position:relative}
-canvas#stage{width:100%;height:auto;display:block;border-radius:8px;background:#000;cursor:crosshair;image-rendering:auto}
+canvas#stage{width:100%;height:auto;display:block;border-radius:8px;background:#000;cursor:grab;touch-action:none}
+canvas#stage.dragging{cursor:grabbing}
 .bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
-.bar .grow{flex:1}
 .muted{color:var(--muted)}
-.small{font-size:12px}
-h2{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:14px 0 8px}
-h2:first-child{margin-top:0}
-.row{display:grid;grid-template-columns:96px 1fr 64px;align-items:center;gap:8px;margin:6px 0}
-.row output{font-variant-numeric:tabular-nums;text-align:right;color:var(--muted)}
-.seg{display:flex;gap:0}
+.small{font-size:12.5px}
+.hint{margin:8px 0 0;color:var(--muted);font-size:12.5px}
+.banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;padding:8px 10px;border-radius:8px;background:color-mix(in srgb,var(--warn) 12%,var(--panel));border:1px solid color-mix(in srgb,var(--warn) 40%,var(--line));font-size:13px}
+
+.sec{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.sec:first-child{border-top:0;padding-top:0;margin-top:0}
+.sec-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.sec-h h2{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin:0;font-weight:600}
+.row{display:grid;grid-template-columns:84px 1fr 52px;align-items:center;gap:8px;margin:7px 0}
+.row output{font-variant-numeric:tabular-nums;text-align:right;color:var(--muted);font-size:13px}
+.pos{display:grid;grid-template-columns:auto auto;gap:6px 10px;align-items:center;margin-top:6px}
+.pos label{color:var(--muted);font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.chips button{padding:3px 9px;font-size:12.5px}
+.chips button.on{border-color:var(--accent);color:var(--accent)}
+.seg{display:inline-flex}
 .seg button{border-radius:0}
 .seg button:first-child{border-radius:6px 0 0 6px}
 .seg button:last-child{border-radius:0 6px 6px 0}
-.seg button.on{background:var(--accent);color:#1b1205;border-color:var(--accent)}
-.presets{display:flex;flex-wrap:wrap;gap:6px}
-.presets button{padding:3px 8px;font-size:12px}
-.strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
-.fr{flex:0 0 auto;width:136px;background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:6px;text-align:center}
-.fr.cur{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-.fr canvas{width:100px;height:100px;background:#0d0f13;border-radius:4px;display:block;margin:0 auto 4px;cursor:pointer}
-.fr .ctl{display:flex;gap:3px;justify-content:center;align-items:center}
-.fr .ctl button{padding:1px 5px;font-size:12px}
-.fr input{width:38px;padding:2px 3px;font-size:12px}
-.fr.unused{opacity:.55}
-#log{white-space:pre-wrap;font:12px/1.4 ui-monospace,Consolas,monospace;background:#0f1115;border-radius:6px;padding:8px;max-height:150px;overflow:auto;margin:0}
-.ok{color:var(--ok)}.bad{color:var(--bad)}
+.seg button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+details.adv{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+details.adv>summary{cursor:pointer;color:var(--muted);font-size:13px;list-style-position:inside}
+details.adv[open]>summary{margin-bottom:6px}
+.formgrid{display:grid;grid-template-columns:84px 1fr;gap:8px;align-items:center}
+
+.strip-wrap{overflow-x:auto;padding-bottom:6px}
+.strip{display:flex;gap:8px;width:max-content}
+.fr{width:118px;background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:6px;text-align:center}
+.fr.cur{border-color:var(--accent)}
+.fr canvas{width:104px;height:104px;background:#0c0d10;border-radius:5px;display:block;margin:0 auto 5px;cursor:pointer}
+.fr .lab{font-size:12px;color:var(--muted)}
+.fr .ctl{display:flex;gap:3px;justify-content:center;align-items:center;margin-top:3px}
+.fr .ctl button{padding:1px 6px;font-size:12px}
+.fr .ctl input{width:38px;padding:2px 3px;font-size:12px}
+.fr.unused{opacity:.5}
+#log{white-space:pre-wrap;font:12px/1.45 "IBM Plex Mono",ui-monospace,Consolas,monospace;background:#0e0f13;border-radius:6px;padding:8px;max-height:160px;overflow:auto;margin:6px 0 0}
+.l-ok{color:var(--ok)}.l-bad{color:var(--bad)}
+#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--chip);border:1px solid var(--line);padding:8px 14px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:calc(100% - 32px)}
+#toast.show{opacity:1}
+#toast.bad{border-color:var(--bad);color:var(--bad)}
 dialog{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:16px;width:min(560px,92vw)}
 dialog::backdrop{background:rgba(0,0,0,.6)}
-dialog img{max-width:100%;max-height:260px;display:block;margin:8px auto;background:#000;border-radius:6px}
-.formgrid{display:grid;grid-template-columns:120px 1fr;gap:8px;align-items:center}
-.pill{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;background:var(--chip);border:1px solid var(--line)}
-.pill.on{border-color:var(--ok);color:var(--ok)}
-.pill.warn{border-color:var(--accent);color:var(--accent)}
+dialog img{max-width:100%;max-height:240px;display:block;margin:8px auto;background:#000;border-radius:6px}
+[hidden]{display:none!important}
+body.static .local-only{display:none!important}
+body:not(.static) .static-only{display:none!important}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
 </style>
 </head>
 <body>
 <header>
   <h1>Fx Studio</h1>
   <select id="fxSel" aria-label="Hiệu ứng"></select>
-  <button id="btnImport">Nhập sheet mới…</button>
-  <span id="status" class="pill">—</span>
-  <span class="grow" style="flex:1"></span>
-  <span class="muted small" id="gameInfo"></span>
+  <button id="btnImport" class="local-only">+ Nhập sheet</button>
+  <span class="spacer"></span>
+  <span id="state" class="state">—</span>
+  <button id="btnRevert" title="Quay về bản đã áp dụng">Bỏ thay đổi</button>
+  <button id="btnApply" class="primary local-only">Áp dụng vào game</button>
+  <button id="btnShare" class="primary static-only">Lưu cho Claude</button>
+  <button id="btnPlayGame" class="local-only" title="Mở game ở level 3; mọi hiệu ứng đã áp dụng tự phát giữa màn hình mỗi 2 giây">▶ Chơi thử</button>
 </header>
 
 <main>
   <section>
     <div class="card">
-      <div class="stage-wrap"><canvas id="stage" width="960" height="540"></canvas></div>
+      <canvas id="stage" width="960" height="540" aria-label="Khung xem: kéo hiệu ứng để đặt vị trí"></canvas>
+      <div id="vecBanner" class="banner" hidden>
+        <span id="vecText"></span>
+        <button id="btnVecPreview" class="local-only">Tạo xem trước vector</button>
+      </div>
       <div class="bar">
-        <button id="btnPlay" title="Space">⏸ Dừng</button>
+        <button id="btnPlay" title="Space">⏸</button>
         <button id="btnPrev" title="←">◀</button>
         <button id="btnNext" title="→">▶</button>
-        <span id="frameInfo" class="muted small"></span>
-        <span class="grow"></span>
-        <div class="seg" id="viewSeg">
-          <button data-v="quick" class="on" title="Ô gốc, chỉnh màu và scale ngay trên trang (raster)">Xem nhanh</button>
-          <button data-v="render" title="Frame đã render (đúng như vào game, cả chế độ vector)">Bản render</button>
-        </div>
-        <label class="small"><input type="checkbox" id="optHero" checked> Hero so cỡ</label>
-        <label class="small"><input type="checkbox" id="optFlip"> Lật</label>
-        <select id="zoom" aria-label="Phóng"><option value="1">1x (cỡ game)</option><option value="2" selected>2x</option><option value="3">3x</option></select>
+        <span id="frameInfo" class="muted small" style="font-variant-numeric:tabular-nums"></span>
+        <span class="spacer"></span>
+        <label class="small"><input type="checkbox" id="optHero" checked> Nhân vật</label>
+        <label class="small"><input type="checkbox" id="optFlip"> Nhìn sang trái</label>
+        <select id="zoom" aria-label="Phóng to"><option value="1">1x (cỡ thật)</option><option value="2" selected>2x</option><option value="3">3x</option></select>
       </div>
-      <p class="muted small" style="margin:8px 0 0">Bấm vào hình để đặt <b>điểm neo</b> (điểm phun, tâm nổ): điểm đó sẽ nằm đúng vị trí của entity trong game (dấu +).</p>
+      <p class="hint">Kéo hiệu ứng để đặt nó so với nhân vật. Dấu + là chân nhân vật: trong game, hiệu ứng gọi tại vị trí nhân vật sẽ nằm đúng như ở đây.</p>
     </div>
 
     <div class="card" style="margin-top:14px">
+      <div class="sec-h">
+        <h2 id="framesTitle">Các hình</h2>
+        <button class="reset" id="rsFrames" title="Về thứ tự gốc: mọi ô, mỗi hình giữ 2 frame">↺ Thứ tự gốc</button>
+      </div>
       <div class="bar" style="margin-top:0">
-        <h2 style="margin:0">Frame (game chạy 30 fps; “giữ” = số frame game mỗi hình)</h2>
-        <span class="grow"></span>
-        <button data-hold="1">Giữ 1</button><button data-hold="2">Giữ 2</button><button data-hold="3">Giữ 3</button>
-        <button id="btnRev">Đảo ngược</button><button id="btnPing">Ping-pong</button>
+        <span class="small muted">Tốc độ</span>
+        <div class="seg" id="speedSeg">
+          <button data-hold="1">Nhanh</button><button data-hold="2">Chuẩn</button><button data-hold="3">Chậm</button>
+        </div>
+        <button id="btnRev">Đảo ngược</button>
+        <button id="btnPing" title="Chạy tới rồi chạy lùi">Tới và lui</button>
       </div>
-      <div class="strip" id="strip" style="margin-top:10px"></div>
-      <div class="bar">
-        <label class="small muted" for="seqText">Thứ tự (ô:giữ)</label>
-        <input id="seqText" class="grow" spellcheck="false">
-        <button id="btnSeq">Áp dụng</button>
-      </div>
-      <h2>Ô chưa dùng</h2>
-      <div class="strip" id="unused"></div>
+      <div class="strip-wrap" style="margin-top:10px"><div class="strip" id="strip"></div></div>
+      <details class="adv">
+        <summary>Ô chưa dùng và sửa thứ tự bằng chữ</summary>
+        <div class="strip-wrap"><div class="strip" id="unused"></div></div>
+        <div class="bar">
+          <label class="small muted" for="seqText">Thứ tự (ô:giữ)</label>
+          <input id="seqText" style="flex:1;min-width:160px" spellcheck="false">
+          <button id="btnSeq">Dùng thứ tự này</button>
+        </div>
+      </details>
     </div>
   </section>
 
-  <aside>
-    <div class="card">
-      <h2>Chế độ</h2>
-      <div class="seg" id="modeSeg">
-        <button data-m="raster" class="on">Raster (như gốc)</button>
-        <button data-m="vector">Vector</button>
+  <aside class="card">
+    <div class="sec">
+      <div class="sec-h"><h2>Vị trí và kích thước</h2><button class="reset" id="rsPos" title="Về mặc định">↺</button></div>
+      <div class="row"><label for="scale">Kích thước</label><input type="range" id="scale" min="10" max="300" step="1"><output id="scaleOut"></output></div>
+      <div class="pos">
+        <label for="dx">Sang phải (px)</label><input type="number" id="dx" step="1">
+        <label for="dy">Lên trên (px)</label><input type="number" id="dy" step="1">
       </div>
-      <p class="muted small" style="margin:6px 0 0" id="modeHint"></p>
+      <p class="hint" id="sizeInfo"></p>
+    </div>
 
-      <h2>Kích thước và neo</h2>
-      <div class="row"><label for="scale">Scale</label><input type="range" id="scale" min="0.1" max="3" step="0.01"><output id="scaleOut"></output></div>
-      <div class="row"><label>Neo x / y</label><span style="display:flex;gap:6px"><input type="number" id="ax" step="0.01" min="0" max="1" style="width:64px"><input type="number" id="ay" step="0.01" min="0" max="1" style="width:64px"></span><span></span></div>
-      <p class="muted small" id="sizeInfo" style="margin:0"></p>
+    <div class="sec">
+      <div class="sec-h"><h2>Màu</h2><button class="reset" id="rsColor" title="Về màu gốc">↺</button></div>
+      <div class="chips" id="presets"></div>
+      <div class="row"><label for="hue">Sắc</label><input type="range" id="hue" min="-180" max="180" step="1"><output id="hueOut"></output></div>
+      <div class="row"><label for="sat">Độ rực</label><input type="range" id="sat" min="0" max="200" step="1"><output id="satOut"></output></div>
+      <div class="row"><label for="bri">Độ sáng</label><input type="range" id="bri" min="0" max="200" step="1"><output id="briOut"></output></div>
+      <div class="row"><label for="alp">Độ đậm</label><input type="range" id="alp" min="0" max="100" step="1"><output id="alpOut"></output></div>
+    </div>
 
-      <h2>Màu</h2>
-      <div class="presets" id="presets"></div>
-      <div class="row"><label for="hue">Hue</label><input type="range" id="hue" min="-180" max="180" step="1"><output id="hueOut"></output></div>
-      <div class="row"><label for="sat">Bão hòa</label><input type="range" id="sat" min="0" max="2" step="0.01"><output id="satOut"></output></div>
-      <div class="row"><label for="bri">Độ sáng</label><input type="range" id="bri" min="0" max="2" step="0.01"><output id="briOut"></output></div>
-      <div class="row"><label for="alp">Độ đục</label><input type="range" id="alp" min="0" max="1" step="0.01"><output id="alpOut"></output></div>
-
-      <h2>Nền của sheet</h2>
-      <div class="row"><label for="bg">Nền</label><select id="bg"><option value="black">đen (lửa, ánh sáng)</option><option value="alpha">trong suốt</option><option value="magenta">magenta</option></select><span></span></div>
-      <div class="row"><label for="floor">Ngưỡng đen</label><input type="range" id="floor" min="0" max="0.3" step="0.005"><output id="floorOut"></output></div>
-
+    <details class="adv" id="advBox">
+      <summary>Nâng cao</summary>
+      <div class="sec-h" style="margin-top:6px"><h2>Kiểu nét</h2><button class="reset" id="rsMode" title="Về như gốc">↺</button></div>
+      <div class="seg" id="modeSeg"><button data-m="raster">Như gốc</button><button data-m="vector">Vector (nét phẳng)</button></div>
       <div id="vecBox">
-        <h2>Vector</h2>
         <div class="row"><label for="vColors">Số màu</label><input type="range" id="vColors" min="2" max="8" step="1"><output id="vColorsOut"></output></div>
-        <div class="row"><label for="vCore">Ngưỡng lõi</label><input type="range" id="vCore" min="0.2" max="0.95" step="0.01"><output id="vCoreOut"></output></div>
-        <div class="row"><label for="vRad">Glow bán kính</label><input type="range" id="vRad" min="0" max="20" step="0.5"><output id="vRadOut"></output></div>
-        <div class="row"><label for="vStr">Glow độ mạnh</label><input type="range" id="vStr" min="0" max="4" step="0.05"><output id="vStrOut"></output></div>
-        <div class="row"><label for="vCol">Glow màu</label><span><input type="color" id="vCol"> <label class="small"><input type="checkbox" id="vAuto"> tự lấy</label></span><span></span></div>
+        <div class="row"><label for="vCore">Ngưỡng lõi</label><input type="range" id="vCore" min="20" max="95" step="1"><output id="vCoreOut"></output></div>
+        <div class="row"><label for="vRad">Quầng sáng</label><input type="range" id="vRad" min="0" max="20" step="0.5"><output id="vRadOut"></output></div>
+        <div class="row"><label for="vStr">Độ mạnh</label><input type="range" id="vStr" min="0" max="400" step="5"><output id="vStrOut"></output></div>
       </div>
 
-      <h2>Trong game</h2>
+      <div class="sec-h" style="margin-top:12px"><h2>Nền của sheet</h2><button class="reset" id="rsBg" title="Về mặc định">↺</button></div>
+      <div class="formgrid">
+        <label for="bg">Nền</label><select id="bg"><option value="black">đen (lửa, ánh sáng)</option><option value="alpha">trong suốt</option><option value="magenta">magenta</option></select>
+      </div>
+      <div class="row"><label for="floor">Ngưỡng đen</label><input type="range" id="floor" min="0" max="30" step="0.5"><output id="floorOut"></output></div>
+      <p class="hint local-only">Đổi nền hoặc ngưỡng đen chỉ thấy sau khi Áp dụng.</p>
+
+      <div class="sec-h" style="margin-top:12px"><h2>Trong game</h2><button class="reset" id="rsGame" title="Về mặc định">↺</button></div>
       <div class="formgrid">
         <label for="gName">Tên</label><input id="gName" spellcheck="false">
-        <label for="gZ">Lớp</label><select id="gZ"><option>Z_EFFECTS</option><option>Z_OBJECTS</option><option>Z_DECALS</option></select>
-        <label for="gLoop">Lặp</label><span><input type="checkbox" id="gLoop"> <span class="small muted">số lần chạy</span> <input type="number" id="gRuns" min="1" max="99" style="width:56px"></span>
+        <label for="gZ">Lớp vẽ</label><select id="gZ"><option value="Z_EFFECTS">trên cùng (hiệu ứng)</option><option value="Z_OBJECTS">cùng lớp nhân vật</option><option value="Z_DECALS">dưới đất</option></select>
+        <label for="gLoop">Lặp lại</label><span><input type="checkbox" id="gLoop"> <input type="number" id="gRuns" min="1" max="99" style="width:56px" aria-label="Số lần chạy"> <span class="small muted">lần</span></span>
       </div>
+      <div class="bar local-only">
+        <button id="btnUninstall">Gỡ khỏi game</button>
+        <label class="small muted">Chơi thử ở level <input type="number" id="level" value="3" min="1" max="30" style="width:56px"></label>
+      </div>
+      <div class="bar"><button id="rsAll">↺ Về mặc định tất cả</button></div>
+    </details>
 
-      <div class="bar" style="margin-top:14px">
-        <button id="btnSave">Lưu</button>
-        <button id="btnRender" class="primary">Render</button>
-        <button id="btnInstall">Cài vào game</button>
-        <button id="btnUninstall">Gỡ</button>
-      </div>
-      <div class="bar">
-        <button id="btnPlayGame">Chơi thử trong game</button>
-        <label class="small">level <input type="number" id="level" value="3" min="1" max="30" style="width:56px"></label>
-      </div>
-      <p class="muted small" style="margin:6px 0">Trong game: <b>F6</b> chọn hiệu ứng, <b>F7</b> phát tại chuột, <b>Shift+F7</b> lật. “Chơi thử” bật demo: mọi hiệu ứng đã cài phát giữa màn hình mỗi 2 giây.</p>
-      <h2>Nhật ký</h2>
-      <pre id="log"></pre>
-    </div>
+    <p class="hint static-only">Chỉnh xong bấm <b>Lưu cho Claude</b>, rồi nhắn Claude “áp dụng công thức Fx Studio” để cài vào game.</p>
+    <p class="hint local-only">Trong game: <b>F7</b> phát hiệu ứng tại chuột, <b>Shift+F7</b> nhìn sang trái, <b>F6</b> đổi hiệu ứng.</p>
+    <details class="adv"><summary>Nhật ký</summary><pre id="log"></pre></details>
   </aside>
 </main>
 
 <dialog id="dlgImport">
-  <h2 style="margin-top:0">Nhập sprite sheet</h2>
-  <div class="formgrid">
+  <h2 style="margin-top:0;font-size:16px">Nhập sprite sheet</h2>
+  <div class="formgrid" style="grid-template-columns:110px 1fr">
     <label for="impFile">Ảnh</label><input type="file" id="impFile" accept="image/*">
-    <label for="impId">Mã (id)</label><input id="impId" placeholder="fire_breath" spellcheck="false">
-    <label for="impGrid">Lưới</label><input id="impGrid" placeholder="tự tìm (vd 3x3)">
+    <label for="impId">Tên (id)</label><input id="impId" placeholder="fire_breath" spellcheck="false">
+    <label for="impGrid">Lưới</label><input id="impGrid" placeholder="tự tìm (ví dụ 3x3)">
     <label for="impBg">Nền</label><select id="impBg"><option value="auto">tự nhận</option><option value="black">đen</option><option value="alpha">trong suốt</option><option value="magenta">magenta</option></select>
-    <label for="impForce">Ghi đè</label><label class="small"><input type="checkbox" id="impForce"> nhập phiên bản sheet mới cho id đã có (giữ cài đặt)</label>
+    <label for="impForce">Ghi đè</label><label class="small"><input type="checkbox" id="impForce"> sheet mới cho tên đã có (giữ cài đặt)</label>
   </div>
   <img id="impPrev" alt="" hidden>
-  <div class="bar" style="justify-content:flex-end">
-    <button id="impCancel">Hủy</button>
-    <button id="impGo" class="primary">Nhập</button>
-  </div>
+  <div class="bar" style="justify-content:flex-end"><button id="impCancel">Hủy</button><button id="impGo" class="primary">Nhập</button></div>
 </dialog>
+<div id="toast" role="status"></div>
 
 <script>
 const $ = s => document.querySelector(s);
 const FPS = 30;
+const STATIC = !!window.FX_STATIC;   // the published Artifact: data.json beside the page, recipes saved to db
+const HERO_FEET = [0.5, 0.9];        // KR1 hero anchor (0.5, 0.1 from the bottom) in image fractions from the top
+const DEFAULT_LIFT = 32;             // default: the effect's centre this many px above the feet (about chest height)
+const EDITABLE = ['bg', 'black_floor', 'frames', 'scale', 'anchor', 'mode', 'color', 'vector', 'game'];
 const PRESETS = [
   ['Gốc', {hue: 0, saturation: 1, brightness: 1, alpha: 1}],
   ['Băng', {hue: 180, saturation: 0.9, brightness: 1.05, alpha: 1}],
@@ -191,22 +232,35 @@ const PRESETS = [
   ['Thánh', {hue: 12, saturation: 0.45, brightness: 1.12, alpha: 1}],
   ['Bóng tối', {hue: -110, saturation: 0.7, brightness: 0.55, alpha: 1}],
 ];
-let S = {id: null, info: null, recipe: null, cellImgs: [], tinted: [], rendered: [], view: 'quick', playing: true, gi: 0, dirty: false};
-let bgImg = null, heroImg = null;
+let S = {id: null, info: null, recipe: null, base: null, cellImgs: [], tinted: [], box: null, vec: null, playing: true, gi: 0, drafts: {}};
+let bgImg = null, heroImg = null, DATA = null, db = null;
 
+// ---------------------------------------------------------------- small helpers
+const clone = o => JSON.parse(JSON.stringify(o));
+const pick = r => { const o = {}; for (const k of EDITABLE) o[k] = k === 'game' ? {name: r.game.name, z: r.game.z || 'Z_EFFECTS', loop: !!r.game.loop, runs: r.game.runs || 1} : r[k]; return JSON.stringify(o); };
+const dirty = () => S.recipe && pick(S.recipe) !== pick(S.base);
 function log(lines, cls) {
   const el = $('#log');
   for (const l of [].concat(lines || [])) { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = l; el.appendChild(d); }
   el.scrollTop = el.scrollHeight;
 }
+let toastT = 0;
+function toast(msg, bad) { const t = $('#toast'); t.textContent = msg; t.className = 'show' + (bad ? ' bad' : ''); clearTimeout(toastT); toastT = setTimeout(() => t.className = '', bad ? 6000 : 2600); log(msg, bad ? 'l-bad' : 'l-ok'); }
+const loadImg = src => new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = src; });
+
 async function api(path, body) {
+  if (STATIC) return staticApi(path);
   const r = await fetch(path, body === undefined ? {} : {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
   const j = await r.json();
   if (j.log) log(j.log);
-  if (!j.ok) { log(j.error || 'lỗi', 'bad'); throw new Error(j.error); }
+  if (!j.ok) { toast(j.error || 'Có lỗi', true); throw new Error(j.error); }
   return j;
 }
-const loadImg = src => new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = src; });
+async function staticApi(path) {
+  if (!DATA) DATA = await (await fetch('data.json')).json();
+  if (path === '/api/list') return {ok: true, fx: DATA.fx.map(f => ({id: f.id, drawings: f.recipe.frames.length}))};
+  return {ok: true, ...clone(DATA.fx.find(x => x.id === decodeURIComponent(path.split('/')[3])))};
+}
 
 // ---------------------------------------------------------------- colour: same maths as scripts/fx_studio.py recolor()
 function recolorCanvas(img, c) {
@@ -230,186 +284,230 @@ function recolorCanvas(img, c) {
   return cv;
 }
 let tintTimer = 0;
-function retint() { clearTimeout(tintTimer); tintTimer = setTimeout(() => { S.tinted = S.cellImgs.map(i => recolorCanvas(i, S.recipe.color)); drawStrips(); }, 60); }
+function retint() { clearTimeout(tintTimer); tintTimer = setTimeout(() => { S.tinted = S.cellImgs.map(i => recolorCanvas(i, S.recipe.color)); drawStrips(); }, 50); }
+
+// ---------------------------------------------------------------- position: anchor <-> offset of the effect's centre from the hero's feet
+function contentBox(imgs) {   // union of what is drawn in every cell, in cell px
+  let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
+  for (const img of imgs) {
+    const cv = document.createElement('canvas'); cv.width = img.width; cv.height = img.height;
+    const g = cv.getContext('2d'); g.drawImage(img, 0, 0);
+    const p = g.getImageData(0, 0, img.width, img.height).data;
+    for (let y = 0; y < img.height; y++) for (let x = 0; x < img.width; x++) if (p[(y * img.width + x) * 4 + 3] > 25) {
+      if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+    }
+  }
+  return x1 < 0 ? [0, 0, imgs[0]?.width || 1, imgs[0]?.height || 1] : [x0, y0, x1 + 1, y1 + 1];
+}
+function offsetOf(r) {   // game px (fullhd): right +, up +
+  const [cw, ch] = S.info.cell_size, b = S.box, cx = (b[0] + b[2]) / 2, cy = (b[1] + b[3]) / 2;
+  return {dx: (cx - r.anchor[0] * cw) * r.scale, dy: -(cy - r.anchor[1] * ch) * r.scale};
+}
+function setOffset(r, dx, dy) {
+  const [cw, ch] = S.info.cell_size, b = S.box, cx = (b[0] + b[2]) / 2, cy = (b[1] + b[3]) / 2;
+  r.anchor = [+((cx - dx / r.scale) / cw).toFixed(4), +((cy + dy / r.scale) / ch).toFixed(4)];
+}
+
+// ---------------------------------------------------------------- defaults
+function defaults() {
+  const r = clone(S.recipe);
+  r.scale = 1; r.color = {hue: 0, saturation: 1, brightness: 1, alpha: 1};
+  r.frames = S.cellImgs.map((_, i) => ({cell: i, hold: 2}));
+  setOffset(r, 0, DEFAULT_LIFT);
+  r.mode = 'raster'; r.vector = {colors: 4, core: 0.6, glow_radius: 7, glow_strength: 1.5, glow_color: null};
+  r.black_floor = 0.05; r.bg = S.base.bg;
+  r.game = {...r.game, name: 'fx_' + S.id, z: 'Z_EFFECTS', loop: false, runs: 1};
+  return r;
+}
+function resetPart(part) {
+  const d = defaults(), r = S.recipe;
+  if (part === 'pos') { const o = offsetOf(d); r.scale = 1; setOffset(r, o.dx, o.dy); }
+  if (part === 'color') { r.color = d.color; retint(); }
+  if (part === 'frames') { r.frames = d.frames; S.gi = 0; }
+  if (part === 'mode') { r.mode = d.mode; r.vector = d.vector; }
+  if (part === 'bg') { r.bg = d.bg; r.black_floor = d.black_floor; }
+  if (part === 'game') r.game = d.game;
+  if (part === 'all') { S.recipe = d; retint(); S.gi = 0; }
+  refresh();
+}
+$('#rsPos').onclick = () => resetPart('pos');
+$('#rsColor').onclick = () => resetPart('color');
+$('#rsFrames').onclick = () => resetPart('frames');
+$('#rsMode').onclick = () => resetPart('mode');
+$('#rsBg').onclick = () => resetPart('bg');
+$('#rsGame').onclick = () => resetPart('game');
+$('#rsAll').onclick = () => resetPart('all');
 
 // ---------------------------------------------------------------- timeline
-function sequence() {   // quick view: one entry per game frame -> index into recipe.frames
-  const out = [];
-  S.recipe.frames.forEach((f, k) => { for (let j = 0; j < Math.max(1, f.hold | 0); j++) out.push(k); });
-  return out;
-}
-function frameCount() { return S.view === 'render' ? S.rendered.length : sequence().length; }
+function sequence() { const out = []; S.recipe.frames.forEach((f, k) => { for (let j = 0; j < Math.max(1, f.hold | 0); j++) out.push(k); }); return out; }
 
 // ---------------------------------------------------------------- stage
 const stage = $('#stage'), ctx = stage.getContext('2d');
-const PIVOT = [0.42, 0.55];   // where the entity stands on the stage (fraction of the visible map)
-let lastRect = null;
+const PIVOT = [0.42, 0.66];
+const zoom = () => +$('#zoom').value;
+function vectorShown() { return S.recipe.mode === 'vector' && S.vec && S.vec.imgs.length; }
 function draw() {
   if (!S.recipe) return;
-  const z = +$('#zoom').value, W = stage.width, H = stage.height;
+  const z = zoom(), W = stage.width, H = stage.height, px = W * PIVOT[0], py = H * PIVOT[1], flip = $('#optFlip').checked;
   ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
   if (bgImg) { const sw = W / z, sh = H / z; ctx.drawImage(bgImg, (bgImg.width - sw) / 2, (bgImg.height - sh) / 2, sw, sh, 0, 0, W, H); }
-  const px = W * PIVOT[0], py = H * PIVOT[1], flip = $('#optFlip').checked;
-  if ($('#optHero').checked && heroImg) {   // a KR1 hero beside the pivot, for size
-    const hw = heroImg.width * z, hh = heroImg.height * z;
-    ctx.save(); ctx.translate(px, 0); if (flip) ctx.scale(-1, 1);
-    ctx.drawImage(heroImg, -hw + 18 * z, py - hh / 2, hw, hh); ctx.restore();
-  }
-  const n = frameCount(); if (!n) return;
-  const gi = S.gi % n;
-  let img, w, h, ax, ay;
-  if (S.view === 'render') {
-    img = S.rendered[gi]; const m = S.info.manifest;
-    if (!img || !m) return;
-    w = img.width * z; h = img.height * z; ax = m.anchor[0]; ay = 1 - m.anchor[1];
-  } else {
-    const f = S.recipe.frames[sequence()[gi]]; img = S.tinted[f.cell] || S.cellImgs[f.cell];
-    if (!img) return;
-    const [cw, ch] = S.info.cell_size;
-    w = cw * S.recipe.scale * z; h = ch * S.recipe.scale * z; [ax, ay] = S.recipe.anchor;
-  }
   ctx.save(); ctx.translate(px, py); if (flip) ctx.scale(-1, 1);
-  ctx.drawImage(img, -ax * w, -ay * h, w, h); ctx.restore();
-  lastRect = {x: flip ? px - (1 - ax) * w : px - ax * w, y: py - ay * h, w, h, flip};
-  ctx.strokeStyle = 'rgba(0,255,255,.85)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(px - 7, py + .5); ctx.lineTo(px + 8, py + .5); ctx.moveTo(px + .5, py - 7); ctx.lineTo(px + .5, py + 8); ctx.stroke();
-  const shown = S.view === 'render' ? `frame game ${gi + 1}/${n}` : `frame game ${gi + 1}/${n} · hình ${sequence()[gi] + 1}/${S.recipe.frames.length}`;
-  $('#frameInfo').textContent = `${shown} · ${(n / FPS).toFixed(2)} s`;
-  document.querySelectorAll('#strip .fr').forEach((el, k) => el.classList.toggle('cur', S.view === 'quick' && k === sequence()[gi]));
+  if ($('#optHero').checked && heroImg) { const hw = heroImg.width * z, hh = heroImg.height * z; ctx.drawImage(heroImg, -HERO_FEET[0] * hw, -HERO_FEET[1] * hh, hw, hh); }
+  const seq = sequence(), n = seq.length, gi = S.gi % Math.max(1, n);
+  const [cw, ch] = S.info.cell_size, w = cw * S.recipe.scale * z, h = ch * S.recipe.scale * z, [ax, ay] = S.recipe.anchor;
+  const img = vectorShown() ? S.vec.imgs[gi % S.vec.imgs.length] : (S.tinted[S.recipe.frames[seq[gi]]?.cell] || S.cellImgs[S.recipe.frames[seq[gi]]?.cell]);
+  if (img) ctx.drawImage(img, -ax * w, -ay * h, w, h);
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(80,240,255,.9)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(px - 8, py); ctx.lineTo(px + 8, py); ctx.moveTo(px, py - 8); ctx.lineTo(px, py + 8); ctx.stroke();
+  $('#frameInfo').textContent = `frame ${gi + 1}/${n} · hình ${seq[gi] + 1}/${S.recipe.frames.length} · ${(n / FPS).toFixed(2)} s`;
+  document.querySelectorAll('#strip .fr').forEach((el, k) => el.classList.toggle('cur', k === seq[gi]));
 }
 let acc = 0, last = performance.now();
 function tick(t) {
   const dt = Math.min(0.1, (t - last) / 1000); last = t;
-  if (S.playing && S.recipe) {
-    acc += dt;
-    while (acc >= 1 / FPS) {
-      acc -= 1 / FPS; S.gi++;
-      if (S.gi >= frameCount()) S.gi = 0;
-    }
-  }
+  if (S.playing && S.recipe) { acc += dt; const n = sequence().length; while (acc >= 1 / FPS) { acc -= 1 / FPS; S.gi = (S.gi + 1) % Math.max(1, n); } }
   draw(); requestAnimationFrame(tick);
 }
-stage.addEventListener('click', e => {   // the clicked point of the effect becomes its anchor
-  if (!lastRect || S.view !== 'quick') { if (S.view !== 'quick') log('Đặt neo trong chế độ Xem nhanh.'); return; }
-  const r = stage.getBoundingClientRect(), x = (e.clientX - r.left) * stage.width / r.width, y = (e.clientY - r.top) * stage.height / r.height;
-  let fx = (x - lastRect.x) / lastRect.w, fy = (y - lastRect.y) / lastRect.h;
-  if (lastRect.flip) fx = 1 - fx;
-  if (fx < 0 || fx > 1 || fy < 0 || fy > 1) return;
-  S.recipe.anchor = [+fx.toFixed(4), +fy.toFixed(4)]; markDirty(); syncForm();
+// drag anywhere on the stage: the effect follows the pointer, relative to the hero's feet
+let drag = null;
+function stagePt(e) { const r = stage.getBoundingClientRect(); return [(e.clientX - r.left) * stage.width / r.width, (e.clientY - r.top) * stage.height / r.height]; }
+stage.addEventListener('pointerdown', e => { if (!S.recipe) return; stage.setPointerCapture(e.pointerId); drag = {pt: stagePt(e), off: offsetOf(S.recipe)}; stage.classList.add('dragging'); });
+stage.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const [x, y] = stagePt(e), z = zoom(), sx = $('#optFlip').checked ? -1 : 1;
+  setOffset(S.recipe, drag.off.dx + sx * (x - drag.pt[0]) / z, drag.off.dy - (y - drag.pt[1]) / z);
+  syncPos(); status();
 });
+const endDrag = () => { if (!drag) return; drag = null; stage.classList.remove('dragging'); refresh(); };
+stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
 
 // ---------------------------------------------------------------- frames strip
 function thumb(cell) {
-  const cv = document.createElement('canvas'); cv.width = 100; cv.height = 100;
+  const cv = document.createElement('canvas'); cv.width = 104; cv.height = 104;
   const img = S.tinted[cell] || S.cellImgs[cell];
-  if (img) { const k = Math.min(100 / img.width, 100 / img.height); const g = cv.getContext('2d'); g.drawImage(img, (100 - img.width * k) / 2, (100 - img.height * k) / 2, img.width * k, img.height * k); }
+  if (img) { const k = Math.min(104 / img.width, 104 / img.height); cv.getContext('2d').drawImage(img, (104 - img.width * k) / 2, (104 - img.height * k) / 2, img.width * k, img.height * k); }
   return cv;
 }
 function drawStrips() {
   const strip = $('#strip'); strip.innerHTML = '';
   S.recipe.frames.forEach((f, k) => {
     const d = document.createElement('div'); d.className = 'fr';
-    const cv = thumb(f.cell); cv.title = 'Xem hình này'; cv.onclick = () => { S.playing = false; S.view = 'quick'; setView(); S.gi = sequence().indexOf(k); updatePlay(); };
+    const cv = thumb(f.cell); cv.title = 'Dừng ở hình này'; cv.onclick = () => { S.playing = false; updatePlay(); S.gi = sequence().indexOf(k); };
     d.appendChild(cv);
-    const lab = document.createElement('div'); lab.className = 'small muted'; lab.textContent = `#${k + 1} · ô ${f.cell + 1}`; d.appendChild(lab);
+    const lab = document.createElement('div'); lab.className = 'lab'; lab.textContent = `hình ${k + 1} · ô ${f.cell + 1}`; d.appendChild(lab);
     const ctl = document.createElement('div'); ctl.className = 'ctl';
     const b = (t, title, fn) => { const x = document.createElement('button'); x.textContent = t; x.title = title; x.onclick = fn; ctl.appendChild(x); };
-    b('◀', 'Lên trước', () => move(k, -1));
-    const hold = document.createElement('input'); hold.type = 'number'; hold.min = 1; hold.max = 60; hold.value = f.hold; hold.title = 'Giữ (frame game)';
-    hold.onchange = () => { f.hold = Math.max(1, Math.min(60, hold.value | 0)); markDirty(); syncSeq(); };
+    b('◀', 'Đưa lên trước', () => move(k, -1));
+    const hold = document.createElement('input'); hold.type = 'number'; hold.min = 1; hold.max = 60; hold.value = f.hold; hold.title = 'Giữ bao nhiêu frame (game chạy 30 frame/giây)';
+    hold.onchange = () => { f.hold = Math.max(1, Math.min(60, hold.value | 0)); refresh(); };
     ctl.appendChild(hold);
-    b('▶', 'Ra sau', () => move(k, 1));
-    b('✕', 'Bỏ hình này', () => { if (S.recipe.frames.length > 1) { S.recipe.frames.splice(k, 1); changed(); } });
+    b('▶', 'Đưa ra sau', () => move(k, 1));
+    b('✕', 'Bỏ hình này', () => { if (S.recipe.frames.length > 1) { S.recipe.frames.splice(k, 1); S.gi = 0; refresh(); } });
     d.appendChild(ctl); strip.appendChild(d);
   });
   const un = $('#unused'); un.innerHTML = '';
   const used = new Set(S.recipe.frames.map(f => f.cell));
   S.cellImgs.forEach((_, c) => {
     if (used.has(c)) return;
-    const d = document.createElement('div'); d.className = 'fr unused';
-    d.appendChild(thumb(c));
-    const bt = document.createElement('button'); bt.textContent = `+ ô ${c + 1}`; bt.onclick = () => { S.recipe.frames.push({cell: c, hold: 2}); changed(); };
+    const d = document.createElement('div'); d.className = 'fr unused'; d.appendChild(thumb(c));
+    const bt = document.createElement('button'); bt.textContent = `+ thêm ô ${c + 1}`; bt.onclick = () => { S.recipe.frames.push({cell: c, hold: 2}); refresh(); };
     d.appendChild(bt); un.appendChild(d);
   });
-  if (!un.children.length) un.innerHTML = '<span class="muted small">Mọi ô đều đang dùng. Muốn dùng lại một ô (ví dụ ping-pong), sửa dòng “Thứ tự”.</span>';
-  syncSeq();
+  if (!un.children.length) un.innerHTML = '<span class="small muted">Mọi ô đều đang dùng.</span>';
+  $('#seqText').value = S.recipe.frames.map(f => `${f.cell + 1}:${f.hold}`).join(' ');
+  const n = sequence().length;
+  $('#framesTitle').textContent = `Các hình · ${S.recipe.frames.length} hình · ${(n / FPS).toFixed(2)} giây`;
+  const holds = new Set(S.recipe.frames.map(f => f.hold));
+  document.querySelectorAll('#speedSeg button').forEach(b => b.classList.toggle('on', holds.size === 1 && holds.has(+b.dataset.hold)));
 }
-function move(k, d) { const j = k + d, F = S.recipe.frames; if (j < 0 || j >= F.length) return; [F[k], F[j]] = [F[j], F[k]]; changed(); }
-function changed() { markDirty(); S.gi = 0; drawStrips(); }
-function syncSeq() { $('#seqText').value = S.recipe.frames.map(f => `${f.cell + 1}:${f.hold}`).join(' '); }
+function move(k, d) { const j = k + d, F = S.recipe.frames; if (j < 0 || j >= F.length) return; [F[k], F[j]] = [F[j], F[k]]; refresh(); }
 $('#btnSeq').onclick = () => {
   const n = S.cellImgs.length, out = [];
   for (const t of $('#seqText').value.trim().split(/[\s,]+/)) {
-    const m = t.match(/^(\d+)(?::(\d+))?$/); if (!m) { log(`không hiểu “${t}” (dạng ô:giữ, ví dụ 3:2)`, 'bad'); return; }
-    const c = +m[1] - 1; if (c < 0 || c >= n) { log(`không có ô ${m[1]} (sheet có ${n} ô)`, 'bad'); return; }
+    const m = t.match(/^(\d+)(?::(\d+))?$/); if (!m) { toast(`Không hiểu “${t}”: viết dạng ô:giữ, ví dụ 3:2`, true); return; }
+    const c = +m[1] - 1; if (c < 0 || c >= n) { toast(`Không có ô ${m[1]} (sheet có ${n} ô)`, true); return; }
     out.push({cell: c, hold: Math.max(1, Math.min(60, +(m[2] || 2)))});
   }
-  if (out.length) { S.recipe.frames = out; changed(); }
+  if (out.length) { S.recipe.frames = out; S.gi = 0; refresh(); }
 };
-document.querySelectorAll('[data-hold]').forEach(b => b.onclick = () => { S.recipe.frames.forEach(f => f.hold = +b.dataset.hold); changed(); });
-$('#btnRev').onclick = () => { S.recipe.frames.reverse(); changed(); };
-$('#btnPing').onclick = () => { const F = S.recipe.frames; S.recipe.frames = F.concat(F.slice(1, -1).reverse().map(f => ({...f}))); changed(); };
+document.querySelectorAll('#speedSeg button').forEach(b => b.onclick = () => { S.recipe.frames.forEach(f => f.hold = +b.dataset.hold); refresh(); });
+$('#btnRev').onclick = () => { S.recipe.frames.reverse(); refresh(); };
+$('#btnPing').onclick = () => { const F = S.recipe.frames; S.recipe.frames = F.concat(F.slice(1, -1).reverse().map(f => ({...f}))); refresh(); };
 
-// ---------------------------------------------------------------- form
-const sliders = [['scale', 'scale', v => v.toFixed(2)], ['hue', 'color.hue', v => `${v}°`], ['sat', 'color.saturation', v => v.toFixed(2)],
-  ['bri', 'color.brightness', v => v.toFixed(2)], ['alp', 'color.alpha', v => v.toFixed(2)], ['floor', 'black_floor', v => v.toFixed(3)],
-  ['vColors', 'vector.colors', v => v], ['vCore', 'vector.core', v => v.toFixed(2)], ['vRad', 'vector.glow_radius', v => v],
-  ['vStr', 'vector.glow_strength', v => v.toFixed(2)]];
-const getp = (o, p) => p.split('.').reduce((a, k) => a[k], o);
-const setp = (o, p, v) => { const ks = p.split('.'); const l = ks.pop(); ks.reduce((a, k) => a[k], o)[l] = v; };
+// ---------------------------------------------------------------- panel
+const SLIDERS = [   // id, get, set, label
+  ['scale', r => Math.round(r.scale * 100), (r, v) => { const o = offsetOf(r); r.scale = v / 100; setOffset(r, o.dx, o.dy); }, v => v + '%'],
+  ['hue', r => r.color.hue, (r, v) => r.color.hue = v, v => v + '°'],
+  ['sat', r => Math.round(r.color.saturation * 100), (r, v) => r.color.saturation = v / 100, v => v + '%'],
+  ['bri', r => Math.round(r.color.brightness * 100), (r, v) => r.color.brightness = v / 100, v => v + '%'],
+  ['alp', r => Math.round(r.color.alpha * 100), (r, v) => r.color.alpha = v / 100, v => v + '%'],
+  ['floor', r => +(r.black_floor * 100).toFixed(1), (r, v) => r.black_floor = v / 100, v => v + '%'],
+  ['vColors', r => r.vector.colors, (r, v) => r.vector.colors = v, v => v],
+  ['vCore', r => Math.round(r.vector.core * 100), (r, v) => r.vector.core = v / 100, v => v + '%'],
+  ['vRad', r => r.vector.glow_radius, (r, v) => r.vector.glow_radius = v, v => v + ' px'],
+  ['vStr', r => Math.round(r.vector.glow_strength * 100), (r, v) => r.vector.glow_strength = v / 100, v => v + '%'],
+];
+for (const [id, , set, fmt] of SLIDERS) $('#' + id).addEventListener('input', e => {
+  set(S.recipe, +e.target.value); $('#' + id + 'Out').textContent = fmt(+e.target.value);
+  if (['hue', 'sat', 'bri', 'alp'].includes(id)) { retint(); syncPresets(); }
+  if (id === 'scale') syncPos();
+  status(); vecBanner();
+});
+function syncPos() {
+  const o = offsetOf(S.recipe), [cw, ch] = S.info.cell_size, w1 = Math.round(cw * S.recipe.scale), h1 = Math.round(ch * S.recipe.scale);
+  if (document.activeElement !== $('#dx')) $('#dx').value = Math.round(o.dx);
+  if (document.activeElement !== $('#dy')) $('#dy').value = Math.round(o.dy);
+  $('#sizeInfo').textContent = `Khung hiệu ứng ${w1}×${h1} px trong game (nhân vật cao khoảng 64 px).`;
+}
+$('#dx').onchange = () => { setOffset(S.recipe, +$('#dx').value || 0, offsetOf(S.recipe).dy); refresh(); };
+$('#dy').onchange = () => { setOffset(S.recipe, offsetOf(S.recipe).dx, +$('#dy').value || 0); refresh(); };
+function syncPresets() { const c = JSON.stringify(S.recipe.color); document.querySelectorAll('#presets button').forEach((b, i) => b.classList.toggle('on', JSON.stringify(PRESETS[i][1]) === c)); }
+PRESETS.forEach(([name, c]) => { const b = document.createElement('button'); b.textContent = name; b.onclick = () => { S.recipe.color = {...c}; retint(); refresh(); }; $('#presets').appendChild(b); });
+document.querySelectorAll('#modeSeg button').forEach(b => b.onclick = () => { S.recipe.mode = b.dataset.m; refresh(); });
+$('#bg').onchange = () => { S.recipe.bg = $('#bg').value; refresh(); };
+$('#gName').onchange = () => { S.recipe.game.name = $('#gName').value.trim(); refresh(); };
+$('#gZ').onchange = () => { S.recipe.game.z = $('#gZ').value; refresh(); };
+$('#gLoop').onchange = () => { S.recipe.game.loop = $('#gLoop').checked; refresh(); };
+$('#gRuns').onchange = () => { S.recipe.game.runs = Math.max(1, $('#gRuns').value | 0); refresh(); };
+
 function syncForm() {
   const r = S.recipe;
-  for (const [id, p, fmt] of sliders) { $('#' + id).value = getp(r, p); $('#' + id + 'Out').textContent = fmt(+getp(r, p)); }
-  $('#ax').value = r.anchor[0]; $('#ay').value = r.anchor[1];
+  for (const [id, get, , fmt] of SLIDERS) { const v = get(r); $('#' + id).value = v; $('#' + id + 'Out').textContent = fmt(v); }
+  syncPos(); syncPresets();
   $('#bg').value = r.bg;
-  $('#vAuto').checked = !r.vector.glow_color; $('#vCol').value = r.vector.glow_color || '#ff4010'; $('#vCol').disabled = !r.vector.glow_color;
   $('#gName').value = r.game.name; $('#gZ').value = r.game.z || 'Z_EFFECTS'; $('#gLoop').checked = !!r.game.loop; $('#gRuns').value = r.game.runs || 1;
   document.querySelectorAll('#modeSeg button').forEach(b => b.classList.toggle('on', b.dataset.m === r.mode));
-  $('#vecBox').style.display = r.mode === 'vector' ? '' : 'none';
-  $('#modeHint').textContent = r.mode === 'vector'
-    ? 'Lõi phẳng được trace bằng vtracer, glow vẽ lại. Xem nhanh vẫn là ô gốc; bấm Render rồi chọn “Bản render” để xem kết quả vector.'
-    : 'Giữ nguyên nét vẽ và glow mềm của sheet; chỉ cắt, bỏ nền, đổi màu, đổi cỡ.';
-  const [cw, ch] = S.info.cell_size, w1 = Math.round(cw * r.scale), h1 = Math.round(ch * r.scale);
-  $('#sizeInfo').textContent = `Khung trong game ${w1}×${h1} px (fullhd) · ipad ${Math.round(w1 * 768 / 1080)}×${Math.round(h1 * 768 / 1080)} · @2x ${w1 * 2}×${h1 * 2}`;
+  $('#vecBox').hidden = r.mode !== 'vector';
 }
-for (const [id, p, fmt] of sliders) $('#' + id).addEventListener('input', e => {
-  const v = +e.target.value; setp(S.recipe, p, v); $('#' + id + 'Out').textContent = fmt(v); markDirty();
-  if (p.startsWith('color.')) retint();
-  if (p === 'scale') syncForm();
-});
-$('#ax').onchange = () => { S.recipe.anchor[0] = Math.max(0, Math.min(1, +$('#ax').value)); markDirty(); };
-$('#ay').onchange = () => { S.recipe.anchor[1] = Math.max(0, Math.min(1, +$('#ay').value)); markDirty(); };
-$('#bg').onchange = () => { S.recipe.bg = $('#bg').value; markDirty(); log('Nền đổi: bấm Lưu để cắt lại các ô.'); };
-$('#floor').addEventListener('change', () => log('Ngưỡng đen đổi: bấm Lưu để cắt lại các ô.'));
-$('#vAuto').onchange = () => { S.recipe.vector.glow_color = $('#vAuto').checked ? null : $('#vCol').value; markDirty(); syncForm(); };
-$('#vCol').oninput = () => { S.recipe.vector.glow_color = $('#vCol').value; markDirty(); };
-$('#gName').onchange = () => { S.recipe.game.name = $('#gName').value.trim(); markDirty(); };
-$('#gZ').onchange = () => { S.recipe.game.z = $('#gZ').value; markDirty(); };
-$('#gLoop').onchange = () => { S.recipe.game.loop = $('#gLoop').checked; markDirty(); };
-$('#gRuns').onchange = () => { S.recipe.game.runs = Math.max(1, $('#gRuns').value | 0); markDirty(); };
-document.querySelectorAll('#modeSeg button').forEach(b => b.onclick = () => { S.recipe.mode = b.dataset.m; markDirty(); syncForm(); });
-PRESETS.forEach(([name, c]) => { const b = document.createElement('button'); b.textContent = name; b.onclick = () => { S.recipe.color = {...c}; markDirty(); syncForm(); retint(); }; $('#presets').appendChild(b); });
-
-function markDirty(v = true) { S.dirty = v; status(); }
+function vecBanner() {
+  const r = S.recipe, show = r.mode === 'vector';
+  $('#vecBanner').hidden = !show;
+  if (!show) return;
+  const fresh = S.vec && S.vec.key === vecKey(r);
+  $('#vecText').textContent = !S.vec ? (STATIC ? 'Kiểu vector chỉ xem được trên bản chạy trên máy (fx_studio.bat). Khung xem đang hiện nét gốc.' : 'Chưa có xem trước vector: khung xem đang hiện nét gốc.')
+    : fresh ? 'Đang xem nét vector, đúng với cài đặt hiện tại.' : 'Màu hoặc nét đã đổi sau lần tạo xem trước vector: bấm để cập nhật.';
+  $('#btnVecPreview').hidden = fresh;
+}
+const vecKey = r => JSON.stringify([r.color, r.vector, r.frames, r.bg, r.black_floor]);
 function status() {
-  const el = $('#status'), r = S.recipe; if (!r) { el.textContent = '—'; return; }
-  const inst = r.game.installed, stale = S.info.stale;
-  el.className = 'pill' + (S.dirty ? ' warn' : inst ? ' on' : '');
-  el.textContent = S.dirty ? 'chưa lưu' : (!S.info.manifest ? 'chưa render' : stale ? 'cần render lại' : inst ? 'đã cài vào game' : 'đã render');
-  $('#btnUninstall').disabled = !inst;
+  // "in game" = installed AND the game's frames were rendered from the saved recipe (not stale)
+  const el = $('#state'), d = dirty(), inGame = STATIC || (S.base.game.installed && S.info.manifest && !S.info.stale);
+  el.className = 'state ' + (d || !inGame ? 'warn' : 'ok');
+  el.textContent = d ? 'Có thay đổi chưa áp dụng' : (STATIC ? 'Đã lưu' : inGame ? 'Đã áp dụng vào game' : 'Đã lưu, chưa áp dụng vào game');
+  $('#btnRevert').disabled = !d;
+  $('#btnApply').disabled = !d && inGame;
+  $('#btnShare').disabled = !d;
+  $('#btnUninstall').disabled = !S.base.game.installed;
 }
+function refresh() { syncForm(); drawStrips(); status(); vecBanner(); }
 
-// ---------------------------------------------------------------- views and playback
-function setView() {
-  document.querySelectorAll('#viewSeg button').forEach(b => b.classList.toggle('on', b.dataset.v === S.view));
-  if (S.view === 'render' && !S.rendered.length) log('Chưa có bản render: bấm Render.');
-}
-document.querySelectorAll('#viewSeg button').forEach(b => b.onclick = () => { S.view = b.dataset.v; S.gi = 0; setView(); });
-function updatePlay() { $('#btnPlay').textContent = S.playing ? '⏸ Dừng' : '▶ Chạy'; }
+// ---------------------------------------------------------------- playback controls
+function updatePlay() { $('#btnPlay').textContent = S.playing ? '⏸' : '▶'; $('#btnPlay').title = (S.playing ? 'Dừng' : 'Chạy') + ' (Space)'; }
 $('#btnPlay').onclick = () => { S.playing = !S.playing; updatePlay(); };
-$('#btnPrev').onclick = () => { S.playing = false; updatePlay(); S.gi = (S.gi - 1 + frameCount()) % frameCount(); };
-$('#btnNext').onclick = () => { S.playing = false; updatePlay(); S.gi = (S.gi + 1) % frameCount(); };
+$('#btnPrev').onclick = () => { S.playing = false; updatePlay(); const n = sequence().length; S.gi = (S.gi - 1 + n) % n; };
+$('#btnNext').onclick = () => { S.playing = false; updatePlay(); S.gi = (S.gi + 1) % sequence().length; };
 addEventListener('keydown', e => {
   if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
   if (e.code === 'Space') { e.preventDefault(); $('#btnPlay').click(); }
@@ -417,45 +515,69 @@ addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') $('#btnNext').click();
 });
 
-// ---------------------------------------------------------------- server actions
+// ---------------------------------------------------------------- open, apply, revert
 async function openFx(id) {
+  if (S.id && dirty()) S.drafts[S.id] = S.recipe;   // switching effects keeps unsaved edits for this visit
   const j = await api('/api/fx/' + encodeURIComponent(id));
-  S.id = id; S.info = j; S.recipe = structuredClone(j.recipe); S.gi = 0;
-  $('#fxSel').value = id;
-  S.cellImgs = await Promise.all(j.cells.map(u => loadImg(u + '?t=' + Date.now())));
+  S.id = id; S.info = j;
+  S.cellImgs = await Promise.all(j.cells.map(u => loadImg(STATIC ? u : u + '?t=' + Date.now())));
+  S.box = contentBox(S.cellImgs);
+  S.base = clone(await savedRecipe(id) || j.recipe);
+  S.recipe = clone(S.drafts[id] || S.base); delete S.drafts[id];
   S.tinted = S.cellImgs.map(i => recolorCanvas(i, S.recipe.color));
-  S.rendered = await Promise.all(j.rendered.map(u => loadImg(u)));
-  markDirty(false); syncForm(); drawStrips(); setView();
+  S.vec = null;
+  if (S.base.mode === 'vector' && j.rendered.length && !j.stale) S.vec = {imgs: await Promise.all(j.rendered.map(loadImg)), key: vecKey(S.base)};
+  S.gi = 0; $('#fxSel').value = id; refresh();
   try { localStorage.setItem('fxstudio.last', id); } catch (e) {}
 }
-async function afterServer(j) {
-  S.info = j; S.recipe = structuredClone(j.recipe);
+async function busy(btn, fn) { const t = btn.textContent; btn.disabled = true; btn.textContent = '…'; try { await fn(); } catch (e) {} finally { btn.textContent = t; status(); } }
+$('#btnRevert').onclick = () => { S.recipe = clone(S.base); S.tinted = S.cellImgs.map(i => recolorCanvas(i, S.recipe.color)); S.gi = 0; refresh(); toast('Đã quay về bản đã áp dụng'); };
+$('#btnApply').onclick = e => busy(e.target, async () => {
+  const j = await api('/api/apply/' + S.id, {recipe: S.recipe});
+  S.info = j; S.base = clone(j.recipe); S.recipe = clone(j.recipe);
+  if (S.base.mode === 'vector' && j.rendered.length) S.vec = {imgs: await Promise.all(j.rendered.map(loadImg)), key: vecKey(S.base)};
   S.cellImgs = await Promise.all(j.cells.map(u => loadImg(u + '?t=' + Date.now())));
   S.tinted = S.cellImgs.map(i => recolorCanvas(i, S.recipe.color));
-  S.rendered = await Promise.all(j.rendered.map(u => loadImg(u)));
-  markDirty(false); syncForm(); drawStrips(); refreshList();
-}
-async function busy(btn, fn) { const t = btn.textContent; btn.disabled = true; btn.textContent = '…'; try { await fn(); } catch (e) {} finally { btn.disabled = false; btn.textContent = t; status(); } }
-$('#btnSave').onclick = e => busy(e.target, async () => { await afterServer(await api('/api/save/' + S.id, {recipe: S.recipe})); log('Đã lưu fx.json', 'ok'); });
-$('#btnRender').onclick = e => busy(e.target, async () => { await afterServer(await api('/api/render/' + S.id, {recipe: S.recipe})); S.view = 'render'; S.gi = 0; setView(); });
-$('#btnInstall').onclick = e => busy(e.target, async () => {
-  if (S.dirty) await afterServer(await api('/api/save/' + S.id, {recipe: S.recipe}));
-  await afterServer(await api('/api/install/' + S.id, {})); log('Đã cài: chạy game (run.bat hoặc nút Chơi thử), vào level, F7 tại chuột.', 'ok');
+  refresh(); refreshList(); toast('Đã áp dụng vào game. Mở game, vào một level, bấm F7 để xem.');
 });
-$('#btnUninstall').onclick = e => busy(e.target, async () => { await afterServer(await api('/api/uninstall/' + S.id, {})); });
-$('#btnPlayGame').onclick = e => busy(e.target, async () => { await api('/api/play', {level: +$('#level').value}); });
+$('#btnVecPreview').onclick = e => busy(e.target, async () => {
+  const r = clone(S.recipe), j = await api('/api/preview/' + S.id, {recipe: r});
+  S.vec = {imgs: await Promise.all(j.frames.map(loadImg)), key: vecKey(r)}; vecBanner();
+});
+$('#btnUninstall').onclick = e => busy(e.target, async () => {
+  const j = await api('/api/uninstall/' + S.id, {}); S.base.game.installed = false; S.recipe.game.installed = false; S.info = j; refresh(); refreshList(); toast('Đã gỡ khỏi game');
+});
+$('#btnPlayGame').onclick = e => busy(e.target, async () => { await api('/api/play', {level: +$('#level').value || 3}); toast('Đang mở game: hiệu ứng đã áp dụng tự phát giữa màn hình mỗi 2 giây'); });
+
+// Artifact: recipes live in the page's db (recipes/<id>), Claude reads and applies them
+async function savedRecipe(id) {
+  if (!STATIC || !db) return null;
+  try {
+    const d = await db.doc('recipes/' + id).get();
+    if (!d.exists) return null;
+    const base = clone(DATA.fx.find(x => x.id === id).recipe), r = d.data().recipe || {};
+    for (const k of EDITABLE) if (k in r) base[k] = clone(r[k]);
+    return base;
+  } catch (e) { return null; }
+}
+$('#btnShare').onclick = e => busy(e.target, async () => {
+  if (!db) { toast('Trang chưa lưu được (cần đăng nhập và quyền chỉnh sửa). Công thức đã ghi vào Nhật ký để gửi Claude.', true); log(JSON.stringify({id: S.id, recipe: S.recipe})); return; }
+  try {
+    const recipe = {}; for (const k of EDITABLE) recipe[k] = S.recipe[k];
+    await db.doc('recipes/' + S.id).set({id: S.id, recipe, savedAt: Date.now()});
+    S.base = clone(S.recipe); status(); toast('Đã lưu. Nhắn Claude “áp dụng công thức Fx Studio” để cài vào game.');
+  } catch (err) { toast(err.code === 'invalid_argument' ? 'Bạn chỉ có quyền xem nên không lưu được.' : 'Không lưu được: ' + (err.message || err.code), true); }
+});
 
 async function refreshList() {
   const j = await api('/api/list');
-  $('#gameInfo').textContent = j.game_found ? `Game: ${j.game}` : `Không thấy game ở ${j.game} (đặt KR1_GAME_DIR)`;
-  const sel = $('#fxSel'), cur = S.id;
-  sel.innerHTML = j.fx.map(f => `<option value="${f.id}">${f.id} · ${f.drawings} hình · ${f.mode}${f.installed ? ' · trong game' : ''}</option>`).join('') || '<option value="">(chưa có hiệu ứng)</option>';
-  if (cur) sel.value = cur;
+  $('#fxSel').innerHTML = j.fx.map(f => `<option value="${f.id}">${f.id}</option>`).join('') || '<option value="">(chưa có hiệu ứng)</option>';
+  if (S.id) $('#fxSel').value = S.id;
   return j.fx;
 }
-$('#fxSel').onchange = async () => { if (S.dirty && !confirm('Có thay đổi chưa lưu. Bỏ qua?')) { $('#fxSel').value = S.id; return; } await openFx($('#fxSel').value); };
+$('#fxSel').onchange = () => openFx($('#fxSel').value);
 
-// ---------------------------------------------------------------- import
+// ---------------------------------------------------------------- import (local)
 const dlg = $('#dlgImport');
 $('#btnImport').onclick = () => dlg.showModal();
 $('#impCancel').onclick = () => dlg.close();
@@ -465,21 +587,25 @@ $('#impFile').onchange = () => {
   if (!$('#impId').value) $('#impId').value = f.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') || 'fx';
 };
 $('#impGo').onclick = e => busy(e.target, async () => {
-  const f = $('#impFile').files[0]; if (!f) { log('Chọn một ảnh.', 'bad'); return; }
+  const f = $('#impFile').files[0]; if (!f) { toast('Chọn một ảnh trước', true); return; }
   const data = await new Promise(ok => { const rd = new FileReader(); rd.onload = () => ok(rd.result); rd.readAsDataURL(f); });
   const j = await api('/api/import', {id: $('#impId').value.trim(), name: f.name, data, grid: $('#impGrid').value.trim(), bg: $('#impBg').value, force: $('#impForce').checked});
-  dlg.close(); await refreshList(); $('#fxSel').value = j.id; await openFx(j.id);
+  dlg.close(); await refreshList(); await openFx(j.id);
+  if (!S.base.game.installed) { resetPart('pos'); }   // a fresh sheet starts at full size, centred at chest height
+  toast('Đã nhập. Chỉnh rồi bấm Cài vào game.');
 });
 
 // ---------------------------------------------------------------- start
 (async () => {
-  [bgImg, heroImg] = await Promise.all([loadImg('/bg.png').catch(() => null), loadImg('/hero.png').catch(() => null)]);
+  if (STATIC) { document.body.classList.add('static'); try { db = await window.claude?.use?.('db') || null; } catch (e) { db = null; } }
+  const root = STATIC ? '' : '/';
+  [bgImg, heroImg] = await Promise.all([loadImg(root + 'bg.png').catch(() => null), loadImg(root + 'hero.png').catch(() => null)]);
   const list = await refreshList();
-  let last = null; try { last = localStorage.getItem('fxstudio.last'); } catch (e) {}
+  let lastId = null; try { lastId = localStorage.getItem('fxstudio.last'); } catch (e) {}
   const want = new URLSearchParams(location.search).get('fx');
-  const pick = list.find(f => f.id === want) || list.find(f => f.id === last) || list[0];
-  if (pick) await openFx(pick.id); else dlg.showModal();
-  if (new URLSearchParams(location.search).get('view') === 'render') { S.view = 'render'; setView(); }
+  const pickFx = list.find(f => f.id === want) || list.find(f => f.id === lastId) || list[0];
+  updatePlay();
+  if (pickFx) await openFx(pickFx.id); else if (!STATIC) dlg.showModal();
   requestAnimationFrame(tick);
 })();
 </script>
