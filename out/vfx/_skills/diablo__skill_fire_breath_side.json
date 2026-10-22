@@ -1,0 +1,19 @@
+{
+ "key": "diablo__skill_fire_breath_side",
+ "combo": "fx_diablo__skill_fire_breath_side_combo",
+ "title": "Diablo · Fire breath",
+ "character": "diablo",
+ "pose_id": "skill_fire_breath_side",
+ "anim": null,
+ "pivot": [
+  0.5,
+  0.88
+ ],
+ "length": 62,
+ "layers": [
+  [
+   "fx_diablo_fire_breath_1",
+   34
+  ]
+ ]
+}

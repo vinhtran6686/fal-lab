@@ -16,8 +16,16 @@ Không gọi model, không tốn phí.
    hưởng skill khác). Hiệu ứng mới bắt đầu tại đầu phát: dừng ở frame muốn gắn rồi thêm.
 4. **Panel phải** chỉnh tầng đang chọn: *Bắt đầu ở frame* (nút **Gắn vào hit**, **Tại đầu phát**), vị trí (kéo trên khung
    xem; số là px trong game từ chân nhân vật tới tâm hiệu ứng), kích thước, màu, các hình và tốc độ; mỗi mục có ↺.
-5. **Lưu**: lưu skill (mọi tầng, sheet, gói frame) vào app; sheet mới cũng vào thư viện. **Bỏ thay đổi** về bản đã lưu.
-6. Đưa vào game: nhắn Claude **“cài skill <nhân vật>__<pose> từ Fx Studio”**, hoặc **Tải gói .zip** rồi
+5. **Frame tuner** (chuột phải hoặc ⋯ trên tầng nhân vật): bấm hình để giữ/bỏ, số giữ (frame game) cho từng hình, ◎ đặt
+   frame hit; nút Giữ tất cả, Bỏ 1 trong 2, mọi hình giữ N frame, Về gốc; **Áp dụng**. Tầng hiệu ứng đang gắn vào hit tự dời
+   theo hit mới. Pose đã chỉnh lưu trong skill (`poseEdit`), tầng nhân vật ghi "đã chỉnh".
+6. Tốc độ hiệu ứng: Nhanh/Chuẩn/Chậm, ô **giữ N frame/hình** (số tùy ý 1-60), hoặc **kéo mép trái/phải** của tầng trên
+   timeline để co giãn (số giữ chia lại theo độ dài mới). Chuột phải trên tầng hiệu ứng: nhân đôi, đổi thứ tự, xóa.
+   Phím `,` `.` dời tầng đang chọn 1 frame.
+7. **Lưu**: lưu skill (mọi tầng, sheet, gói frame) vào app, cùng **một sheet gộp** = nhân vật + mọi tầng đang hiện, từng frame
+   game (frame giống nhau liên tiếp thành alias, điểm neo ở chân). Sheet mới cũng vào thư viện. **Bỏ thay đổi** về bản đã lưu.
+   @2x của sheet gộp phóng từ @1x (danh mục chỉ có frame nhân vật @1x).
+8. Đưa vào game: nhắn Claude **“cài skill <nhân vật>__<pose> từ Fx Studio”**, hoặc **Tải gói .zip** rồi
    `python scripts/fx_studio.py install-pack <key>.fxskill.zip`.
 
 Nhịp của pose lấy từ bảng animation của game khi nhân vật đã có trong game (mỗi frame atlas = 1 frame game, đúng như game
@@ -27,6 +35,12 @@ chạy; holy_commander chạy nhanh gấp đôi con số 15 fps trong meta.json)
 ### Trong game
 - `install-pack` cài từng tầng như một hiệu ứng (`fx_<nhân vật>_<pose>_<n>`), thêm một template phát chính animation của
   nhân vật (`fx_lab_pose_<n>`), bảng `FX_LAB_SKILLS` (tầng nào, frame nào), và nạp atlas của nhân vật ở mọi level.
+- Skill có sheet gộp (mọi skill có nhân vật, lưu từ bản này): game phát **chính sheet gộp** (`fx_<key>_combo`), nên pose đã chỉnh
+  và nhân vật chưa có trong game (Diablo) đều chạy đúng; không cần template pose hay atlas của nhân vật. Sheet gộp nằm trong
+  atlas `go_fx_lab` (nạp ở mọi level). Skill cũ không có sheet gộp vẫn phát pose của game + từng tầng.
+- Đã kiểm (2026-10-23): Diablo fire breath, frame tuner bỏ 2 hình trước hit (hit 38 -> 34, tầng lửa dời theo), co giãn lửa
+  18 -> 27 frame, save() thật (nơi lưu giả lập) -> `install-pack --skill` và cả bản zip -> trong game Diablo phun lửa (cả lật).
+  Sheet gộp: khung 232x187, 62 frame (36 hình), 1,5 MB.
 - Trong level: **F5** phát skill (pose + hiệu ứng đúng frame) tại chuột, **Ctrl+F5** đổi skill, **Shift** = nhìn sang
   trái; **F7 / F6** như trước cho từng hiệu ứng. `KR_FX_LAB_DEMO=1` phát mọi skill giữa màn hình.
 - Đã kiểm (2026-10-22): holy_commander radiant slash + lửa mẫu ở frame hit 26 → trong game lửa phun từ mũi kiếm đúng lúc chém.

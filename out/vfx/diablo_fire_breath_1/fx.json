@@ -1,0 +1,71 @@
+{
+ "version": 1,
+ "id": "diablo_fire_breath_1",
+ "pack": true,
+ "title": "Lửa mẫu",
+ "source": "app pack",
+ "mode": "raster",
+ "bg": "black",
+ "black_floor": 0.05,
+ "grid": [
+  3,
+  3
+ ],
+ "cells": [],
+ "frames": [
+  {
+   "cell": 0,
+   "hold": 3
+  },
+  {
+   "cell": 1,
+   "hold": 3
+  },
+  {
+   "cell": 2,
+   "hold": 3
+  },
+  {
+   "cell": 3,
+   "hold": 3
+  },
+  {
+   "cell": 4,
+   "hold": 3
+  },
+  {
+   "cell": 5,
+   "hold": 3
+  },
+  {
+   "cell": 6,
+   "hold": 3
+  },
+  {
+   "cell": 7,
+   "hold": 3
+  },
+  {
+   "cell": 8,
+   "hold": 3
+  }
+ ],
+ "scale": 0.68,
+ "anchor": [
+  0.1521,
+  0.6354
+ ],
+ "color": {
+  "hue": 0,
+  "saturation": 1,
+  "brightness": 1,
+  "alpha": 1
+ },
+ "game": {
+  "name": "fx_diablo_fire_breath_1",
+  "z": "Z_EFFECTS",
+  "loop": false,
+  "runs": 1,
+  "installed": true
+ }
+}

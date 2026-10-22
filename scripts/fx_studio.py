@@ -693,6 +693,12 @@ end
 function fx_lab.play_skill(game, s, x, y, flip)
 	local now = game.store.tick_ts
 
+	if s.combo then   -- the character and its effects baked into one animation in Fx Studio
+		fx_lab.spawn(game, s.combo, x, y, flip)
+
+		return
+	end
+
 	if s.pose then
 		fx_lab.spawn(game, s.pose, x, y, flip)
 	end
@@ -873,12 +879,12 @@ def apply_game(fxs: list, game: pathlib.Path, log=print) -> None:
     if fxs:
         body += "FX_LAB_LIST = {\n" + "".join(f'\t{lua_str(r["game"]["name"])},\n' for r in fxs) + "}\n"
     names = {r["game"]["name"] for r in fxs}
-    sk = [k for k in installed_skills() if all(n in names for n, _ in k["layers"])]
+    sk = [k for k in installed_skills() if all(n in names for n, _ in k["layers"]) and (not k.get("combo") or k["combo"] in names)]
     if sk:
         lines = []
         for i, k in enumerate(sk, 1):
             pose = "nil"
-            if k.get("anim") and k.get("pivot"):   # the character's own animation, played by an fx entity at the feet
+            if not k.get("combo") and k.get("anim") and k.get("pivot"):   # the character's own animation, played by an fx entity at the feet
                 pose = lua_str(f"fx_lab_pose_{i}")
                 body += (f'tt = RT({pose}, "fx")\n'
                          f'tt.render.sprites[1].name = {lua_str(k["anim"])}\n'
@@ -887,7 +893,8 @@ def apply_game(fxs: list, game: pathlib.Path, log=print) -> None:
                          f'tt.render.sprites[1].z = Z_OBJECTS\n'
                          f'tt.render.sprites[1].loop = false\n')
             layers = ", ".join(f"{{{lua_str(n)}, {int(at)}}}" for n, at in k["layers"])
-            lines.append(f'\t{{key = {lua_str(k["key"])}, pose = {pose}, length = {int(k.get("length", 30))}, layers = {{{layers}}}}},\n')
+            combo = lua_str(k["combo"]) if k.get("combo") else "nil"
+            lines.append(f'\t{{key = {lua_str(k["key"])}, combo = {combo}, pose = {pose}, length = {int(k.get("length", 30))}, layers = {{{layers}}}}},\n')
         body += "FX_LAB_SKILLS = {\n" + "".join(lines) + "}\n"
         log(f"skills: {', '.join(k['key'] for k in sk)}")
     write_text(f["templates"], put_block(text, body or None, None), nl)
@@ -903,7 +910,7 @@ def apply_game(fxs: list, game: pathlib.Path, log=print) -> None:
         # a skill plays its character's own animation: that character's atlas group must be loaded in every level,
         # not only when the character is the selected hero
         i = next(j for j, ln in enumerate(lines) if ln.strip() == "game.required_textures = {")
-        for group in sorted({g for g in (anim_group(game, k["anim"]) for k in sk if k.get("anim")) if g}):
+        for group in sorted({g for g in (anim_group(game, k["anim"]) for k in sk if k.get("anim") and not k.get("combo")) if g}):
             lines.insert(i + 1, f'\t"{group}", -- {MARK}')
     write_text(f["game"], "\n".join(lines), nl)
     tables, pages = {}, {}
@@ -974,7 +981,7 @@ def installed_skills() -> list:
     return [json.loads(p.read_text(encoding="utf-8")) for p in sorted(SKILLS.glob("*.json"))] if SKILLS.exists() else []
 
 
-def install_skill(skill: dict, layer_dirs: list, game: pathlib.Path, force: bool = False, log=print) -> str:
+def install_skill(skill: dict, layer_dirs: list, game: pathlib.Path, force: bool = False, log=print, combo_dir=None) -> str:
     """A skill from the app: every layer is an fx pack (cut and installed as is), plus the timing that ties them to the
     character's pose. Muted layers are installed but left out of the skill."""
     key = skill["key"]
@@ -985,11 +992,14 @@ def install_skill(skill: dict, layer_dirs: list, game: pathlib.Path, force: bool
         fx_id = install_pack(folder, game, force, log, apply=False)
         if not meta.get("muted"):   # the game name comes from the pack itself (the saved document may not repeat it)
             layers.append([load(fx_id)["game"]["name"], int(meta["start"])])
+    combo = None
+    if combo_dir:   # the app's baked sheet: the character with every layer, frame by frame
+        combo = load(install_pack(combo_dir, game, force, log, apply=False))["game"]["name"]
     SKILLS.mkdir(parents=True, exist_ok=True)
-    rec = {"key": key, "title": skill.get("title", key), "character": skill.get("character"), "pose_id": skill.get("pose"),
+    rec = {"key": key, "combo": combo, "title": skill.get("title", key), "character": skill.get("character"), "pose_id": skill.get("pose"),
            "anim": skill.get("anim"), "pivot": skill.get("pivot"), "length": skill.get("length", 30), "layers": layers}
     (SKILLS / f"{key}.json").write_text(json.dumps(rec, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
-    log(f"skill {key}: {len(layers)} effect(s) on " + (f"{skill.get('anim')}" if skill.get("anim") else "no game animation (effects only)"))
+    log(f"skill {key}: {len(layers)} effect(s)" + (f", plays the baked sheet {combo}" if combo else f" on {skill.get('anim') or 'no game animation'}"))
     do_install([], game, True, log)
     return key
 
@@ -1033,7 +1043,9 @@ def install_pack(src: pathlib.Path, game: pathlib.Path, force: bool = False, log
         folder = src.parent if src.is_file() else src
     if (folder / "skill.json").exists():   # a skill zip from the app: skill.json + one pack folder per layer
         skill = json.loads((folder / "skill.json").read_text(encoding="utf-8"))
-        key = install_skill(skill, [folder / L["dir"] for L in skill["layers"]], game, force, log)
+        combo = skill.get("combo") or {}
+        key = install_skill(skill, [folder / L["dir"] for L in skill["layers"]], game, force, log,
+                            folder / combo["dir"] if combo.get("dir") else None)
         if tmp:
             shutil.rmtree(tmp, ignore_errors=True)
         return key
@@ -1139,7 +1151,9 @@ def main() -> None:
     elif a.cmd == "install-pack":
         if a.skill:
             doc = json.loads(pathlib.Path(a.skill).read_text(encoding="utf-8"))
-            install_skill(doc, [pack_from_ids(L["pack"], pathlib.Path(a.pack)) for L in doc["layers"]], pathlib.Path(a.game), a.force)
+            combo = doc.get("combo") or {}
+            install_skill(doc, [pack_from_ids(L["pack"], pathlib.Path(a.pack)) for L in doc["layers"]], pathlib.Path(a.game), a.force,
+                          combo_dir=pack_from_ids(combo["pack"], pathlib.Path(a.pack)) if combo.get("pack") else None)
         else:
             src = pack_from_assets(pathlib.Path(a.project), pathlib.Path(a.pack)) if a.project else pathlib.Path(a.pack)
             install_pack(src, pathlib.Path(a.game), a.force)
