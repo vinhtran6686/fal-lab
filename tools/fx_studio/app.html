@@ -563,7 +563,7 @@ function findBlobs(d, w, h) {
   return {lab, n: id, area, cx: sx, cy: sy, bb};
 }
 // a 1-D split of weighted points (sorted by x) into k runs with the least weighted spread (natural breaks): the cut
-// positions between the runs
+// indices where the runs start
 function breaks(X, Wt, k) {
   const n = X.length; if (k <= 1 || n < 2) return [];
   k = Math.min(k, n);
@@ -574,7 +574,7 @@ function breaks(X, Wt, k) {
   D[0][0] = 0;
   for (let g = 1; g <= k; g++) for (let j = g; j <= n; j++) for (let i = g - 1; i < j; i++) { const v = D[g - 1][i] + cost(i, j); if (v < D[g][j]) { D[g][j] = v; B[g][j] = i; } }
   const cuts = []; let j = n;
-  for (let g = k; g > 0; g--) { const i = B[g][j]; if (i > 0) cuts.push((X[i - 1] + X[i]) / 2); j = i; }
+  for (let g = k; g > 0; g--) { const i = B[g][j]; if (i > 0) cuts.push(i); j = i; }
   return cuts.sort((a, b) => a - b);
 }
 const cutKeyOf = R => JSON.stringify([R.bg, R.black_floor, R.grid, R.key || null, R.slice || null]);
@@ -1044,7 +1044,8 @@ async function openSlicer(src) {
   $('#slInfo').textContent = `${W}×${H} px`;
   $('#slGo').textContent = src.L ? 'Áp dụng cho tầng' : 'Thêm vào timeline';
   slKeyed();
-  if (R?.slice?.boxes?.length) { SL.mode = 'manual'; SL.boxes = R.slice.boxes.map(b => ({x0: b[0], y0: b[1], x1: b[2], y1: b[3], dx: b[4] || 0, dy: b[5] || 0, slot: b.length >= 10 ? b.slice(6, 10) : null})); }
+  if (R?.slice?.ui) { Object.assign(SL, {mode: 'rows', rowsY: [...R.slice.ui.rowsY], ks: [...R.slice.ui.ks], cuts: R.slice.ui.cuts.map(c => [...c])}); slBuild(); R.slice.boxes.forEach((b, i) => { if (SL.boxes[i]) { SL.boxes[i].dx = b[4] || 0; SL.boxes[i].dy = b[5] || 0; } }); }
+  else if (R?.slice?.boxes?.length) { SL.mode = 'manual'; SL.boxes = R.slice.boxes.map(b => ({x0: b[0], y0: b[1], x1: b[2], y1: b[3], dx: b[4] || 0, dy: b[5] || 0, slot: b.length >= 10 ? b.slice(6, 10) : null})); }
   else slAutoRows();
   slSync(); dlgS.showModal(); slDraw();
 }
@@ -1075,7 +1076,7 @@ function slBuild() {   // boxes from the row bands: k frames per row at the k-1 
     const [cols, rows] = SL.grid;
     for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
       const b = slTight(Math.round(c * pw / cols), Math.round(r * ph / rows), Math.round((c + 1) * pw / cols), Math.round((r + 1) * ph / rows));
-      if (b) SL.boxes.push({x0: Math.round(c * SL.W / cols), y0: Math.round(r * SL.H / rows), x1: Math.round((c + 1) * SL.W / cols), y1: Math.round((r + 1) * SL.H / rows), dx: 0, dy: 0});
+      SL.boxes.push({x0: Math.round(c * SL.W / cols), y0: Math.round(r * SL.H / rows), x1: Math.round((c + 1) * SL.W / cols), y1: Math.round((r + 1) * SL.H / rows), dx: 0, dy: 0, empty: !b});
     }
     return;
   }
@@ -1092,7 +1093,11 @@ function slBuild() {   // boxes from the row bands: k frames per row at the k-1 
     G.sort((a, b) => (a.u[0] + a.u[1]) - (b.u[0] + b.u[1]));
     let k = SL.ks[ri]; if (!k) { const big = Math.max(1, ...G.map(g => g.a)); k = SL.ks[ri] = Math.max(1, Math.min(30, G.filter(g => g.a >= big * 0.1).length)); }
     if (!SL.cuts[ri] || SL.cuts[ri].length !== k - 1) {   // where the frames split: natural breaks of the groups, weighted by size
-      const c = breaks(G.map(g => (g.u[0] + g.u[1]) / 2), G.map(g => g.a), k).map(x => x / p);
+      // each cut goes into the empty gap between the two runs when there is one (else between their centres)
+      const X = G.map(g => (g.u[0] + g.u[1]) / 2), c = breaks(X, G.map(g => g.a), k).map(i => {
+        const r = Math.max(...G.slice(0, i).map(g => g.u[1])), l = Math.min(...G.slice(i).map(g => g.u[0]));
+        return (r < l ? (r + l) / 2 : (X[i - 1] + X[i]) / 2) / p;
+      });
       for (let i = 1; c.length < k - 1; i++) c.push(SL.W * i / k);   // fewer blobs than frames: even spacing for the rest
       SL.cuts[ri] = c.sort((a, b) => a - b);
     }
@@ -1248,7 +1253,7 @@ dlgS.addEventListener('keydown', e => {   // arrows nudge the selected frame (Sh
 addEventListener('resize', () => slDraw());
 $('#slCancel').onclick = () => { dlgS.close(); SL = null; };
 $('#slGo').onclick = e => busy(e.target, async () => {
-  const [mw, mh] = slCell(), slice = {boxes: SL.boxes.map(b => [b.x0, b.y0, b.x1, b.y1, b.dx, b.dy, ...(b.slot || [])]), align: SL.align, cellScale: +Math.min(1, 512 / Math.max(mw, mh)).toFixed(4)};
+  const [mw, mh] = slCell(), slice = {boxes: SL.boxes.map(b => [b.x0, b.y0, b.x1, b.y1, b.dx, b.dy, ...(b.slot || [])]), align: SL.align, ...(SL.mode === 'rows' ? {ui: {rowsY: SL.rowsY.map(Math.round), ks: [...SL.ks], cuts: SL.cuts.map(c => (c || []).map(Math.round))}} : {}), cellScale: +Math.min(1, 512 / Math.max(mw, mh)).toFixed(4)};
   const src = SL.src, name = $('#slName').value.trim() || 'hiệu ứng', bg = SL.bg, key = bg === 'color' ? {c: SL.key.c.map(Math.round), tol: +SL.key.tol.toFixed(3)} : null;
   dlgS.close(); SL = null;
   if (src.L) { const L = src.L; L.recipe.slice = slice; L.recipe.bg = bg; L.recipe.key = key; L.title = name; recut(); defaults(L, 'pos'); refresh(); return; }

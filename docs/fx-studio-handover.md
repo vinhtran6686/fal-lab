@@ -71,7 +71,7 @@ Thêm `meta.json["skills"][<pose>]`, và dòng `fx_<skill>` trong Asset manifest
 | 2 | 10 hiệu ứng mẫu Python trong menu "+ Thêm hiệu ứng" | ✅ xong, đã kiểm (mọi mẫu cắt đủ hình), đã publish (bản 7) |
 | 3a | Chuyển động: mờ vào/ra, cỡ đầu→cuối, trôi, ghim vị trí theo frame; vị trí đặt ở mục tiêu / bay tới mục tiêu (xem trước, kéo dấu mục tiêu) | ✅ xong, đã thử headless (gói "motion" 24 frame), đã publish (bản 8) |
 | 3b | Phía game cho tầng "ở mục tiêu" và "bay tới mục tiêu" | ✅ xong (2026-10-24): `skill_lua` nhận `target` / `external_only`, tầng bay do `fly()` (runner) di chuyển; đã thấy trong game: vệt chém bay từ nhân vật tới mục tiêu, cả khi lật; tia trúng ở mục tiêu |
-| 4 | Trình cắt sheet cho sheet ngoài (nền một màu, hàng/hình kéo được, gán mảng theo tâm, căn, xem trước) | ✅ xong (2026-10-24), đã thử headless trên sheet sóng nước 7000×3044 nền navy (3 hàng 10/4/3 = 17 hình, viền sạch, lưu được), đã publish (bản 9); chưa thử tay trong artifact |
+| 4 | Trình cắt sheet cho sheet ngoài (nền một màu, hàng/hình kéo được, gán mảng theo tâm, căn, xem trước) | ✅ xong (2026-10-24), đã thử headless trên sheet sóng nước 7000×3044 nền navy (3 hàng 10/4/3 = 17 hình, viền sạch, lưu được), đã publish (bản 10); chưa thử tay trong artifact. Đường chia lưu trong `slice.ui` nên mở lại vẫn kéo được; dịch x/y bị đặt lại khi đổi số hình |
 
 ## 6. Đã kiểm / chưa kiểm
 
