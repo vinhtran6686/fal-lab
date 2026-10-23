@@ -1035,6 +1035,12 @@ end
 
 -- a flying layer: move fx from where it was spawned to (x1, y1) in `frames` game frames (a runner entity's coroutine)
 local function fly(store, fx, x1, y1, frames)
+	if not E.entities["fx_lab_runner"] then   -- outside fx_lab (a hero script using skill.lua alone): register it here
+		local tt = E:register_t("fx_lab_runner")
+
+		E:add_comps(tt, "pos", "main_script")
+	end
+
 	local r = E:create_entity("fx_lab_runner")
 
 	r.pos.x, r.pos.y = fx.pos.x, fx.pos.y
@@ -1110,6 +1116,10 @@ def install_skill(skill: dict, layer_dirs: list, game: pathlib.Path, force: bool
     key = skill["key"]
     if not re.fullmatch(r"[a-z0-9_]+", key):
         sys.exit(f"skill key {key!r}: lowercase letters, digits and _ only")
+    if skill.get("character") and not skill.get("anim") and not combo_dir:
+        # a character the game does not have plays only as the baked combo: without one the effects would play bodiless
+        sys.exit(f"skill {key}: {skill['character']} is not in the game and the skill has no combo sheet (saved by an older "
+                 f"Fx Studio): open it in the app and press Lưu again, then install")
     layers, places = [], {}
     for meta, folder in zip(skill["layers"], layer_dirs):
         fx_id = install_pack(folder, game, force, log, apply=False)

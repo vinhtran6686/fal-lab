@@ -70,7 +70,7 @@ Thêm `meta.json["skills"][<pose>]`, và dòng `fx_<skill>` trong Asset manifest
 | 1 | Bộ asset đúng chỗ + manifest, @2x thật, code skill chạy được, kiểm tra trước khi xuất, hoàn tác/làm lại | ✅ xong, đã kiểm (headless + trong game), đã publish |
 | 2 | 10 hiệu ứng mẫu Python trong menu "+ Thêm hiệu ứng" | ✅ xong, đã kiểm (mọi mẫu cắt đủ hình), đã publish (bản 7) |
 | 3a | Chuyển động: mờ vào/ra, cỡ đầu→cuối, trôi, ghim vị trí theo frame; vị trí đặt ở mục tiêu / bay tới mục tiêu (xem trước, kéo dấu mục tiêu) | ✅ xong, đã thử headless (gói "motion" 24 frame), đã publish (bản 8) |
-| 3b | Phía game cho tầng "ở mục tiêu" và "bay tới mục tiêu" | ✅ xong (2026-10-24): `skill_lua` nhận `target` / `external_only`, tầng bay do `fly()` (runner) di chuyển; thử trong game: nổ ở mũi kiếm + tia trúng ở mục tiêu (chưa chụp được lúc vệt chém đang bay, log không lỗi) |
+| 3b | Phía game cho tầng "ở mục tiêu" và "bay tới mục tiêu" | ✅ xong (2026-10-24): `skill_lua` nhận `target` / `external_only`, tầng bay do `fly()` (runner) di chuyển; đã thấy trong game: vệt chém bay từ nhân vật tới mục tiêu, cả khi lật; tia trúng ở mục tiêu |
 
 ## 6. Đã kiểm / chưa kiểm
 
@@ -90,9 +90,12 @@ Thêm `meta.json["skills"][<pose>]`, và dòng `fx_<skill>` trong Asset manifest
 
 ## 7. Việc còn dở (làm tiếp theo thứ tự)
 
-1. Trong game, tầng bay chỉ thử bằng code (log không lỗi, tia trúng ở mục tiêu hiện đúng); nên xem tận mắt bằng F5.
-   Script hero thật muốn dùng mục tiêu thật thì gọi `FXS.<key>(this, store, nil, target_entity)`.
-2. Người dùng thử trong app thật: mở lại skill sau khi tải lại trang, Tải gói .zip, rồi nhắn "cài skill …".
+1. `skill.lua` dùng độc lập được: `fly()` tự đăng ký entity `fx_lab_runner` nếu chưa có. Script hero muốn dùng mục tiêu
+   thật thì gọi `FXS.<key>(this, store, nil, target_entity)`.
+2. Người dùng mở lại skill thật `diablo__skill_fire_breath_side` (lưu bằng app cũ, chưa có sheet gộp) và bấm **Lưu** lại;
+   `install-pack --skill` chặn bản cũ này với lời nhắn rõ ràng. Bản app mới đã mở thử được bản ghi này (headless).
+   Lửa trong bản đó bắt đầu ở frame 41, hit là 38 (chip kiểm tra báo). Sau đó: thử Tải gói .zip, nhắn "cài skill …".
+   Hiện trong game và `out/vfx`, cả hai skill Holy Commander và Diablo là **dữ liệu test** của Claude, không phải bản người dùng lưu.
 3. Dọn hiệu ứng thử trong game:
    - còn cài: `fire_breath_test`, `ice_breath_test`, `fire_breath`, `holy_commander_radiant_slash_1/_2/_3`, `diablo_fire_breath_1/_2`, các combo thử;
    - lệnh: `python scripts/fx_studio.py uninstall <id> …` hoặc `--all`;
