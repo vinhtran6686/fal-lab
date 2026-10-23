@@ -36,7 +36,9 @@ chạy; holy_commander chạy nhanh gấp đôi con số 15 fps trong meta.json)
 "+ Thêm hiệu ứng → Nhập sprite sheet" mở **trình cắt sheet** (mở lại cho tầng đang chọn ở Nâng cao → "Mở trình cắt sheet…"):
 - **Nền:** tự nhận (trong suốt, magenta, đen kiểu ánh sáng, hoặc **một màu bất kỳ** = trung vị viền ảnh, ví dụ xanh navy);
   "Hút màu" bấm lên nền; "Độ lệch" nới ngưỡng. Màu nền được gỡ khỏi viền mềm (không còn viền navy).
-- **Theo hàng (tự tìm):** vạch vàng chia hàng, vạch hồng chia hình trong hàng; kéo được cả hai. Số hình mỗi hàng nhập tay.
+- **Theo hàng (tự tìm):** vạch vàng chia hàng, vạch hồng chia hình trong hàng; kéo được cả hai, bấm đúp lên vạch để xóa,
+  bấm đúp chỗ trống để thêm vạch hồng (Shift: vạch vàng); ✕ cạnh mỗi hàng gộp nó với hàng kế. Số hình mỗi hàng nhập tay (cập nhật ngay).
+  Số trên ô hình ở panel phải = số khung trong trình cắt. Panel phải kéo rộng / hẹp ở vạch giữa khung xem và panel.
   Mỗi mảng màu thuộc về hình **chứa tâm của nó**, nên đuôi sóng lấn sang cột bên cạnh vẫn đi đúng hình; mảng nằm trong khung
   của mảng lớn (bọt, giọt) tính chung với mảng lớn khi tự chia.
 - **Lưới đều:** cột × hàng.

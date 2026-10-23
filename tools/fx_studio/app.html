@@ -31,8 +31,12 @@ header select,header button{padding:4px 9px}
 .state::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted)}
 .state.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}.state.ok::before{background:var(--ok)}
 .state.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}.state.warn::before{background:var(--warn)}
-main.ws{display:grid;grid-template-columns:minmax(0,1fr) var(--panel-w);gap:10px;padding:10px 12px 0;align-items:stretch;min-height:0;min-width:0}
+main.ws{display:grid;grid-template-columns:minmax(0,1fr) 8px var(--panel-w);gap:2px;padding:10px 12px 0;align-items:stretch;min-height:0;min-width:0}
 .app.no-panel main.ws{grid-template-columns:minmax(0,1fr)}
+.app.no-panel #vsplit{display:none}
+.vsplit{cursor:col-resize;touch-action:none;position:relative;border-radius:4px}
+.vsplit::before{content:"";position:absolute;top:50%;left:3px;height:44px;width:3px;margin-top:-22px;border-radius:2px;background:var(--line)}
+.vsplit:hover::before,.vsplit:focus-visible::before,.vsplit.on::before{background:var(--accent)}
 .app.no-panel #panel{display:none}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
 .stage-card{display:flex;flex-direction:column;min-width:0;min-height:0;padding:8px}
@@ -87,7 +91,8 @@ details.adv[open]>summary{margin-bottom:6px}
 .layer-title{font-size:15px;font-weight:600;margin:0 0 2px;overflow-wrap:anywhere}
 /* frames: a wrapping grid of small cards, never a horizontal scroll */
 .minis{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:8px 6px}
-.mini{min-width:0;text-align:center;font-size:11px;color:var(--muted)}
+.mini{min-width:0;text-align:center;font-size:11px;color:var(--muted);position:relative}
+.mini .no{position:absolute;left:50%;top:2px;margin-left:-29px;min-width:16px;padding:0 3px;border-radius:3px;background:rgba(10,20,30,.85);color:#bfefff;font:11px/15px "IBM Plex Mono",monospace;pointer-events:none}
 .mini canvas{width:62px;height:62px;background:#0c0d10;border:1px solid var(--line);border-radius:5px;display:block;margin:0 auto 3px;cursor:pointer}
 .mini.cur canvas{border-color:var(--accent)}
 .mini input{width:40px;padding:1px 3px;font-size:11.5px}
@@ -150,6 +155,7 @@ dialog img{max-width:100%;max-height:240px;display:block;margin:8px auto;backgro
 @media (max-width:980px){
   header{position:sticky;top:env(safe-area-inset-top,0px);z-index:6}
   main.ws{grid-template-columns:minmax(0,1fr);padding:12px 16px 0}
+  #vsplit{display:none}
   .app.no-panel #panel{display:block}
   #btnPanel{display:none}
   .stage-card{display:block}
@@ -240,6 +246,7 @@ dialog.tuner:not([open]){display:none}
     </div>
   </section>
 
+  <div class="vsplit" id="vsplit" role="separator" aria-orientation="vertical" aria-controls="panel" aria-label="Kéo để đổi độ rộng panel (phím ← →)" tabindex="0"></div>
   <aside class="card" id="panel" aria-label="Tầng đang chọn">
     <div id="noSel" class="empty-panel">Chọn một tầng hiệu ứng ở timeline bên dưới,<br>hoặc bấm <b>+ Thêm hiệu ứng</b>.</div>
     <div id="editor" hidden>
@@ -374,7 +381,7 @@ dialog.tuner:not([open]){display:none}
         <div id="slRowsBox">
           <div class="sl-rows"><label for="slRowN">Số hàng</label><input type="number" id="slRowN" min="1" max="30"></div>
           <div class="sl-rows" id="slRowKs"></div>
-          <p class="hint">Vạch vàng chia hàng, vạch hồng chia hình trong hàng: kéo nếu chia sai. Mỗi mảng màu thuộc về hình chứa tâm của nó, nên đuôi sóng lấn sang cột bên cạnh vẫn đi đúng hình.</p>
+          <p class="hint">Vạch vàng chia hàng, vạch hồng chia hình: <b>kéo</b> để chỉnh, <b>bấm đúp</b> lên vạch để xóa, bấm đúp chỗ trống để thêm vạch hồng (Shift + bấm đúp: thêm vạch vàng). Mỗi mảng màu thuộc về hình chứa tâm của nó.</p>
         </div>
         <div id="slGridBox" hidden>
           <div class="sl-rows"><label for="slCols">Số cột</label><input type="number" id="slCols" min="1" max="60"><label for="slGRows">Số hàng</label><input type="number" id="slGRows" min="1" max="60"></div>
@@ -1065,8 +1072,16 @@ function slAutoRows(n) {   // rows split at the n-1 widest empty bands (n guesse
   const {pw, ph, mask, p} = SL, occ = new Uint8Array(ph);
   for (let y = 0; y < ph; y++) for (let x = 0; x < pw; x++) if (mask[y * pw + x]) { occ[y] = 1; break; }
   const gaps = slGaps(occ, 2);
+  const guess = !n;
   if (!n) n = 1 + gaps.filter(gp => gp.w >= Math.max(6, ph * 0.03)).length;
-  SL.rowsY = gaps.sort((a, b) => b.w - a.w).slice(0, n - 1).map(gp => gp.at / p).sort((a, b) => a - b);
+  let cand = gaps.sort((a, b) => b.w - a.w).slice(0, n - 1).sort((a, b) => a.at - b.at);
+  // a guessed row that holds only a thin strip (the bottom of the row above) is not a row: drop its narrower line
+  while (guess && cand.length) {
+    const ys = [0, ...cand.map(gp => gp.at), ph], hs = ys.slice(1).map((y, i) => { const a = Math.round(ys[i]), b = Math.round(y); let lo = -1, hi = -1; for (let r = a; r < b; r++) if (occ[r]) { if (lo < 0) lo = r; hi = r; } return lo < 0 ? 0 : hi - lo + 1; });
+    const mi = hs.indexOf(Math.min(...hs)); if (hs[mi] >= Math.max(...hs) * 0.25) break;
+    const nb = [cand[mi - 1], cand[mi]].filter(Boolean).sort((a, b) => a.w - b.w)[0]; cand = cand.filter(gp => gp !== nb);
+  }
+  SL.rowsY = cand.map(gp => gp.at / p);
   SL.ks = []; SL.cuts = []; slBuild();
 }
 function slBands() { const ys = [0, ...SL.rowsY, SL.H]; return ys.slice(1).map((y, i) => [ys[i], y]); }
@@ -1116,19 +1131,27 @@ function slTight(x0, y0, x1, y1) {   // the content inside a preview rect, or nu
   for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) if (mask[y * pw + x]) { if (x < a) a = x; if (x > c) c = x; if (y < b) b = y; if (y > d) d = y; }
   return c < 0 ? null : [a, b, c + 1, d + 1];
 }
-function slSync() {
+function slDelRow(li) {   // remove row line li: the two rows become one, frames counted again
+  SL.rowsY.splice(li, 1); SL.ks.splice(li, 2, undefined); SL.cuts.splice(li, 2, null); SL.sel = -1; slBuild(); slSync(); slDraw();
+}
+function slAddRow(y) { const i = SL.rowsY.filter(r => r < y).length; SL.rowsY.splice(i, 0, y); SL.ks.splice(i, 1, undefined, undefined); SL.cuts.splice(i, 1, null, null); SL.sel = -1; slBuild(); slSync(); slDraw(); }
+function slSync(keepInputs) {
   SL.sprites = null;
   $('#slBg').value = SL.bg; $('#slKey').value = hex(SL.key.c); $('#slTol').value = Math.round(SL.key.tol * 100); $('#slTolOut').textContent = Math.round(SL.key.tol * 100);
   $('#slKey').disabled = $('#slTol').disabled = $('#slPick').disabled = SL.bg !== 'color';
   document.querySelectorAll('#slMode button').forEach(b => b.classList.toggle('on', b.dataset.m === SL.mode || (SL.mode === 'manual' && b.dataset.m === 'rows')));
   $('#slRowsBox').hidden = SL.mode === 'grid'; $('#slGridBox').hidden = SL.mode !== 'grid';
   $('#slRowN').value = SL.rowsY.length + 1; $('#slCols').value = SL.grid[0]; $('#slGRows').value = SL.grid[1];
-  $('#slRowKs').innerHTML = '';
-  if (SL.mode === 'rows') slBands().forEach((_, ri) => {
+  if (!keepInputs) $('#slRowKs').innerHTML = '';
+  if (SL.mode === 'rows' && !keepInputs) slBands().forEach((_, ri, all) => {
     const l = document.createElement('label'); l.textContent = `Hàng ${ri + 1}: số hình`; l.htmlFor = 'slK' + ri;
-    const inp = document.createElement('input'); inp.type = 'number'; inp.min = 1; inp.max = 60; inp.id = 'slK' + ri; inp.value = SL.ks[ri] || 1;
-    inp.onchange = () => { SL.ks[ri] = Math.max(1, Math.min(60, inp.value | 0)); SL.cuts[ri] = null; slBuild(); slSync(); slDraw(); };
-    $('#slRowKs').append(l, inp);
+    const wrap = document.createElement('span'); wrap.style.cssText = 'display:flex;gap:4px';
+    const inp = document.createElement('input'); inp.type = 'number'; inp.min = 1; inp.max = 60; inp.id = 'slK' + ri; inp.value = SL.ks[ri] || 1; inp.style.width = '56px';
+    const apply = () => { const v = Math.max(1, Math.min(60, inp.value | 0)); if (v === SL.ks[ri]) return; SL.ks[ri] = v; SL.cuts[ri] = null; slBuild(); slSync(true); slDraw(); };
+    inp.oninput = () => { clearTimeout(inp._t); inp._t = setTimeout(apply, 250); }; inp.onchange = apply;
+    wrap.append(inp);
+    if (all.length > 1) { const x = document.createElement('button'); x.textContent = '✕'; x.title = ri < all.length - 1 ? `Xóa vạch dưới hàng ${ri + 1} (gộp với hàng sau)` : `Xóa vạch trên hàng ${ri + 1} (gộp với hàng trước)`; x.setAttribute('aria-label', x.title); x.onclick = () => slDelRow(Math.min(ri, all.length - 2)); wrap.append(x); }
+    $('#slRowKs').append(l, wrap);
   });
   if (SL.mode === 'manual') $('#slRowKs').innerHTML = '<span class="small muted" style="grid-column:1/-1">Khung đã chỉnh tay. Đổi số hàng để tự tìm lại.</span>';
   document.querySelectorAll('#slAlign button').forEach(b => b.classList.toggle('on', b.dataset.a === SL.align));
@@ -1180,7 +1203,7 @@ function slDraw() {
 }
 function slPreview(now) {   // the cut frames at preview size, aligned as they will be, 15 drawings a second, onion of the previous one
   if (!SL || !dlgS.open || !SL.boxes.length) return;
-  const c = $('#slPrev'), g = c.getContext('2d'), [mw, mh] = slCell(), n = SL.boxes.length, i = Math.floor((now - SL.t0) / 1000 * 15) % (n + 4);
+  const c = $('#slPrev'), g = c.getContext('2d'), [mw, mh] = slCell(), n = SL.boxes.length, i = Math.max(0, Math.floor((now - SL.t0) / 1000 * 15)) % (n + 4);
   g.fillStyle = '#0c0d10'; g.fillRect(0, 0, c.width, c.height);
   const s = Math.min(c.width / mw, c.height / mh) * 0.95, ox = (c.width - mw * s) / 2, oy = (c.height - mh * s) / 2;
   const one = (k, alpha) => { const b = SL.boxes[k], w = b.x1 - b.x0, h = b.y1 - b.y0, [ax, ay] = (ALIGN[SL.align] || ALIGN.bl)(w, h, mw, mh), sp = slSprite(k);
@@ -1227,6 +1250,16 @@ slc.addEventListener('pointerup', () => {
   if (x1 - x0 > 6 && y1 - y0 > 6) { SL.boxes.push({x0, y0, x1, y1, dx: 0, dy: 0}); SL.sel = SL.boxes.length - 1; SL.mode = 'manual'; }
   slSync(); slDraw();
 });
+slc.addEventListener('dblclick', e => {
+  if (!SL || SL.mode !== 'rows') return;
+  const [x, y] = slPt(e), k = slScale() * SL.p, ri = SL.rowsY.findIndex(ry => Math.abs(ry - y) * k < 7);
+  if (ri >= 0) { slDelRow(ri); return; }
+  const band = slBands().findIndex(([y0, y1]) => y >= y0 && y < y1); if (band < 0) return;
+  if (e.shiftKey) { slAddRow(y); return; }
+  const c = SL.cuts[band] || [], ci = c.findIndex(cx => Math.abs(cx - x) * k < 7);
+  if (ci >= 0) c.splice(ci, 1); else { c.push(x); c.sort((a, b) => a - b); }
+  SL.cuts[band] = c; SL.ks[band] = c.length + 1; SL.sel = -1; slBuild(); slSync(); slDraw();
+});
 $('#slBg').onchange = () => { SL.bg = $('#slBg').value; slKeyed(); if (SL.mode !== 'manual') slBuild(); slSync(); slDraw(); };
 $('#slKey').oninput = () => { const v = $('#slKey').value; SL.key = {...SL.key, c: [1, 3, 5].map(i => parseInt(v.slice(i, i + 2), 16))}; slKeyed(); slDraw(); };
 $('#slKey').onchange = () => { if (SL.mode !== 'manual') slBuild(); slSync(); slDraw(); };
@@ -1234,7 +1267,9 @@ $('#slTol').oninput = () => { SL.key = {...SL.key, tol: +$('#slTol').value / 100
 $('#slTol').onchange = () => { if (SL.mode !== 'manual') slBuild(); slSync(); slDraw(); };
 $('#slPick').onclick = () => { SL.pick = true; slc.style.cursor = 'copy'; toast('Bấm lên một chỗ nền trên ảnh'); };
 document.querySelectorAll('#slMode button').forEach(b => b.onclick = () => { SL.mode = b.dataset.m; SL.sel = -1; if (SL.mode === 'rows') slAutoRows(); else slBuild(); slSync(); slDraw(); });
-$('#slRowN').onchange = () => { SL.mode = 'rows'; SL.sel = -1; slAutoRows(Math.max(1, Math.min(30, $('#slRowN').value | 0))); slSync(); slDraw(); };
+$('#slRowN').onchange = () => { const n = Math.max(1, Math.min(30, $('#slRowN').value | 0)); if (SL.mode === 'rows' && n === SL.rowsY.length + 1) return; SL.mode = 'rows'; SL.sel = -1; slAutoRows(n); slSync(); slDraw(); };
+$('#slRowN').oninput = () => { clearTimeout(SL._rt); SL._rt = setTimeout(() => $('#slRowN').onchange(), 300); };
+$('#slCols').oninput = $('#slGRows').oninput = () => { clearTimeout(SL._gt); SL._gt = setTimeout(() => $('#slCols').onchange(), 300); };
 $('#slCols').onchange = $('#slGRows').onchange = () => { SL.grid = [Math.max(1, $('#slCols').value | 0), Math.max(1, $('#slGRows').value | 0)]; slBuild(); slSync(); slDraw(); };
 document.querySelectorAll('#slAlign button').forEach(b => b.onclick = () => { SL.align = b.dataset.a; slSync(); });
 $('#slOrig').onchange = () => slDraw();
@@ -1343,6 +1378,7 @@ function drawMinis() {
     if (img) { const s = Math.min(62 / img.width, 62 / img.height); cv.getContext('2d').drawImage(img, (62 - img.width * s) / 2, (62 - img.height * s) / 2, img.width * s, img.height * s); }
     cv.title = 'Tới hình này'; cv.onclick = () => { playing = false; updatePlay(); t = L.start + seq.indexOf(k); };
     d.appendChild(cv);
+    const no = document.createElement('span'); no.className = 'no'; no.textContent = f.cell + 1; no.title = `Hình số ${f.cell + 1} của sheet (số trong trình cắt sheet)`; d.appendChild(no);
     const hold = document.createElement('input'); hold.type = 'number'; hold.min = 1; hold.max = 60; hold.value = f.hold; hold.title = 'Giữ bao nhiêu frame'; hold.setAttribute('aria-label', `Hình ${k + 1}: giữ (frame)`);
     hold.onchange = () => { f.hold = Math.max(1, Math.min(60, hold.value | 0)); refresh(); };
     d.appendChild(hold);
@@ -1530,15 +1566,19 @@ addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') $('#btnNext').click();
   if ((e.key === ',' || e.key === '.') && S()) { S().start = Math.max(0, S().start + (e.key === ',' ? -1 : 1)); refresh(); }
 });
-let acc = 0, last = performance.now(), lastT = -1;
+let acc = 0, last = performance.now(), lastT = -1, tickErr = false;
 function tick(now) {
   const dt = Math.min(0.1, (now - last) / 1000); last = now;
   if (playing && skill) {
     acc += dt;
     while (acc >= 1 / FPS) { acc -= 1 / FPS; t++; if (t >= contentTicks() + TAIL) { if ($('#optLoop').checked) t = 0; else { t = contentTicks() + TAIL - 1; playing = false; updatePlay(); } } }
   }
-  draw(); drawTunerPreview(now); slPreview(now);
-  if (t !== lastT && skill) { lastT = t; drawTimeline(); markMini(); }
+  try {
+    draw(); drawTunerPreview(now); slPreview(now);
+    if (t !== lastT && skill) { lastT = t; drawTimeline(); markMini(); }
+  } catch (e) {   // report once, keep running
+    if (!tickErr) { tickErr = true; toast('Lỗi khi vẽ: ' + e.message, true); console.error(e); }
+  }
   requestAnimationFrame(tick);
 }
 
@@ -1800,6 +1840,20 @@ split.addEventListener('keydown', e => {   // ↑ gives the timeline more room, 
   if (to == null) return;
   e.preventDefault(); setTlH(to, true);
 });
+const vsplit = $('#vsplit'), PW_MIN = 260, PW_DEF = 340, pwMax = () => Math.max(PW_MIN, Math.round(innerWidth * 0.6));
+function setPanelW(w, keep) {
+  const v = Math.round(Math.max(PW_MIN, Math.min(pwMax(), w)));
+  appEl.style.setProperty('--panel-w', v + 'px'); vsplit.setAttribute('aria-valuenow', v);
+  if (keep) pref('fxstudio.panelW', v);
+}
+setPanelW(+pref('fxstudio.panelW') || PW_DEF);
+let vdrag = null;
+vsplit.addEventListener('pointerdown', e => { vsplit.setPointerCapture(e.pointerId); vdrag = {x: e.clientX, w: $('#panel').getBoundingClientRect().width}; vsplit.classList.add('on'); appEl.classList.add('resizing'); e.preventDefault(); });
+vsplit.addEventListener('pointermove', e => { if (vdrag) setPanelW(vdrag.w - (e.clientX - vdrag.x)); });
+const endV = () => { if (!vdrag) return; vdrag = null; vsplit.classList.remove('on'); appEl.classList.remove('resizing'); setPanelW($('#panel').getBoundingClientRect().width, true); };
+vsplit.addEventListener('pointerup', endV); vsplit.addEventListener('pointercancel', endV);
+vsplit.addEventListener('dblclick', () => setPanelW(PW_DEF, true));
+vsplit.addEventListener('keydown', e => { const step = e.shiftKey ? 64 : 16, w = $('#panel').getBoundingClientRect().width, to = {ArrowLeft: w + step, ArrowRight: w - step}[e.key]; if (to == null) return; e.preventDefault(); setPanelW(to, true); });
 function setPanel(open, keep) {
   appEl.classList.toggle('no-panel', !open);
   $('#btnPanel').textContent = open ? 'Ẩn panel ›' : '‹ Hiện panel'; $('#btnPanel').setAttribute('aria-expanded', open);
