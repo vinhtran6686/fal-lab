@@ -2,40 +2,40 @@
  "object": "fx_holy_commander__skill_radiant_slash_side_combo",
  "kind": "animation",
  "fps": 30,
- "exported": "2026-10-22T17:54:36.203Z",
+ "exported": "2026-10-23T20:56:20.680Z",
  "source": "Fx Studio app pack",
- "recipe_hash": "fd507a2a0eb7",
+ "recipe_hash": "b171a4b3a5aa",
  "mode": "raster",
  "scale": 1,
  "canvas": {
   "@2x": [
-   484,
-   370
+   520,
+   400
   ],
   "@1x": [
-   242,
-   185
+   260,
+   200
   ],
   "ipad": [
-   172,
-   132
+   185,
+   142
   ]
  },
  "anchor": [
-  0.3678,
-  0.3243
+  0.3423,
+  0.215
  ],
  "anchor_note": "game anchor: x from the left, y from the BOTTOM of the canvas",
  "loop": false,
  "frames": {
   "fx_holy_commander__skill_radiant_slash_side_combo_0001": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    57
+    89
    ],
    "content": [
     46,
@@ -45,12 +45,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0002": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    57
+    89
    ],
    "content": [
     46,
@@ -60,12 +60,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0003": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    57
+    89
    ],
    "content": [
     46,
@@ -75,12 +75,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0004": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    57
+    89
    ],
    "content": [
     46,
@@ -90,12 +90,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0005": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    56
+    88
    ],
    "content": [
     53,
@@ -105,12 +105,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0006": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    56
+    88
    ],
    "content": [
     70,
@@ -120,12 +120,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0007": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    56
+    88
    ],
    "content": [
     75,
@@ -135,12 +135,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0008": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    53
+    85
    ],
    "content": [
     67,
@@ -150,12 +150,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0009": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    53
+    85
    ],
    "content": [
     46,
@@ -165,12 +165,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0010": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    53
+    85
    ],
    "content": [
     52,
@@ -180,12 +180,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0011": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     66,
-    58
+    90
    ],
    "content": [
     54,
@@ -195,12 +195,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0012": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     63,
-    60
+    92
    ],
    "content": [
     55,
@@ -210,12 +210,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0013": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     60,
-    60
+    92
    ],
    "content": [
     55,
@@ -225,12 +225,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0014": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     60,
-    61
+    93
    ],
    "content": [
     55,
@@ -240,12 +240,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0015": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     60,
-    61
+    93
    ],
    "content": [
     55,
@@ -255,12 +255,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0016": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     60,
-    61
+    93
    ],
    "content": [
     55,
@@ -270,12 +270,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0017": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     60,
-    61
+    93
    ],
    "content": [
     55,
@@ -285,12 +285,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0018": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     60,
-    61
+    93
    ],
    "content": [
     55,
@@ -300,12 +300,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0019": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     60,
-    61
+    93
    ],
    "content": [
     55,
@@ -315,12 +315,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0020": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     60,
-    61
+    93
    ],
    "content": [
     55,
@@ -330,12 +330,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0021": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     60,
-    61
+    93
    ],
    "content": [
     54,
@@ -345,12 +345,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0022": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     59,
-    61
+    93
    ],
    "content": [
     54,
@@ -360,12 +360,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0023": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     58,
-    61
+    93
    ],
    "content": [
     54,
@@ -375,12 +375,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0024": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     60,
-    62
+    94
    ],
    "content": [
     62,
@@ -390,12 +390,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0025": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     53,
-    64
+    96
    ],
    "content": [
     96,
@@ -405,12 +405,12 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0026": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     50,
-    64
+    96
    ],
    "content": [
     108,
@@ -420,280 +420,370 @@
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0027": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     42,
-    64
+    96
    ],
    "content": [
-    112,
-    70
+    114,
+    71
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0028": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     41,
-    64
+    96
    ],
    "content": [
-    113,
-    70
+    116,
+    71
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0029": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     40,
-    64
+    96
    ],
    "content": [
-    139,
-    70
+    129,
+    75
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0030": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     40,
-    64
+    96
    ],
    "content": [
-    139,
-    70
+    130,
+    75
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0031": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     40,
-    64
+    79
    ],
    "content": [
-    186,
-    70
+    147,
+    96
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0032": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     41,
-    64
+    78
    ],
    "content": [
-    185,
-    70
+    148,
+    98
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0033": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     42,
-    64
+    76
    ],
    "content": [
-    184,
-    70
+    151,
+    103
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0034": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     42,
-    65
+    75
    ],
    "content": [
-    184,
-    69
+    152,
+    104
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0035": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     43,
-    65
+    91
    ],
    "content": [
-    190,
-    69
+    160,
+    91
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0036": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     43,
-    65
+    90
    ],
    "content": [
-    190,
-    69
+    162,
+    92
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0037": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     45,
-    64
+    93
    ],
    "content": [
-    193,
-    70
+    167,
+    91
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0038": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     47,
-    64
+    92
    ],
    "content": [
-    191,
-    70
+    167,
+    93
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0039": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     48,
-    65
+    88
    ],
    "content": [
-    190,
-    69
+    173,
+    98
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0040": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     49,
-    65
+    87
    ],
    "content": [
-    189,
-    69
+    173,
+    100
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0041": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     48,
-    65
+    82
    ],
    "content": [
-    193,
-    69
+    180,
+    107
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0042": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     47,
-    65
+    81
    ],
    "content": [
-    194,
-    69
+    183,
+    108
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0043": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     45,
-    65
+    78
    ],
    "content": [
-    196,
-    69
+    189,
+    112
    ],
    "alias_of": null
   },
   "fx_holy_commander__skill_radiant_slash_side_combo_0044": {
    "size": [
-    242,
-    185
+    260,
+    200
    ],
    "trim_offset": [
     45,
-    65
+    77
    ],
    "content": [
-    196,
-    69
+    191,
+    113
    ],
-   "alias_of": "fx_holy_commander__skill_radiant_slash_side_combo_0043"
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0045": {
+   "size": [
+    260,
+    200
+   ],
+   "trim_offset": [
+    45,
+    74
+   ],
+   "content": [
+    190,
+    92
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0046": {
+   "size": [
+    260,
+    200
+   ],
+   "trim_offset": [
+    45,
+    73
+   ],
+   "content": [
+    191,
+    93
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0047": {
+   "size": [
+    260,
+    200
+   ],
+   "trim_offset": [
+    45,
+    71
+   ],
+   "content": [
+    192,
+    95
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0048": {
+   "size": [
+    260,
+    200
+   ],
+   "trim_offset": [
+    45,
+    70
+   ],
+   "content": [
+    194,
+    96
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0049": {
+   "size": [
+    260,
+    200
+   ],
+   "trim_offset": [
+    45,
+    71
+   ],
+   "content": [
+    204,
+    95
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0050": {
+   "size": [
+    260,
+    200
+   ],
+   "trim_offset": [
+    45,
+    70
+   ],
+   "content": [
+    206,
+    96
+   ],
+   "alias_of": null
   }
  },
  "animations": {
   "fx_holy_commander__skill_radiant_slash_side_combo": {
    "prefix": "fx_holy_commander__skill_radiant_slash_side_combo",
    "from": 1,
-   "to": 44
+   "to": 50
   }
  }
 }

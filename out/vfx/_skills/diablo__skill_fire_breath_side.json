@@ -9,13 +9,31 @@
   0.5,
   0.88
  ],
- "length": 62,
+ "length": 66,
  "layers": [
   [
    "fx_diablo_fire_breath_1",
-   34
+   38
+  ],
+  [
+   "fx_diablo_fire_breath_2",
+   46
   ]
  ],
- "edited": true,
- "hit": 34
+ "places": {
+  "fx_diablo_fire_breath_2": {
+   "place": "target",
+   "launch": [
+    0,
+    30
+   ],
+   "len": 10
+  }
+ },
+ "target": {
+  "dx": 200,
+  "dy": 0
+ },
+ "edited": false,
+ "hit": 38
 }

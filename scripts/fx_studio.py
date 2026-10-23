@@ -693,28 +693,37 @@ end
 function fx_lab.play_skill(game, s, x, y, flip)
 	local now = game.store.tick_ts
 
-	if s.combo then   -- the character and its effects baked into one animation in Fx Studio
-		fx_lab.spawn(game, s.combo, x, y, flip)
-
-		return
-	end
-
 	local ok, FXS = pcall(require, "fx_lab_skills")
+	local fn = ok and FXS[s.key]
 
-	if ok and FXS[s.key] then   -- the generated skill function, run in a coroutine like a hero script runs it
-		if s.pose then
-			fx_lab.spawn(game, s.pose, x, y, flip)
-		end
-
+	local function run(external_only)   -- the generated skill function, in a coroutine like a hero script runs it
 		local r = E:create_entity("fx_lab_runner")
 
 		r.pos.x, r.pos.y = x, y
 		r.main_script.update = function(this, store)
-			FXS[s.key](this, store, flip)
+			fn(this, store, flip, nil, external_only)
 			game.simulation:queue_remove_entity(this)
 		end
 
 		game.simulation:queue_insert_entity(r)
+	end
+
+	if s.combo then   -- the character and its effects baked into one animation in Fx Studio
+		fx_lab.spawn(game, s.combo, x, y, flip)
+
+		if fn then
+			run(true)   -- the layers at the target or flying to it are not in the combo
+		end
+
+		return
+	end
+
+	if fn then
+		if s.pose then
+			fx_lab.spawn(game, s.pose, x, y, flip)
+		end
+
+		run(false)
 
 		return
 	end
@@ -1007,6 +1016,9 @@ SKILL_LUA_HEAD = """-- fx_lab_skills: one function per skill made in fal-lab Fx 
 --   U.animation_start(this, "radiant_slash", nil, store.tick_ts)
 --   FXS.holy_commander__skill_radiant_slash_side(this, store)
 -- (it waits with U.y_wait, so it runs inside the coroutine). F5 in a level runs these very functions.
+-- Arguments: flip (nil = the hero's facing), target (an entity: layers placed at the target spawn at target.pos, flying
+-- layers travel to it; nil = the target point of the Fx Studio preview), external_only (only the target / flying layers:
+-- used with a baked combo, which already holds the layers at the hero).
 local E = require("entity_db")
 local U = require("utils")
 local simulation = require("simulation")
@@ -1021,25 +1033,65 @@ local function queue_insert(store, e)
 	simulation:queue_insert_entity(e)
 end
 
+-- a flying layer: move fx from where it was spawned to (x1, y1) in `frames` game frames (a runner entity's coroutine)
+local function fly(store, fx, x1, y1, frames)
+	local r = E:create_entity("fx_lab_runner")
+
+	r.pos.x, r.pos.y = fx.pos.x, fx.pos.y
+	r.main_script.update = function(this, st)
+		local t0, x0, y0 = st.tick_ts, fx.pos.x, fx.pos.y
+
+		while st.tick_ts - t0 < fts(frames) do
+			local k = (st.tick_ts - t0) / fts(frames)
+
+			fx.pos.x, fx.pos.y = x0 + (x1 - x0) * k, y0 + (y1 - y0) * k
+
+			coroutine.yield()
+		end
+
+		simulation:queue_remove_entity(this)
+	end
+
+	queue_insert(store, r)
+end
+
 local S = {}
 """
 
 
+WORLD = 768 / 1080   # fullhd px -> game world units (TEXTURE_SIZE_ALIAS.ipad / fullhd)
+
+
 def skill_lua(k: dict) -> str:
-    """The skill as a game-script function: spawn each layer's fx entity `at` game frames after the start."""
-    rows = "".join(f"\t\t{{{lua_str(n)}, {int(at)}}},\n" for n, at in sorted(k["layers"], key=lambda l: l[1]))
+    """The skill as a game-script function: spawn each layer's fx entity `at` game frames after the start, at the hero's
+    feet, at the target, or at the feet and then flown to the target over the layer's length."""
+    places, T = k.get("places") or {}, k.get("target") or {"dx": 150, "dy": 0}
+    rows = ""
+    for n, at in sorted(k["layers"], key=lambda l: l[1]):
+        pl = places.get(n, {})
+        lx, ly = (pl.get("launch") or [0, 0])
+        rows += (f"\t\t{{{lua_str(n)}, {int(at)}, {lua_str(pl.get('place', 'hero'))}, {round(lx * WORLD, 2)}, {round(ly * WORLD, 2)}, "
+                 f"{int(pl.get('len', 1))}}},\n")
     return (f"\n-- {k['key']}: {k.get('title', k['key'])}; {len(k['layers'])} layer(s), frames at 30 per second\n"
-            f"function S.{k['key']}(this, store, flip)\n"
+            f"function S.{k['key']}(this, store, flip, target, external_only)\n"
             f"\tlocal start = store.tick_ts\n"
             f"\tif flip == nil then\n\t\tflip = this.render and this.render.sprites[1].flip_x or false\n\tend\n"
-            f"\tlocal x, y = this.pos.x, this.pos.y\n\n"
+            f"\tlocal sx = flip and -1 or 1\n"
+            f"\tlocal x, y = this.pos.x, this.pos.y\n"
+            f"\tlocal tx, ty = x + sx * {round(T['dx'] * WORLD, 2)}, y + {round(T['dy'] * WORLD, 2)}   -- the preview's target\n\n"
+            f"\tif target then\n\t\ttx, ty = target.pos.x, target.pos.y\n\tend\n\n"
+            f"\t-- {{fx, frame, placed at, launch point x, y (world units, from the feet), frames in flight}}\n"
             f"\tfor _, l in ipairs({{\n{rows}\t}}) do\n"
-            f"\t\tU.y_wait(store, fts(l[2]) - (store.tick_ts - start))\n\n"
-            f"\t\tlocal fx = E:create_entity(l[1])\n\n"
-            f"\t\tfx.pos.x, fx.pos.y = x, y\n"
-            f"\t\tfx.render.sprites[1].ts = store.tick_ts\n"
-            f"\t\tfx.render.sprites[1].flip_x = flip\n\n"
-            f"\t\tqueue_insert(store, fx)\n\tend\nend\n")
+            f"\t\tif not external_only or l[3] ~= \"hero\" then\n"
+            f"\t\t\tU.y_wait(store, fts(l[2]) - (store.tick_ts - start))\n\n"
+            f"\t\t\tlocal fx = E:create_entity(l[1])\n\n"
+            f"\t\t\tfx.pos.x, fx.pos.y = x, y\n\n"
+            f"\t\t\tif l[3] == \"target\" then\n\t\t\t\tfx.pos.x, fx.pos.y = tx, ty\n\t\t\tend\n\n"
+            f"\t\t\tfx.render.sprites[1].ts = store.tick_ts\n"
+            f"\t\t\tfx.render.sprites[1].flip_x = flip\n\n"
+            f"\t\t\tqueue_insert(store, fx)\n\n"
+            f"\t\t\tif l[3] == \"fly\" then   -- its launch point reaches the target at the end of its animation\n"
+            f"\t\t\t\tfly(store, fx, tx - sx * l[4], ty - l[5], l[6])\n\t\t\tend\n\t\tend\n\tend\nend\n")
 
 
 def plays_pose(k: dict) -> bool:
@@ -1058,17 +1110,21 @@ def install_skill(skill: dict, layer_dirs: list, game: pathlib.Path, force: bool
     key = skill["key"]
     if not re.fullmatch(r"[a-z0-9_]+", key):
         sys.exit(f"skill key {key!r}: lowercase letters, digits and _ only")
-    layers = []
+    layers, places = [], {}
     for meta, folder in zip(skill["layers"], layer_dirs):
         fx_id = install_pack(folder, game, force, log, apply=False)
         if not meta.get("muted"):   # the game name comes from the pack itself (the saved document may not repeat it)
-            layers.append([load(fx_id)["game"]["name"], int(meta["start"])])
+            name = load(fx_id)["game"]["name"]
+            layers.append([name, int(meta["start"])])
+            if meta.get("place", "hero") != "hero":
+                places[name] = {"place": meta["place"], "launch": meta.get("launch") or [0, 0], "len": int(meta.get("len") or 1)}
     combo = None
     if combo_dir:   # the app's baked sheet: the character with every layer, frame by frame
         combo = load(install_pack(combo_dir, game, force, log, apply=False))["game"]["name"]
     SKILLS.mkdir(parents=True, exist_ok=True)
     rec = {"key": key, "combo": combo, "title": skill.get("title", key), "character": skill.get("character"), "pose_id": skill.get("pose"),
-           "anim": skill.get("anim"), "pivot": skill.get("pivot"), "length": skill.get("length", 30), "layers": layers}
+           "anim": skill.get("anim"), "pivot": skill.get("pivot"), "length": skill.get("length", 30), "layers": layers,
+           "places": places, "target": skill.get("target")}
     (SKILLS / f"{key}.json").write_text(json.dumps(rec, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     rec["edited"] = bool(skill.get("pose_edit") or skill.get("poseEdit"))
     rec["hit"] = skill.get("hit")
@@ -1101,12 +1157,14 @@ def export_skill_set(rec: dict, log=print) -> None:
     for name, at in rec["layers"]:
         shutil.copytree(by_name[name] / "game", out / "layers" / name)
         man = json.loads((out / "layers" / name / "manifest.json").read_text(encoding="utf-8"))
-        layers.append({"name": name, "start": at, "frames": len(man["frames"]), "anchor": man["anchor"], "canvas": man["canvas"],
+        pl = (rec.get("places") or {}).get(name, {})
+        layers.append({"name": name, "start": at, "place": pl.get("place", "hero"), "launch": pl.get("launch"), "frames": len(man["frames"]), "anchor": man["anchor"], "canvas": man["canvas"],
                        "z": json.loads((by_name[name] / "fx.json").read_text(encoding="utf-8"))["game"].get("z", "Z_EFFECTS")})
     if rec.get("combo") and rec["combo"] in by_name:
         shutil.copytree(by_name[rec["combo"]] / "game", out / "combo")
     info = {"key": rec["key"], "title": rec.get("title"), "character": rec["character"], "pose": pose, "game_animation": rec.get("anim"),
             "pose_edited": rec.get("edited", False), "fps": FPS, "length": rec.get("length"), "hit": rec.get("hit"),
+            "target_preview": rec.get("target"), "units": "px at fullhd (@1x); game world units = px x 768/1080",
             "layers": layers, "combo": "combo/" if (out / "combo").exists() else None,
             "use": "spawn each layer's fx at the hero's feet `start` frames after the skill animation starts (skill.lua does "
                    "exactly that); the combo is the character + every layer baked in one animation, for characters or poses "

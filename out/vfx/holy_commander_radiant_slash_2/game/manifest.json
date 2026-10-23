@@ -1,0 +1,189 @@
+{
+ "object": "fx_holy_commander_radiant_slash_2",
+ "kind": "animation",
+ "fps": 30,
+ "exported": "2026-10-23T20:56:18.900Z",
+ "source": "Fx Studio app pack",
+ "recipe_hash": "c590d1e930aa",
+ "mode": "raster",
+ "scale": 0.5,
+ "canvas": {
+  "@2x": [
+   334,
+   308
+  ],
+  "@1x": [
+   167,
+   154
+  ],
+  "ipad": [
+   119,
+   110
+  ]
+ },
+ "anchor": [
+  0.3048,
+  0.2948
+ ],
+ "anchor_note": "game anchor: x from the left, y from the BOTTOM of the canvas",
+ "loop": false,
+ "frames": {
+  "fx_holy_commander_radiant_slash_2_0001": {
+   "size": [
+    167,
+    154
+   ],
+   "trim_offset": [
+    58,
+    28
+   ],
+   "content": [
+    78,
+    30
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander_radiant_slash_2_0002": {
+   "size": [
+    167,
+    154
+   ],
+   "trim_offset": [
+    58,
+    28
+   ],
+   "content": [
+    78,
+    30
+   ],
+   "alias_of": "fx_holy_commander_radiant_slash_2_0001"
+  },
+  "fx_holy_commander_radiant_slash_2_0003": {
+   "size": [
+    167,
+    154
+   ],
+   "trim_offset": [
+    60,
+    28
+   ],
+   "content": [
+    84,
+    81
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander_radiant_slash_2_0004": {
+   "size": [
+    167,
+    154
+   ],
+   "trim_offset": [
+    60,
+    28
+   ],
+   "content": [
+    84,
+    81
+   ],
+   "alias_of": "fx_holy_commander_radiant_slash_2_0003"
+  },
+  "fx_holy_commander_radiant_slash_2_0005": {
+   "size": [
+    167,
+    154
+   ],
+   "trim_offset": [
+    75,
+    28
+   ],
+   "content": [
+    69,
+    100
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander_radiant_slash_2_0006": {
+   "size": [
+    167,
+    154
+   ],
+   "trim_offset": [
+    75,
+    28
+   ],
+   "content": [
+    69,
+    100
+   ],
+   "alias_of": "fx_holy_commander_radiant_slash_2_0005"
+  },
+  "fx_holy_commander_radiant_slash_2_0007": {
+   "size": [
+    167,
+    154
+   ],
+   "trim_offset": [
+    106,
+    32
+   ],
+   "content": [
+    38,
+    97
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander_radiant_slash_2_0008": {
+   "size": [
+    167,
+    154
+   ],
+   "trim_offset": [
+    106,
+    32
+   ],
+   "content": [
+    38,
+    97
+   ],
+   "alias_of": "fx_holy_commander_radiant_slash_2_0007"
+  },
+  "fx_holy_commander_radiant_slash_2_0009": {
+   "size": [
+    167,
+    154
+   ],
+   "trim_offset": [
+    120,
+    67
+   ],
+   "content": [
+    24,
+    62
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander_radiant_slash_2_0010": {
+   "size": [
+    167,
+    154
+   ],
+   "trim_offset": [
+    120,
+    67
+   ],
+   "content": [
+    24,
+    62
+   ],
+   "alias_of": "fx_holy_commander_radiant_slash_2_0009"
+  }
+ },
+ "animations": {
+  "fx_holy_commander_radiant_slash_2": {
+   "prefix": "fx_holy_commander_radiant_slash_2",
+   "from": 1,
+   "to": 10
+  }
+ }
+}

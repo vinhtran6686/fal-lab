@@ -1,0 +1,55 @@
+{
+ "version": 1,
+ "id": "holy_commander_radiant_slash_3",
+ "pack": true,
+ "title": "Tia trúng đòn",
+ "source": "app pack",
+ "mode": "raster",
+ "bg": "alpha",
+ "black_floor": 0.05,
+ "grid": [
+  2,
+  3
+ ],
+ "cells": [],
+ "frames": [
+  {
+   "cell": 0,
+   "hold": 2
+  },
+  {
+   "cell": 1,
+   "hold": 2
+  },
+  {
+   "cell": 2,
+   "hold": 2
+  },
+  {
+   "cell": 3,
+   "hold": 2
+  },
+  {
+   "cell": 4,
+   "hold": 2
+  }
+ ],
+ "scale": 0.5,
+ "anchor": [
+  0.4283,
+  0.8196
+ ],
+ "color": {
+  "hue": 0,
+  "saturation": 1,
+  "brightness": 1,
+  "alpha": 1
+ },
+ "game": {
+  "name": "fx_holy_commander_radiant_slash_3",
+  "z": "Z_EFFECTS",
+  "loop": false,
+  "runs": 1,
+  "installed": true
+ }
+}

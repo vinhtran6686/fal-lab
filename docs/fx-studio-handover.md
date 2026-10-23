@@ -1,4 +1,4 @@
-# Bàn giao: Fx Studio (2026-10-23)
+# Bàn giao: Fx Studio (cập nhật 2026-10-24)
 
 Tài liệu cho người làm tiếp Fx Studio (người hoặc một phiên Claude mới): tool làm ra những gì, file nằm đâu, đã kiểm
 những gì, còn dở gì. Hướng dẫn dùng chi tiết nằm ở [tools/fx_studio/README.md](../tools/fx_studio/README.md).
@@ -69,8 +69,8 @@ Thêm `meta.json["skills"][<pose>]`, và dòng `fx_<skill>` trong Asset manifest
 |---|---|---|
 | 1 | Bộ asset đúng chỗ + manifest, @2x thật, code skill chạy được, kiểm tra trước khi xuất, hoàn tác/làm lại | ✅ xong, đã kiểm (headless + trong game), đã publish |
 | 2 | 10 hiệu ứng mẫu Python trong menu "+ Thêm hiệu ứng" | ✅ xong, đã kiểm (mọi mẫu cắt đủ hình), đã publish (bản 7) |
-| 3a | Chuyển động: mờ vào/ra, cỡ đầu→cuối, trôi, ghim vị trí theo frame; vị trí đặt ở mục tiêu / bay tới mục tiêu (xem trước, kéo dấu mục tiêu) | ✅ phần app viết xong, đã thử headless (gói "motion" 24 frame, lưu được); **chưa publish** |
-| 3b | Phía game cho tầng "ở mục tiêu" và "bay tới mục tiêu" | ❌ **chưa làm**, xem mục 7 |
+| 3a | Chuyển động: mờ vào/ra, cỡ đầu→cuối, trôi, ghim vị trí theo frame; vị trí đặt ở mục tiêu / bay tới mục tiêu (xem trước, kéo dấu mục tiêu) | ✅ xong, đã thử headless (gói "motion" 24 frame), đã publish (bản 8) |
+| 3b | Phía game cho tầng "ở mục tiêu" và "bay tới mục tiêu" | ✅ xong (2026-10-24): `skill_lua` nhận `target` / `external_only`, tầng bay do `fly()` (runner) di chuyển; thử trong game: nổ ở mũi kiếm + tia trúng ở mục tiêu (chưa chụp được lúc vệt chém đang bay, log không lỗi) |
 
 ## 6. Đã kiểm / chưa kiểm
 
@@ -90,19 +90,11 @@ Thêm `meta.json["skills"][<pose>]`, và dòng `fx_<skill>` trong Asset manifest
 
 ## 7. Việc còn dở (làm tiếp theo thứ tự)
 
-1. **Giai đoạn 3b, phía game cho tầng ở mục tiêu / bay** (`scripts/fx_studio.py`):
-   - `install_skill`: lưu `place`, `len`, `launch` của từng tầng và `target` của skill (app đã ghi các trường này vào
-     `skill.json` và doc `skills/<key>`).
-   - `skill_lua`: hàm nhận thêm `target` (entity) và `external_only`.
-     - Tầng `target` tạo tại `target.pos`, không có thì tại điểm mục tiêu xem trước.
-     - Tầng `fly` tạo tại chân nhân vật, rồi một `fx_lab_runner` di chuyển `pos` tới `target - launch` trong `len` frame.
-     - Đổi px fullhd sang đơn vị thế giới bằng × 768/1080; nhân dx với `sx` (-1 khi lật).
-   - Runtime `play_skill`: nhánh sheet gộp cũng gọi hàm với `external_only = true`, vì sheet gộp không chứa tầng mục tiêu/bay.
-   - Thử trong game rồi publish app (`python tools/fx_studio/build_artifact.py`, publish `out/fx_studio_artifact/index.html`
-     cùng mọi file trong thư mục đó, đúng link trên).
+1. Trong game, tầng bay chỉ thử bằng code (log không lỗi, tia trúng ở mục tiêu hiện đúng); nên xem tận mắt bằng F5.
+   Script hero thật muốn dùng mục tiêu thật thì gọi `FXS.<key>(this, store, nil, target_entity)`.
 2. Người dùng thử trong app thật: mở lại skill sau khi tải lại trang, Tải gói .zip, rồi nhắn "cài skill …".
 3. Dọn hiệu ứng thử trong game:
-   - còn cài: `fire_breath_test`, `ice_breath_test`, `fire_breath`, `holy_commander_radiant_slash_1/_2`, các combo thử;
+   - còn cài: `fire_breath_test`, `ice_breath_test`, `fire_breath`, `holy_commander_radiant_slash_1/_2/_3`, `diablo_fire_breath_1/_2`, các combo thử;
    - lệnh: `python scripts/fx_studio.py uninstall <id> …` hoặc `--all`;
    - cài lại skill thật của người dùng từ db.
 4. Thư viện trong app: thêm cùng một sheet hai lần tạo hai mục (`lua_mau`, `lua_mau_2`); nên gộp theo nội dung ảnh.
