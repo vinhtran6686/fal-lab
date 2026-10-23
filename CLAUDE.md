@@ -35,6 +35,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   pick character + pose, layer effects on a timeline at game frames (snap to the hit frame), drag to place, recolour, save.
   "cài skill <char>__<pose> từ Fx Studio" = ArtifactData `get` skills/<key> -> Artifact `read` each asset id in
   `layers[].pack` -> `python scripts/fx_studio.py install-pack <assets dir> --skill <doc.json>` (no re-render; F5 in a level).
+  State, open work and repo notes: `docs/fx-studio-handover.md`.
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.

@@ -1,0 +1,699 @@
+{
+ "object": "fx_holy_commander__skill_radiant_slash_side_combo",
+ "kind": "animation",
+ "fps": 30,
+ "exported": "2026-10-22T17:54:36.203Z",
+ "source": "Fx Studio app pack",
+ "recipe_hash": "fd507a2a0eb7",
+ "mode": "raster",
+ "scale": 1,
+ "canvas": {
+  "@2x": [
+   484,
+   370
+  ],
+  "@1x": [
+   242,
+   185
+  ],
+  "ipad": [
+   172,
+   132
+  ]
+ },
+ "anchor": [
+  0.3678,
+  0.3243
+ ],
+ "anchor_note": "game anchor: x from the left, y from the BOTTOM of the canvas",
+ "loop": false,
+ "frames": {
+  "fx_holy_commander__skill_radiant_slash_side_combo_0001": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    57
+   ],
+   "content": [
+    46,
+    77
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0002": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    57
+   ],
+   "content": [
+    46,
+    77
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0003": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    57
+   ],
+   "content": [
+    46,
+    77
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0004": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    57
+   ],
+   "content": [
+    46,
+    77
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0005": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    56
+   ],
+   "content": [
+    53,
+    78
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0006": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    56
+   ],
+   "content": [
+    70,
+    78
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0007": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    56
+   ],
+   "content": [
+    75,
+    78
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0008": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    53
+   ],
+   "content": [
+    67,
+    81
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0009": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    53
+   ],
+   "content": [
+    46,
+    81
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0010": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    53
+   ],
+   "content": [
+    52,
+    81
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0011": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    66,
+    58
+   ],
+   "content": [
+    54,
+    76
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0012": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    63,
+    60
+   ],
+   "content": [
+    55,
+    74
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0013": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    60,
+    60
+   ],
+   "content": [
+    55,
+    74
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0014": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    60,
+    61
+   ],
+   "content": [
+    55,
+    73
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0015": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    60,
+    61
+   ],
+   "content": [
+    55,
+    73
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0016": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    60,
+    61
+   ],
+   "content": [
+    55,
+    73
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0017": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    60,
+    61
+   ],
+   "content": [
+    55,
+    73
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0018": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    60,
+    61
+   ],
+   "content": [
+    55,
+    73
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0019": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    60,
+    61
+   ],
+   "content": [
+    55,
+    73
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0020": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    60,
+    61
+   ],
+   "content": [
+    55,
+    73
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0021": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    60,
+    61
+   ],
+   "content": [
+    54,
+    73
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0022": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    59,
+    61
+   ],
+   "content": [
+    54,
+    73
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0023": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    58,
+    61
+   ],
+   "content": [
+    54,
+    73
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0024": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    60,
+    62
+   ],
+   "content": [
+    62,
+    72
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0025": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    53,
+    64
+   ],
+   "content": [
+    96,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0026": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    50,
+    64
+   ],
+   "content": [
+    108,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0027": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    42,
+    64
+   ],
+   "content": [
+    112,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0028": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    41,
+    64
+   ],
+   "content": [
+    113,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0029": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    40,
+    64
+   ],
+   "content": [
+    139,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0030": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    40,
+    64
+   ],
+   "content": [
+    139,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0031": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    40,
+    64
+   ],
+   "content": [
+    186,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0032": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    41,
+    64
+   ],
+   "content": [
+    185,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0033": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    42,
+    64
+   ],
+   "content": [
+    184,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0034": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    42,
+    65
+   ],
+   "content": [
+    184,
+    69
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0035": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    43,
+    65
+   ],
+   "content": [
+    190,
+    69
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0036": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    43,
+    65
+   ],
+   "content": [
+    190,
+    69
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0037": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    45,
+    64
+   ],
+   "content": [
+    193,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0038": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    47,
+    64
+   ],
+   "content": [
+    191,
+    70
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0039": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    48,
+    65
+   ],
+   "content": [
+    190,
+    69
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0040": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    49,
+    65
+   ],
+   "content": [
+    189,
+    69
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0041": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    48,
+    65
+   ],
+   "content": [
+    193,
+    69
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0042": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    47,
+    65
+   ],
+   "content": [
+    194,
+    69
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0043": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    45,
+    65
+   ],
+   "content": [
+    196,
+    69
+   ],
+   "alias_of": null
+  },
+  "fx_holy_commander__skill_radiant_slash_side_combo_0044": {
+   "size": [
+    242,
+    185
+   ],
+   "trim_offset": [
+    45,
+    65
+   ],
+   "content": [
+    196,
+    69
+   ],
+   "alias_of": "fx_holy_commander__skill_radiant_slash_side_combo_0043"
+  }
+ },
+ "animations": {
+  "fx_holy_commander__skill_radiant_slash_side_combo": {
+   "prefix": "fx_holy_commander__skill_radiant_slash_side_combo",
+   "from": 1,
+   "to": 44
+  }
+ }
+}

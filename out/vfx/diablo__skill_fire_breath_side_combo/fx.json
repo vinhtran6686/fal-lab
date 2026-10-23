@@ -84,11 +84,11 @@
   },
   {
    "cell": 18,
-   "hold": 1
+   "hold": 2
   },
   {
    "cell": 19,
-   "hold": 1
+   "hold": 2
   },
   {
    "cell": 20,
@@ -100,11 +100,11 @@
   },
   {
    "cell": 22,
-   "hold": 1
+   "hold": 2
   },
   {
    "cell": 23,
-   "hold": 1
+   "hold": 2
   },
   {
    "cell": 24,
@@ -116,11 +116,11 @@
   },
   {
    "cell": 26,
-   "hold": 1
+   "hold": 2
   },
   {
    "cell": 27,
-   "hold": 1
+   "hold": 2
   },
   {
    "cell": 28,
@@ -132,27 +132,7 @@
   },
   {
    "cell": 30,
-   "hold": 1
-  },
-  {
-   "cell": 31,
-   "hold": 1
-  },
-  {
-   "cell": 32,
    "hold": 2
-  },
-  {
-   "cell": 33,
-   "hold": 2
-  },
-  {
-   "cell": 34,
-   "hold": 1
-  },
-  {
-   "cell": 35,
-   "hold": 1
   }
  ],
  "scale": 1,

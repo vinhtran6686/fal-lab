@@ -2,9 +2,9 @@
  "object": "fx_diablo__skill_fire_breath_side_combo",
  "kind": "animation",
  "fps": 30,
- "exported": "2026-10-22T17:11:28.524Z",
+ "exported": "2026-10-22T17:54:37.296Z",
  "source": "Fx Studio app pack",
- "recipe_hash": "064b89a29e42",
+ "recipe_hash": "b3cbb8bfb93a",
  "mode": "raster",
  "scale": 1,
  "canvas": {
@@ -575,11 +575,11 @@
    ],
    "trim_offset": [
     68,
-    79
+    74
    ],
    "content": [
-    65,
-    52
+    101,
+    57
    ],
    "alias_of": null
   },
@@ -596,7 +596,7 @@
     101,
     57
    ],
-   "alias_of": null
+   "alias_of": "fx_diablo__skill_fire_breath_side_combo_0037"
   },
   "fx_diablo__skill_fire_breath_side_combo_0039": {
    "size": [
@@ -604,12 +604,12 @@
     187
    ],
    "trim_offset": [
-    68,
-    74
+    67,
+    71
    ],
    "content": [
-    101,
-    57
+    149,
+    60
    ],
    "alias_of": null
   },
@@ -619,12 +619,12 @@
     187
    ],
    "trim_offset": [
-    68,
-    74
+    67,
+    71
    ],
    "content": [
-    101,
-    57
+    149,
+    60
    ],
    "alias_of": "fx_diablo__skill_fire_breath_side_combo_0039"
   },
@@ -634,12 +634,12 @@
     187
    ],
    "trim_offset": [
-    67,
-    71
+    64,
+    70
    ],
    "content": [
-    149,
-    60
+    152,
+    61
    ],
    "alias_of": null
   },
@@ -649,12 +649,12 @@
     187
    ],
    "trim_offset": [
-    67,
-    71
+    64,
+    70
    ],
    "content": [
-    149,
-    60
+    152,
+    61
    ],
    "alias_of": "fx_diablo__skill_fire_breath_side_combo_0041"
   },
@@ -664,12 +664,12 @@
     187
    ],
    "trim_offset": [
-    67,
-    71
+    68,
+    67
    ],
    "content": [
-    149,
-    60
+    155,
+    64
    ],
    "alias_of": null
   },
@@ -679,14 +679,14 @@
     187
    ],
    "trim_offset": [
-    64,
-    70
+    68,
+    67
    ],
    "content": [
-    152,
-    61
+    155,
+    64
    ],
-   "alias_of": null
+   "alias_of": "fx_diablo__skill_fire_breath_side_combo_0043"
   },
   "fx_diablo__skill_fire_breath_side_combo_0045": {
    "size": [
@@ -694,12 +694,12 @@
     187
    ],
    "trim_offset": [
-    64,
-    70
+    67,
+    66
    ],
    "content": [
-    152,
-    61
+    161,
+    65
    ],
    "alias_of": null
   },
@@ -709,12 +709,12 @@
     187
    ],
    "trim_offset": [
-    64,
-    70
+    67,
+    66
    ],
    "content": [
-    152,
-    61
+    161,
+    65
    ],
    "alias_of": "fx_diablo__skill_fire_breath_side_combo_0045"
   },
@@ -725,11 +725,11 @@
    ],
    "trim_offset": [
     68,
-    67
+    69
    ],
    "content": [
-    155,
-    64
+    160,
+    62
    ],
    "alias_of": null
   },
@@ -740,11 +740,11 @@
    ],
    "trim_offset": [
     68,
-    67
+    69
    ],
    "content": [
-    155,
-    64
+    160,
+    62
    ],
    "alias_of": "fx_diablo__skill_fire_breath_side_combo_0047"
   },
@@ -754,12 +754,12 @@
     187
    ],
    "trim_offset": [
-    68,
-    67
+    67,
+    72
    ],
    "content": [
-    155,
-    64
+    164,
+    59
    ],
    "alias_of": null
   },
@@ -770,13 +770,13 @@
    ],
    "trim_offset": [
     67,
-    66
+    72
    ],
    "content": [
-    161,
-    65
+    164,
+    59
    ],
-   "alias_of": null
+   "alias_of": "fx_diablo__skill_fire_breath_side_combo_0049"
   },
   "fx_diablo__skill_fire_breath_side_combo_0051": {
    "size": [
@@ -784,12 +784,12 @@
     187
    ],
    "trim_offset": [
-    67,
-    66
+    68,
+    77
    ],
    "content": [
-    161,
-    65
+    163,
+    54
    ],
    "alias_of": null
   },
@@ -799,12 +799,12 @@
     187
    ],
    "trim_offset": [
-    67,
-    66
+    68,
+    77
    ],
    "content": [
-    161,
-    65
+    163,
+    54
    ],
    "alias_of": "fx_diablo__skill_fire_breath_side_combo_0051"
   },
@@ -815,11 +815,11 @@
    ],
    "trim_offset": [
     68,
-    69
+    81
    ],
    "content": [
-    160,
-    62
+    42,
+    50
    ],
    "alias_of": null
   },
@@ -830,11 +830,11 @@
    ],
    "trim_offset": [
     68,
-    69
+    81
    ],
    "content": [
-    160,
-    62
+    42,
+    50
    ],
    "alias_of": "fx_diablo__skill_fire_breath_side_combo_0053"
   },
@@ -845,11 +845,11 @@
    ],
    "trim_offset": [
     68,
-    69
+    81
    ],
    "content": [
-    160,
-    62
+    42,
+    50
    ],
    "alias_of": null
   },
@@ -859,14 +859,14 @@
     187
    ],
    "trim_offset": [
-    67,
-    72
+    68,
+    81
    ],
    "content": [
-    164,
-    59
+    42,
+    50
    ],
-   "alias_of": null
+   "alias_of": "fx_diablo__skill_fire_breath_side_combo_0055"
   },
   "fx_diablo__skill_fire_breath_side_combo_0057": {
    "size": [
@@ -874,12 +874,12 @@
     187
    ],
    "trim_offset": [
-    67,
-    72
+    68,
+    81
    ],
    "content": [
-    164,
-    59
+    42,
+    50
    ],
    "alias_of": null
   },
@@ -889,12 +889,12 @@
     187
    ],
    "trim_offset": [
-    67,
-    72
+    68,
+    81
    ],
    "content": [
-    164,
-    59
+    42,
+    50
    ],
    "alias_of": "fx_diablo__skill_fire_breath_side_combo_0057"
   },
@@ -905,11 +905,11 @@
    ],
    "trim_offset": [
     68,
-    77
+    81
    ],
    "content": [
-    163,
-    54
+    42,
+    50
    ],
    "alias_of": null
   },
@@ -920,11 +920,11 @@
    ],
    "trim_offset": [
     68,
-    77
+    81
    ],
    "content": [
-    163,
-    54
+    42,
+    50
    ],
    "alias_of": "fx_diablo__skill_fire_breath_side_combo_0059"
   },
@@ -935,11 +935,11 @@
    ],
    "trim_offset": [
     68,
-    77
+    81
    ],
    "content": [
-    163,
-    54
+    42,
+    50
    ],
    "alias_of": null
   },
@@ -956,7 +956,7 @@
     42,
     50
    ],
-   "alias_of": null
+   "alias_of": "fx_diablo__skill_fire_breath_side_combo_0061"
   }
  },
  "animations": {

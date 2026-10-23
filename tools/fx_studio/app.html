@@ -162,6 +162,32 @@ dialog img{max-width:100%;max-height:240px;display:block;margin:8px auto;backgro
   #tl{margin:12px 16px 24px}
   .tl-scroll{max-height:min(420px,70vh)}
 }
+/* undo / checks */
+.hist{display:inline-flex;gap:2px}
+.hist button{padding:4px 8px}
+#chk{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:13px;border:1px solid var(--line);background:var(--chip);cursor:pointer}
+#chk.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
+#chk.err{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 55%,var(--line))}
+#chkList{max-width:min(460px,92vw)}
+#chkList ul{margin:6px 0 0;padding-left:18px}
+#chkList li{margin:3px 0}
+#chkList li.err{color:var(--bad)}#chkList li.warn{color:var(--warn)}
+/* frame tuner */
+dialog.tuner{width:min(1100px,94vw);max-height:90vh;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+dialog.tuner:not([open]){display:none}
+.tn-top{display:grid;grid-template-columns:260px 1fr;gap:14px;align-items:start}
+.tn-top canvas{width:260px;height:206px;background:#0c0d10;border:1px solid var(--line);border-radius:8px}
+.tn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:8px;overflow:auto;min-height:0;padding:2px}
+.tn-card{background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:4px;text-align:center;font-size:11px;color:var(--muted)}
+.tn-card canvas{width:72px;height:58px;display:block;margin:0 auto 3px;cursor:pointer;background:#0c0d10;border-radius:4px}
+.tn-card.off{opacity:.35}
+.tn-card.off canvas{outline:1px dashed var(--muted)}
+.tn-card.hit{border-color:var(--head)}
+.tn-card .ctl{display:flex;justify-content:center;align-items:center;gap:3px}
+.tn-card input{width:38px;padding:1px 3px;font-size:11.5px}
+.tn-card button{padding:0 5px;font-size:11px}
+.tn-card.hit button.hb{color:var(--head);border-color:var(--head)}
+@media (max-width:700px){.tn-top{grid-template-columns:1fr}.tn-top canvas{width:100%;height:auto}}
 @media (prefers-reduced-motion:reduce){#toast,details.sec>summary::before{transition:none}}
 </style>
 
@@ -171,16 +197,21 @@ dialog img{max-width:100%;max-height:240px;display:block;margin:8px auto;backgro
   <label>Nhân vật <select id="charSel"></select></label>
   <label id="poseWrap">Pose <select id="poseSel"></select></label>
   <span class="spacer"></span>
+  <span class="hist"><button class="icon" id="btnUndo" title="Hoàn tác (Ctrl+Z)" aria-label="Hoàn tác" disabled>↶</button><button class="icon" id="btnRedo" title="Làm lại (Ctrl+Y)" aria-label="Làm lại" disabled>↷</button></span>
+  <button id="chk" popovertarget="chkList" title="Kiểm tra trước khi xuất" hidden>✓</button>
   <span id="state" class="state">—</span>
   <button id="btnRevert" title="Quay về bản đã lưu">Bỏ thay đổi</button>
   <button id="btnSave" class="primary">Lưu</button>
   <button id="btnZip" title="Tải gói (.zip) để cài vào game">Tải gói .zip</button>
   <button class="icon" popovertarget="howto" title="Cách đưa hiệu ứng vào game" aria-label="Cách đưa vào game">? Đưa vào game</button>
 </header>
+<div id="chkList" class="howto" popover><b style="color:var(--text)">Kiểm tra trước khi xuất</b><ul id="chkItems"></ul></div>
 <div id="howto" class="howto" popover>
   <b style="color:var(--text)">Đưa vào game</b>
   <p>Bấm <b>Lưu</b>, rồi nhắn Claude: <code id="askText">cài skill … từ Fx Studio</code></p>
   <p>Hoặc <b>Tải gói .zip</b> rồi trong <code>fal-lab</code> chạy:<br><code id="cmdText">python scripts/fx_studio.py install-pack skill.zip</code></p>
+  <p>Lưu tạo thêm <b>một sheet gộp</b> (nhân vật + mọi hiệu ứng, đúng từng frame); trong game phím <b>F5</b> phát sheet đó.</p>
+  <p><b>Mẹo:</b> chuột phải (hoặc ⋯) trên tầng nhân vật = <b>Frame tuner</b>; trên tầng hiệu ứng = nhân đôi, đổi thứ tự. Kéo <b>mép</b> tầng hiệu ứng để co giãn tốc độ. Phím <b>,</b> <b>.</b> dời tầng đang chọn 1 frame; <b>←</b> <b>→</b> từng frame; <b>Space</b> chạy/dừng.</p>
 </div>
 
 <main class="ws">
@@ -229,10 +260,25 @@ dialog img{max-width:100%;max-height:240px;display:block;margin:8px auto;backgro
         <button class="icon reset" id="rsFrames" title="Mọi ô theo thứ tự, mỗi hình giữ 2 frame">↺</button>
         <div class="bar" style="margin-top:0">
           <div class="seg" id="speedSeg"><button data-hold="1">Nhanh</button><button data-hold="2">Chuẩn</button><button data-hold="3">Chậm</button></div>
+          <label class="small muted" title="Mọi hình giữ cùng số frame game (30 frame = 1 giây)">giữ <input type="number" id="holdAll" min="1" max="60" style="width:52px" aria-label="Mỗi hình giữ bao nhiêu frame"> frame/hình</label>
           <button id="btnRev" title="Đảo ngược thứ tự">⇄</button>
           <button id="btnPing" title="Chạy tới rồi chạy lùi">Tới và lui</button>
         </div>
         <div class="minis" id="minis" style="margin-top:8px"></div>
+      </details>
+      <details class="sec" data-sec="motion">
+        <summary><h2>Chuyển động</h2></summary>
+        <button class="icon reset" id="rsMotion" title="Bỏ mọi chuyển động">↺</button>
+        <div class="seg" id="placeSeg" title="Game đặt tầng này ở đâu"><button data-p="hero">Ở nhân vật</button><button data-p="target">Ở mục tiêu</button><button data-p="fly">Bay tới mục tiêu</button></div>
+        <div class="pos" style="margin-top:8px">
+          <label for="mFadeIn">Hiện dần (frame)</label><input type="number" id="mFadeIn" min="0" max="60">
+          <label for="mFadeOut">Mờ dần (frame)</label><input type="number" id="mFadeOut" min="0" max="60">
+          <label for="mScaleFrom">Cỡ đầu → cuối (%)</label><span style="display:flex;gap:4px"><input type="number" id="mScaleFrom" min="10" max="400" style="width:62px" aria-label="Cỡ lúc đầu (%)"><input type="number" id="mScaleTo" min="10" max="400" style="width:62px" aria-label="Cỡ lúc cuối (%)"></span>
+          <label for="mMoveX">Trôi x / y (px)</label><span style="display:flex;gap:4px"><input type="number" id="mMoveX" style="width:62px" aria-label="Trôi sang phải (px)"><input type="number" id="mMoveY" style="width:62px" aria-label="Trôi lên trên (px)"></span>
+        </div>
+        <div class="bar"><button id="btnPin" title="Ghi vị trí của hiệu ứng ở frame đang xem; giữa các ghim, vị trí được nội suy">Ghim vị trí ở frame này</button></div>
+        <div class="chips" id="pins" style="margin-top:6px"></div>
+        <p class="hint" id="motionHint"></p>
       </details>
       <details class="sec" data-sec="adv">
         <summary><h2>Nâng cao</h2></summary>
@@ -286,6 +332,24 @@ dialog img{max-width:100%;max-height:240px;display:block;margin:8px auto;backgro
   <p class="hint">Lưới và nền được tự nhận; chỉnh lại trong Nâng cao nếu cắt sai. Hiệu ứng bắt đầu tại đầu phát.</p>
   <div class="bar" style="justify-content:flex-end"><button id="impCancel">Hủy</button><button id="impGo" class="primary">Thêm vào timeline</button></div>
 </dialog>
+<dialog id="dlgTuner" class="tuner" aria-labelledby="tnTitle">
+  <div class="tn-top">
+    <canvas id="tnPrev" width="260" height="206" aria-label="Xem trước pose đã chỉnh"></canvas>
+    <div>
+      <h2 style="margin:0 0 4px;font-size:16px" id="tnTitle">Frame tuner</h2>
+      <p class="hint" style="margin:0 0 8px">Bấm hình để giữ / bỏ. Số dưới hình = giữ bao nhiêu frame game (30 frame = 1 giây). ◎ = frame hit (trúng đòn).</p>
+      <div class="bar" style="margin-top:0">
+        <button id="tnAll">Giữ tất cả</button>
+        <button id="tnHalf" title="Giữ hình 1, 3, 5 …">Bỏ 1 trong 2</button>
+        <label class="small">mọi hình giữ <input type="number" id="tnHold" min="1" max="60" value="2" style="width:52px"> frame</label><button id="tnHoldGo">Đặt</button>
+        <button id="tnReset">Về gốc</button>
+      </div>
+      <p class="small muted" id="tnSum" style="margin:8px 0 0"></p>
+    </div>
+  </div>
+  <div class="tn-grid" id="tnGrid"></div>
+  <div class="bar" style="justify-content:flex-end;margin-top:0"><button id="tnCancel">Hủy</button><button id="tnApply" class="primary">Áp dụng</button></div>
+</dialog>
 <div id="menu" class="menu" hidden></div>
 <div id="toast" role="status"></div>
 
@@ -305,6 +369,7 @@ const PRESETS = [
 ];
 const REF_HERO_FEET = [0.5, 0.9];
 let db = null, assets = null, downloads = null;
+let SAMPLES_LIB = [];
 let CHARS = [], library = [], bgImg = null, heroImg = null, savedKeys = new Set();
 let skill = null, base = '';          // the open skill (character + pose + layers) and its saved form
 let sel = null;                       // the selected layer id
@@ -324,12 +389,20 @@ function toast(msg, bad) { const el = $('#toast'); el.textContent = msg; el.clas
 async function busy(btn, fn) { const tx = btn.textContent; btn.disabled = true; btn.textContent = '…'; try { await fn(); } catch (e) { if (e && e.message) toast(e.message, true); } finally { btn.textContent = tx; status(); } }
 const layer = id => skill?.layers.find(l => l.lid === id);
 const S = () => layer(sel);
-const savedForm = () => JSON.stringify(skill.layers.map(l => ({lid: l.lid, title: l.title, sheet: l.sheet || l.lid, recipe: l.recipe, start: l.start, muted: !!l.muted})));
+const savedForm = () => JSON.stringify({target: skill.target || null, pose: skill.poseEdit || null, layers: skill.layers.map(l => ({lid: l.lid, title: l.title, sheet: l.sheet || l.lid, recipe: l.recipe, start: l.start, muted: !!l.muted}))});
 const dirty = () => !!skill && savedForm() !== base;
 
 // ---------------------------------------------------------------- characters
 const CH = () => CHARS.find(c => c.id === skill?.character) || null;
-const POSE = () => CH()?.poses.find(p => p.id === skill.pose) || null;
+const BASE_POSE = () => CH()?.poses.find(p => p.id === skill.pose) || null;
+// the pose as the skill plays it: the catalog pose, or the frames, holds and hit chosen in the frame tuner (skill.poseEdit);
+// src[i] = the frame's index in the character strip
+function POSE() {
+  const b = BASE_POSE(); if (!b) return null;
+  const e = skill.poseEdit;
+  if (!e) return {...b, src: b.ticks.map((_, i) => i)};
+  return {...b, src: e.frames.map(f => f.i), ticks: e.frames.map(f => f.hold), frames: e.frames.length, hit: e.hit, edited: true};
+}
 function poseLen() { const p = POSE(); return p ? p.ticks.reduce((a, b) => a + b, 0) : 0; }
 function poseFrameAt(tk) { const p = POSE(); if (!p) return -1; let acc = 0; for (let i = 0; i < p.frames; i++) { acc += p.ticks[i]; if (tk < acc) return i; } return p.frames - 1; }
 function poseTickOf(frame) { const p = POSE(); let acc = 0; for (let i = 0; i < frame; i++) acc += p.ticks[i]; return acc; }
@@ -414,7 +487,7 @@ function cutSheet(L) {
     for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) if (p[(y * cw + x) * 4 + 3] > 25) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
   }
   C.box = x1 < 0 ? [0, 0, cw, ch] : [x0, y0, x1 + 1, y1 + 1];
-  C.tint = {key: ''}; C.r1 = {key: ''};
+  C.tint = {key: ''}; C.r1 = {key: ''}; C.r2 = {key: ''}; C.cutKey = JSON.stringify([R.bg, R.black_floor, R.grid]);
 }
 
 // ---------------------------------------------------------------- colour + the ONE renderer (preview == export)
@@ -450,6 +523,7 @@ function renderCell(L, i, f) {
   return c;
 }
 function frames1x(L) { const C = LC[L.lid], R = L.recipe, k = JSON.stringify([R.color, R.scale, C.cells.length, R.bg, R.black_floor, R.grid]); if (C.r1.key !== k) C.r1 = {key: k, c: C.cells.map((_, i) => renderCell(L, i, 1))}; return C.r1.c; }
+function frames2x(L) { const C = LC[L.lid], R = L.recipe, k = JSON.stringify([R.color, R.scale, C.cells.length, R.bg, R.black_floor, R.grid]); if (C.r2?.key !== k) C.r2 = {key: k, c: C.cells.map((_, i) => renderCell(L, i, 2))}; return C.r2.c; }
 const layerSeq = L => { const out = []; L.recipe.frames.forEach((f, k) => { for (let j = 0; j < Math.max(1, f.hold | 0); j++) out.push(k); }); return out; };
 const layerLen = L => layerSeq(L).length;
 
@@ -466,16 +540,65 @@ function defaults(L, part) {
   if (part === 'game' || part === 'all') r.game = {name: uniqueName(L), z: 'Z_EFFECTS', loop: false, runs: 1};
 }
 
+// ---------------------------------------------------------------- motion (baked into the layer's frames) and placement (done by the game)
+const MOTION0 = {fadeIn: 0, fadeOut: 0, scaleFrom: 100, scaleTo: 100, moveX: 0, moveY: 0, keys: []};
+const TARGET0 = {dx: 150, dy: 0};
+const mot = L => ({...MOTION0, ...(L.recipe.motion || {})});
+const place = L => L.recipe.place || 'hero';
+const external = L => place(L) !== 'hero';   // at the target or flying to it: the game places it, the combo leaves it out
+function hasMotion(L) { const m = mot(L); return !!(m.fadeIn || m.fadeOut || m.scaleFrom !== 100 || m.scaleTo !== 100 || m.moveX || m.moveY || m.keys.length); }
+function keyDelta(L, local) {   // the pinned positions, interpolated between pins (game px, y up)
+  const ks = [...mot(L).keys].sort((a, b) => a.f - b.f); if (!ks.length) return [0, 0];
+  if (local <= ks[0].f) return [ks[0].dx, ks[0].dy];
+  for (let i = 1; i < ks.length; i++) if (local <= ks[i].f) { const a = ks[i - 1], b = ks[i], k = (local - a.f) / Math.max(1, b.f - a.f); return [a.dx + (b.dx - a.dx) * k, a.dy + (b.dy - a.dy) * k]; }
+  const l = ks[ks.length - 1]; return [l.dx, l.dy];
+}
+function xform(L, local) {   // opacity, scale around the feet point and offset (game px, y up) at the layer's local frame
+  const m = mot(L), len = layerLen(L), k = len > 1 ? local / (len - 1) : 0, e = 1 - (1 - k) * (1 - k);
+  let a = 1; if (m.fadeIn) a = Math.min(a, (local + 1) / m.fadeIn); if (m.fadeOut) a = Math.min(a, (len - local) / m.fadeOut);
+  const [kx, ky] = keyDelta(L, local);
+  return {a: Math.max(0, Math.min(1, a)), s: (m.scaleFrom + (m.scaleTo - m.scaleFrom) * k) / 100, ox: m.moveX * e + kx, oy: m.moveY * e + ky};
+}
+function placeOffset(L, local) {   // preview only: the game does this with the real target
+  const T = skill.target || TARGET0, p = place(L);
+  if (p === 'target') return [T.dx, T.dy];
+  if (p === 'fly') { const len = layerLen(L), k = len > 1 ? local / (len - 1) : 1, o = offsetOf(L); return [(T.dx - o.dx) * k, (T.dy - o.dy) * k]; }
+  return [0, 0];
+}
+// img is the layer drawing at resolution f (1 = @1x, 2 = @2x), drawn around the feet (g's origin) zoomed by z
+function paint(g, L, img, x, f, z = 1) {
+  g.save(); g.globalAlpha *= x.a; g.translate(x.ox * f * z, -x.oy * f * z); g.scale(x.s * z, x.s * z);
+  g.drawImage(img, Math.round(-L.recipe.anchor[0] * img.width), Math.round(-L.recipe.anchor[1] * img.height)); g.restore();
+}
+function layerBounds(L, f) {   // the union of every frame's drawn rect around the feet, at resolution f (motion included)
+  const [w, h] = sizeOf(L, f), len = layerLen(L); let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (let k = 0; k < len; k++) { const x = xform(L, k), lx = -L.recipe.anchor[0] * w * x.s + x.ox * f, ly = -L.recipe.anchor[1] * h * x.s - x.oy * f; x0 = Math.min(x0, lx); y0 = Math.min(y0, ly); x1 = Math.max(x1, lx + w * x.s); y1 = Math.max(y1, ly + h * x.s); }
+  return [x0, y0, x1, y1];
+}
+
 // ---------------------------------------------------------------- stage
 const stage = $('#stage'), ctx = stage.getContext('2d');
 const PIVOT = [0.42, 0.68];
 const zoom = () => +$('#zoom').value;
-function drawLayer(L, z) {
-  const local = t - L.start, seq = layerSeq(L);
-  if (L.muted || local < 0 || local >= seq.length) return;
+function drawLayer(g, L, tk, z, bake) {
+  const local = tk - L.start, seq = layerSeq(L);
+  if (L.muted || local < 0 || local >= seq.length || bake && external(L)) return;
   const img = frames1x(L)[L.recipe.frames[seq[local]].cell]; if (!img) return;
-  const w = img.width * z, h = img.height * z;
-  ctx.drawImage(img, -L.recipe.anchor[0] * w, -L.recipe.anchor[1] * h, w, h);
+  const x = xform(L, local), [px, py] = bake ? [0, 0] : placeOffset(L, local);
+  paint(g, L, img, {...x, ox: x.ox + px, oy: x.oy + py}, 1, z);
+}
+// everything at game tick tk, around the feet (the origin of g): ground layers, the character, the other layers.
+// The stage draws it zoomed; the combo bake draws it at 1x, so the saved sheet is exactly what the stage shows.
+function drawScene(g, tk, z, ref, bake) {
+  for (const L of skill.layers) if (L.recipe.game.z === 'Z_DECALS') drawLayer(g, L, tk, z, bake);
+  const ch = CH(), p = POSE();
+  if (ch && p) {
+    const img = stripImgs[p.strip], i = poseFrameAt(Math.min(tk, poseLen() - 1));
+    if (img && i >= 0) { const [cw, chh] = ch.cell, w = cw * z, h = chh * z; g.drawImage(img, p.src[i] * cw, 0, cw, chh, Math.round(-ch.pivot[0] * w), Math.round(-ch.pivot[1] * h), w, h); }
+  } else if (ref && heroImg) {
+    const hw = heroImg.width * z, hh = heroImg.height * z; g.drawImage(heroImg, -REF_HERO_FEET[0] * hw, -REF_HERO_FEET[1] * hh, hw, hh);
+  }
+  for (const L of skill.layers) if (L.recipe.game.z !== 'Z_DECALS') drawLayer(g, L, tk, z, bake);
 }
 function draw() {
   const z = zoom(), W = stage.width, H = stage.height, px = W * PIVOT[0], py = H * PIVOT[1];
@@ -484,28 +607,39 @@ function draw() {
   if (bgImg) { const sw = W / z, sh = H / z; ctx.drawImage(bgImg, (bgImg.width - sw) / 2, (bgImg.height - sh) / 2, sw, sh, 0, 0, W, H); }
   if (!skill) return;
   ctx.save(); ctx.translate(px, py); if ($('#optFlip').checked) ctx.scale(-1, 1);
-  for (const L of skill.layers) if (L.recipe.game.z === 'Z_DECALS') drawLayer(L, z);
-  const ch = CH(), p = POSE();
-  if (ch && p) {
-    const img = stripImgs[p.strip], i = poseFrameAt(Math.min(t, poseLen() - 1));
-    if (img && i >= 0) { const [cw, chh] = ch.cell, w = cw * z, h = chh * z; ctx.drawImage(img, i * cw, 0, cw, chh, -ch.pivot[0] * w, -ch.pivot[1] * h, w, h); }
-  } else if ($('#optRef').checked && heroImg) {
-    const hw = heroImg.width * z, hh = heroImg.height * z; ctx.drawImage(heroImg, -REF_HERO_FEET[0] * hw, -REF_HERO_FEET[1] * hh, hw, hh);
-  }
-  for (const L of skill.layers) if (L.recipe.game.z !== 'Z_DECALS') drawLayer(L, z);
+  drawScene(ctx, t, z, $('#optRef').checked);
   ctx.restore();
   ctx.strokeStyle = 'rgba(80,240,255,.9)'; ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(px - 8, py); ctx.lineTo(px + 8, py); ctx.moveTo(px, py - 8); ctx.lineTo(px, py + 8); ctx.stroke();
+  if (skill.layers.some(external)) {   // the target (an enemy's feet), draggable; preview only
+    const [tx, ty] = targetPt();
+    ctx.strokeStyle = '#ff4d6d'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(tx, ty, 11, 0, Math.PI * 2); ctx.moveTo(tx - 16, ty); ctx.lineTo(tx + 16, ty); ctx.moveTo(tx, ty - 16); ctx.lineTo(tx, ty + 16); ctx.stroke();
+    ctx.fillStyle = '#ff4d6d'; ctx.font = '13px "IBM Plex Sans", sans-serif'; ctx.fillText('mục tiêu', tx + 14, ty - 14);
+  }
 }
+function targetPt() { const z = zoom(), T = skill.target || TARGET0, sx = $('#optFlip').checked ? -1 : 1; return [stage.width * PIVOT[0] + sx * T.dx * z, stage.height * PIVOT[1] - T.dy * z]; }
 let drag = null;
 function stagePt(e) { const r = stage.getBoundingClientRect(); return [(e.clientX - r.left) * stage.width / r.width, (e.clientY - r.top) * stage.height / r.height]; }
-stage.addEventListener('pointerdown', e => { const L = S(); if (!L) { toast('Chọn một tầng hiệu ứng ở timeline để kéo nó', true); return; } stage.setPointerCapture(e.pointerId); drag = {pt: stagePt(e), off: offsetOf(L)}; stage.classList.add('dragging'); });
+stage.addEventListener('pointerdown', e => {
+  const pt = stagePt(e);
+  if (skill?.layers.some(external)) { const [tx, ty] = targetPt(); if (Math.hypot(pt[0] - tx, pt[1] - ty) < 18) { stage.setPointerCapture(e.pointerId); drag = {kind: 'target', pt, T: {...(skill.target || TARGET0)}}; stage.classList.add('dragging'); return; } }
+  const L = S(); if (!L) { toast('Chọn một tầng hiệu ứng ở timeline để kéo nó', true); return; }
+  stage.setPointerCapture(e.pointerId);
+  const local = t - L.start;
+  if (mot(L).keys.length && local >= 0 && local < layerLen(L)) drag = {kind: 'pin', pt, L, local, k: keyDelta(L, local)};   // with pins, a drag edits the pin at this frame
+  else drag = {kind: 'base', pt, off: offsetOf(L)};
+  stage.classList.add('dragging');
+});
 stage.addEventListener('pointermove', e => {
   if (!drag) return;
-  const L = S(), [x, y] = stagePt(e), z = zoom(), sx = $('#optFlip').checked ? -1 : 1;
-  setOffset(L, drag.off.dx + sx * (x - drag.pt[0]) / z, drag.off.dy - (y - drag.pt[1]) / z); syncPos(); status();
+  const [x, y] = stagePt(e), z = zoom(), sx = $('#optFlip').checked ? -1 : 1, ddx = sx * (x - drag.pt[0]) / z, ddy = -(y - drag.pt[1]) / z;
+  if (drag.kind === 'target') { skill.target = {dx: Math.round(drag.T.dx + ddx), dy: Math.round(drag.T.dy + ddy)}; status(); return; }
+  const L = S();
+  if (drag.kind === 'pin') { setPin(L, drag.local, drag.k[0] + ddx, drag.k[1] + ddy); status(); return; }
+  setOffset(L, drag.off.dx + ddx, drag.off.dy + ddy); syncPos(); status();
 });
-const endDrag = () => { if (!drag) return; drag = null; stage.classList.remove('dragging'); refresh(); };
+function setPin(L, f, dx, dy) { const m = mot(L), keys = m.keys.filter(k => k.f !== f); keys.push({f, dx: Math.round(dx), dy: Math.round(dy)}); L.recipe.motion = {...m, keys}; }
+const endDrag = () => { if (!drag) return; drag = null; stage.classList.remove('dragging'); refresh(); };   // one undo step per drag
 stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
 
 // ---------------------------------------------------------------- timeline
@@ -521,8 +655,10 @@ function buildTimeline() {
   const add = c => lanes.appendChild(c);
   const ruler = canvas(W, RULER_H); ruler.dataset.kind = 'ruler'; add(ruler);
   if (POSE()) {
-    const p = POSE(), h = head('char', `<span class="sw"></span><span class="nm" title="${esc(CH().name + ': ' + p.name)}">${esc(CH().name)} · ${esc(p.name)}</span><span class="small muted" title="${p.timing === 'game' ? 'nhịp lấy từ animation của game' : 'nhịp lấy từ meta.json (nhân vật chưa có trong game)'}">${p.timing === 'game' ? 'game' : 'meta'}</span>`);
-    h.style.cursor = 'default';
+    const p = POSE(), h = head('char', `<span class="sw"></span><span class="nm" title="${esc(CH().name + ': ' + p.name)}">${esc(CH().name)} · ${esc(p.name)}</span><span class="small muted" title="${p.edited ? 'đã chỉnh trong Frame tuner' : p.timing === 'game' ? 'nhịp lấy từ animation của game' : 'nhịp lấy từ meta.json (nhân vật chưa có trong game)'}">${p.edited ? 'đã chỉnh' : p.timing === 'game' ? 'game' : 'meta'}</span>`);
+    const more = document.createElement('button'); more.className = 'icon'; more.textContent = '⋯'; more.title = 'Frame tuner và tùy chọn pose'; more.setAttribute('aria-label', 'Tùy chọn pose');
+    more.onclick = e => { e.stopPropagation(); charMenu(more); };
+    h.append(more); h.oncontextmenu = e => { e.preventDefault(); charMenu(e); };
     const c = canvas(W, LANE_H); c.dataset.kind = 'char'; add(c);
   }
   skill?.layers.forEach((L, i) => {
@@ -533,6 +669,7 @@ function buildTimeline() {
     del.onclick = e => { e.stopPropagation(); removeLayer(L.lid); };
     h.append(eye, del);
     h.onclick = () => selectLayer(L.lid);
+    h.oncontextmenu = e => { e.preventDefault(); layerMenu(L.lid, e); };
     const c = canvas(W, LANE_H); c.dataset.kind = 'layer'; c.dataset.lid = L.lid; add(c);
   });
   const a = head('add', '+ Thêm hiệu ứng'); a.onclick = e => openAddMenu(e.currentTarget);
@@ -554,12 +691,12 @@ function drawTimeline() {
       g.strokeStyle = '#262933'; for (let i = 0; i <= N; i += 5) { g.beginPath(); g.moveTo(i * P + .5, 0); g.lineTo(i * P + .5, c.height); g.stroke(); }
     }
     if (k === 'char' && pose) {
-      const img = stripImgs[pose.strip], [cw, ch] = CH().cell, starts = [];
+      const img = stripImgs[pose.strip], [cw, ch] = CH().cell, starts = [], src = pose.src;
       let x = 0;
       for (let i = 0; i < pose.frames; i++) { const w = pose.ticks[i] * P; starts.push(x); g.fillStyle = i % 2 ? '#22314f' : '#1f2c47'; g.fillRect(x, 4, w - 1, LANE_H - 8); x += w; }
       // a thumbnail every few frames, as wide as the frames it stands for, so the pose stays readable when zoomed out
       const s = (LANE_H - 10) / ch, thumbW = cw * s, every = Math.max(1, Math.ceil(thumbW * 0.6 / (P * (pose.ticks[0] || 1))));
-      if (img) for (let i = 0; i < pose.frames; i += every) { g.drawImage(img, i * cw, 0, cw, ch, starts[i] + (Math.min(thumbW, P * pose.ticks[i] * every) - thumbW) / 2, 5, thumbW, ch * s); }
+      if (img) for (let i = 0; i < pose.frames; i += every) { g.drawImage(img, src[i] * cw, 0, cw, ch, starts[i] + (Math.min(thumbW, P * pose.ticks[i] * every) - thumbW) / 2, 5, thumbW, ch * s); }
     }
     if (k === 'layer') {
       const i = skill.layers.findIndex(L => L.lid === c.dataset.lid), L = skill.layers[i], len = layerLen(L), x0 = L.start * P, col = laneColor(i);
@@ -573,6 +710,7 @@ function drawTimeline() {
         x += w; j += n;
       }
       g.lineWidth = L.lid === sel ? 2 : 1; g.strokeStyle = L.lid === sel ? '#ffffff' : col; g.strokeRect(x0 + .5, 4.5, len * P - 1, LANE_H - 9);
+      if (L.lid === sel) { g.fillStyle = '#ffffff'; g.fillRect(x0 + 1, LANE_H / 2 - 9, 3, 18); g.fillRect(x0 + len * P - 4, LANE_H / 2 - 9, 3, 18); }   // resize grips
       g.globalAlpha = 1;
     }
     if (hitTick != null && k !== 'add') {
@@ -590,22 +728,42 @@ $('#lanes').addEventListener('pointerdown', e => {
   const c = e.target.closest('canvas'); if (!c || !skill || c.dataset.kind === 'add') return;
   const r = $('#lanes').getBoundingClientRect(), x = e.clientX - r.left;
   $('#lanes').setPointerCapture(e.pointerId);
+  if (e.button === 2) { $('#lanes').releasePointerCapture(e.pointerId); return; }   // right click: the context menu handles it
   if (c.dataset.kind === 'layer') {
-    const L = layer(c.dataset.lid), local = x / ppt() - L.start;
+    const L = layer(c.dataset.lid), local = x / ppt() - L.start, edge = clipEdge(L, x);
     if (sel !== L.lid) selectLayer(L.lid);
+    if (edge) { tdrag = {kind: edge, L, holds: L.recipe.frames.map(f => f.hold), end: L.start + layerLen(L)}; return; }
     if (local >= 0 && local <= layerLen(L)) { tdrag = {kind: 'clip', L, grab: local}; return; }
   }
   tdrag = {kind: 'scrub'}; playing = false; updatePlay(); t = Math.max(0, Math.min(totalTicks() - 1, Math.floor(x / ppt())));
 });
+// within 6 px of a clip's left or right edge: drag to stretch or squeeze it (the holds are spread over the new length)
+function clipEdge(L, x) { const P = ppt(), x0 = L.start * P, x1 = x0 + layerLen(L) * P; if (Math.abs(x - x0) <= 6) return 'left'; if (Math.abs(x - x1) <= 6) return 'right'; return null; }
+function scaleHolds(L, T, orig) {
+  const L0 = orig.reduce((a, b) => a + b, 0); T = Math.max(orig.length, Math.min(60 * orig.length, T));
+  let cum = 0, prev = 0;
+  L.recipe.frames.forEach((f, i) => { cum += orig[i]; const h = Math.max(1, Math.min(60, Math.round(cum * T / L0) - prev)); f.hold = h; prev += h; });
+}
 $('#lanes').addEventListener('pointermove', e => {
-  if (!tdrag) return;
   const r = $('#lanes').getBoundingClientRect(), x = e.clientX - r.left;
+  if (!tdrag) { const c = e.target.closest('canvas'); if (c?.dataset.kind === 'layer') c.style.cursor = clipEdge(layer(c.dataset.lid), x) ? 'ew-resize' : 'grab'; return; }
   if (tdrag.kind === 'scrub') { t = Math.max(0, Math.min(totalTicks() - 1, Math.floor(x / ppt()))); return; }
+  if (tdrag.kind === 'right') { scaleHolds(tdrag.L, Math.round(x / ppt()) - tdrag.L.start, tdrag.holds); drawTimeline(); syncForm(); status(); return; }
+  if (tdrag.kind === 'left') {
+    let st = Math.max(0, Math.min(tdrag.end - tdrag.holds.length, Math.round(x / ppt())));
+    const p = POSE(); if (p?.hit != null) { const h = poseTickOf(p.hit); if (Math.abs(st - h) <= 2 && h <= tdrag.end - tdrag.holds.length) st = h; }
+    tdrag.L.start = st; scaleHolds(tdrag.L, tdrag.end - st, tdrag.holds); drawTimeline(); syncForm(); status(); return;
+  }
   let s = Math.max(0, Math.round(x / ppt() - tdrag.grab));
   const p = POSE(); if (p?.hit != null) { const h = poseTickOf(p.hit); if (Math.abs(s - h) <= 2) s = h; }
   if (s !== tdrag.L.start) { tdrag.L.start = s; drawTimeline(); syncStart(); status(); }
 });
-const endT = () => { if (!tdrag) return; const k = tdrag.kind; tdrag = null; if (k === 'clip') buildTimeline(); };
+const endT = () => { if (!tdrag) return; const k = tdrag.kind; tdrag = null; if (k !== 'scrub') refresh(); };
+$('#lanes').addEventListener('contextmenu', e => {
+  const c = e.target.closest('canvas'); if (!c) return;
+  if (c.dataset.kind === 'char') { e.preventDefault(); charMenu(e); }
+  if (c.dataset.kind === 'layer') { e.preventDefault(); layerMenu(c.dataset.lid, e); }
+});
 $('#lanes').addEventListener('pointerup', endT); $('#lanes').addEventListener('pointercancel', endT);
 $('#tlZoom').oninput = () => buildTimeline();
 
@@ -617,6 +775,11 @@ function openAddMenu(anchor) {
   const item = (label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = () => { menu.hidden = true; fn(); }; menu.appendChild(b); };
   item('Nhập sprite sheet…', openImport);
   item('Lửa mẫu', () => tryAdd(async () => addFromBlob(await (await fetch('samples/fire_breath.png')).blob(), 'Lửa mẫu', 'fire_breath.png')));
+  if (SAMPLES_LIB.length) {   // effects drawn with fx_layers (tools/fx_studio/build_samples.py): grid, scale and feet anchor given
+    const s = document.createElement('div'); s.className = 'sep'; menu.appendChild(s);
+    const l = document.createElement('div'); l.className = 'lbl'; l.textContent = 'Mẫu (vẽ bằng Python, đổi màu được)'; menu.appendChild(l);
+    for (const sp of SAMPLES_LIB) item(sp.title, () => tryAdd(async () => addFromBlob(await (await fetch(sp.file)).blob(), sp.title, sp.id + '.png', sp)));
+  }
   if (library.length) {
     const s = document.createElement('div'); s.className = 'sep'; menu.appendChild(s);
     const l = document.createElement('div'); l.className = 'lbl'; l.textContent = 'Từ thư viện (bản sao riêng cho skill này)'; menu.appendChild(l);
@@ -625,7 +788,33 @@ function openAddMenu(anchor) {
   menu.hidden = false;
   menu.style.left = Math.min(r.left, innerWidth - 250) + 'px'; menu.style.top = Math.max(8, r.top - menu.offsetHeight - 6) + 'px';
 }
-addEventListener('pointerdown', e => { if (!menu.hidden && !menu.contains(e.target) && !e.target.closest('.tl-head.add')) menu.hidden = true; });
+addEventListener('pointerdown', e => { if (!menu.hidden && !menu.contains(e.target) && !e.target.closest('.tl-head.add') && !e.target.closest('.tl-head .icon')) menu.hidden = true; });
+function showMenu(at, items) {   // at: a mouse event or an element; items: [label, fn] or 'sep'
+  menu.innerHTML = '';
+  for (const it of items) {
+    if (it === 'sep') { const sp = document.createElement('div'); sp.className = 'sep'; menu.appendChild(sp); continue; }
+    const b = document.createElement('button'); b.textContent = it[0]; b.disabled = !!it[2]; b.onclick = () => { menu.hidden = true; it[1](); }; menu.appendChild(b);
+  }
+  menu.hidden = false;
+  const r = at.getBoundingClientRect ? at.getBoundingClientRect() : {left: at.clientX, top: at.clientY, bottom: at.clientY};
+  menu.style.left = Math.max(8, Math.min(r.left, innerWidth - menu.offsetWidth - 8)) + 'px';
+  menu.style.top = Math.max(8, Math.min((r.bottom ?? r.top) + 4, innerHeight - menu.offsetHeight - 8)) + 'px';
+}
+function charMenu(at) {
+  if (!POSE()) return;
+  showMenu(at, [['Frame tuner: chọn frame, nhịp, hit…', openTuner], ['Về pose gốc', () => applyPoseEdit(null), !skill.poseEdit]]);
+}
+function layerMenu(lid, at) {
+  const i = skill.layers.findIndex(L => L.lid === lid);
+  showMenu(at, [['Nhân đôi tầng này', () => duplicateLayer(lid)], ['Đưa lên trên', () => moveLayer(i, -1), i === 0], ['Đưa xuống dưới', () => moveLayer(i, 1), i === skill.layers.length - 1], 'sep', ['Xóa tầng này', () => removeLayer(lid)]]);
+}
+function moveLayer(i, d) { const A = skill.layers, j = i + d; if (j < 0 || j >= A.length) return; [A[i], A[j]] = [A[j], A[i]]; refresh(); }
+function duplicateLayer(lid) {
+  const src = layer(lid), L = {...clone({...src, sheetBlob: null}), lid: 'L' + Date.now().toString(36) + skill.layers.length, title: src.title + ' (2)', sheetBlob: src.sheetBlob, pack: null, packKey: null};
+  LC[L.lid] = {bitmap: LC[lid].bitmap}; cutSheet(L);
+  skill.layers.splice(skill.layers.indexOf(src) + 1, 0, L);
+  L.recipe.game.name = uniqueName(L); selectLayer(L.lid); toast(`Đã nhân đôi “${src.title}”`);
+}
 const tryAdd = fn => fn().catch(e => toast(e.message, true));
 function newLayer(title) {
   const n = skill.layers.length + 1;
@@ -633,12 +822,17 @@ function newLayer(title) {
     recipe: {bg: null, black_floor: 0.05, grid: null, frames: [], scale: 1, anchor: [0.5, 0.5], color: {hue: 0, saturation: 1, brightness: 1, alpha: 1}, game: {name: '', z: 'Z_EFFECTS', loop: false, runs: 1}},
     start: Math.max(0, Math.min(t, totalTicks() - 1)), muted: false, pack: null, packKey: null};
 }
-async function addFromBlob(blob, title, fileName) {
+async function addFromBlob(blob, title, fileName, preset) {
   const L = newLayer(title); L.sheetBlob = blob; L.sheetName = fileName || '';
+  if (preset) { L.recipe.grid = preset.grid; L.recipe.bg = 'alpha'; }
   LC[L.lid] = {bitmap: await createImageBitmap(blob)};
   cutSheet(L);
   if (!LC[L.lid].cells.length) { delete LC[L.lid]; throw new Error('Không tìm thấy hình nào sau khi bỏ nền. Thử ảnh khác hoặc nền khác.'); }
   skill.layers.push(L); defaults(L, 'all');
+  if (preset) {   // a sample is drawn to scale with its feet at preset.anchor: keep both
+    L.recipe.scale = preset.scale; L.recipe.anchor = [...preset.anchor];
+    L.recipe.frames = LC[L.lid].cells.map((_, i) => ({cell: i, hold: preset.hold || 2}));
+  }
   selectLayer(L.lid);
   toast(`Đã thêm “${L.title}”: lưới ${L.recipe.grid.join('x')}, ${LC[L.lid].cells.length} hình, bắt đầu ở frame ${L.start}.`);
   return L;
@@ -653,8 +847,8 @@ async function addFromLibrary(p) {
   selectLayer(L.lid); toast(`Đã thêm “${L.title}” từ thư viện, bắt đầu ở frame ${L.start}`);
 }
 function removeLayer(lid) {
-  const L = layer(lid); skill.layers = skill.layers.filter(o => o.lid !== lid); delete LC[lid];
-  if (sel === lid) sel = skill.layers[0]?.lid || null; refresh(); toast(`Đã xóa tầng “${L.title}”. Bấm Bỏ thay đổi nếu xóa nhầm.`);
+  const L = layer(lid); skill.layers = skill.layers.filter(o => o.lid !== lid);   // LC[lid] stays: undo can restore the layer
+  if (sel === lid) sel = skill.layers[0]?.lid || null; refresh(); toast(`Đã xóa tầng “${L.title}”. Xóa nhầm thì bấm Ctrl+Z (hoàn tác).`);
 }
 const dlg = $('#dlgImport');
 function openImport() { if (!skill) return; $('#impFile').value = ''; $('#impPrev').hidden = true; $('#impName').value = ''; dlg.showModal(); }
@@ -713,6 +907,28 @@ function recut() {
   L.recipe.frames = L.recipe.frames.filter(f => f.cell < n);
   toast(`Đã cắt lại: lưới ${L.recipe.grid.join('x')}, ${n} ô`); refresh();
 }
+const MFIELDS = [['mFadeIn', 'fadeIn', 0, 60], ['mFadeOut', 'fadeOut', 0, 60], ['mScaleFrom', 'scaleFrom', 10, 400], ['mScaleTo', 'scaleTo', 10, 400], ['mMoveX', 'moveX', -999, 999], ['mMoveY', 'moveY', -999, 999]];
+for (const [id, k, lo, hi] of MFIELDS) $('#' + id).onchange = () => { const L = S(), v = Math.max(lo, Math.min(hi, Math.round(+$('#' + id).value || 0))); L.recipe.motion = {...mot(L), [k]: v}; refresh(); };
+document.querySelectorAll('#placeSeg button').forEach(b => b.onclick = () => { const L = S(); L.recipe.place = b.dataset.p; if (b.dataset.p !== 'hero' && !skill.target) skill.target = {...TARGET0}; refresh(); });
+$('#rsMotion').onclick = () => { const L = S(); delete L.recipe.motion; L.recipe.place = 'hero'; refresh(); };
+$('#btnPin').onclick = () => {
+  const L = S(), local = t - L.start;
+  if (local < 0 || local >= layerLen(L)) { toast('Đầu phát đang ở ngoài tầng này: tua tới frame mà tầng đang chạy rồi ghim', true); return; }
+  const [kx, ky] = keyDelta(L, local); setPin(L, local, kx, ky); refresh(); toast(`Đã ghim ở frame ${L.start + local}. Tua sang frame khác rồi kéo hiệu ứng để thêm ghim.`);
+};
+function syncMotion() {
+  const L = S(), m = mot(L);
+  for (const [id, k] of MFIELDS) if (document.activeElement !== $('#' + id)) $('#' + id).value = m[k];
+  document.querySelectorAll('#placeSeg button').forEach(b => b.classList.toggle('on', b.dataset.p === place(L)));
+  const pins = $('#pins'); pins.innerHTML = '';
+  for (const k of [...m.keys].sort((a, b) => a.f - b.f)) {
+    const b = document.createElement('button'); b.textContent = `frame ${L.start + k.f} ✕`; b.title = 'Bấm để bỏ ghim này';
+    b.onclick = () => { L.recipe.motion = {...mot(L), keys: mot(L).keys.filter(x => x.f !== k.f)}; refresh(); };
+    pins.appendChild(b);
+  }
+  $('#motionHint').textContent = (m.keys.length ? 'Có ghim: kéo hiệu ứng trên khung xem = sửa vị trí ở frame đang xem. ' : '') +
+    (place(L) === 'target' ? 'Tầng nằm ở mục tiêu (kéo dấu đỏ trên khung xem để thử).' : place(L) === 'fly' ? 'Tầng bay từ vị trí đặt tới mục tiêu trong suốt độ dài của nó; game di chuyển nó theo mục tiêu thật.' : '');
+}
 function drawMinis() {
   const L = S(), box = $('#minis'); box.innerHTML = ''; if (!L) return;
   const imgs = tinted(L), seq = layerSeq(L);
@@ -735,6 +951,7 @@ function drawMinis() {
 function markMini() { const L = S(); if (!L) return; const seq = layerSeq(L), local = t - L.start; document.querySelectorAll('#minis .mini').forEach((el, k) => el.classList.toggle('cur', local >= 0 && local < seq.length && seq[local] === k)); }
 function moveF(k, d) { const F = S().recipe.frames, j = k + d; if (j < 0 || j >= F.length) return; [F[k], F[j]] = [F[j], F[k]]; refresh(); }
 document.querySelectorAll('#speedSeg button').forEach(b => b.onclick = () => { S().recipe.frames.forEach(f => f.hold = +b.dataset.hold); refresh(); });
+$('#holdAll').onchange = () => { const v = Math.max(1, Math.min(60, $('#holdAll').value | 0)); if (!v) return; S().recipe.frames.forEach(f => f.hold = v); refresh(); };
 $('#btnRev').onclick = () => { S().recipe.frames.reverse(); refresh(); };
 $('#btnPing').onclick = () => { const F = S().recipe.frames; S().recipe.frames = F.concat(F.slice(1, -1).reverse().map(f => ({...f}))); refresh(); };
 $('#btnSeq').onclick = () => {
@@ -752,7 +969,7 @@ function syncForm() {
   if (!L) return;
   $('#layerTitle').textContent = L.title;
   for (const [id, get, , fmt] of SLIDERS) { const v = get(L); $('#' + id).value = v; $('#' + id + 'Out').textContent = fmt(v); }
-  syncPos(); syncPresets(); syncStart();
+  syncPos(); syncPresets(); syncStart(); syncMotion();
   $('#btnToHit').disabled = POSE()?.hit == null;
   $('#bg').value = L.recipe.bg; $('#grid').value = L.recipe.grid.join('x');
   $('#gName').value = L.recipe.game.name; $('#gZ').value = L.recipe.game.z;
@@ -760,6 +977,7 @@ function syncForm() {
   $('#framesTitle').textContent = `Các hình · ${L.recipe.frames.length} hình · ${(layerLen(L) / FPS).toFixed(2)} s`;
   const holds = new Set(L.recipe.frames.map(f => f.hold));
   document.querySelectorAll('#speedSeg button').forEach(b => b.classList.toggle('on', holds.size === 1 && holds.has(+b.dataset.hold)));
+  if (document.activeElement !== $('#holdAll')) { $('#holdAll').value = holds.size === 1 ? [...holds][0] : ''; $('#holdAll').placeholder = holds.size === 1 ? '' : 'khác'; }
 }
 function status() {
   const el = $('#state'), d = dirty();
@@ -770,7 +988,129 @@ function status() {
   $('#btnZip').disabled = !skill?.layers.length;
   if (skill) { $('#askText').textContent = `cài skill ${skill.key} từ Fx Studio`; $('#cmdText').textContent = `python scripts/fx_studio.py install-pack ${skill.key}.fxskill.zip`; }
 }
-function refresh() { syncForm(); drawMinis(); buildTimeline(); status(); }
+function refresh() { syncForm(); drawMinis(); buildTimeline(); status(); remember(); checkSoon(); }
+
+// ---------------------------------------------------------------- undo / redo (Ctrl+Z, Ctrl+Y): the skill's layers and pose edit after each finished edit
+const HIST = {past: [], future: [], cur: null, quiet: false};
+const blobs = {};   // sheets not uploaded yet, by layer id (snapshots are JSON)
+function snapshot() { for (const L of skill.layers) if (L.sheetBlob) blobs[L.lid] = L.sheetBlob; return JSON.stringify({target: skill.target || null, pose: skill.poseEdit || null, sel, layers: skill.layers.map(L => ({...L, sheetBlob: null}))}); }
+function remember() {
+  if (!skill || HIST.quiet) return;
+  const now = snapshot();
+  if (HIST.cur === null) { HIST.cur = now; } else if (now !== HIST.cur) { HIST.past.push(HIST.cur); if (HIST.past.length > 100) HIST.past.shift(); HIST.cur = now; HIST.future = []; }
+  $('#btnUndo').disabled = !HIST.past.length; $('#btnRedo').disabled = !HIST.future.length;
+}
+function resetHistory() { HIST.past = []; HIST.future = []; HIST.cur = null; }
+function restore(snap) {
+  const d = JSON.parse(snap);
+  skill.poseEdit = d.pose; skill.target = d.target;
+  skill.layers = d.layers.map(L => ({...L, sheetBlob: blobs[L.lid] || null}));
+  for (const L of skill.layers) { const C = LC[L.lid], k = JSON.stringify([L.recipe.bg, L.recipe.black_floor, L.recipe.grid]); if (C && C.cutKey !== k) cutSheet(L); }
+  sel = layer(d.sel) ? d.sel : skill.layers[0]?.lid || null;
+  HIST.quiet = true; refresh(); HIST.quiet = false;
+  $('#btnUndo').disabled = !HIST.past.length; $('#btnRedo').disabled = !HIST.future.length;
+}
+function undo() { if (!HIST.past.length) return; HIST.future.push(HIST.cur); HIST.cur = HIST.past.pop(); restore(HIST.cur); }
+function redo() { if (!HIST.future.length) return; HIST.past.push(HIST.cur); HIST.cur = HIST.future.pop(); restore(HIST.cur); }
+$('#btnUndo').onclick = undo; $('#btnRedo').onclick = redo;
+addEventListener('keydown', e => {   // in a text field Ctrl+Z stays the field's own undo
+  if (!(e.ctrlKey || e.metaKey) || ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName) || document.querySelector('dialog[open]')) return;
+  const k = e.key.toLowerCase();
+  if (k === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
+  if (k === 'y' || (k === 'z' && e.shiftKey)) { e.preventDefault(); redo(); }
+});
+// sliders change the recipe live; the edit is one step when the slider is released
+document.querySelectorAll('#panel input[type=range]').forEach(r => r.addEventListener('change', () => remember()));
+
+// ---------------------------------------------------------------- checks before export (the chip next to the state)
+let checkT = 0;
+function checkSoon() { clearTimeout(checkT); checkT = setTimeout(() => showChecks(checks()), 150); }
+function checks(extra = []) {
+  const out = [], p = POSE(), names = new Set();
+  if (!skill) return out;
+  if (!skill.layers.length) out.push(['warn', 'Chưa có tầng hiệu ứng nào.']);
+  for (const L of skill.layers) {
+    if (names.has(L.recipe.game.name)) out.push(['err', `Tên “${L.recipe.game.name}” trùng ở hai tầng.`]); names.add(L.recipe.game.name);
+    if (L.muted) out.push(['warn', `Tầng “${L.title}” đang ẩn: không có trong sheet gộp, không vào skill.`]);
+    const empty = L.recipe.frames.filter(f => { const c = frames1x(L)[f.cell]; return !c || trimBox(c)[2] <= 1 && !c.getContext('2d').getImageData(0, 0, 1, 1).data[3]; }).length;
+    if (empty) out.push(['warn', `Tầng “${L.title}”: ${empty} hình trống (không thấy gì).`]);
+  }
+  if (p?.hit != null && skill.layers.length) {
+    const h = poseTickOf(p.hit);
+    if (!skill.layers.some(L => !L.muted && L.start <= h + 2 && L.start + layerLen(L) > h)) out.push(['warn', `Không tầng nào đang chạy ở frame hit (${h}).`]);
+  }
+  if (CH() && contentTicks() > 120) out.push(['warn', `Skill dài ${contentTicks()} frame (> 4 giây): sheet gộp sẽ lớn.`]);
+  return out.concat(extra);
+}
+function showChecks(list) {
+  const c = $('#chk'), errs = list.filter(x => x[0] === 'err').length, warns = list.length - errs;
+  c.hidden = !skill; c.className = errs ? 'err' : warns ? 'warn' : '';
+  c.textContent = errs ? `⛔ ${errs}` : warns ? `⚠ ${warns}` : '✓ Ổn';
+  $('#chkItems').innerHTML = list.length ? list.map(([lv, m]) => `<li class="${lv}">${esc(m)}</li>`).join('') : '<li>Không có vấn đề.</li>';
+  return errs;
+}
+
+// ---------------------------------------------------------------- frame tuner: which pose frames play, how long each is held, which is the hit
+const dlgT = $('#dlgTuner');
+let TN = null;   // {frames: [{i, keep, hold}], hit: strip index or null}
+function openTuner() {
+  const b = BASE_POSE(), e = skill.poseEdit;
+  const keep = e ? new Map(e.frames.map(f => [f.i, f.hold])) : null;
+  TN = {frames: b.ticks.map((tk, i) => ({i, keep: keep ? keep.has(i) : true, hold: keep?.get(i) ?? tk})), hit: e ? (e.hit != null ? e.frames[e.hit].i : null) : b.hit, t0: performance.now()};
+  $('#tnTitle').textContent = `Frame tuner · ${CH().name} · ${b.name}`;
+  drawTuner(); dlgT.showModal();
+}
+function tunerSum() { const k = TN.frames.filter(f => f.keep), n = k.reduce((a, f) => a + f.hold, 0); return {k, n}; }
+function drawTuner() {
+  const grid = $('#tnGrid'), b = BASE_POSE(), img = stripImgs[b.strip], [cw, ch] = CH().cell; grid.innerHTML = '';
+  TN.frames.forEach(f => {
+    const d = document.createElement('div'); d.className = 'tn-card' + (f.keep ? '' : ' off') + (TN.hit === f.i ? ' hit' : '');
+    const cv = canvas(72, 58); if (img) { const s = Math.min(72 / cw, 58 / ch); cv.getContext('2d').drawImage(img, f.i * cw, 0, cw, ch, (72 - cw * s) / 2, (58 - ch * s) / 2, cw * s, ch * s); }
+    cv.title = f.keep ? 'Bỏ hình này' : 'Giữ hình này'; cv.onclick = () => { f.keep = !f.keep; drawTuner(); };
+    d.append(cv, Object.assign(document.createElement('div'), {textContent: `hình ${f.i + 1}`}));
+    const ctl = document.createElement('div'); ctl.className = 'ctl';
+    const h = document.createElement('input'); h.type = 'number'; h.min = 1; h.max = 60; h.value = f.hold; h.title = 'Giữ bao nhiêu frame game'; h.setAttribute('aria-label', `Hình ${f.i + 1}: giữ (frame)`);
+    h.onchange = () => { f.hold = Math.max(1, Math.min(60, h.value | 0)); drawTuner(); };
+    const hb = document.createElement('button'); hb.className = 'hb'; hb.textContent = '◎'; hb.title = 'Đặt làm frame hit'; hb.onclick = () => { TN.hit = TN.hit === f.i ? null : f.i; drawTuner(); };
+    ctl.append(h, hb); d.appendChild(ctl); grid.appendChild(d);
+  });
+  const {k, n} = tunerSum();
+  $('#tnSum').textContent = `Giữ ${k.length}/${TN.frames.length} hình · ${n} frame game · ${(n / FPS).toFixed(2)} giây` + (TN.hit != null && !TN.frames[TN.hit].keep ? ' · frame hit đang bị bỏ' : '');
+}
+function drawTunerPreview(now) {
+  if (!dlgT.open || !TN) return;
+  const {k, n} = tunerSum(), c = $('#tnPrev'), g = c.getContext('2d'), b = BASE_POSE(), img = stripImgs[b.strip], [cw, ch] = CH().cell;
+  g.fillStyle = '#0c0d10'; g.fillRect(0, 0, c.width, c.height);
+  if (!k.length || !img) return;
+  let tk = Math.floor((now - TN.t0) / 1000 * FPS) % (n + 8), i = 0;   // a short rest after the last frame before it loops
+  while (i < k.length - 1 && tk >= k[i].hold) { tk -= k[i].hold; i++; }
+  const s = Math.min(c.width / cw, c.height / ch); g.drawImage(img, k[i].i * cw, 0, cw, ch, (c.width - cw * s) / 2, (c.height - ch * s) / 2, cw * s, ch * s);
+  if (TN.hit === k[i].i) { g.fillStyle = '#ff4d6d'; g.font = '12px "IBM Plex Mono", monospace'; g.fillText('hit', 8, 18); }
+}
+$('#tnAll').onclick = () => { TN.frames.forEach(f => f.keep = true); drawTuner(); };
+$('#tnHalf').onclick = () => { TN.frames.forEach((f, i) => f.keep = i % 2 === 0); drawTuner(); };
+$('#tnHoldGo').onclick = () => { const v = Math.max(1, Math.min(60, $('#tnHold').value | 0)); TN.frames.forEach(f => f.hold = v); drawTuner(); };
+$('#tnReset').onclick = () => { const b = BASE_POSE(); TN.frames = b.ticks.map((tk, i) => ({i, keep: true, hold: tk})); TN.hit = b.hit; drawTuner(); };
+$('#tnCancel').onclick = () => dlgT.close();
+$('#tnApply').onclick = () => {
+  const {k} = tunerSum(); if (!k.length) { toast('Giữ ít nhất một hình', true); return; }
+  let hit = TN.hit, moved = '';
+  if (hit != null && !k.some(f => f.i === hit)) {   // the hit frame was dropped: the nearest kept frame takes over
+    const near = k.reduce((a, f) => Math.abs(f.i - hit) < Math.abs(a.i - hit) ? f : a); moved = ` Frame hit bị bỏ nên dời sang hình ${near.i + 1}.`; hit = near.i;
+  }
+  const b = BASE_POSE(), e = {frames: k.map(f => ({i: f.i, hold: f.hold})), hit: hit == null ? null : k.findIndex(f => f.i === hit)};
+  const same = k.length === b.frames && k.every((f, j) => f.i === j && f.hold === b.ticks[j]) && hit === b.hit;
+  applyPoseEdit(same ? null : e, moved); dlgT.close();
+};
+function applyPoseEdit(e, note = '') {
+  const before = POSE(), oldHit = before?.hit != null ? poseTickOf(before.hit) : null;
+  skill.poseEdit = e;
+  const p = POSE(), newHit = p?.hit != null ? poseTickOf(p.hit) : null;
+  let n = 0;
+  if (oldHit != null && newHit != null && oldHit !== newHit) for (const L of skill.layers) if (L.start === oldHit) { L.start = newHit; n++; }   // layers pinned to the hit follow it
+  t = Math.min(t, totalTicks() - 1); refresh();
+  toast((e ? `Đã áp dụng: ${p.frames} hình, ${poseLen()} frame game.` : 'Đã về pose gốc.') + (n ? ` ${n} tầng gắn vào hit đã dời theo sang frame ${newHit}.` : '') + note + ' Bấm Lưu để giữ.');
+}
 
 // ---------------------------------------------------------------- playback
 function updatePlay() { $('#btnPlay').textContent = playing ? '⏸' : '▶'; }
@@ -783,6 +1123,7 @@ addEventListener('keydown', e => {
   if (e.code === 'Space') { e.preventDefault(); $('#btnPlay').click(); }
   if (e.key === 'ArrowLeft') $('#btnPrev').click();
   if (e.key === 'ArrowRight') $('#btnNext').click();
+  if ((e.key === ',' || e.key === '.') && S()) { S().start = Math.max(0, S().start + (e.key === ',' ? -1 : 1)); refresh(); }
 });
 let acc = 0, last = performance.now(), lastT = -1;
 function tick(now) {
@@ -791,7 +1132,7 @@ function tick(now) {
     acc += dt;
     while (acc >= 1 / FPS) { acc -= 1 / FPS; t++; if (t >= contentTicks() + TAIL) { if ($('#optLoop').checked) t = 0; else { t = contentTicks() + TAIL - 1; playing = false; updatePlay(); } } }
   }
-  draw();
+  draw(); drawTunerPreview(now);
   if (t !== lastT && skill) { lastT = t; drawTimeline(); markMini(); }
   requestAnimationFrame(tick);
 }
@@ -811,7 +1152,39 @@ function trimBox(c) {
   return x1 < 0 ? [0, 0, 1, 1] : [x0, y0, x1 + 1, y1 + 1];
 }
 const toBlob = c => new Promise(ok => c.toBlob(ok, 'image/png'));
+async function buildMotionPack(L) {
+  const R = L.recipe, name = R.game.name, len = layerLen(L), lseq = layerSeq(L);
+  let [x0, y0, x1, y1] = layerBounds(L, 1); x0 = Math.floor(x0) - 1; y0 = Math.floor(y0) - 1;
+  const W = Math.ceil(x1) + 1 - x0, H = Math.ceil(y1) + 1 - y0, px = -x0, py = -y0, uniq = [], seq = [];
+  let prev = null;
+  for (let k = 0; k < len; k++) {
+    const c = canvas(W, H), g = c.getContext('2d', {willReadFrequently: true}); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.translate(px, py);
+    paint(g, L, frames1x(L)[R.frames[lseq[k]].cell], xform(L, k), 1);
+    const data = g.getImageData(0, 0, W, H).data, fname = `${name}_${String(k + 1).padStart(4, '0')}`;
+    if (prev && sameBytes(data, prev)) { seq.push({name: fname, alias_of: uniq[uniq.length - 1].fname}); uniq[uniq.length - 1].run++; }
+    else { uniq.push({fname, c, run: 1, k}); seq.push({name: fname, alias_of: null}); prev = data; }
+  }
+  const drawings = {}, sheets = {}, canvasSizes = {};
+  for (const [key, f] of SIZES) {
+    const w = Math.max(1, Math.round(W * f)), h = Math.max(1, Math.round(H * f)); canvasSizes[key] = [w, h];
+    const items = uniq.map(u => {
+      let c = u.c;
+      if (f !== 1) { c = canvas(w, h); const g = c.getContext('2d', {willReadFrequently: true}); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.translate(px * f, py * f);
+        paint(g, L, f === 2 ? frames2x(L)[R.frames[lseq[u.k]].cell] : renderCell(L, R.frames[lseq[u.k]].cell, f), xform(L, u.k), f); }
+      const b = trimBox(c); return {fname: u.fname, c, b, w: b[2] - b[0], h: b[3] - b[1]};
+    });
+    const [SW, SH] = packSheet(items), sheet = canvas(SW, SH), g = sheet.getContext('2d');
+    for (const it of items) { g.drawImage(it.c, it.b[0], it.b[1], it.w, it.h, it.x, it.y, it.w, it.h); (drawings[it.fname] ||= {})[key] = {rect: [it.x, it.y, it.w, it.h], trim: [it.b[0], it.b[1], it.c.width - it.b[2], it.c.height - it.b[3]], size: [it.c.width, it.c.height]}; }
+    sheets[key] = await toBlob(sheet);
+  }
+  const recipe = {...clone(R), frames: uniq.map((u, i) => ({cell: i, hold: u.run})), scale: 1, anchor: [+(px / W).toFixed(4), +(py / H).toFixed(4)]};
+  const pack = {format: 'fx-studio-pack', kind: 'motion', version: 1, id: name.replace(/^fx_/, ''), title: L.title, fps: FPS, name, z: R.game.z, loop: false, runs: 1,
+    anchor: recipe.anchor, anchor_note: 'x from the left, y from the TOP of the canvas (the game anchor is y from the bottom: 1 - y)', note: 'motion (fade, scale, drift, pins) baked: one drawing per game frame',
+    canvas: canvasSizes, sheets: {'@2x': 'sheet@2x.png', '@1x': 'sheet@1x.png', 'ipad': 'sheet_ipad.png'}, frames: seq, drawings, recipe, exported: new Date().toISOString()};
+  return {pack, sheets};
+}
 async function buildPack(L) {
+  if (hasMotion(L)) return buildMotionPack(L);
   const R = L.recipe, name = R.game.name, seq = [], firstOf = {};
   let n = 0;
   R.frames.forEach(f => { for (let j = 0; j < Math.max(1, f.hold | 0); j++) { n++; const fname = `${name}_${String(n).padStart(4, '0')}`; seq.push({name: fname, alias_of: firstOf[f.cell] || null}); if (!firstOf[f.cell]) firstOf[f.cell] = fname; } });
@@ -829,15 +1202,82 @@ async function buildPack(L) {
     frames: seq, drawings, recipe: clone(R), exported: new Date().toISOString()};
   return {pack, sheets};
 }
+function sameBytes(a, b) { if (a.length !== b.length) return false; for (let i = 0; i < a.length; i += 4) if (a[i] !== b[i] || a[i + 1] !== b[i + 1] || a[i + 2] !== b[i + 2] || a[i + 3] !== b[i + 3]) return false; return true; }
+const comboName = () => `fx_${skill.key}_combo`;
+// @2x scene at tick tk around the origin: layers rendered at 2x, the character from its @2x frames (a grid strip);
+// a character without @2x frames (Ignus) is scaled up from @1x
+function drawScene2x(g, tk) {
+  const ch = CH(), p = POSE(), lay = L => {
+    const local = tk - L.start, seq = layerSeq(L); if (L.muted || local < 0 || local >= seq.length || external(L)) return;
+    const img = frames2x(L)[L.recipe.frames[seq[local]].cell]; if (img) paint(g, L, img, xform(L, local), 2);
+  };
+  for (const L of skill.layers) if (L.recipe.game.z === 'Z_DECALS') lay(L);
+  const i = poseFrameAt(Math.min(tk, poseLen() - 1)), [cw, chh] = ch.cell, w = cw * 2, h = chh * 2, src = p.src[i], s2 = stripImgs[p.strip2x];
+  if (s2) { const cols = p.cols2x; g.drawImage(s2, (src % cols) * w, Math.floor(src / cols) * h, w, h, Math.round(-ch.pivot[0] * w), Math.round(-ch.pivot[1] * h), w, h); }
+  else if (stripImgs[p.strip]) g.drawImage(stripImgs[p.strip], src * cw, 0, cw, chh, Math.round(-ch.pivot[0] * w), Math.round(-ch.pivot[1] * h), w, h);
+  for (const L of skill.layers) if (L.recipe.game.z !== 'Z_DECALS') lay(L);
+}
+// The whole skill as one animation: one frame per game tick (identical neighbours become aliases), the feet as the anchor.
+// @1x is drawn by drawScene at 1x, @2x by drawScene2x (real @2x frames where the catalog has them), ipad scaled from @1x.
+async function buildCombo() {
+  const ch = CH(), p = POSE(); if (!ch || !p) return null;
+  const N = contentTicks(), vis = skill.layers.filter(L => !L.muted && !external(L));
+  let x0 = -ch.pivot[0] * ch.cell[0], y0 = -ch.pivot[1] * ch.cell[1], x1 = x0 + ch.cell[0], y1 = y0 + ch.cell[1];
+  for (const L of vis) { const b = layerBounds(L, 1); x0 = Math.min(x0, b[0]); y0 = Math.min(y0, b[1]); x1 = Math.max(x1, b[2]); y1 = Math.max(y1, b[3]); }
+  x0 = Math.floor(x0) - 1; y0 = Math.floor(y0) - 1;
+  const W = Math.ceil(x1) + 1 - x0, H = Math.ceil(y1) + 1 - y0, px = -x0, py = -y0, name = comboName(), uniq = [], seq = [];
+  let prev = null;
+  for (let k = 0; k < N; k++) {
+    const c = canvas(W, H), g = c.getContext('2d', {willReadFrequently: true});
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.translate(px, py); drawScene(g, k, 1, false, true);
+    const data = g.getImageData(0, 0, W, H).data, fname = `${name}_${String(k + 1).padStart(4, '0')}`;
+    if (prev && sameBytes(data, prev)) { seq.push({name: fname, alias_of: uniq[uniq.length - 1].fname}); uniq[uniq.length - 1].run++; }
+    else { uniq.push({fname, c, run: 1, k}); seq.push({name: fname, alias_of: null}); prev = data; }
+  }
+  if (p.strip2x) await stripImg(p.strip2x).catch(() => null);
+  for (const u of uniq) {   // the @2x drawing of each unique frame
+    const c2 = canvas(W * 2, H * 2), g2 = c2.getContext('2d', {willReadFrequently: true});
+    g2.imageSmoothingEnabled = true; g2.imageSmoothingQuality = 'high'; g2.translate(px * 2, py * 2); drawScene2x(g2, u.k); u.c2 = c2;
+  }
+  const drawings = {}, sheets = {}, canvasSizes = {}, sizes = {};
+  for (const [key, f] of SIZES) {
+    const w = Math.max(1, Math.round(W * f)), h = Math.max(1, Math.round(H * f)); canvasSizes[key] = [w, h];
+    const items = uniq.map(u => {
+      let c = f === 2 ? u.c2 : u.c;
+      if (f !== 1 && f !== 2) { c = canvas(w, h); const g = c.getContext('2d', {willReadFrequently: true}); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.drawImage(u.c, 0, 0, w, h); }
+      const b = trimBox(c); return {fname: u.fname, c, b, w: b[2] - b[0], h: b[3] - b[1]};
+    });
+    const [SW, SH] = packSheet(items), sheet = canvas(SW, SH), g = sheet.getContext('2d'); sizes[key] = [SW, SH];
+    for (const it of items) { g.drawImage(it.c, it.b[0], it.b[1], it.w, it.h, it.x, it.y, it.w, it.h); (drawings[it.fname] ||= {})[key] = {rect: [it.x, it.y, it.w, it.h], trim: [it.b[0], it.b[1], it.c.width - it.b[2], it.c.height - it.b[3]], size: [it.c.width, it.c.height]}; }
+    sheets[key] = await toBlob(sheet);
+  }
+  const recipe = {bg: null, black_floor: 0, grid: null, frames: uniq.map((u, i) => ({cell: i, hold: u.run})), scale: 1,
+    anchor: [+(px / W).toFixed(4), +(py / H).toFixed(4)], color: {hue: 0, saturation: 1, brightness: 1, alpha: 1}, game: {name, z: 'Z_OBJECTS', loop: false, runs: 1}};
+  const pack = {format: 'fx-studio-pack', kind: 'combo', version: 1, id: name.replace(/^fx_/, ''), title: `${ch.name} · ${p.name} (gộp)`, fps: FPS, name, z: 'Z_OBJECTS', loop: false, runs: 1,
+    anchor: recipe.anchor, anchor_note: 'the character\'s feet: x from the left, y from the TOP of the canvas (the game anchor is y from the bottom: 1 - y)',
+    note: p.strip2x ? '@2x drawn from the character\'s @2x frames' : '@2x upscaled from @1x (no @2x character frames)', canvas: canvasSizes, sheets: {'@2x': 'sheet@2x.png', '@1x': 'sheet@1x.png', 'ipad': 'sheet_ipad.png'},
+    frames: seq, drawings, recipe, exported: new Date().toISOString()};
+  const big = Object.entries(sheets).filter(([k, b]) => b.size > 20 * 1024 * 1024).map(([k]) => k);
+  if (big.length) throw new Error(`Sheet gộp ${big.join(', ')} lớn hơn 20 MB: rút ngắn skill hoặc thu nhỏ hiệu ứng.`);
+  if (Math.max(...Object.values(sizes).flat()) > 4096) log(`Cảnh báo: sheet gộp ${sizes['@2x'].join('×')} px vượt 4096 px, một số máy không nạp được.`, 'l-bad');
+  pack.go_fx_lab_kb = Math.round((sheets['@1x'].size + sheets.ipad.size) / 1024);
+  log(`Sheet gộp: khung ${W}×${H} px, ${N} frame game (${uniq.length} hình khác nhau), sheet @1x ${sizes['@1x'].join('×')}, @2x ${sizes['@2x'].join('×')}${p.strip2x ? '' : ' (phóng từ @1x)'}, ${Math.round((sheets['@1x'].size + sheets['@2x'].size + sheets.ipad.size) / 1024)} KB; atlas game (go_fx_lab, nạp ở mọi level) thêm khoảng ${pack.go_fx_lab_kb} KB`);
+  return {pack, sheets};
+}
 function skillJson(dirs) {
   const ch = CH(), p = POSE();
   return {format: 'fx-studio-skill', version: 1, key: skill.key, character: skill.character, pose: skill.pose, title: ch ? `${ch.name} · ${p.name}` : 'Tự do',
-    anim: p?.anim || null, pivot: ch?.pivot || null, cell: ch?.cell || null, length: contentTicks(), fps: FPS,
-    layers: skill.layers.map((L, i) => ({name: L.recipe.game.name, title: L.title, start: L.start, muted: !!L.muted, dir: dirs ? dirs[i] : null}))};
+    anim: p?.anim || null, pivot: ch?.pivot || null, cell: ch?.cell || null, length: contentTicks(), fps: FPS, hit: p?.hit != null ? poseTickOf(p.hit) : null,
+    pose_edit: skill.poseEdit || null, combo: CH() ? {name: comboName(), dir: dirs ? 'combo' : null} : null,
+    target: skill.target || null,
+    layers: skill.layers.map((L, i) => ({name: L.recipe.game.name, title: L.title, start: L.start, muted: !!L.muted, place: place(L), len: layerLen(L),
+      launch: [Math.round(offsetOf(L).dx), Math.round(offsetOf(L).dy)], dir: dirs ? dirs[i] : null}))};
 }
 
 // ---------------------------------------------------------------- save (db + assets), revert, zip
+function blockOnErrors() { if (showChecks(checks())) { $('#chkList').showPopover?.(); throw new Error('Còn lỗi cần sửa trước khi lưu (xem ⛔ trên thanh trên).'); } }
 async function save() {
+  blockOnErrors();
   if (!db) throw new Error('Chưa lưu được: cần đăng nhập và có quyền chỉnh sửa trang này. Bạn vẫn có thể Tải gói .zip.');
   if (!assets) throw new Error('Chỉ người có quyền chỉnh sửa trang mới lưu được ảnh. Bạn vẫn có thể Tải gói .zip.');
   const old = [];
@@ -851,7 +1291,19 @@ async function save() {
     if (L.pack) old.push(...Object.values(L.pack));
     L.pack = ids; L.packKey = key;
   }
-  const body = {...skillJson(null), layers: skill.layers.map(L => ({lid: L.lid, name: L.recipe.game.name, title: L.title, sheet: L.sheet, sheetName: L.sheetName, recipe: L.recipe, start: L.start, muted: !!L.muted, pack: L.pack, packKey: L.packKey})), savedAt: Date.now()};
+  let combo = skill.combo || null;
+  if (CH()) {   // the character with every layer baked in: what the game plays for this skill
+    const key = savedForm();
+    if (!combo || combo.key !== key) {
+      const {pack, sheets} = await buildCombo(), ids = {};
+      ids.json = (await assets.upload(new Blob([JSON.stringify(pack)], {type: 'application/json'}), {type: 'application/json'})).id;
+      for (const k of Object.keys(sheets)) ids[k] = (await assets.upload(sheets[k], {type: 'image/png'})).id;
+      if (combo?.pack) old.push(...Object.values(combo.pack));
+      combo = {name: comboName(), pack: ids, key};
+    }
+  } else combo = null;
+  skill.combo = combo;
+  const body = {...skillJson(null), poseEdit: skill.poseEdit || null, combo, layers: skill.layers.map(L => ({lid: L.lid, name: L.recipe.game.name, title: L.title, sheet: L.sheet, sheetName: L.sheetName, recipe: L.recipe, start: L.start, muted: !!L.muted, place: place(L), len: layerLen(L), launch: [Math.round(offsetOf(L).dx), Math.round(offsetOf(L).dy)], pack: L.pack, packKey: L.packKey})), savedAt: Date.now()};
   await db.doc('skills/' + skill.key).set(body);
   for (const L of skill.layers) {   // every new sheet also goes into the library, so other skills can reuse it
     if (library.some(p => p.sheet === L.sheet)) continue;
@@ -866,6 +1318,7 @@ async function save() {
 $('#btnSave').onclick = e => busy(e.target, save);
 $('#btnRevert').onclick = e => busy(e.target, async () => { await openSkill(skill.character, skill.pose, true); toast('Đã quay về bản đã lưu'); });
 $('#btnZip').onclick = e => busy(e.target, async () => {
+  blockOnErrors();
   if (!window.JSZip) throw new Error('Không tải được thư viện nén zip; thử tải lại trang.');
   if (!downloads) throw new Error('Trang này không tải file về được ở chế độ xem hiện tại.');
   const zip = new JSZip(), dirs = [];
@@ -874,6 +1327,7 @@ $('#btnZip').onclick = e => busy(e.target, async () => {
     zip.file(`${dir}/pack.json`, JSON.stringify(pack, null, 1));
     for (const [k, f] of Object.entries(pack.sheets)) zip.file(`${dir}/${f}`, sheets[k]);
   }
+  if (CH()) { const {pack, sheets} = await buildCombo(); zip.file('combo/pack.json', JSON.stringify(pack, null, 1)); for (const [k, f] of Object.entries(pack.sheets)) zip.file(`combo/${f}`, sheets[k]); }
   zip.file('skill.json', JSON.stringify(skillJson(dirs), null, 1));
   zip.file('README.txt', `Fx Studio skill: ${skill.key}\nCài vào Kingdom Rush 1, trong thư mục fal-lab:\n  python scripts/fx_studio.py install-pack ${skill.key}.fxskill.zip\n`);
   const blob = await zip.generateAsync({type: 'blob'});
@@ -890,14 +1344,14 @@ async function openSkill(character, pose, force) {
   if (p) await stripImg(p.strip).catch(() => null);
   let data = null;
   if (db) { try { const s = await db.doc('skills/' + key).get(); if (s.exists) data = s.data(); } catch (e) {} }
-  skill = {key, character: ch ? character : null, pose: ch ? pose : null, layers: [], savedAt: data?.savedAt || null};
+  skill = {key, character: ch ? character : null, pose: ch ? pose : null, layers: [], savedAt: data?.savedAt || null, poseEdit: data?.poseEdit || null, combo: data?.combo || null, target: data?.target || null};
   for (const k of Object.keys(LC)) delete LC[k];
   for (const Ld of data?.layers || []) {
     const res = await fetch('/_blob/' + Ld.sheet).catch(() => null);
     if (!res?.ok) { toast(`Không tải được ảnh của tầng “${Ld.title}”`, true); continue; }
     const L = {...clone(Ld), sheetBlob: null}; LC[L.lid] = {bitmap: await createImageBitmap(await res.blob())}; cutSheet(L); skill.layers.push(L);
   }
-  base = data ? savedForm() : savedForm();
+  base = savedForm(); resetHistory();
   sel = skill.layers[0]?.lid || null; t = 0; playing = true; updatePlay();
   syncTop(); refresh();
   try { localStorage.setItem('fxstudio.skill', JSON.stringify([character, pose])); } catch (e) {}
@@ -959,6 +1413,7 @@ document.querySelectorAll('details[data-sec]').forEach(d => {
   updatePlay();
   [bgImg, heroImg] = await Promise.all([loadImg('bg.png').catch(() => null), loadImg('hero.png').catch(() => null)]);
   try { CHARS = await (await fetch('characters.json')).json(); } catch (e) { CHARS = []; }
+  try { SAMPLES_LIB = await (await fetch('samples/samples.json')).json(); } catch (e) { SAMPLES_LIB = []; }
   const use = name => window.claude?.use?.(name).catch(() => null) ?? Promise.resolve(null);
   [db, assets, downloads] = await Promise.all([use('db'), use('assets'), use('downloads')]);
   if (db) {

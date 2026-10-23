@@ -4,8 +4,9 @@ Usage: python tools/fx_studio/build_artifact.py [--out out/fx_studio_artifact]
 
 Writes <out>/index.html (tools/fx_studio/app.html), bg.png and hero.png (a KR1 map crop and a KR1 hero at the game's
 fullhd size), samples/fire_breath.png (the sample sheet) and the character catalog the timeline plays:
-chars/<id>/<pose>.png (every frame of a pose side by side, @1x = fullhd) and characters.json:
-  [{id, name, pivot: [x, y from the TOP], cell: [w, h], poses: [{id, name, strip, frames, ticks: [game ticks per frame],
+chars/<id>/<pose>.png (every frame of a pose side by side, @1x = fullhd), chars/<id>/<pose>@2x.png (the @2x frames in a
+grid of cols2x columns, when the character has them) and characters.json:
+  [{id, name, pivot: [x, y from the TOP], cell: [w, h], poses: [{id, name, strip, strip2x, cols2x, frames, ticks: [game ticks per frame],
     hit (0-based or null), timing: "game" | "meta", anim (the game's animation name or null)}]}]
 Timing comes from the game's animation table when the character is in the game (one atlas frame per tick at 30 fps,
 the way the game plays it), else from meta.json fps. Publish index.html with every other file of <out> under its
@@ -16,6 +17,7 @@ from PIL import Image
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(HERE))
 import fx_studio as fx   # noqa: E402
 
 SAMPLE = ROOT / "out" / "vfx" / "fire_breath_test" / "design" / "sheet_v01.png"
@@ -50,6 +52,20 @@ def strip(frames: list, dst: pathlib.Path) -> list:
     return [w, h]
 
 
+def grid_strip(frames: list, dst: pathlib.Path, max_side: int = 8000) -> int:
+    """@2x frames in a grid (rows of `cols`), so no side passes ~8000 px; -> cols."""
+    ims = [Image.open(f).convert("RGBA") for f in frames]
+    w, h = ims[0].size
+    cols = max(1, min(len(ims), max_side // w))
+    rows = -(-len(ims) // cols)
+    sheet = Image.new("RGBA", (w * cols, h * rows), (0, 0, 0, 0))
+    for i, im in enumerate(ims):
+        sheet.paste(im, ((i % cols) * w, (i // cols) * h))
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    sheet.save(dst, optimize=True)
+    return cols
+
+
 def catalog(out: pathlib.Path) -> list:
     anims, chars = game_anims(), []
     for meta_p in sorted((ROOT / "out").glob("*/*/meta.json")):
@@ -68,7 +84,12 @@ def catalog(out: pathlib.Path) -> list:
             rel = f"chars/{cid}/{state}.png"
             strip(files, out / rel)
             hit = st.get("hit_frame")
-            poses.append({"id": state, "name": POSE_NAMES.get(suffix, suffix.replace("_", " ").capitalize()), "strip": rel,
+            files2 = sorted((meta_p.parent / st["dir"] / "frames" / "@2x").glob("*.png"))
+            extra = {}
+            if len(files2) == len(files):   # real @2x frames: the combo bake draws its @2x from these
+                rel2 = f"chars/{cid}/{state}@2x.png"
+                extra = {"strip2x": rel2, "cols2x": grid_strip(files2, out / rel2)}
+            poses.append({**extra, "id": state, "name": POSE_NAMES.get(suffix, suffix.replace("_", " ").capitalize()), "strip": rel,
                           "frames": len(files), "ticks": ticks, "hit": hit - 1 if hit else None,
                           "timing": "game" if in_game else "meta", "anim": anim if in_game else None})
         if poses:
@@ -106,6 +127,8 @@ def main() -> None:
         hero.save(out / "hero.png")
     if SAMPLE.exists():
         shutil.copyfile(SAMPLE, out / "samples" / "fire_breath.png")
+    import build_samples   # the sample effects behind "+ Thêm hiệu ứng → Mẫu" (samples/<id>.png + samples.json)
+    build_samples.main_out(out / "samples")
     chars = catalog(out)
     (out / "characters.json").write_text(json.dumps(chars, ensure_ascii=False, indent=1), encoding="utf-8")
     for c in chars:

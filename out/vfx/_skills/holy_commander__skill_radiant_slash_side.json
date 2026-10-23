@@ -1,5 +1,6 @@
 {
  "key": "holy_commander__skill_radiant_slash_side",
+ "combo": "fx_holy_commander__skill_radiant_slash_side_combo",
  "title": "Holy Commander · Radiant slash",
  "character": "holy_commander",
  "pose_id": "skill_radiant_slash_side",
@@ -14,5 +15,7 @@
    "fx_holy_commander_radiant_slash_1",
    26
   ]
- ]
+ ],
+ "edited": false,
+ "hit": 26
 }
