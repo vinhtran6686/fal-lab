@@ -18,7 +18,7 @@ Xuất được **bộ asset hiệu ứng mà game dùng được** cho Kingdom 
 |---|---|---|
 | App (cách dùng chính) | https://claude.ai/artifact/JUVk6cDVriDXhLXLTTQzVi, nguồn `tools/fx_studio/app.html` | Studio chạy trên trình duyệt: timeline, frame tuner, chỉnh tầng, Lưu, Tải gói .zip |
 | Đóng gói app | `tools/fx_studio/build_artifact.py` | Dựng `out/fx_studio_artifact/` (app + danh mục nhân vật + mẫu) để publish |
-| Thư viện mẫu | `tools/fx_studio/build_samples.py` | 10 hiệu ứng mẫu vẽ bằng `scripts/fx_layers.py` (nổ, sét, cột sáng, hồi máu, băng, độc, chém, sóng, lên cấp, tia trúng) |
+| Thư viện mẫu | `tools/fx_studio/build_samples.py` | 9 fx Python đã duyệt của Holy Commander (levelup v01, v03 bản chốt, v05-v10; tia radiant_slash), mỗi mẫu 2 tầng sau/trước thân, cộng sáng; vẽ một lần vào `tools/fx_studio/samples/` (lệnh `render`), build chỉ chép. 10 mẫu `fx_layers` cũ đã bỏ (user chê xấu) |
 | Engine | `scripts/fx_studio.py` | Import/render sheet (bản cũ), `install-pack` (cài gói từ app), `install`/`uninstall`, ghi vào game |
 | Bản chạy trên máy | `tools/fx_studio/fx_studio.bat`, `index.html`, `serve.py` | Bản cũ có server Python: vector (vtracer), cài thẳng; không có timeline |
 | Phía game | `kr-remake/games/kr1/src/`: `kr1/fx_lab.lua`, `kr1/fx_lab_skills.lua`, các khối `-- fx_lab` trong `kr1/game_templates.lua`, `kr1/data/game_animations.lua`, `all/game.lua`; atlas `go_fx_lab` | Sinh tự động bởi `install`; không sửa tay |
@@ -130,7 +130,8 @@ Thêm `meta.json["skills"][<pose>]`, và dòng `fx_<skill>` trong Asset manifest
 
 ```
 python tools/fx_studio/build_artifact.py                 # dựng bản app để publish (gồm mẫu + danh mục nhân vật)
-python tools/fx_studio/build_samples.py                  # chỉ dựng lại 10 mẫu
+PYTHONUTF8=1 python tools/fx_studio/build_samples.py render [id]   # vẽ lại mẫu fx Python (chậm, ~1 phút/mẫu)
+python tools/fx_studio/build_samples.py                  # chép mẫu đã vẽ + samples.json vào artifact
 python scripts/fx_studio.py install-pack <key>.fxskill.zip
 python scripts/fx_studio.py install-pack <assets dir> --skill <skills/<key>.json>
 python scripts/fx_studio.py list

@@ -1,115 +1,127 @@
-"""Sample effect sheets for Fx Studio's "+ Thêm hiệu ứng → Mẫu", drawn with scripts/fx_layers.py's layer painters (flat,
-2-3 tones of one colour, a dark outline of the same hue: the reference game's look). No model, no cost.
+"""Samples for Fx Studio's "+ Thêm hiệu ứng → Mẫu": the Python-drawn fx the user approved for holy_commander
+(docs/python-fx-recipe.md §9 and out/heroes/holy_commander/brief.md), as transparent light layers that line up with the
+hero's exported body frames.
 
-Usage: python tools/fx_studio/build_samples.py [--out out/fx_studio_artifact/samples]
+  levelup v01, v03 (chosen for levelup), v05, v06, v07, v08, v09, v10   (v02 and v04 were rejected)
+  radiant_slash beam (chosen for the skill)
 
-Every sample is a grid sheet on a transparent background, drawn at @2x of a KR1 hero (body height 64 px @1x, so 128 px
-here) at 15 drawings per second, written as <id>.png, plus samples.json:
-  [{id, title, file, grid: [cols, rows], frames, scale: 0.5, anchor: [x, y from the top] = the feet in the cell}]
-The app uses grid and anchor as given (no detection), so a tall pillar or a faded last drawing never splits or drops a
-cell. Frames with nothing visible at the start or the end are cut before the sheet is made."""
-import argparse, json, math, pathlib, sys
-import numpy as np
+Every sample has two layers: `back` (drawn behind the body) and `front` (over it), one drawing per body frame of its pose
+(holy_commander plays 1 frame per game tick), anchored at the hero's feet. Light is stored as straight alpha = strength
+(tools/frame_tuner/export_fx.py), meant to be blended with "screen" (the app's "Cộng sáng").
+
+Usage:
+  python tools/fx_studio/build_samples.py render [id ...]   # draw the variants once into tools/fx_studio/samples/ (slow, ~1 min each)
+  python tools/fx_studio/build_samples.py [--out DIR]       # copy the cached sheets + samples.json (build_artifact.py calls main_out)
+
+v03 and radiant_slash are taken from the hero's exported fx (fx/levelup, fx/radiant_slash): the very frames the user approved.
+The aura variants follow holy_commander's levelup silhouette, so on another character or pose they are a starting point only."""
+import argparse, copy, json, math, pathlib, shutil, sys, tempfile
 from PIL import Image
 
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
-sys.path.insert(0, str(ROOT / "scripts"))
-import fx_layers as fl   # noqa: E402
+HERO = ROOT / "out" / "heroes" / "holy_commander"
+CACHE = HERE / "samples"
 
-HPX = 128                 # hero body height @2x
-FPS = 15
-DRAW = {"ring": fl.draw_ring, "slash": fl.draw_slash, "burst": fl.draw_burst, "pillar": fl.draw_pillar, "particles": fl.draw_particles}
-
-# canvas [w, h] in body heights, pivot = the feet in the canvas (fractions from the left and the TOP), time in seconds.
-# Coordinates in body heights from the feet, y up (fx_layers' units).
+# id, title, the levelup_variants function (None = the hero's exported fx folder), the pose it was drawn on, note
 SAMPLES = [
-    {"id": "explosion", "title": "Nổ lửa", "canvas": [3.0, 2.8], "pivot": [0.5, 0.8], "dur": 0.8, "layers": [
-        {"type": "ring", "start": 0.0, "length": 0.6, "color": "#ff7a1a", "radius": [0.3, 1.3], "width": 0.16},
-        {"type": "burst", "start": 0.0, "length": 0.55, "color": "#ff8a1e", "at": [0, 0.55], "radius": 0.85, "spikes": 9, "seed": 2},
-        {"type": "burst", "start": 0.05, "length": 0.4, "color": "#ffd84a", "at": [0, 0.6], "radius": 0.5, "spikes": 7, "seed": 5},
-        {"type": "particles", "start": 0.05, "length": 0.75, "color": "#ff9a2e", "at": [0, 0.5], "count": 14, "speed": 2.4, "size": 0.08, "spread": 200, "gravity": 3.0}]},
-    {"id": "lightning", "title": "Sét đánh", "canvas": [2.4, 4.4], "pivot": [0.5, 0.88], "dur": 0.7, "layers": [
-        {"type": "bolt", "start": 0.0, "length": 0.5, "color": "#9fd8ff", "at": [0, 0], "from": [0.3, 3.6], "top": 3.6, "width": 0.09, "kinks": 7, "seed": 3},
-        {"type": "burst", "start": 0.08, "length": 0.4, "color": "#c9ecff", "at": [0, 0.15], "radius": 0.55, "spikes": 8, "seed": 4},
-        {"type": "ring", "start": 0.1, "length": 0.55, "color": "#7cc4ff", "radius": [0.2, 1.0], "width": 0.12}]},
-    {"id": "holy_pillar", "title": "Cột sáng thánh", "canvas": [2.4, 4.2], "pivot": [0.5, 0.85], "dur": 1.1, "layers": [
-        {"type": "ring", "start": 0.0, "length": 1.0, "color": "#ffe27a", "radius": [0.4, 1.1], "width": 0.14},
-        {"type": "pillar", "start": 0.05, "length": 1.0, "color": "#fff0a8", "at": [0, 0], "width": 0.8, "height": 3.4},
-        {"type": "particles", "start": 0.2, "length": 0.9, "color": "#ffe27a", "at": [0, 0.3], "count": 12, "speed": 1.4, "size": 0.06, "spread": 60, "gravity": -1.5}]},
-    {"id": "heal", "title": "Vòng hồi máu", "canvas": [2.8, 2.6], "pivot": [0.5, 0.8], "dur": 1.1, "layers": [
-        {"type": "ring", "start": 0.0, "length": 1.0, "color": "#6fe08a", "radius": [0.3, 1.2], "width": 0.13},
-        {"type": "particles", "start": 0.1, "length": 1.0, "color": "#9dffb0", "at": [0, 0.1], "count": 16, "speed": 1.2, "size": 0.07, "spread": 100, "gravity": -1.8, "seed": 6}]},
-    {"id": "ice_shatter", "title": "Băng vỡ", "canvas": [2.8, 2.6], "pivot": [0.5, 0.8], "dur": 0.75, "layers": [
-        {"type": "burst", "start": 0.0, "length": 0.5, "color": "#9be7ff", "at": [0, 0.55], "radius": 0.75, "spikes": 6, "seed": 1},
-        {"type": "particles", "start": 0.05, "length": 0.7, "color": "#cfefff", "at": [0, 0.55], "count": 12, "speed": 2.6, "size": 0.1, "spread": 220, "gravity": 3.5, "seed": 9},
-        {"type": "ring", "start": 0.05, "length": 0.5, "color": "#7fd3f5", "radius": [0.2, 0.9], "width": 0.1}]},
-    {"id": "poison_cloud", "title": "Mây độc", "canvas": [3.0, 2.4], "pivot": [0.5, 0.8], "dur": 1.4, "layers": [
-        {"type": "ring", "start": 0.0, "length": 1.3, "color": "#6fbf3a", "radius": [0.5, 1.3], "width": 0.12, "squash": 0.3},
-        {"type": "particles", "start": 0.0, "length": 1.4, "color": "#8be04e", "at": [0, 0.3], "count": 22, "speed": 0.7, "size": 0.12, "spread": 360, "gravity": -0.4, "seed": 11, "time": 1.2}]},
-    {"id": "slash", "title": "Vệt chém", "canvas": [2.6, 2.4], "pivot": [0.35, 0.8], "dur": 0.4, "layers": [
-        {"type": "slash", "start": 0.0, "length": 0.4, "color": "#fff3c4", "at": [0.45, 0.6], "radius": 0.85, "from": 120, "to": -50, "width": 0.24}]},
-    {"id": "shockwave", "title": "Sóng xung kích", "canvas": [4.0, 2.0], "pivot": [0.5, 0.7], "dur": 0.75, "layers": [
-        {"type": "ring", "start": 0.0, "length": 0.7, "color": "#ffb347", "radius": [0.2, 1.8], "width": 0.2, "squash": 0.3},
-        {"type": "ring", "start": 0.12, "length": 0.6, "color": "#ffd27a", "radius": [0.1, 1.2], "width": 0.12, "squash": 0.3},
-        {"type": "burst", "start": 0.0, "length": 0.3, "color": "#ffe1a0", "at": [0, 0.2], "radius": 0.5, "spikes": 10, "seed": 6}]},
-    {"id": "level_up", "title": "Lên cấp", "canvas": [2.4, 3.6], "pivot": [0.5, 0.85], "dur": 1.2, "layers": [
-        {"type": "ring", "start": 0.0, "length": 1.0, "color": "#ffd84a", "radius": [0.4, 1.0], "width": 0.12},
-        {"type": "pillar", "start": 0.0, "length": 0.8, "color": "#ffe98a", "at": [0, 0], "width": 0.55, "height": 2.6},
-        {"type": "particles", "start": 0.15, "length": 1.0, "color": "#fff3a8", "at": [0, 0.4], "count": 14, "speed": 1.8, "size": 0.07, "spread": 50, "gravity": -1.0, "seed": 4}]},
-    {"id": "hit_spark", "title": "Tia trúng đòn", "canvas": [1.8, 1.8], "pivot": [0.5, 0.75], "dur": 0.35, "layers": [
-        {"type": "burst", "start": 0.0, "length": 0.3, "color": "#fff3b0", "at": [0, 0.5], "radius": 0.45, "spikes": 8, "seed": 8},
-        {"type": "particles", "start": 0.0, "length": 0.35, "color": "#ffe27a", "at": [0, 0.5], "count": 8, "speed": 2.0, "size": 0.06, "spread": 360, "gravity": 1.0, "seed": 2}]},
+    ("hc_levelup_v03", "Hào quang xung nhịp (bản chốt levelup)", None, "levelup_side", "levelup",
+     "3 đợt hào quang lan ra từ hình người, viền sáng trong thân, chớp ở nắm đấm"),
+    ("hc_levelup_v01", "Cột sáng + sóng lan", "V01", "levelup_side", None, "cột viên nang, hào quang, 3 sóng lan dưới chân, dải sáng trên đầu"),
+    ("hc_levelup_v05", "Sóng xung kích", "V05", "levelup_side", None, "3 sóng rộng dưới chân, chớp, tia lửa rơi (hợp skill đập đất)"),
+    ("hc_levelup_v06", "Hai vòng xoắn sáng", "V06", "levelup_side", None, "hai xoắn hạt sáng quấn thân"),
+    ("hc_levelup_v07", "Trụ sáng từ trời", "V07", "levelup_side", None, "trụ rất rộng đổ xuống, bắn tung, hạt nổi lên (hợp buff, triệu hồi)"),
+    ("hc_levelup_v08", "Vòng sáng bay lên", "V08", "levelup_side", None, "4 vòng mềm bay từ chân quá đầu (hợp respawn)"),
+    ("hc_levelup_v09", "Cột sáng có dải chạy", "V09", "levelup_side", None, "cột có dải sáng chạy lên, sóng đáy rộng"),
+    ("hc_levelup_v10", "Tổng hợp", "V10", "levelup_side", None, "gộp mọi lớp: sóng, hào quang, cột, hạt, tia, chớp"),
+    ("hc_radiant_slash", "Tia sáng từ mũi kiếm (bản chốt)", None, "skill_radiant_slash_side", "radiant_slash",
+     "tia sáng bắn ra từ mũi kiếm khi chém"),
 ]
 
 
-def render(sp: dict) -> list:
-    cw, ch = (round(v * HPX) for v in sp["canvas"])
-    pivot = (cw * sp["pivot"][0], ch * sp["pivot"][1])
-    n = max(1, math.ceil(sp["dur"] * FPS))
-    frames = []
-    for f in range(n):
-        time = f / FPS
-        comp = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
-        for ly in sp["layers"]:
-            t = (time - ly["start"]) / ly["length"]
-            if not 0 <= t <= 1:
-                continue
-            L = fl.Layer((cw, ch), pivot, HPX)
-            c = fl.rgb(ly["color"])
-            alpha = fl.draw_bolt(L, t, ly, c, f) if ly["type"] == "bolt" else DRAW[ly["type"]](L, t, ly, c)
-            comp.alpha_composite(L.done(alpha * ly.get("alpha", 1.0)))
-        frames.append(comp)
-    visible = lambda im: int((np.asarray(im.getchannel("A")) > 25).sum()) > 20   # what the app keeps as a drawing
-    while len(frames) > 1 and not visible(frames[-1]):
-        frames.pop()
-    while len(frames) > 1 and not visible(frames[0]):
-        frames.pop(0)
-    return frames
+def frames_of(folder: pathlib.Path) -> list:
+    return [Image.open(p).convert("RGBA") for p in sorted((folder / "frames" / "@2x").glob("*.png"))]
 
 
-def main() -> None:
-    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--out", default=str(ROOT / "out" / "fx_studio_artifact" / "samples"))
-    main_out(pathlib.Path(p.parse_args().out))
+def sheet(frames: list) -> tuple:
+    n, (cw, ch) = len(frames), frames[0].size
+    cols = min(n, max(1, round(math.sqrt(n * ch / cw))))
+    rows = -(-n // cols)
+    im = Image.new("RGBA", (cw * cols, ch * rows), (0, 0, 0, 0))
+    for i, f in enumerate(frames):
+        im.paste(f, ((i % cols) * cw, (i // cols) * ch))
+    return im, [cols, rows]
+
+
+def cache_one(sid: str, fx_dir: pathlib.Path) -> None:
+    """fx_dir = an export_fx output folder (back/, front/, fx.json) -> CACHE/<sid>/{back,front}.png + fx.json"""
+    fxj = json.loads((fx_dir / "fx.json").read_text(encoding="utf-8"))
+    out = CACHE / sid
+    out.mkdir(parents=True, exist_ok=True)
+    info = {"frames": fxj["frames"], "size_2x": fxj["size_2x"], "pivot_2x": fxj["pivot_2x"], "grid": None}
+    for z in ("back", "front"):
+        fr = frames_of(fx_dir / z)
+        assert len(fr) == fxj["frames"], f"{sid}/{z}: {len(fr)} frames, fx.json says {fxj['frames']}"
+        im, info["grid"] = sheet(fr)
+        im.save(out / f"{z}.png", optimize=True)
+    (out / "fx.json").write_text(json.dumps(info, indent=1), encoding="utf-8")
+    print(f"{sid}: {info['frames']} frames, cell {info['size_2x']} @2x, grid {info['grid']}")
+
+
+def render(ids: list) -> None:
+    sys.path.insert(0, str(ROOT / "tools" / "frame_tuner"))
+    import os
+    os.chdir(ROOT)                       # levelup_variants adds 'scripts' to sys.path relative to the cwd
+    import apply_recipe as ar
+    import export_fx as ef
+    saved = json.loads((ROOT / ar.CFG["asset"] / "export_recipe.json").read_text()).get("states", {})
+    lv = next(s for s in ar.CFG["states"] if s["id"] == "levelup")
+    for sid, title, fn, pose, exported, note in SAMPLES:
+        if ids and sid not in ids:
+            continue
+        if fn is None:                   # the approved export itself
+            cache_one(sid, HERO / "fx" / exported)
+            continue
+        with tempfile.TemporaryDirectory(prefix="fxs_") as tmp:   # export_fx writes fx/<name>/ and meta.json here, never in the hero folder
+            t = pathlib.Path(tmp)
+            shutil.copyfile(HERO / "meta.json", t / "meta.json")
+            st = copy.deepcopy(lv)
+            st["fx"] = {**st["fx"], "fn": fn, "name": sid, "label": f"fx Python {fn.lower()} ({title})"}
+            ef.run(st, saved, t)
+            cache_one(sid, t / "fx" / sid)
 
 
 def main_out(out: pathlib.Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
     index = []
-    for sp in SAMPLES:
-        frames = render(sp)
-        n, (cw, ch) = len(frames), frames[0].size
-        cols = min(n, max(1, round(math.sqrt(n * ch / cw))))
-        rows = -(-n // cols)
-        sheet = Image.new("RGBA", (cw * cols, ch * rows), (0, 0, 0, 0))
-        for i, im in enumerate(frames):
-            sheet.paste(im, ((i % cols) * cw, (i // cols) * ch))
-        sheet.save(out / f"{sp['id']}.png", optimize=True)
-        index.append({"id": sp["id"], "title": sp["title"], "file": f"samples/{sp['id']}.png", "grid": [cols, rows], "frames": n,
-                      "scale": 0.5, "anchor": sp["pivot"], "hold": round(30 / FPS)})
-        print(f"{sp['id']}: {n} frames, cell {cw}x{ch} @2x, grid {cols}x{rows}")
+    for sid, title, fn, pose, exported, note in SAMPLES:
+        src = CACHE / sid
+        if not (src / "fx.json").exists():
+            print(f"{sid}: not rendered yet (python tools/fx_studio/build_samples.py render {sid})")
+            continue
+        info = json.loads((src / "fx.json").read_text(encoding="utf-8"))
+        (w, h), (px, py) = info["size_2x"], info["pivot_2x"]
+        parts = []
+        for z, zl in (("back", "Z_DECALS"), ("front", "Z_EFFECTS")):
+            shutil.copyfile(src / f"{z}.png", out / f"{sid}_{z}.png")
+            parts.append({"part": z, "title": "sau thân" if z == "back" else "trước thân", "file": f"samples/{sid}_{z}.png", "z": zl})
+        index.append({"id": sid, "title": title, "note": note, "character": "holy_commander", "pose": pose, "frames": info["frames"],
+                      "grid": info["grid"], "cell": [w, h], "scale": 0.5, "anchor": [round(px / w, 4), round(py / h, 4)], "hold": 1,
+                      "blend": "screen", "parts": parts})
     (out / "samples.json").write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"{len(index)} samples -> {out}")
+
+
+def main() -> None:
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("cmd", nargs="?", default="out", choices=["out", "render"])
+    p.add_argument("ids", nargs="*")
+    p.add_argument("--out", default=str(ROOT / "out" / "fx_studio_artifact" / "samples"))
+    a = p.parse_args()
+    if a.cmd == "render":
+        render(a.ids)
+    else:
+        main_out(pathlib.Path(a.out))
 
 
 if __name__ == "__main__":

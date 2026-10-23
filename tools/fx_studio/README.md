@@ -32,6 +32,16 @@ Nhịp của pose lấy từ bảng animation của game khi nhân vật đã c�
 chạy; holy_commander chạy nhanh gấp đôi con số 15 fps trong meta.json), còn không thì từ meta.json (tầng nhân vật ghi
 "game" hay "meta"). Khung xem hiện **đúng các frame sẽ vào game**: app render một lần, gói chứa chính các frame đó.
 
+### Mẫu hiệu ứng đã duyệt
+"+ Thêm hiệu ứng → Mẫu hiệu ứng đã duyệt…" mở bảng thẻ có hình động (thân Holy Commander + hiệu ứng). Đó là 9 fx Python user đã duyệt
+(`docs/python-fx-recipe.md` §9): levelup v03 (bản chốt), v01, v05-v10 và tia radiant_slash. Mỗi mẫu thêm **2 tầng** (sau thân `Z_DECALS`,
+trước thân `Z_EFFECTS`) trong một bước hoàn tác, mỗi hình = 1 frame thân, hòa trộn **Cộng sáng**. Trên Holy Commander · Lên cấp / Radiant
+slash, mẫu bắt đầu ở frame 0, khớp từng frame. Trên pose khác, mẫu được dời để đỉnh hiệu ứng trùng frame hit, và app nhắc rằng hào quang vẽ
+theo dáng Holy Commander. Vẽ lại: `PYTHONUTF8=1 python tools/fx_studio/build_samples.py render [id]` (ghi `tools/fx_studio/samples/`).
+
+**Cộng sáng** (Màu → Hòa trộn) có trong khung xem và trong sheet gộp. Tầng cài riêng vào game vẽ thường (sprite KR1 không có chế độ cộng).
+**Nền khung xem** (bản đồ / tối / sáng, cạnh ô phóng to): hiệu ứng sáng nhìn rõ hơn trên nền tối. **?**: bảng phím tắt.
+
 ### Nhập sheet ngoài: trình cắt sheet
 "+ Thêm hiệu ứng → Nhập sprite sheet" mở **trình cắt sheet** (mở lại cho tầng đang chọn ở Nâng cao → "Mở trình cắt sheet…"):
 - **Nền:** tự nhận (trong suốt, magenta, đen kiểu ánh sáng, hoặc **một màu bất kỳ** = trung vị viền ảnh, ví dụ xanh navy);

@@ -187,6 +187,14 @@ dialog.slicer:not([open]){display:none}
 .sl-rows{display:grid;grid-template-columns:auto 70px;gap:4px 8px;align-items:center;font-size:13px;margin-top:6px}
 #slPrev{width:100%;height:auto;background:#0c0d10;border-radius:6px}
 @media (max-width:900px){.sl-body{grid-template-columns:1fr}}
+/* samples picker */
+dialog.samples{width:min(1100px,96vw);max-height:92vh;display:flex;flex-direction:column;gap:10px}
+dialog.samples:not([open]){display:none}
+.sm-grid{overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.sm-card{border:1px solid var(--line);border-radius:8px;padding:8px;display:flex;flex-direction:column;gap:4px}
+.sm-card canvas{width:100%;aspect-ratio:1;border-radius:6px;display:block}
+.sm-card p{margin:0;flex:1}
+.sm-card button{align-self:flex-start}
 /* undo / checks */
 .hist{display:inline-flex;gap:2px}
 .hist button{padding:4px 8px}
@@ -246,6 +254,7 @@ dialog.tuner:not([open]){display:none}
       <span class="small muted tip" title="Kéo hiệu ứng đang chọn để đặt nó so với nhân vật. Dấu + là chân nhân vật.">Kéo hiệu ứng đang chọn để đặt nó so với nhân vật. Dấu + là chân nhân vật.</span>
       <label class="small"><input type="checkbox" id="optRef"> Nhân vật mẫu</label>
       <label class="small"><input type="checkbox" id="optFlip"> Nhìn sang trái</label>
+      <select id="bgMode" aria-label="Nền khung xem" title="Nền để xem: hiệu ứng sáng nhìn rõ hơn trên nền tối"><option value="map">Nền bản đồ</option><option value="dark">Nền tối</option><option value="light">Nền sáng</option></select>
       <select id="zoom" aria-label="Phóng to"><option value="1">1x (cỡ thật)</option><option value="2" selected>2x</option><option value="3">3x</option></select>
       <button class="icon" id="btnPanel" aria-controls="panel" aria-expanded="true" title="Ẩn / hiện panel bên phải">Ẩn panel ›</button>
     </div>
@@ -298,6 +307,8 @@ dialog.tuner:not([open]){display:none}
         <summary><h2>Màu</h2></summary>
         <button class="icon reset" id="rsColor" title="Về màu gốc">↺</button>
         <div class="chips" id="presets"></div>
+        <div class="row" style="grid-template-columns:84px 1fr;margin-top:8px"><span class="small muted">Hòa trộn</span><div class="seg" id="blendSeg"><button data-b="normal" title="Vẽ đè bình thường">Thường</button><button data-b="screen" title="Ánh sáng cộng lên nền (screen): hợp với lửa, hào quang, tia sáng">Cộng sáng</button></div></div>
+        <p class="hint" id="blendHint" hidden>Cộng sáng có trong khung xem và trong sheet gộp (nhân vật + hiệu ứng). Tầng cài riêng vào game vẽ thường (game KR1 không có chế độ cộng cho sprite), nên trông hơi tối hơn.</p>
         <div class="row"><label for="hue">Sắc</label><input type="range" id="hue" min="-180" max="180" step="1"><output id="hueOut"></output></div>
         <div class="row"><label for="sat">Độ rực</label><input type="range" id="sat" min="0" max="200" step="1"><output id="satOut"></output></div>
         <div class="row"><label for="bri">Độ sáng</label><input type="range" id="bri" min="0" max="200" step="1"><output id="briOut"></output></div>
@@ -364,6 +375,23 @@ dialog.tuner:not([open]){display:none}
 </section>
 </div>
 
+<dialog id="dlgSamples" class="samples" aria-labelledby="smTitle">
+  <div class="sl-head"><h2 id="smTitle" style="margin:0;font-size:16px">Mẫu hiệu ứng đã duyệt</h2><span class="small muted">fx Python của Holy Commander; mỗi mẫu thêm 2 tầng (sau thân, trước thân), cộng sáng</span><span class="spacer"></span><button id="smClose">Đóng</button></div>
+  <div class="sm-grid" id="smGrid"></div>
+</dialog>
+<div id="keysPop" class="howto" popover><b style="color:var(--text)">Phím tắt</b>
+  <table class="small" style="margin-top:6px;border-spacing:10px 3px">
+    <tr><td><kbd>Space</kbd></td><td>Phát / dừng</td></tr>
+    <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Lùi / tới 1 frame</td></tr>
+    <tr><td><kbd>,</kbd> <kbd>.</kbd></td><td>Dời tầng đang chọn sớm / muộn 1 frame</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Hoàn tác / làm lại</td></tr>
+    <tr><td>Kéo trên khung xem</td><td>Đặt hiệu ứng so với chân nhân vật</td></tr>
+    <tr><td>Kéo mép tầng ở timeline</td><td>Co giãn thời gian tầng</td></tr>
+    <tr><td>Chuột phải tầng / nhân vật</td><td>Nhân đôi, xóa, Frame tuner…</td></tr>
+    <tr><td>Trong trình cắt sheet</td><td>Mũi tên: dịch hình đang chọn; bấm đúp vạch: xóa</td></tr>
+    <tr><td><kbd>?</kbd></td><td>Bảng này</td></tr>
+  </table>
+</div>
 <dialog id="dlgLeave" aria-labelledby="lvTitle">
   <h2 id="lvTitle" style="margin:0 0 8px;font-size:16px">Lưu thay đổi trước khi chuyển?</h2>
   <p class="small" id="lvText" style="margin:0 0 14px"></p>
@@ -770,7 +798,7 @@ function placeOffset(L, local) {   // preview only: the game does this with the 
 }
 // img is the layer drawing at resolution f (1 = @1x, 2 = @2x), drawn around the feet (g's origin) zoomed by z
 function paint(g, L, img, x, f, z = 1) {
-  g.save(); g.globalAlpha *= x.a; g.translate(x.ox * f * z, -x.oy * f * z); g.scale(x.s * z, x.s * z);
+  g.save(); g.globalAlpha *= x.a; if (L.recipe.blend === 'screen') g.globalCompositeOperation = 'screen'; g.translate(x.ox * f * z, -x.oy * f * z); g.scale(x.s * z, x.s * z);
   g.drawImage(img, Math.round(-L.recipe.anchor[0] * img.width), Math.round(-L.recipe.anchor[1] * img.height)); g.restore();
 }
 function layerBounds(L, f) {   // the union of every frame's drawn rect around the feet, at resolution f (motion included)
@@ -807,7 +835,9 @@ function draw() {
   const z = zoom(), W = stage.width, H = stage.height, px = W * PIVOT[0], py = H * PIVOT[1];
   ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
   ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
-  if (bgImg) { const sw = W / z, sh = H / z; ctx.drawImage(bgImg, (bgImg.width - sw) / 2, (bgImg.height - sh) / 2, sw, sh, 0, 0, W, H); }
+  const bm = $('#bgMode').value;
+  if (bm !== 'map') { ctx.fillStyle = bm === 'dark' ? '#25302a' : '#d9cfa3'; ctx.fillRect(0, 0, W, H); }
+  else if (bgImg) { const sw = W / z, sh = H / z; ctx.drawImage(bgImg, (bgImg.width - sw) / 2, (bgImg.height - sh) / 2, sw, sh, 0, 0, W, H); }
   if (!skill) return;
   ctx.save(); ctx.translate(px, py); if ($('#optFlip').checked) ctx.scale(-1, 1);
   drawScene(ctx, t, z, $('#optRef').checked);
@@ -978,11 +1008,7 @@ function openAddMenu(anchor) {
   const item = (label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = () => { menu.hidden = true; fn(); }; menu.appendChild(b); };
   item('Nhập sprite sheet…', openImport);
   item('Lửa mẫu', () => tryAdd(async () => addFromBlob(await (await fetch('samples/fire_breath.png')).blob(), 'Lửa mẫu', 'fire_breath.png')));
-  if (SAMPLES_LIB.length) {   // effects drawn with fx_layers (tools/fx_studio/build_samples.py): grid, scale and feet anchor given
-    const s = document.createElement('div'); s.className = 'sep'; menu.appendChild(s);
-    const l = document.createElement('div'); l.className = 'lbl'; l.textContent = 'Mẫu (vẽ bằng Python, đổi màu được)'; menu.appendChild(l);
-    for (const sp of SAMPLES_LIB) item(sp.title, () => tryAdd(async () => addFromBlob(await (await fetch(sp.file)).blob(), sp.title, sp.id + '.png', sp)));
-  }
+  if (SAMPLES_LIB.length) item(`Mẫu hiệu ứng đã duyệt (${SAMPLES_LIB.length})…`, openSamples);
   if (library.length) {
     const s = document.createElement('div'); s.className = 'sep'; menu.appendChild(s);
     const l = document.createElement('div'); l.className = 'lbl'; l.textContent = 'Từ thư viện (bản sao riêng cho skill này)'; menu.appendChild(l);
@@ -1041,6 +1067,64 @@ async function addFromBlob(blob, title, fileName, preset) {
   toast(`Đã thêm “${L.title}”: ${L.recipe.slice ? '' : 'lưới ' + L.recipe.grid.join('x') + ', '}${LC[L.lid].cells.length} hình, bắt đầu ở frame ${L.start}.`);
   return L;
 }
+// a sample = the approved Python fx of a hero (tools/fx_studio/build_samples.py): a back and a front layer, one drawing per
+// body frame, feet at the anchor, light blended with "screen". Both layers are added as one undo step.
+async function addSample(sp) {
+  const own = CHARS.find(c => c.id === sp.character)?.poses.find(p => p.id === sp.pose), same = skill.character === sp.character && skill.pose === sp.pose;
+  const hit = POSE()?.hit != null ? poseTickOf(POSE().hit) : null;
+  const start = same ? 0 : hit != null && own?.hit != null ? Math.max(0, hit - own.hit) : Math.max(0, Math.min(t, totalTicks() - 1));
+  const [cols, rows] = sp.grid, [cw, ch] = sp.cell, boxes = [];
+  for (let i = 0; i < sp.frames; i++) { const x = (i % cols) * cw, y = Math.floor(i / cols) * ch; boxes.push([x, y, x + cw, y + ch, 0, 0]); }   // every drawing kept, even the empty ones
+  HIST.quiet = true;
+  try {
+    for (const part of sp.parts) {
+      const blob = await (await fetch(part.file)).blob();
+      const L = await addFromBlob(blob, `${sp.title} · ${part.title}`, `${sp.id}_${part.part}.png`, {slice: {boxes, align: 'tl', cellScale: 1}, bg: 'alpha'});
+      L.recipe.scale = sp.scale; L.recipe.anchor = [...sp.anchor]; L.recipe.frames = boxes.map((_, i) => ({cell: i, hold: sp.hold || 1}));
+      L.recipe.blend = sp.blend; L.recipe.game.z = part.z; L.start = start;
+    }
+  } finally { HIST.quiet = false; }
+  refresh();
+  const who = `${CHARS.find(c => c.id === sp.character)?.name || sp.character} · ${own?.name || sp.pose}`;
+  toast(same ? `Đã thêm “${sp.title}”: 2 tầng (sau thân, trước thân), khớp từng frame với pose này.`
+    : `Đã thêm “${sp.title}” (2 tầng), bắt đầu ở frame ${start}${hit != null && own?.hit != null ? ' để đỉnh hiệu ứng trùng frame hit' : ''}. Mẫu vẽ theo dáng ${who}: hào quang bám dáng đó, với pose khác chỉ là điểm bắt đầu.`);
+}
+const dlgSm = $('#dlgSamples');
+let SM = null;   // {imgs: {file: img}, t0}
+async function openSamples() {
+  if (!skill) return;
+  SM = {imgs: {}, t0: performance.now()};
+  const grid = $('#smGrid'); grid.innerHTML = '';
+  for (const sp of SAMPLES_LIB) {
+    const card = document.createElement('div'); card.className = 'sm-card';
+    const cv = document.createElement('canvas'); cv.width = 150; cv.height = 150; cv.dataset.id = sp.id; cv.setAttribute('aria-hidden', 'true');
+    const tt = document.createElement('b'); tt.textContent = sp.title;
+    const nt = document.createElement('p'); nt.className = 'small muted'; nt.textContent = `${sp.note} · ${sp.frames} frame`;
+    const b = document.createElement('button'); b.className = 'primary'; b.textContent = 'Thêm';
+    b.onclick = () => { dlgSm.close(); tryAdd(() => addSample(sp)); };
+    card.append(cv, tt, nt, b); grid.appendChild(card);
+  }
+  dlgSm.showModal();
+  await Promise.all([...SAMPLES_LIB.flatMap(sp => sp.parts.map(async pt => { SM.imgs[pt.file] = await loadImg(pt.file).catch(() => null); })),
+    ...SAMPLES_LIB.map(async sp => { const p = CHARS.find(c => c.id === sp.character)?.poses.find(x => x.id === sp.pose); if (p) await stripImg(p.strip).catch(() => null); })]);
+}
+function drawSamples(now) {   // each card plays its sample over a dark ground, back + front, screen-blended, 30 frames a second
+  if (!SM || !dlgSm.open) return;
+  const k = Math.floor((now - SM.t0) / 1000 * 30);
+  for (const cv of document.querySelectorAll('#smGrid canvas')) {
+    const sp = SAMPLES_LIB.find(x => x.id === cv.dataset.id), g = cv.getContext('2d'), i = k % (sp.frames + 8);
+    g.globalCompositeOperation = 'source-over'; g.fillStyle = '#1b2a22'; g.fillRect(0, 0, cv.width, cv.height);
+    const [cw, ch] = sp.cell, [cols] = sp.grid, sc = Math.min(cv.width / cw, cv.height / ch) * 0.95, x = (i % cols) * cw, y = Math.floor(i / cols) * ch;
+    const c = CHARS.find(o => o.id === sp.character), p = c?.poses.find(o => o.id === sp.pose), body = p && stripImgs[p.strip];
+    if (body) {   // the body it was drawn on, feet on the fx anchor (body strips are @1x, the fx @2x)
+      const fx = (cv.width - cw * sc) / 2 + sp.anchor[0] * cw * sc, fy = (cv.height - ch * sc) / 2 + sp.anchor[1] * ch * sc, [bw, bh] = c.cell, k = sc * 2, j = Math.min(i, p.ticks.length - 1);
+      g.drawImage(body, j * bw, 0, bw, bh, fx - c.pivot[0] * bw * k, fy - c.pivot[1] * bh * k, bw * k, bh * k);
+    }
+    g.globalCompositeOperation = 'screen';
+    if (i < sp.frames) for (const pt of sp.parts) { const im = SM.imgs[pt.file]; if (im) g.drawImage(im, x, y, cw, ch, (cv.width - cw * sc) / 2, (cv.height - ch * sc) / 2, cw * sc, ch * sc); }
+  }
+}
+$('#smClose').onclick = () => dlgSm.close();
 async function addFromLibrary(p) {
   const res = await fetch('/_blob/' + p.sheet); if (!res.ok) throw new Error('Không tải được ảnh của ' + p.title);
   const L = newLayer(p.title); L.sheet = p.sheet; L.sheetName = p.sheetName || '';
@@ -1352,6 +1436,8 @@ function syncPos() {
 }
 $('#dx').onchange = () => { const L = S(); setOffset(L, +$('#dx').value || 0, offsetOf(L).dy); refresh(); };
 $('#dy').onchange = () => { const L = S(); setOffset(L, offsetOf(L).dx, +$('#dy').value || 0); refresh(); };
+document.querySelectorAll('#blendSeg button').forEach(b => b.onclick = () => { const L = S(); if (b.dataset.b === 'screen') L.recipe.blend = 'screen'; else delete L.recipe.blend; refresh(); });
+function syncBlend() { const L = S(), v = L.recipe.blend || 'normal'; document.querySelectorAll('#blendSeg button').forEach(b => b.classList.toggle('on', b.dataset.b === v)); $('#blendHint').hidden = v !== 'screen'; }
 function syncPresets() { const c = JSON.stringify(S().recipe.color); document.querySelectorAll('#presets button').forEach((b, i) => b.classList.toggle('on', JSON.stringify(PRESETS[i][1]) === c)); }
 PRESETS.forEach(([name, c]) => { const b = document.createElement('button'); b.textContent = name; b.onclick = () => { S().recipe.color = {...c}; refresh(); }; $('#presets').appendChild(b); });
 for (const [id, part] of [['rsPos', 'pos'], ['rsColor', 'color'], ['rsFrames', 'frames'], ['rsGame', 'game']]) $('#' + id).onclick = () => { defaults(S(), part); refresh(); };
@@ -1435,7 +1521,7 @@ function syncForm() {
   if (!L) return;
   $('#layerTitle').textContent = L.title;
   for (const [id, get, , fmt] of SLIDERS) { const v = get(L); $('#' + id).value = v; $('#' + id + 'Out').textContent = fmt(v); }
-  syncPos(); syncPresets(); syncStart(); syncMotion();
+  syncPos(); syncPresets(); syncBlend(); syncStart(); syncMotion();
   $('#btnToHit').disabled = POSE()?.hit == null;
   $('#bg').value = L.recipe.bg; $('#grid').value = L.recipe.grid.join('x');
   const n = LC[L.lid].cells.length, len = layerLen(L), hit = POSE()?.hit != null ? poseTickOf(POSE().hit) : null;
@@ -1505,8 +1591,9 @@ function checks(extra = []) {
   for (const L of skill.layers) {
     if (names.has(L.recipe.game.name)) out.push(['err', `Tên “${L.recipe.game.name}” trùng ở hai tầng.`]); names.add(L.recipe.game.name);
     if (L.muted) out.push(['warn', `Tầng “${L.title}” đang ẩn: không có trong sheet gộp, không vào skill.`]);
-    const empty = L.recipe.frames.filter(f => { const c = frames1x(L)[f.cell]; return !c || trimBox(c)[2] <= 1 && !c.getContext('2d').getImageData(0, 0, 1, 1).data[3]; }).length;
-    if (empty) out.push(['warn', `Tầng “${L.title}”: ${empty} hình trống (không thấy gì).`]);
+    const blank = L.recipe.frames.map(f => { const c = frames1x(L)[f.cell]; return !c || trimBox(c)[2] <= 1 && !c.getContext('2d').getImageData(0, 0, 1, 1).data[3]; });
+    const a = blank.indexOf(false), b = blank.lastIndexOf(false), empty = a < 0 ? blank.length : blank.slice(a, b + 1).filter(Boolean).length;
+    if (empty) out.push(['warn', `Tầng “${L.title}”: ${empty} hình trống (không thấy gì) xen giữa các hình có nội dung.`]);
   }
   if (p?.hit != null && skill.layers.length) {
     const h = poseTickOf(p.hit);
@@ -1603,6 +1690,7 @@ $('#btnNext').onclick = () => { playing = false; updatePlay(); t = Math.min(tota
 addEventListener('keydown', e => {
   const a = document.activeElement;   // keys aimed at a focused control (a button, a section heading, the splitter) stay with it
   if (!skill || ['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'SUMMARY'].includes(a.tagName) || a.getAttribute('role') === 'separator' || document.querySelector('dialog[open]')) return;
+  if (e.key === '?') { const k = $('#keysPop'); k.matches(':popover-open') ? k.hidePopover() : k.showPopover(); return; }
   if (e.code === 'Space') { e.preventDefault(); $('#btnPlay').click(); }
   if (e.key === 'ArrowLeft') $('#btnPrev').click();
   if (e.key === 'ArrowRight') $('#btnNext').click();
@@ -1616,7 +1704,7 @@ function tick(now) {
     while (acc >= 1 / FPS) { acc -= 1 / FPS; t++; if (t >= contentTicks() + TAIL) { if ($('#optLoop').checked) t = 0; else { t = contentTicks() + TAIL - 1; playing = false; updatePlay(); } } }
   }
   try {
-    draw(); drawTunerPreview(now); slPreview(now);
+    draw(); drawTunerPreview(now); slPreview(now); drawSamples(now);
     if (t !== lastT && skill) { lastT = t; drawTimeline(); markMini(); }
   } catch (e) {   // report once, keep running
     if (!tickErr) { tickErr = true; toast('Lỗi khi vẽ: ' + e.message, true); console.error(e); }
@@ -1867,6 +1955,8 @@ function syncTop() {
   $('#optRef').parentElement.hidden = !!ch;
 }
 $('#charSel').onchange = () => { const c = CHARS.find(x => x.id === $('#charSel').value); openSkill(c?.id || null, c ? (c.poses.find(p => p.hit != null) || c.poses[0]).id : null).catch(e => toast(e.message, true)); };
+try { $('#bgMode').value = localStorage.getItem('fxstudio.bg') || 'map'; } catch (e) {}
+$('#bgMode').onchange = () => { try { localStorage.setItem('fxstudio.bg', $('#bgMode').value); } catch (e) {} };
 $('#poseSel').onchange = () => openSkill(skill.character, $('#poseSel').value).catch(e => toast(e.message, true));
 
 // ---------------------------------------------------------------- layout: timeline splitter, panel and sections (per viewer, localStorage)
