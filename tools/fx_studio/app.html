@@ -162,6 +162,20 @@ dialog img{max-width:100%;max-height:240px;display:block;margin:8px auto;backgro
   #tl{margin:12px 16px 24px}
   .tl-scroll{max-height:min(420px,70vh)}
 }
+/* sheet slicer */
+dialog.slicer{width:min(1400px,97vw);height:min(900px,94vh);max-width:none;max-height:none;padding:12px;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+dialog.slicer:not([open]){display:none}
+.sl-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sl-head h2{margin:0;font-size:16px}
+.sl-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:12px}
+.sl-view{min-height:0;overflow:auto;background:repeating-conic-gradient(#20232b 0% 25%,#191b21 0% 50%) 0 0/16px 16px;border-radius:8px;border:1px solid var(--line)}
+.sl-view canvas{display:block;cursor:crosshair;touch-action:none}
+.sl-side{min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px;padding-right:2px}
+.sl-box{border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.sl-box h3{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600}
+.sl-rows{display:grid;grid-template-columns:auto 70px;gap:4px 8px;align-items:center;font-size:13px;margin-top:6px}
+#slPrev{width:100%;height:auto;background:#0c0d10;border-radius:6px}
+@media (max-width:900px){.sl-body{grid-template-columns:1fr}}
 /* undo / checks */
 .hist{display:inline-flex;gap:2px}
 .hist button{padding:4px 8px}
@@ -283,6 +297,7 @@ dialog.tuner:not([open]){display:none}
       <details class="sec" data-sec="adv">
         <summary><h2>Nâng cao</h2></summary>
         <div class="sec-h" style="margin-top:6px"><h2>Cắt sheet</h2><button class="icon" id="rsSheet" title="Tự nhận lại">↺</button></div>
+        <div class="bar" style="margin-top:0;margin-bottom:6px"><button id="btnSlicer" title="Chọn lại nền, hàng, khung từng hình, căn hình">Mở trình cắt sheet…</button></div>
         <div class="formgrid">
           <label for="bg">Nền</label><select id="bg"><option value="black">đen (lửa, ánh sáng)</option><option value="alpha">trong suốt</option><option value="magenta">magenta</option></select>
           <label for="grid">Lưới</label><span><input id="grid" style="width:90px" placeholder="3x3" spellcheck="false"> <span class="small muted">cột x hàng</span></span>
@@ -331,6 +346,62 @@ dialog.tuner:not([open]){display:none}
   <img id="impPrev" alt="" hidden>
   <p class="hint">Lưới và nền được tự nhận; chỉnh lại trong Nâng cao nếu cắt sai. Hiệu ứng bắt đầu tại đầu phát.</p>
   <div class="bar" style="justify-content:flex-end"><button id="impCancel">Hủy</button><button id="impGo" class="primary">Thêm vào timeline</button></div>
+</dialog>
+<input type="file" id="slFile" accept="image/png,image/jpeg,image/webp" hidden>
+<dialog id="dlgSlice" class="slicer" aria-labelledby="slTitle">
+  <div class="sl-head">
+    <h2 id="slTitle">Cắt sprite sheet</h2><span class="small muted" id="slInfo"></span><span class="spacer"></span>
+    <label class="small"><input type="checkbox" id="slOrig"> Xem ảnh gốc</label>
+    <button id="slCancel">Hủy</button><button id="slGo" class="primary">Thêm vào timeline</button>
+  </div>
+  <div class="sl-body">
+    <div class="sl-view" id="slView"><canvas id="slCanvas" aria-label="Sheet: bấm để chọn hình, kéo trên chỗ trống để vẽ khung, kéo vạch vàng để chia hàng"></canvas></div>
+    <div class="sl-side">
+      <div class="sl-box">
+        <h3>Tên</h3><input id="slName" style="width:100%" spellcheck="false">
+      </div>
+      <div class="sl-box">
+        <h3>Nền</h3>
+        <div class="formgrid" style="grid-template-columns:70px 1fr">
+          <label for="slBg">Kiểu</label><select id="slBg"><option value="color">một màu (hút từ ảnh)</option><option value="black">đen, kiểu ánh sáng (lửa)</option><option value="alpha">trong suốt</option><option value="magenta">magenta</option></select>
+          <label for="slKey">Màu nền</label><span style="display:flex;gap:6px;align-items:center"><input type="color" id="slKey"><button id="slPick" title="Bấm rồi bấm lên ảnh để lấy màu nền">Hút màu</button></span>
+        </div>
+        <div class="row" style="grid-template-columns:70px 1fr 40px"><label for="slTol">Độ lệch</label><input type="range" id="slTol" min="1" max="40" step="1"><output id="slTolOut"></output></div>
+      </div>
+      <div class="sl-box">
+        <h3>Cách cắt</h3>
+        <div class="seg" id="slMode"><button data-m="rows">Theo hàng (tự tìm)</button><button data-m="grid">Lưới đều</button></div>
+        <div id="slRowsBox">
+          <div class="sl-rows"><label for="slRowN">Số hàng</label><input type="number" id="slRowN" min="1" max="30"></div>
+          <div class="sl-rows" id="slRowKs"></div>
+          <p class="hint">Vạch vàng chia hàng, vạch hồng chia hình trong hàng: kéo nếu chia sai. Mỗi mảng màu thuộc về hình chứa tâm của nó, nên đuôi sóng lấn sang cột bên cạnh vẫn đi đúng hình.</p>
+        </div>
+        <div id="slGridBox" hidden>
+          <div class="sl-rows"><label for="slCols">Số cột</label><input type="number" id="slCols" min="1" max="60"><label for="slGRows">Số hàng</label><input type="number" id="slGRows" min="1" max="60"></div>
+        </div>
+      </div>
+      <div class="sl-box">
+        <h3 id="slSelTitle">Hình đang chọn</h3>
+        <div class="bar" style="margin-top:0">
+          <button id="slMerge" title="Gộp hình này với hình kế tiếp (một hình bị tách đôi)">Gộp với hình sau</button>
+          <button id="slDel" title="Bỏ hình này">Xóa</button>
+          <button id="slPrevB" title="Đưa lên trước">◀</button><button id="slNextB" title="Đưa ra sau">▶</button>
+        </div>
+        <div class="pos" style="margin-top:6px"><label for="slDx">Dịch x / y (px)</label><span style="display:flex;gap:4px"><input type="number" id="slDx" style="width:62px"><input type="number" id="slDy" style="width:62px" aria-label="Dịch y (px)"></span></div>
+        <p class="hint">Bấm một hình trên sheet để chọn; kéo trên chỗ trống để vẽ khung mới. Mũi tên dịch hình đang chọn 1 px (Shift: 10 px) để các hình khớp nhau.</p>
+      </div>
+      <div class="sl-box">
+        <h3>Căn các hình</h3>
+        <div class="seg" id="slAlign"><button data-a="bl">Đáy-trái</button><button data-a="bc">Đáy-giữa</button><button data-a="c">Giữa</button><button data-a="tl">Trên-trái</button></div>
+      </div>
+      <div class="sl-box">
+        <h3>Xem trước</h3>
+        <canvas id="slPrev" width="300" height="200" aria-label="Xem trước các hình đã cắt"></canvas>
+        <label class="small"><input type="checkbox" id="slOnion" checked> Bóng mờ hình trước</label>
+        <p class="small muted" id="slSum" style="margin:4px 0 0"></p>
+      </div>
+    </div>
+  </div>
 </dialog>
 <dialog id="dlgTuner" class="tuner" aria-labelledby="tnTitle">
   <div class="tn-top">
@@ -411,18 +482,32 @@ const skillKey = (c, p) => c ? `${c}__${p}` : 'free';
 function nameBase() { const p = skill.pose ? skill.pose.replace(/^skill_|_side$/g, '') : ''; return skill.character ? `fx_${skill.character}_${p}` : 'fx_free'; }
 
 // ---------------------------------------------------------------- sheet -> cells (same rules as scripts/fx_studio.py)
-function detectBg(d, w, h) {
+// the sheet's background from its border: transparent, magenta, black (light painted on black: alpha = brightness) or any
+// other solid colour (the border median, robust to JPEG noise; the tolerance from the border's spread)
+function bgInfo(d, w, h) {
   let transp = 0; for (let i = 3; i < d.length; i += 4) if (d[i] < 250) transp++;
-  if (transp / (w * h) > 0.05) return 'alpha';
-  let s = [0, 0, 0], n = 0;
-  for (const [x0, y0] of [[0, 0], [w - 4, 0], [0, h - 4], [w - 4, h - 4]]) for (let y = y0; y < y0 + 4; y++) for (let x = x0; x < x0 + 4; x++) { const i = (y * w + x) * 4; s[0] += d[i]; s[1] += d[i + 1]; s[2] += d[i + 2]; n++; }
-  s = s.map(v => v / n);
-  if (s[0] > 200 && s[1] < 80 && s[2] > 200) return 'magenta';
-  return 'black';
+  if (transp / (w * h) > 0.05) return {bg: 'alpha'};
+  const px = [], step = Math.max(1, Math.round((w + h) / 400)), take = (x, y) => { const i = (y * w + x) * 4; px.push([d[i], d[i + 1], d[i + 2]]); };
+  for (let x = 0; x < w; x += step) for (const y of [0, 1, 2, h - 3, h - 2, h - 1]) take(x, y);
+  for (let y = 0; y < h; y += step) for (const x of [0, 1, 2, w - 3, w - 2, w - 1]) take(x, y);
+  const med = [0, 1, 2].map(c => px.map(p => p[c]).sort((a, b) => a - b)[px.length >> 1]);
+  const dist = px.map(p => Math.hypot(p[0] - med[0], p[1] - med[1], p[2] - med[2]) / 441.7).sort((a, b) => a - b);
+  const tol = Math.min(0.4, Math.max(0.06, dist[Math.floor(dist.length * 0.98)] + 0.05));
+  if (med[0] > 200 && med[1] < 80 && med[2] > 200) return {bg: 'magenta'};
+  if (Math.max(...med) <= 14) return {bg: 'black'};
+  return {bg: 'color', key: {c: med, tol: +tol.toFixed(3)}};
 }
-function keyOut(d, bg, floor) {
+function detectBg(d, w, h) { return bgInfo(d, w, h).bg; }
+function keyOut(d, bg, floor, key) {
+  const kc = key?.c?.map(v => v / 255) || [0, 0, 0], tol = key?.tol ?? 0.08;
   for (let i = 0; i < d.length; i += 4) {
     const r = d[i] / 255, g = d[i + 1] / 255, b = d[i + 2] / 255;
+    if (bg === 'color') {   // distance to the key colour -> alpha, then the key colour is un-blended out of soft edges
+      const dist = Math.hypot(r - kc[0], g - kc[1], b - kc[2]) / Math.sqrt(3), a = Math.min(1, Math.max(0, (dist - tol) / 0.12));
+      if (a > 0) { d[i] = Math.min(255, Math.max(0, (r - (1 - a) * kc[0]) / a * 255)); d[i + 1] = Math.min(255, Math.max(0, (g - (1 - a) * kc[1]) / a * 255)); d[i + 2] = Math.min(255, Math.max(0, (b - (1 - a) * kc[2]) / a * 255)); }
+      d[i + 3] = a * 255 * (d[i + 3] / 255);
+      continue;
+    }
     if (bg === 'black') {
       const m = Math.max(r, g, b), a = Math.min(1, Math.max(0, (m - floor) / Math.max(1e-6, 1 - floor)));
       if (m > 1e-4) { d[i] = r / m * 255; d[i + 1] = g / m * 255; d[i + 2] = b / m * 255; } else { d[i] = d[i + 1] = d[i + 2] = 0; }
@@ -458,13 +543,95 @@ function despeckle(d, w, h, minPx = 12) {
     if (members.length < minPx) for (const q of members) d.fill(0, q * 4, q * 4 + 4);
   }
 }
+// connected blobs of an RGBA buffer (alpha > 40, 8-connected): labels + per-blob area, centre, bounds
+function findBlobs(d, w, h) {
+  const lab = new Int32Array(w * h), area = [0], sx = [0], sy = [0], bb = [null], stack = new Int32Array(w * h);
+  let id = 0;
+  for (let i0 = 0; i0 < w * h; i0++) {
+    if (lab[i0] || d[i0 * 4 + 3] <= 40) continue;
+    id++; let top = 0, n = 0, ax = 0, ay = 0, x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1; stack[top++] = i0; lab[i0] = id;
+    while (top) {
+      const q = stack[--top], x = q % w, y = (q - x) / w; n++; ax += x; ay += y;
+      if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        const m = ny * w + nx; if (!lab[m] && d[m * 4 + 3] > 40) { lab[m] = id; stack[top++] = m; }
+      }
+    }
+    area.push(n); sx.push(ax / n); sy.push(ay / n); bb.push([x0, y0, x1 + 1, y1 + 1]);
+  }
+  return {lab, n: id, area, cx: sx, cy: sy, bb};
+}
+// a 1-D split of weighted points (sorted by x) into k runs with the least weighted spread (natural breaks): the cut
+// positions between the runs
+function breaks(X, Wt, k) {
+  const n = X.length; if (k <= 1 || n < 2) return [];
+  k = Math.min(k, n);
+  const cw = [0], cx = [0], cxx = [0];
+  for (let i = 0; i < n; i++) { cw.push(cw[i] + Wt[i]); cx.push(cx[i] + Wt[i] * X[i]); cxx.push(cxx[i] + Wt[i] * X[i] * X[i]); }
+  const cost = (i, j) => { const w = cw[j] - cw[i], s = cx[j] - cx[i]; return cxx[j] - cxx[i] - s * s / w; };
+  const D = [...Array(k + 1)].map(() => new Float64Array(n + 1).fill(Infinity)), B = [...Array(k + 1)].map(() => new Int32Array(n + 1));
+  D[0][0] = 0;
+  for (let g = 1; g <= k; g++) for (let j = g; j <= n; j++) for (let i = g - 1; i < j; i++) { const v = D[g - 1][i] + cost(i, j); if (v < D[g][j]) { D[g][j] = v; B[g][j] = i; } }
+  const cuts = []; let j = n;
+  for (let g = k; g > 0; g--) { const i = B[g][j]; if (i > 0) cuts.push((X[i - 1] + X[i]) / 2); j = i; }
+  return cuts.sort((a, b) => a - b);
+}
+const cutKeyOf = R => JSON.stringify([R.bg, R.black_floor, R.grid, R.key || null, R.slice || null]);
+const ALIGN = {bl: (w, h, mw, mh) => [0, mh - h], bc: (w, h, mw, mh) => [(mw - w) / 2, mh - h], c: (w, h, mw, mh) => [(mw - w) / 2, (mh - h) / 2], tl: () => [0, 0]};
+// the slicer's boxes [x0, y0, x1, y1, dx, dy] in sheet px: every box becomes a cell (never dropped), all cells one size
+// (the largest box), placed by the alignment plus the box's nudge, scaled by slice.cellScale (big sheets stay light)
+// a box with a slot [.., sx0, sy0, sx1, sy1] keeps only the blobs whose centre lies in the slot (frames whose tails
+// reach into the next frame's columns), plus their soft edge (2 px); a box without one keeps everything inside it
+function slotBand(C, R, bands, y0, y1) {   // the keyed, labelled full-width band of rows y0..y1 (cached per cut)
+  const k = y0 + ',' + y1; if (bands[k]) return bands[k];
+  const W = C.bitmap.width, h = y1 - y0, c = canvas(W, h), g = c.getContext('2d', {willReadFrequently: true});
+  g.drawImage(C.bitmap, 0, y0, W, h, 0, 0, W, h);
+  const im = g.getImageData(0, 0, W, h); keyOut(im.data, R.bg, R.black_floor, R.key);
+  return bands[k] = {im, y0, W, h, B: findBlobs(im.data, W, h)};
+}
+function slotPixels(band, b) {
+  const [x0, y0, x1, y1] = b, [sx0, sy0, sx1, sy1] = b.slice(6, 10), w = x1 - x0, h = y1 - y0, {im, W, B} = band, d = im.data;
+  const out = new ImageData(w, h), keep = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const gy = y0 + y - band.y0; if (gy < 0 || gy >= band.h) continue;
+    const l = B.lab[gy * W + x0 + x];
+    if (l && B.area[l] >= 12 && B.cx[l] >= sx0 && B.cx[l] < sx1 && B.cy[l] + band.y0 >= sy0 && B.cy[l] + band.y0 < sy1) keep[y * w + x] = 1;
+  }
+  const near = new Uint8Array(w * h), R2 = 2;   // the soft edge: low-alpha pixels within 2 px of a kept one
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (keep[y * w + x]) for (let dy = -R2; dy <= R2; dy++) for (let dx = -R2; dx <= R2; dx++) { const nx = x + dx, ny = y + dy; if (nx >= 0 && ny >= 0 && nx < w && ny < h) near[ny * w + nx] = 1; }
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const gy = y0 + y - band.y0; if (gy < 0 || gy >= band.h) continue;
+    const i = y * w + x, si = (gy * W + x0 + x) * 4;
+    if (keep[i] || (near[i] && !B.lab[si / 4] && d[si + 3])) for (let c = 0; c < 4; c++) out.data[i * 4 + c] = d[si + c];
+  }
+  return out;
+}
+function cutBoxes(L) {
+  const C = LC[L.lid], R = L.recipe, S = R.slice, bs = S.boxes, bands = {};
+  const mw = Math.max(...bs.map(b => b[2] - b[0])), mh = Math.max(...bs.map(b => b[3] - b[1])), sc = S.cellScale || 1;
+  const cw = Math.max(1, Math.round(mw * sc)), ch = Math.max(1, Math.round(mh * sc));
+  C.cells = []; C.cellSize = [cw, ch];
+  for (const b of bs) {
+    const w = b[2] - b[0], h = b[3] - b[1], tmp = canvas(w, h), tg = tmp.getContext('2d', {willReadFrequently: true});
+    if (b.length >= 10) tg.putImageData(slotPixels(slotBand(C, R, bands, Math.min(b[1], b[7]), Math.max(b[3], b[9])), b), 0, 0);
+    else {
+      tg.drawImage(C.bitmap, b[0], b[1], w, h, 0, 0, w, h);
+      const im = tg.getImageData(0, 0, w, h); keyOut(im.data, R.bg, R.black_floor, R.key); despeckle(im.data, w, h); tg.putImageData(im, 0, 0);
+    }
+    const [ox, oy] = (ALIGN[S.align] || ALIGN.bl)(w, h, mw, mh), cell = canvas(cw, ch), cg = cell.getContext('2d', {willReadFrequently: true});
+    cg.imageSmoothingEnabled = true; cg.imageSmoothingQuality = 'high';
+    cg.drawImage(tmp, (ox + (b[4] || 0)) * sc, (oy + (b[5] || 0)) * sc, w * sc, h * sc); C.cells.push(cell);
+  }
+}
 function cutSheet(L) {
   const C = LC[L.lid], R = L.recipe, W = C.bitmap.width, H = C.bitmap.height;
+  if (R.slice?.boxes?.length) { cutBoxes(L); return cellsDone(L); }
   const c = canvas(W, H), g = c.getContext('2d', {willReadFrequently: true});
   g.drawImage(C.bitmap, 0, 0);
   const im = g.getImageData(0, 0, W, H), d = im.data;
-  if (!R.bg) R.bg = detectBg(d, W, H);
-  keyOut(d, R.bg, R.black_floor);
+  if (!R.bg) { const info = bgInfo(d, W, H); R.bg = info.bg; if (info.key) R.key = info.key; }
+  keyOut(d, R.bg, R.black_floor, R.key);
   if (!R.grid) {
     const rowOcc = new Array(H).fill(false), colOcc = new Array(W).fill(false);
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 25) { rowOcc[y] = true; colOcc[x] = true; }
@@ -481,13 +648,17 @@ function cutSheet(L) {
     if (n <= 20) continue;
     despeckle(full.data, cw, ch); cg.putImageData(full, 0, 0); C.cells.push(cell);
   }
+  cellsDone(L);
+}
+function cellsDone(L) {   // the union of what is drawn in the cells (placement) and the cache keys
+  const C = LC[L.lid], R = L.recipe, [cw, ch] = C.cellSize;
   let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
   for (const cell of C.cells) {
     const p = cell.getContext('2d').getImageData(0, 0, cw, ch).data;
     for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) if (p[(y * cw + x) * 4 + 3] > 25) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
   }
   C.box = x1 < 0 ? [0, 0, cw, ch] : [x0, y0, x1 + 1, y1 + 1];
-  C.tint = {key: ''}; C.r1 = {key: ''}; C.r2 = {key: ''}; C.cutKey = JSON.stringify([R.bg, R.black_floor, R.grid]);
+  C.tint = {key: ''}; C.r1 = {key: ''}; C.r2 = {key: ''}; C.cutKey = cutKeyOf(R);
 }
 
 // ---------------------------------------------------------------- colour + the ONE renderer (preview == export)
@@ -522,8 +693,8 @@ function renderCell(L, i, f) {
   g.putImageData(im, 0, 0);
   return c;
 }
-function frames1x(L) { const C = LC[L.lid], R = L.recipe, k = JSON.stringify([R.color, R.scale, C.cells.length, R.bg, R.black_floor, R.grid]); if (C.r1.key !== k) C.r1 = {key: k, c: C.cells.map((_, i) => renderCell(L, i, 1))}; return C.r1.c; }
-function frames2x(L) { const C = LC[L.lid], R = L.recipe, k = JSON.stringify([R.color, R.scale, C.cells.length, R.bg, R.black_floor, R.grid]); if (C.r2?.key !== k) C.r2 = {key: k, c: C.cells.map((_, i) => renderCell(L, i, 2))}; return C.r2.c; }
+function frames1x(L) { const C = LC[L.lid], R = L.recipe, k = JSON.stringify([R.color, R.scale, C.cells.length, C.cutKey]); if (C.r1.key !== k) C.r1 = {key: k, c: C.cells.map((_, i) => renderCell(L, i, 1))}; return C.r1.c; }
+function frames2x(L) { const C = LC[L.lid], R = L.recipe, k = JSON.stringify([R.color, R.scale, C.cells.length, C.cutKey]); if (C.r2?.key !== k) C.r2 = {key: k, c: C.cells.map((_, i) => renderCell(L, i, 2))}; return C.r2.c; }
 const layerSeq = L => { const out = []; L.recipe.frames.forEach((f, k) => { for (let j = 0; j < Math.max(1, f.hold | 0); j++) out.push(k); }); return out; };
 const layerLen = L => layerSeq(L).length;
 
@@ -824,17 +995,18 @@ function newLayer(title) {
 }
 async function addFromBlob(blob, title, fileName, preset) {
   const L = newLayer(title); L.sheetBlob = blob; L.sheetName = fileName || '';
-  if (preset) { L.recipe.grid = preset.grid; L.recipe.bg = 'alpha'; }
+  if (preset?.slice) { L.recipe.slice = preset.slice; L.recipe.bg = preset.bg; L.recipe.key = preset.key || null; L.recipe.grid = [preset.slice.boxes.length, 1]; }
+  else if (preset) { L.recipe.grid = preset.grid; L.recipe.bg = 'alpha'; }
   LC[L.lid] = {bitmap: await createImageBitmap(blob)};
   cutSheet(L);
   if (!LC[L.lid].cells.length) { delete LC[L.lid]; throw new Error('Không tìm thấy hình nào sau khi bỏ nền. Thử ảnh khác hoặc nền khác.'); }
   skill.layers.push(L); defaults(L, 'all');
-  if (preset) {   // a sample is drawn to scale with its feet at preset.anchor: keep both
+  if (preset && !preset.slice) {   // a sample is drawn to scale with its feet at preset.anchor: keep both
     L.recipe.scale = preset.scale; L.recipe.anchor = [...preset.anchor];
     L.recipe.frames = LC[L.lid].cells.map((_, i) => ({cell: i, hold: preset.hold || 2}));
   }
   selectLayer(L.lid);
-  toast(`Đã thêm “${L.title}”: lưới ${L.recipe.grid.join('x')}, ${LC[L.lid].cells.length} hình, bắt đầu ở frame ${L.start}.`);
+  toast(`Đã thêm “${L.title}”: ${L.recipe.slice ? '' : 'lưới ' + L.recipe.grid.join('x') + ', '}${LC[L.lid].cells.length} hình, bắt đầu ở frame ${L.start}.`);
   return L;
 }
 async function addFromLibrary(p) {
@@ -851,10 +1023,237 @@ function removeLayer(lid) {
   if (sel === lid) sel = skill.layers[0]?.lid || null; refresh(); toast(`Đã xóa tầng “${L.title}”. Xóa nhầm thì bấm Ctrl+Z (hoàn tác).`);
 }
 const dlg = $('#dlgImport');
-function openImport() { if (!skill) return; $('#impFile').value = ''; $('#impPrev').hidden = true; $('#impName').value = ''; dlg.showModal(); }
+function openImport() { if (!skill) return; $('#slFile').value = ''; $('#slFile').click(); }
+$('#slFile').onchange = async () => { const f = $('#slFile').files[0]; if (!f) return; try { await openSlicer({blob: f, name: f.name.replace(/\.[^.]+$/, ''), fileName: f.name}); } catch (e) { toast(e.message || 'Không mở được ảnh này', true); } };
 $('#impCancel').onclick = () => dlg.close();
 $('#impFile').onchange = () => { const f = $('#impFile').files[0]; if (!f) return; $('#impPrev').src = URL.createObjectURL(f); $('#impPrev').hidden = false; if (!$('#impName').value) $('#impName').value = f.name.replace(/\.[^.]+$/, ''); };
 $('#impGo').onclick = e => busy(e.target, async () => { const f = $('#impFile').files[0]; if (!f) throw new Error('Chọn một ảnh trước'); dlg.close(); await addFromBlob(f, $('#impName').value || f.name.replace(/\.[^.]+$/, ''), f.name); });
+
+// ---------------------------------------------------------------- sheet slicer: background, rows and frames, boxes, alignment, preview
+const dlgS = $('#dlgSlice'), slc = $('#slCanvas');
+let SL = null;
+const hex = c => '#' + c.map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+async function openSlicer(src) {
+  const bmp = src.bitmap || await createImageBitmap(src.blob), W = bmp.width, H = bmp.height, p = Math.min(1, 1600 / W, 1200 / H);
+  const pw = Math.max(1, Math.round(W * p)), ph = Math.max(1, Math.round(H * p)), pv = canvas(pw, ph), g = pv.getContext('2d', {willReadFrequently: true});
+  g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.drawImage(bmp, 0, 0, pw, ph);
+  const orig = g.getImageData(0, 0, pw, ph), R = src.L?.recipe, info = bgInfo(orig.data, pw, ph);
+  SL = {src, bmp, W, H, p, pw, ph, pv, orig, keyed: canvas(pw, ph), mask: new Uint8Array(pw * ph), bg: R?.bg || info.bg, key: R?.key || info.key || {c: [0, 0, 0], tol: 0.08},
+    mode: 'rows', rowsY: [], ks: [], cuts: [], grid: [3, 3], boxes: [], align: R?.slice?.align || 'bl', sel: -1, drag: null, pick: false, t0: performance.now()};
+  $('#slName').value = src.name || 'hiệu ứng';
+  $('#slInfo').textContent = `${W}×${H} px`;
+  $('#slGo').textContent = src.L ? 'Áp dụng cho tầng' : 'Thêm vào timeline';
+  slKeyed();
+  if (R?.slice?.boxes?.length) { SL.mode = 'manual'; SL.boxes = R.slice.boxes.map(b => ({x0: b[0], y0: b[1], x1: b[2], y1: b[3], dx: b[4] || 0, dy: b[5] || 0, slot: b.length >= 10 ? b.slice(6, 10) : null})); }
+  else slAutoRows();
+  slSync(); dlgS.showModal(); slDraw();
+}
+function slKeyed() {   // the background removed at preview size: drives detection, the overlay and the preview
+  const d = new ImageData(new Uint8ClampedArray(SL.orig.data), SL.pw, SL.ph);
+  keyOut(d.data, SL.bg, 0.05, SL.key);
+  for (let i = 0; i < SL.mask.length; i++) SL.mask[i] = d.data[i * 4 + 3] > 40 ? 1 : 0;
+  SL.keyed.getContext('2d').putImageData(d, 0, 0);
+  SL.B = findBlobs(d.data, SL.pw, SL.ph); SL.kd = d; SL.sprites = null;
+}
+function slGaps(occ, minW) {   // empty stretches between content: [{at: centre, w}]
+  const out = []; let s = -1, seen = false;
+  for (let i = 0; i < occ.length; i++) { if (!occ[i]) { if (s < 0) s = i; } else { if (s >= 0 && seen && i - s >= minW) out.push({at: (s + i) / 2, w: i - s}); s = -1; seen = true; } }
+  return out;
+}
+function slAutoRows(n) {   // rows split at the n-1 widest empty bands (n guessed when not given); then frames per row
+  const {pw, ph, mask, p} = SL, occ = new Uint8Array(ph);
+  for (let y = 0; y < ph; y++) for (let x = 0; x < pw; x++) if (mask[y * pw + x]) { occ[y] = 1; break; }
+  const gaps = slGaps(occ, 2);
+  if (!n) n = 1 + gaps.filter(gp => gp.w >= Math.max(6, ph * 0.03)).length;
+  SL.rowsY = gaps.sort((a, b) => b.w - a.w).slice(0, n - 1).map(gp => gp.at / p).sort((a, b) => a - b);
+  SL.ks = []; SL.cuts = []; slBuild();
+}
+function slBands() { const ys = [0, ...SL.rowsY, SL.H]; return ys.slice(1).map((y, i) => [ys[i], y]); }
+function slBuild() {   // boxes from the row bands: k frames per row at the k-1 widest horizontal gaps, each tightened to its content
+  const {pw, ph, mask, p} = SL; SL.boxes = []; SL.mode = SL.mode === 'grid' ? 'grid' : 'rows';
+  if (SL.mode === 'grid') {
+    const [cols, rows] = SL.grid;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const b = slTight(Math.round(c * pw / cols), Math.round(r * ph / rows), Math.round((c + 1) * pw / cols), Math.round((r + 1) * ph / rows));
+      if (b) SL.boxes.push({x0: Math.round(c * SL.W / cols), y0: Math.round(r * SL.H / rows), x1: Math.round((c + 1) * SL.W / cols), y1: Math.round((r + 1) * SL.H / rows), dx: 0, dy: 0});
+    }
+    return;
+  }
+  const B = SL.B;
+  slBands().forEach(([sy0, sy1], ri) => {
+    const ids = []; for (let l = 1; l <= B.n; l++) if (B.area[l] >= 2 && B.cy[l] >= sy0 * p && B.cy[l] < sy1 * p) ids.push(l);
+    ids.sort((a, b) => B.cx[a] - B.cx[b]);
+    // pieces lying inside a bigger blob's bounds (foam, curls) count as part of it: groups, by bounds centre and size
+    const G = [];
+    for (const l of [...ids].sort((a, b) => B.area[b] - B.area[a])) {
+      const q = B.bb[l], mx = (q[0] + q[2]) / 2, my = (q[1] + q[3]) / 2, host = G.find(g => mx >= g.b[0] && mx < g.b[2] && my >= g.b[1] && my < g.b[3]);
+      if (host) { host.a += B.area[l]; host.u = [Math.min(host.u[0], q[0]), Math.max(host.u[1], q[2])]; } else G.push({b: q, a: B.area[l], u: [q[0], q[2]]});
+    }
+    G.sort((a, b) => (a.u[0] + a.u[1]) - (b.u[0] + b.u[1]));
+    let k = SL.ks[ri]; if (!k) { const big = Math.max(1, ...G.map(g => g.a)); k = SL.ks[ri] = Math.max(1, Math.min(30, G.filter(g => g.a >= big * 0.1).length)); }
+    if (!SL.cuts[ri] || SL.cuts[ri].length !== k - 1) {   // where the frames split: natural breaks of the groups, weighted by size
+      const c = breaks(G.map(g => (g.u[0] + g.u[1]) / 2), G.map(g => g.a), k).map(x => x / p);
+      for (let i = 1; c.length < k - 1; i++) c.push(SL.W * i / k);   // fewer blobs than frames: even spacing for the rest
+      SL.cuts[ri] = c.sort((a, b) => a - b);
+    }
+    const xs = [0, ...SL.cuts[ri], SL.W];
+    for (let i = 0; i < xs.length - 1; i++) {
+      const slot = [Math.round(xs[i]), Math.round(sy0), Math.round(xs[i + 1]), Math.round(sy1)];
+      let a = 1e9, b = 1e9, c = -1, d = -1;
+      for (const l of ids) if (B.cx[l] >= xs[i] * p && B.cx[l] < xs[i + 1] * p) { const q = B.bb[l]; a = Math.min(a, q[0]); b = Math.min(b, q[1]); c = Math.max(c, q[2]); d = Math.max(d, q[3]); }
+      if (c < 0) SL.boxes.push({x0: slot[0], y0: slot[1], x1: slot[2], y1: slot[3], dx: 0, dy: 0, slot, empty: true});
+      else SL.boxes.push({x0: Math.max(0, Math.floor(a / p) - 2), y0: Math.max(0, Math.floor(b / p) - 2), x1: Math.min(SL.W, Math.ceil(c / p) + 2), y1: Math.min(SL.H, Math.ceil(d / p) + 2), dx: 0, dy: 0, slot});
+    }
+  });
+}
+function slTight(x0, y0, x1, y1) {   // the content inside a preview rect, or null
+  const {pw, mask} = SL; let a = 1e9, b = 1e9, c = -1, d = -1;
+  for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) if (mask[y * pw + x]) { if (x < a) a = x; if (x > c) c = x; if (y < b) b = y; if (y > d) d = y; }
+  return c < 0 ? null : [a, b, c + 1, d + 1];
+}
+function slSync() {
+  SL.sprites = null;
+  $('#slBg').value = SL.bg; $('#slKey').value = hex(SL.key.c); $('#slTol').value = Math.round(SL.key.tol * 100); $('#slTolOut').textContent = Math.round(SL.key.tol * 100);
+  $('#slKey').disabled = $('#slTol').disabled = $('#slPick').disabled = SL.bg !== 'color';
+  document.querySelectorAll('#slMode button').forEach(b => b.classList.toggle('on', b.dataset.m === SL.mode || (SL.mode === 'manual' && b.dataset.m === 'rows')));
+  $('#slRowsBox').hidden = SL.mode === 'grid'; $('#slGridBox').hidden = SL.mode !== 'grid';
+  $('#slRowN').value = SL.rowsY.length + 1; $('#slCols').value = SL.grid[0]; $('#slGRows').value = SL.grid[1];
+  $('#slRowKs').innerHTML = '';
+  if (SL.mode === 'rows') slBands().forEach((_, ri) => {
+    const l = document.createElement('label'); l.textContent = `Hàng ${ri + 1}: số hình`; l.htmlFor = 'slK' + ri;
+    const inp = document.createElement('input'); inp.type = 'number'; inp.min = 1; inp.max = 60; inp.id = 'slK' + ri; inp.value = SL.ks[ri] || 1;
+    inp.onchange = () => { SL.ks[ri] = Math.max(1, Math.min(60, inp.value | 0)); SL.cuts[ri] = null; slBuild(); slSync(); slDraw(); };
+    $('#slRowKs').append(l, inp);
+  });
+  if (SL.mode === 'manual') $('#slRowKs').innerHTML = '<span class="small muted" style="grid-column:1/-1">Khung đã chỉnh tay. Đổi số hàng để tự tìm lại.</span>';
+  document.querySelectorAll('#slAlign button').forEach(b => b.classList.toggle('on', b.dataset.a === SL.align));
+  const b = SL.boxes[SL.sel];
+  $('#slSelTitle').textContent = b ? `Hình ${SL.sel + 1} / ${SL.boxes.length}` : 'Hình đang chọn (chưa chọn)';
+  for (const id of ['slMerge', 'slDel', 'slPrevB', 'slNextB', 'slDx', 'slDy']) $('#' + id).disabled = !b;
+  if (b) { $('#slDx').value = b.dx; $('#slDy').value = b.dy; }
+  const empty = slEmpty();
+  $('#slSum').textContent = `${SL.boxes.length} hình` + (empty ? ` · ${empty} hình trống` : '') + ` · cell ${slCell().join('×')} px`;
+  $('#slGo').disabled = !SL.boxes.length;
+}
+function slEmpty() { return SL.boxes.filter(b => b.empty || !slTight(Math.floor(b.x0 * SL.p), Math.floor(b.y0 * SL.p), Math.ceil(b.x1 * SL.p), Math.ceil(b.y1 * SL.p))).length; }
+function slSprite(i) {   // one frame at preview size, as it will be cut (only its own blobs when it has a slot)
+  SL.sprites ||= [];
+  if (SL.sprites[i]) return SL.sprites[i];
+  const b = SL.boxes[i], p = SL.p, x0 = Math.floor(b.x0 * p), y0 = Math.floor(b.y0 * p), w = Math.max(1, Math.ceil(b.x1 * p) - x0), h = Math.max(1, Math.ceil(b.y1 * p) - y0);
+  const c = canvas(w, h), im = new ImageData(w, h), d = SL.kd.data, B = SL.B;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const gx = x0 + x, gy = y0 + y; if (gx >= SL.pw || gy >= SL.ph) continue;
+    const q = gy * SL.pw + gx, l = B.lab[q];
+    if (b.slot && l && !(B.cx[l] >= b.slot[0] * p && B.cx[l] < b.slot[2] * p && B.cy[l] >= b.slot[1] * p && B.cy[l] < b.slot[3] * p)) continue;
+    if (b.slot && !l && d[q * 4 + 3] > 0) { let ok = false; for (let dy = -1; dy <= 1 && !ok; dy++) for (let dx = -1; dx <= 1; dx++) { const m = q + dy * SL.pw + dx, lm = B.lab[m]; if (lm && B.cx[lm] >= b.slot[0] * p && B.cx[lm] < b.slot[2] * p) { ok = true; break; } } if (!ok) continue; }
+    for (let k = 0; k < 4; k++) im.data[(y * w + x) * 4 + k] = d[q * 4 + k];
+  }
+  c.getContext('2d').putImageData(im, 0, 0);
+  return SL.sprites[i] = {c, x: x0 / p, y: y0 / p, w: w / p, h: h / p};
+}
+function slCell() { const mw = Math.max(1, ...SL.boxes.map(b => b.x1 - b.x0)), mh = Math.max(1, ...SL.boxes.map(b => b.y1 - b.y0)); return [mw, mh]; }
+function slScale() { const v = $('#slView'); return Math.min((v.clientWidth - 4) / SL.pw, (v.clientHeight - 4) / SL.ph, 2); }
+function slDraw() {
+  if (!SL || !dlgS.open) return;
+  const s = slScale(), w = Math.round(SL.pw * s), h = Math.round(SL.ph * s), g = slc.getContext('2d');
+  if (slc.width !== w || slc.height !== h) { slc.width = w; slc.height = h; }
+  g.clearRect(0, 0, w, h); g.imageSmoothingEnabled = true;
+  g.drawImage($('#slOrig').checked ? SL.pv : SL.keyed, 0, 0, w, h);
+  const k = s * SL.p;
+  if (SL.mode === 'rows') for (const y of SL.rowsY) { g.strokeStyle = '#ffd84a'; g.setLineDash([8, 5]); g.lineWidth = 2; g.beginPath(); g.moveTo(0, y * k); g.lineTo(w, y * k); g.stroke(); g.setLineDash([]); g.fillStyle = '#ffd84a'; g.fillRect(w / 2 - 14, y * k - 4, 28, 8); }
+  if (SL.mode === 'rows') slBands().forEach(([y0, y1], ri) => (SL.cuts[ri] || []).forEach(x => {
+    g.strokeStyle = '#ff6bd0'; g.setLineDash([6, 4]); g.lineWidth = 2; g.beginPath(); g.moveTo(x * k, y0 * k + 6); g.lineTo(x * k, y1 * k - 6); g.stroke(); g.setLineDash([]);
+    g.fillStyle = '#ff6bd0'; g.fillRect(x * k - 4, (y0 + y1) / 2 * k - 14, 8, 28);
+  }));
+  g.font = '12px "IBM Plex Mono", monospace';
+  SL.boxes.forEach((b, i) => {
+    const on = i === SL.sel; g.strokeStyle = on ? '#f2a33a' : b.empty ? 'rgba(255,90,90,.9)' : 'rgba(80,240,255,.9)'; g.lineWidth = on ? 2.5 : 1.5;
+    g.strokeRect(b.x0 * k + .5, b.y0 * k + .5, (b.x1 - b.x0) * k, (b.y1 - b.y0) * k);
+    g.fillStyle = on ? '#f2a33a' : 'rgba(10,20,30,.8)'; g.fillRect(b.x0 * k, b.y0 * k, 22, 15); g.fillStyle = on ? '#1d1305' : '#bfefff'; g.fillText(String(i + 1), b.x0 * k + 3, b.y0 * k + 12);
+  });
+  if (SL.drag?.kind === 'box') { const d = SL.drag; g.strokeStyle = '#f2a33a'; g.setLineDash([4, 3]); g.strokeRect(Math.min(d.a[0], d.b[0]) * k, Math.min(d.a[1], d.b[1]) * k, Math.abs(d.b[0] - d.a[0]) * k, Math.abs(d.b[1] - d.a[1]) * k); g.setLineDash([]); }
+}
+function slPreview(now) {   // the cut frames at preview size, aligned as they will be, 15 drawings a second, onion of the previous one
+  if (!SL || !dlgS.open || !SL.boxes.length) return;
+  const c = $('#slPrev'), g = c.getContext('2d'), [mw, mh] = slCell(), n = SL.boxes.length, i = Math.floor((now - SL.t0) / 1000 * 15) % (n + 4);
+  g.fillStyle = '#0c0d10'; g.fillRect(0, 0, c.width, c.height);
+  const s = Math.min(c.width / mw, c.height / mh) * 0.95, ox = (c.width - mw * s) / 2, oy = (c.height - mh * s) / 2;
+  const one = (k, alpha) => { const b = SL.boxes[k], w = b.x1 - b.x0, h = b.y1 - b.y0, [ax, ay] = (ALIGN[SL.align] || ALIGN.bl)(w, h, mw, mh), sp = slSprite(k);
+    g.globalAlpha = alpha; g.drawImage(sp.c, ox + (ax + b.dx + sp.x - b.x0) * s, oy + (ay + b.dy + sp.y - b.y0) * s, sp.w * s, sp.h * s); g.globalAlpha = 1; };
+  const cur = Math.min(i, n - 1);
+  if ($('#slOnion').checked && cur > 0) one(cur - 1, 0.3);
+  one(cur, 1);
+  g.strokeStyle = 'rgba(255,255,255,.15)'; g.strokeRect(ox + .5, oy + .5, mw * s, mh * s);
+}
+function slPt(e) { const r = slc.getBoundingClientRect(), k = slScale() * SL.p; return [(e.clientX - r.left) / k, (e.clientY - r.top) / k]; }   // sheet px
+slc.addEventListener('pointerdown', e => {
+  const [x, y] = slPt(e), k = slScale() * SL.p;
+  if (SL.pick) {   // the background colour from the original sheet
+    const px = Math.min(SL.pw - 1, Math.max(0, Math.round(x * SL.p))), py = Math.min(SL.ph - 1, Math.max(0, Math.round(y * SL.p))), i = (py * SL.pw + px) * 4, d = SL.orig.data;
+    SL.key = {...SL.key, c: [d[i], d[i + 1], d[i + 2]]}; SL.bg = 'color'; SL.pick = false; slc.style.cursor = ''; slKeyed(); if (SL.mode !== 'manual') slBuild(); slSync(); slDraw(); return;
+  }
+  slc.setPointerCapture(e.pointerId);
+  const ri = SL.mode === 'rows' ? SL.rowsY.findIndex(ry => Math.abs(ry - y) * k < 7) : -1;
+  if (ri >= 0) { SL.drag = {kind: 'row', ri}; return; }
+  if (SL.mode === 'rows') {
+    const band = slBands().findIndex(([y0, y1]) => y >= y0 && y < y1), ci = band < 0 ? -1 : (SL.cuts[band] || []).findIndex(cx => Math.abs(cx - x) * k < 7);
+    if (ci >= 0) { SL.drag = {kind: 'cut', band, ci}; return; }
+  }
+  const bi = SL.boxes.findIndex(b => x >= b.x0 && x <= b.x1 && y >= b.y0 && y <= b.y1);
+  if (bi >= 0) { SL.sel = bi; slSync(); slDraw(); return; }
+  SL.drag = {kind: 'box', a: [x, y], b: [x, y]};
+});
+slc.addEventListener('pointermove', e => {
+  if (SL && !SL.drag && !SL.pick) {
+    const [x, y] = slPt(e), k = slScale() * SL.p, band = slBands().findIndex(([y0, y1]) => y >= y0 && y < y1);
+    slc.style.cursor = SL.mode !== 'rows' ? '' : SL.rowsY.some(ry => Math.abs(ry - y) * k < 7) ? 'ns-resize' : (SL.cuts[band] || []).some(cx => Math.abs(cx - x) * k < 7) ? 'ew-resize' : '';
+  }
+  if (!SL?.drag) return;
+  const [x, y] = slPt(e);
+  if (SL.drag.kind === 'row') { const lo = SL.rowsY[SL.drag.ri - 1] ?? 0, hi = SL.rowsY[SL.drag.ri + 1] ?? SL.H; SL.rowsY[SL.drag.ri] = Math.max(lo + 4, Math.min(hi - 4, y)); slDraw(); return; }
+  if (SL.drag.kind === 'cut') { const c = SL.cuts[SL.drag.band], lo = c[SL.drag.ci - 1] ?? 0, hi = c[SL.drag.ci + 1] ?? SL.W; c[SL.drag.ci] = Math.max(lo + 4, Math.min(hi - 4, x)); slDraw(); return; }
+  SL.drag.b = [x, y]; slDraw();
+});
+slc.addEventListener('pointerup', () => {
+  const d = SL?.drag; if (!d) return; SL.drag = null;
+  if (d.kind === 'row') { SL.cuts = []; slBuild(); slSync(); slDraw(); return; }
+  if (d.kind === 'cut') { slBuild(); slSync(); slDraw(); return; }
+  const x0 = Math.max(0, Math.round(Math.min(d.a[0], d.b[0]))), y0 = Math.max(0, Math.round(Math.min(d.a[1], d.b[1]))), x1 = Math.min(SL.W, Math.round(Math.max(d.a[0], d.b[0]))), y1 = Math.min(SL.H, Math.round(Math.max(d.a[1], d.b[1])));
+  if (x1 - x0 > 6 && y1 - y0 > 6) { SL.boxes.push({x0, y0, x1, y1, dx: 0, dy: 0}); SL.sel = SL.boxes.length - 1; SL.mode = 'manual'; }
+  slSync(); slDraw();
+});
+$('#slBg').onchange = () => { SL.bg = $('#slBg').value; slKeyed(); if (SL.mode !== 'manual') slBuild(); slSync(); slDraw(); };
+$('#slKey').oninput = () => { const v = $('#slKey').value; SL.key = {...SL.key, c: [1, 3, 5].map(i => parseInt(v.slice(i, i + 2), 16))}; slKeyed(); slDraw(); };
+$('#slKey').onchange = () => { if (SL.mode !== 'manual') slBuild(); slSync(); slDraw(); };
+$('#slTol').oninput = () => { SL.key = {...SL.key, tol: +$('#slTol').value / 100}; $('#slTolOut').textContent = $('#slTol').value; slKeyed(); slDraw(); };
+$('#slTol').onchange = () => { if (SL.mode !== 'manual') slBuild(); slSync(); slDraw(); };
+$('#slPick').onclick = () => { SL.pick = true; slc.style.cursor = 'copy'; toast('Bấm lên một chỗ nền trên ảnh'); };
+document.querySelectorAll('#slMode button').forEach(b => b.onclick = () => { SL.mode = b.dataset.m; SL.sel = -1; if (SL.mode === 'rows') slAutoRows(); else slBuild(); slSync(); slDraw(); });
+$('#slRowN').onchange = () => { SL.mode = 'rows'; SL.sel = -1; slAutoRows(Math.max(1, Math.min(30, $('#slRowN').value | 0))); slSync(); slDraw(); };
+$('#slCols').onchange = $('#slGRows').onchange = () => { SL.grid = [Math.max(1, $('#slCols').value | 0), Math.max(1, $('#slGRows').value | 0)]; slBuild(); slSync(); slDraw(); };
+document.querySelectorAll('#slAlign button').forEach(b => b.onclick = () => { SL.align = b.dataset.a; slSync(); });
+$('#slOrig').onchange = () => slDraw();
+$('#slMerge').onclick = () => { const i = SL.sel, a = SL.boxes[i], b = SL.boxes[i + 1]; if (!b) { toast('Đây là hình cuối', true); return; }
+  const slot = a.slot && b.slot ? [Math.min(a.slot[0], b.slot[0]), Math.min(a.slot[1], b.slot[1]), Math.max(a.slot[2], b.slot[2]), Math.max(a.slot[3], b.slot[3])] : null;
+  SL.boxes.splice(i, 2, {x0: Math.min(a.x0, b.x0), y0: Math.min(a.y0, b.y0), x1: Math.max(a.x1, b.x1), y1: Math.max(a.y1, b.y1), dx: a.dx, dy: a.dy, slot}); SL.mode = 'manual'; slSync(); slDraw(); };
+$('#slDel').onclick = () => { SL.boxes.splice(SL.sel, 1); SL.sel = Math.min(SL.sel, SL.boxes.length - 1); SL.mode = 'manual'; slSync(); slDraw(); };
+const slMove = d => { const i = SL.sel, j = i + d; if (j < 0 || j >= SL.boxes.length) return; [SL.boxes[i], SL.boxes[j]] = [SL.boxes[j], SL.boxes[i]]; SL.sel = j; SL.mode = 'manual'; slSync(); slDraw(); };
+$('#slPrevB').onclick = () => slMove(-1); $('#slNextB').onclick = () => slMove(1);
+$('#slDx').onchange = () => { SL.boxes[SL.sel].dx = $('#slDx').value | 0; }; $('#slDy').onchange = () => { SL.boxes[SL.sel].dy = $('#slDy').value | 0; };
+dlgS.addEventListener('keydown', e => {   // arrows nudge the selected frame (Shift: 10 px)
+  if (!SL || SL.sel < 0 || ['INPUT', 'SELECT'].includes(document.activeElement.tagName)) return;
+  const st = e.shiftKey ? 10 : 1, mv = {ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, -st], ArrowDown: [0, st]}[e.key];
+  if (!mv) return; e.preventDefault(); const b = SL.boxes[SL.sel]; b.dx += mv[0]; b.dy += mv[1]; slSync();
+});
+addEventListener('resize', () => slDraw());
+$('#slCancel').onclick = () => { dlgS.close(); SL = null; };
+$('#slGo').onclick = e => busy(e.target, async () => {
+  const [mw, mh] = slCell(), slice = {boxes: SL.boxes.map(b => [b.x0, b.y0, b.x1, b.y1, b.dx, b.dy, ...(b.slot || [])]), align: SL.align, cellScale: +Math.min(1, 512 / Math.max(mw, mh)).toFixed(4)};
+  const src = SL.src, name = $('#slName').value.trim() || 'hiệu ứng', bg = SL.bg, key = bg === 'color' ? {c: SL.key.c.map(Math.round), tol: +SL.key.tol.toFixed(3)} : null;
+  dlgS.close(); SL = null;
+  if (src.L) { const L = src.L; L.recipe.slice = slice; L.recipe.bg = bg; L.recipe.key = key; L.title = name; recut(); defaults(L, 'pos'); refresh(); return; }
+  await addFromBlob(src.blob, name, src.fileName, {slice, bg, key});
+});
 
 // ---------------------------------------------------------------- right panel: the selected layer
 function selectLayer(lid) { sel = lid; refresh(); }
@@ -891,7 +1290,8 @@ $('#dy').onchange = () => { const L = S(); setOffset(L, offsetOf(L).dx, +$('#dy'
 function syncPresets() { const c = JSON.stringify(S().recipe.color); document.querySelectorAll('#presets button').forEach((b, i) => b.classList.toggle('on', JSON.stringify(PRESETS[i][1]) === c)); }
 PRESETS.forEach(([name, c]) => { const b = document.createElement('button'); b.textContent = name; b.onclick = () => { S().recipe.color = {...c}; refresh(); }; $('#presets').appendChild(b); });
 for (const [id, part] of [['rsPos', 'pos'], ['rsColor', 'color'], ['rsFrames', 'frames'], ['rsGame', 'game']]) $('#' + id).onclick = () => { defaults(S(), part); refresh(); };
-$('#rsSheet').onclick = () => { const r = S().recipe; r.bg = null; r.grid = null; r.black_floor = 0.05; recut(); };
+$('#rsSheet').onclick = () => { const r = S().recipe; r.bg = null; r.grid = null; r.key = null; r.slice = null; r.black_floor = 0.05; recut(); };
+$('#btnSlicer').onclick = () => { const L = S(); openSlicer({bitmap: LC[L.lid].bitmap, name: L.title, L}); };
 $('#bg').onchange = () => { S().recipe.bg = $('#bg').value; recut(); };
 $('#grid').onchange = () => {
   const m = $('#grid').value.trim().toLowerCase().match(/^(\d+)\s*x\s*(\d+)$/);
@@ -905,7 +1305,7 @@ function recut() {
   const n = LC[L.lid].cells.length;
   if (n !== n0) L.recipe.frames = LC[L.lid].cells.map((_, i) => ({cell: i, hold: 2}));
   L.recipe.frames = L.recipe.frames.filter(f => f.cell < n);
-  toast(`Đã cắt lại: lưới ${L.recipe.grid.join('x')}, ${n} ô`); refresh();
+  toast(`Đã cắt lại: ${L.recipe.slice ? n + ' hình (trình cắt sheet)' : 'lưới ' + L.recipe.grid.join('x') + ', ' + n + ' ô'}`); refresh();
 }
 const MFIELDS = [['mFadeIn', 'fadeIn', 0, 60], ['mFadeOut', 'fadeOut', 0, 60], ['mScaleFrom', 'scaleFrom', 10, 400], ['mScaleTo', 'scaleTo', 10, 400], ['mMoveX', 'moveX', -999, 999], ['mMoveY', 'moveY', -999, 999]];
 for (const [id, k, lo, hi] of MFIELDS) $('#' + id).onchange = () => { const L = S(), v = Math.max(lo, Math.min(hi, Math.round(+$('#' + id).value || 0))); L.recipe.motion = {...mot(L), [k]: v}; refresh(); };
@@ -1005,7 +1405,7 @@ function restore(snap) {
   const d = JSON.parse(snap);
   skill.poseEdit = d.pose; skill.target = d.target;
   skill.layers = d.layers.map(L => ({...L, sheetBlob: blobs[L.lid] || null}));
-  for (const L of skill.layers) { const C = LC[L.lid], k = JSON.stringify([L.recipe.bg, L.recipe.black_floor, L.recipe.grid]); if (C && C.cutKey !== k) cutSheet(L); }
+  for (const L of skill.layers) { const C = LC[L.lid]; if (C && C.cutKey !== cutKeyOf(L.recipe)) cutSheet(L); }
   sel = layer(d.sel) ? d.sel : skill.layers[0]?.lid || null;
   HIST.quiet = true; refresh(); HIST.quiet = false;
   $('#btnUndo').disabled = !HIST.past.length; $('#btnRedo').disabled = !HIST.future.length;
@@ -1132,7 +1532,7 @@ function tick(now) {
     acc += dt;
     while (acc >= 1 / FPS) { acc -= 1 / FPS; t++; if (t >= contentTicks() + TAIL) { if ($('#optLoop').checked) t = 0; else { t = contentTicks() + TAIL - 1; playing = false; updatePlay(); } } }
   }
-  draw(); drawTunerPreview(now);
+  draw(); drawTunerPreview(now); slPreview(now);
   if (t !== lastT && skill) { lastT = t; drawTimeline(); markMini(); }
   requestAnimationFrame(tick);
 }

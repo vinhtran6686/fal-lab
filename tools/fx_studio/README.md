@@ -32,6 +32,20 @@ Nhịp của pose lấy từ bảng animation của game khi nhân vật đã c�
 chạy; holy_commander chạy nhanh gấp đôi con số 15 fps trong meta.json), còn không thì từ meta.json (tầng nhân vật ghi
 "game" hay "meta"). Khung xem hiện **đúng các frame sẽ vào game**: app render một lần, gói chứa chính các frame đó.
 
+### Nhập sheet ngoài: trình cắt sheet
+"+ Thêm hiệu ứng → Nhập sprite sheet" mở **trình cắt sheet** (mở lại cho tầng đang chọn ở Nâng cao → "Mở trình cắt sheet…"):
+- **Nền:** tự nhận (trong suốt, magenta, đen kiểu ánh sáng, hoặc **một màu bất kỳ** = trung vị viền ảnh, ví dụ xanh navy);
+  "Hút màu" bấm lên nền; "Độ lệch" nới ngưỡng. Màu nền được gỡ khỏi viền mềm (không còn viền navy).
+- **Theo hàng (tự tìm):** vạch vàng chia hàng, vạch hồng chia hình trong hàng; kéo được cả hai. Số hình mỗi hàng nhập tay.
+  Mỗi mảng màu thuộc về hình **chứa tâm của nó**, nên đuôi sóng lấn sang cột bên cạnh vẫn đi đúng hình; mảng nằm trong khung
+  của mảng lớn (bọt, giọt) tính chung với mảng lớn khi tự chia.
+- **Lưới đều:** cột × hàng.
+- Bấm một hình để chọn: gộp với hình sau, xóa, đổi thứ tự ◀▶, dịch x/y (mũi tên, Shift = 10 px); kéo trên chỗ trống để vẽ khung.
+  Khung đỏ = hình trống (không bị bỏ ngầm).
+- **Căn:** đáy-trái / đáy-giữa / giữa / trên-trái; xem trước động với bóng mờ hình trước.
+- Recipe: `slice = {boxes: [[x0,y0,x1,y1,dx,dy, sx0,sy0,sx1,sy1]...], align, cellScale}` (px của sheet gốc; ô dài nhất ≤ 512 px),
+  `bg: "color"` + `key = {c: [r,g,b], tol}`. Sheet gốc được lưu nguyên, nên mở lại vẫn cắt lại được.
+
 ### Trong game
 - `install-pack` cài từng tầng như một hiệu ứng (`fx_<nhân vật>_<pose>_<n>`), thêm một template phát chính animation của
   nhân vật (`fx_lab_pose_<n>`), bảng `FX_LAB_SKILLS` (tầng nào, frame nào), và nạp atlas của nhân vật ở mọi level.
