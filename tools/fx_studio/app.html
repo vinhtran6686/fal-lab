@@ -62,6 +62,11 @@ canvas#stage.dragging{cursor:grabbing}
 /* inspector sections: <details data-sec> remember open/closed per viewer */
 .sec{border-top:1px solid var(--line);padding-top:10px;margin-top:10px;position:relative}
 .sec:first-child{border-top:0;padding-top:0;margin-top:0}
+.lhead{padding-bottom:2px}
+details.sub{margin-top:8px;font-size:13px}
+details.sub>summary{cursor:pointer;color:var(--muted)}
+details.sub>summary:hover{color:var(--text)}
+#chkList li button{margin-left:6px;font-size:12px;padding:2px 8px}
 .sec-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .sec-h h2,details.sec>summary h2{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin:0;font-weight:600}
 details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;padding:2px 34px 2px 0;border-radius:4px;min-height:24px}
@@ -225,7 +230,7 @@ dialog.tuner:not([open]){display:none}
   <button id="btnZip" title="Tải gói (.zip) để cài vào game">Tải gói .zip</button>
   <button class="icon" popovertarget="howto" title="Cách đưa hiệu ứng vào game" aria-label="Cách đưa vào game">? Đưa vào game</button>
 </header>
-<div id="chkList" class="howto" popover><b style="color:var(--text)">Kiểm tra trước khi xuất</b><ul id="chkItems"></ul></div>
+<div id="chkList" class="howto" popover><b style="color:var(--text)">Kiểm tra trước khi xuất</b><p class="small" style="margin:4px 0 0">⚠ cảnh báo: vẫn lưu được, nên xem lại. ⛔ lỗi: phải sửa mới lưu được.</p><ul id="chkItems"></ul></div>
 <div id="howto" class="howto" popover>
   <b style="color:var(--text)">Đưa vào game</b>
   <p>Bấm <b>Lưu</b>, rồi nhắn Claude: <code id="askText">cài skill … từ Fx Studio</code></p>
@@ -250,13 +255,18 @@ dialog.tuner:not([open]){display:none}
   <aside class="card" id="panel" aria-label="Tầng đang chọn">
     <div id="noSel" class="empty-panel">Chọn một tầng hiệu ứng ở timeline bên dưới,<br>hoặc bấm <b>+ Thêm hiệu ứng</b>.</div>
     <div id="editor" hidden>
-      <div class="sec">
+      <div class="lhead">
         <p class="layer-title" id="layerTitle"></p>
-        <div class="pos" style="grid-template-columns:auto 1fr">
-          <label for="start">Bắt đầu ở frame</label>
-          <span style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"><input type="number" id="start" min="0" step="1"><button id="btnToHit" title="Bắt đầu đúng frame hit của pose">Gắn vào hit</button><button id="btnToHead" title="Bắt đầu tại đầu phát">Tại đầu phát</button></span>
-        </div>
+        <p class="small muted" id="layerSum" style="margin:0"></p>
       </div>
+      <details class="sec" data-sec="time" open>
+        <summary><h2>Thời điểm</h2></summary>
+        <div class="pos" style="grid-template-columns:auto 1fr">
+          <label for="start">Bắt đầu ở frame</label><input type="number" id="start" min="0" step="1" style="width:80px">
+        </div>
+        <div class="bar"><button id="btnToHit" title="Bắt đầu đúng frame hit (lúc đòn trúng) của pose">Bắt đầu ở hit</button><button id="btnToHead" title="Bắt đầu tại frame đầu phát đang đứng">Bắt đầu tại đầu phát</button></div>
+        <p class="hint" id="timeHint"></p>
+      </details>
       <details class="sec" data-sec="pos" open>
         <summary><h2>Vị trí và kích thước</h2></summary>
         <button class="icon reset" id="rsPos" title="Về mặc định">↺</button>
@@ -266,15 +276,6 @@ dialog.tuner:not([open]){display:none}
           <label for="dy">Lên trên (px)</label><input type="number" id="dy" step="1">
         </div>
         <p class="hint" id="sizeInfo"></p>
-      </details>
-      <details class="sec" data-sec="color" open>
-        <summary><h2>Màu</h2></summary>
-        <button class="icon reset" id="rsColor" title="Về màu gốc">↺</button>
-        <div class="chips" id="presets"></div>
-        <div class="row"><label for="hue">Sắc</label><input type="range" id="hue" min="-180" max="180" step="1"><output id="hueOut"></output></div>
-        <div class="row"><label for="sat">Độ rực</label><input type="range" id="sat" min="0" max="200" step="1"><output id="satOut"></output></div>
-        <div class="row"><label for="bri">Độ sáng</label><input type="range" id="bri" min="0" max="200" step="1"><output id="briOut"></output></div>
-        <div class="row"><label for="alp">Độ đậm</label><input type="range" id="alp" min="0" max="100" step="1"><output id="alpOut"></output></div>
       </details>
       <details class="sec" data-sec="frames" open>
         <summary><h2 id="framesTitle">Các hình</h2></summary>
@@ -286,6 +287,21 @@ dialog.tuner:not([open]){display:none}
           <button id="btnPing" title="Chạy tới rồi chạy lùi">Tới và lui</button>
         </div>
         <div class="minis" id="minis" style="margin-top:8px"></div>
+        <p class="hint">Số ở góc = số hình trong sheet (như trong trình cắt). Ô số dưới hình = giữ hình đó bao nhiêu frame game.</p>
+        <details class="sub">
+          <summary>Sửa thứ tự bằng chữ</summary>
+          <p class="hint" style="margin-top:4px">Mỗi mục là <b>số hình : số frame giữ</b>, cách nhau bằng dấu cách. Ví dụ <code>1:2 2:2 3:4</code> = hình 1 giữ 2 frame, hình 2 giữ 2 frame, hình 3 giữ 4 frame. Lặp lại hình được: <code>1:2 2:2 1:2</code>.</p>
+          <span style="display:flex;gap:6px"><input id="seqText" style="flex:1;min-width:0" spellcheck="false" aria-label="Thứ tự hình, dạng số hình:số frame giữ"><button id="btnSeq">Dùng</button></span>
+        </details>
+      </details>
+      <details class="sec" data-sec="color" open>
+        <summary><h2>Màu</h2></summary>
+        <button class="icon reset" id="rsColor" title="Về màu gốc">↺</button>
+        <div class="chips" id="presets"></div>
+        <div class="row"><label for="hue">Sắc</label><input type="range" id="hue" min="-180" max="180" step="1"><output id="hueOut"></output></div>
+        <div class="row"><label for="sat">Độ rực</label><input type="range" id="sat" min="0" max="200" step="1"><output id="satOut"></output></div>
+        <div class="row"><label for="bri">Độ sáng</label><input type="range" id="bri" min="0" max="200" step="1"><output id="briOut"></output></div>
+        <div class="row"><label for="alp">Độ đậm</label><input type="range" id="alp" min="0" max="100" step="1"><output id="alpOut"></output></div>
       </details>
       <details class="sec" data-sec="motion">
         <summary><h2>Chuyển động</h2></summary>
@@ -301,21 +317,25 @@ dialog.tuner:not([open]){display:none}
         <div class="chips" id="pins" style="margin-top:6px"></div>
         <p class="hint" id="motionHint"></p>
       </details>
-      <details class="sec" data-sec="adv">
-        <summary><h2>Nâng cao</h2></summary>
-        <div class="sec-h" style="margin-top:6px"><h2>Cắt sheet</h2><button class="icon" id="rsSheet" title="Tự nhận lại">↺</button></div>
-        <div class="bar" style="margin-top:0;margin-bottom:6px"><button id="btnSlicer" title="Chọn lại nền, hàng, khung từng hình, căn hình">Mở trình cắt sheet…</button></div>
+      <details class="sec" data-sec="src">
+        <summary><h2>Nguồn: sprite sheet</h2></summary>
+        <button class="icon reset" id="rsSheet" title="Tự nhận lại nền và lưới (bỏ cách cắt của trình cắt sheet)">↺</button>
+        <p class="hint" id="srcInfo" style="margin-top:0"></p>
+        <div class="bar" style="margin-top:0;margin-bottom:8px"><button id="btnSlicer" title="Chọn lại nền, hàng, khung từng hình, căn hình">Mở trình cắt sheet…</button></div>
         <div class="formgrid">
-          <label for="bg">Nền</label><select id="bg"><option value="black">đen (lửa, ánh sáng)</option><option value="alpha">trong suốt</option><option value="magenta">magenta</option></select>
-          <label for="grid">Lưới</label><span><input id="grid" style="width:90px" placeholder="3x3" spellcheck="false"> <span class="small muted">cột x hàng</span></span>
+          <label for="bg">Nền</label><select id="bg"><option value="color">một màu (chọn trong trình cắt)</option><option value="black">đen (lửa, ánh sáng)</option><option value="alpha">trong suốt</option><option value="magenta">magenta</option></select>
+          <label for="grid" class="gridRow">Lưới</label><span class="gridRow"><input id="grid" style="width:90px" placeholder="3x3" spellcheck="false"> <span class="small muted">cột x hàng</span></span>
         </div>
-        <div class="row"><label for="floor">Ngưỡng đen</label><input type="range" id="floor" min="0" max="30" step="0.5"><output id="floorOut"></output></div>
-        <div class="row" style="grid-template-columns:84px 1fr"><label for="seqText">Thứ tự</label><span style="display:flex;gap:6px"><input id="seqText" style="flex:1;min-width:0" spellcheck="false" title="ô:giữ, ví dụ 1:2 2:2 3:3"><button id="btnSeq">Dùng</button></span></div>
-        <div class="sec-h" style="margin-top:12px"><h2>Trong game</h2><button class="icon" id="rsGame" title="Về mặc định">↺</button></div>
+        <div class="row" id="floorRow"><label for="floor">Ngưỡng đen</label><input type="range" id="floor" min="0" max="30" step="0.5"><output id="floorOut"></output></div>
+      </details>
+      <details class="sec" data-sec="game">
+        <summary><h2>Trong game</h2></summary>
+        <button class="icon reset" id="rsGame" title="Về mặc định">↺</button>
         <div class="formgrid">
           <label for="gName">Tên</label><input id="gName" spellcheck="false">
           <label for="gZ">Lớp vẽ</label><select id="gZ"><option value="Z_EFFECTS">trước nhân vật</option><option value="Z_OBJECTS">cùng lớp nhân vật</option><option value="Z_DECALS">sau nhân vật (dưới đất)</option></select>
         </div>
+        <p class="hint">Tên là tên hiệu ứng trong game (fx_…); lớp vẽ quyết định hiệu ứng nằm trên hay dưới nhân vật.</p>
       </details>
     </div>
     <details class="adv"><summary>Nhật ký</summary><pre id="log"></pre></details>
@@ -344,6 +364,11 @@ dialog.tuner:not([open]){display:none}
 </section>
 </div>
 
+<dialog id="dlgLeave" aria-labelledby="lvTitle">
+  <h2 id="lvTitle" style="margin:0 0 8px;font-size:16px">Lưu thay đổi trước khi chuyển?</h2>
+  <p class="small" id="lvText" style="margin:0 0 14px"></p>
+  <div class="bar" style="justify-content:flex-end"><button id="lvCancel">Ở lại</button><button id="lvDrop">Không lưu, chuyển luôn</button><button id="lvSave" class="primary">Lưu và chuyển</button></div>
+</dialog>
 <dialog id="dlgImport">
   <h2 style="margin-top:0;font-size:16px">Nhập sprite sheet</h2>
   <div class="formgrid" style="grid-template-columns:110px 1fr">
@@ -1413,6 +1438,13 @@ function syncForm() {
   syncPos(); syncPresets(); syncStart(); syncMotion();
   $('#btnToHit').disabled = POSE()?.hit == null;
   $('#bg').value = L.recipe.bg; $('#grid').value = L.recipe.grid.join('x');
+  const n = LC[L.lid].cells.length, len = layerLen(L), hit = POSE()?.hit != null ? poseTickOf(POSE().hit) : null;
+  $('#layerSum').textContent = `${L.recipe.frames.length} hình · ${(len / FPS).toFixed(2)} giây · chạy từ frame ${L.start} đến ${L.start + len - 1}` + (external(L) ? ` · ${place(L) === 'fly' ? 'bay tới mục tiêu' : 'ở mục tiêu'}` : '');
+  $('#timeHint').textContent = hit == null ? 'Pose này không có frame hit. 30 frame = 1 giây.'
+    : `Frame hit của pose (lúc đòn trúng) là ${hit}: ` + (L.start <= hit + 2 && L.start + len > hit ? 'tầng này đang chạy lúc đó.' : `tầng này ${L.start > hit ? 'bắt đầu sau' : 'đã hết trước'} lúc đó.`);
+  $('#srcInfo').textContent = L.recipe.slice ? `${n} hình, cắt bằng trình cắt sheet${L.sheetName ? ' từ ' + L.sheetName : ''}.` : `${n} hình, cắt theo lưới ${L.recipe.grid.join('x')}${L.sheetName ? ' từ ' + L.sheetName : ''}. Mở trình cắt sheet nếu sheet không chia đều.`;
+  document.querySelectorAll('.gridRow').forEach(e => e.hidden = !!L.recipe.slice);
+  $('#floorRow').hidden = L.recipe.bg !== 'black';
   $('#gName').value = L.recipe.game.name; $('#gZ').value = L.recipe.game.z;
   $('#seqText').value = L.recipe.frames.map(f => `${f.cell + 1}:${f.hold}`).join(' ');
   $('#framesTitle').textContent = `Các hình · ${L.recipe.frames.length} hình · ${(layerLen(L) / FPS).toFixed(2)} s`;
@@ -1478,7 +1510,12 @@ function checks(extra = []) {
   }
   if (p?.hit != null && skill.layers.length) {
     const h = poseTickOf(p.hit);
-    if (!skill.layers.some(L => !L.muted && L.start <= h + 2 && L.start + layerLen(L) > h)) out.push(['warn', `Không tầng nào đang chạy ở frame hit (${h}).`]);
+    const live = skill.layers.filter(L => !L.muted);
+    if (live.length && !live.some(L => L.start <= h + 2 && L.start + layerLen(L) > h)) {
+      const first = Math.min(...live.map(L => L.start)), L = S() && !S().muted ? S() : live[0];
+      out.push(['warn', `Lúc đòn trúng (frame hit ${h} của pose) chưa có hiệu ứng nào chạy: ${first > h ? `tầng sớm nhất bắt đầu ở frame ${first}, sau hit ${first - h} frame` : 'các tầng đã hết trước lúc đó'}. Vẫn lưu được; chỉ là hiệu ứng thường nên trùng lúc trúng đòn.`,
+        {label: `Cho “${L.title}” bắt đầu ở hit`, fn: () => { L.start = h; sel = L.lid; refresh(); }}]);
+    }
   }
   if (CH() && contentTicks() > 120) out.push(['warn', `Skill dài ${contentTicks()} frame (> 4 giây): sheet gộp sẽ lớn.`]);
   return out.concat(extra);
@@ -1487,7 +1524,12 @@ function showChecks(list) {
   const c = $('#chk'), errs = list.filter(x => x[0] === 'err').length, warns = list.length - errs;
   c.hidden = !skill; c.className = errs ? 'err' : warns ? 'warn' : '';
   c.textContent = errs ? `⛔ ${errs}` : warns ? `⚠ ${warns}` : '✓ Ổn';
-  $('#chkItems').innerHTML = list.length ? list.map(([lv, m]) => `<li class="${lv}">${esc(m)}</li>`).join('') : '<li>Không có vấn đề.</li>';
+  const ul = $('#chkItems'); ul.innerHTML = list.length ? '' : '<li>Không có vấn đề.</li>';
+  for (const [lv, m, act] of list) {
+    const li = document.createElement('li'); li.className = lv; li.textContent = m;
+    if (act) { const b = document.createElement('button'); b.textContent = act.label; b.onclick = () => { act.fn(); $('#chkList').hidePopover?.(); }; li.append(' ', b); }
+    ul.appendChild(li);
+  }
   return errs;
 }
 
@@ -1784,7 +1826,7 @@ $('#btnZip').onclick = e => busy(e.target, async () => {
 async function openSkill(character, pose, force) {
   const key = skillKey(character, pose);
   if (!force && skill && skill.key === key) return;
-  if (!force && dirty() && !confirmLeave()) { syncTop(); return; }
+  if (!force && dirty() && !(await askLeave())) { syncTop(); return; }
   const ch = CHARS.find(c => c.id === character), p = ch?.poses.find(x => x.id === pose);
   if (p) await stripImg(p.strip).catch(() => null);
   let data = null;
@@ -1801,8 +1843,21 @@ async function openSkill(character, pose, force) {
   syncTop(); refresh();
   try { localStorage.setItem('fxstudio.skill', JSON.stringify([character, pose])); } catch (e) {}
 }
-let leaveArmed = 0;
-function confirmLeave() { if (Date.now() - leaveArmed < 4000) return true; leaveArmed = Date.now(); toast('Có thay đổi chưa lưu. Chọn lại lần nữa để bỏ chúng.', true); return false; }
+function askLeave() {   // true = go on (saved, or changes dropped), false = stay
+  const d = $('#dlgLeave'), who = CH() ? `${CH().name} · ${POSE()?.name || skill.pose}` : 'hiệu ứng tự do';
+  $('#lvText').textContent = `“${who}” có thay đổi chưa lưu (${skill.layers.length} tầng hiệu ứng).`;
+  return new Promise(res => {
+    const done = v => { d.onclose = null; d.close(); res(v); };
+    $('#lvCancel').onclick = () => done(false);
+    $('#lvDrop').onclick = () => done(true);
+    $('#lvSave').onclick = async e => {
+      const b = e.target, tx = b.textContent; b.disabled = true; b.textContent = 'Đang lưu…';
+      try { await save(); done(true); } catch (err) { toast(err.message || 'Không lưu được', true); done(false); } finally { b.disabled = false; b.textContent = tx; }
+    };
+    d.onclose = () => res(false);   // Esc
+    d.showModal();
+  });
+}
 function syncTop() {
   const cs = $('#charSel');
   cs.innerHTML = '<option value="">Không có (hiệu ứng tự do)</option>' + CHARS.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
