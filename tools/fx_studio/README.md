@@ -68,6 +68,18 @@ trong ô "đỉnh ở frame". Trên Holy Commander · Lên cấp dùng đúng b�
 - Recipe: `slice = {boxes: [[x0,y0,x1,y1,dx,dy, sx0,sy0,sx1,sy1]...], align, cellScale}` (px của sheet gốc; ô dài nhất ≤ 512 px),
   `bg: "color"` + `key = {c: [r,g,b], tol}`. Sheet gốc được lưu nguyên, nên mở lại vẫn cắt lại được.
 
+### Nhập nhân vật từ sprite sheet
+Trong trình cắt sheet, mục **Dùng làm → Nhân vật (pose)**: chọn nhân vật (mới hoặc đã nhập), tên pose, chiều cao khung trong game
+(px @1x = fullhd) và số frame giữ mỗi hình, rồi **Tạo pose nhân vật**. App ghép các hình đã căn thành strip @1x + lưới @2x (đúng
+dạng catalog), lưu thành tài liệu `characters/<id>` + asset của artifact; nhân vật hiện trong danh sách với dấu ★, mỗi pose giữ
+khung và điểm đặt riêng. Thêm hiệu ứng, Lưu (sheet gộp) và cài vào game như nhân vật có sẵn (game chưa có nhân vật này nên phát
+sheet gộp).
+- **Lật**: nút Lật ⇋ (phím F), Lật cả hàng, Lật tất cả (sheet vẽ ngược hướng). Lưu trong `slice.flips`.
+- **Căn để không giật**: **Tâm thân** (trọng tâm phần thân sau khi bỏ cánh, đuôi mảnh; hợp nhân vật bay, xoay), **Tâm thân + đáy**
+  (đi trên đất), **Điểm neo** (bấm "Đặt điểm neo" rồi bấm cùng một điểm, ví dụ ngực, trên từng hình; `slice.anchors`). Mọi cách căn
+  dùng chung một bố cục cho xem trước và cắt thật: khung = hợp của các hình đã đặt, dấu + = điểm chung (= chân của nhân vật).
+- Tự tìm hàng nhận cả khoảng trống hẹp (từ 1% chiều cao); dải mỏng vẫn được gộp lại.
+
 ### Trong game
 - `install-pack` cài từng tầng như một hiệu ứng (`fx_<nhân vật>_<pose>_<n>`), thêm một template phát chính animation của
   nhân vật (`fx_lab_pose_<n>`), bảng `FX_LAB_SKILLS` (tầng nào, frame nào), và nạp atlas của nhân vật ở mọi level.

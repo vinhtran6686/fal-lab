@@ -421,7 +421,22 @@ dialog.tuner:not([open]){display:none}
     <div class="sl-view" id="slView"><canvas id="slCanvas" aria-label="Sheet: bấm để chọn hình, kéo trên chỗ trống để vẽ khung, kéo vạch vàng để chia hàng"></canvas></div>
     <div class="sl-side">
       <div class="sl-box">
-        <h3>Tên</h3><input id="slName" style="width:100%" spellcheck="false">
+        <h3>Dùng làm</h3>
+        <div class="seg" id="slUse"><button data-u="fx" class="on">Hiệu ứng</button><button data-u="char">Nhân vật (pose)</button></div>
+        <div class="formgrid" id="slCharPick" style="grid-template-columns:90px 1fr;margin-top:8px" hidden>
+          <label for="slCharSel">Nhân vật</label><select id="slCharSel"></select>
+        </div>
+        <div class="formgrid" style="grid-template-columns:90px 1fr;margin-top:8px">
+          <label for="slName" id="slNameLbl">Tên</label><input id="slName" spellcheck="false">
+        </div>
+        <div id="slCharBox" hidden>
+          <div class="formgrid" style="grid-template-columns:90px 1fr;margin-top:6px">
+            <label for="slPose">Tên pose</label><input id="slPose" value="Bay" spellcheck="false">
+            <label for="slCharH">Cao trong game</label><span><input type="number" id="slCharH" min="20" max="600" value="110" style="width:70px"> <span class="small muted">px (@1x = fullhd), cả khung</span></span>
+            <label for="slHold">Giữ mỗi hình</label><span><input type="number" id="slHold" min="1" max="10" value="2" style="width:56px"> <span class="small muted">frame (2 = 15 hình/giây)</span></span>
+          </div>
+          <p class="hint">Tạo nhân vật trong Fx Studio (lưu cùng app): pose này dùng được để thêm hiệu ứng, lưu sheet gộp và cài vào game. Điểm đặt (chân) = điểm chung của cách căn.</p>
+        </div>
       </div>
       <div class="sl-box">
         <h3>Nền</h3>
@@ -449,13 +464,16 @@ dialog.tuner:not([open]){display:none}
           <button id="slMerge" title="Gộp hình này với hình kế tiếp (một hình bị tách đôi)">Gộp với hình sau</button>
           <button id="slDel" title="Bỏ hình này">Xóa</button>
           <button id="slPrevB" title="Đưa lên trước">◀</button><button id="slNextB" title="Đưa ra sau">▶</button>
+          <button id="slFlip" title="Lật ngang hình này (phím F)">Lật ⇋</button><button id="slFlipRow" title="Lật ngang cả hàng của hình này">Lật cả hàng</button>
         </div>
         <div class="pos" style="margin-top:6px"><label for="slDx">Dịch x / y (px)</label><span style="display:flex;gap:4px"><input type="number" id="slDx" style="width:62px"><input type="number" id="slDy" style="width:62px" aria-label="Dịch y (px)"></span></div>
         <p class="hint">Bấm một hình trên sheet để chọn; kéo trên chỗ trống để vẽ khung mới. Mũi tên dịch hình đang chọn 1 px (Shift: 10 px) để các hình khớp nhau.</p>
       </div>
       <div class="sl-box">
         <h3>Căn các hình</h3>
-        <div class="seg" id="slAlign"><button data-a="bl">Đáy-trái</button><button data-a="bc">Đáy-giữa</button><button data-a="c">Giữa</button><button data-a="tl">Trên-trái</button></div>
+        <div class="seg" id="slAlign" style="flex-wrap:wrap"><button data-a="bl">Đáy-trái</button><button data-a="bc">Đáy-giữa</button><button data-a="c">Giữa</button><button data-a="tl">Trên-trái</button><button data-a="mass" title="Tâm phần thân (bỏ cánh, đuôi mảnh): cho nhân vật bay, xoay">Tâm thân</button><button data-a="massb" title="Tâm thân theo chiều ngang, chân theo đáy: nhân vật đi trên đất">Tâm thân + đáy</button><button data-a="anchor" title="Điểm neo bạn bấm trên từng hình">Điểm neo</button></div>
+        <div class="bar" style="margin-top:6px"><button id="slAnchorMode" aria-pressed="false" title="Bấm cùng một điểm trên thân (ví dụ ngực) ở mỗi hình; hình kế tiếp được chọn tự động">Đặt điểm neo</button><button id="slFlipAll" title="Lật ngang mọi hình">Lật tất cả</button></div>
+        <p class="hint" id="slAlignHint">Hình giật khi khung mỗi hình khác nhau: chọn <b>Tâm thân</b>, hoặc <b>Đặt điểm neo</b> rồi bấm cùng một điểm (ngực, đầu) trên từng hình. Dấu + trong khung xem trước là điểm chung.</p>
       </div>
       <div class="sl-box">
         <h3>Xem trước</h3>
@@ -527,7 +545,10 @@ const savedForm = () => JSON.stringify({target: skill.target || null, pose: skil
 const dirty = () => !!skill && savedForm() !== base;
 
 // ---------------------------------------------------------------- characters
-const CH = () => CHARS.find(c => c.id === skill?.character) || null;
+const CH = () => {   // the open character; a pose with its own cell and pivot (imported in the studio) overrides them
+  const c = CHARS.find(o => o.id === skill?.character); if (!c) return null;
+  const p = c.poses.find(o => o.id === skill.pose); return p?.cell ? {...c, cell: p.cell, pivot: p.pivot} : c;
+};
 const BASE_POSE = () => CH()?.poses.find(p => p.id === skill.pose) || null;
 // the pose as the skill plays it: the catalog pose, or the frames, holds and hit chosen in the frame tuner (skill.poseEdit);
 // src[i] = the frame's index in the character strip
@@ -641,7 +662,33 @@ function breaks(X, Wt, k) {
   return cuts.sort((a, b) => a - b);
 }
 const cutKeyOf = R => JSON.stringify([R.bg, R.black_floor, R.grid, R.key || null, R.slice || null]);
-const ALIGN = {bl: (w, h, mw, mh) => [0, mh - h], bc: (w, h, mw, mh) => [(mw - w) / 2, mh - h], c: (w, h, mw, mh) => [(mw - w) / 2, (mh - h) / 2], tl: () => [0, 0]};
+// Alignment: every frame has a reference point (its corner, bottom centre, centre, the centre of its body core, or the
+// anchor the user clicked); all frames are placed so these points coincide, the cell is the union of the placed frames.
+function coreCentroid(im) {   // the centre of the body: the alpha mask eroded (thin wings, tails, sparks drop out), its centroid
+  const {width: w, height: h, data: d} = im, r = Math.max(1, Math.round(Math.min(w, h) * 0.06));
+  const a = new Uint8Array(w * h); for (let i = 0; i < w * h; i++) a[i] = d[i * 4 + 3] > 128 ? 1 : 0;
+  const ero = (src, horiz) => { const o = new Uint8Array(w * h); for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { let v = 1; for (let k = -r; k <= r && v; k++) { const xx = horiz ? x + k : x, yy = horiz ? y : y + k; v = xx < 0 || yy < 0 || xx >= w || yy >= h ? 0 : src[yy * w + xx]; } o[y * w + x] = v; } return o; };
+  let m = ero(ero(a, true), false), n = 0; for (let i = 0; i < w * h; i++) n += m[i];
+  if (n < 20) m = a;   // a thin frame: the whole mask
+  let sx = 0, sy = 0; n = 0; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (m[y * w + x]) { sx += x; sy += y; n++; }
+  return n ? [sx / n, sy / n] : [w / 2, h / 2];
+}
+function frameRef(mode, w, h, im, anchor) {   // in the frame's own px (after any flip)
+  if (mode === 'bl') return [0, h];
+  if (mode === 'bc') return [w / 2, h];
+  if (mode === 'c') return [w / 2, h / 2];
+  if (mode === 'tl') return [0, 0];
+  if (mode === 'anchor' && anchor) return anchor;
+  const c = coreCentroid(im);
+  return mode === 'massb' ? [c[0], h] : c;
+}
+function layoutRefs(sizes, refs, nudges) {   // -> {offs: top-left of each frame in the cell, w, h, ref: where every reference lands}
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  const pos = sizes.map(([w, h], i) => { const x = -refs[i][0] + nudges[i][0], y = -refs[i][1] + nudges[i][1]; x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x + w); y1 = Math.max(y1, y + h); return [x, y]; });
+  return {offs: pos.map(([x, y]) => [x - x0, y - y0]), w: Math.max(1, x1 - x0), h: Math.max(1, y1 - y0), ref: [-x0, -y0]};
+}
+const flipCanvas = c => { const o = canvas(c.width, c.height), g = o.getContext('2d'); g.translate(c.width, 0); g.scale(-1, 1); g.drawImage(c, 0, 0); return o; };
+const anchorLocal = (a, b, flip) => a ? [flip ? (b[2] - b[0]) - (a[0] - b[0]) : a[0] - b[0], a[1] - b[1]] : null;   // sheet px -> the frame's px
 // the slicer's boxes [x0, y0, x1, y1, dx, dy] in sheet px: every box becomes a cell (never dropped), all cells one size
 // (the largest box), placed by the alignment plus the box's nudge, scaled by slice.cellScale (big sheets stay light)
 // a box with a slot [.., sx0, sy0, sx1, sy1] keeps only the blobs whose centre lies in the slot (frames whose tails
@@ -670,22 +717,30 @@ function slotPixels(band, b) {
   }
   return out;
 }
-function cutBoxes(L) {
-  const C = LC[L.lid], R = L.recipe, S = R.slice, bs = S.boxes, bands = {};
-  const mw = Math.max(...bs.map(b => b[2] - b[0])), mh = Math.max(...bs.map(b => b[3] - b[1])), sc = S.cellScale || 1;
-  const cw = Math.max(1, Math.round(mw * sc)), ch = Math.max(1, Math.round(mh * sc));
-  C.cells = []; C.cellSize = [cw, ch];
-  for (const b of bs) {
-    const w = b[2] - b[0], h = b[3] - b[1], tmp = canvas(w, h), tg = tmp.getContext('2d', {willReadFrequently: true});
+function cutFrames(C, R) {   // the slicer's frames at sheet size: keyed, flipped, aligned -> {imgs, lay}
+  const S = R.slice, bs = S.boxes, bands = {}, imgs = [], refs = [];
+  bs.forEach((b, i) => {
+    const w = b[2] - b[0], h = b[3] - b[1]; let tmp = canvas(w, h); const tg = tmp.getContext('2d', {willReadFrequently: true});
     if (b.length >= 10) tg.putImageData(slotPixels(slotBand(C, R, bands, Math.min(b[1], b[7]), Math.max(b[3], b[9])), b), 0, 0);
     else {
       tg.drawImage(C.bitmap, b[0], b[1], w, h, 0, 0, w, h);
       const im = tg.getImageData(0, 0, w, h); keyOut(im.data, R.bg, R.black_floor, R.key); despeckle(im.data, w, h); tg.putImageData(im, 0, 0);
     }
-    const [ox, oy] = (ALIGN[S.align] || ALIGN.bl)(w, h, mw, mh), cell = canvas(cw, ch), cg = cell.getContext('2d', {willReadFrequently: true});
+    const flip = !!S.flips?.[i]; if (flip) tmp = flipCanvas(tmp);
+    imgs.push(tmp);
+    refs.push(frameRef(S.align, w, h, tmp.getContext('2d', {willReadFrequently: true}).getImageData(0, 0, w, h), anchorLocal(S.anchors?.[i], b, flip)));
+  });
+  return {imgs, lay: layoutRefs(bs.map(b => [b[2] - b[0], b[3] - b[1]]), refs, bs.map(b => [b[4] || 0, b[5] || 0]))};
+}
+function cutBoxes(L) {
+  const C = LC[L.lid], R = L.recipe, sc = R.slice.cellScale || 1, {imgs, lay} = cutFrames(C, R);
+  const cw = Math.max(1, Math.round(lay.w * sc)), ch = Math.max(1, Math.round(lay.h * sc));
+  C.cells = []; C.cellSize = [cw, ch];
+  imgs.forEach((t, i) => {
+    const cell = canvas(cw, ch), cg = cell.getContext('2d', {willReadFrequently: true});
     cg.imageSmoothingEnabled = true; cg.imageSmoothingQuality = 'high';
-    cg.drawImage(tmp, (ox + (b[4] || 0)) * sc, (oy + (b[5] || 0)) * sc, w * sc, h * sc); C.cells.push(cell);
-  }
+    cg.drawImage(t, lay.offs[i][0] * sc, lay.offs[i][1] * sc, t.width * sc, t.height * sc); C.cells.push(cell);
+  });
 }
 function cutSheet(L) {
   const C = LC[L.lid], R = L.recipe, W = C.bitmap.width, H = C.bitmap.height;
@@ -1178,10 +1233,13 @@ async function openSlicer(src) {
   $('#slName').value = src.name || 'hiệu ứng';
   $('#slInfo').textContent = `${W}×${H} px`;
   $('#slGo').textContent = src.L ? 'Áp dụng cho tầng' : 'Thêm vào timeline';
+  slUse('fx');
   slKeyed();
+  const restoreExtra = () => SL.boxes.forEach((b, i) => { b.flip = !!R.slice.flips?.[i]; b.anchor = R.slice.anchors?.[i] || null; });
   if (R?.slice?.ui) { Object.assign(SL, {mode: 'rows', rowsY: [...R.slice.ui.rowsY], ks: [...R.slice.ui.ks], cuts: R.slice.ui.cuts.map(c => [...c])}); slBuild(); R.slice.boxes.forEach((b, i) => { if (SL.boxes[i]) { SL.boxes[i].dx = b[4] || 0; SL.boxes[i].dy = b[5] || 0; } }); }
   else if (R?.slice?.boxes?.length) { SL.mode = 'manual'; SL.boxes = R.slice.boxes.map(b => ({x0: b[0], y0: b[1], x1: b[2], y1: b[3], dx: b[4] || 0, dy: b[5] || 0, slot: b.length >= 10 ? b.slice(6, 10) : null})); }
   else slAutoRows();
+  if (R?.slice?.boxes?.length) restoreExtra();
   slSync(); dlgS.showModal(); slDraw();
 }
 function slKeyed() {   // the background removed at preview size: drives detection, the overlay and the preview
@@ -1201,7 +1259,7 @@ function slAutoRows(n) {   // rows split at the n-1 widest empty bands (n guesse
   for (let y = 0; y < ph; y++) for (let x = 0; x < pw; x++) if (mask[y * pw + x]) { occ[y] = 1; break; }
   const gaps = slGaps(occ, 2);
   const guess = !n;
-  if (!n) n = 1 + gaps.filter(gp => gp.w >= Math.max(6, ph * 0.03)).length;
+  if (!n) n = 1 + gaps.filter(gp => gp.w >= Math.max(4, ph * 0.01)).length;   // thin strips are merged back below
   let cand = gaps.sort((a, b) => b.w - a.w).slice(0, n - 1).sort((a, b) => a.at - b.at);
   // a guessed row that holds only a thin strip (the bottom of the row above) is not a row: drop its narrower line
   while (guess && cand.length) {
@@ -1213,7 +1271,8 @@ function slAutoRows(n) {   // rows split at the n-1 widest empty bands (n guesse
   SL.ks = []; SL.cuts = []; slBuild();
 }
 function slBands() { const ys = [0, ...SL.rowsY, SL.H]; return ys.slice(1).map((y, i) => [ys[i], y]); }
-function slBuild() {   // boxes from the row bands: k frames per row at the k-1 widest horizontal gaps, each tightened to its content
+function slBuild() { const old = SL.boxes || []; slBuild0(); if (old.length === SL.boxes.length) SL.boxes.forEach((b, i) => { b.flip = old[i].flip; b.anchor = old[i].anchor; }); }
+function slBuild0() {   // boxes from the row bands: k frames per row at the k-1 widest horizontal gaps, each tightened to its content
   const {pw, ph, mask, p} = SL; SL.boxes = []; SL.mode = SL.mode === 'grid' ? 'grid' : 'rows';
   if (SL.mode === 'grid') {
     const [cols, rows] = SL.grid;
@@ -1264,7 +1323,7 @@ function slDelRow(li) {   // remove row line li: the two rows become one, frames
 }
 function slAddRow(y) { const i = SL.rowsY.filter(r => r < y).length; SL.rowsY.splice(i, 0, y); SL.ks.splice(i, 1, undefined, undefined); SL.cuts.splice(i, 1, null, null); SL.sel = -1; slBuild(); slSync(); slDraw(); }
 function slSync(keepInputs) {
-  SL.sprites = null;
+  SL.sprites = null; SL.layout = null;
   $('#slBg').value = SL.bg; $('#slKey').value = hex(SL.key.c); $('#slTol').value = Math.round(SL.key.tol * 100); $('#slTolOut').textContent = Math.round(SL.key.tol * 100);
   $('#slKey').disabled = $('#slTol').disabled = $('#slPick').disabled = SL.bg !== 'color';
   document.querySelectorAll('#slMode button').forEach(b => b.classList.toggle('on', b.dataset.m === SL.mode || (SL.mode === 'manual' && b.dataset.m === 'rows')));
@@ -1285,7 +1344,7 @@ function slSync(keepInputs) {
   document.querySelectorAll('#slAlign button').forEach(b => b.classList.toggle('on', b.dataset.a === SL.align));
   const b = SL.boxes[SL.sel];
   $('#slSelTitle').textContent = b ? `Hình ${SL.sel + 1} / ${SL.boxes.length}` : 'Hình đang chọn (chưa chọn)';
-  for (const id of ['slMerge', 'slDel', 'slPrevB', 'slNextB', 'slDx', 'slDy']) $('#' + id).disabled = !b;
+  for (const id of ['slMerge', 'slDel', 'slPrevB', 'slNextB', 'slDx', 'slDy', 'slFlip', 'slFlipRow']) $('#' + id).disabled = !b;
   if (b) { $('#slDx').value = b.dx; $('#slDy').value = b.dy; }
   const empty = slEmpty();
   $('#slSum').textContent = `${SL.boxes.length} hình` + (empty ? ` · ${empty} hình trống` : '') + ` · cell ${slCell().join('×')} px`;
@@ -1296,7 +1355,7 @@ function slSprite(i) {   // one frame at preview size, as it will be cut (only i
   SL.sprites ||= [];
   if (SL.sprites[i]) return SL.sprites[i];
   const b = SL.boxes[i], p = SL.p, x0 = Math.floor(b.x0 * p), y0 = Math.floor(b.y0 * p), w = Math.max(1, Math.ceil(b.x1 * p) - x0), h = Math.max(1, Math.ceil(b.y1 * p) - y0);
-  const c = canvas(w, h), im = new ImageData(w, h), d = SL.kd.data, B = SL.B;
+  let c = canvas(w, h); const im = new ImageData(w, h), d = SL.kd.data, B = SL.B;
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const gx = x0 + x, gy = y0 + y; if (gx >= SL.pw || gy >= SL.ph) continue;
     const q = gy * SL.pw + gx, l = B.lab[q];
@@ -1305,9 +1364,18 @@ function slSprite(i) {   // one frame at preview size, as it will be cut (only i
     for (let k = 0; k < 4; k++) im.data[(y * w + x) * 4 + k] = d[q * 4 + k];
   }
   c.getContext('2d').putImageData(im, 0, 0);
+  if (b.flip) c = flipCanvas(c);
   return SL.sprites[i] = {c, x: x0 / p, y: y0 / p, w: w / p, h: h / p};
 }
-function slCell() { const mw = Math.max(1, ...SL.boxes.map(b => b.x1 - b.x0)), mh = Math.max(1, ...SL.boxes.map(b => b.y1 - b.y0)); return [mw, mh]; }
+function slLayout() {   // the cut's layout at preview size (sheet px), cached until the boxes change
+  if (SL.layout) return SL.layout;
+  const p = SL.p, refs = SL.boxes.map((b, i) => {
+    const sp = slSprite(i), cw = sp.c.width, chh = sp.c.height, r = frameRef(SL.align, cw, chh, sp.c.getContext('2d').getImageData(0, 0, cw, chh), (() => { const a = anchorLocal(b.anchor, [b.x0, b.y0, b.x1, b.y1], b.flip); return a && [a[0] * p, a[1] * p]; })());
+    return [r[0] / p, r[1] / p];
+  });
+  return SL.layout = layoutRefs(SL.boxes.map(b => [b.x1 - b.x0, b.y1 - b.y0]), refs, SL.boxes.map(b => [b.dx, b.dy]));
+}
+function slCell() { if (!SL.boxes.length) return [1, 1]; const l = slLayout(); return [l.w, l.h]; }
 function slScale() { const v = $('#slView'); return Math.min((v.clientWidth - 4) / SL.pw, (v.clientHeight - 4) / SL.ph, 2); }
 function slDraw() {
   if (!SL || !dlgS.open) return;
@@ -1325,7 +1393,9 @@ function slDraw() {
   SL.boxes.forEach((b, i) => {
     const on = i === SL.sel; g.strokeStyle = on ? '#f2a33a' : b.empty ? 'rgba(255,90,90,.9)' : 'rgba(80,240,255,.9)'; g.lineWidth = on ? 2.5 : 1.5;
     g.strokeRect(b.x0 * k + .5, b.y0 * k + .5, (b.x1 - b.x0) * k, (b.y1 - b.y0) * k);
-    g.fillStyle = on ? '#f2a33a' : 'rgba(10,20,30,.8)'; g.fillRect(b.x0 * k, b.y0 * k, 22, 15); g.fillStyle = on ? '#1d1305' : '#bfefff'; g.fillText(String(i + 1), b.x0 * k + 3, b.y0 * k + 12);
+    const lbl = String(i + 1) + (b.flip ? ' ⇋' : ''), lw = 8 + lbl.length * 7;
+    g.fillStyle = on ? '#f2a33a' : 'rgba(10,20,30,.8)'; g.fillRect(b.x0 * k, b.y0 * k, lw, 15); g.fillStyle = on ? '#1d1305' : '#bfefff'; g.fillText(lbl, b.x0 * k + 3, b.y0 * k + 12);
+    if (b.anchor) { const [ax, ay] = b.anchor; g.strokeStyle = '#ff4d6d'; g.lineWidth = 2; g.beginPath(); g.arc(ax * k, ay * k, 5, 0, Math.PI * 2); g.moveTo(ax * k - 9, ay * k); g.lineTo(ax * k + 9, ay * k); g.moveTo(ax * k, ay * k - 9); g.lineTo(ax * k, ay * k + 9); g.stroke(); }
   });
   if (SL.drag?.kind === 'box') { const d = SL.drag; g.strokeStyle = '#f2a33a'; g.setLineDash([4, 3]); g.strokeRect(Math.min(d.a[0], d.b[0]) * k, Math.min(d.a[1], d.b[1]) * k, Math.abs(d.b[0] - d.a[0]) * k, Math.abs(d.b[1] - d.a[1]) * k); g.setLineDash([]); }
 }
@@ -1334,12 +1404,14 @@ function slPreview(now) {   // the cut frames at preview size, aligned as they w
   const c = $('#slPrev'), g = c.getContext('2d'), [mw, mh] = slCell(), n = SL.boxes.length, i = Math.max(0, Math.floor((now - SL.t0) / 1000 * 15)) % (n + 4);
   g.fillStyle = '#0c0d10'; g.fillRect(0, 0, c.width, c.height);
   const s = Math.min(c.width / mw, c.height / mh) * 0.95, ox = (c.width - mw * s) / 2, oy = (c.height - mh * s) / 2;
-  const one = (k, alpha) => { const b = SL.boxes[k], w = b.x1 - b.x0, h = b.y1 - b.y0, [ax, ay] = (ALIGN[SL.align] || ALIGN.bl)(w, h, mw, mh), sp = slSprite(k);
-    g.globalAlpha = alpha; g.drawImage(sp.c, ox + (ax + b.dx + sp.x - b.x0) * s, oy + (ay + b.dy + sp.y - b.y0) * s, sp.w * s, sp.h * s); g.globalAlpha = 1; };
+  const lay = slLayout();
+  const one = (k, alpha) => { const sp = slSprite(k), [fx, fy] = lay.offs[k];
+    g.globalAlpha = alpha; g.drawImage(sp.c, ox + fx * s, oy + fy * s, sp.w * s, sp.h * s); g.globalAlpha = 1; };
   const cur = Math.min(i, n - 1);
   if ($('#slOnion').checked && cur > 0) one(cur - 1, 0.3);
   one(cur, 1);
   g.strokeStyle = 'rgba(255,255,255,.15)'; g.strokeRect(ox + .5, oy + .5, mw * s, mh * s);
+  const [rx, ry] = lay.ref; g.strokeStyle = 'rgba(80,240,255,.8)'; g.beginPath(); g.moveTo(ox + rx * s - 6, oy + ry * s); g.lineTo(ox + rx * s + 6, oy + ry * s); g.moveTo(ox + rx * s, oy + ry * s - 6); g.lineTo(ox + rx * s, oy + ry * s + 6); g.stroke();
 }
 function slPt(e) { const r = slc.getBoundingClientRect(), k = slScale() * SL.p; return [(e.clientX - r.left) / k, (e.clientY - r.top) / k]; }   // sheet px
 slc.addEventListener('pointerdown', e => {
@@ -1356,6 +1428,11 @@ slc.addEventListener('pointerdown', e => {
     if (ci >= 0) { SL.drag = {kind: 'cut', band, ci}; return; }
   }
   const bi = SL.boxes.findIndex(b => x >= b.x0 && x <= b.x1 && y >= b.y0 && y <= b.y1);
+  if (bi >= 0 && SL.anchorMode) {   // the same body point on every frame (e.g. the chest): frames are aligned on it
+    SL.boxes[bi].anchor = [Math.round(x), Math.round(y)]; SL.sel = Math.min(SL.boxes.length - 1, bi + 1);
+    if (SL.align !== 'anchor') SL.align = 'anchor';
+    slSync(); slDraw(); return;
+  }
   if (bi >= 0) { SL.sel = bi; slSync(); slDraw(); return; }
   SL.drag = {kind: 'box', a: [x, y], b: [x, y]};
 });
@@ -1388,6 +1465,22 @@ slc.addEventListener('dblclick', e => {
   if (ci >= 0) c.splice(ci, 1); else { c.push(x); c.sort((a, b) => a - b); }
   SL.cuts[band] = c; SL.ks[band] = c.length + 1; SL.sel = -1; slBuild(); slSync(); slDraw();
 });
+const slFlipIdx = idx => { for (const i of idx) SL.boxes[i].flip = !SL.boxes[i].flip; slSync(); slDraw(); };
+$('#slFlip').onclick = () => slFlipIdx([SL.sel]);
+$('#slFlipRow').onclick = () => { const b = SL.boxes[SL.sel], cy = (b.y0 + b.y1) / 2, band = slBands().find(([y0, y1]) => cy >= y0 && cy < y1);
+  slFlipIdx(SL.boxes.map((o, i) => [o, i]).filter(([o]) => { const c = (o.y0 + o.y1) / 2; return band ? c >= band[0] && c < band[1] : Math.abs(c - cy) < (b.y1 - b.y0) / 2; }).map(([, i]) => i)); };
+$('#slFlipAll').onclick = () => slFlipIdx(SL.boxes.map((_, i) => i));
+$('#slAnchorMode').onclick = () => { SL.anchorMode = !SL.anchorMode; $('#slAnchorMode').classList.toggle('on', SL.anchorMode); $('#slAnchorMode').setAttribute('aria-pressed', SL.anchorMode); slc.style.cursor = SL.anchorMode ? 'crosshair' : '';
+  if (SL.anchorMode) { if (SL.sel < 0) SL.sel = 0; toast('Bấm cùng một điểm trên thân ở từng hình (ví dụ ngực rồng); hình kế tiếp được chọn tự động'); } slSync(); };
+document.querySelectorAll('#slUse button').forEach(b => b.onclick = () => slUse(b.dataset.u));
+function slUse(u) {
+  SL.use = u; document.querySelectorAll('#slUse button').forEach(o => o.classList.toggle('on', o.dataset.u === u));
+  $('#slCharBox').hidden = $('#slCharPick').hidden = u !== 'char'; $('#slNameLbl').textContent = u === 'char' ? 'Tên nhân vật' : 'Tên';
+  $('#slGo').textContent = u === 'char' ? 'Tạo pose nhân vật' : SL.src.L ? 'Áp dụng cho tầng' : 'Thêm vào timeline';
+  const cs = $('#slCharSel'); cs.innerHTML = '<option value="">+ Nhân vật mới</option>' + CHARS.filter(c => c.custom).map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  if (u === 'char' && ['mass', 'massb', 'anchor'].indexOf(SL.align) < 0) { SL.align = 'mass'; slSync(); }
+}
+$('#slCharSel').onchange = () => { const c = CHARS.find(x => x.id === $('#slCharSel').value); if (c) $('#slName').value = c.name; };
 $('#slBg').onchange = () => { SL.bg = $('#slBg').value; slKeyed(); if (SL.mode !== 'manual') slBuild(); slSync(); slDraw(); };
 $('#slKey').oninput = () => { const v = $('#slKey').value; SL.key = {...SL.key, c: [1, 3, 5].map(i => parseInt(v.slice(i, i + 2), 16))}; slKeyed(); slDraw(); };
 $('#slKey').onchange = () => { if (SL.mode !== 'manual') slBuild(); slSync(); slDraw(); };
@@ -1408,20 +1501,63 @@ $('#slDel').onclick = () => { SL.boxes.splice(SL.sel, 1); SL.sel = Math.min(SL.s
 const slMove = d => { const i = SL.sel, j = i + d; if (j < 0 || j >= SL.boxes.length) return; [SL.boxes[i], SL.boxes[j]] = [SL.boxes[j], SL.boxes[i]]; SL.sel = j; SL.mode = 'manual'; slSync(); slDraw(); };
 $('#slPrevB').onclick = () => slMove(-1); $('#slNextB').onclick = () => slMove(1);
 $('#slDx').onchange = () => { SL.boxes[SL.sel].dx = $('#slDx').value | 0; }; $('#slDy').onchange = () => { SL.boxes[SL.sel].dy = $('#slDy').value | 0; };
-dlgS.addEventListener('keydown', e => {   // arrows nudge the selected frame (Shift: 10 px)
+dlgS.addEventListener('keydown', e => {   // arrows nudge the selected frame (Shift: 10 px); F flips it
   if (!SL || SL.sel < 0 || ['INPUT', 'SELECT'].includes(document.activeElement.tagName)) return;
+  if (e.key === 'f' || e.key === 'F') { e.preventDefault(); slFlipIdx([SL.sel]); return; }
   const st = e.shiftKey ? 10 : 1, mv = {ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, -st], ArrowDown: [0, st]}[e.key];
   if (!mv) return; e.preventDefault(); const b = SL.boxes[SL.sel]; b.dx += mv[0]; b.dy += mv[1]; slSync();
 });
 addEventListener('resize', () => slDraw());
 $('#slCancel').onclick = () => { dlgS.close(); SL = null; };
 $('#slGo').onclick = e => busy(e.target, async () => {
-  const [mw, mh] = slCell(), slice = {boxes: SL.boxes.map(b => [b.x0, b.y0, b.x1, b.y1, b.dx, b.dy, ...(b.slot || [])]), align: SL.align, ...(SL.mode === 'rows' ? {ui: {rowsY: SL.rowsY.map(Math.round), ks: [...SL.ks], cuts: SL.cuts.map(c => (c || []).map(Math.round))}} : {}), cellScale: +Math.min(1, 512 / Math.max(mw, mh)).toFixed(4)};
+  const [mw, mh] = slCell(), slice = {flips: SL.boxes.map(b => !!b.flip), anchors: SL.boxes.map(b => b.anchor || null), boxes: SL.boxes.map(b => [b.x0, b.y0, b.x1, b.y1, b.dx, b.dy, ...(b.slot || [])]), align: SL.align, ...(SL.mode === 'rows' ? {ui: {rowsY: SL.rowsY.map(Math.round), ks: [...SL.ks], cuts: SL.cuts.map(c => (c || []).map(Math.round))}} : {}), cellScale: +Math.min(1, 512 / Math.max(mw, mh)).toFixed(4)};
   const src = SL.src, name = $('#slName').value.trim() || 'hiệu ứng', bg = SL.bg, key = bg === 'color' ? {c: SL.key.c.map(Math.round), tol: +SL.key.tol.toFixed(3)} : null;
+  if (SL.use === 'char') {
+    const opt = {charId: $('#slCharSel').value, name, pose: $('#slPose').value.trim() || 'pose', h1: Math.max(20, $('#slCharH').value | 0), hold: Math.max(1, $('#slHold').value | 0), bmp: SL.bmp};
+    dlgS.close(); SL = null;
+    await makeCharacterPose(opt, {...slice, cellScale: 1}, bg, key); return;
+  }
   dlgS.close(); SL = null;
   if (src.L) { const L = src.L; L.recipe.slice = slice; L.recipe.bg = bg; L.recipe.key = key; L.title = name; recut(); defaults(L, 'pos'); refresh(); return; }
   await addFromBlob(src.blob, name, src.fileName, {slice, bg, key});
 });
+
+// ---------------------------------------------------------------- characters imported from a sprite sheet (kept with the app)
+// A pose = the slicer's frames, aligned, scaled to the height asked in game px: a strip @1x (frames side by side, the
+// catalog's format) and a grid @2x; the pivot is the alignment's common point. Saved as db characters/<id> + assets.
+async function makeCharacterPose(opt, slice, bg, key) {
+  toast('Đang tạo pose nhân vật…');
+  const C = {bitmap: opt.bmp}, R = {slice, bg, key, black_floor: 0.05}, {imgs, lay} = cutFrames(C, R);
+  const s2 = opt.h1 * 2 / lay.h, w2 = Math.max(2, Math.round(lay.w * s2 / 2) * 2), h2 = Math.max(2, Math.round(lay.h * s2 / 2) * 2), w1 = w2 / 2, h1 = h2 / 2, n = imgs.length;
+  const cols2 = Math.max(1, Math.min(n, Math.floor(8000 / w2))), rows2 = Math.ceil(n / cols2);
+  const st2 = canvas(w2 * cols2, h2 * rows2), g2 = st2.getContext('2d'), st1 = canvas(w1 * n, h1), g1 = st1.getContext('2d');
+  for (const g of [g1, g2]) { g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; }
+  imgs.forEach((t, i) => {
+    const cell = canvas(w2, h2), cg = cell.getContext('2d'); cg.imageSmoothingEnabled = true; cg.imageSmoothingQuality = 'high';
+    cg.drawImage(t, lay.offs[i][0] * s2, lay.offs[i][1] * s2, t.width * s2, t.height * s2);
+    g2.drawImage(cell, (i % cols2) * w2, Math.floor(i / cols2) * h2); g1.drawImage(cell, i * w1, 0, w1, h1);
+  });
+  const blob = c => new Promise(r => c.toBlob(r, 'image/png')), [b1, b2] = await Promise.all([blob(st1), blob(st2)]);
+  const old = CHARS.find(c => c.id === opt.charId), id = old?.id || 'u_' + slug(opt.name), poseId = slug(opt.pose) || 'pose';
+  let s1 = URL.createObjectURL(b1), s2u = URL.createObjectURL(b2), stored = null;
+  if (assets) {   // kept with the app: the strips as assets, the character as a db document
+    const [a1, a2] = await Promise.all([assets.upload(b1, {type: 'image/png'}), assets.upload(b2, {type: 'image/png'})]);
+    s1 = '/_blob/' + a1.id; s2u = '/_blob/' + a2.id; stored = {strip: a1.id, strip2x: a2.id};
+  }
+  const pivot = [+(lay.ref[0] / lay.w).toFixed(4), +(lay.ref[1] / lay.h).toFixed(4)];
+  const pose = {id: poseId, name: opt.pose, strip: s1, strip2x: s2u, cols2x: cols2, frames: n, ticks: Array(n).fill(opt.hold), hit: null, timing: 'custom', anim: null, cell: [w1, h1], pivot};
+  const ch = old || {id, name: opt.name, custom: true, cell: [w1, h1], pivot, poses: []};   // each pose keeps its own cell and pivot
+  ch.poses = ch.poses.filter(p => p.id !== poseId).concat(pose);
+  if (!old) CHARS.push(ch);
+  if (db && stored) {
+    try {
+      const doc = {name: ch.name, cell: ch.cell, pivot: ch.pivot, poses: ch.poses.map(p => ({...p, strip: p.strip.replace('/_blob/', ''), strip2x: p.strip2x.replace('/_blob/', '')})), savedAt: Date.now()};
+      await db.doc('characters/' + id).set(doc);
+    } catch (e) { toast('Chưa lưu được nhân vật: ' + (e.message || e), true); }
+  }
+  syncTop(); await openSkill(id, poseId);
+  toast(`Đã tạo “${ch.name} · ${opt.pose}”: ${n} hình, khung ${w1}×${h1} px trong game${db ? ', đã lưu cùng app' : ''}.`);
+}
 
 // ---------------------------------------------------------------- right panel: the selected layer
 function selectLayer(lid) { sel = lid; refresh(); }
@@ -2317,7 +2453,7 @@ function askLeave() {   // true = go on (saved, or changes dropped), false = sta
 }
 function syncTop() {
   const cs = $('#charSel');
-  cs.innerHTML = '<option value="">Không có (hiệu ứng tự do)</option>' + CHARS.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  cs.innerHTML = '<option value="">Không có (hiệu ứng tự do)</option>' + CHARS.map(c => `<option value="${c.id}">${c.custom ? '★ ' : ''}${esc(c.name)}</option>`).join('');
   cs.value = skill?.character || '';
   const ch = CH(); $('#poseWrap').hidden = !ch;
   if (ch) { $('#poseSel').innerHTML = ch.poses.map(p => `<option value="${p.id}">${esc(p.name)}${savedKeys.has(skillKey(ch.id, p.id)) ? ' ✓' : ''}</option>`).join(''); $('#poseSel').value = skill.pose; }
@@ -2392,6 +2528,11 @@ document.querySelectorAll('details[data-sec]').forEach(d => {
   if (db) {
     try { library = (await db.collection('projects').get()).docs.map(d => ({id: d.id, ...d.data()})).filter(p => p.sheet); } catch (e) { library = []; }
     try { savedKeys = new Set((await db.collection('skills').get()).docs.map(d => d.id)); } catch (e) {}
+    try {   // characters imported in the studio
+      for (const d of (await db.collection('characters').get()).docs) {
+        const c = d.data(); CHARS.push({...c, id: d.id, custom: true, poses: c.poses.map(p => ({...p, strip: '/_blob/' + p.strip, strip2x: '/_blob/' + p.strip2x}))});
+      }
+    } catch (e) {}
   } else log('Chưa kết nối được nơi lưu: vẫn chỉnh và tải gói .zip được, nhưng chưa lưu được.');
   let lastSel = null; try { lastSel = JSON.parse(localStorage.getItem('fxstudio.skill')); } catch (e) {}
   const c0 = CHARS.find(c => c.id === lastSel?.[0]) || CHARS.find(c => c.id === 'holy_commander') || CHARS[0];
