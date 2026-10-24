@@ -27,19 +27,19 @@
   {
    "id": "back",
    "z": "behind the body",
-   "files": "fx/levelup/back/frames/@2x/hero_holy_commander_fx_levelup_back_NN.png (also @1x)"
+   "files": "frames/fx/levelup/back/frames/@2x/hero_holy_commander_fx_levelup_back_NN.png (also @1x)"
   },
   {
    "id": "front",
    "z": "in front of the body",
-   "files": "fx/levelup/front/frames/@2x/hero_holy_commander_fx_levelup_front_NN.png (also @1x)"
+   "files": "frames/fx/levelup/front/frames/@2x/hero_holy_commander_fx_levelup_front_NN.png (also @1x)"
   }
  ],
  "previews": {
-  "fx_only_gif": "fx/levelup/preview_fx_only.gif",
-  "with_body_gif": "fx/levelup/preview_with_body.gif",
-  "sheet": "fx/levelup/sheet.png",
-  "state_folder_gif": "level/levelup_side/preview_with_fx.gif",
+  "fx_only_gif": "frames/fx/levelup/preview_fx_only.gif",
+  "with_body_gif": "frames/fx/levelup/preview_with_body.gif",
+  "sheet": "frames/fx/levelup/sheet.png",
+  "state_folder_gif": "frames/levelup_side/preview_with_fx.gif",
   "note": "previews only (dark ground, screen blend); the game uses the PNG layers"
  }
 }

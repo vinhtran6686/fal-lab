@@ -609,18 +609,18 @@
    "role": "pose skill 1"
   },
   {
-   "id": "pose_holy_banner_old",
+   "id": "pose_holy_banner",
    "file": "source/design/pose_skill_holy_banner_v01.png",
-   "role": "thiết kế cũ của skill 2 (không dùng cho bản chốt)"
+   "role": "pose skill 2 (bản chốt dùng take do model vẽ)"
   },
   {
-   "id": "pose_radiant_slash_old",
+   "id": "pose_radiant_slash",
    "file": "source/design/pose_skill_radiant_slash_v01.png",
-   "role": "thiết kế cũ của skill 3 (không dùng cho bản chốt)"
+   "role": "pose skill 3"
   }
  ],
  "reproduce": {
-  "recipes": "export_recipe.json",
+  "recipes": "frames/export_recipe.json",
   "source_clips": "source/video/*.mp4",
   "tools": [
    "tools/frame_tuner/apply_recipe.py",
@@ -628,7 +628,7 @@
    "tools/frame_tuner/build_export_manifest.py"
   ]
  },
- "not_in_package": "raw clips, review sheets, .work, fx scripts (fx/*.py) and design drafts are repo-only; copy the state folders, fx/*/, ui/, meta.json, export_manifest.json",
+ "not_in_package": "source/ (clips, stills, fx code) and .work are repo-only; copy frames/ and meta.json",
  "open_items": [
   "respawn clip not approved by the user yet",
   "fx blend: screen is preferred; alpha-over is dimmer on bright ground",

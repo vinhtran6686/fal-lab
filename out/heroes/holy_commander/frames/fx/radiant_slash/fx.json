@@ -27,19 +27,19 @@
   {
    "id": "back",
    "z": "behind the body",
-   "files": "fx/radiant_slash/back/frames/@2x/hero_holy_commander_fx_radiant_slash_back_NN.png (also @1x)"
+   "files": "frames/fx/radiant_slash/back/frames/@2x/hero_holy_commander_fx_radiant_slash_back_NN.png (also @1x)"
   },
   {
    "id": "front",
    "z": "in front of the body",
-   "files": "fx/radiant_slash/front/frames/@2x/hero_holy_commander_fx_radiant_slash_front_NN.png (also @1x)"
+   "files": "frames/fx/radiant_slash/front/frames/@2x/hero_holy_commander_fx_radiant_slash_front_NN.png (also @1x)"
   }
  ],
  "previews": {
-  "fx_only_gif": "fx/radiant_slash/preview_fx_only.gif",
-  "with_body_gif": "fx/radiant_slash/preview_with_body.gif",
-  "sheet": "fx/radiant_slash/sheet.png",
-  "state_folder_gif": "skill/skill_radiant_slash_side/preview_with_fx.gif",
+  "fx_only_gif": "frames/fx/radiant_slash/preview_fx_only.gif",
+  "with_body_gif": "frames/fx/radiant_slash/preview_with_body.gif",
+  "sheet": "frames/fx/radiant_slash/sheet.png",
+  "state_folder_gif": "frames/skill_radiant_slash_side/preview_with_fx.gif",
   "note": "previews only (dark ground, screen blend); the game uses the PNG layers"
  }
 }

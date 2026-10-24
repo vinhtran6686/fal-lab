@@ -10,6 +10,7 @@ asset's source/ holds only what was chosen, the rest is dropped (it stays in git
 Usage:
   python scripts/source_prune.py out/heroes/<id>                                   # dry run: what would go
   python scripts/source_prune.py out/heroes/<id> --keep source/design/master_v08.png  # mark approved (meta.json sources)
+  python scripts/source_prune.py out/heroes/<id> --drop source/design/master_v07.png  # superseded: no longer kept
   python scripts/source_prune.py out/heroes/<id> --apply                           # delete everything not kept
 """
 import argparse, json, pathlib, re, shutil
@@ -55,6 +56,7 @@ def plan(asset: pathlib.Path) -> list:
 def main() -> None:
     a = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     a.add_argument("asset"); a.add_argument("--keep", action="append", default=[], metavar="source/<kind>/<file>")
+    a.add_argument("--drop", action="append", default=[], metavar="source/<kind>/<file>", help="remove from meta.json sources (a superseded approval)")
     a.add_argument("--apply", action="store_true")
     args = a.parse_args()
     asset = pathlib.Path(args.asset)
@@ -69,6 +71,20 @@ def main() -> None:
                 lst.append(m.group(2)); lst.sort()
         (asset / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         print("kept:", ", ".join(args.keep))
+    if args.drop:
+        meta = load(asset)
+        for rel in args.drop:
+            m = re.match(r"(?:source/)?(\w+)/([^/]+)$", rel.replace("\\", "/"))
+            lst = meta.get("sources", {}).get(m.group(1) if m else "", [])
+            if not m or m.group(2) not in lst:
+                raise SystemExit(f"--drop {rel}: not in meta.json sources")
+            stem = m.group(2).split(".")[0]   # the file and its sidecars (.json, .prompt.txt)
+            lst[:] = [n for n in lst if n.split(".")[0] != stem]
+            used = [k for k, st in meta.get("states", {}).items() if str(st.get("source", "")).endswith("/" + m.group(2))]
+            if used:
+                print(f"note: {m.group(2)} is still the source of {', '.join(used)} (kept for that sheet)")
+        (asset / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print("dropped:", ", ".join(args.drop))
     drop = plan(asset)
     for p in drop:
         print(("DELETE " if args.apply else "would delete ") + p.relative_to(asset).as_posix())

@@ -101,7 +101,7 @@ master_v07 approved by user ("v07 đẹp nhất, chốt"). `{design}` and `{idle
 - Thứ tự thử: Python trước; chỉ khi user thấy chưa đủ chi tiết mới sang gen video.
 
 **Cách làm (Python)**
-1. Quay clip thân sạch: prompt không mời hiệu ứng nào, có câu "locked tripod" (clip A của levelup: `raw/levelup_side_extra_v2_t01`).
+1. Quay clip thân sạch: prompt không mời hiệu ứng nào, có câu "locked tripod" (clip A của levelup: `source/video/levelup_side_extra_v2_t01`).
 2. Tách **toàn bộ** frame bằng `ffmpeg fps=15` và key nền bằng `sprite_pack.key_out()`. Không bỏ frame nào (lỗi đã gặp: script chỉ ghép `[:45]` trên 46 frame nên mất frame cuối).
 3. Vẽ fx **theo từng frame** bằng `source/fx/levelup_variants.py` (numpy + PIL), thứ tự lớp: lớp sau thân, thân, lớp trước thân.
 4. Ánh sáng dùng chế độ **screen** (màu sáng cộng lên nền), lớp bóng/đục dùng chế độ thường. Tất cả bằng màu + độ trong suốt.
@@ -154,7 +154,7 @@ Ra frame PNG đủ 46 hình, `v03.mp4` xem thử, `v03_peak.png`.
 
 ## Skill 2 holy_banner (chốt 2026-10-20): mô tả hành động rõ ràng là điều quyết định
 
-**Kết quả**: sau 3 vòng quay, user chốt take do model vẽ cả ripple (`raw/skill_side_skill_holy_banner_v4_t02`); user nhận xét "quá đẹp", cả bản model lẫn bản Python (`v4_t01` + `fx/holy_banner_ripple.py`) đều đẹp, model đẹp hơn. Không cắt frame, chưa export. Take chốt vẫn có lỗi nhỏ đã ghi ở `history.md` (khối nón sáng thừa, ripple lan ra mép khung); user vẫn chọn.
+**Kết quả**: sau 3 vòng quay, user chốt take do model vẽ cả ripple (`source/video/skill_side_skill_holy_banner_v4_t02`); user nhận xét "quá đẹp", cả bản model lẫn bản Python (`v4_t01` + `fx/holy_banner_ripple.py`) đều đẹp, model đẹp hơn. Không cắt frame, chưa export. Take chốt vẫn có lỗi nhỏ đã ghi ở `history.md` (khối nón sáng thừa, ripple lan ra mép khung); user vẫn chọn.
 
 **Bài học chính: phải mô tả hành động của nhân vật rõ ràng, cụ thể, không chung chung.**
 Cùng một skill, cùng model, cùng giá (0.06 USD/clip), chất lượng đổi hẳn theo độ cụ thể của mô tả hành động:

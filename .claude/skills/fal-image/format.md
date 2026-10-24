@@ -208,7 +208,8 @@ out/<class>/<id>/                         e.g. out/heroes/centaur/
 user picks, clips are generated, reviewed and exported to `frames/` in the same session. Every paid still or take is
 saved into `source/` the moment it exists (cost guard). At the end of the session, mark what the user approved or left
 pending (`python scripts/source_prune.py A --keep source/design/master_v08.png`; exported clips and stills are kept
-automatically through `meta.json` states) and drop the rest (`python scripts/source_prune.py A --apply`). Rejected and
+automatically through `meta.json` states; a superseded approval leaves the list with `--drop`) and drop the rest
+(`python scripts/source_prune.py A --apply`). Rejected and
 superseded versions are **not** kept: choosing again means running the flow again (new take, new export).
 Re-exporting a sheet replaces its `frames/<sheet>/` folder; the clip or still it came from is named in `meta.json`
 (`version`, `source`).

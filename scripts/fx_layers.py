@@ -4,7 +4,7 @@
 anchored at the character's feet, each layer exported on its own and composited over the body sheet.
 
 Usage:
-  python scripts/fx_layers.py out/heroes/holy_commander/fx/radiant_slash.json        render + preview
+  python scripts/fx_layers.py out/heroes/<id>/source/fx/<skill>.json            render + preview (the recipe is a source)
   python scripts/fx_layers.py <recipe> --check                                       validate only
 
 Recipe (JSON, one per skill; units of the character's body height H, origin = the feet pivot, x right,
@@ -27,7 +27,7 @@ Layer types (all flat: 2-3 tones of one colour and a dark outline of the same hu
   sprite    a keyframe still (fal-image, magenta key) tweened          image, height, keys [{t, scale, alpha, dx, dy, rot}]
 Common: id, type, z (back|front of the body), start, length, color, alpha (peak), ease (out|in|inout|linear).
 
-Writes <asset>/fx/<skill>/: <layer>/frames/@2x and @1x/<layer>_NN.png (each layer on the shared effect canvas),
+Writes <asset>/frames/fx/<skill>/: <layer>/frames/@2x and @1x/<layer>_NN.png (each layer on the shared effect canvas),
 preview.gif and sheet.png (body + every layer), fx.json (canvas, pivot @2x, fps, layer list and timing for
 the engine), and records the skill under "fx" in <asset>/meta.json when that file exists.
 """

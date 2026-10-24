@@ -26,7 +26,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   are cut in the same session; at its end `python scripts/source_prune.py <asset> [--keep ...] --apply` drops every still
   and take that was not approved (no "pick again later": run the flow again). `out/vfx/` is the Fx Studio install registry.
 - Icon packing: `scripts/sprite_pack.py` (single stills into `ui/icon/`).
-- Effects (skills, attack smears, respawn, level-up): `scripts/fx_layers.py A/fx/<skill>.json`, a recipe of small flat
+- Effects (skills, attack smears, respawn, level-up): `scripts/fx_layers.py A/source/fx/<skill>.json`, a recipe of small flat
   layers (slash, ring, burst, bolt, pillar, particles, tweened fx part stills) on one canvas anchored at the
   feet, the reference game's method; no video model. Character clips are body only (`video-sprite` SKILL.md).
 - Fx Studio (`tools/fx_studio/fx_studio.bat`, engine `scripts/fx_studio.py`): a sprite sheet of a 2D effect -> `out/vfx/<id>/`

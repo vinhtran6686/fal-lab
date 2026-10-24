@@ -32,7 +32,7 @@ on PATH; in Git Bash use the real Python, see `CLAUDE.md`).
 | Review | `sprite_set.py review --plan ...`, then **Read** every `review/<action>/tNN-sheet.png` |
 | Accept / retake | `sprite_set.py accept --plan ... --action walk --take 1 [--window 0:124]` / `retake ... --action attack --fix weapon-shape` |
 | Export | `python scripts/video_to_sheet.py --set A/.work/<set> --action <action> --asset A --id <id> --sheet <sheet> [--flip-to <dir>] [--despill]` |
-| Effect layers (free) | `python scripts/fx_layers.py A/fx/<skill>.json` (`--check` validates only) |
+| Effect layers (free) | `python scripts/fx_layers.py A/source/fx/<skill>.json` (`--check` validates only) |
 | Checks | `python scripts/motion_check.py A/frames/<sheet>`, `python scripts/leg_check.py ...` (walks), Motion Lab |
 | Prune (after export; always) | `python scripts/video_prune.py prune --set A/.work/<set>` |
 | Rebuild a pruned action | `python scripts/video_prune.py rebuild --set A/.work/<set> --action <action>` (from the clip, no API call) |
@@ -60,7 +60,7 @@ Everything a character does is two separate things, as in the reference game:
    | `pillar` | light column (respawn, level-up, a buff) | a respawn |
    | `particles` | small shards or sparks thrown out | embers, ice shards |
    | `sprite` | a keyframe still from fal-image (one flat element: a cloud, a banner, a crystal) tweened in scale, alpha and position | a summoned banner, a storm cloud |
-   One recipe per skill (`A/fx/<skill>.json`: body sheet, canvas and pivot in units of `{H}`, layers with
+   One recipe per skill (`A/source/fx/<skill>.json`: body sheet, canvas and pivot in units of `{H}`, layers with
    `start`/`length` in seconds, z back or front of the body). The tool writes each layer's frames on the shared
    canvas, `fx.json` for the engine and a composite `preview.gif`/`sheet.png`; Read the sheet to review it,
    tune the numbers, run again (free). Before the body clip exists, `"body_still"` previews over the pose.
@@ -131,7 +131,7 @@ idle, no feet gate), `boss`, `hero` or `mob` otherwise.
 | `levelup_side` (hero) | `side_extra` | `master` | `levelup` | `--sheet levelup_side --flip-to left` |
 | `respawn_side` (hero), `raise_side` (summoned) | `side_extra` | `master` | `despawn` (sinks into the ground) | `--action despawn --sheet respawn_side --reverse --flip-to left` (or `raise_side`); its light column + ground ring are an fx recipe |
 | `skill_<name>_side` | `side_skill_<name>` (one set per skill) | `master` | `skill` | `--action skill --sheet skill_<name>_side --flip-to left` |
-| `fx_<name>` | - | - | no video: `python scripts/fx_layers.py A/fx/<name>.json` (layers below) | `A/fx/<name>/` |
+| `fx_<name>` | - | - | no video: `python scripts/fx_layers.py A/source/fx/<name>.json` (layers below) | `A/frames/fx/<name>/` |
 | `thorn_*`, rows marked ⏭ | - | - | later | - |
 Front and back MUST be planned with `--views front` / `--views back` (their action ids become
 `front-walk` / `back-walk`): that turns off the turn-around gate, which cannot work on a symmetric view.
