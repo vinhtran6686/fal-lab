@@ -94,6 +94,7 @@ def render(ids: list) -> None:
 def main_out(out: pathlib.Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
     index = []
+    keep = json.loads((HERO / "export_recipe.json").read_text(encoding="utf-8"))["states"]["levelup"]["keep"]   # tick -> python frame
     for sid, title, fn, pose, exported, note in SAMPLES:
         src = CACHE / sid
         if not (src / "fx.json").exists():
@@ -108,6 +109,8 @@ def main_out(out: pathlib.Path) -> None:
         index.append({"id": sid, "title": title, "note": note, "character": "holy_commander", "pose": pose, "frames": info["frames"],
                       "grid": info["grid"], "cell": [w, h], "scale": 0.5, "anchor": [round(px / w, 4), round(py / h, 4)], "hold": 1,
                       "blend": "screen", "parts": parts})
+        if pose == "levelup_side":   # redrawable on any character in the app ("Vẽ theo dáng này")
+            index[-1].update(variant=sid.rsplit("_", 1)[1], keep=keep)
     (out / "samples.json").write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"{len(index)} samples -> {out}")
 

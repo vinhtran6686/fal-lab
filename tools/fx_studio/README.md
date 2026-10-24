@@ -39,6 +39,16 @@ trước thân `Z_EFFECTS`) trong một bước hoàn tác, mỗi hình = 1 fram
 slash, mẫu bắt đầu ở frame 0, khớp từng frame. Trên pose khác, mẫu được dời để đỉnh hiệu ứng trùng frame hit, và app nhắc rằng hào quang vẽ
 theo dáng Holy Commander. Vẽ lại: `PYTHONUTF8=1 python tools/fx_studio/build_samples.py render [id]` (ghi `tools/fx_studio/samples/`).
 
+**Vẽ theo dáng này** (nút trên thẻ của 8 mẫu levelup): vẽ lại hào quang quanh dáng của nhân vật + pose đang mở, ngay trong trình duyệt.
+Mã là bản chép của `levelup_variants.py` (cùng canvas 700x720, BODY 425, cùng số, mặt nạ số thực; canvas chỉ để vẽ hình). Thân lấy từ frame
+@2x đúng như sheet gộp vẽ (cả khi đã chỉnh Frame tuner), bỏ bóng dưới chân; chiều cao thân = khung idle x 0,897 (hiệu chỉnh theo bản export
+đã duyệt của Holy Commander); chớp sáng đặt ở điểm cao nhất của thân tại frame đỉnh. Đỉnh hiệu ứng (python frame 22) = frame hit, sửa được
+trong ô "đỉnh ở frame". Trên Holy Commander · Lên cấp dùng đúng bảng frame đã duyệt (`keep`): so với bản export, lớp sau thân lệch trung bình
+3,7/255, lớp trước thân (viền sáng mảnh) IoU 0,72. Mất khoảng 7-8 giây cho 27 frame. Nguồn gốc ghi trong `recipe.gen`.
+
+**Xuất GIF** (thanh trên): toàn bộ skill đúng như khung xem (nền, hướng nhìn, phóng to, cả tầng ở mục tiêu và tầng bay), mỗi frame game một hình,
+30 frame/giây (trễ 3-3-4 phần trăm giây), lặp mãi, cắt sát phần có hình. Bộ mã hóa GIF89a tự viết (bảng màu median cut 256 màu).
+
 **Cộng sáng** (Màu → Hòa trộn) có trong khung xem và trong sheet gộp. Tầng cài riêng vào game vẽ thường (sprite KR1 không có chế độ cộng).
 **Nền khung xem** (bản đồ / tối / sáng, cạnh ô phóng to): hiệu ứng sáng nhìn rõ hơn trên nền tối. **?**: bảng phím tắt.
 

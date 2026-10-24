@@ -236,6 +236,7 @@ dialog.tuner:not([open]){display:none}
   <button id="btnRevert" title="Quay về bản đã lưu">Bỏ thay đổi</button>
   <button id="btnSave" class="primary">Lưu</button>
   <button id="btnZip" title="Tải gói (.zip) để cài vào game">Tải gói .zip</button>
+  <button id="btnGif" title="Xuất GIF xem trước: đúng như khung xem (nền, hướng, phóng to), 30 frame/giây">Xuất GIF</button>
   <button class="icon" popovertarget="keysPop" title="Phím tắt (phím ?)">⌨ Phím tắt</button>
   <button class="icon" popovertarget="howto" title="Cách đưa hiệu ứng vào game" aria-label="Cách đưa vào game">? Đưa vào game</button>
 </header>
@@ -378,6 +379,7 @@ dialog.tuner:not([open]){display:none}
 
 <dialog id="dlgSamples" class="samples" aria-labelledby="smTitle">
   <div class="sl-head"><h2 id="smTitle" style="margin:0;font-size:16px">Mẫu hiệu ứng đã duyệt</h2><span class="small muted">fx Python của Holy Commander; mỗi mẫu thêm 2 tầng (sau thân, trước thân), cộng sáng</span><span class="spacer"></span><button id="smClose">Đóng</button></div>
+  <p class="small" id="smHere" style="margin:0">“Vẽ theo dáng này”: vẽ lại hào quang quanh dáng của <b id="smWho"></b>, đỉnh hiệu ứng (chớp sáng) ở frame <input type="number" id="smPeak" min="0" style="width:64px" aria-label="Đỉnh hiệu ứng ở frame"> (mặc định = frame hit). Mất vài giây.</p>
   <div class="sm-grid" id="smGrid"></div>
 </dialog>
 <div id="keysPop" class="howto" popover><b style="color:var(--text)">Phím tắt</b>
@@ -1073,19 +1075,20 @@ async function addFromBlob(blob, title, fileName, preset) {
 async function addSample(sp) {
   const own = CHARS.find(c => c.id === sp.character)?.poses.find(p => p.id === sp.pose), same = skill.character === sp.character && skill.pose === sp.pose;
   const hit = POSE()?.hit != null ? poseTickOf(POSE().hit) : null;
-  const start = same ? 0 : hit != null && own?.hit != null ? Math.max(0, hit - own.hit) : Math.max(0, Math.min(t, totalTicks() - 1));
+  const start = sp.start ?? (same ? 0 : hit != null && own?.hit != null ? Math.max(0, hit - own.hit) : Math.max(0, Math.min(t, totalTicks() - 1)));
   const [cols, rows] = sp.grid, [cw, ch] = sp.cell, boxes = [];
   for (let i = 0; i < sp.frames; i++) { const x = (i % cols) * cw, y = Math.floor(i / cols) * ch; boxes.push([x, y, x + cw, y + ch, 0, 0]); }   // every drawing kept, even the empty ones
   HIST.quiet = true;
   try {
     for (const part of sp.parts) {
-      const blob = await (await fetch(part.file)).blob();
+      const blob = part.blob || await (await fetch(part.file)).blob();
       const L = await addFromBlob(blob, `${sp.title} · ${part.title}`, `${sp.id}_${part.part}.png`, {slice: {boxes, align: 'tl', cellScale: 1}, bg: 'alpha'});
       L.recipe.scale = sp.scale; L.recipe.anchor = [...sp.anchor]; L.recipe.frames = boxes.map((_, i) => ({cell: i, hold: sp.hold || 1}));
-      L.recipe.blend = sp.blend; L.recipe.game.z = part.z; L.start = start;
+      L.recipe.blend = sp.blend; L.recipe.game.z = part.z; L.start = start; if (sp.gen) L.recipe.gen = sp.gen;
     }
   } finally { HIST.quiet = false; }
   refresh();
+  if (sp.gen) { toast(`Đã vẽ “${sp.title}” theo dáng ${CH()?.name} · ${POSE()?.name}: 2 tầng, ${sp.frames} hình, từ frame ${start}.`); return; }
   const who = `${CHARS.find(c => c.id === sp.character)?.name || sp.character} · ${own?.name || sp.pose}`;
   toast(same ? `Đã thêm “${sp.title}”: 2 tầng (sau thân, trước thân), khớp từng frame với pose này.`
     : `Đã thêm “${sp.title}” (2 tầng), bắt đầu ở frame ${start}${hit != null && own?.hit != null ? ' để đỉnh hiệu ứng trùng frame hit' : ''}. Mẫu vẽ theo dáng ${who}: hào quang bám dáng đó, với pose khác chỉ là điểm bắt đầu.`);
@@ -1103,8 +1106,16 @@ async function openSamples() {
     const nt = document.createElement('p'); nt.className = 'small muted'; nt.textContent = `${sp.note} · ${sp.frames} frame`;
     const b = document.createElement('button'); b.className = 'primary'; b.textContent = 'Thêm';
     b.onclick = () => { dlgSm.close(); tryAdd(() => addSample(sp)); };
-    card.append(cv, tt, nt, b); grid.appendChild(card);
+    const bar = document.createElement('div'); bar.className = 'bar'; bar.style.marginTop = '0'; bar.append(b);
+    if (sp.variant && CH()) {
+      const r = document.createElement('button'); r.textContent = 'Vẽ theo dáng này';
+      r.title = `Vẽ lại hiệu ứng quanh dáng của ${CH().name} · ${POSE()?.name} (mỗi frame một hình, đỉnh ở frame trong ô phía trên)`;
+      r.onclick = () => { dlgSm.close(); tryAdd(() => drawAuraHere(sp)); }; bar.append(r);
+    }
+    card.append(cv, tt, nt, bar); grid.appendChild(card);
   }
+  const hit = POSE()?.hit != null ? poseTickOf(POSE().hit) : Math.floor(poseLen() / 2);
+  $('#smHere').hidden = !CH(); $('#smWho').textContent = CH() ? `${CH().name} · ${POSE()?.name}` : ''; $('#smPeak').value = hit; $('#smPeak').max = Math.max(0, poseLen() - 1);
   dlgSm.showModal();
   await Promise.all([...SAMPLES_LIB.flatMap(sp => sp.parts.map(async pt => { SM.imgs[pt.file] = await loadImg(pt.file).catch(() => null); })),
     ...SAMPLES_LIB.map(async sp => { const p = CHARS.find(c => c.id === sp.character)?.poses.find(x => x.id === sp.pose); if (p) await stripImg(p.strip).catch(() => null); })]);
@@ -1126,6 +1137,13 @@ function drawSamples(now) {   // each card plays its sample over a dark ground, 
   }
 }
 $('#smClose').onclick = () => dlgSm.close();
+async function drawAuraHere(sp) {
+  const exact = skill.character === 'holy_commander' && skill.pose === sp.pose && !skill.poseEdit && sp.keep;   // the approved pose: its own frame table
+  const peak = Math.max(0, $('#smPeak').value | 0);
+  toast('Đang vẽ hào quang theo dáng nhân vật…');
+  const g = await genAura(sp.variant, peak, exact ? sp.keep : null, (k, n) => { if (k % 4 === 0 || k === n) toast(`Đang vẽ hào quang: ${k}/${n} frame`); });
+  await addSample({...g, id: `${sp.id}_${skill.character}`, title: `${sp.title} (theo dáng)`, gen: {variant: sp.variant, character: skill.character, pose: skill.pose, peak: exact ? 'approved' : peak}});
+}
 async function addFromLibrary(p) {
   const res = await fetch('/_blob/' + p.sheet); if (!res.ok) throw new Error('Không tải được ảnh của ' + p.title);
   const L = newLayer(p.title); L.sheet = p.sheet; L.sheetName = p.sheetName || '';
@@ -1909,6 +1927,356 @@ $('#btnZip').onclick = e => busy(e.target, async () => {
   const blob = await zip.generateAsync({type: 'blob'});
   try { await downloads.save({filename: `${skill.key}.fxskill.zip`, data: blob}); toast('Đã tải gói .zip'); }
   catch (err) { if (err.code !== 'declined') throw new Error('Không tải được: ' + (err.message || err.code)); }
+});
+
+// ---------------------------------------------------------------- aura redrawn on the selected character (a port of
+// out/heroes/holy_commander/fx/levelup_variants.py: same canvas, same numbers, float masks; canvas only rasterizes shapes)
+const AU = (() => {
+  const W = 700, H = 720, FX = 350, FY = 630, B = 425, N = W * H;
+  const CREAM = [1, .957, .784], GOLD = [1, .788, .235], WHITE = [1, 1, .94], AMBER = [1, .62, .15];
+  const ramp = (i, a, b) => Math.min(1, Math.max(0, (i - a) / (b - a)));
+  const env = (i, a, full, hold, end) => ramp(i, a, full) * (1 - ramp(i, hold, end));
+  const cv = canvas(W, H), g = cv.getContext('2d', {willReadFrequently: true});
+  function raster(fn) {   // a white shape -> Float32 mask 0..1
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.fillStyle = g.strokeStyle = '#fff'; g.globalAlpha = 1; fn(g);
+    const d = g.getImageData(0, 0, W, H).data, m = new Float32Array(N); for (let i = 0; i < N; i++) m[i] = d[i * 4 + 3] / 255; return m;
+  }
+  function boxes(sigma) {   // 3 box widths whose sum approximates a gaussian of this sigma
+    const wi = Math.floor(Math.sqrt(12 * sigma * sigma / 3 + 1)), wl = wi % 2 ? wi : wi - 1, wu = wl + 2;
+    const m = Math.round((12 * sigma * sigma - 3 * wl * wl - 12 * wl - 9) / (-4 * wl - 4));
+    return [0, 1, 2].map(i => i < m ? wl : wu);
+  }
+  function boxPass(src, dst, r, horiz) {
+    const len = horiz ? W : H, lines = horiz ? H : W, st = horiz ? 1 : W, ls = horiz ? W : 1, k = 1 / (2 * r + 1);
+    for (let l = 0; l < lines; l++) {
+      const o = l * ls; let acc = 0;
+      for (let j = -r - 1; j < r; j++) acc += src[o + Math.min(len - 1, Math.max(0, j)) * st];
+      for (let j = 0; j < len; j++) {
+        acc += src[o + Math.min(len - 1, j + r) * st] - src[o + Math.max(0, j - r - 1) * st];
+        dst[o + j * st] = acc * k;
+      }
+    }
+  }
+  function blur(m, sigma) {   // PIL GaussianBlur(sigma): 3 box passes each way, edges clamped
+    if (!(sigma > 0)) return m;
+    let a = Float32Array.from(m), b = new Float32Array(N);
+    for (const w of boxes(sigma)) { const r = (w - 1) / 2; if (r < 1) continue; boxPass(a, b, r, true); boxPass(b, a, r, false); }
+    return a;
+  }
+  function minFilter(m, size) {   // PIL MinFilter(size): square erosion
+    const r = (size - 1) / 2, a = new Float32Array(N), b = new Float32Array(N);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { let v = 1; for (let d = -r; d <= r; d++) { const xx = Math.min(W - 1, Math.max(0, x + d)); v = Math.min(v, m[y * W + xx]); } a[y * W + x] = v; }
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { let v = 1; for (let d = -r; d <= r; d++) { const yy = Math.min(H - 1, Math.max(0, y + d)); v = Math.min(v, a[yy * W + x]); } b[y * W + x] = v; }
+    return b;
+  }
+  const paintL = (fn, bl = 0) => blur(raster(fn), bl);
+  function radial(cx, cy, rx, ry, p = 1.5) {
+    ry = ry || rx; const m = new Float32Array(N);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const v = 1 - Math.hypot((x - cx) / rx, (y - cy) / ry); if (v > 0) m[y * W + x] = v ** p; }
+    return m;
+  }
+  const capsule = (w, h, cx = FX, soft = 9) => paintL(c => { c.beginPath(); c.roundRect(cx - w / 2, FY - h, w, h + 8, Math.min(w / 2, (h + 8) / 2)); c.fill(); }, soft);
+  const ring = (cx, cy, rx, ry, width, bl = 4) => paintL(c => {
+    const wd = Math.max(1, Math.round(width)); c.lineWidth = wd; c.beginPath(); c.ellipse(cx, cy, Math.max(.5, rx - wd / 2), Math.max(.5, ry - wd / 2), 0, 0, Math.PI * 2); c.stroke(); }, bl);
+  function star(cx, cy, r, ang = 0, spikes = 4) {
+    const a = paintL(c => { c.beginPath(); for (let k = 0; k < spikes * 2; k++) { const t = ang + k * Math.PI / spikes, rr = k % 2 ? r * .14 : r; c.lineTo(cx + rr * Math.cos(t), cy + rr * Math.sin(t)); } c.fill(); }, 1.5);
+    const b = radial(cx, cy, r * .55, 0, 2); for (let i = 0; i < N; i++) a[i] = Math.max(a[i], b[i] * .8); return a;
+  }
+  function rng(seed) { let s = seed >>> 0 || 1; return () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function motes(i, n, seed, xh, t0, speed, size, rise = 1, top, jitter = .6) {
+    const R = rng(seed), u = (a, b) => a + (b - a) * R(), pts = [];
+    for (let k = 0; k < n; k++) {
+      let x = FX + u(-xh, xh); const y0 = FY - u(0, .25 * B), delay = u(0, 14), sp = speed * u(.7, 1.3), sz = size * u(.6, 1.5), life = u(14, 26), ph = u(0, 6.28), age = i - t0 - delay;
+      if (age < 0 || age > life) continue;
+      const y = y0 - sp * age * rise; x += Math.sin(ph + age * .3) * 10 * jitter;
+      const a = Math.sin(Math.PI * age / life) * (.6 + .4 * Math.sin(age * 1.3 + ph)); pts.push([x, y, sz, a]);
+    }
+    return paintL(c => { for (const [x, y, sz, a] of pts) { c.globalAlpha = Math.max(0, Math.min(1, a)); c.beginPath(); c.ellipse(x, y, sz, sz, 0, 0, Math.PI * 2); c.fill(); } c.globalAlpha = 1; }, 2);
+  }
+  function aura(sil, grow, bl) { const w = blur(sil, Math.max(1, grow * .75)); for (let i = 0; i < N; i++) w[i] = Math.min(1, w[i] * 2.6); return blur(w, bl); }
+  function rimlight(sil, k = 1) { const inner = blur(minFilter(sil, 9), 5), m = new Float32Array(N); for (let i = 0; i < N; i++) m[i] = Math.max(0, sil[i] - inner[i]) * k; return m; }
+  const mul = (a, f) => { const m = new Float32Array(N); for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) m[y * W + x] = a[y * W + x] * f(x, y); return m; };
+  const sub = (a, b) => { const m = new Float32Array(N); for (let i = 0; i < N; i++) m[i] = Math.max(0, Math.min(1, a[i] - b[i])); return m; };
+  const clip01 = v => Math.max(0, Math.min(1, v));
+  class Acc {   // screen-accumulated light on black (export_fx: back/front drawn on zeros)
+    constructor() { this.c = new Float32Array(N * 3); }
+    screen(col, a, k = 1) { const c = this.c; for (let i = 0; i < N; i++) { const v = clip01(a[i] * k); if (v <= 0) continue; for (let j = 0; j < 3; j++) c[i * 3 + j] = 1 - (1 - c[i * 3 + j]) * (1 - col[j] * v); } }
+  }
+  const ground = (cv, e, k = 1, wide = .5) => cv.screen(GOLD, radial(FX, FY, wide * B, .1 * B, 1.2), .85 * e * k);
+  function beam(cv, e, w = .30, k = .5) {
+    const wpx = w * B, bot = FY - .78 * B, m = paintL(c => c.fillRect(FX - wpx / 2, 0, wpx, bot), 14);
+    cv.screen(CREAM, mul(m, (x, y) => clip01(y / bot) ** 1.2), k * e);
+  }
+  const flashFist = (cv, i, t, F, k = .9, r = .42) => { const e = Math.max(0, 1 - Math.abs(i - t) / 4); if (e > 0) cv.screen(WHITE, radial(F[0], F[1], r * B, 0, 1.6), e * k); };
+  const capGrad = (c, h, a0, a1) => mul(c, (x, y) => a0 + a1 * clip01((y - (FY - h)) / h));
+  // the variants: (cv, i, sil, front, F = the fist / top point at the peak)
+  const V = {
+    v01(cv, i, sil, front) {
+      const e = env(i, 18, 24, 31, 40);
+      if (!front) {
+        ground(cv, e, 1, .58);
+        for (const s of [19, 23, 27]) { const t = ramp(i, s, s + 11); if (t > 0 && t < 1) cv.screen(GOLD, ring(FX, FY, (.2 + .7 * t) * B, (.2 + .7 * t) * .17 * B, 10, 6), .9 * (1 - t)); }
+        cv.screen(GOLD, aura(sil, 14, 16), .55 * e);
+      } else {
+        const h = .98 * B * (.35 + .65 * ramp(i, 18, 24)), c = capsule(.9 * B, h, FX, 12);
+        cv.screen(CREAM, capGrad(c, h, .16, .34), e);
+        cv.screen(GOLD, sub(c, capsule(.9 * B - 30, h - 30, FX, 14)), .8 * e);
+        cv.screen(CREAM, rimlight(sil, 1), .7 * e); beam(cv, e);
+      }
+    },
+    v03(cv, i, sil, front, F) {
+      const e = env(i, 18, 24, 32, 41);
+      if (!front) {
+        ground(cv, e, .9, .55);
+        for (const [s, col] of [[19, GOLD], [23, CREAM], [27, AMBER]]) { const t = ramp(i, s, s + 13); if (t > 0 && t < 1) cv.screen(col, aura(sil, 4 + 56 * t ** .7, 8 + 12 * t), .85 * (1 - t) ** 1.2); }
+        cv.screen(GOLD, aura(sil, 8, 12), .45 * e);
+      } else { cv.screen(CREAM, rimlight(sil, 1), .8 * e); flashFist(cv, i, 22, F, .7); }
+    },
+    v05(cv, i, sil, front, F) {
+      const e = env(i, 18, 22, 32, 41);
+      if (!front) {
+        ground(cv, e, 1, .7);
+        for (const s of [20, 23, 26]) { const t = ramp(i, s, s + 12); if (t > 0 && t < 1) { const R = (.15 + t) * B; cv.screen(s !== 23 ? CREAM : GOLD, ring(FX, FY, R, R * .2, 18 * (1 - t) + 4, 8), .95 * (1 - t)); } }
+        cv.screen(GOLD, aura(sil, 9, 14), .4 * e);
+      } else { flashFist(cv, i, 22, F, .95, .55); cv.screen(CREAM, rimlight(sil), .75 * e); cv.screen(GOLD, motes(i, 22, 11, .55 * B, 21, 5, 6.5, 1, null, .3), .9); }
+    },
+    v06(cv, i, sil, front) {
+      const e = env(i, 17, 24, 32, 41);
+      const helix = fr => paintL(c => {
+        for (let strand = 0; strand < 2; strand++) for (let k = 0; k < 26; k++) {
+          const t = (i * .045 + k * .035) % 1, y = FY - t * 1.05 * B, a = i * .22 + k * .5 + strand * Math.PI, depth = Math.cos(a);
+          if ((depth >= 0) !== fr) continue;
+          const x = FX + Math.sin(a) * .42 * B * (.75 + .25 * t), r = (13 - 6 * t) * (.8 + .3 * depth), al = Math.sin(Math.PI * t) ** .7 * (.55 + .45 * Math.abs(depth));
+          c.globalAlpha = clip01(al); c.beginPath(); c.ellipse(x, y, Math.max(.1, r), Math.max(.1, r), 0, 0, Math.PI * 2); c.fill();
+        }
+        c.globalAlpha = 1;
+      }, 2.2);
+      if (!front) { ground(cv, e, 1, .6); cv.screen(CREAM, capsule(.9 * B, .98 * B, FX, 14), .12 * e); cv.screen(GOLD, helix(false), e); }
+      else { cv.screen(GOLD, helix(true), e); cv.screen(CREAM, rimlight(sil), .6 * e); beam(cv, e, .24, .35); }
+    },
+    v07(cv, i, sil, front) {
+      const e = env(i, 17, 22, 33, 42);
+      if (!front) {
+        ground(cv, e, 1.1, .7);
+        for (const s of [20, 25]) { const t = ramp(i, s, s + 12); if (t > 0 && t < 1) cv.screen(CREAM, ring(FX, FY, (.2 + .8 * t) * B, (.2 + .8 * t) * .2 * B, 12, 7), .7 * (1 - t)); }
+      } else {
+        const w = (.95 + .08 * Math.sin(i * .6)) * B, m = paintL(c => c.fillRect(FX - w / 2, 0, w, FY), 22), top = ramp(i, 17, 21);
+        cv.screen(CREAM, mul(m, (x, y) => clip01(1 - Math.abs(x - FX) / (w / 2)) ** .6 * (.18 + .5 * clip01(y / FY) ** 1.5)), e * top);
+        cv.screen(WHITE, motes(i, 26, 21, .4 * B, 20, 7, 5.5), e); cv.screen(CREAM, rimlight(sil), .7 * e);
+      }
+    },
+    v08(cv, i, sil, front) {
+      const e = env(i, 17, 23, 33, 42);
+      if (!front) { ground(cv, e, 1, .6); cv.screen(CREAM, capsule(.9 * B, .98 * B, FX, 16), .12 * e); }
+      else {
+        for (let k = 0; k < 4; k++) { const t = ramp(i, 18 + k * 3.5, 18 + k * 3.5 + 14); if (t > 0 && t < 1) { const y = FY - t * 1.05 * B, rx = (.46 - .1 * t) * B; cv.screen(k % 2 ? CREAM : GOLD, ring(FX, y, rx, rx * .25, 14 * (1 - .4 * t), 5), .9 * Math.sin(Math.PI * t) ** .8); } }
+        cv.screen(CREAM, rimlight(sil), .6 * e); beam(cv, e, .28, .4);
+      }
+    },
+    v09(cv, i, sil, front) {
+      const e = env(i, 18, 24, 32, 41);
+      if (!front) {
+        ground(cv, e, 1.1, .75);
+        for (const s of [19, 24]) { const t = ramp(i, s, s + 12); if (t > 0 && t < 1) cv.screen(GOLD, ring(FX, FY, (.2 + .85 * t) * B, (.2 + .85 * t) * .2 * B, 14, 7), .8 * (1 - t)); }
+        cv.screen(GOLD, aura(sil, 16, 22), .5 * e);
+      } else {
+        const h = .98 * B * (.4 + .6 * ramp(i, 18, 24)), c = capsule(.82 * B, h, FX, 14);
+        cv.screen(CREAM, mul(c, (x, y) => (.10 + .30 * clip01((y - (FY - h)) / h)) * (.55 + .6 * (.5 + .5 * Math.sin((FY - y) / 26 - i * .9)))), e);
+        cv.screen(GOLD, sub(c, capsule(.82 * B - 26, h - 26, FX, 14)), .7 * e);
+        cv.screen(CREAM, rimlight(sil), .6 * e); beam(cv, e);
+      }
+    },
+    v10(cv, i, sil, front, F) {
+      const e = env(i, 17, 24, 32, 41), cx = FX, cy = FY - .55 * B;
+      if (!front) {
+        ground(cv, e, 1.1, .7);
+        const a0 = i * .03, rays = paintL(c => { for (let k = 0; k < 12; k++) { const a = a0 + k * 2 * Math.PI / 12; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + 1.1 * B * Math.cos(a - .08), cy + 1.1 * B * Math.sin(a - .08)); c.lineTo(cx + 1.1 * B * Math.cos(a + .08), cy + 1.1 * B * Math.sin(a + .08)); c.fill(); } }, 6);
+        const rd = radial(cx, cy, 1.1 * B, 0, .9); for (let j = 0; j < N; j++) rays[j] *= rd[j];
+        cv.screen(CREAM, rays, .28 * e);
+        for (const s of [19, 23]) { const t = ramp(i, s, s + 13); if (t > 0 && t < 1) cv.screen(GOLD, ring(FX, FY, (.2 + .9 * t) * B, (.2 + .9 * t) * .2 * B, 14, 7), .85 * (1 - t)); }
+        for (const [s, col] of [[20, GOLD], [25, CREAM]]) { const t = ramp(i, s, s + 13); if (t > 0 && t < 1) cv.screen(col, aura(sil, 4 + 44 * t ** .7, 8 + 10 * t), .7 * (1 - t) ** 1.2); }
+        cv.screen(GOLD, aura(sil, 12, 16), .5 * e);
+      } else {
+        const h = .98 * B * (.35 + .65 * ramp(i, 18, 24)), c = capsule(.86 * B, h, FX, 12);
+        cv.screen(CREAM, capGrad(c, h, .14, .34), e);
+        cv.screen(GOLD, sub(c, capsule(.86 * B - 28, h - 28, FX, 14)), .75 * e);
+        cv.screen(WHITE, motes(i, 30, 33, .42 * B, 19, 6.5, 5), e);
+        cv.screen(CREAM, rimlight(sil), .75 * e); beam(cv, e, .3, .5); flashFist(cv, i, 22, F, .8);
+        const s = ramp(i, 21, 25) * (1 - ramp(i, 32, 40)); if (s > 0) cv.screen(WHITE, star(F[0], F[1] - .02 * B, .24 * B), s);
+      }
+    },
+  };
+  // light on black -> straight-alpha RGBA (export_fx.to_rgba: alpha = max channel)
+  function toImage(acc) {
+    const im = new ImageData(W, H), d = im.data, c = acc.c;
+    for (let i = 0; i < N; i++) { const r = c[i * 3], gg = c[i * 3 + 1], b = c[i * 3 + 2], a = Math.max(r, gg, b); if (a <= 1e-4) continue; d[i * 4] = r / a * 255; d[i * 4 + 1] = gg / a * 255; d[i * 4 + 2] = b / a * 255; d[i * 4 + 3] = a * 255; }
+    const out = canvas(W, H); out.getContext('2d').putImageData(im, 0, 0); return out;
+  }
+  // a silhouette canvas (the body frame scaled so its standing height is B, feet on (FX, FY)) -> mask
+  function silMask(src) { const d = src.getContext('2d').getImageData(0, 0, W, H).data, m = new Float32Array(N); for (let i = 0; i < N; i++) m[i] = d[i * 4 + 3] / 255; return m; }
+  return {W, H, FX, FY, B, V, Acc, toImage, silMask};
+})();
+const AURA_IDS = ['v01', 'v03', 'v05', 'v06', 'v07', 'v08', 'v09', 'v10'];
+const AURA_STEP = 44 / 26;   // the approved levelup: 27 game frames over python frames 0..44 (export_recipe keep)
+// the effective pose's @2x frame at game tick tk (the frame the combo bake draws), as a canvas
+function pose2x(tk) {
+  const ch = CH(), p = POSE(), i = poseFrameAt(Math.min(tk, poseLen() - 1)), [cw, chh] = ch.cell, w = cw * 2, h = chh * 2, src = p.src[i], c = canvas(w, h), g = c.getContext('2d');
+  const s2 = stripImgs[p.strip2x];
+  if (s2) g.drawImage(s2, (src % p.cols2x) * w, Math.floor(src / p.cols2x) * h, w, h, 0, 0, w, h);
+  else g.drawImage(stripImgs[p.strip], src * cw, 0, cw, chh, 0, 0, w, h);
+  return c;
+}
+function alphaBox(c, th = 40) { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1; for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3] > th) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } return x1 < 0 ? null : [x0, y0, x1 + 1, y1 + 1]; }
+const AURA_CAL = 425 * 0.3040 / 144;   // the approved export drew BODY = 425 px at k = 0.304 (129 px @2x) for holy_commander, whose idle frame is 144 px tall
+async function bodyHeight2x() { return Math.round(await standHeight2x() * AURA_CAL * 10) / 10; }
+async function standHeight2x() {   // the standing height @2x: the character's idle frame, else the median over this pose
+  const ch = CH(), [cw, chh] = ch.cell, idle = ch.poses.find(p => /^idle/.test(p.id));
+  if (idle) {
+    const img = idle.strip2x ? await stripImg(idle.strip2x).catch(() => null) : null, im1 = img || await stripImg(idle.strip).catch(() => null);
+    if (im1) { const f = img ? 2 : 1, c = canvas(cw * 2, chh * 2); c.getContext('2d').drawImage(im1, 0, 0, cw * f, chh * f, 0, 0, cw * 2, chh * 2); const b = alphaBox(c); if (b) return b[3] - b[1]; }
+  }
+  const hs = []; for (let tk = 0; tk < poseLen(); tk += 2) { const b = alphaBox(pose2x(tk)); if (b) hs.push(b[3] - b[1]); }
+  hs.sort((a, b) => a - b); return hs[hs.length >> 1] || chh * 1.6;
+}
+// draw a levelup variant around the open pose: one drawing per game tick, the peak (python frame 22, the fist at the top)
+// on game tick `peak`; ticks map to python frames by `keep` (the approved pose) or AURA_STEP. -> a sample-like object
+async function genAura(vid, peak, keep, onStep) {
+  const ch = CH(), p = POSE(); if (!ch || !p) throw new Error('Chọn nhân vật và pose trước');
+  if (p.strip2x) await stripImg(p.strip2x).catch(() => null); await stripImg(p.strip).catch(() => null);
+  const B2 = await bodyHeight2x(), S = AU.B / B2, [cw, chh] = ch.cell, piv = [ch.pivot[0] * cw * 2, ch.pivot[1] * chh * 2];
+  const pyOf = tk => keep ? keep[Math.min(tk, keep.length - 1)] : 22 + (tk - peak) * AURA_STEP;
+  const ticks = [];   // python frames 15..46: the variants draw nothing outside (the approved pose keeps all its ticks)
+  if (keep) for (let k = 0; k < keep.length; k++) ticks.push(k);
+  else for (let k = Math.max(0, Math.ceil(peak - 7 / AURA_STEP)); k <= Math.floor(peak + 24 / AURA_STEP); k++) ticks.push(k);
+  const silAt = tk => {   // the body frame at tk, scaled by S, feet on the python canvas feet
+    const b = pose2x(tk), bg = b.getContext('2d'), im = bg.getImageData(0, 0, b.width, b.height), d = im.data;
+    for (let i = 0; i < d.length; i += 4) if (d[i + 3] < 200 && Math.max(d[i], d[i + 1], d[i + 2]) < 70) d[i + 3] = 0;   // the ground shadow is not body
+    bg.putImageData(im, 0, 0);
+    const c = canvas(AU.W, AU.H), g = c.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+    g.drawImage(b, AU.FX - piv[0] * S, AU.FY - piv[1] * S, b.width * S, b.height * S); return c;
+  };
+  // the flash (the fist in the approved levelup) sits on the topmost point of the body at the peak
+  const pk = keep && keep.indexOf(22) >= 0 ? keep.indexOf(22) : peak, sc = silAt(pk), top = alphaBox(sc), F = [AU.FX - .08 * AU.B, AU.FY - .93 * AU.B];
+  if (top) {
+    const d = sc.getContext('2d').getImageData(0, top[1], AU.W, 12).data; let sx = 0, n = 0;
+    for (let y = 0; y < 12; y++) for (let x = 0; x < AU.W; x++) if (d[(y * AU.W + x) * 4 + 3] > 40) { sx += x; n++; }
+    F[0] = n ? sx / n : (top[0] + top[2]) / 2; F[1] = top[1] + .05 * AU.B;
+  }
+  const ow = Math.ceil(AU.W / S), oh = Math.ceil(AU.H / S), ofx = AU.FX / S, ofy = AU.FY / S, outs = {back: [], front: []};
+  for (const [n, tk] of ticks.entries()) {
+    const sil = AU.silMask(silAt(tk)), i = pyOf(tk);
+    for (const front of [false, true]) {
+      const acc = new AU.Acc(); AU.V[vid](acc, i, sil, front, F);
+      const o = canvas(ow, oh), g = o.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.drawImage(AU.toImage(acc), 0, 0, ow, oh);
+      outs[front ? 'front' : 'back'].push(o);
+    }
+    onStep?.(n + 1, ticks.length); await new Promise(r => setTimeout(r, 0));
+  }
+  let bb = null;   // crop to what is drawn in any frame (even sizes), keep the feet
+  for (const o of [...outs.back, ...outs.front]) { const b = alphaBox(o, 3); if (b) bb = bb ? [Math.min(bb[0], b[0]), Math.min(bb[1], b[1]), Math.max(bb[2], b[2]), Math.max(bb[3], b[3])] : b; }
+  bb = bb || [0, 0, 2, 2];
+  const x0 = Math.max(0, bb[0] - 4 & ~1), y0 = Math.max(0, bb[1] - 4 & ~1), w = Math.min(ow, bb[2] + 5) - x0 + 1 & ~1, h = Math.min(oh, bb[3] + 5) - y0 + 1 & ~1;
+  const n = ticks.length, cols = Math.min(n, Math.max(1, Math.round(Math.sqrt(n * h / w)))), rows = Math.ceil(n / cols), parts = [];
+  for (const z of ['back', 'front']) {
+    const sh = canvas(w * cols, h * rows), g = sh.getContext('2d');
+    outs[z].forEach((o, k) => g.drawImage(o, x0, y0, w, h, (k % cols) * w, Math.floor(k / cols) * h, w, h));
+    parts.push({part: z, title: z === 'back' ? 'sau thân' : 'trước thân', z: z === 'back' ? 'Z_DECALS' : 'Z_EFFECTS', blob: await new Promise(r => sh.toBlob(r, 'image/png')), canvas: sh});
+  }
+  return {frames: n, grid: [cols, rows], cell: [w, h], scale: .5, anchor: [+((ofx - x0) / w).toFixed(4), +((ofy - y0) / h).toFixed(4)], hold: 1, blend: 'screen', parts, start: ticks[0]};
+}
+
+// ---------------------------------------------------------------- GIF of the whole skill (what the stage shows), own GIF89a encoder
+function gifPalette(frames, w, h) {   // median cut over pixels sampled from every frame -> 256 colours
+  const px = [], step = Math.max(1, Math.floor(frames.length * w * h / 120000));
+  let k = 0;
+  for (const f of frames) for (let i = 0; i < w * h; i++, k++) if (k % step === 0) px.push([f[i * 4], f[i * 4 + 1], f[i * 4 + 2]]);
+  let boxes = [px];
+  while (boxes.length < 256) {
+    let bi = -1, best = -1, ch = 0;
+    boxes.forEach((b, j) => { if (b.length < 2) return; for (let c = 0; c < 3; c++) { let lo = 255, hi = 0; for (const p of b) { if (p[c] < lo) lo = p[c]; if (p[c] > hi) hi = p[c]; } if (hi - lo > best) { best = hi - lo; bi = j; ch = c; } } });
+    if (bi < 0 || best <= 0) break;
+    const b = boxes[bi].sort((p, q) => p[ch] - q[ch]), m = b.length >> 1;
+    boxes.splice(bi, 1, b.slice(0, m), b.slice(m));
+  }
+  const pal = boxes.map(b => { const s = [0, 0, 0]; for (const p of b) for (let c = 0; c < 3; c++) s[c] += p[c]; return s.map(v => Math.round(v / Math.max(1, b.length))); });
+  while (pal.length < 256) pal.push([0, 0, 0]);
+  return pal;
+}
+function gifIndex(f, n, pal, cache) {
+  const out = new Uint8Array(n);
+  for (let i = 0; i < n; i++) {
+    const r = f[i * 4], g = f[i * 4 + 1], b = f[i * 4 + 2], key = (r >> 3) << 10 | (g >> 3) << 5 | b >> 3;
+    let v = cache[key];
+    if (v < 0) { let bd = 1e9; for (let j = 0; j < 256; j++) { const p = pal[j], d = (p[0] - r) ** 2 + (p[1] - g) ** 2 + (p[2] - b) ** 2; if (d < bd) { bd = d; v = j; } } cache[key] = v; }
+    out[i] = v;
+  }
+  return out;
+}
+function gifLZW(ix, out) {   // min code size 8, codes grow to 12 bits, clear at 4096; packed into 255-byte sub-blocks
+  const clear = 256, eoi = 257, buf = []; let size = 9, next = 258, cur = 0, nb = 0, table = new Map();
+  const emit = c => { cur |= c << nb; nb += size; while (nb >= 8) { buf.push(cur & 255); cur >>>= 8; nb -= 8; } };
+  emit(clear);
+  let pre = ix[0];
+  for (let i = 1; i < ix.length; i++) {
+    const k = ix[i], key = pre << 8 | k, c = table.get(key);
+    if (c !== undefined) { pre = c; continue; }
+    emit(pre);
+    if (next === 4096) { emit(clear); next = 258; size = 9; table = new Map(); }
+    else { if (next >= 1 << size) size++; table.set(key, next++); }
+    pre = k;
+  }
+  emit(pre); emit(eoi); if (nb > 0) buf.push(cur & 255);
+  out.push(8);
+  for (let i = 0; i < buf.length; i += 255) { const n = Math.min(255, buf.length - i); out.push(n); for (let j = 0; j < n; j++) out.push(buf[i + j]); }
+  out.push(0);
+}
+function encodeGIF(frames, w, h, delays) {   // frames: RGBA Uint8ClampedArray, delays in 1/100 s
+  const pal = gifPalette(frames, w, h), cache = new Int16Array(32768).fill(-1), o = [];
+  const u16 = v => o.push(v & 255, v >> 8 & 255);
+  for (const c of 'GIF89a') o.push(c.charCodeAt(0));
+  u16(w); u16(h); o.push(0xF7, 0, 0);
+  for (const p of pal) o.push(p[0], p[1], p[2]);
+  o.push(0x21, 0xFF, 11); for (const c of 'NETSCAPE2.0') o.push(c.charCodeAt(0)); o.push(3, 1, 0, 0, 0);   // loop forever
+  frames.forEach((f, k) => {
+    o.push(0x21, 0xF9, 4, 0x04); u16(delays[k]); o.push(0, 0);
+    o.push(0x2C); u16(0); u16(0); u16(w); u16(h); o.push(0);
+    gifLZW(gifIndex(f, w * h, pal, cache), o);
+  });
+  o.push(0x3B);
+  return new Blob([new Uint8Array(o)], {type: 'image/gif'});
+}
+// the skill as the stage draws it (same drawScene, background, facing and zoom), one frame per game tick, cropped to
+// what moves (character, layers, target and flying layers included)
+async function exportGif() {
+  if (!skill) return;
+  const z = zoom(), W = stage.width, H = stage.height, px = W * PIVOT[0], py = H * PIVOT[1], n = contentTicks(), flip = $('#optFlip').checked;
+  const c = canvas(W, H), g = c.getContext('2d', {willReadFrequently: true});
+  const scene = (tk, bg) => {
+    g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, W, H);
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+    if (bg) {
+      const bm = $('#bgMode').value;
+      if (bm !== 'map' || !bgImg) { g.fillStyle = bm === 'light' ? '#d9cfa3' : '#25302a'; g.fillRect(0, 0, W, H); }
+      else { const sw = W / z, sh = H / z; g.drawImage(bgImg, (bgImg.width - sw) / 2, (bgImg.height - sh) / 2, sw, sh, 0, 0, W, H); }
+    }
+    g.save(); g.translate(px, py); if (flip) g.scale(-1, 1); drawScene(g, tk, z, $('#optRef').checked); g.restore();
+  };
+  let bb = null;   // the union of everything drawn, over every tick
+  for (let tk = 0; tk < n; tk++) { scene(tk, false); const b = alphaBox(c, 3); if (b) bb = bb ? [Math.min(bb[0], b[0]), Math.min(bb[1], b[1]), Math.max(bb[2], b[2]), Math.max(bb[3], b[3])] : b; }
+  if (!bb) throw new Error('Không có gì để xuất');
+  const m = 12, x0 = Math.max(0, bb[0] - m), y0 = Math.max(0, bb[1] - m), w = Math.min(W, bb[2] + m) - x0, h = Math.min(H, bb[3] + m) - y0, frames = [];
+  for (let tk = 0; tk < n; tk++) { scene(tk, true); frames.push(g.getImageData(x0, y0, w, h).data); if (tk % 8 === 7) await new Promise(r => setTimeout(r, 0)); }
+  const delays = frames.map((_, k) => [3, 3, 4][k % 3]);   // 30 frames a second on average
+  return {blob: encodeGIF(frames, w, h, delays), w, h, n};
+}
+$('#btnGif').onclick = e => busy(e.target, async () => {
+  const r = await exportGif(); if (!r) return;
+  const name = `${skill.key}.gif`;
+  if (downloads) {
+    try { await downloads.save({filename: name, data: r.blob}); toast(`Đã xuất GIF ${r.w}×${r.h}, ${r.n} frame`); }
+    catch (err) { if (err.code !== 'declined') throw new Error('Không tải được: ' + (err.message || err.code)); }
+  } else { const a = document.createElement('a'); a.href = URL.createObjectURL(r.blob); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); toast(`Đã xuất GIF ${r.w}×${r.h}, ${r.n} frame`); }
+  window.LAST_GIF = r.blob;
 });
 
 // ---------------------------------------------------------------- open a skill (character + pose)
