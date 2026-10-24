@@ -3,7 +3,7 @@
  "hero": "holy_commander",
  "states": {
   "attack": {
-   "clip": "raw/attack_side_attack_t04.mp4",
+   "clip": "source/video/attack_side_attack_t04.mp4",
    "fps": 15,
    "loop": false,
    "keep": [
@@ -50,7 +50,7 @@
    "savedAt": "2026-10-20T10:03:48.989Z"
   },
   "banner": {
-   "clip": "raw/skill_side_skill_holy_banner_v4_t02.mp4",
+   "clip": "source/video/skill_side_skill_holy_banner_v4_t02.mp4",
    "fps": 15,
    "loop": false,
    "keep": [
@@ -139,7 +139,7 @@
    "savedAt": "2026-10-20T10:19:06.826Z"
   },
   "charge": {
-   "clip": "raw/skill_side_skill_charge_v4_t01.mp4",
+   "clip": "source/video/skill_side_skill_charge_v4_t01.mp4",
    "fps": 15,
    "loop": false,
    "keep": [
@@ -218,7 +218,7 @@
    "savedAt": "2026-10-20T10:18:26.526Z"
   },
   "death": {
-   "clip": "raw/death_side_death_t01.mp4",
+   "clip": "source/video/death_side_death_t01.mp4",
    "fps": 15,
    "loop": false,
    "keep": [
@@ -293,7 +293,7 @@
    "savedAt": "2026-10-20T10:03:46.392Z"
   },
   "levelup": {
-   "clip": "raw/levelup_side_extra_v2_t01.mp4",
+   "clip": "source/video/levelup_side_extra_v2_t01.mp4",
    "fps": 15,
    "loop": false,
    "keep": [
@@ -358,7 +358,7 @@
    "savedAt": "2026-10-20T10:15:53.369Z"
   },
   "respawn": {
-   "clip": "raw/respawn_side_rise_t01.mp4",
+   "clip": "source/video/respawn_side_rise_t01.mp4",
    "fps": 15,
    "loop": false,
    "keep": [
@@ -429,7 +429,7 @@
    "savedAt": "2026-10-20T10:03:42.558Z"
   },
   "slash": {
-   "clip": "raw/skill_side_skill_radiant_slash_v2_t01.mp4",
+   "clip": "source/video/skill_side_skill_radiant_slash_v2_t01.mp4",
    "fps": 15,
    "loop": false,
    "keep": [

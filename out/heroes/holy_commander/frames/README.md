@@ -4,8 +4,8 @@ Thánh Kỵ Sĩ Chỉ Huy, hero cận chiến cỡ M. Mọi frame đã export, �
 Chưa có chỉ số nhân vật (stats), và clip respawn chưa được user duyệt (xem "Còn mở").
 
 ## Cần copy gì
-`meta.json`, `export_manifest.json`, các thư mục state (`idle/ move/ attack/ death/ spawn/ level/ skill/`), `fx/levelup/`, `fx/radiant_slash/`, `ui/icon/`, và (tuỳ chọn) ảnh tĩnh ở `design/`.
-Không cần: `raw/`, `review/`, `fx/*.py`, `brief.md`, `history.md`, `export_recipe.json` (chỉ để tái lập trong repo này).
+`meta.json`, `export_manifest.json`, các thư mục state (`idle/ move/ attack/ death/ spawn/ level/ skill/`), `frames/fx/levelup/`, `frames/fx/radiant_slash/`, `frames/icon/`, và (tuỳ chọn) ảnh tĩnh ở `source/design/`.
+Không cần: `source/video/`, `review/`, `fx/*.py`, `brief.md`, `history.md`, `export_recipe.json` (chỉ để tái lập trong repo này).
 
 ## Định dạng
 - Mỗi state là một thư mục `<loại>/<tên>/` gồm `frames/@1x/*.png` (176x140), `frames/@2x/*.png` (352x280), `sheet.png` (băng ngang @2x), `preview.gif`.
@@ -19,23 +19,23 @@ Không cần: `raw/`, `review/`, `fx/*.py`, `brief.md`, `history.md`, `export_re
 ## Các state
 | State (`sheet`) | Thư mục | Hình | Thời gian | hit | Ghi chú |
 |---|---|---|---|---|---|
-| idle_side | idle/idle_side | 1 | - | - | đứng yên (master) |
-| run_side | move/run_side | 8 | 0,53 s lặp | - | |
-| attack_side | attack/attack_side | 18 | 1,20 s | 10 | vệt chém trắng nằm trong frame |
-| death_side | death/death_side | 32 | 2,13 s | - | nằm yên ở hình cuối |
-| respawn_side | spawn/respawn_side | 30 | 2,00 s | - | quỳ xám, hồi màu, đứng lên; **chờ user duyệt** |
-| levelup_side | level/levelup_side | 27 | 1,80 s | 13 | + fx `levelup` |
-| skill_charge_side | skill/skill_charge_side | 34 | 2,27 s | - | skill 1; lửa nằm trong frame; vòng lửa lớn là lỗi đã biết |
-| skill_holy_banner_side | skill/skill_holy_banner_side | 39 | 2,60 s | 18 | skill 2; ripple nằm trong frame |
-| skill_radiant_slash_side | skill/skill_radiant_slash_side | 43 | 2,87 s | 27 | skill 3; + fx `radiant_slash` |
-| icon | ui/icon | 1 | - | - | 128x128 (@2x 256x256) |
+| idle_side | frames/idle_side | 1 | - | - | đứng yên (master) |
+| run_side | frames/run_side | 8 | 0,53 s lặp | - | |
+| attack_side | frames/attack_side | 18 | 1,20 s | 10 | vệt chém trắng nằm trong frame |
+| death_side | frames/death_side | 32 | 2,13 s | - | nằm yên ở hình cuối |
+| respawn_side | frames/respawn_side | 30 | 2,00 s | - | quỳ xám, hồi màu, đứng lên; **chờ user duyệt** |
+| levelup_side | frames/levelup_side | 27 | 1,80 s | 13 | + fx `levelup` |
+| skill_charge_side | frames/skill_charge_side | 34 | 2,27 s | - | skill 1; lửa nằm trong frame; vòng lửa lớn là lỗi đã biết |
+| skill_holy_banner_side | frames/skill_holy_banner_side | 39 | 2,60 s | 18 | skill 2; ripple nằm trong frame |
+| skill_radiant_slash_side | frames/skill_radiant_slash_side | 43 | 2,87 s | 27 | skill 3; + fx `radiant_slash` |
+| icon | frames/icon | 1 | - | - | 128x128 (@2x 256x256) |
 
 ## Lớp hiệu ứng (fx) riêng
 **Xem fx ở đâu:** thư mục `preview.gif` của state levelup và slash chỉ có **thân**. Hiệu ứng nằm trong mục riêng `fx/`, mỗi fx có `preview_fx_only.gif` (chỉ lớp fx), `preview_with_body.gif` (fx và thân),
 `sheet.png` (8 hình fx). Cạnh `preview.gif` của state có thêm `preview_with_fx.gif` (thân + fx). Đây chỉ là bản xem (nền tối, screen); game dùng các PNG `back/` và `front/`.
 Các hình đầu của fx để trống vì hiệu ứng chỉ bắt đầu khi động tác tới nhịp đó (levelup từ hình đấm lên, slash từ lúc kéo kiếm sát người).
 
-Hai skill có lớp fx tách khỏi thân: `fx/levelup/` (hào quang xung nhịp) và `fx/radiant_slash/` (tia sáng bắn từ mũi kiếm). Mỗi fx có `back/` (vẽ **sau** thân) và `front/` (vẽ **trước** thân),
+Hai skill có lớp fx tách khỏi thân: `frames/fx/levelup/` (hào quang xung nhịp) và `frames/fx/radiant_slash/` (tia sáng bắn từ mũi kiếm). Mỗi fx có `back/` (vẽ **sau** thân) và `front/` (vẽ **trước** thân),
 mỗi thư mục `frames/@1x` và `@2x`, số hình **bằng đúng** số hình thân của state, và `fx.json`.
 - Đặt ảnh fx sao cho **pivot của nó** (`pivot_1x` hoặc `pivot_2x` trong `fx.json`) trùng pivot của hero. Hình n của fx đi với hình n của thân. Kích thước fx khác ô hero (tia slash dài hơn ô).
 - Ánh sáng lưu kiểu **cộng sáng trên nền đen**: màu = màu ánh sáng, alpha = độ mạnh (kênh lớn nhất), alpha thẳng. Nên pha trộn bằng **screen hoặc additive** nếu engine có; alpha-over thường vẫn dùng được nhưng hơi tối hơn trên nền sáng.

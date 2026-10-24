@@ -50,13 +50,13 @@
    "duration_ms": 533,
    "loop": true,
    "hit_frame_1based": null,
-   "folder": "move/run_side",
-   "files_1x": "move/run_side/frames/@1x/hero_holy_commander_run_side_01..08.png",
-   "files_2x": "move/run_side/frames/@2x/hero_holy_commander_run_side_01..08.png",
-   "sheet_2x": "move/run_side/sheet.png",
-   "preview": "move/run_side/preview.gif",
+   "folder": "frames/run_side",
+   "files_1x": "frames/run_side/frames/@1x/hero_holy_commander_run_side_01..08.png",
+   "files_2x": "frames/run_side/frames/@2x/hero_holy_commander_run_side_01..08.png",
+   "sheet_2x": "frames/run_side/sheet.png",
+   "preview": "frames/run_side/preview.gif",
    "sheet_sha256_16": "7336eb889f513412",
-   "source_clip": "raw/run_side_t01.mp4"
+   "source_clip": "source/video/run_side_t01.mp4"
   },
   {
    "id": "idle_side",
@@ -69,13 +69,13 @@
    "duration_ms": 1000,
    "loop": true,
    "hit_frame_1based": null,
-   "folder": "idle/idle_side",
-   "files_1x": "idle/idle_side/frames/@1x/hero_holy_commander_idle_side_01..01.png",
-   "files_2x": "idle/idle_side/frames/@2x/hero_holy_commander_idle_side_01..01.png",
-   "sheet_2x": "idle/idle_side/sheet.png",
-   "preview": "idle/idle_side/preview.gif",
+   "folder": "frames/idle_side",
+   "files_1x": "frames/idle_side/frames/@1x/hero_holy_commander_idle_side_01..01.png",
+   "files_2x": "frames/idle_side/frames/@2x/hero_holy_commander_idle_side_01..01.png",
+   "sheet_2x": "frames/idle_side/sheet.png",
+   "preview": "frames/idle_side/preview.gif",
    "sheet_sha256_16": "4dc0f22baed65581",
-   "source_clip": "raw/run_side_t01.mp4"
+   "source_clip": "source/video/run_side_t01.mp4"
   },
   {
    "id": "attack_side",
@@ -88,13 +88,13 @@
    "duration_ms": 1200,
    "loop": false,
    "hit_frame_1based": 10,
-   "folder": "attack/attack_side",
-   "files_1x": "attack/attack_side/frames/@1x/hero_holy_commander_attack_side_01..18.png",
-   "files_2x": "attack/attack_side/frames/@2x/hero_holy_commander_attack_side_01..18.png",
-   "sheet_2x": "attack/attack_side/sheet.png",
-   "preview": "attack/attack_side/preview.gif",
+   "folder": "frames/attack_side",
+   "files_1x": "frames/attack_side/frames/@1x/hero_holy_commander_attack_side_01..18.png",
+   "files_2x": "frames/attack_side/frames/@2x/hero_holy_commander_attack_side_01..18.png",
+   "sheet_2x": "frames/attack_side/sheet.png",
+   "preview": "frames/attack_side/preview.gif",
    "sheet_sha256_16": "adf43fd82d350d27",
-   "source_clip": "raw/attack_side_attack_t04.mp4",
+   "source_clip": "source/video/attack_side_attack_t04.mp4",
    "frame_recipe": {
     "kept_clip_frames": [
      0,
@@ -131,13 +131,13 @@
    "duration_ms": 2133,
    "loop": false,
    "hit_frame_1based": null,
-   "folder": "death/death_side",
-   "files_1x": "death/death_side/frames/@1x/hero_holy_commander_death_side_01..32.png",
-   "files_2x": "death/death_side/frames/@2x/hero_holy_commander_death_side_01..32.png",
-   "sheet_2x": "death/death_side/sheet.png",
-   "preview": "death/death_side/preview.gif",
+   "folder": "frames/death_side",
+   "files_1x": "frames/death_side/frames/@1x/hero_holy_commander_death_side_01..32.png",
+   "files_2x": "frames/death_side/frames/@2x/hero_holy_commander_death_side_01..32.png",
+   "sheet_2x": "frames/death_side/sheet.png",
+   "preview": "frames/death_side/preview.gif",
    "sheet_sha256_16": "db78183fdaa20adc",
-   "source_clip": "raw/death_side_death_t01.mp4",
+   "source_clip": "source/video/death_side_death_t01.mp4",
    "frame_recipe": {
     "kept_clip_frames": [
      0,
@@ -188,13 +188,13 @@
    "duration_ms": 2267,
    "loop": false,
    "hit_frame_1based": null,
-   "folder": "skill/skill_charge_side",
-   "files_1x": "skill/skill_charge_side/frames/@1x/hero_holy_commander_skill_charge_side_01..34.png",
-   "files_2x": "skill/skill_charge_side/frames/@2x/hero_holy_commander_skill_charge_side_01..34.png",
-   "sheet_2x": "skill/skill_charge_side/sheet.png",
-   "preview": "skill/skill_charge_side/preview.gif",
+   "folder": "frames/skill_charge_side",
+   "files_1x": "frames/skill_charge_side/frames/@1x/hero_holy_commander_skill_charge_side_01..34.png",
+   "files_2x": "frames/skill_charge_side/frames/@2x/hero_holy_commander_skill_charge_side_01..34.png",
+   "sheet_2x": "frames/skill_charge_side/sheet.png",
+   "preview": "frames/skill_charge_side/preview.gif",
    "sheet_sha256_16": "12bab99b49181e68",
-   "source_clip": "raw/skill_side_skill_charge_v4_t01.mp4",
+   "source_clip": "source/video/skill_side_skill_charge_v4_t01.mp4",
    "known_issues": [
     "vòng lửa lớn ở khoảng 2/3 clip (lỗi user đã nhận, giữ lại)",
     "hình lạ cạnh vai ở đầu clip"
@@ -251,13 +251,13 @@
    "duration_ms": 2000,
    "loop": false,
    "hit_frame_1based": null,
-   "folder": "spawn/respawn_side",
-   "files_1x": "spawn/respawn_side/frames/@1x/hero_holy_commander_respawn_side_01..30.png",
-   "files_2x": "spawn/respawn_side/frames/@2x/hero_holy_commander_respawn_side_01..30.png",
-   "sheet_2x": "spawn/respawn_side/sheet.png",
-   "preview": "spawn/respawn_side/preview.gif",
+   "folder": "frames/respawn_side",
+   "files_1x": "frames/respawn_side/frames/@1x/hero_holy_commander_respawn_side_01..30.png",
+   "files_2x": "frames/respawn_side/frames/@2x/hero_holy_commander_respawn_side_01..30.png",
+   "sheet_2x": "frames/respawn_side/sheet.png",
+   "preview": "frames/respawn_side/preview.gif",
    "sheet_sha256_16": "a750b338f280a735",
-   "source_clip": "raw/respawn_side_rise_t01.mp4",
+   "source_clip": "source/video/respawn_side_rise_t01.mp4",
    "note": "clip rise t01 chưa được user duyệt",
    "frame_recipe": {
     "kept_clip_frames": [
@@ -299,7 +299,7 @@
   {
    "id": "levelup_side",
    "label": "Lên cấp",
-   "what": "hạ người lấy đà, đấm một tay lên trời, giữ pose; ánh sáng là lớp fx riêng (fx/levelup)",
+   "what": "hạ người lấy đà, đấm một tay lên trời, giữ pose; ánh sáng là lớp fx riêng (frames/fx/levelup)",
    "status": "final",
    "frames": 27,
    "fps": 15,
@@ -307,13 +307,13 @@
    "duration_ms": 1800,
    "loop": false,
    "hit_frame_1based": 13,
-   "folder": "level/levelup_side",
-   "files_1x": "level/levelup_side/frames/@1x/hero_holy_commander_levelup_side_01..27.png",
-   "files_2x": "level/levelup_side/frames/@2x/hero_holy_commander_levelup_side_01..27.png",
-   "sheet_2x": "level/levelup_side/sheet.png",
-   "preview": "level/levelup_side/preview.gif",
+   "folder": "frames/levelup_side",
+   "files_1x": "frames/levelup_side/frames/@1x/hero_holy_commander_levelup_side_01..27.png",
+   "files_2x": "frames/levelup_side/frames/@2x/hero_holy_commander_levelup_side_01..27.png",
+   "sheet_2x": "frames/levelup_side/sheet.png",
+   "preview": "frames/levelup_side/preview.gif",
    "sheet_sha256_16": "e2d2b4005fbd71dc",
-   "source_clip": "raw/levelup_side_extra_v2_t01.mp4",
+   "source_clip": "source/video/levelup_side_extra_v2_t01.mp4",
    "fx": "levelup",
    "frame_recipe": {
     "kept_clip_frames": [
@@ -360,13 +360,13 @@
    "duration_ms": 2600,
    "loop": false,
    "hit_frame_1based": 18,
-   "folder": "skill/skill_holy_banner_side",
-   "files_1x": "skill/skill_holy_banner_side/frames/@1x/hero_holy_commander_skill_holy_banner_side_01..39.png",
-   "files_2x": "skill/skill_holy_banner_side/frames/@2x/hero_holy_commander_skill_holy_banner_side_01..39.png",
-   "sheet_2x": "skill/skill_holy_banner_side/sheet.png",
-   "preview": "skill/skill_holy_banner_side/preview.gif",
+   "folder": "frames/skill_holy_banner_side",
+   "files_1x": "frames/skill_holy_banner_side/frames/@1x/hero_holy_commander_skill_holy_banner_side_01..39.png",
+   "files_2x": "frames/skill_holy_banner_side/frames/@2x/hero_holy_commander_skill_holy_banner_side_01..39.png",
+   "sheet_2x": "frames/skill_holy_banner_side/sheet.png",
+   "preview": "frames/skill_holy_banner_side/preview.gif",
    "sheet_sha256_16": "d7bd2764082c5c5f",
-   "source_clip": "raw/skill_side_skill_holy_banner_v4_t02.mp4",
+   "source_clip": "source/video/skill_side_skill_holy_banner_v4_t02.mp4",
    "known_issues": [
     "một khối nón sáng mờ phủ lên hero trong vài hình lúc găm kiếm",
     "vòng sóng chạy ra mép ô"
@@ -420,7 +420,7 @@
   {
    "id": "skill_radiant_slash_side",
    "label": "Skill 3: Chém sáng (tia thánh xuyên)",
-   "what": "rút kiếm ngang ngực, kéo sát người, bước dài đâm thẳng, giữ pose; tia sáng là lớp fx riêng (fx/radiant_slash)",
+   "what": "rút kiếm ngang ngực, kéo sát người, bước dài đâm thẳng, giữ pose; tia sáng là lớp fx riêng (frames/fx/radiant_slash)",
    "status": "final",
    "frames": 43,
    "fps": 15,
@@ -428,13 +428,13 @@
    "duration_ms": 2867,
    "loop": false,
    "hit_frame_1based": 27,
-   "folder": "skill/skill_radiant_slash_side",
-   "files_1x": "skill/skill_radiant_slash_side/frames/@1x/hero_holy_commander_skill_radiant_slash_side_01..43.png",
-   "files_2x": "skill/skill_radiant_slash_side/frames/@2x/hero_holy_commander_skill_radiant_slash_side_01..43.png",
-   "sheet_2x": "skill/skill_radiant_slash_side/sheet.png",
-   "preview": "skill/skill_radiant_slash_side/preview.gif",
+   "folder": "frames/skill_radiant_slash_side",
+   "files_1x": "frames/skill_radiant_slash_side/frames/@1x/hero_holy_commander_skill_radiant_slash_side_01..43.png",
+   "files_2x": "frames/skill_radiant_slash_side/frames/@2x/hero_holy_commander_skill_radiant_slash_side_01..43.png",
+   "sheet_2x": "frames/skill_radiant_slash_side/sheet.png",
+   "preview": "frames/skill_radiant_slash_side/preview.gif",
    "sheet_sha256_16": "871515fea06a979d",
-   "source_clip": "raw/skill_side_skill_radiant_slash_v2_t01.mp4",
+   "source_clip": "source/video/skill_side_skill_radiant_slash_v2_t01.mp4",
    "known_issues": [
     "thân hơi xoay về camera khi kéo kiếm",
     "kiếm vung chéo lên khi rút"
@@ -501,13 +501,13 @@
    "duration_ms": 83,
    "loop": true,
    "hit_frame_1based": null,
-   "folder": "ui/icon",
-   "files_1x": "ui/icon/frames/@1x/hero_holy_commander_icon_01..01.png",
-   "files_2x": "ui/icon/frames/@2x/hero_holy_commander_icon_01..01.png",
-   "sheet_2x": "ui/icon/sheet.png",
-   "preview": "ui/icon/preview.gif",
+   "folder": "frames/icon",
+   "files_1x": "frames/icon/frames/@1x/hero_holy_commander_icon_01..01.png",
+   "files_2x": "frames/icon/frames/@2x/hero_holy_commander_icon_01..01.png",
+   "sheet_2x": "frames/icon/sheet.png",
+   "preview": "frames/icon/preview.gif",
    "sheet_sha256_16": "5685acf7df009f6a",
-   "source_clip": "design/icon_v01.png"
+   "source_clip": "source/design/icon_v01.png"
   }
  ],
  "fx": [
@@ -533,15 +533,15 @@
     39,
     88
    ],
-   "back_2x": "fx/levelup/back/frames/@2x/hero_holy_commander_fx_levelup_back_01..27.png",
-   "front_2x": "fx/levelup/front/frames/@2x/hero_holy_commander_fx_levelup_front_01..27.png",
-   "back_1x": "fx/levelup/back/frames/@1x/hero_holy_commander_fx_levelup_back_01..27.png",
-   "front_1x": "fx/levelup/front/frames/@1x/hero_holy_commander_fx_levelup_front_01..27.png",
+   "back_2x": "frames/fx/levelup/back/frames/@2x/hero_holy_commander_fx_levelup_back_01..27.png",
+   "front_2x": "frames/fx/levelup/front/frames/@2x/hero_holy_commander_fx_levelup_front_01..27.png",
+   "back_1x": "frames/fx/levelup/back/frames/@1x/hero_holy_commander_fx_levelup_back_01..27.png",
+   "front_1x": "frames/fx/levelup/front/frames/@1x/hero_holy_commander_fx_levelup_front_01..27.png",
    "previews": {
-    "fx_only_gif": "fx/levelup/preview_fx_only.gif",
-    "with_body_gif": "fx/levelup/preview_with_body.gif",
-    "sheet": "fx/levelup/sheet.png",
-    "state_folder_gif": "level/levelup_side/preview_with_fx.gif",
+    "fx_only_gif": "frames/fx/levelup/preview_fx_only.gif",
+    "with_body_gif": "frames/fx/levelup/preview_with_body.gif",
+    "sheet": "frames/fx/levelup/sheet.png",
+    "state_folder_gif": "frames/levelup_side/preview_with_fx.gif",
     "note": "previews only (dark ground, screen blend); the game uses the PNG layers"
    },
    "how": "draw back behind the body, front over it; put the fx image so its pivot is on the hero pivot; frame n goes with body frame n of for_state"
@@ -568,15 +568,15 @@
     54,
     81
    ],
-   "back_2x": "fx/radiant_slash/back/frames/@2x/hero_holy_commander_fx_radiant_slash_back_01..43.png",
-   "front_2x": "fx/radiant_slash/front/frames/@2x/hero_holy_commander_fx_radiant_slash_front_01..43.png",
-   "back_1x": "fx/radiant_slash/back/frames/@1x/hero_holy_commander_fx_radiant_slash_back_01..43.png",
-   "front_1x": "fx/radiant_slash/front/frames/@1x/hero_holy_commander_fx_radiant_slash_front_01..43.png",
+   "back_2x": "frames/fx/radiant_slash/back/frames/@2x/hero_holy_commander_fx_radiant_slash_back_01..43.png",
+   "front_2x": "frames/fx/radiant_slash/front/frames/@2x/hero_holy_commander_fx_radiant_slash_front_01..43.png",
+   "back_1x": "frames/fx/radiant_slash/back/frames/@1x/hero_holy_commander_fx_radiant_slash_back_01..43.png",
+   "front_1x": "frames/fx/radiant_slash/front/frames/@1x/hero_holy_commander_fx_radiant_slash_front_01..43.png",
    "previews": {
-    "fx_only_gif": "fx/radiant_slash/preview_fx_only.gif",
-    "with_body_gif": "fx/radiant_slash/preview_with_body.gif",
-    "sheet": "fx/radiant_slash/sheet.png",
-    "state_folder_gif": "skill/skill_radiant_slash_side/preview_with_fx.gif",
+    "fx_only_gif": "frames/fx/radiant_slash/preview_fx_only.gif",
+    "with_body_gif": "frames/fx/radiant_slash/preview_with_body.gif",
+    "sheet": "frames/fx/radiant_slash/sheet.png",
+    "state_folder_gif": "frames/skill_radiant_slash_side/preview_with_fx.gif",
     "note": "previews only (dark ground, screen blend); the game uses the PNG layers"
    },
    "how": "draw back behind the body, front over it; put the fx image so its pivot is on the hero pivot; frame n goes with body frame n of for_state"
@@ -585,43 +585,43 @@
  "stills": [
   {
    "id": "master",
-   "file": "design/master_v07.png",
+   "file": "source/design/master_v07.png",
    "role": "ảnh chốt = idle"
   },
   {
    "id": "icon",
-   "file": "design/icon_v01.png",
+   "file": "source/design/icon_v01.png",
    "role": "icon gốc"
   },
   {
    "id": "pose_respawn",
-   "file": "design/pose_respawn_v02.png",
+   "file": "source/design/pose_respawn_v02.png",
    "role": "ảnh đầu của respawn"
   },
   {
    "id": "pose_levelup",
-   "file": "design/pose_levelup_v02.png",
+   "file": "source/design/pose_levelup_v02.png",
    "role": "đỉnh cú đấm levelup"
   },
   {
    "id": "pose_charge",
-   "file": "design/pose_skill_charge_v01.png",
+   "file": "source/design/pose_skill_charge_v01.png",
    "role": "pose skill 1"
   },
   {
    "id": "pose_holy_banner_old",
-   "file": "design/pose_skill_holy_banner_v01.png",
+   "file": "source/design/pose_skill_holy_banner_v01.png",
    "role": "thiết kế cũ của skill 2 (không dùng cho bản chốt)"
   },
   {
    "id": "pose_radiant_slash_old",
-   "file": "design/pose_skill_radiant_slash_v01.png",
+   "file": "source/design/pose_skill_radiant_slash_v01.png",
    "role": "thiết kế cũ của skill 3 (không dùng cho bản chốt)"
   }
  ],
  "reproduce": {
   "recipes": "export_recipe.json",
-  "source_clips": "raw/*.mp4",
+  "source_clips": "source/video/*.mp4",
   "tools": [
    "tools/frame_tuner/apply_recipe.py",
    "tools/frame_tuner/export_fx.py",

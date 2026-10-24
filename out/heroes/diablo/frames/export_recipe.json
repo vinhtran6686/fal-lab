@@ -4,7 +4,7 @@
  "states": {
   "attack": {
    "sheet": "attack_side",
-   "clip": "raw/attack_side_attack_t02.mp4",
+   "clip": "source/video/attack_side_attack_t02.mp4",
    "fps": 15,
    "keep": [
     0,
@@ -62,7 +62,7 @@
   },
   "death": {
    "sheet": "death_side",
-   "clip": "raw/death_side_t01.mp4",
+   "clip": "source/video/death_side_t01.mp4",
    "fps": 15,
    "keep": [
     0,
@@ -129,7 +129,7 @@
   },
   "respawn": {
    "sheet": "respawn_side",
-   "clip": "raw/respawn_side_t01.mp4",
+   "clip": "source/video/respawn_side_t01.mp4",
    "fps": 15,
    "keep": [
     0,
@@ -225,7 +225,7 @@
   },
   "slam": {
    "sheet": "skill_flame_slam_side",
-   "clip": "raw/skill_flame_slam_side_t02.mp4",
+   "clip": "source/video/skill_flame_slam_side_t02.mp4",
    "fps": 15,
    "keep": [
     0,
@@ -319,7 +319,7 @@
   },
   "breath": {
    "sheet": "skill_fire_breath_side",
-   "clip": "raw/skill_fire_breath_side_t01.mp4",
+   "clip": "source/video/skill_fire_breath_side_t01.mp4",
    "fps": 15,
    "keep": [
     0,
@@ -409,7 +409,7 @@
   },
   "run": {
    "sheet": "run_side",
-   "clip": "raw/run_side_t04.mp4",
+   "clip": "source/video/run_side_t04.mp4",
    "fps": 24,
    "keep": [
     52,

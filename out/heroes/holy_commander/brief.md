@@ -41,9 +41,9 @@
 | attack_side | video-sprite | one-shot | ✅ exported | 18 hình theo công thức user (1,20 s), hit 10, canvas 176x140 |
 | death_side | video-sprite | one-shot | ✅ exported | 32 hình theo công thức user (2,13 s) |
 | respawn_side | video-sprite | one-shot | ✅ exported (chờ user duyệt clip) | `rise` t01, 30 hình, 2,00 s, cỡ thân đo theo hình cuối (đứng) để khớp idle (`--rest-last`). Chưa có fx_respawn |
-| levelup_side | video-sprite | one-shot | ✅ exported | 27 hình, 1,80 s, hit 13; fx `fx/levelup` (v03) xuất thành lớp riêng back/front |
+| levelup_side | video-sprite | one-shot | ✅ exported | 27 hình, 1,80 s, hit 13; fx `frames/fx/levelup` (v03) xuất thành lớp riêng back/front |
 | skill_holy_banner_side | video-sprite | one-shot | ✅ exported | 39 hình, 2,60 s, hit 18; take chốt `v4_t02` (ripple do model vẽ nằm trong frame) |
-| skill_radiant_slash_side | video-sprite | one-shot | ✅ exported | 43 hình, 2,87 s, hit 27; thân sạch `v2_t01` + fx `fx/radiant_slash` (tia Python) lớp riêng |
+| skill_radiant_slash_side | video-sprite | one-shot | ✅ exported | 43 hình, 2,87 s, hit 27; thân sạch `v2_t01` + fx `frames/fx/radiant_slash` (tia Python) lớp riêng |
 | skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 34 hình theo công thức user (2,27 s); vòng lửa lớn là lỗi đã biết |
 | fx_holy_banner | fal-image vfx | hiệu ứng | ✅ v01 | cờ hiệu, asset riêng |
 | fx_radiant_slash | fal-image vfx | hiệu ứng | ✅ v01 | vệt chém vàng, asset riêng |
@@ -91,7 +91,7 @@ master_v07 approved by user ("v07 đẹp nhất, chốt"). `{design}` and `{idle
 **Vì sao Python là mặc định**
 - Miễn phí và chạy lại vô hạn: chỉnh màu, độ đậm, nhịp, kích thước là sửa tham số, không phải quay lại clip. Clip gen video tốn ~0.045 USD/take (3 s, h3-max-turbo) và mỗi lần muốn đổi là một take mới.
 - Ổn định: clip thân luôn sạch (không vòng lớn, không zoom, gate `area`/`identity` không bị fx làm sai). Fx vẽ vào clip đã gây vòng lửa ở charge_v4 và zoom 2.4-2.9x ở ba skill cũ.
-- Tái lập được: nguồn là clip trong `raw/` + một script; không cần `.work`.
+- Tái lập được: nguồn là clip trong `source/video/` + một script; không cần `.work`.
 - Khớp cách game tham chiếu làm: fx là lớp riêng, thân không đổi.
 
 **Khi nào mới gen video + cắt frame**
@@ -103,7 +103,7 @@ master_v07 approved by user ("v07 đẹp nhất, chốt"). `{design}` and `{idle
 **Cách làm (Python)**
 1. Quay clip thân sạch: prompt không mời hiệu ứng nào, có câu "locked tripod" (clip A của levelup: `raw/levelup_side_extra_v2_t01`).
 2. Tách **toàn bộ** frame bằng `ffmpeg fps=15` và key nền bằng `sprite_pack.key_out()`. Không bỏ frame nào (lỗi đã gặp: script chỉ ghép `[:45]` trên 46 frame nên mất frame cuối).
-3. Vẽ fx **theo từng frame** bằng `fx/levelup_variants.py` (numpy + PIL), thứ tự lớp: lớp sau thân, thân, lớp trước thân.
+3. Vẽ fx **theo từng frame** bằng `source/fx/levelup_variants.py` (numpy + PIL), thứ tự lớp: lớp sau thân, thân, lớp trước thân.
 4. Ánh sáng dùng chế độ **screen** (màu sáng cộng lên nền), lớp bóng/đục dùng chế độ thường. Tất cả bằng màu + độ trong suốt.
 5. Export: neo chân vào pivot (0.5, 0.88), canvas 176x140, body 111@2x như các state khác; fx rộng hơn canvas thì cắt theo canvas hoặc xuất riêng như `fx_layers`.
 
@@ -115,7 +115,7 @@ master_v07 approved by user ("v07 đẹp nhất, chốt"). `{design}` and `{idle
 - Nhịp ăn khớp động tác: chớp/bùng ở frame nắm đấm lên đỉnh (frame ~22 của clip 46 frame).
 - Giữ fx trong canvas; cú đấm đã sát mép trên khung nên dải sáng trên đầu mờ dần chứ không dừng gắt.
 
-**Trạng thái**: 10 phiên bản Python của levelup (`fx/levelup_variants.py`, v01-v10). User chọn **v03** (mục bên dưới); v02 và v04 không đẹp (bỏ), các bản còn lại "cực đẹp" và giữ làm kho ý tưởng. Bản A1 (`fx/levelup.json` qua `fx_layers`) bị loại vì thô. **Công thức làm từng bước, bộ công cụ và các lỗi đã gặp: `docs/python-fx-recipe.md`.**
+**Trạng thái**: 10 phiên bản Python của levelup (`source/fx/levelup_variants.py`, v01-v10). User chọn **v03** (mục bên dưới); v02 và v04 không đẹp (bỏ), các bản còn lại "cực đẹp" và giữ làm kho ý tưởng. Bản A1 (`fx/levelup.json` qua `fx_layers`) bị loại vì thô. **Công thức làm từng bước, bộ công cụ và các lỗi đã gặp: `docs/python-fx-recipe.md`.**
 
 ## Levelup fx v03, "hào quang xung nhịp" (chốt 2026-10-20)
 
@@ -123,11 +123,11 @@ master_v07 approved by user ("v07 đẹp nhất, chốt"). `{design}` and `{idle
 
 **Ý tưởng**: ba đợt hào quang ánh sáng lan ra từ chính hình người (không phải hình hộp hay vòng chồng lên), lúc nắm đấm lên trời; ánh sáng viền ngay mép thân, chớp trắng ở nắm đấm, quầng sáng ấm dưới chân. Hợp ý user: "ánh sáng chớp quanh người theo nhịp vung tay".
 
-**Thân (clip A)**: `raw/levelup_side_extra_v2_t01.mp4`, 3 s, tách 15 fps = 46 hình; đứng, hạ người, đấm lên trời (đỉnh ở **frame 22**), giữ pose. Ảnh đầu master_v07, ảnh cuối `pose_levelup_v02`.
+**Thân (clip A)**: `source/video/levelup_side_extra_v2_t01.mp4`, 3 s, tách 15 fps = 46 hình; đứng, hạ người, đấm lên trời (đỉnh ở **frame 22**), giữ pose. Ảnh đầu master_v07, ảnh cuối `pose_levelup_v02`.
 
 **Số đo dùng để đặt fx** (trong khung clip 832x480): chân `(370, 453)`, chiều cao thân `425 px`, nắm đấm ở đỉnh lệch `-0.08` chiều cao thân so với chân và cao `~0.93-0.95`. Canvas vẽ 700x720, chân tại `(350, 630)`.
 
-**Các lớp, theo thứ tự** (hàm `V03` trong `fx/levelup_variants.py`; `e = env(i, 18, 24, 32, 41)`: hiện từ frame 18, đầy ở 24, giữ tới 32, tắt ở 41):
+**Các lớp, theo thứ tự** (hàm `V03` trong `source/fx/levelup_variants.py`; `e = env(i, 18, 24, 32, 41)`: hiện từ frame 18, đầy ở 24, giữ tới 32, tắt ở 41):
 | Lớp | Vị trí so với thân | Màu | Chế độ | Độ đục | Chi tiết |
 |---|---|---|---|---|---|
 | Quầng sáng dưới chân `ground(e, 0.9, 0.55)` | sau | vàng (255,201,60) | screen | 0.85 x 0.9 x e | elip rộng 0.55 chiều cao thân mỗi bên, dẹt 0.1 |
@@ -146,7 +146,7 @@ python out/heroes/holy_commander/fx/levelup_variants.py out/heroes/holy_commande
 ```
 Ra frame PNG đủ 46 hình, `v03.mp4` xem thử, `v03_peak.png`.
 
-**Đã bị thay thế, đừng dùng lại**: `fx/levelup.json` + `fx/levelup/` (bản A1 qua `fx_layers`, bị chê thô) và `fx/levelup_soft_glow.py` (A2 bản đầu có lưỡi sáng nhỏ ở đáy). Entry `fx` trong `meta.json` đã gỡ vì chưa có asset fx v03 đã export; **thêm entry `fx` cho levelup khi export v03**.
+**Đã bị thay thế, đừng dùng lại**: `fx/levelup.json` + `frames/fx/levelup/` (bản A1 qua `fx_layers`, bị chê thô) và `fx/levelup_soft_glow.py` (A2 bản đầu có lưỡi sáng nhỏ ở đáy). Entry `fx` trong `meta.json` đã gỡ vì chưa có asset fx v03 đã export; **thêm entry `fx` cho levelup khi export v03**.
 
 **Quyết định user (2026-10-20): chưa export, chỉ review đầy đủ.** Chuyển động đấm do clip thân A (model sinh) có sẵn; Python chỉ vẽ ánh sáng lên đó và đo clip để đặt fx. Nếu sau này export, việc cần làm: quyết định cách xuất lớp trong suốt (screen trên nền tối khác nền sáng; kiểm tra trên nền sáng), kiểm tra fx vừa canvas 176x140, rồi export `levelup_side` (body 111@2x, pivot (0.5, 0.88)). Không cắt frame.
 
@@ -177,7 +177,7 @@ Cùng một skill, cùng model, cùng giá (0.06 USD/clip), chất lượng đ�
 8. **Không ghim ảnh cuối** khi ảnh cuối chưa đúng tư thế bạn mô tả: ở vòng 3 chỉ dùng ảnh đầu (master), tư thế cuối theo mô tả đã đúng.
 9. Câu "locked tripod" như mọi clip.
 
-**Tham chiếu prompt chốt**: `raw/skill_side_skill_holy_banner_v4_t02.prompt.txt` (take chốt) và `v4_t01.prompt.txt` (thân sạch). Phần "Beat 1-5" là mẫu dùng lại.
+**Tham chiếu prompt chốt**: `source/video/skill_side_skill_holy_banner_v4_t02.prompt.txt` (take chốt) và `v4_t01.prompt.txt` (thân sạch). Phần "Beat 1-5" là mẫu dùng lại.
 
 **Điều model vẫn làm dù đã cấm** (cần dự trù): vệt trắng/hồng bắn ra ở chỗ vũ khí chạm đất; khối nón ánh sáng khi có ripple; nâng vũ khí cao hơn yêu cầu (mũi kiếm chạm mép trên khung); thân xoay nhẹ về camera khi giơ vũ khí. Python xoá được vệt (xem `fx/holy_banner_ripple.py`, hàm `clean`).
 
@@ -185,13 +185,13 @@ Cùng một skill, cùng model, cùng giá (0.06 USD/clip), chất lượng đ�
 
 **Kết quả**: user chốt **video 3 = thân sạch (video 1) + tia sáng vẽ bằng Python** ("hiệu ứng từ Python là đẹp nhất"). Chi phí: 2 clip x 0.06 USD (một clip thân + một clip để so với bản model vẽ tia); bản chốt chỉ cần clip thân, fx Python 0 USD. Không cắt frame, chưa export, chưa chạy gate.
 
-**Hành động** (mô tả từng bước, theo công thức ở mục "Skill 2 holy_banner"): khoá hướng nhìn sang phải; đứng idle kiếm cắm đất; rút kiếm bằng hai tay, đưa ngang ngực, mũi chỉ sang phải; gối chùng, hông sụp, hai tay kéo cán sát người, lưỡi vẫn ngang ngực; một bước dài về phía trước bên phải, chân sau thẳng, hai tay đẩy kiếm thẳng ra; giữ pose lao tới. Cấm: xoay, nhảy, vung, cử chỉ khác; chỉ rút một lần, đâm một lần. Không ghim ảnh cuối. Prompt: `raw/skill_side_skill_radiant_slash_v2_t01.prompt.txt` (thân) và `_t02.prompt.txt` (kèm tia).
+**Hành động** (mô tả từng bước, theo công thức ở mục "Skill 2 holy_banner"): khoá hướng nhìn sang phải; đứng idle kiếm cắm đất; rút kiếm bằng hai tay, đưa ngang ngực, mũi chỉ sang phải; gối chùng, hông sụp, hai tay kéo cán sát người, lưỡi vẫn ngang ngực; một bước dài về phía trước bên phải, chân sau thẳng, hai tay đẩy kiếm thẳng ra; giữ pose lao tới. Cấm: xoay, nhảy, vung, cử chỉ khác; chỉ rút một lần, đâm một lần. Không ghim ảnh cuối. Prompt: `source/video/skill_side_skill_radiant_slash_v2_t01.prompt.txt` (thân) và `_t02.prompt.txt` (kèm tia).
 
 **Kết quả quay**: mọi nhịp đọc rõ, kích thước ổn định, mũi kiếm trong khung (cách mép phải ~30 px), không có vệt splash. Lỗi nhỏ còn lại: thân hơi xoay về camera khi kéo kiếm sát người; lúc rút kiếm, kiếm vung chéo lên cao hơn mức "ngang ngực".
 
 **Số đo clip** (15 fps, 67 hình, 832x480): rút kiếm hình 6-18; kéo sát người 21-38; đâm 39-43; **duỗi hết ở hình 43**, mũi kiếm tại **(803, 202.5)**; giữ pose tới hết.
 
-**Fx Python (`fx/radiant_slash_beam.py`, canvas 1500x600, khung clip đặt tại (100, 60))**, màu + độ trong suốt, screen blend, `t = i - 43`:
+**Fx Python (`source/fx/radiant_slash_beam.py`, canvas 1500x600, khung clip đặt tại (100, 60))**, màu + độ trong suốt, screen blend, `t = i - 43`:
 | Lớp | Thời điểm | Chi tiết |
 |---|---|---|
 | Ánh sáng gom ở mũi kiếm | hình 21-38, tắt 38-41 | vàng, `radial` bán kính 70 + 40 g, độ đục 0.75 g, bám mũi kiếm đo từng hình (điểm phải nhất của hình bóng) |
@@ -213,4 +213,4 @@ Trích xuất hoàn chỉnh theo yêu cầu (repo khác sẽ dùng, không liên
 Kiểm: `python tools/frame_tuner/build_export_manifest.py` (746 file frame, đúng số lượng, kích thước, alpha, fx khớp thân).
 
 ### Xem lớp fx (2026-10-21)
-`preview.gif` của state levelup và slash chỉ có thân; fx là lớp riêng trong `fx/levelup/` và `fx/radiant_slash/`. Đã thêm bản xem: `fx/<tên>/preview_fx_only.gif`, `preview_with_body.gif`, `sheet.png` và `<state>/preview_with_fx.gif` (script `tools/frame_tuner/preview_fx.py`, gọi tự động cuối `export_fx.py`).
+`preview.gif` của state levelup và slash chỉ có thân; fx là lớp riêng trong `frames/fx/levelup/` và `frames/fx/radiant_slash/`. Đã thêm bản xem: `fx/<tên>/preview_fx_only.gif`, `preview_with_body.gif`, `sheet.png` và `<state>/preview_with_fx.gif` (script `tools/frame_tuner/preview_fx.py`, gọi tự động cuối `export_fx.py`).
