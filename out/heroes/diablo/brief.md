@@ -29,7 +29,7 @@
 ## Asset manifest
 | Asset | Từ | Loại | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| master (= idle) | fal-image | ảnh tĩnh | ✅ v04 | chốt 2026-10-22 (user chọn v04; v01-v03 quay thẳng mặt, giữ làm bản cũ) |
+| master (= idle) | fal-image | ảnh tĩnh | ✅ v04 | chốt 2026-10-22 (user chọn v04; v01-v03 quay thẳng mặt, đã bỏ 2026-10-24) |
 | icon | fal-image | ảnh tĩnh | ✅ v01 | chốt 2026-10-22 |
 | pose_respawn | fal-image | ảnh tĩnh | ✅ v01 | chốt 2026-10-22; ngồi xổm hơn là quỳ |
 | pose_skill_flame_slam_start | fal-image | ảnh tĩnh | ⏳ v01 | tư thế gồng: chân trước chân sau, hai tay ngang vai; chờ user duyệt |

@@ -11,6 +11,7 @@ over it. Light is stored the way it was drawn, "screen" (additive) light on blac
 Blend with `screen`/additive where the engine has it; plain alpha-over also works (a little dimmer on bright backgrounds).
 Frames are repeated like the body (video_to_sheet's even_fps) when the recipe holds a frame longer."""
 import sys, os, json, pathlib, argparse, shutil
+sys.dont_write_bytecode = True   # the fx code lives in an asset's source/fx: no __pycache__ there
 HERE = pathlib.Path(__file__).resolve().parent; ROOT = HERE.parent.parent
 sys.path.insert(0, str(HERE)); sys.path.insert(0, str(ROOT / 'scripts')); sys.path.insert(0, str(ROOT / 'out' / 'heroes' / 'holy_commander' / 'source' / 'fx'))
 import numpy as np

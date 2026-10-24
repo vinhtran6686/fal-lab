@@ -5,6 +5,7 @@ composite sheet per rate (the fx is drawn on every source frame; at 24 fps the f
 Needs: python, numpy, Pillow, ffmpeg on PATH. Run from anywhere; paths resolve from this file. A sheet newer than its clip (and its fx script) is
 reused; --force rebuilds everything. Optional arguments: state ids."""
 import sys, os, json, glob, shutil, subprocess, tempfile, pathlib, importlib
+sys.dont_write_bytecode = True   # the fx code lives in an asset's source/fx: no __pycache__ there
 HERE = pathlib.Path(__file__).resolve().parent; ROOT = HERE.parent.parent
 sys.path.insert(0, str(ROOT / 'scripts'))
 from sprite_pack import key_out

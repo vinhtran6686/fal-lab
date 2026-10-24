@@ -72,7 +72,7 @@ nothing in this skill changes. Class, tier, role, skills and the design question
    a candidate run `python scripts/ingest_image.py <image> --check` (size, flat magenta border, margins, share of the frame, magenta tint).
    Report scores and warnings in Vietnamese, recommend one, write the next prompt as a one-fix retry. The user's words are the brief: translate
    their feedback into prompt lines yourself.
-5. **File only what the user approves**: `python scripts/ingest_image.py <image> --out <asset>/design --name <still> --prompt-file <the pack text> --note "<why chosen>"`
+5. **File only what the user approves**: `python scripts/ingest_image.py <image> --out <asset>/source/design --name <still> --prompt-file <the pack text> --note "<why chosen>"`
    (PNG 1024x1024, next free `<still>_vNN`, sidecar `.json` with source `manual`, the prompt and cost 0; `costs.csv` is not touched).
    Rejected candidates are never saved. Then `brief.md` (approved stills, "why chosen"), `history.md` (model column: `chatgpt (manual)`, cost 0) and the manifest row as usual.
 6. Never ask the user to attach anything from `ref/` (look-only style anchors), and no confidential material.
@@ -145,6 +145,11 @@ Open each image with the Read tool, check it against the goal and the checklist 
 `templates.md`), and score it 1-10. Below 8: revise the prompt with a specific fix (name the angle in
 capitals, say what must not be visible) and regenerate that image only. Max 3 rounds per image. Report:
 output paths, scores, what changed each round, and the cost from the `cost:` lines.
+
+**End of the session** (`format.md` §4, "One session, one finished step"): mark every still the user approved or left
+pending (⏳) with `python scripts/source_prune.py <asset> --keep source/design/<still>_vNN.png` (a superseded one leaves with
+`--drop`), show the dry run `python scripts/source_prune.py <asset>`, then `--apply`: rejected and superseded versions are
+deleted, not kept for a later pick (choosing again = generating again).
 
 ## Costs
 - Each run logs to `out/costs.csv` (manual stills cost nothing and are not logged). Spend summary: `python scripts/cost_report.py` (add `--today`).
