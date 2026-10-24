@@ -75,6 +75,9 @@ dạng catalog), lưu thành tài liệu `characters/<id>` + asset của artifac
 khung và điểm đặt riêng. Thêm hiệu ứng, Lưu (sheet gộp) và cài vào game như nhân vật có sẵn (game chưa có nhân vật này nên phát
 sheet gộp).
 - **Lật**: nút Lật ⇋ (phím F), Lật cả hàng, Lật tất cả (sheet vẽ ngược hướng). Lưu trong `slice.flips`.
+- **Tắt / bật** một hình (phím O) hoặc cả hàng: hình tắt không vào xem trước, không được cắt, không vào pose; bật lại được (`slice.offs`).
+  Đã thử và bỏ hai cách căn tự động: dò điểm neo bằng so khớp vùng nhỏ (trôi trên nhân vật 3D xoay góc) và ổn định theo bóng hình
+  liền kề (không hơn Tâm thân: trên sheet rồng, tâm khối trôi 71 px so với 46 px của Tâm thân, 75 px của đáy-trái).
 - **Căn để không giật**: **Tâm thân** (trọng tâm phần thân sau khi bỏ cánh, đuôi mảnh; hợp nhân vật bay, xoay), **Tâm thân + đáy**
   (đi trên đất), **Điểm neo** (bấm "Đặt điểm neo" rồi bấm cùng một điểm, ví dụ ngực, trên từng hình; `slice.anchors`). Mọi cách căn
   dùng chung một bố cục cho xem trước và cắt thật: khung = hợp của các hình đã đặt, dấu + = điểm chung (= chân của nhân vật).
