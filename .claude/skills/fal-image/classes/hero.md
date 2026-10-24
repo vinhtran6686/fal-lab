@@ -61,7 +61,7 @@ The master is upright and calm (`../format.md` §3 `{UPRIGHT}`): the body vertic
 | pose_skill_`<name>` | fal-image | ảnh tĩnh | per skill, optional (final pose described in words) | - |
 | skill_`<name>`_side | video-sprite | one-shot | per skill | 28-68 frames, 1-2 s |
 | fx_`<name>` | fx-layers | hiệu ứng | per skill (+ its fx part stills, if any) | separate small objects in the reference |
-| package | export | gói | all | last row: `ui/icon`, `export_manifest.json`, `EXPORT_README.md` when the asset leaves the repo |
+| package | export | gói | all | last row: `frames/` (incl. `frames/icon`), `frames/export_manifest.json`, `frames/README.md` when the asset leaves the repo |
 Optional (`../format.md` §9): `attack2_side` (4/15 heroes have a second melee move), a transformation.
 Cost, melee hero with 2 skills: 4 stills (master, icon, 2 poses) + 2 vfx (~USD 0.10) + 7 clips (~USD 0.56) + retakes.
 

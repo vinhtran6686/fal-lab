@@ -27,10 +27,10 @@ def screen(c, im, xy):
     c[sy0:sy1, sx0:sx1] = 1 - (1 - reg) * (1 - col); return c
 
 def build(name):
-    fx = json.loads((A / 'fx' / name / 'fx.json').read_text()); state = fx['state']
+    fx = json.loads((A / 'frames' / 'fx' / name / 'fx.json').read_text()); state = fx['state']
     meta = json.loads((A / 'meta.json').read_text())['states'][state]; sdir = A / meta['dir']
     body = sorted((sdir / 'frames' / '@2x').glob('*.png'))
-    fb = sorted((A / 'fx' / name / 'back' / 'frames' / '@2x').glob('*.png')); ff = sorted((A / 'fx' / name / 'front' / 'frames' / '@2x').glob('*.png'))
+    fb = sorted((A / 'frames' / 'fx' / name / 'back' / 'frames' / '@2x').glob('*.png')); ff = sorted((A / 'frames' / 'fx' / name / 'front' / 'frames' / '@2x').glob('*.png'))
     assert len(body) == len(fb) == len(ff), (len(body), len(fb), len(ff))
     fw, fh = fx['size_2x']; px, py = fx['pivot_2x']
     fxo = (PIV[0] - px, PIV[1] - py)                                   # where the fx image sits relative to the hero cell
@@ -47,7 +47,7 @@ def build(name):
         c = screen(screen(base.copy(), a, (ox + fxo[0], oy + fxo[1])), b, (ox + fxo[0], oy + fxo[1])); only.append(c)
         c = screen(base.copy(), a, (ox + fxo[0], oy + fxo[1])); c = over(c, Image.open(body[i]).convert('RGBA'), (ox, oy)); c = screen(c, b, (ox + fxo[0], oy + fxo[1])); withb.append(c)
     toimg = lambda c: Image.fromarray((np.clip(c, 0, 1) * 255).astype(np.uint8))
-    ms = round(1000 / fx['fps']); out = A / 'fx' / name
+    ms = round(1000 / fx['fps']); out = A / 'frames' / 'fx' / name
     def gif(frames, path):
         ims = [toimg(c) for c in frames]; pal = [im.convert('P', palette=Image.ADAPTIVE, colors=128) for im in ims]
         pal[0].save(path, save_all=True, append_images=pal[1:], duration=ms, loop=0, optimize=False, disposal=2)
@@ -56,14 +56,14 @@ def build(name):
     sh = Image.new('RGB', (cw * 4, chh * 2))
     for k, i in enumerate(idx): sh.paste(toimg(only[i]).resize((cw, chh), Image.LANCZOS), ((k % 4) * cw, (k // 4) * chh))
     sh.save(out / 'sheet.png', optimize=True)
-    fx['previews'] = {'fx_only_gif': f'fx/{name}/preview_fx_only.gif', 'with_body_gif': f'fx/{name}/preview_with_body.gif', 'sheet': f'fx/{name}/sheet.png',
+    fx['previews'] = {'fx_only_gif': f'frames/fx/{name}/preview_fx_only.gif', 'with_body_gif': f'frames/fx/{name}/preview_with_body.gif', 'sheet': f'frames/fx/{name}/sheet.png',
                       'state_folder_gif': meta['dir'] + '/preview_with_fx.gif', 'note': 'previews only (dark ground, screen blend); the game uses the PNG layers'}
     (out / 'fx.json').write_text(json.dumps(fx, indent=1, ensure_ascii=False))
     return withb, only, ms
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(); ap.add_argument('--mp4-dir'); a = ap.parse_args()
-    for name in sorted(p.name for p in (A / 'fx').iterdir() if (p / 'fx.json').exists()):
+    for name in sorted(p.name for p in (A / 'frames' / 'fx').iterdir() if (p / 'fx.json').exists()):
         withb, only, ms = build(name); print(name, len(only), 'frames: previews written')
         if a.mp4_dir:
             d = pathlib.Path(a.mp4_dir); d.mkdir(parents=True, exist_ok=True)

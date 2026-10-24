@@ -1,12 +1,12 @@
 """Local server for the frame tuner: serves this folder and saves recipes straight into the repo.
 Usage: python serve.py [port]   (frame_tuner.bat does build_states.py, opens the browser, then runs this)
-API: GET /api/ping, GET /api/recipes, POST /api/recipe {state, recipe}. Recipes live in <asset>/export_recipe.json
+API: GET /api/ping, GET /api/recipes, POST /api/recipe {state, recipe}. Recipes live in <asset>/frames/export_recipe.json
 (see docs/issue-frame-recipe-sync.md). Binds to 127.0.0.1 only."""
 import sys, json, os, pathlib, tempfile
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 HERE = pathlib.Path(__file__).resolve().parent; ROOT = HERE.parent.parent
 CFG = json.loads((HERE / 'sources.json').read_text())
-RECIPE = ROOT / CFG['asset'] / 'export_recipe.json'
+RECIPE = ROOT / CFG['asset'] / 'frames' / 'export_recipe.json'
 IDS = {s['id'] for s in CFG['states']}
 
 def read_recipes():

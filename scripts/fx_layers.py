@@ -237,7 +237,7 @@ def load_body(asset: pathlib.Path, sheet: str | None, h2: float, still: str | No
     if still:   # recipe "body_still": preview over one approved still (the skill's pose) until the clip exists
         img = key_magenta(ROOT / still); s = img.resize((round(img.width * h2 / img.height * 1.0), round(h2)), Image.LANCZOS)
         return [s], 15, (s.width / 2, s.height)
-    masters = sorted((asset / "design").glob("master_v*.png"))
+    masters = sorted((asset / "source" / "design").glob("master_v*.png"))
     if not masters:
         return [], 15, (0, 0)
     img = key_magenta(masters[-1]); s = img.resize((round(img.width * h2 / img.height), round(h2)), Image.LANCZOS)
@@ -293,7 +293,7 @@ def main():
     body_len = len(body) / bfps if len(body) > 1 else 0
     dur = recipe.get("duration") or max([body_len] + [ly["start"] + ly["length"] for ly in recipe["layers"]])
     n = max(1, math.ceil(dur * fps))
-    out = asset / "fx" / recipe["skill"]
+    out = asset / "frames" / "fx" / recipe["skill"]
     layer_frames = {ly["id"]: [] for ly in recipe["layers"]}
     composite = []
     for f in range(n):
@@ -340,13 +340,13 @@ def main():
     info = {"skill": recipe["skill"], "canvas_2x": [cw, ch], "pivot_2x": [round(pivot[0]), round(pivot[1])],
             "fps": fps, "frames": n, "body": recipe.get("body"),
             "layers": [{"id": ly["id"], "type": ly["type"], "z": ly.get("z", "front"), "start": ly["start"],
-                        "length": ly["length"], "files": f"fx/{recipe['skill']}/{ly['id']}/frames/@2x/{ly['id']}_NN.png (also @1x)"}
+                        "length": ly["length"], "files": f"frames/fx/{recipe['skill']}/{ly['id']}/frames/@2x/{ly['id']}_NN.png (also @1x)"}
                        for ly in recipe["layers"]]}
     (out / "fx.json").write_text(json.dumps(info, indent=1), encoding="utf-8")
     meta_path = asset / "meta.json"
     if meta_path.exists():
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        meta.setdefault("fx", {})[recipe["skill"]] = f"fx/{recipe['skill']}/fx.json"
+        meta.setdefault("fx", {})[recipe["skill"]] = f"frames/fx/{recipe['skill']}/fx.json"
         meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
     print(json.dumps({"skill": recipe["skill"], "frames": n, "fps": fps, "canvas_2x": [cw, ch],
                       "layers": [ly["id"] for ly in recipe["layers"]], "preview": str((out / "preview.gif").relative_to(ROOT))}))

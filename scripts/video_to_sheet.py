@@ -24,7 +24,7 @@ What it does:
      per-frame crop or re-centering, so registered motion (bob, lean, a fall, a spin) is kept
   5. writes the ONE final version of the sheet into <asset>/<category>/<sheet>/ (frames/@2x and @1x,
      sheet.png, preview.gif, check/take_review.png), replacing the previous export; category = move, attack,
-     death ... (scripts/asset_layout.py). The source clip stays in <asset>/raw/ (sprite_set puts every clip
+     death ... (scripts/asset_layout.py). The source clip stays in <asset>/source/video/ (sprite_set puts every clip
      there when it is generated); meta.json records which clip and take the frames come from, and
      <set>/exports.json records the export (video_prune.py only drops frames of exported takes)
 Prints a one-line summary; warnings go to stderr.
@@ -232,7 +232,7 @@ def main() -> None:
                  "at 1x). Keep one canvas for every action: delete meta.json and re-export every sheet with a "
                  "larger --cell")
 
-    # the sheet folder holds ONE final version: an export replaces the previous one (the clips stay in raw/)
+    # the sheet folder holds ONE final version: an export replaces the previous one (the clips stay in source/video/)
     folder = layout_dir(asset, a.sheet)
     version = f"t{record['take']:02d}{tag}"
     tagname = f"{a.kind}_{a.id}_{a.sheet}"
@@ -289,7 +289,7 @@ def main() -> None:
         (vdir / "check").mkdir(exist_ok=True)
         shutil.copyfile(review, vdir / "check" / "take_review.png")
 
-    clip = (set_dir / record["clip"]["path"]).resolve()   # in <asset>/raw/ since generation (sprite_set)
+    clip = (set_dir / record["clip"]["path"]).resolve()   # in <asset>/source/video/ since generation (sprite_set)
     def rel(path: pathlib.Path) -> str:
         path = path.resolve()
         return path.relative_to(asset.resolve()).as_posix() if path.is_relative_to(asset.resolve()) else str(path)

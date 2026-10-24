@@ -19,8 +19,9 @@ ROOT = HERE.parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(HERE))
 import fx_studio as fx   # noqa: E402
+from asset_layout import category   # noqa: E402
 
-SAMPLE = ROOT / "out" / "vfx" / "fire_breath_test" / "design" / "sheet_v01.png"
+SAMPLE = ROOT / "tools" / "fx_studio" / "samples" / "fire_breath.png"   # "Lửa mẫu"
 FPS = 30
 # meta.json state -> the game's animation suffix (hero_<id>_<suffix>), when the names differ
 STATE_ANIM = {"run_side": "running", "idle_side": "idle", "attack_side": "attack", "death_side": "death",
@@ -72,7 +73,7 @@ def catalog(out: pathlib.Path) -> list:
         meta = json.loads(meta_p.read_text(encoding="utf-8"))
         cid, poses, cell = meta["id"], [], meta["cell"]
         for state, st in meta.get("states", {}).items():
-            if st.get("dir", "").startswith("ui/"):
+            if category(state) == "ui":   # the icon is a still, not a pose
                 continue
             files = sorted((meta_p.parent / st["dir"] / "frames" / "@1x").glob("*.png"))
             if not files:

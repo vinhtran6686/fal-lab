@@ -3,7 +3,7 @@
 Viết 2026-10-20 từ việc làm 10 phiên bản fx levelup cho `holy_commander`. Mục đích: lần sau làm fx cho bất kỳ hero,
 trạng thái hay skill nào, đọc file này là làm được mà **không phải quay thêm clip trả phí**.
 
-> Không sửa `SKILL.md` (user tự sửa). File này là ghi chú trong `docs/`. Mã nguồn chạy được: `out/heroes/holy_commander/fx/levelup_variants.py`.
+> Không sửa `SKILL.md` (user tự sửa). File này là ghi chú trong `docs/`. Mã nguồn chạy được: `out/heroes/holy_commander/source/fx/levelup_variants.py`.
 
 ## 1. Tóm tắt một đoạn
 
@@ -22,7 +22,7 @@ phiên bản khác nhau từ đúng một clip 0.045 USD.
 | Đổi nhịp, màu, kích thước | Sửa tham số | Quay lại clip |
 | Rủi ro | Không (thân không bị fx làm méo) | Model tự thêm vòng lớn, zoom (charge_v4: vòng lửa; 3 skill cũ: zoom 2.4-2.9x) |
 | Thân clip | Luôn sạch, gate `area`/`identity` đọc đúng | fx trong clip làm gate đọc sai |
-| Tái lập | Clip trong `raw/` + một script | Phụ thuộc lần quay |
+| Tái lập | Clip trong `source/video/` + một script | Phụ thuộc lần quay |
 | Độ chi tiết | Mềm, ánh sáng, hào quang, tia, vòng, hạt: **rất tốt** | Hình có hoạ tiết thật (xoáy có kết cấu, sét nhiều nhánh, lửa có hình, khói): tốt hơn |
 
 **Quy tắc (user chốt):** Python trước. Chỉ khi fx cần hình dạng phức tạp hay phải bám vũ khí từng frame mà Python vẽ sẽ thô thì
@@ -36,7 +36,7 @@ mới gen video + cắt frame, và báo giá, chờ user ok trước mỗi take.
 
 ### Bước 1. Có clip thân sạch
 - Quay bằng `scripts/fal_video.py` (hoặc `sprite_set.py`) với prompt **không nhắc hiệu ứng** và có câu "locked tripod" (lấy từ
-  `raw/skill_side_skill_charge_v2_t01.json`). Ví dụ levelup: `raw/levelup_side_extra_v2_t01.mp4` (3 s, 832x480, nền magenta).
+  `raw/skill_side_skill_charge_v2_t01.json`). Ví dụ levelup: `source/video/levelup_side_extra_v2_t01.mp4` (3 s, 832x480, nền magenta).
 - Ảnh đầu = master, ảnh cuối = pose đỉnh. Điều này giữ cỡ người ổn định (đã đo: cao 431 px frame đầu, 423 px frame cuối).
 
 ### Bước 2. Tách toàn bộ frame và key nền
@@ -126,7 +126,7 @@ Màu: `CREAM (255,244,200)`, `GOLD (255,201,60)`, `WHITE (255,255,240)`, `AMBER 
 
 Lệnh chạy:
 ```
-python out/heroes/holy_commander/fx/levelup_variants.py out/heroes/holy_commander/raw/levelup_side_extra_v2_t01.mp4 <thư_mục_ra> v03
+python out/heroes/holy_commander/source/fx/levelup_variants.py out/heroes/holy_commander/source/video/levelup_side_extra_v2_t01.mp4 <thư_mục_ra> v03
 # bỏ tên variant để chạy cả 10; có thể truyền nhiều tên: v01 v05 v10
 ```
 
@@ -174,11 +174,11 @@ Fx Python chỉ đẹp khi clip thân đúng. Khi user tự viết hành động
 kiếm chìm khoảng một nửa, khuỵu quỳ một gối, hai tay nắm chặt cán, gồng), clip thân ra "quá đẹp" và việc đo clip (frame găm kiếm 32, mũi kiếm tại (475, 455)) cho
 fx đúng khoảnh khắc. Công thức mô tả hành động đầy đủ (khoá hướng, tư thế đầu, các nhịp đánh số theo bộ phận cơ thể, tư thế cuối, câu thứ tự, điều cấm,
 một fx hẹp nếu có): `out/heroes/holy_commander/brief.md`, mục "Skill 2 holy_banner". Làm skill mới: **viết hành động thật cụ thể trước**, rồi mới quay và vẽ fx.
-Mã tham chiếu cho ripple dưới đất: `out/heroes/holy_commander/fx/holy_banner_ripple.py` (ripple elip trên mặt phẳng đất, nửa sau ở sau thân và nửa trước đè lên chân).
+Mã tham chiếu cho ripple dưới đất (bản Python không được chọn, đã bỏ khỏi `out/`; còn trong git, tag `pre-out-restructure`): `out/heroes/holy_commander/fx/holy_banner_ripple.py` (ripple elip trên mặt phẳng đất, nửa sau ở sau thân và nửa trước đè lên chân).
 
 ## 11. Ví dụ thứ ba: tia sáng từ mũi kiếm (radiant_slash, 2026-10-20)
 
-Mã: `out/heroes/holy_commander/fx/radiant_slash_beam.py`; bảng lớp và tham số: `out/heroes/holy_commander/brief.md`, mục "Skill 3 radiant_slash".
+Mã: `out/heroes/holy_commander/source/fx/radiant_slash_beam.py`; bảng lớp và tham số: `out/heroes/holy_commander/brief.md`, mục "Skill 3 radiant_slash".
 Điểm mới so với levelup và banner:
 - **Đo mũi vũ khí từng hình** (điểm phải nhất của hình bóng) để ánh sáng gom bám theo kiếm lúc kéo sát người; tới hình duỗi hết thì dùng điểm cố định đã đo (tránh nhiễu khi chân hay tay vào vùng đo).
 - **Tia sáng = ba lớp gaussian theo trục dọc** (lõi trắng sigma 7, thân vàng sigma 20, quầng hổ phách sigma 52), mờ dần theo khoảng cách, đầu tia chạy tới mép trong 4 hình, nhịp phồng nhẹ.

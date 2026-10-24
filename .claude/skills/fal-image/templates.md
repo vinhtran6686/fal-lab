@@ -14,7 +14,7 @@ footprint) exactly as written. Never name a commercial game or studio in a promp
   outlines, effects as flat layered shapes. Never ask for "ornate", "intricate", "detailed", "glow",
   "rim light" or "pixel art" (`format.md` §1): complex effects are where the model drifts from the style.
 - Same camera as the characters: high top-down, tilted about 60 degrees, light from the top-left.
-- Folder: `out/<kind>s/<id>/design/` with `brief.md` and `history.md` (`format.md` §4), e.g.
+- Folder: `out/<kind>s/<id>/` with `brief.md`, `history.md` and the stills in `source/design/` (`format.md` §4), e.g.
   `--name tower_archer --versioned --out out/towers/archer/design`.
 - Cutting a sheet into single images and keying the magenta: `scripts/sprite_pack.py` (splits a COLSxROWS
   grid by gaps, keys the magenta background, writes frames). Single stills (an ability icon) use the icon
@@ -56,7 +56,7 @@ side by side and is never animated. `--ref <approved master>`.
 Rings, smears, bursts, bolts, light columns and particles are drawn by `fx_layers.py` itself: never make
 a still for them. Make a still only for a shaped element the tool cannot draw, ONE element per still, nothing
 else in it: `{part}` = "a dark storm cloud" (no lightning), "a holy banner on a pole" (no rays, no sparkles),
-"an ice crystal", "a flaming meteor rock". Name: `fx_<skill>_<part>_vNN`, folder `out/vfx/<skill>/design/`.
+"an ice crystal", "a flaming meteor rock". Name: `fx_<skill>_<part>_vNN`, folder `out/<class>/<hero>/source/vfx/<skill>/design/` (the vfx of a character lives with it; `format.md` §4).
 
 > Single game effect element: {part}, alone, centered, filling about 70% of the frame, seen from the same high top-down camera as the characters: big flat shapes, 2-3 hard-edged tones of its colour, a thick dark outline of the same hue, no other effect around it: no glow, no rays, no sparkles, no lightning, no smoke unless the element IS smoke. {BG} {STYLE}
 

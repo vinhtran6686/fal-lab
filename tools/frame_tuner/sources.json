@@ -7,7 +7,7 @@
       "id": "attack",
       "label": "Attack (t04)",
       "sheet": "attack_side",
-      "clip": "raw/attack_side_attack_t04.mp4",
+      "clip": "source/video/attack_side_attack_t04.mp4",
       "loop": false,
       "hasHit": true,
       "approved": {
@@ -21,7 +21,7 @@
       "id": "death",
       "label": "Death (t01)",
       "sheet": "death_side",
-      "clip": "raw/death_side_death_t01.mp4",
+      "clip": "source/video/death_side_death_t01.mp4",
       "loop": false,
       "hasHit": false,
       "approved": {
@@ -34,7 +34,7 @@
       "id": "charge",
       "label": "Skill 1: Xung phong (v4)",
       "sheet": "skill_charge_side",
-      "clip": "raw/skill_side_skill_charge_v4_t01.mp4",
+      "clip": "source/video/skill_side_skill_charge_v4_t01.mp4",
       "loop": false,
       "hasHit": false,
       "approved": {
@@ -47,7 +47,7 @@
       "id": "levelup",
       "label": "Levelup (thân clip A)",
       "sheet": "levelup_side",
-      "clip": "raw/levelup_side_extra_v2_t01.mp4",
+      "clip": "source/video/levelup_side_extra_v2_t01.mp4",
       "loop": false,
       "hasHit": true,
       "approved": {
@@ -66,7 +66,7 @@
       "id": "banner",
       "label": "Skill 2: Cờ hiệu thánh (bản chốt)",
       "sheet": "skill_holy_banner_side",
-      "clip": "raw/skill_side_skill_holy_banner_v4_t02.mp4",
+      "clip": "source/video/skill_side_skill_holy_banner_v4_t02.mp4",
       "loop": false,
       "hasHit": true,
       "approved": {
@@ -79,7 +79,7 @@
       "id": "slash",
       "label": "Skill 3: Chém sáng (thân sạch)",
       "sheet": "skill_radiant_slash_side",
-      "clip": "raw/skill_side_skill_radiant_slash_v2_t01.mp4",
+      "clip": "source/video/skill_side_skill_radiant_slash_v2_t01.mp4",
       "loop": false,
       "hasHit": true,
       "approved": {
@@ -97,7 +97,7 @@
       "id": "respawn",
       "label": "Respawn (rise t01, chờ duyệt)",
       "sheet": "respawn_side",
-      "clip": "raw/respawn_side_rise_t01.mp4",
+      "clip": "source/video/respawn_side_rise_t01.mp4",
       "loop": false,
       "hasHit": false,
       "approved": {

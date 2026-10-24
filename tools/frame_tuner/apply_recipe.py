@@ -1,4 +1,4 @@
-"""Apply a saved frame recipe: rebuild the state's frames from the clip in raw/ and export them with video_to_sheet.py.
+"""Apply a saved frame recipe: rebuild the state's frames from the clip in source/video/ and export them with video_to_sheet.py.
 
 Usage (from the repo root or anywhere):
   python tools/frame_tuner/apply_recipe.py                      dry run for every saved state (prints the plan, writes nothing)
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     ap.add_argument('--default', action='store_true', help='use the approved default instead of the saved recipe')
     ap.add_argument('--asset', help='export into this asset folder instead of the real one (testing)')
     a = ap.parse_args()
-    rf = ROOT / CFG['asset'] / 'export_recipe.json'
+    rf = ROOT / CFG['asset'] / 'frames' / 'export_recipe.json'
     saved = json.loads(rf.read_text()).get('states', {}) if rf.exists() else {}
     todo = [s for s in CFG['states'] if (a.states and s['id'] in a.states) or (not a.states and (a.default or s['id'] in saved))]
     if not todo: print('nothing to do: no saved recipe in', rf, '(save one in the frame tuner, or use --default <state>)'); sys.exit(0)

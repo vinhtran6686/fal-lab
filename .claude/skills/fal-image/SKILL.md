@@ -63,7 +63,7 @@ nothing in this skill changes. Class, tier, role, skills and the design question
    message, **fully expanded**: the real `{design}`, `{STYLE}`, `{BG}`, `{UPRIGHT}`, `{SIMPLE}` and the view text from `format.md` (§1-§3,
    §10) with `{H}` filled in, no `[ ]` or `{ }` left (an unfilled slot is read by the model as text and it invents the design), ending
    "Output: one image, 1024x1024, one character only". Each message must stand alone (the chat has no memory we rely on): one still per
-   message; a new chat per still is safest. Save the same text as `A/design/prompts/<still>_pNN.txt` once the asset exists.
+   message; a new chat per still is safest. Save the same text as `A/source/design/prompts/<still>_pNN.txt` once the asset exists.
    Patterns already written out: `docs/prompt-style-transfer.md` (from a concept image: A convert only, B optional changes) and
    `docs/prompt-assets-from-master.md` (front, back, icon, projectile, poses, fx part, ability icon). Use them, adapted, instead of inventing a new shape.
 3. **From a concept image**: the prompt says what to KEEP (count limbs and features), what to CHANGE, and what must NOT be added (a weapon the
@@ -110,7 +110,7 @@ flags or the words of the request; never guess a missing one. Ask only what is m
   `{body}`, files, manifest format, checklist), and follow them exactly. The class file is the only place
   for class-specific facts; `reference.md` holds the measurements behind them. The user gives content
   ("đạo tặc đầu trọc, dùng đao"); the class file says what to make of it.
-  1. `brief.md` with class, tier, role, skills, the filled slots and the **Asset manifest**, then the **master** (side view, format.md §3) into `<asset>/design/`. Mode (`format.md` §5): no `--auto`
+  1. `brief.md` with class, tier, role, skills, the filled slots and the **Asset manifest**, then the **master** (side view, format.md §3) into `<asset>/source/design/`. Mode (`format.md` §5): no `--auto`
      → stop after the master and ask the user to approve a version; `--auto` → approve it yourself (>= 8).
   2. Every `fal-image` row of the manifest, from the approved master (`--ref`): front and back (enemies,
      bosses), icon, projectile (ranged), `pose_skill_<name>` (one per skill, the skill's peak), then the
@@ -125,7 +125,7 @@ flags or the words of the request; never guess a missing one. Ask only what is m
 - **Character animation** asked directly ("tạo attack cho bandit"): use the `video-sprite` skill; it uses
   this skill only for a missing still.
 - **Other game asset** (tower, prop, ability icon, VFX key frame, UI, map): `templates.md`, with `{STYLE}` and
-  `{BG}` from `format.md`, into `out/<kind>s/<id>/design/` (`format.md` §4). They are stills too.
+  `{BG}` from `format.md`, into `out/<kind>s/<id>/source/design/` (`format.md` §4). They are stills too.
 - **Anything else**: write a concrete prompt (subject, composition, camera, lighting, style, palette).
 
 ## Running the generator (project root; not used in `--manual`)

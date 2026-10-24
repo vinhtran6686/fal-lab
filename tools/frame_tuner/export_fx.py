@@ -12,7 +12,7 @@ Blend with `screen`/additive where the engine has it; plain alpha-over also work
 Frames are repeated like the body (video_to_sheet's even_fps) when the recipe holds a frame longer."""
 import sys, os, json, pathlib, argparse, shutil
 HERE = pathlib.Path(__file__).resolve().parent; ROOT = HERE.parent.parent
-sys.path.insert(0, str(HERE)); sys.path.insert(0, str(ROOT / 'scripts')); sys.path.insert(0, str(ROOT / 'out' / 'heroes' / 'holy_commander' / 'fx'))
+sys.path.insert(0, str(HERE)); sys.path.insert(0, str(ROOT / 'scripts')); sys.path.insert(0, str(ROOT / 'out' / 'heroes' / 'holy_commander' / 'source' / 'fx'))
 import numpy as np
 from PIL import Image
 import apply_recipe as ar
@@ -93,7 +93,7 @@ def run(st, saved, asset_out):
     x0, y0 = (bb[0] - 4) // 2 * 2, (bb[1] - 4) // 2 * 2; x1, y1 = (bb[2] + 5) // 2 * 2, (bb[3] + 5) // 2 * 2
     box = (max(0, x0), max(0, y0), min(PW, x1), min(PH, y1)); w2, h2 = box[2] - box[0], box[3] - box[1]
     pivot2 = (PPIV[0] - box[0], PPIV[1] - box[1])
-    name = fx.get('name', st['id']); out = asset_out / 'fx' / name; nm = 'hero_' + ar.CFG['hero'] + '_fx_' + name
+    name = fx.get('name', st['id']); out = asset_out / 'frames' / 'fx' / name; nm = 'hero_' + ar.CFG['hero'] + '_fx_' + name
     for z in ('back', 'front'):
         d = out / z / 'frames'
         if d.exists(): shutil.rmtree(d)
@@ -105,15 +105,15 @@ def run(st, saved, asset_out):
            'loop': False, 'blend': 'screen (additive light on black; straight alpha = strength, alpha-over is a little dimmer)',
            'size_2x': [w2, h2], 'size_1x': [w2 // 2, h2 // 2], 'pivot_2x': list(pivot2), 'pivot_1x': [pivot2[0] // 2, pivot2[1] // 2],
            'note': 'place the fx image so its pivot sits on the hero pivot (feet, x 0.5, y 0.88 of the 176x140 cell); frame n goes with body frame n of the same state',
-           'layers': [{'id': 'back', 'z': 'behind the body', 'files': f'fx/{name}/back/frames/@2x/{nm}_back_NN.png (also @1x)'},
-                      {'id': 'front', 'z': 'in front of the body', 'files': f'fx/{name}/front/frames/@2x/{nm}_front_NN.png (also @1x)'}]}
+           'layers': [{'id': 'back', 'z': 'behind the body', 'files': f'frames/fx/{name}/back/frames/@2x/{nm}_back_NN.png (also @1x)'},
+                      {'id': 'front', 'z': 'in front of the body', 'files': f'frames/fx/{name}/front/frames/@2x/{nm}_front_NN.png (also @1x)'}]}
     (out / 'fx.json').write_text(json.dumps(fxj, indent=1, ensure_ascii=False))
-    meta.setdefault('fx', {})[name] = f'fx/{name}/fx.json'; meta_p.write_text(json.dumps(meta, indent=2, ensure_ascii=False))
+    meta.setdefault('fx', {})[name] = f'frames/fx/{name}/fx.json'; meta_p.write_text(json.dumps(meta, indent=2, ensure_ascii=False))
     print(f"  wrote {out.relative_to(asset_out)}: {len(order)} frames each for back/front, {w2}x{h2} @2x, pivot {pivot2}")
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser(); p.add_argument('states', nargs='*'); p.add_argument('--asset'); a = p.parse_args()
-    rf = ROOT / ar.CFG['asset'] / 'export_recipe.json'; saved = json.loads(rf.read_text()).get('states', {})
+    rf = ROOT / ar.CFG['asset'] / 'frames' / 'export_recipe.json'; saved = json.loads(rf.read_text()).get('states', {})
     out = pathlib.Path(a.asset) if a.asset else ROOT / ar.CFG['asset']
     todo = [s for s in ar.CFG['states'] if s.get('fx') and (not a.states or s['id'] in a.states) and s['id'] in saved]
     for st in todo: run(st, saved, out)

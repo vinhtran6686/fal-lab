@@ -13,7 +13,7 @@ import numpy as np
 
 CELL_H = 220; COLS = 10
 FX_COLS = 5; FX_CELL_H = 200; BGC = (58, 74, 64)
-FXDIR = ROOT / 'out' / 'heroes' / 'holy_commander' / 'fx'
+FXDIR = ROOT / 'out' / 'heroes' / 'holy_commander' / 'source' / 'fx'
 BASE_FPS = 15                                # the fx scripts count their beats in frames at this rate
 
 _frames = {}

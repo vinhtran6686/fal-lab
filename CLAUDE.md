@@ -15,13 +15,16 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
     images with `scripts/ingest_image.py` (checks + next `_vNN`, cost 0, `costs.csv` untouched).
   - `video-sprite` (`.claude/skills/video-sprite/`): every character animation (move, attack, death ...) from
     the approved stills: image-to-video on fal.ai (`scripts/fal_video.py`) -> keyed, registered, looped or
-    retimed frames -> `scripts/video_to_sheet.py` exports them into `out/<class>/<id>/<category>/<sheet>/`
+    retimed frames -> `scripts/video_to_sheet.py` exports them into `out/<class>/<id>/frames/<sheet>/`
     with ONE canvas and ONE body size for every action (`meta.json`). After export, always
     `python scripts/video_prune.py prune --set <set>`; intermediate frames are rebuilt from the clip with
     `rebuild`. Checks: `scripts/motion_check.py`, `scripts/leg_check.py`.
-- Asset folder `out/<class>/<id>/`: `design/` (the original design: source images, every version), `raw/` (source videos, every
-  take, saved as soon as they are generated), state folders `idle/`, `move/`, `attack/`, `death/` ... (ONE final
-  version per sheet: `preview.gif`, `frames/`, `check/`), `.work/` (tools only, not in git). `format.md` §4.
+- Asset folder `out/<class>/<id>/` has two groups (`format.md` §4, `scripts/asset_layout.py`): `source/` (approved
+  originals: `design/` stills, `video/` clips, `fx/` Python fx code, `vfx/`) and `frames/` (cut from them: one folder per
+  sheet with `preview.gif`, `frames/`, `check/`; `icon/`, `fx/<name>/`, `skills/<pose>/`, `export_recipe.json`), plus
+  `brief.md`, `history.md`, `meta.json` and `.work/` (tools only, not in git). One session, one finished step: originals
+  are cut in the same session; at its end `python scripts/source_prune.py <asset> [--keep ...] --apply` drops every still
+  and take that was not approved (no "pick again later": run the flow again). `out/vfx/` is the Fx Studio install registry.
 - Icon packing: `scripts/sprite_pack.py` (single stills into `ui/icon/`).
 - Effects (skills, attack smears, respawn, level-up): `scripts/fx_layers.py A/fx/<skill>.json`, a recipe of small flat
   layers (slash, ring, burst, bolt, pillar, particles, tweened fx part stills) on one canvas anchored at the

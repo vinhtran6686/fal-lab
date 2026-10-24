@@ -1,6 +1,6 @@
 @echo off
-rem Frame Tuner (local): builds the frame sheets from raw/ clips (skips states already built), starts a local server and opens
-rem the browser. Recipes are saved straight into out\heroes\holy_commander\export_recipe.json.
+rem Frame Tuner (local): builds the frame sheets from source/video/ clips (skips states already built), starts a local server and opens
+rem the browser. Recipes are saved straight into out\heroes\holy_commander\frames\export_recipe.json.
 rem Needs python (numpy, Pillow) and ffmpeg on PATH, like the other video tools.
 setlocal
 cd /d "%~dp0"

@@ -168,42 +168,55 @@ creature without shoulders: "ONLY the upper half of {design} with its face".
 > centered, small and simple, filling about 40% of the frame. {BG} {STYLE}
 
 ### Commands (project root)
-Let `A=out/<class>/{id}` (class folder from the class file) and `M=A/design/master_vNN.png` (approved master).
+Let `A=out/<class>/{id}` (class folder from the class file) and `M=A/source/design/master_vNN.png` (approved master).
 ```
 python scripts/gen_image.py "<master prompt>" --size 1024x1024 --png --name master --versioned --out A/design
 python scripts/gen_image.py "<view prompt>"   --size 1024x1024 --png --ref M --name view_front --versioned --out A/design
 # ... view_back (enemies, bosses), pose_*, icon (and projectile) the same way; independent stills run in parallel
-python scripts/sprite_pack.py A/design/icon_vNN.png --asset A --kind <kind> --id {id} --state icon --dir none --grid 1x1 --frames 1 --cell 128 --center --own-scale --fill 0.95
+python scripts/sprite_pack.py A/source/design/icon_vNN.png --asset A --kind <kind> --id {id} --state icon --dir none --grid 1x1 --frames 1 --cell 128 --center --own-scale --fill 0.95
 ```
 Then the animations: `video-sprite` skill, with the frame size of the class file.
 
-## 4. Files, folders and versions (fixed)
-One folder per asset (`out/<class>/<id>/`: enemies, heroes, towers, props, vfx, ui, maps ...). Sources keep
-every version; state folders keep only the one final version; `.work/` holds the tools' intermediate data
-and is not in git.
+## 4. Files, folders and versions (fixed; two groups since 2026-10-24)
+One folder per asset (`out/<class>/<id>/`: enemies, heroes, towers, props, ui, maps ...). Inside it, exactly **two
+groups**: `source/` (the approved originals: stills, clips, Python fx code) and `frames/` (everything cut from them for the
+game). `scripts/asset_layout.py` holds this layout for every tool.
 ```
 out/<class>/<id>/                         e.g. out/heroes/centaur/
-  brief.md                                request, class/level, filled slots, approved design stills and poses
+  brief.md                                request, class/level, filled slots, Asset manifest (§8)
   history.md                              one row per still or video take: version, score, verdict, issue, change
-  meta.json                               engine metadata: one canvas, pivot and body size for every action
-  design/                                 the ORIGINAL DESIGN (this skill), every version: master_v03.png, view_front_v01.png, pose_run_v01.png ... (+ .json)
-  raw/                                    SOURCE videos (video-sprite), every take, saved as soon as the model returns
-    run_side_run_t02.mp4 (+ .json)   <action>_<set>_tNN: the .json holds model, prompt, cost, request id
-  idle/ move/ attack/ death/ ...          STATE folders (category, scripts/asset_layout.py): ONE final version each
-    move/run_side/                        one folder per sheet
+  meta.json                               engine metadata (one canvas, pivot, body size for every action), the
+                                          exported states (each with its "source"), "sources" (approved items)
+  source/                                 GROUP 1: the approved originals
+    design/                               stills (this skill): master_v07.png, view_front_v01.png, pose_run_v01.png, icon_v01.png (+ .json), prompts/
+    video/                                clips (video-sprite): <action>_<set>_tNN.mp4 (+ .json: model, prompt, cost, request id)
+    fx/                                   Python fx code that draws a state's effect (levelup_variants.py ...)
+    vfx/<name>/                           fal-image vfx stills that belong to this character (brief.md, history.md, design/)
+  frames/                                 GROUP 2: cut from group 1, what the game uses (ONE final version each)
+    run_side/                             one folder per sheet (no category folder: the category is in meta.json)
       preview.gif                         look here first
       sheet.png                           horizontal sheet @2x
       frames/@2x/hero_centaur_run_side_01.png ...   frames for the game (also @1x)
       check/                              motioncheck.txt, transitions.png, legcheck.png, take_review.png
-  ui/icon/                                packed icon (sprite_pack.py from design/icon_vNN.png)
+    icon/                                 packed icon (sprite_pack.py from source/design/icon_vNN.png)
+    fx/<name>/                            fx layers that go with a sheet: back/ front/ frames, fx.json, previews
+    skills/<pose>/                        Fx Studio skill sets: layers/, combo/, skill.json, skill.lua
+    export_recipe.json                    frame tuner recipes (+ export_manifest.json, README.md when packaged for another repo)
   .work/                                  tools only, not in git (video-sprite sets pruned to their decisions)
 ```
-Assets without a class file (towers, props, vfx, ui, maps; `templates.md`) use the same folder:
-`out/<kind>s/<id>/` with `brief.md`, `history.md` and `design/` (+ packed frames when the asset is cut up).
-Re-exporting a sheet replaces its state folder; the take it came from is named in `meta.json` (`version`,
-`source`), and every other take stays in `raw/` (any of them can be accepted and exported later).
-Categories: `move` (walk, run), `attack` (attack, cast), `death`, `hurt`, `idle`, `ui` (icon), `projectile`.
-- Design still names: `<name>_vNN.png`, made by `gen_image.py --name <name> --versioned --out <asset>/design`.
+**One session, one finished step.** A session that makes originals also cuts them: stills are reviewed and the
+user picks, clips are generated, reviewed and exported to `frames/` in the same session. Every paid still or take is
+saved into `source/` the moment it exists (cost guard). At the end of the session, mark what the user approved or left
+pending (`python scripts/source_prune.py A --keep source/design/master_v08.png`; exported clips and stills are kept
+automatically through `meta.json` states) and drop the rest (`python scripts/source_prune.py A --apply`). Rejected and
+superseded versions are **not** kept: choosing again means running the flow again (new take, new export).
+Re-exporting a sheet replaces its `frames/<sheet>/` folder; the clip or still it came from is named in `meta.json`
+(`version`, `source`).
+`out/vfx/<id>/` is the Fx Studio **install registry** (effects installed in the game, effects not tied to a character),
+not part of a character; a character's skill sets live in its `frames/skills/`.
+Categories (metadata, `asset_layout.CATEGORIES`): `move` (walk, run), `attack` (attack, cast), `skill`, `spawn`, `level`,
+`death`, `hurt`, `idle`, `ui` (icon), `projectile`.
+- Design still names: `<name>_vNN.png`, made by `gen_image.py --name <name> --versioned --out <asset>/source/design`.
 - Frame names keep kind and id (`enemy_bandit_walk_side_03.png`) so they are unique inside a game project.
 
 Game-ready frames (the same for every action of an asset):

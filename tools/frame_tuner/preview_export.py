@@ -1,4 +1,4 @@
-"""Preview of the EXPORTED package only (reads files under out/heroes/holy_commander/, never the clips or the fx scripts):
+"""Preview of the EXPORTED package only (reads files under out/heroes/holy_commander/, never source/ (clips, stills, fx code)):
 body @2x frames + fx back/front layers (placed by their pivots, screen blend) on a dark ground -> data/export_preview/<state>.mp4 + a key-frame strip.
 Usage: python tools/frame_tuner/preview_export.py [--out DIR]"""
 import sys, json, glob, pathlib, subprocess, argparse
@@ -17,9 +17,9 @@ def screen_layer(c, im, pivot):
 
 def render_state(sheet, folder, fxname):
     body = sorted(glob.glob(str(A / folder / sheet / 'frames' / '@2x' / '*.png')))
-    fx = json.loads((A / 'fx' / fxname / 'fx.json').read_text()) if fxname else None
-    fb = sorted(glob.glob(str(A / 'fx' / fxname / 'back' / 'frames' / '@2x' / '*.png'))) if fxname else []
-    ff = sorted(glob.glob(str(A / 'fx' / fxname / 'front' / 'frames' / '@2x' / '*.png'))) if fxname else []
+    fx = json.loads((A / 'frames' / 'fx' / fxname / 'fx.json').read_text()) if fxname else None
+    fb = sorted(glob.glob(str(A / 'frames' / 'fx' / fxname / 'back' / 'frames' / '@2x' / '*.png'))) if fxname else []
+    ff = sorted(glob.glob(str(A / 'frames' / 'fx' / fxname / 'front' / 'frames' / '@2x' / '*.png'))) if fxname else []
     out = []
     for i, f in enumerate(body):
         c = np.tile(BG, (CELL[1], CELL[0], 1)).astype(np.float32)

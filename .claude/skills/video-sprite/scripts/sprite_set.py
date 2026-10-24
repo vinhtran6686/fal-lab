@@ -2082,11 +2082,12 @@ class SetRunner:
 
     def to_raw(self, ident: str, record: dict, clip: Path) -> Path:
         """fal-image-lab: every clip the model returns is the paid source; it leaves the tool folder at once for
-        <asset>/raw/<action>_<set>_tNN.mp4 (+ .json), which is versioned in git (.work is not). A set outside
+        <asset>/source/video/<action>_<set>_tNN.mp4 (+ .json), which is versioned in git (.work is not); takes that are not
+        exported are dropped at the end of the session (scripts/source_prune.py). A set outside
         <asset>/.work/ keeps its clips where they are."""
         if self.root.parent.name != ".work":
             return clip
-        raw = self.root.parent.parent / "raw"
+        raw = self.root.parent.parent / "source" / "video"
         dest = raw / f"{ident}_{self.root.name}_t{int(record['take']):02d}{clip.suffix.lower() or '.mp4'}"
         if clip.resolve() == dest.resolve():
             return dest

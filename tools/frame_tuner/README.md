@@ -9,10 +9,10 @@ Tool để bật/tắt từng frame, chỉnh thời gian mỗi frame và đặt 
 | | Cục bộ (`frame_tuner.bat`) | Artifact (máy khác, không cần repo) |
 |---|---|---|
 | Chạy | double-click `tools/frame_tuner/frame_tuner.bat` | mở link artifact |
-| Lưu công thức | thẳng vào `out/heroes/holy_commander/export_recipe.json` | trong db của trang (Claude đọc lại được), kèm nút Tải JSON / Sao chép JSON |
+| Lưu công thức | thẳng vào `out/heroes/holy_commander/frames/export_recipe.json` | trong db của trang (Claude đọc lại được), kèm nút Tải JSON / Sao chép JSON |
 | Cần | python (numpy, Pillow) và ffmpeg trên PATH, như các tool video khác | trình duyệt |
 
-`frame_tuner.bat` dựng sheet frame từ clip trong `raw/` (lần đầu ~80 s, sau đó bỏ qua state đã dựng), mở `http://127.0.0.1:8767/` rồi chạy `serve.py`
+`frame_tuner.bat` dựng sheet frame từ clip trong `source/video/` (lần đầu ~80 s, sau đó bỏ qua state đã dựng), mở `http://127.0.0.1:8767/` rồi chạy `serve.py`
 (chỉ nghe 127.0.0.1). Mở thẳng `index.html` bằng `file://` sẽ không chạy (trình duyệt chặn tải dữ liệu).
 
 ## Trong tool
@@ -32,7 +32,7 @@ Công thức lưu `fps` của nguồn đã chọn; `apply_recipe.py` và `export
 ## Công thức (`export_recipe.json`)
 ```json
 {"version": 1, "hero": "holy_commander", "states": {
-  "attack": {"clip": "raw/attack_side_attack_t04.mp4", "fps": 15, "loop": false,
+  "attack": {"clip": "source/video/attack_side_attack_t04.mp4", "fps": 15, "loop": false,
              "keep": [0, 2, 4], "durationsMs": [67, 67, 67], "hit": 9, "savedAt": "..."}}}
 ```
 `keep` = chỉ số các frame của clip (ở nguồn `fps` của công thức, 15 hoặc 24) được giữ, `durationsMs` = một số cho mỗi frame giữ, `hit` = **chỉ số trong danh sách giữ** (0-based) hoặc null.
@@ -44,7 +44,7 @@ python tools/frame_tuner/apply_recipe.py                 # dry run: in kế ho�
 python tools/frame_tuner/apply_recipe.py attack --write  # export attack theo công thức đã lưu
 python tools/frame_tuner/apply_recipe.py --default death --write   # export theo bản đã chốt (không cần công thức)
 ```
-Đường đi: clip trong `raw/` -> `ffmpeg fps=15` -> `key_out` -> thang `120 / 268` cho attack, death, charge (cỡ thân master trong clip cũ) hoặc
+Đường đi: clip trong `source/video/` -> `ffmpeg fps=15` -> `key_out` -> thang `120 / 268` cho attack, death, charge (cỡ thân master trong clip cũ) hoặc
 `120 / chiều cao thân hình 0` cho clip mới -> chân hình 0 tại (256, 400) trên canvas 512x512 -> set tạm -> `video_to_sheet.py` (một canvas 176x140, một cỡ thân).
 Mặc định `--write` ghi đè sheet của state trong `out/heroes/holy_commander/`; thử trước bằng `--asset <thư mục khác>`.
 

@@ -2,7 +2,7 @@
 """Turn a raw AI sprite sheet into game-ready frames (see .claude/skills/fal-image/format.md).
 
 Usage:
-  python scripts/sprite_pack.py out/enemies/spider/walk_side/raw/walk_side_v02.png
+  python scripts/sprite_pack.py out/enemies/spider/source/design/walk_side_v02.png
                                 --asset out/enemies/spider --kind enemy --id spider
                                 --state walk --dir side --frames 6 --grid 3x2 --cell 96
                                 [--fps 12] [--no-loop] [--hit-frame 3] [--fill 0.72]

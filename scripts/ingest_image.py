@@ -2,7 +2,7 @@
 """Take a still made outside this project (ChatGPT, by hand: fal-image --manual), check it against our rules and file it as the next version.
 
 Usage:
-  python scripts/ingest_image.py <image> --out <asset>/design --name master [--prompt-file p.txt] [--note "why chosen"]
+  python scripts/ingest_image.py <image> --out <asset>/source/design --name master [--prompt-file p.txt] [--note "why chosen"]
   python scripts/ingest_image.py <image> --check      checks only: prints the report, writes nothing (use before the user approves)
 
 What it does: opens any format (webp, jpg, png), puts it on a 1024x1024 canvas (a non-square image is centred on magenta, a different

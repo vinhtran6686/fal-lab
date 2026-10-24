@@ -1,6 +1,6 @@
 ---
 name: video-sprite
-description: Animate a game character's approved stills into consistent sprite animations (walk in 3 views for enemies, run/attack/death/skills from the side view for heroes) with image-to-video on fal.ai, then key, register, loop or retime, finish and export them into out/<class>/<id>/<category>/<sheet>/ (one final version; every source clip kept in raw/) with one fixed canvas and body size for every action. Use for any character or enemy animation; the stills come from the fal-image skill.
+description: Animate a game character's approved stills into consistent sprite animations (walk in 3 views for enemies, run/attack/death/skills from the side view for heroes) with image-to-video on fal.ai, then key, register, loop or retime, finish and export them into out/<class>/<id>/frames/<sheet>/ (one final version; the approved clips kept in source/video/, the rest pruned at the end of the session) with one fixed canvas and body size for every action. Use for any character or enemy animation; the stills come from the fal-image skill.
 ---
 
 # Video sprites (image-to-video on fal.ai)
@@ -10,7 +10,7 @@ project: clips come from `scripts/fal_video.py` (fal.ai, `FAL_KEY` in `.env`), f
 asset folder by `scripts/video_to_sheet.py`, and a top-down tower-defense game needs 1 view for heroes and allies, 3 for enemies and bosses (fal-image/format.md §3).
 
 **Division of work.** The `fal-image` skill makes the stills: one approved master per character (the side
-view) and, for enemies and bosses, front and back, plus a pose per skill, all in `A/design/`. Every
+view) and, for enemies and bosses, front and back, plus a pose per skill, all in `A/source/design/`. Every
 character's `A/brief.md` holds the **Asset manifest** (rows from `fal-image/classes/<class>.md` §6): the list of every still,
 clip and effect it needs, from its class, role and skills. **This skill makes the manifest's `video-sprite`
 rows marked ❌, and nothing else**: never invent a direction or a state the manifest does not list (no
@@ -25,7 +25,7 @@ on PATH; in Git Bash use the real Python, see `CLAUDE.md`).
 ## Tools
 | Step | Command |
 |---|---|
-| Still -> master.json | `python scripts/make_master.py A/design/<still>.png --out-dir A/.work/masters/<view> --name <id> --facing <facing> --recap "<{design}>"` |
+| Still -> master.json | `python scripts/make_master.py A/source/design/<still>.png --out-dir A/.work/masters/<view> --name <id> --facing <facing> --recap "<{design}>"` |
 | Plan a set | `python .claude/skills/video-sprite/scripts/sprite_set.py plan --master A/.work/masters/<view>/master.json --views <side\|front\|back> --output-dir A/.work/<set> --actions <list> --duration 4 --resolution 480p --fps 15 --target-height <2x{H}> --formats png --max-takes 1` |
 | Cost before paying | clips x takes x price (`python scripts/fal_video.py models`), or `fal_video.py video ... --dry-run` |
 | Generate + process | `python .claude/skills/video-sprite/scripts/sprite_set.py run --plan A/.work/<set>/set_plan.json` |
@@ -33,7 +33,7 @@ on PATH; in Git Bash use the real Python, see `CLAUDE.md`).
 | Accept / retake | `sprite_set.py accept --plan ... --action walk --take 1 [--window 0:124]` / `retake ... --action attack --fix weapon-shape` |
 | Export | `python scripts/video_to_sheet.py --set A/.work/<set> --action <action> --asset A --id <id> --sheet <sheet> [--flip-to <dir>] [--despill]` |
 | Effect layers (free) | `python scripts/fx_layers.py A/fx/<skill>.json` (`--check` validates only) |
-| Checks | `python scripts/motion_check.py A/<category>/<sheet>`, `python scripts/leg_check.py ...` (walks), Motion Lab |
+| Checks | `python scripts/motion_check.py A/frames/<sheet>`, `python scripts/leg_check.py ...` (walks), Motion Lab |
 | Prune (after export; always) | `python scripts/video_prune.py prune --set A/.work/<set>` |
 | Rebuild a pruned action | `python scripts/video_prune.py rebuild --set A/.work/<set> --action <action>` (from the clip, no API call) |
 `sprite_set.py` resumes where it stopped and never generates a clip twice; every verb prints one JSON line.
@@ -64,10 +64,10 @@ Everything a character does is two separate things, as in the reference game:
    `start`/`length` in seconds, z back or front of the body). The tool writes each layer's frames on the shared
    canvas, `fx.json` for the engine and a composite `preview.gif`/`sheet.png`; Read the sheet to review it,
    tune the numbers, run again (free). Before the body clip exists, `"body_still"` previews over the pose.
-   Example recipes: `out/heroes/holy_commander/fx/radiant_slash.json`, `out/heroes/thunder_sage/fx/thunderstorm.json`.
+   Example recipes: in git history (tag `pre-out-restructure`: `out/heroes/holy_commander/fx/radiant_slash.json`); the approved fx of that hero are Python (`source/fx/`).
 
    **Soft light around a body (level-up, buff, beam, ripple): Python first** (`docs/python-fx-recipe.md`, examples in
-   `out/heroes/holy_commander/fx/*.py`; numpy + Pillow, no model, $0). Flat vector layers (`fx_layers.py`) read as coarse when laid over a
+   `out/heroes/holy_commander/source/fx/*.py`; numpy + Pillow, no model, $0). Flat vector layers (`fx_layers.py`) read as coarse when laid over a
    body (rejected once); use them for small shaped objects (sprite, projectile). The soft recipe: a wide soft layer that wraps the
    silhouette (blur-and-lift of the body mask, not a max-filter: that gives square halos), additive "screen" light, a `back` and a
    `front` layer, no fine particles that clutter. Make 3-10 variants, let the user pick (a 10-variant round got one clear winner),
@@ -136,7 +136,7 @@ idle, no feet gate), `boss`, `hero` or `mob` otherwise.
 Front and back MUST be planned with `--views front` / `--views back` (their action ids become
 `front-walk` / `back-walk`): that turns off the turn-around gate, which cannot work on a symmetric view.
 Skills: put the skill's body move from `brief.md` in the entry's `motion` and set `"endStill":
-"<path to A/design/pose_skill_<name>_vNN.png from the set folder>"`: the clip runs from the master to the
+"<path to A/source/design/pose_skill_<name>_vNN.png from the set folder>"`: the clip runs from the master to the
 approved peak pose and the game switches back to idle after the last frame. The big effect is the vfx row.
 The category folder comes from the sheet name (`scripts/asset_layout.py`: walk/run/fly -> move,
 attack/attack2/shoot/cast -> attack, skill, respawn/raise -> spawn, levelup -> level, death, idle, icon -> ui).
@@ -156,7 +156,7 @@ interleaving is the mistake this structure exists to prevent.
    ❌ (or the ones the user names) - this whole list is the batch for steps 1-6 below. A row whose still is
    missing or not approved (a skill without its `pose_skill_*`, an enemy without `view_front`) goes back to
    `fal-image` first.
-1. **Stills.** The approved master and the views the rows need, from `fal-image` (`A/design/`).
+1. **Stills.** The approved master and the views the rows need, from `fal-image` (`A/source/design/`).
 2. **Masters.** `make_master.py` per view, with `--recap` = the `{design}` slot of `brief.md` verbatim (the
    long recap is repeated in every motion prompt; short recaps let the model redesign the character).
 3. **Plan** the set for the row you are on now (table above). Read the action's `prompt` in `set_plan.json`;
@@ -202,7 +202,7 @@ interleaving is the mistake this structure exists to prevent.
    `python scripts/fal_video.py video --prompt-file <P.txt> --reference <start.png> [--last-frame <end.png>] --duration 4 --resolution 480p --out-dir <dir>`,
    where `start.png` (and `end.png`) is the keyed still centred on one magenta canvas (the reference hero used 1820x1024, body 268 px;
    no helper script exists yet: place it by hand and keep the same canvas for every clip of the hero). Save the mp4, `.json` and the
-   prompt as `A/raw/<action>_<set>_tNN.*` at once. Frames then come from the recipe route ("Choosing the frames"). The `sprite_set`
+   prompt as `A/source/video/<action>_<set>_tNN.*` at once. Frames then come from the recipe route ("Choosing the frames"). The `sprite_set`
    route stays for loops (walk, run, fly), which need its gait gates and loop cutting.
 6. **Run**, then **review**: Read every take's sheet. The gates measure size, feet, zoom, turning, edges,
    background, extra objects, motion, colour and timing; they cannot see identity, a changed weapon, the
@@ -218,7 +218,7 @@ interleaving is the mistake this structure exists to prevent.
 7. **Export** each accepted action with `video_to_sheet.py` (one canvas, one body size, see above; for a state with a frame recipe use
    `apply_recipe.py`, "Choosing the frames"), then
    `idle_side --rest-frame` from the first side take. Each export replaces the sheet's state folder
-   `A/<category>/<sheet>/` (one final version). Log one row per take in `history.md` (`model` column = the
+   `A/frames/<sheet>/` (one final version). Log one row per take in `history.md` (`model` column = the
    fal model) and mark the manifest row ✅ `tNN` (⏳ while it waits for the user).
 8. **Check**: `motion_check.py` on every sheet, `leg_check.py` on walks; anything only visible in motion is
    unverified until seen in Motion Lab (`python scripts/build_playtest.py`, republish, see `CLAUDE.md`).
@@ -236,7 +236,7 @@ before Phase B exports any of them.
     show it again, same checkpoint). Never run a clip on an unconfirmed description.
   - **Checkpoint 2 (step 6, after `run` + `review`): the take.** Do your own review (Pass / Needs Revision /
     Fail) but **do not export**. Stop and show the user, per action: the clip
-    (`A/raw/<action>_<set>_tNN.mp4`), the review sheet (`review/<action>/tNN-sheet.png`), your verdict with
+    (`A/source/video/<action>_<set>_tNN.mp4`), the review sheet (`review/<action>/tNN-sheet.png`), your verdict with
     the frames at fault, and the next options. Wait.
     - "ok" / "chốt" → accept (with `--window` if a gate misread it); this row is done - go back to step 3
       for the next row in the batch, or to Phase B if this was the last row. Do not export here.
@@ -274,7 +274,7 @@ Log the user's words and the translated fix in `history.md`.
 
 ## Choosing the frames: Frame Tuner and frame recipes (`tools/frame_tuner/`, free)
 The user picks the smoothest frames, per-frame durations and the hit frame of each clip by eye. The tool shows EVERY frame of the clip
-(with the Python fx composited), saves a **recipe** (`A/export_recipe.json`: per state `clip`, `fps`, `keep`, `durationsMs`, `hit`
+(with the Python fx composited), saves a **recipe** (`A/frames/export_recipe.json`: per state `clip`, `fps`, `keep`, `durationsMs`, `hit`
 = index in the kept list, optional `shake`), and `apply_recipe.py <state> --write` exports it through `video_to_sheet.py` (one canvas,
 one body size, `--rest-last` where the state asks); `export_fx.py` exports the fx for the same kept frames. Run it as an artifact
 (recipes saved in its db; the first Claude-side copy is `export_recipe.json`) or locally with `frame_tuner.bat` + `serve.py`. Offer it after a
@@ -299,7 +299,7 @@ one-shot is accepted; with no recipe, the old `retime` default applies.
 | Frames cut wrong (loop length, timing, smear colour) | edit `set_plan.json` / export flags, `video_prune.py rebuild`, export again (replaces the state folder) | free |
 | Motion wrong (pose, weapon, turned head) | `retake --fix ...`, `run`, review, export | 1 clip per take |
 | New stills (restyle, new design, fixed view) from `fal-image` | `make_master.py` from the new still into a NEW folder (`A/.work/masters/<view>_v2`), plan a NEW set (`A/.work/<set>_v2`; plan refuses an existing folder), run, export (replaces the state folder) on the SAME canvas and body height (`meta.json` stays) | 1 clip per action |
-Every clip stays in `A/raw/`; the state folder holds only the exported (final) take.
+Every take is saved in `A/source/video/` at once; the sheet folder `A/frames/<sheet>/` holds only the exported (final) take, and at the end of the session `python scripts/source_prune.py A --apply` drops the takes that were not exported or kept as pending (`format.md` §4, "One session, one finished step").
 
 ## Per-action options in `set_plan.json` (ours, see `VENDORED.md`)
 - `"spins": true`: the body turns on purpose (a whirlwind spin attack); the prompt locks the facing only at
@@ -335,13 +335,13 @@ Video models play one-shots in slow motion; the retime cuts frozen holds and com
 (The clip canvas only frames the video; every export lands on the asset's one canvas.)
 
 ## Where things are, and disk
-Layout (`fal-image/format.md` §4): `A/raw/<action>_<set>_tNN.mp4` (+ `.json`: model, prompt, cost, request
+Layout (`fal-image/format.md` §4): `A/source/video/<action>_<set>_tNN.mp4` (+ `.json`: model, prompt, cost, request
 id) = every clip the model returned, moved there by `sprite_set.py` **as soon as it is generated** (git keeps
-it even before any export); `A/<category>/<sheet>/` = the ONE final version: `preview.gif`, `frames/`,
+it even before any export); `A/frames/<sheet>/` = the ONE final version: `preview.gif`, `frames/`,
 `check/` (checks and the take's review sheet); `meta.json` names the take. `A/.work/` is for tools only and
 is not in git: on another machine, to cut a clip again, plan the set again (`make_master.py` + `plan`), copy
-the clip from `raw/` into the new take's `actions/<action>/takes/t01/media/` and `run`: the clip is adopted
-(no API call) and matched back to its `raw/` file. One take produces ~550 files / ~70 MB of intermediate frames;
+the clip from `source/video/` into the new take's `actions/<action>/takes/t01/media/` and `run`: the clip is adopted
+(no API call) and matched back to its `source/video/` file. One take produces ~550 files / ~70 MB of intermediate frames;
 `video_prune.py prune` keeps per set only what decides the frames (the master, the input image and transform
 sent to the model, prompts, QC and every stage's JSON in `takes/tNN/record/`): ~1.4 MB per set; the review
 folder goes once every action of the set is exported (the chosen take's sheet is in `<sheet>/check/`). Wrong

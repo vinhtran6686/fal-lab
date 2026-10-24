@@ -13,7 +13,7 @@ Usage:
   python tools/fx_studio/build_samples.py render [id ...]   # draw the variants once into tools/fx_studio/samples/ (slow, ~1 min each)
   python tools/fx_studio/build_samples.py [--out DIR]       # copy the cached sheets + samples.json (build_artifact.py calls main_out)
 
-v03 and radiant_slash are taken from the hero's exported fx (fx/levelup, fx/radiant_slash): the very frames the user approved.
+v03 and radiant_slash are taken from the hero's exported fx (frames/fx/levelup, frames/fx/radiant_slash): the very frames the user approved.
 The aura variants follow holy_commander's levelup silhouette, so on another character or pose they are a starting point only."""
 import argparse, copy, json, math, pathlib, shutil, sys, tempfile
 from PIL import Image
@@ -74,13 +74,13 @@ def render(ids: list) -> None:
     os.chdir(ROOT)                       # levelup_variants adds 'scripts' to sys.path relative to the cwd
     import apply_recipe as ar
     import export_fx as ef
-    saved = json.loads((ROOT / ar.CFG["asset"] / "export_recipe.json").read_text()).get("states", {})
+    saved = json.loads((ROOT / ar.CFG["asset"] / "frames" / "export_recipe.json").read_text()).get("states", {})
     lv = next(s for s in ar.CFG["states"] if s["id"] == "levelup")
     for sid, title, fn, pose, exported, note in SAMPLES:
         if ids and sid not in ids:
             continue
         if fn is None:                   # the approved export itself
-            cache_one(sid, HERO / "fx" / exported)
+            cache_one(sid, HERO / "frames" / "fx" / exported)
             continue
         with tempfile.TemporaryDirectory(prefix="fxs_") as tmp:   # export_fx writes fx/<name>/ and meta.json here, never in the hero folder
             t = pathlib.Path(tmp)
@@ -88,13 +88,13 @@ def render(ids: list) -> None:
             st = copy.deepcopy(lv)
             st["fx"] = {**st["fx"], "fn": fn, "name": sid, "label": f"fx Python {fn.lower()} ({title})"}
             ef.run(st, saved, t)
-            cache_one(sid, t / "fx" / sid)
+            cache_one(sid, t / "frames" / "fx" / sid)
 
 
 def main_out(out: pathlib.Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
     index = []
-    keep = json.loads((HERO / "export_recipe.json").read_text(encoding="utf-8"))["states"]["levelup"]["keep"]   # tick -> python frame
+    keep = json.loads((HERO / "frames" / "export_recipe.json").read_text(encoding="utf-8"))["states"]["levelup"]["keep"]   # tick -> python frame
     for sid, title, fn, pose, exported, note in SAMPLES:
         src = CACHE / sid
         if not (src / "fx.json").exists():

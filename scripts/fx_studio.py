@@ -11,7 +11,8 @@ Usage:
   python scripts/fx_studio.py install-pack <assets dir> --skill skills/<key>.json  the same, from the app's saved data
   python scripts/fx_studio.py list
 
-Asset folder out/vfx/<id>/ (fal-image format.md section 4):
+Asset folder out/vfx/<id>/: the install registry of effects not tied to a character (and of every effect installed in
+the game: atlas, templates); a character's skills are exported to out/<class>/<id>/frames/skills/<pose>/:
   design/sheet_vNN.png     the imported sheet, every version
   fx.json                  the recipe: everything render and install need (edited by hand, with --set or by the page)
   .work/cells/cell_NN.png  each cell of the sheet with the background removed (straight alpha, source px), for the page
@@ -1151,14 +1152,14 @@ def character_dir(char: str | None) -> pathlib.Path | None:
 
 
 def export_skill_set(rec: dict, log=print) -> None:
-    """The skill as game assets next to the character: out/<class>/<id>/skills/<pose>/ with layers/<fx>/ (frames @2x, @1x,
+    """The skill as game assets next to the character: out/<class>/<id>/frames/skills/<pose>/ with layers/<fx>/ (frames @2x, @1x,
     ipad + manifest, one per effect: the engine's way), combo/ (the baked sheet), skill.json (timing) and skill.lua (the
     function a hero script calls). Recorded under "skills" in meta.json and as a row of brief.md's Asset manifest."""
     cdir = character_dir(rec.get("character"))
     if not cdir or not rec.get("pose_id"):
         return
     pose = rec["pose_id"]
-    out = cdir / "skills" / pose
+    out = cdir / "frames" / "skills" / pose
     if out.exists():
         shutil.rmtree(out)
     (out / "layers").mkdir(parents=True)
@@ -1183,7 +1184,7 @@ def export_skill_set(rec: dict, log=print) -> None:
     (out / "skill.lua").write_text(SKILL_LUA_HEAD + skill_lua(rec) + "\nreturn S\n", encoding="utf-8")
     meta_p = cdir / "meta.json"
     meta = json.loads(meta_p.read_text(encoding="utf-8"))
-    meta.setdefault("skills", {})[pose] = f"skills/{pose}/skill.json"
+    meta.setdefault("skills", {})[pose] = f"frames/skills/{pose}/skill.json"
     meta_p.write_text(json.dumps(meta, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     manifest_row(cdir / "brief.md", pose, rec, log)
     log(f"assets: {out.relative_to(ROOT)} ({len(layers)} layer(s){', combo' if info['combo'] else ''}, skill.json, skill.lua)")
@@ -1196,7 +1197,7 @@ def manifest_row(brief: pathlib.Path, pose: str, rec: dict, log=print) -> None:
     short = re.sub(r"^skill_|_side$", "", pose)
     name, date = f"fx_{short}", datetime.date.today().isoformat()
     row = (f"| {name} | Fx Studio | hiệu ứng | ✅ {date} | skill {rec['key']}: {len(rec['layers'])} tầng"
-           f"{' + sheet gộp' if rec.get('combo') else ''}, skills/{pose}/ (layers, combo, skill.json, skill.lua) |")
+           f"{' + sheet gộp' if rec.get('combo') else ''}, frames/skills/{pose}/ (layers, combo, skill.json, skill.lua) |")
     lines = brief.read_text(encoding="utf-8").split("\n")
     try:
         start = next(i for i, ln in enumerate(lines) if ln.strip().startswith("## Asset manifest"))
