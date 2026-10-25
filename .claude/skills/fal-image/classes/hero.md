@@ -70,6 +70,7 @@ Cost, melee hero with 2 skills: 4 stills (master, icon, 2 poses) + 2 vfx (~USD 0
 parts: the **pose** (peak, one still), the **body clip** (master → pose, video-sprite) and a **vfx** when the
 effect is big. Kinds seen in the references: area rain or storm, ground smash or shockwave, summon,
 transformation, buff or support, special weapon strike (sawblade, multishot, counter, chain), teleport.
+Described by `../format.md` §11: a quick idea (level 1) when proposing; the detailed phase table (level 2) with `--creative` and when a skill's work starts.
 
 ## 7b. Design details to ask when the description leaves them out
 A weapon or held item that is not described with its size has cost a hero 7 master versions (a long sword: the tip fell under the ground line,

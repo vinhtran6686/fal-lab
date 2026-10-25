@@ -1,0 +1,14 @@
+{
+  "prompt": "Use the reference image ONLY to know where the effect goes: the effect sits exactly where the character's body and leg are in the reference, at the same scale and position. Draw ONLY a game visual effect, flat 2D, on its own: NO character, NO person, NO body, NO leg, NO foot, NO hair, NO clothing, only the effect shapes. Colours: pale yellow (#ffe27a) core and orange (#ff8a2a) edge, with a thick dark orange outline on the shapes; flat solid fills, hard edges, no glow, no gradient, no blur, no smoke, no photo texture. Effect: one thin flat crescent trail, pointed at both ends and thicker in the middle, curving through the air from the hip level out to the right at waist height, following the swing of the kicking knee; plus one thin flat ellipse ring on the ground under the standing foot at the bottom centre. Centered composition, the effect inside the frame with margin on every side. Background: one flat solid pure magenta color (#FF00FF) everywhere, no gradient, no ground, no shadow, no scenery, no text, no border. Do not use magenta or pink anywhere on the subject. Stylized 2D vector cartoon game art for a top-down fantasy tower defense game, designed to read at about 60 pixels tall. Simple design: big clear shapes and a strong silhouette; small details are left out or merged into larger shapes. Stylized, exaggerated cartoon proportions, not realistic anatomy: the parts that express the character's role are enlarged and the rest is shrunk. Colour: flat solid fills only, no gradients, no airbrush, no painterly texture, no noise. Volume and shadow come from 2-3 hard-edged tones of the same colour, plus a few small highlight shapes. Thick clean outlines in a dark shade of the neighbouring colour. High top-down camera tilted about 60 degrees; light comes from the top-left.",
+  "model": "openai/gpt-image-2/edit",
+  "quality": "low",
+  "size": "1024x1024",
+  "refs": [
+    "E:\\work\\fal-lab\\out\\heroes\\surya\\source\\design\\pose_skill_whirlwind_kick_p2_v01.png"
+  ],
+  "transparent": false,
+  "seconds": 23.3,
+  "cost_usd": 0.0123,
+  "cost_is_estimate": true,
+  "source_url": "https://v3b.fal.media/files/b/0aafd1b3/Ibt-3yr9StzLFzTaNVstr_HzOpi6RM.png"
+}

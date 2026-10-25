@@ -50,6 +50,7 @@ Cost, melee ally: 2 stills (~USD 0.03) + 3 clips (~USD 0.24) + retakes.
 
 ## 7. Skills
 None by default. Elite units: 1-2 specials, made like a hero skill (pose + body clip + vfx when big).
+Described by `../format.md` §11: a quick idea (level 1) when proposing; the detailed phase table (level 2) with `--creative` and when a skill's work starts.
 
 ## 8. Slots (`brief.md`)
 | Slot | Meaning |

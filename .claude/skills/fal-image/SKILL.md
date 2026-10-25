@@ -43,12 +43,11 @@ turn it into a few designs and the user only chooses. No API call until the choi
    The user may mix (concept A with weapon from B) or type their own with "Other".
 4. **Compose** `{design}` (one dense sentence, format.md §1) and the other slots from the choices; write
    `brief.md` with the idea in the user's words, the 3 concepts offered, the choices made, class and tier.
-   **Actions**: once the character is approved, each skill (and any action the user has not described) gets 2-3 proposed action
-   descriptions written by the `video-sprite` formula (`references/motion-prompts.md` "Writing the action"): beats by body part, facing lock,
-   end state, suggested clip length, risks, price; the user picks or edits one before any clip is paid. Use the model-habit table there
-   to enrich, never to fix the design to one hero. **Physical motion** (same file, "Physical motion: five phases"): every proposed action is
-   written as wind-up (joint angles named, longest beat), load, one explosive release, travel or impact, short hold; a move that goes
-   somewhere says how far and which way. Design the `pose_skill_<name>` still to show that intent (a charge: horns forward, body low).
+   **Skills in `--creative`**: every skill a concept proposes (any class) is written at **level 2** (`format.md` §11): a phase table with the body part by
+   part, how the parts link (feet, hips, shoulder, arm, fist), and the effect at each phase, in physical order (wind-up away from the target, load, one
+   release, impact or travel, short hold), plus length, risks and price. Show it before the "Chọn kỹ năng" question; the user picks or edits one before
+   any clip is paid. Use the model-habit table of `references/motion-prompts.md` to enrich, never to fix the design to one hero. Design the
+   `pose_skill_<name>` still to show that intent (a charge: horns forward, body low).
 5. Continue in the normal mode (default: master, then stop for approval; with `--auto` too, if given).
    Show the composed `{design}` sentence in the master report so the user sees what was drawn from.
 
@@ -96,6 +95,8 @@ flags or the words of the request; never guess a missing one. Ask only what is m
    - Role missing: "Vai trò?" with the class file's §2 roles, the one the description suggests first.
    - Skills missing (hero; boss: specials): "Chọn kỹ năng" with `multiSelect: true`, 3-4 skills you propose
      from the description, each "<name>: <the body's move>; <the effect, marked vfx when big>". Hero: pick 2-3.
+     Without `--creative` this is **level 1** (`format.md` §11): a quick idea (name, one line of body, one line of effect, when it fits) that ends with the
+     note that it is only a quick idea and each skill gets its detailed phase table when work on it starts. With `--creative` it is level 2.
      Allies and enemies get no skill question (none by default; the user may add them).
    **Design details** the description leaves out (size of a held weapon against the body, hands, where it rests when idle, stance width, cape or
    hair): detect them from the description and ask them in the same call or a following one, as the class file's "Design details" table says

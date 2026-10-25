@@ -1,0 +1,35 @@
+out\heroes\surya\frames\skill_whirlwind_kick_side  frames=18  cyclic
+  F  height  ground  torso_x  change_in
+  1     130     256      3.5        2.9
+  2     128     256      0.5        1.5
+  3     126     256     -2.9        1.2
+  4     125     256     -4.7        0.9
+  5     124     256     -5.6        0.5
+  6     124     256     -5.6        0.2
+  7     124     256     -5.7        0.9
+  8     120     256     24.7        4.3
+  9     120     256     24.7        0.0
+ 10     120     256     24.7        0.0
+ 11     120     256     24.7        0.0
+ 12     120     256     24.7        0.0
+ 13     120     256     24.7        0.0
+ 14     120     256     24.7        0.0
+ 15     120     256     24.7        0.0
+ 16     120     256     24.7        0.0
+ 17     120     256     -6.3        2.3
+ 18     120     256     -4.9        1.2
+bob (height range): 10px = 7.7% of the body; lowest F8, highest F1
+loop 8->1 style check: 18->1 change 2.9 vs median 0.3
+flags:
+FROZEN  4->5: almost no change (0.5); a held pose reads as a stutter
+FROZEN  5->6: almost no change (0.2); a held pose reads as a stutter
+SPIKE   7->8: change 4.3 vs median 0.3; check pose continuity
+FROZEN  8->9: almost no change (0.0); a held pose reads as a stutter
+FROZEN  9->10: almost no change (0.0); a held pose reads as a stutter
+FROZEN  10->11: almost no change (0.0); a held pose reads as a stutter
+FROZEN  11->12: almost no change (0.0); a held pose reads as a stutter
+FROZEN  12->13: almost no change (0.0); a held pose reads as a stutter
+FROZEN  13->14: almost no change (0.0); a held pose reads as a stutter
+FROZEN  14->15: almost no change (0.0); a held pose reads as a stutter
+FROZEN  15->16: almost no change (0.0); a held pose reads as a stutter
+DRIFT   torso x moves 31px across the cycle; pack with --align torso or check for whole-sprite sliding

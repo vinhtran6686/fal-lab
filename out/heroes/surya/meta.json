@@ -1,0 +1,67 @@
+{
+  "id": "surya",
+  "class": "hero",
+  "tier": "M",
+  "H": 60,
+  "cell": [
+    176,
+    140
+  ],
+  "role": "melee",
+  "sources": {
+    "design": [
+      "master_v02.png",
+      "pose_respawn_v01.png",
+      "pose_skill_rising_uppercut_p1_v01.png",
+      "pose_skill_rising_uppercut_p2_v01.png",
+      "pose_skill_rising_uppercut_p3_v01.png",
+      "pose_skill_rising_uppercut_p3_v02.png",
+      "pose_skill_sun_fist_p1_v01.png",
+      "pose_skill_sun_fist_p2_v01.png",
+      "pose_skill_sun_fist_p3_v01.png",
+      "pose_skill_twin_palm_wave_p1_v01.png",
+      "pose_skill_twin_palm_wave_p2_v01.png",
+      "pose_skill_twin_palm_wave_p3_v01.png",
+      "pose_skill_whirlwind_kick_p1_v01.png",
+      "pose_skill_whirlwind_kick_p2_v01.png",
+      "pose_skill_whirlwind_kick_p3_v01.png"
+    ]
+  },
+  "kind": "hero",
+  "scale_2x": 2,
+  "pivot": [
+    0.5,
+    0.12
+  ],
+  "states": {
+    "skill_whirlwind_kick_side": {
+      "version": "t01-w0-106",
+      "dir": "frames/skill_whirlwind_kick_side",
+      "source": "source/video/skill_side_skill_whirlwind_kick_t01.mp4",
+      "frames": 18,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/skill_whirlwind_kick_side/frames/@1x/enemy_surya_skill_whirlwind_kick_side_NN.png",
+      "sheet": "frames/skill_whirlwind_kick_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": ".work/side_skill_whirlwind_kick",
+        "action": "skill",
+        "take": 1,
+        "route": "supplied"
+      },
+      "despill": true
+    }
+  },
+  "body_area_2x": 4939,
+  "body_height_2x": 120,
+  "shadow": {
+    "w_2x": 62,
+    "h_2x": 19,
+    "color": "#000000",
+    "alpha": 0.35
+  },
+  "mirrored": {
+    "skill_left": "skill_whirlwind_kick_side"
+  }
+}

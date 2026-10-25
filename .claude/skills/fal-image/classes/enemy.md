@@ -58,6 +58,7 @@ No reference enemy has a hurt state. Cost, melee enemy: 4 stills (~USD 0.06) + 5
 ## 7. Skills
 Rare (22 of 41 reference enemies have none; most others one: shoot, summon, heal or a special). A special is
 made like a hero skill (pose + body clip + vfx when big), only when the user asks.
+Described by `../format.md` §11: a quick idea (level 1) when proposing; the detailed phase table (level 2) with `--creative` and when a skill's work starts.
 
 ## 8. Slots (`brief.md`)
 | Slot | Meaning |

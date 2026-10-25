@@ -1,0 +1,27 @@
+{
+  "prompt": "A flat 2D game character animation, side view facing right (three-quarter, turned about 30 degrees toward the camera), on a flat solid magenta background. The stocky heroic bare-handed martial artist with long straight black hair, sleeveless golden-yellow gi, baggy golden-yellow trousers, orange sash with a teal panel, gold wrist and ankle bands, bare feet, performs a roundhouse whirlwind kick. The supporting foot stays planted on the same spot the whole time and never slides. The body only turns around the hips; the face keeps looking right and he never turns his back to the camera.\n0-0.8 s, chamber: the kicking knee is raised high, the hips wind back away from the kick, both fists stay in a guard close to the chest, the body sinks slightly and holds one beat.\n0.8-1.6 s, hip snap: the supporting foot pushes, the hips and shoulders rotate sharply to the right, the knee leads forward with the shin still folded, the fists stay in guard and do not swing.\n1.6-2.3 s, strike: the shin snaps straight and the leg extends horizontally at waist height to the right, the hair and the sash tail fly back. This is the longest and clearest beat.\n2.3-4 s, hold: he holds exactly the final pose of the end frame, leg straight at waist height and fists in guard, completely still, then settles a little.\nBoth arms never swing out. Constant character size, camera fixed, no zoom. Body motion only: no effects, no glow, no light, no trails, no particles, no motion blur, no new objects.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0aafd1cd/kQ30101peTXpGBdlRAQL1_wk_p1.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0aafd1cd/QD5OFEisIFmXdrI-OMZul_wk_p3.png"
+  },
+  "seconds": 4,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.06,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "E:\\work\\fal-lab\\out\\heroes\\surya\\.work\\wk\\wk_p1.png",
+  "lastFrame": "E:\\work\\fal-lab\\out\\heroes\\surya\\.work\\wk\\wk_p3.png",
+  "requestId": "01a173f3-70dc-7f93-818b-989799ed66df",
+  "seconds_elapsed": 3.4,
+  "source_url": "https://v3b.fal.media/files/b/0aafd1cd/CFXqZU5Mc1aqB9IDTJdzA_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

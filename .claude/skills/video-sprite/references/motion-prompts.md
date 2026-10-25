@@ -78,6 +78,8 @@ when you enrich a user's description, in `--creative` and `--example`, never to 
 
 ## Physical motion: write every skill and attack as five phases (added 2026-10-21, from a hero's slam and charge)
 
+The phase table of fal-image `format.md` §11 (level 2) is written in this order and is the input here: copy its body column into the beats and its effect column into the fx recipe.
+
 A move that only "enters the pose and stays" reads as a pose change, not an attack. Two takes showed it: a slam whose arms rose in a
 straight line, and a charge that crouched and then froze in place (the user: "just gets into the pose and stays, no charge at all").
 Write the beats so the body does what a body does:

@@ -57,6 +57,7 @@ Optional (`../format.md` §9): `death_end_side` (two-phase death: lying, or fadi
 ## 7. Skills
 **0-3 specials** (references: most have 1, a few 2, one 5). Asked with the tier (`multiSelect`). Kinds seen:
 smash, breath, freeze, heal, spores, eat, summon, cast, transformation. Each: pose + body clip + vfx when big.
+Described by `../format.md` §11: a quick idea (level 1) when proposing; the detailed phase table (level 2) with `--creative` and when a skill's work starts.
 
 ## 8. Slots (`brief.md`)
 | Slot | Meaning |

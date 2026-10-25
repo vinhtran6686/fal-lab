@@ -106,3 +106,28 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-22 01:44:18,out/heroes/diablo/design/pose_skill_fire_breath_v02.png,gpt-image-2,low,1024x1024,False,21.5,0.0131,True
 2026-10-22 01:44:44,out/heroes/diablo/.work/fb_t01/clip.mp4,h3-max-turbo,video,480P 4s,False,3.4,0.0600,True
 2026-10-22 02:00:02,out/heroes/diablo/.work/ea_t01/clip.mp4,h3-max-turbo,video,480P 4s,False,3.2,0.0600,True
+2026-10-25 17:08:45,out/heroes/surya/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,22.2,0.0136,True
+2026-10-25 17:08:48,out/heroes/surya/source/design/master_v02.png,gpt-image-2,low,1024x1024,False,24.7,0.0136,True
+2026-10-25 22:55:28,out/heroes/surya/source/design/pose_skill_earthquake_slam_v01.png,gpt-image-2,low,1024x1024,False,18.7,0.0135,True
+2026-10-25 22:55:28,out/heroes/surya/source/design/pose_skill_sun_fist_v01.png,gpt-image-2,low,1024x1024,False,19.5,0.0136,True
+2026-10-25 22:55:29,out/heroes/surya/source/design/pose_skill_whirlwind_kick_v01.png,gpt-image-2,low,1024x1024,False,20.3,0.0136,True
+2026-10-25 22:55:30,out/heroes/surya/source/design/pose_respawn_v01.png,gpt-image-2,low,1024x1024,False,21.1,0.0133,True
+2026-10-25 23:05:40,out/heroes/surya/source/design/pose_skill_twin_palm_wave_windup_v01.png,gpt-image-2,low,1024x1024,False,20.0,0.0134,True
+2026-10-25 23:05:41,out/heroes/surya/source/design/pose_skill_whirlwind_kick_release_v01.png,gpt-image-2,low,1024x1024,False,21.3,0.0134,True
+2026-10-25 23:05:41,out/heroes/surya/source/design/pose_skill_twin_palm_wave_release_v01.png,gpt-image-2,low,1024x1024,False,21.7,0.0134,True
+2026-10-25 23:05:41,out/heroes/surya/source/design/pose_skill_rising_uppercut_v01.png,gpt-image-2,low,1024x1024,False,22.4,0.0135,True
+2026-10-25 23:05:42,out/heroes/surya/source/design/pose_skill_rising_uppercut_release_v01.png,gpt-image-2,low,1024x1024,False,22.1,0.0134,True
+2026-10-25 23:05:42,out/heroes/surya/source/design/pose_skill_whirlwind_kick_windup_v01.png,gpt-image-2,low,1024x1024,False,22.3,0.0134,True
+2026-10-25 23:05:42,out/heroes/surya/source/design/pose_skill_sun_fist_windup_v01.png,gpt-image-2,low,1024x1024,False,23.0,0.0135,True
+2026-10-25 23:05:43,out/heroes/surya/source/design/pose_skill_twin_palm_wave_v01.png,gpt-image-2,low,1024x1024,False,23.0,0.0135,True
+2026-10-25 23:05:43,out/heroes/surya/source/design/pose_skill_sun_fist_release_v01.png,gpt-image-2,low,1024x1024,False,23.3,0.0135,True
+2026-10-25 23:05:44,out/heroes/surya/source/design/pose_skill_rising_uppercut_windup_v01.png,gpt-image-2,low,1024x1024,False,24.3,0.0134,True
+2026-10-25 23:07:33,out/heroes/surya/source/design/pose_skill_rising_uppercut_v02.png,gpt-image-2,low,1024x1024,False,19.7,0.0136,True
+2026-10-25 23:20:26,out/heroes/surya/source/design/pose_skill_whirlwind_kick_p1_v02.png,gpt-image-2,low,1024x1024,False,17.9,0.0143,True
+2026-10-25 23:20:27,out/heroes/surya/source/design/pose_skill_whirlwind_kick_p3_v02.png,gpt-image-2,low,1024x1024,False,18.9,0.0141,True
+2026-10-25 23:20:27,out/heroes/surya/source/design/pose_skill_whirlwind_kick_p2_v02.png,gpt-image-2,low,1024x1024,False,19.7,0.0141,True
+2026-10-25 23:31:35,out/heroes/surya/source/design/pose_skill_whirlwind_kick_p3_v03.png,gpt-image-2,low,1024x1024,False,19.6,0.0142,True
+2026-10-25 23:40:44,out/heroes/surya/source/vfx/whirlwind_kick/design/fx_whirlwind_kick_p1_v01.png,gpt-image-2,low,1024x1024,False,16.6,0.0121,True
+2026-10-25 23:40:45,out/heroes/surya/source/vfx/whirlwind_kick/design/fx_whirlwind_kick_p3_v01.png,gpt-image-2,low,1024x1024,False,18.2,0.0125,True
+2026-10-25 23:40:51,out/heroes/surya/source/vfx/whirlwind_kick/design/fx_whirlwind_kick_p2_v01.png,gpt-image-2,low,1024x1024,False,23.3,0.0123,True
+2026-10-25 23:45:01,out/heroes/surya/.work/wk/out/clip.mp4,h3-max-turbo,video,480P 4s,False,3.4,0.0600,True

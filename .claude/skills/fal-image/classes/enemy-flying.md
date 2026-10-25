@@ -54,6 +54,7 @@ Cost: 4 stills (~USD 0.06) + 5 clips (~USD 0.40) + retakes.
 
 ## 7. Skills
 Rare; made like a hero skill when the user asks.
+Described by `../format.md` §11: a quick idea (level 1) when proposing; the detailed phase table (level 2) with `--creative` and when a skill's work starts.
 
 ## 8. Slots (`brief.md`)
 | Slot | Meaning |

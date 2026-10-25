@@ -407,3 +407,31 @@ A new direction, state or skill is a new row: the size, style and pivot never ch
 - **Effects longer than the cell** (a beam, a long arc, a banner's ripple): separate fx layers on their own canvas, pivot
   at the feet (`video-sprite` "Effect layers"). The body canvas stays the tier's canvas.
 - **Why chosen**: every approved still gets 2-3 lines in `brief.md`: how it was made, why it was chosen, what it was checked with.
+
+## 11. Describing a skill or action: two levels (every class; added 2026-10-25, from a hero's "Sun Fist" proposal that was too thin)
+A skill (or any special action: hero skill, boss special, ally special, enemy shoot/summon/heal) is described at one of two levels. Never mix them.
+
+**Level 1, idea (default, no `--creative`).** Per skill: the name, one line of what the body does, one line of the effect, and when it fits (role/target).
+Every list of ideas ends with this note (in the user's language, e.g. Vietnamese): "Đây chỉ là bản mô tả nhanh về ý tưởng; mình sẽ viết chi tiết từng
+bước chuyển động và hiệu ứng khi bắt đầu triển khai từng skill cụ thể." No clip, still or fx is started from a level-1 text.
+
+**Level 2, detailed.** Written (a) always when `--creative` is given, for every skill proposed, and (b) for any skill the moment its work starts
+(pose still, clip, fx), also without the flag. It is a **phase table**, one row per phase, in this order, and it becomes the `motion` text of the clip
+(`video-sprite` "Writing the action" + "Physical motion: five phases") and the keyframes of the fx recipe, so nothing is rewritten later:
+| Phase | Body: each part and how it links to the next | Effect at this phase (frame it appears, what it is anchored to) |
+|---|---|---|
+| 1 Wind-up + load | stance (which foot is in front, knees bent how much, where the weight goes), hips, shoulders (which side drops back), arms (which one folds, where the fist is), head and soft parts; end with a short hold | usually none; only an effect that charges (a glow on the fist) |
+| 2 Release | what drives it, in order: legs push, hips turn, shoulder goes forward, arm and fist last; where each part ends | starts at the frame the limb passes the body (trail on the fist, anchored to it) |
+| 3 Impact / travel | the contact pose (reach, which part leads), or the travel (how many body widths, which way) | the main effect, born at the contact frame, anchored to the contact point or the feet, and its direction |
+| 4 Follow-through + hold | overshoot of limbs and soft parts, the return, the final still pose (the clip's end state) | decay of the effect: shrink, fade as flat layers, the last frame it is gone |
+Rules for the table:
+1. **Physics first.** Force travels feet -> hips -> shoulders -> arm -> fist; the wind-up goes AWAY from the target first and is the longest phase; the
+   strike is one explosive motion; the body part that strikes is named with its side (near or far arm, front or back leg, relative to the facing).
+   A move that goes somewhere says how far and which way; one that lands ends on the contact with the knees giving.
+2. **Name parts and joints**, never "attacks" or "moves forward". Each cell says which part moves, in which direction, and which other part it drags.
+3. **The effect follows the body.** An effect never appears before the part that makes it has reached its pose; it is anchored to a body part or the ground
+   and keeps flat layered shapes (`format.md` §1); a big effect is a separate vfx (`fx_<name>`), the clip stays body-only.
+4. **Locks**: facing (the view's 30 degree turn kept in every phase), body size constant, feet on the ground line unless the move leaves it, inside the canvas.
+5. End the table with: clip length (about 0.7-1 s per phase plus a short hold), the risks (the model-habit table of `motion-prompts.md`), the price.
+6. The `pose_skill_<name>` still is the peak of phase 2/3, drawn to show the same intent (a punch: the arm and shoulder reaching forward).
+7. **Phase stills are numbered by phase**: `pose_skill_<name>_p<N>_vNN` (p1 wind-up, p2 release, p3 impact peak, p4 follow-through when drawn), so they read in order; the prompt files are `<still>_p<N>_promptNN.txt`. A skill with one still uses `p3`.
