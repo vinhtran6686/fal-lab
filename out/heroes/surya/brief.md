@@ -20,12 +20,14 @@ Class hero, tier M ({H} 60, canvas 176x140), role melee, tay không. Skills (use
 | levelup_side | video-sprite | one-shot | ❌ | |
 | pose_skill_sun_fist (p1-p3) | fal-image | ảnh tĩnh | ⏳ v01 x3 | 3 pha, chờ user duyệt |
 | pose_skill_whirlwind_kick (p1-p3) | fal-image | ảnh tĩnh | ✅ v01 x3 | chốt: chuỗi xoay hông, chân trụ cùng một chỗ, p3 hai tay giữ guard |
-| pose_skill_rising_uppercut (p1-p3) | fal-image | ảnh tĩnh | ⏳ p1 v01, p2 v01, p3 v01/v02 | đỉnh v02 gọn hơn |
+| pose_skill_rising_uppercut (p1-p3) | fal-image | ảnh tĩnh | ⏳ p1 v01, p2 v01, p3 v02 | không còn cần: clip làm từ video mẫu, không từ still (hero.md §5: tuỳ chọn) |
 | pose_skill_twin_palm_wave (p1-p3) | fal-image | ảnh tĩnh | ⏳ v01 x3 | 3 pha, chờ user duyệt |
 | skill_whirlwind_kick_side | video-sprite | one-shot | ⏳ t01 | clip user chốt (p1→p3, 4 s); frame đã cắt nhưng còn vệt trắng-tím của model ở mũi chân (frame 8-16), cần cắt lại |
-| skill_sun_fist_side, skill_rising_uppercut_side, skill_twin_palm_wave_side | video-sprite | one-shot | ❌ | 3 clip |
+| skill_rising_uppercut_side | video-sprite | one-shot | ⏳ t01 | clip làm từ video mẫu (`ref/sprite/uppercut/ref_uppercut.mp4`, `docs/reference-video-motion.md`), user: rất tốt. Fx dính trong thân. Chưa cắt frame. Sửa lần sau: thân bị thu nhỏ khi hạ thấp -> giữ đúng cỡ nhân vật |
+| skill_sun_fist_side, skill_twin_palm_wave_side | video-sprite | one-shot | ❌ | 2 clip |
 | fx_whirlwind_kick (p1-p3 stills) | fal-image | ảnh tĩnh | ⏳ v01 x3 | thử fal: chỉ hiệu ứng trên nền magenta; sẽ phủ với opacity (sprite layer), cần dời đúng vị trí |
-| fx_sun_fist, fx_rising_uppercut, fx_twin_palm_wave | fx-layers | hiệu ứng | ❌ | |
+| fx_rising_uppercut | fx-layers | hiệu ứng | ⏭ | fx nằm trong clip t01 (video mẫu), không có recipe riêng |
+| fx_sun_fist, fx_twin_palm_wave | fx-layers | hiệu ứng | ❌ | |
 | package | export | gói | ❌ | |
 
 ## Why chosen (master_v02)

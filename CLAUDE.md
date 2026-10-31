@@ -42,10 +42,13 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.
+- Reference-video route (experimental, tested 2026-10-29): a character performs a move taken from a sprite sheet of another character,
+  fx included: `scripts/make_ref_video.py` (frames -> mp4 >= 24 fps) then fal `minimax/h3-max/reference-to-video` (0.05 USD/s, 5 s = 0.25;
+  called directly, log the cost in `costs.csv` by hand). Full method, prompt template, limits: `docs/reference-video-motion.md`.
 - Playtest: `python scripts/build_playtest.py` builds `out/playtest/` from `tools/playtest/index.html`;
   publish `index.html` (Sprite Playtest: https://claude.ai/artifact/75DbnF3Fne9dnYVuu9XaSV) and
   `motion.html` (Motion Lab: https://claude.ai/artifact/C4umJEeQjjmx6FAjpcyT1J) with the same files.
-- `ref/` holds style reference assets: look only, never send to the API.
+- `ref/` holds reference assets (style anchors, collected or AI-rendered sprites for poses and motion). Since 2026-10-29 they MAY be sent to the API as `--ref` when the user asks or for a test; the prompt says what to take from them (pose, motion, layout, never the character's design) and never names a commercial game.
 - Output: images, `.json` sidecars (prompt, settings, estimated cost) and `costs.csv` go to `out/`.
 - Spend summary: `python scripts/cost_report.py [--today]`.
 - Progress: every character's `brief.md` holds an Asset manifest (rows from `fal-image/classes/<class>.md` §6, format in `format.md` §8: class + role +

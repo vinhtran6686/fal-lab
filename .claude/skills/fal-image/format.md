@@ -5,7 +5,7 @@ sheet list and its frame size; it must not change the style, the view prompts, t
 This skill makes **stills**: the approved master of a character and its standard views, plus icons and
 other single images. **Animation is never drawn here**: the `video-sprite` skill animates the approved
 stills (image-to-video) and exports the frames into the same asset folder. Style references live in `ref/`
-(`ref/assets/`, `ref/hero/`; read-only, for looking only: never send them to the API, never copy their
+(`ref/assets/`, `ref/hero/`; read-only; may be sent as `--ref` since 2026-10-29 when the prompt says what to take (pose, motion, layout), never copy their
 designs, never name the game they come from).
 
 ## 1. Style block `{STYLE}` (fixed, append to every prompt)
@@ -61,8 +61,7 @@ the body or the weapon; the big effects of a skill belong to the animation, not 
 
 **Style anchors** (review only): before approving a new master, open it next to `ref/hero/frames/hero_elemental_0014.png`
 (and, once one exists, the first approved master of the project) with the Read tool and check outline weight,
-tone count, shape size and face simplicity match. Never send an anchor as `--ref`: `ref/` never goes to the
-API, and an approved master's design would leak into the new character.
+tone count, shape size and face simplicity match. A style anchor sent as `--ref` leaks its design into the new character: send one only for a stated purpose (a pose or motion sheet, `ref/sprite/`), and say in the prompt what NOT to copy.
 
 If `style.md` exists at the project root it replaces this block. Assets made before 2026-10-16 (bandit) used
 the previous block (muted earthy palette, near-black outlines, oversized chibi head); restyle them only on request.

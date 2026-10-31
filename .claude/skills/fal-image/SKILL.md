@@ -74,7 +74,7 @@ nothing in this skill changes. Class, tier, role, skills and the design question
 5. **File only what the user approves**: `python scripts/ingest_image.py <image> --out <asset>/source/design --name <still> --prompt-file <the pack text> --note "<why chosen>"`
    (PNG 1024x1024, next free `<still>_vNN`, sidecar `.json` with source `manual`, the prompt and cost 0; `costs.csv` is not touched).
    Rejected candidates are never saved. Then `brief.md` (approved stills, "why chosen"), `history.md` (model column: `chatgpt (manual)`, cost 0) and the manifest row as usual.
-6. Never ask the user to attach anything from `ref/` (look-only style anchors), and no confidential material.
+6. A file from `ref/` may be attached when the user wants it (rule changed 2026-10-29); say what to take from it. No confidential material.
 7. After this the asset is an ordinary asset: the same names, folders and numbering, so `video-sprite` and every tool work unchanged. A still may be
    made through the API later for the same character (the numbering continues); `--auto` does not apply (a human carries every prompt).
 
@@ -160,6 +160,6 @@ deleted, not kept for a later pick (choosing again = generating again).
 ## Rules
 - Never print, echo, read or write FAL_KEY. It lives only in `.env`.
 - Do not send confidential company data or real people's photos to the API.
-- Never send files from `ref/` to the API and never name a commercial game or studio in a prompt;
+- Files from `ref/` may be sent as `--ref` (rule changed 2026-10-29: the prompt names what to take, e.g. the poses, never the design) and never name a commercial game or studio in a prompt;
   describe the style instead.
 - If a script exits with an error, read the message, fix the arguments, and retry once before reporting.

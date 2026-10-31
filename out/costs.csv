@@ -131,3 +131,37 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-25 23:40:45,out/heroes/surya/source/vfx/whirlwind_kick/design/fx_whirlwind_kick_p3_v01.png,gpt-image-2,low,1024x1024,False,18.2,0.0125,True
 2026-10-25 23:40:51,out/heroes/surya/source/vfx/whirlwind_kick/design/fx_whirlwind_kick_p2_v01.png,gpt-image-2,low,1024x1024,False,23.3,0.0123,True
 2026-10-25 23:45:01,out/heroes/surya/.work/wk/out/clip.mp4,h3-max-turbo,video,480P 4s,False,3.4,0.0600,True
+2026-10-29 00:25:50,out/heroes/wind_drake_rider/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,15.6,0.0140,True
+2026-10-29 00:25:50,out/heroes/wind_drake_rider/source/design/master_v02.png,gpt-image-2,low,1024x1024,False,15.7,0.0140,True
+2026-10-29 00:26:26,out/heroes/wind_drake_rider/source/design/master_v03.png,gpt-image-2,low,1024x1024,False,14.3,0.0143,True
+2026-10-29 00:26:28,out/heroes/wind_drake_rider/source/design/master_v04.png,gpt-image-2,low,1024x1024,False,16.6,0.0143,True
+2026-10-29 00:28:04,out/heroes/wind_drake_rider/source/design/master_v05.png,gpt-image-2,low,1024x1024,False,14.8,0.0145,True
+2026-10-29 00:28:06,out/heroes/wind_drake_rider/source/design/master_v06.png,gpt-image-2,low,1024x1024,False,17.3,0.0145,True
+2026-10-29 00:29:16,out/heroes/wind_drake_rider/source/design/pose_respawn_v01.png,gpt-image-2,low,1024x1024,False,26.2,0.0138,True
+2026-10-29 00:29:20,out/heroes/wind_drake_rider/source/design/icon_v01.png,gpt-image-2,low,1024x1024,False,31.5,0.0132,True
+2026-10-29 00:34:31,out/heroes/wind_drake_rider/.work/side_idle/actions/idle/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 4s,False,7.1,0.0600,True
+2026-10-29 00:36:59,out/heroes/wind_drake_rider/.work/side_inspect/actions/idle/takes/t01/media/clip.mp4,h3-max-turbo,video,480P 4s,False,12.4,0.0600,True
+2026-10-29 00:59:15,out/heroes/wind_drake_rider/source/design/pose_skill_combo_slash_p1_v01.png,gpt-image-2,low,1024x1024,False,26.7,0.0137,True
+2026-10-29 00:59:18,out/heroes/wind_drake_rider/source/design/pose_skill_combo_slash_p2_v01.png,gpt-image-2,low,1024x1024,False,29.5,0.0137,True
+2026-10-29 00:59:19,out/heroes/wind_drake_rider/source/design/pose_skill_combo_slash_p3_v01.png,gpt-image-2,low,1024x1024,False,30.8,0.0136,True
+2026-10-29 01:13:52,out/heroes/wind_drake_rider/source/design/combo_sheet_test_v01.png,gpt-image-2,low,1536x1024,False,30.1,0.0144,True
+2026-10-29 01:17:36,out/heroes/wind_drake_rider/.work/pose_test/pt01-20261029-011733-0.png,gpt-image-2,low,1024x1024,False,40.5,0.0140,True
+2026-10-29 01:17:40,out/heroes/wind_drake_rider/.work/pose_test/pt22-20261029-011736-0.png,gpt-image-2,low,1024x1024,False,42.9,0.0140,True
+2026-10-29 01:17:41,out/heroes/wind_drake_rider/.work/pose_test/pt09-20261029-011737-0.png,gpt-image-2,low,1024x1024,False,44.4,0.0140,True
+2026-10-29 01:17:42,out/heroes/wind_drake_rider/.work/pose_test/pt41-20261029-011737-0.png,gpt-image-2,low,1024x1024,False,43.5,0.0140,True
+2026-10-29 01:17:43,out/heroes/wind_drake_rider/.work/pose_test/pt36-20261029-011738-0.png,gpt-image-2,low,1024x1024,False,44.5,0.0140,True
+2026-10-29 01:17:43,out/heroes/wind_drake_rider/.work/pose_test/pt06-20261029-011737-0.png,gpt-image-2,low,1024x1024,False,44.3,0.0140,True
+2026-10-29 01:17:44,out/heroes/wind_drake_rider/.work/pose_test/pt11-20261029-011739-0.png,gpt-image-2,low,1024x1024,False,45.6,0.0140,True
+2026-10-29 01:17:45,out/heroes/wind_drake_rider/.work/pose_test/pt15-20261029-011739-0.png,gpt-image-2,low,1024x1024,False,45.6,0.0140,True
+2026-10-29 01:17:45,out/heroes/wind_drake_rider/.work/pose_test/pt28-20261029-011739-0.png,gpt-image-2,low,1024x1024,False,45.1,0.0140,True
+2026-10-29 01:17:46,out/heroes/wind_drake_rider/.work/pose_test/pt39-20261029-011743-0.png,gpt-image-2,low,1024x1024,False,49.7,0.0140,True
+2026-10-29 01:17:54,out/heroes/wind_drake_rider/.work/pose_test/pt31-20261029-011752-0.png,gpt-image-2,low,1024x1024,False,58.0,0.0140,True
+2026-10-29 01:17:58,out/heroes/wind_drake_rider/.work/pose_test/pt04-20261029-011755-0.png,gpt-image-2,low,1024x1024,False,62.2,0.0140,True
+2026-10-29 01:19:04,out/heroes/wind_drake_rider/.work/pose_test2/pt31-20261029-011902-0.png,gpt-image-2,low,1024x1024,False,30.4,0.0140,True
+2026-10-29 01:19:06,out/heroes/wind_drake_rider/.work/pose_test2/pt15-20261029-011903-0.png,gpt-image-2,low,1024x1024,False,31.4,0.0140,True
+2026-10-29 01:19:06,out/heroes/wind_drake_rider/.work/pose_test2/pt01-20261029-011903-0.png,gpt-image-2,low,1024x1024,False,31.1,0.0140,True
+2026-10-29 01:19:07,out/heroes/wind_drake_rider/.work/pose_test2/pt28-20261029-011903-0.png,gpt-image-2,low,1024x1024,False,31.7,0.0140,True
+2026-10-29 01:19:08,out/heroes/wind_drake_rider/.work/pose_test2/pt04-20261029-011905-0.png,gpt-image-2,low,1024x1024,False,33.9,0.0140,True
+2026-10-29 01:19:11,out/heroes/wind_drake_rider/.work/pose_test2/pt09-20261029-011908-0.png,gpt-image-2,low,1024x1024,False,36.5,0.0140,True
+2026-10-29 03:10:00,out/heroes/wind_drake_rider/.work/ref_video/out_t01.mp4,minimax/h3-max/reference-to-video,video,480P 5s,False,0.0,0.2500,True
+2026-10-29 03:40:00,out/heroes/surya/source/video/skill_rising_uppercut_side_t01.mp4,minimax/h3-max/reference-to-video,video,480P 5s,False,0.0,0.2500,True

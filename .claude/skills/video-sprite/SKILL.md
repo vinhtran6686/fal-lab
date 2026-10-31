@@ -96,6 +96,13 @@ pose that regains colour and stands, ~4 s clip, no post-process for the colour; 
 `despawn` clip (the body sinks into the ground) exported `--reverse` stays the fallback (a statue-like result was criticised),
 plus a `pillar` + `ring` recipe or a Python fx.
 
+## Reference-video route (experimental)
+When the user brings a motion + effect reference (a sprite sheet of another character, `ref/sprite/<move>/`) and wants OUR character to do
+the same move: skip the pose stills, build `ref_<move>.mp4` with `scripts/make_ref_video.py`, send it with the approved master to
+`minimax/h3-max/reference-to-video` (0.05 USD/s). The effect may stay baked in the clip when the user asks for it (an exception to "body only").
+Method, prompt template, review, limits, bookkeeping: `docs/reference-video-motion.md`. It bypasses `sprite_set.py` (no gates): log the cost in
+`costs.csv`, store the clip as `A/source/video/<sheet>_tNN.*`, keep the body at one size (known weak point: it shrinks when crouching).
+
 ## One canvas and one body size for every action (fixed)
 The engine draws every action of a character in the same frame with the same pivot, so no action may be
 bigger or smaller than another:

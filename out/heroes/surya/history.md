@@ -21,3 +21,4 @@
 | 2026-10-25 | fx_whirlwind_kick_p2 | v01 | gpt-image-2 low | 7.5 | awaiting user | trail good; ground ring floats at shin height | move ring to the feet | same |
 | 2026-10-25 | fx_whirlwind_kick_p3 | v01 | gpt-image-2 low | 8 | awaiting user | crescent + star + shards good; ring floats at the calf | move ring to the feet | same |
 | 2026-10-25 | skill_whirlwind_kick_side (clip) | t01 | h3-max-turbo 480p 4s | 8 | approved (user) | 0.3-1.3 s front fist thrown out (arm swing) instead of guard; 1.7 s orange motion smear; hold + final pose good | retake: fists stay at chest, no-blur | user: make the video from p1/p3 refs |
+| 2026-10-29 | skill_rising_uppercut_side (clip, reference video) | t01 | minimax/h3-max/reference-to-video 480p 5s, USD 0.25 | 8 | approved (user: rất tốt) | body+fx in one clip (user choice); body shrinks while crouching; trail weaker than the reference | next take: keep body size, start crouched | user: Surya does the ref skill with the same fx |

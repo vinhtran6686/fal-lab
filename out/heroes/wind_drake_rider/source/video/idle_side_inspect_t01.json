@@ -1,0 +1,27 @@
+{
+  "prompt": "The same stocky heroic dragonkin warrior, a dragon-person about 3 heads tall (draw the head big and the legs short, not a tall lean figure), with a dragon head with two swept-back horns and a short snout, a humanoid body in layered scale-plate armor built from several stacked overlapping plates on the chest, shoulders and belly, strong arms with clawed hands that grip a sword hilt with fingers, short sturdy legs ending in clawed dragon feet, one thick tail growing from the base of the spine with several curling segments, a flowing feathered mane running from the head down the back, and one large wind-swept cape-like wing trailing from the shoulders; the tail, mane and wing are drawn noticeably wider than the torso itself, spreading out behind and above the body; the near right arm is raised holding a curved wind-blade that reaches from the waist to the chest, its tip clearly below the top of the head (blade and hand fully inside the frame), the other arm relaxed at the side; deep teal-blue scales with a bright cyan accent on the mane and wing edges, dark blue-black outline, facing RIGHT the entire time and never turning around, The dragonkin starts in the ready stance of the still, then inspects his blade, then returns to the exact starting pose, as a looping game idle animation. 0-0.8 s: the sword arm bends at the elbow and lowers the curved blade in front of the chest, edge level; the other arm lifts from the side and holds its palm open facing up under the blade; the upper body leans forward a little and the head starts to bow. 0.8-1.6 s: the flat of the blade rests across the open palm, the sword hand holds the hilt above it; the head is bowed and the eyes look down at the blade. 1.6-2.4 s: the wrist at the hilt rotates and turns the blade over to its other face on the palm; the head tilts slightly with it, still looking down at the blade. 2.4-3.2 s: the blade turns back to the first face; the head gives a small nod as if checking the edge. 3.2-4.0 s: the palm lowers back to the side, the sword arm lifts the blade up again, the head lifts, the body stands upright in exactly the starting pose. The blade keeps exactly the same rigid shape and the fist keeps its grip on the hilt. The tail, feathered mane and cape-like wing keep swaying gently at different, offset rhythms. The feet stay planted on the same ground line, no steps, no attack, the body stays centered. The clip starts AND ends in exactly the same pose as the still. Body motion only: no NEW light, glow, sparks, lightning, energy, magic, trails or particles beyond the shapes already drawn on the still; the game draws every effect as a separate layer. The camera never moves or zooms: the character keeps exactly the same size in every frame. Nothing appears around the character: no particles, no smoke, no dust, no effects. camera locked, no zoom, no pan; solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick clean outlines in a dark shade of the neighbouring colour, flat colour fills with 2-3 tone hard-edged cel shading, the exact palette of the still, big simple readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the still; single continuous action.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0ab03843/WR9KJtze6Bg6N2iYmtuqV_input.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0ab03844/ZQyIAd9ssjxp2m8Ka4omp_input.png"
+  },
+  "seconds": 4,
+  "resolution": "480P",
+  "size": [
+    1024,
+    1024
+  ],
+  "estimateUsd": 0.06,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "E:\\work\\fal-lab\\out\\heroes\\wind_drake_rider\\.work\\side_inspect\\actions\\idle\\job\\input.png",
+  "lastFrame": "E:\\work\\fal-lab\\out\\heroes\\wind_drake_rider\\.work\\side_inspect\\actions\\idle\\job\\input.png",
+  "requestId": "01a18395-f115-75d0-bfc1-d2d635a95777",
+  "seconds_elapsed": 12.4,
+  "source_url": "https://v3b.fal.media/files/b/0ab03845/oNOI7DvOhS159tQKsv5P1_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

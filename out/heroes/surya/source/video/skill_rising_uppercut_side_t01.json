@@ -1,0 +1,24 @@
+{
+  "model": "minimax/h3-max/reference-to-video",
+  "endpoint": "minimax/h3-max/reference-to-video",
+  "method": "reference video (docs/reference-video-motion.md)",
+  "arguments": {
+    "duration": 5,
+    "resolution": "480P",
+    "aspect_ratio": "1:1",
+    "prompt_expansion_mode": "disabled",
+    "reference_image": "out/heroes/surya/source/design/master_v02.png",
+    "reference_video": "ref/sprite/uppercut/ref_uppercut.mp4"
+  },
+  "seed": 1906363321,
+  "reference_tokens": 9349,
+  "source_url": "https://v3b.fal.media/files/b/0ab039aa/m5I9rkpyFKMcRN3gFSac3_minimax-h3.mp4",
+  "seconds": 5,
+  "estimateUsd": 0.25,
+  "cost_is_estimate": true,
+  "price": "0.05 USD/s (fal pricing API)",
+  "notes": [
+    "fx baked into the body at user request",
+    "body shrinks while crouching: fix in next take"
+  ]
+}
