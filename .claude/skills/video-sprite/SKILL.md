@@ -33,7 +33,7 @@ on PATH; in Git Bash use the real Python, see `CLAUDE.md`).
 | Accept / retake | `sprite_set.py accept --plan ... --action walk --take 1 [--window 0:124]` / `retake ... --action attack --fix weapon-shape` |
 | Export | `python scripts/video_to_sheet.py --set A/.work/<set> --action <action> --asset A --id <id> --sheet <sheet> [--flip-to <dir>] [--despill]` |
 | Effect layers (free) | `python scripts/fx_layers.py A/source/fx/<skill>.json` (`--check` validates only) |
-| Checks | `python scripts/motion_check.py A/frames/<sheet>`, `python scripts/leg_check.py ...` (walks), Motion Lab |
+| Checks | `python scripts/motion_check.py A/frames/<sheet>`, `python scripts/leg_check.py ...` (walks), Motion Lab (`python .claude/skills/video-sprite/playtest/build_playtest.py`) |
 | Prune (after export; always) | `python scripts/video_prune.py prune --set A/.work/<set>` |
 | Rebuild a pruned action | `python scripts/video_prune.py rebuild --set A/.work/<set> --action <action>` (from the clip, no API call) |
 `sprite_set.py` resumes where it stopped and never generates a clip twice; every verb prints one JSON line.
@@ -228,7 +228,8 @@ interleaving is the mistake this structure exists to prevent.
    `A/frames/<sheet>/` (one final version). Log one row per take in `history.md` (`model` column = the
    fal model) and mark the manifest row ✅ `tNN` (⏳ while it waits for the user).
 8. **Check**: `motion_check.py` on every sheet, `leg_check.py` on walks; anything only visible in motion is
-   unverified until seen in Motion Lab (`python scripts/build_playtest.py`, republish, see `CLAUDE.md`).
+   unverified until seen in Motion Lab (`python .claude/skills/video-sprite/playtest/build_playtest.py`, then republish
+   `out/playtest/motion.html` and `index.html` with the same files, see `CLAUDE.md`).
 9. **Prune** every set once its actions are exported (always; no need to ask).
 Report: the manifest after the run (`python scripts/asset_status.py <id>`), the state folder of every sheet,
 the model and takes, the cost (`python scripts/cost_report.py --today`).

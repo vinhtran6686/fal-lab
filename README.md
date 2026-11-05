@@ -46,7 +46,8 @@ size, hướng, ảnh tĩnh, dòng manifest, skill, slot, điểm review):
 - `.claude/skills/fal-image/reference.md`: số liệu đo từ game tham chiếu (nguồn của các con số trong class).
 - `docs/asset-manifest.md`: cách đọc manifest và xem tiến độ.
 - `.claude/skills/video-sprite/SKILL.md`: quy trình tạo animation từ ảnh tĩnh.
-- Playtest: `python scripts/build_playtest.py` rồi nhờ Claude publish `out/playtest/` để xem quái đi trên map.
+- Playtest (thuộc skill video-sprite): `python .claude/skills/video-sprite/playtest/build_playtest.py` rồi nhờ Claude publish `out/playtest/` để xem nhân vật đi trên map.
+- Thư viện hiệu ứng: `lib-fx/` (xem `lib-fx/README.md`), `python lib-fx/build.py` dựng lại toàn bộ và gallery xem trước.
 
 Ví dụ:
 - `Tạo enemy nhện quái vật cận chiến` → Claude tạo **master** rồi dừng; bạn chốt (vd. "chốt v02") → Claude tạo các góc chuẩn để bạn duyệt.

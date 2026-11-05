@@ -1,0 +1,59 @@
+{
+ "id": "force/shock/drill",
+ "name": "Khoan xoắn",
+ "desc": "a spear of light inside a double helix that screws forward fast; the tip bites off small rings, sparks spiral off, then the coils unwind outward and the tip flies on alone",
+ "status": "draft",
+ "tags": [
+  "force",
+  "impact",
+  "one-shot",
+  "directional",
+  "anchor:contact",
+  "heavy",
+  "piercing"
+ ],
+ "fps": 30,
+ "frames": 19,
+ "frame_size_2x": [
+  320,
+  320
+ ],
+ "anchor_2x": [
+  64,
+  160
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "rim": [
+   168,
+   90,
+   18
+  ],
+  "body": [
+   255,
+   182,
+   46
+  ],
+  "light": [
+   255,
+   222,
+   128
+  ],
+  "core": [
+   255,
+   245,
+   220
+  ],
+  "white": [
+   255,
+   255,
+   250
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/drill_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/force/shock/shock.py: shock_drill"
+}

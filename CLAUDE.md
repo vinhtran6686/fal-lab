@@ -24,28 +24,24 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   sheet with `preview.gif`, `frames/`, `check/`; `icon/`, `fx/<name>/`, `skills/<pose>/`, `export_recipe.json`), plus
   `brief.md`, `history.md`, `meta.json` and `.work/` (tools only, not in git). One session, one finished step: originals
   are cut in the same session; at its end `python scripts/source_prune.py <asset> [--keep ...] --apply` drops every still
-  and take that was not approved (no "pick again later": run the flow again). `out/vfx/` is the Fx Studio install registry.
+  and take that was not approved (no "pick again later": run the flow again).
 - Icon packing: `scripts/sprite_pack.py` (single stills into `ui/icon/`).
 - Effects (skills, attack smears, respawn, level-up): `scripts/fx_layers.py A/source/fx/<skill>.json`, a recipe of small flat
   layers (slash, ring, burst, bolt, pillar, particles, tweened fx part stills) on one canvas anchored at the
   feet, the reference game's method; no video model. Character clips are body only (`video-sprite` SKILL.md).
-- Fx Studio (`tools/fx_studio/fx_studio.bat`, engine `scripts/fx_studio.py`): a sprite sheet of a 2D effect -> `out/vfx/<id>/`
-  (recipe `fx.json`; `game/`: frames @2x, @1x = fullhd, ipad, manifest in the `ref/hero` format) -> `install` packs atlas
-  `go_fx_lab` into the Kingdom Rush 1 game (`KR1_GAME_DIR`, default `E:\work\reverse\games\kr1`, LOVE 0.10.2) and registers
-  animation + template; F6/F7 play it in a level. Raster (as drawn) by default; `mode: vector` traces the flat core with
-  vtracer and redraws the glow. Guide: `tools/fx_studio/README.md`.
-  The main tool is the browser app (`tools/fx_studio/app.html`, Artifact https://claude.ai/artifact/JUVk6cDVriDXhLXLTTQzVi):
-  pick character + pose, layer effects on a timeline at game frames (snap to the hit frame), drag to place, recolour, save.
-  "cài skill <char>__<pose> từ Fx Studio" = ArtifactData `get` skills/<key> -> Artifact `read` each asset id in
-  `layers[].pack` -> `python scripts/fx_studio.py install-pack <assets dir> --skill <doc.json>` (no re-render; F5 in a level).
-  State, open work and repo notes: `docs/fx-studio-handover.md`.
+- **lib-fx/** is THE fx library for every character (since 2026-11-06): effects drawn in code (0 USD), each stored ON ITS OWN
+  (no character), frames @2x. Folders = group -> family (`melee/blade`, `force/shock`, `element/fire/<cast|projectile|impact|aoe|aura|status>`
+  ...), map in `lib-fx/GUIDE.md` (Vietnamese), rules and commands in `lib-fx/README.md`. Code sits in its family (`force/shock/shock.py`),
+  shared kit in `lib-fx/_core/` (`fxcore.py`, `palettes.py`). `python lib-fx/build.py [group[/family[/id]]]` renders each effect
+  (`sheet.png`, `frames/`, `preview.gif`, `meta.json` with status draft|approved|rework) plus `lib-fx/_gallery/<group>-<family>.png|gif`
+  and `lib-fx/catalog.json`. New effects go into the library first; characters use them from there. Show fx alone for review.
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.
 - Reference-video route (experimental, tested 2026-10-29): a character performs a move taken from a sprite sheet of another character,
   fx included: `scripts/make_ref_video.py` (frames -> mp4 >= 24 fps) then fal `minimax/h3-max/reference-to-video` (0.05 USD/s, 5 s = 0.25;
   called directly, log the cost in `costs.csv` by hand). Full method, prompt template, limits: `docs/reference-video-motion.md`.
-- Playtest: `python scripts/build_playtest.py` builds `out/playtest/` from `tools/playtest/index.html`;
+- Playtest (part of the `video-sprite` skill): `python .claude/skills/video-sprite/playtest/build_playtest.py` builds `out/playtest/`;
   publish `index.html` (Sprite Playtest: https://claude.ai/artifact/75DbnF3Fne9dnYVuu9XaSV) and
   `motion.html` (Motion Lab: https://claude.ai/artifact/C4umJEeQjjmx6FAjpcyT1J) with the same files.
 - `ref/` holds reference assets (style anchors, collected or AI-rendered sprites for poses and motion). Since 2026-10-29 they MAY be sent to the API as `--ref` when the user asks or for a test; the prompt says what to take from them (pose, motion, layout, never the character's design) and never names a commercial game.

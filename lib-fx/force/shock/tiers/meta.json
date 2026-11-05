@@ -1,0 +1,59 @@
+{
+ "id": "force/shock/tiers",
+ "name": "Tầng vòng",
+ "desc": "a hot flash at the contact, then three 3D rings born a frame apart along a bright axis streak; they shoot forward accelerating, overshoot, leave motion echoes and shed sparks from their tips",
+ "status": "draft",
+ "tags": [
+  "force",
+  "impact",
+  "one-shot",
+  "directional",
+  "anchor:contact",
+  "light",
+  "medium"
+ ],
+ "fps": 30,
+ "frames": 19,
+ "frame_size_2x": [
+  320,
+  320
+ ],
+ "anchor_2x": [
+  64,
+  160
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "rim": [
+   168,
+   90,
+   18
+  ],
+  "body": [
+   255,
+   182,
+   46
+  ],
+  "light": [
+   255,
+   222,
+   128
+  ],
+  "core": [
+   255,
+   245,
+   220
+  ],
+  "white": [
+   255,
+   255,
+   250
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/tiers_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/force/shock/shock.py: shock_tiers"
+}

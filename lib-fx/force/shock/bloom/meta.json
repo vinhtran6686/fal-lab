@@ -1,0 +1,60 @@
+{
+ "id": "force/shock/bloom",
+ "name": "Hoa nổ",
+ "desc": "an explosion shaped like a flower: rays rush in, a white flash, then three tiers of petals blast open with a shock ring, embers fly from the petal tips and the petals tear away from the empty centre",
+ "status": "draft",
+ "tags": [
+  "force",
+  "impact",
+  "one-shot",
+  "directional",
+  "anchor:contact",
+  "heavy",
+  "burst",
+  "explosion"
+ ],
+ "fps": 30,
+ "frames": 19,
+ "frame_size_2x": [
+  320,
+  320
+ ],
+ "anchor_2x": [
+  64,
+  160
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "rim": [
+   168,
+   90,
+   18
+  ],
+  "body": [
+   255,
+   182,
+   46
+  ],
+  "light": [
+   255,
+   222,
+   128
+  ],
+  "core": [
+   255,
+   245,
+   220
+  ],
+  "white": [
+   255,
+   255,
+   250
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/bloom_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/force/shock/shock.py: shock_bloom"
+}

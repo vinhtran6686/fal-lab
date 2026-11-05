@@ -199,7 +199,6 @@ out/<class>/<id>/                         e.g. out/heroes/centaur/
       check/                              motioncheck.txt, transitions.png, legcheck.png, take_review.png
     icon/                                 packed icon (sprite_pack.py from source/design/icon_vNN.png)
     fx/<name>/                            fx layers that go with a sheet: back/ front/ frames, fx.json, previews
-    skills/<pose>/                        Fx Studio skill sets: layers/, combo/, skill.json, skill.lua
     export_recipe.json                    frame tuner recipes (+ export_manifest.json, README.md when packaged for another repo)
   .work/                                  tools only, not in git (video-sprite sets pruned to their decisions)
 ```
@@ -212,8 +211,8 @@ automatically through `meta.json` states; a superseded approval leaves the list 
 superseded versions are **not** kept: choosing again means running the flow again (new take, new export).
 Re-exporting a sheet replaces its `frames/<sheet>/` folder; the clip or still it came from is named in `meta.json`
 (`version`, `source`).
-`out/vfx/<id>/` is the Fx Studio **install registry** (effects installed in the game, effects not tied to a character),
-not part of a character; a character's skill sets live in its `frames/skills/`.
+Effects not tied to one character live in **`lib-fx/`** (repo root), the shared fx library: each effect stored on its own,
+built with `python lib-fx/build.py` (guide `lib-fx/README.md`); a character uses them from there, its own fx layers live in `frames/fx/`.
 Categories (metadata, `asset_layout.CATEGORIES`): `move` (walk, run), `attack` (attack, cast), `skill`, `spawn`, `level`,
 `death`, `hurt`, `idle`, `ui` (icon), `projectile`.
 - Design still names: `<name>_vNN.png`, made by `gen_image.py --name <name> --versioned --out <asset>/source/design`.
@@ -226,7 +225,7 @@ Game-ready frames (the same for every action of an asset):
 | Canvas | **one canvas for every action of an asset** (`meta.json` "cell"), from the class file's §3 (class and tier, §7). No action gets a bigger or smaller frame, so the engine never rescales one action against another |
 | Body | **one body height for every action**: `2 x {H}` at @2x (video-sprite `--target-height`), recorded as `meta.json` "body_height_2x"; a sheet whose body differs by more than 4% is rescaled on export |
 | Pivot | feet, x 0.5, y 0.88 of the canvas (`meta.json` "pivot"; fixed in `video_to_sheet.py`); icons are centered. The reference game sets the anchor per character (0.10-0.25 of the canvas above the bottom, median 0.18) and the engine reads it per character; this project fixes it at 0.88 for every asset and records it in `meta.json`, the size matrix (§7) already includes the room below the feet |
-| Motion | `move_speed` (px/s at 1x) in `meta.json`, tuned in the playtest so the feet do not slide |
+| Motion | `move_speed` (px/s at 1x) in `meta.json`, tuned in the playtest (`.claude/skills/video-sprite/playtest/`) so the feet do not slide |
 Frame size: §7.
 
 `history.md` row format (append one row after reviewing every still or take, including rejected ones):

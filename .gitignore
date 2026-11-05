@@ -5,4 +5,3 @@ __pycache__/
 # out/ is tracked (stills, clips, exported frames, meta, briefs); tool-only data is not:
 out/**/.work/
 out/playtest/
-out/fx_studio_artifact/
