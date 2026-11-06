@@ -75,9 +75,10 @@ class Shape:
         dil = ndimage.distance_transform_edt(~m0) <= r
         return (ndimage.distance_transform_edt(dil) > r) | m0             # never lose a thin tip
 
-    def paint(self, bands, a=1.0, fillet=3.0, erode=0.0, noise=0.0, seed=1, backing=None):
+    def paint(self, bands, a=1.0, fillet=3.0, erode=0.0, noise=0.0, seed=1, backing=None, clip=None, cut=None):
         """bands = [(max distance from the edge in px, colour), ..., (None, colour)]. erode (px) + noise (px) dissolve the shape;
-        backing = (px, colour, alpha) draws a darker halo of the silhouette behind it."""
+        backing = (px, colour, alpha) draws a darker halo of the silhouette behind it; clip / cut = another Shape on the same
+        canvas: keep only the pixels inside it / cut it out (distances are still measured on this shape)."""
         if a <= 0.003: return
         bb = self.m.getbbox()                                             # work on the shape's box only (same pixels, much faster)
         if bb is None: return
@@ -96,6 +97,9 @@ class Shape:
             if not m.any(): return
         if self.h is not None:
             m = m & ~(np.asarray(self.h)[box] > 127)
+        if clip is not None: m = m & (np.asarray(clip.m)[box] > 127)        # only where another shape is (a band inside a body)
+        if cut is not None: m = m & ~(np.asarray(cut.m)[box] > 127)         # holes of any shape
+        if not m.any(): return
         if backing:
             px, col, al = backing
             bk = ndimage.distance_transform_edt(~m) <= px * ss

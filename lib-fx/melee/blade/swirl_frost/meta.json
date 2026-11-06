@@ -1,0 +1,91 @@
+{
+ "id": "melee/blade/swirl_frost",
+ "name": "Xoáy chém băng",
+ "desc": "a frost swirl slash: an ice-white blade with feathered cyan and blue zones that cool from the tail toward the head sweeps and hooks inward over a dark-blue see-through after-image; the blue zones open into long holes and the blade dissolves into shards while thin, dim crack lines in two clusters stay a while",
+ "status": "draft",
+ "tags": [
+  "melee",
+  "blade",
+  "slash",
+  "swirl",
+  "one-shot",
+  "anchor:centre",
+  "ice",
+  "water",
+  "medium"
+ ],
+ "fps": 30,
+ "frames": 30,
+ "frame_size_2x": [
+  380,
+  380
+ ],
+ "anchor_2x": [
+  190,
+  190
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "rim": [
+   37,
+   93,
+   128
+  ],
+  "body": [
+   60,
+   170,
+   227
+  ],
+  "light": [
+   105,
+   231,
+   255
+  ],
+  "core": [
+   239,
+   255,
+   255
+  ],
+  "white": [
+   250,
+   255,
+   255
+  ],
+  "deep": [
+   37,
+   93,
+   128
+  ],
+  "blue": [
+   34,
+   119,
+   172
+  ],
+  "mid": [
+   60,
+   170,
+   227
+  ],
+  "cyan": [
+   105,
+   231,
+   255
+  ],
+  "ice": [
+   239,
+   255,
+   255
+  ],
+  "ghost": [
+   30,
+   80,
+   115
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/swirl_frost_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/melee/blade/blade.py: swirl_frost"
+}

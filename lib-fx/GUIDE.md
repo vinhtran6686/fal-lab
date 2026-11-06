@@ -18,7 +18,7 @@ Liên hệ với game thủ thành: tháp cung → `ranged/bow`, tháp phép →
 
 | Thư mục | Chứa gì |
 |---|---|
-| `_core/` | Bộ vẽ dùng chung, không chứa hiệu ứng. `fxcore.py`: canvas siêu mẫu, hình cơ bản (lưỡi liềm, dải, thấu kính, ribbon, lấp lánh), easing, quầng sáng. `palettes.py`: 14 bảng màu chuẩn (sun, fire, ice, water, lightning, earth, wind, nature, poison, holy, shadow, arcane, blood, spirit). `organic.py`: hình tự do (gai, giọt, khối méo, lưỡi lửa chữ S `flame`, viền spline), tô theo khoảng cách tới mép, khói toon (`cloud`, `shade`). |
+| `_core/` | Bộ vẽ dùng chung, không chứa hiệu ứng. `fxcore.py`: canvas siêu mẫu, hình cơ bản (lưỡi liềm, dải, thấu kính, ribbon, lấp lánh), easing, quầng sáng. `palettes.py`: 16 bảng màu chuẩn (sun, fire, ice, water, lightning, earth, wind, nature, poison, holy, shadow, arcane, blood, spirit, blaze, frost). `fxcore.glow_under`: quầng sáng nhiều cỡ chỉ từ một lớp. `organic.py`: hình tự do (gai, giọt, khối méo, lưỡi lửa chữ S `flame`, viền spline), tô theo khoảng cách tới mép, khói toon (`cloud`, `shade`). |
 | `_gallery/` | Ảnh xem trước sinh tự động, mỗi họ một cặp: `<nhóm>-<họ>.png` (mọi hiệu ứng, frame cách 1) và `.gif` (chạy cùng lúc, đúng tốc độ). |
 | `catalog.json` | Danh mục toàn bộ hiệu ứng: tên, trạng thái, tag, mô tả, fps, số frame, cỡ, điểm neo, thư mục. |
 | `build.py` | Dựng lại asset và gallery: `python lib-fx/build.py [nhóm[/họ[/id]]]`. |
@@ -39,7 +39,7 @@ force/shock/
 | Thư mục | Tên | Chứa gì | Ví dụ | Hiện có |
 |---|---|---|---|---|
 | `melee/unarmed/` | Tay không | đấm, đá, chưởng tay (phần vệt và va chạm của đòn thân thể), húc vai, vật | vệt đấm thẳng, vệt đá quét, tia trúng nắm đấm | - |
-| `melee/blade/` | Kiếm, dao | vệt chém, đâm, chém xoay, chuỗi combo của vũ khí có lưỡi | vệt chém lưỡi liềm, chém chữ X, đâm nhanh | - |
+| `melee/blade/` | Kiếm, dao | vệt chém, đâm, chém xoay, chuỗi combo của vũ khí có lưỡi | vệt chém lưỡi liềm, chém chữ X, đâm nhanh, chém xoáy | Xoáy chém lửa (draft), Xoáy chém băng (draft) (công thức: RECIPE-swirl.md) |
 | `melee/blunt/` | Búa, chùy | đòn nặng: đập, nện xuống đất, vụt ngang | vệt búa nặng, đập đất nứt | - |
 | `melee/polearm/` | Thương, giáo | đâm xuyên dài, quét rộng hình quạt | đâm thương xuyên, quét giáo | - |
 | `melee/beast/` | Quái thú | vuốt, cắn, húc, quật đuôi của quái | ba vệt vuốt, vết cắn | - |

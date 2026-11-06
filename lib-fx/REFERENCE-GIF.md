@@ -8,7 +8,8 @@ Ghi ngày 2026-11-06, trước khi nhận GIF đầu tiên.
 **Làm được**
 - Đọc **mọi frame** và thời lượng từng frame (ảnh tĩnh chỉ cho một khoảnh khắc; GIF cho cả nhịp: báo trước, bùng, đỉnh, tan).
 - Tách hiệu ứng khỏi nền, đo từng frame: khung bao, diện tích, tâm, độ sáng, **số mảnh rời và cỡ từng mảnh** (ra nhịp to/vừa/nhỏ),
-  bảng màu chính và tỉ lệ từng màu, quỹ đạo chuyển động (ảnh onion skin).
+  bảng màu chính và tỉ lệ từng màu, quỹ đạo chuyển động (ảnh onion skin). Nền có gradient: `--bg median` (nền = trung vị từng điểm ảnh qua mọi frame).
+- Lưu ý: bảng màu k-means lẫn quầng sáng với nền; màu vẽ thật phải lấy mẫu ở giữa từng vùng.
 - Dựng lại bằng bộ kit có sẵn: hình tự do (`organic`: gai, giọt, khối méo, lưỡi lửa `flame`/`tongue`, viền spline, tô theo khoảng cách
   tới mép, khói toon `shade`/`cloud`, ăn mòn có nhiễu), hình học (`fxcore`: vòng 3D, lưỡi liềm, dải, tia, hạt có lực cản), đường bay
   Catmull-Rom với hàm thời gian riêng, đuôi một mặt nạ.
@@ -37,7 +38,7 @@ Có thể dùng chính mặt nạ của bản gốc để **thử** cách tô m�
 
 1. **Nghiên cứu** (tự động):
    ```
-   python lib-fx/_tools/study_ref.py <file.gif> --name <tên> [--bg auto|R,G,B|alpha] [--thr 38] [--hero-px <cao nhân vật>]
+   python lib-fx/_tools/study_ref.py <file.gif> --name <tên> [--bg auto|median|R,G,B|alpha] [--thr 38] [--hero-px <cao nhân vật>]
    ```
    Ra `lib-fx/_study/<tên>/`: `contact.png` (mọi frame, số thứ tự, thời điểm), `onion.png` (quỹ đạo), `palette.png`, `curves.png`
    (diện tích, độ sáng, số mảnh theo frame), `report.json` (nhịp: frame xuất hiện, sáng nhất, to nhất, bắt đầu tan, hết; cỡ các mảnh).
@@ -56,6 +57,7 @@ Có thể dùng chính mặt nạ của bản gốc để **thử** cách tô m�
 
 ## 4. Mẫu tham khảo đã đạt trong thư viện
 
+- Dựng lại từ GIF (ví dụ đầu tiên, có bảng phân tích lớp và nhật ký so frame): [RECIPE-swirl.md](RECIPE-swirl.md).
 - Nhiều lớp, nhịp, vòng xung kích, màu nguội dần: [RECIPE-inferno.md](RECIPE-inferno.md) (`force/shock/inferno`, approved).
 - Đốm lửa / tinh linh bay có đuôi, mỗi con một tính cách: [RECIPE-soul-spirits.md](RECIPE-soul-spirits.md).
 - Tóe va chạm vẽ tay: [RESEARCH-organic-impact.md](RESEARCH-organic-impact.md).

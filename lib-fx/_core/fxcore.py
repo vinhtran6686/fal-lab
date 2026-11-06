@@ -54,6 +54,17 @@ def halo(img, rgb, a, blur=10):
     return out
 
 
+def glow_under(dst, src, passes):
+    """Soft light from the alpha of canvas `src`, composited onto canvas `dst` (put it on the layer behind): passes =
+    [(rgb, alpha, blur px), ...], widest first. Unlike the build-level halo it glows only what you pass it, at several scales."""
+    al0 = src.img.getchannel("A")
+    for rgb, a, blur in passes:
+        if a <= 0: continue
+        al = al0.filter(ImageFilter.GaussianBlur(blur * src.ss)).point(lambda v, a=a: int(min(255, v * a)))
+        g = Image.new("RGBA", src.img.size, tuple(rgb) + (0,)); g.putalpha(al)
+        dst.img.alpha_composite(g)
+
+
 # ---------------------------------------------------------------- shapes
 def lune(c, cx, cy, rxo, rxi, ry, col, a, d=1, ryi=None, n=36):
     """Crescent between two half-ellipses through (cx, cy +- ry): bulges rxo towards d, its inner edge rxi (rxi < rxo; may be negative)."""

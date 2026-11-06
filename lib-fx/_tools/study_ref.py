@@ -2,7 +2,7 @@
 """Study a reference VFX clip (GIF, MP4, WEBM, or a folder of frames) before redrawing it with lib-fx. 0 USD, no model.
 
 Usage (repo root):
-  python lib-fx/_tools/study_ref.py REF.gif [--name NAME] [--bg auto|R,G,B|alpha] [--thr 38] [--k 8]
+  python lib-fx/_tools/study_ref.py REF.gif [--name NAME] [--bg auto|median|R,G,B|alpha] [--thr 38] [--k 8]
   python lib-fx/_tools/study_ref.py REF.gif --compare lib-fx/<group>/<family>/<id>/frames   (our frames next to the reference)
 
 Writes lib-fx/_study/<name>/ (git-ignored: references are study material, never shipped):
@@ -51,6 +51,11 @@ def key(frames, bg, thr):
     arrs = [np.asarray(f).astype(np.int16) for f in frames]
     if bg == "alpha" or (bg == "auto" and min(a[..., 3].min() for a in arrs) < 250):
         return [a[..., 3] > 16 for a in arrs], None
+    if bg == "median":                                                      # a static but uneven background (gradient, floor)
+        med = np.median(np.stack([a[..., :3] for a in arrs]), axis=0)
+        masks = [ndimage.binary_opening(np.sqrt(((a[..., :3] - med) ** 2).sum(-1)) > thr, iterations=1) for a in arrs]
+        Image.fromarray(med.astype(np.uint8)).save(HERE / "_study" / "_last_background.png")
+        return masks, "median"
     if bg == "auto":
         corners = np.concatenate([np.concatenate([a[:6, :6, :3].reshape(-1, 3), a[:6, -6:, :3].reshape(-1, 3), a[-6:, :6, :3].reshape(-1, 3),
                                                   a[-6:, -6:, :3].reshape(-1, 3)]) for a in arrs])
