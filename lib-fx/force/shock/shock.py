@@ -38,7 +38,7 @@ CATALOG = {   # id: name (Vietnamese), description, status (draft | approved | r
     "bloom": dict(name="Hoa nổ", status="draft", tags=["heavy", "burst", "explosion"],
                   desc="an explosion shaped like a flower: rays rush in, a white flash, then three tiers of petals blast open with a shock ring, "
                        "embers fly from the petal tips and the petals tear away from the empty centre"),
-    "inferno": dict(name="Hỏa xung tầng", status="draft", tags=["heavy", "fire", "projectile", "burst", "organic"],
+    "inferno": dict(name="Hỏa xung tầng", status="approved", tags=["heavy", "fire", "projectile", "burst", "organic"],
                     frame=(640, 400), anchor=(60, 200), dur=0.78, glow=(255, 120, 40), halo=(0.55, 10),
                     desc="a burning punch: rays rush into an orb at the fist, a spiky white flash fuses with a white-hot beam, a dark-red ring "
                          "stands around the fist, and four tiers of broken calligraphic fire rings fly out with a faint pressure front ahead; "

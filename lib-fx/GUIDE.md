@@ -1,7 +1,7 @@
 # Hướng dẫn thư viện lib-fx
 
 Thư viện hiệu ứng (fx) chuẩn của dự án, dùng chung cho mọi nhân vật. Mỗi hiệu ứng vẽ bằng code (0 USD) và lưu **riêng lẻ, không kèm nhân vật**.
-File này mô tả từng thư mục chứa gì. Luật nhìn, lệnh dựng và cách thêm hiệu ứng nằm trong `README.md`; phương pháp thiết kế trong `DESIGN.md`; cách sinh hình tự do (gai, toé, khói) trong `RESEARCH-organic-impact.md`.
+File này mô tả từng thư mục chứa gì. Luật nhìn, lệnh dựng và cách thêm hiệu ứng nằm trong `README.md`; phương pháp thiết kế trong `DESIGN.md`; cách sinh hình tự do (gai, toé, khói) trong `RESEARCH-organic-impact.md`; công thức hiệu ứng nhiều lớp đã duyệt: `RECIPE-inferno.md`.
 
 ## Cách chia
 
@@ -60,7 +60,7 @@ Năng lượng thuần không thuộc nguyên tố nào: khí công, chưởng, 
 
 | Thư mục | Tên | Chứa gì | Ví dụ | Hiện có |
 |---|---|---|---|---|
-| `force/shock/` | Sóng xung kích | luồng lực bùng ra dọc một trục tại điểm chạm của đòn thẳng (đá, đấm, chưởng) | tầng vòng, khoan xoắn, vòng vỡ | Hoa nổ (draft), Khoan xoắn (draft), Vòng vỡ (draft), Tầng vòng (draft), Nón hơi (draft), Hỏa xung tầng (draft) |
+| `force/shock/` | Sóng xung kích | luồng lực bùng ra dọc một trục tại điểm chạm của đòn thẳng (đá, đấm, chưởng) | tầng vòng, khoan xoắn, vòng vỡ | Hoa nổ (draft), Khoan xoắn (draft), Vòng vỡ (draft), Tầng vòng (draft), Nón hơi (draft), Hỏa xung tầng (approved, công thức: RECIPE-inferno.md) |
 | `force/wave/` | Sóng lan | sóng lực lan trên mặt đất hoặc bay đi như một bức tường | sóng chưởng bay, sóng lan đất | - |
 | `force/beam/` | Tia năng lượng | tia bắn thẳng liên tục (kame-style), có đầu, thân, điểm chạm | tia chưởng, tia khí | - |
 | `force/charge/` | Tụ khí | gom lực trước đòn: hạt bay vào, quầng sáng lớn dần, bùng khí | tụ khí tay, bùng khí toàn thân | - |

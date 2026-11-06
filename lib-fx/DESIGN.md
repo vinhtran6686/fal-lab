@@ -84,4 +84,5 @@ mỗi vòng (cháy hết trước) → tia đạn có đầu mũi tên → tia l
 
 Luật vật lý của sóng: **vòng sinh trước bay xa nhất và nở to nhất**; mỗi vòng vừa bay vừa nở, nguội màu (trắng → vàng → cam → đỏ), mờ dần
 rồi vỡ thành móc và mảnh (ăn mòn có nhiễu). Ở mọi frame vòng gần nhỏ và nóng, vòng xa to và nhạt. Khung 640x400 @2x, neo (60,200), 0,78 s.
+User duyệt (approved). Công thức đầy đủ (lớp, dòng thời gian, tham số, kỹ thuật, nhật ký lặp): [RECIPE-inferno.md](RECIPE-inferno.md).
 
