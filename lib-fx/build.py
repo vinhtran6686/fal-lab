@@ -9,6 +9,7 @@ Usage (repo root):
 
 A family is a folder holding one module (e.g. force/shock/shock.py). The module exposes
   VARIANTS {id: fn(t, P, front, back)}, CATALOG {id: {name, desc, status, tags}}, TAGS, PAL_SUN, DUR, FRAME, ANCHOR, FPS
+(a CATALOG entry may override frame, anchor, dur, palette, glow and halo for that one effect)
 and every effect is written next to it: <family>/<id>/sheet.png (one transparent row), frames/<id>_NN.png, preview.gif, meta.json.
 Per family: _gallery/<family with - for />.png (every other frame) and .gif (all effects playing together, real speed).
 All effects: catalog.json. Map of the folders: GUIDE.md.
@@ -43,15 +44,27 @@ def frame_of(mod, name):
     return tuple(c.get("frame", mod.FRAME)), tuple(c.get("anchor", mod.ANCHOR))
 
 
+def palette_of(mod, name):
+    """The palette an effect is drawn in: per effect when its CATALOG entry says so ("palette"), else the family's PAL_SUN."""
+    return mod.CATALOG[name].get("palette", mod.PAL_SUN)
+
+
+def glow_of(mod, name):
+    """Tint, strength and blur of the soft glow under an effect: CATALOG "glow" / "halo" (alpha, blur), else the family's."""
+    c = mod.CATALOG[name]
+    return tuple(c.get("glow", palette_of(mod, name)["light"])), tuple(c.get("halo", (getattr(mod, "HALO", 0.45), 8)))
+
+
 def render(mod, name):
     (W, H), P = frame_of(mod, name); fps = mod.FPS
+    glow, (ha, hb) = glow_of(mod, name)
     n = int(math.ceil(mod.CATALOG[name].get("dur", mod.DUR) * fps)) + 1
     frames = []
     for i in range(n):
         fc, bc = fxcore.Canvas(W, H), fxcore.Canvas(W, H)
         mod.VARIANTS[name](i / fps, P, fc, bc)
         img = bc.done(); img.alpha_composite(fc.done())
-        frames.append(fxcore.halo(img, mod.PAL_SUN["light"], getattr(mod, "HALO", 0.45), 8))
+        frames.append(fxcore.halo(img, glow, ha, hb))
     return frames
 
 
@@ -72,7 +85,7 @@ def write_effect(fam, mod, name, frames):
     meta = {"id": f"{fam}/{name}", "name": c["name"], "desc": c["desc"], "status": c.get("status", "draft"),
             "tags": list(dict.fromkeys(list(getattr(mod, "TAGS", [])) + list(c.get("tags", [])))),
             "fps": fps, "frames": len(frames), "frame_size_2x": [W, H], "anchor_2x": list(anchor), "direction": "+x (mirror for -x)",
-            "palette": mod.PAL_SUN, "files": {"sheet": "sheet.png", "frames": f"frames/{name}_NN.png", "preview": "preview.gif"},
+            "palette": palette_of(mod, name), "files": {"sheet": "sheet.png", "frames": f"frames/{name}_NN.png", "preview": "preview.gif"},
             "source": f"lib-fx/{fam}/{pathlib.Path(mod.__file__).name}: {mod.VARIANTS[name].__name__}"}
     (d / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf8")
     return meta

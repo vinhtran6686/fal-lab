@@ -50,6 +50,34 @@
   ],
   "dir": "force/shock/drill"
  },
+ "force/shock/inferno": {
+  "name": "Hỏa xung tầng",
+  "status": "draft",
+  "tags": [
+   "force",
+   "impact",
+   "one-shot",
+   "directional",
+   "anchor:contact",
+   "heavy",
+   "fire",
+   "projectile",
+   "burst",
+   "organic"
+  ],
+  "desc": "a burning punch: rays rush into an orb at the fist, a spiky white flash fuses with a white-hot beam, a dark-red ring stands around the fist, and four tiers of broken calligraphic fire rings fly out with a faint pressure front ahead; the first ring travels farthest and grows widest, every ring cools, fades and breaks into hooks and chips, while bright tracers with arrow heads, sparks and rising embers scatter forward",
+  "fps": 30,
+  "frames": 25,
+  "frame_size_2x": [
+   640,
+   400
+  ],
+  "anchor_2x": [
+   60,
+   200
+  ],
+  "dir": "force/shock/inferno"
+ },
  "force/shock/shatter": {
   "name": "Vòng vỡ",
   "status": "draft",

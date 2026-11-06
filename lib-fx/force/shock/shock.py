@@ -14,8 +14,9 @@ How every design is built (game VFX practice):
 Every design is gone by DUR seconds.
 """
 import math, random
-from fxcore import (tone, mix, clamp, smooth, out_cubic, out_back, out_expo, lin, lune, lens, ribbon, twinkle,
+from fxcore import (Canvas, tone, mix, clamp, smooth, out_cubic, out_back, out_expo, lin, lune, lens, ribbon, twinkle, band,
                     stepped_glow, starburst, spark, arc3d, drag_pos)
+from organic import Shape, thorn, shard, blob, thorns_at
 from palettes import SUN as PAL_SUN
 
 DUR = 0.6
@@ -37,6 +38,12 @@ CATALOG = {   # id: name (Vietnamese), description, status (draft | approved | r
     "bloom": dict(name="Hoa nổ", status="draft", tags=["heavy", "burst", "explosion"],
                   desc="an explosion shaped like a flower: rays rush in, a white flash, then three tiers of petals blast open with a shock ring, "
                        "embers fly from the petal tips and the petals tear away from the empty centre"),
+    "inferno": dict(name="Hỏa xung tầng", status="draft", tags=["heavy", "fire", "projectile", "burst", "organic"],
+                    frame=(640, 400), anchor=(60, 200), dur=0.78, glow=(255, 120, 40), halo=(0.55, 10),
+                    desc="a burning punch: rays rush into an orb at the fist, a spiky white flash fuses with a white-hot beam, a dark-red ring "
+                         "stands around the fist, and four tiers of broken calligraphic fire rings fly out with a faint pressure front ahead; "
+                         "the first ring travels farthest and grows widest, every ring cools, fades and breaks into hooks and chips, while "
+                         "bright tracers with arrow heads, sparks and rising embers scatter forward"),
 }
 
 
@@ -400,4 +407,312 @@ def shock_bloom(t, P, front, back, pal=PAL_SUN, s=1.0, d=1):
         front.ellipse(cx, py, 10 * s * k + 1, 10 * s * k + 1, pal["white"], k)
 
 
-VARIANTS = {"tiers": shock_tiers, "vapor": shock_vapor, "drill": shock_drill, "shatter": shock_shatter, "bloom": shock_bloom}
+# ---------------------------------------------------------------- 6 inferno: a punch that fires a train of burning shock rings
+# Built from many layers (back to front): far halves of the rings, a faint pressure cone, dim speed streaks, a dark-red ring around
+# the fist, the white-hot beam fused with a spiky muzzle flash, the near halves of four ring tiers (broken calligraphic strokes
+# with hooks and barbs), bright tracers with arrow heads, sparks off the flash, embers off the ring ends and chips when they break.
+# The rings are hand-drawn silhouettes coloured by distance to their edge (organic.Shape): thick middles burn white-yellow, thin
+# ends orange-red. The first ring born travels farthest and grows biggest: a shock wave widens, cools and fades as it spreads.
+INFERNO = dict(tip=(172, 32, 20), rim=(226, 70, 24), body=(246, 116, 32), light=(255, 168, 60), core=(255, 224, 146),
+               white=(255, 250, 234), back=(92, 18, 12))
+CATALOG["inferno"]["palette"] = INFERNO
+T_FIRE = 2 / 30                                                           # two drawings of build-up, then the burst
+SQ, LEAN = 0.44, 0.32                                                      # ring seen three-quarters; its top leans forward
+# tier: born (s after the burst), start x, travel, start radius, end radius, stroke width, life (s), seed; tier 0 is the oldest
+INF_TIERS = [(0.00, 30, 380, 26, 138, 19, 0.74, 3), (0.04, 26, 290, 24, 114, 20, 0.69, 8),
+             (0.08, 22, 200, 20, 88, 20, 0.63, 13), (0.12, 18, 118, 16, 62, 18, 0.57, 21)]
+
+
+def fire_bands(pal, s=1.0, heat=1.0):
+    """Edge -> centre bands; as it cools the hottest colours drop out (white first, then pale yellow, then yellow)."""
+    cols = [pal["tip"], pal["rim"], pal["body"], pal["light"], pal["core"], pal["white"]]
+    lims = [1.4, 3.4, 6.0, 8.6, 11.5]
+    top = 2 + int(round(3 * clamp(heat)))                                # index of the hottest colour still burning
+    return [(lims[i] * s, cols[i]) for i in range(top)] + [(None, cols[top])]
+
+
+def dark_bands(pal, s=1.0, heat=1.0):
+    """The far half of a ring, behind everything: dim and red."""
+    return [(1.6 * s, pal["back"]), (3.6 * s, pal["tip"]), (6.5 * s, pal["rim"])] + ([(None, pal["body"])] if heat > 0.4 else [(None, pal["rim"])])
+
+
+def _ring_pt(cx, cy, r, th, d):
+    """A point on a ring standing across the axis at cx, seen three-quarters, its top leaning forward."""
+    y = r * math.sin(th)
+    return cx + d * (r * math.cos(th) * SQ - LEAN * y), cy + y
+
+
+def _stroke(cx, cy, R, th0, th1, W, d, hook=0.0, n=30):
+    """A calligraphic stroke along the ring from th0 to th1: fat middle, pointed ends, thinner on the far side; hook curls the end
+    inward. Returns (outline, centre line, widths)."""
+    cl, ws = [], []
+    for i in range(n + 1):
+        v = i / n
+        th = th0 + (th1 - th0) * v
+        r = R * (1 - hook * 0.24 * smooth(0.7, 1.0, v) ** 1.4)
+        near = (math.cos(th) + 1) / 2
+        cl.append(_ring_pt(cx, cy, r, th, d))
+        ws.append(W * max(0.0, math.sin(math.pi * v)) ** 0.55 * (0.45 + 0.55 * near))
+    L, Rr = [], []
+    for i, (x, y) in enumerate(cl):
+        p, q = cl[max(0, i - 1)], cl[min(n, i + 1)]
+        dx, dy = q[0] - p[0], q[1] - p[1]; l = math.hypot(dx, dy) or 1
+        nx, ny = -dy / l, dx / l
+        L.append((x + nx * ws[i] / 2, y + ny * ws[i] / 2)); Rr.append((x - nx * ws[i] / 2, y - ny * ws[i] / 2))
+    return L + Rr[::-1], cl, ws
+
+
+def _segments(seed):
+    """3-5 broken arcs around a ring (start, end in radians), uneven lengths and gaps, plus a hook direction per arc."""
+    rng = random.Random(seed)
+    segs, a = [], rng.uniform(-math.pi, -math.pi / 2)
+    end = a + 2 * math.pi
+    while a < end - 0.5:
+        span = min(rng.uniform(1.5, 2.5), end - a - 0.15)
+        if span < 0.5: break
+        segs.append((a, a + span, rng.choice((-1, 1)) * rng.uniform(0.5, 1.0)))
+        a += span + rng.uniform(0.22, 0.45)
+    return segs
+
+
+def _tier_state(k, t, s, d, P):
+    """Where tier k is at time t: (u, centre x, radius, width, alpha, heat) or None."""
+    tb, x0, D, R0, R1, W, life, _ = INF_TIERS[k]
+    u = (t - T_FIRE - tb) / life
+    if not 0 <= u < 1: return None
+    e = 1 - (1 - u) ** 1.9                                                # fast out, slowing down as it spreads
+    cx = P[0] + d * (x0 + D * e) * s
+    R = (R0 + (R1 - R0) * out_cubic(min(1, u * 1.15)) + 0.12 * R1 * u) * s       # keeps widening until it is gone
+    w = W * s * (1.15 - 0.7 * smooth(0.05, 1, u))
+    fade = (0.78, 0.88, 0.96, 1.0)[k]                                     # the oldest, widest ring is the faintest
+    a = fade * smooth(0, 0.04, u) * (1 - smooth(0.55, 1, u))
+    heat = (1 - smooth(0.05, 0.85, u)) * (0.82 + 0.06 * k)
+    return u, cx, R, w, a, heat
+
+
+def _tier_arcs(k, t, s, d, P):
+    """The arcs of tier k at time t: [(th0, th1, hook, near?)], spun, shrunk and drifted apart as the ring breaks."""
+    st = _tier_state(k, t, s, d, P)
+    if st is None: return st, []
+    u = st[0]
+    spin = (0.55 if k % 2 else -0.55) * out_cubic(u)
+    brk = smooth(0.42, 1, u)
+    out = []
+    for th0, th1, hook in _segments(INF_TIERS[k][7]):
+        m, h = (th0 + th1) / 2 + spin, (th1 - th0) / 2 * (1 - 0.4 * brk)
+        out.append((m - h, m + h, hook, math.cos(m) >= 0))
+    return st, out
+
+
+def _layer(c):
+    """A fresh layer the size of canvas c: translucent strokes drawn on it are then composited (drawing straight onto a canvas
+    replaces the pixels underneath instead of blending with them)."""
+    return Canvas(c.w, c.h, c.ss)
+
+
+def shock_inferno(t, P, front, back, pal=INFERNO, s=1.0, d=1):
+    X, py = _x(P, d, s), P[1]
+    # ---- build-up: rays rush into a growing orb at the fist, a ring closes in around it
+    if t < T_FIRE - 1e-6:
+        k = t / T_FIRE + 0.5
+        cx = X(10)
+        stepped_glow(front, cx, py, (14 + 16 * k) * s, pal, 0.7 + 0.3 * k)
+        for j in range(9):
+            th = (j / 9 - 0.5) * 2.6 + 0.1 * (j % 2)
+            r_out, r_in = (80 * (1 - k) + 26) * s, (50 * (1 - k) + 12) * s
+            p0 = (cx + d * math.cos(th) * r_out, py + math.sin(th) * r_out * 0.8)
+            p1 = (cx + d * math.cos(th) * r_in, py + math.sin(th) * r_in * 0.8)
+            lens(front, p0, p1, 3.4 * s, pal["light"], 0.5 + 0.5 * k)
+        band(back, cx, py, 10 * s, (64 - 30 * k) * s, 3 * s, pal["rim"], 0.6, math.pi / 2, 3 * math.pi / 2)
+        band(front, cx, py, 10 * s, (64 - 30 * k) * s, 3 * s, pal["light"], 0.8, -math.pi / 2, math.pi / 2)
+        front.ellipse(cx, py, (6 + 3 * k) * s, (6 + 3 * k) * s, pal["white"], 1)
+        return
+    tf = t - T_FIRE
+    first = tf < 1 / 30 - 1e-6
+    # ---- the leading pressure front: a faint, wide, dark-red ring racing ahead of everything
+    ug = tf / 0.62
+    if ug < 1:
+        Rg, cg = (34 + 150 * out_cubic(ug)) * s, X(34 + 430 * (1 - (1 - ug) ** 2.2))
+        ag = 0.55 * smooth(0, 0.05, ug) * (1 - smooth(0.3, 1, ug))
+        for half, c, col, al in (((math.pi / 2, 3 * math.pi / 2), back, pal["back"], 0.6), ((-math.pi / 2, math.pi / 2), back, pal["tip"], 1.0)):
+            pts = [_ring_pt(cg, py, Rg, th, d) for th in lin(half[0], half[1], 40)]
+            ly = _layer(c)
+            ribbon(ly, pts, [(4.5 * s * (1 - 0.5 * ug)) * max(0.0, math.sin(math.pi * i / 39)) ** 0.4 for i in range(40)], col, ag * al)
+            c.paste(ly)
+    # ---- pressure cone behind the rings (volume, very faint)
+    lead = max((st[1] for st in (_tier_state(k, t, s, d, P) for k in range(4)) if st), default=None, key=lambda x: d * x)
+    if lead is not None and tf < 0.5:
+        ac = 0.07 * (1 - smooth(0.15, 0.5, tf))
+        for kk in (1.0, 0.6):
+            Rc = 90 * s * kk * smooth(0, 0.1, tf)
+            ly = _layer(back)
+            ly.poly([(X(16), py - 8 * s), (lead, py - Rc), (lead + d * 20 * s, py), (lead, py + Rc), (X(16), py + 8 * s)], pal["rim"], ac)
+            back.paste(ly)
+    # ---- ring tiers: far halves (behind), motion smears, then near halves (front), oldest first
+    tiers = []
+    for k in range(4):
+        st, arcs = _tier_arcs(k, t, s, d, P)
+        if st: tiers.append((k, st, arcs))
+    for k, (u, cx, R, w, a, heat), arcs in tiers:
+        brk = smooth(0.42, 1, u)
+        Rd = R * (1 + 0.14 * brk)                                         # the pieces drift apart as the ring breaks
+        sh = Shape(back)
+        for th0, th1, hook, near in arcs:
+            if not near: sh.poly(_stroke(cx, py, Rd, th0, th1, w * 0.8, d, hook)[0])
+        sh.paint(dark_bands(pal, s, heat), a * 0.85, fillet=2.0, erode=7 * s * smooth(0.55, 1, u), noise=4 * s * smooth(0.42, 1, u), seed=50 + k)
+        # smear: where the near arcs were a moment ago, thin and faint, behind
+        st2, arcs2 = _tier_arcs(k, t - 0.05, s, d, P)
+        if st2:
+            ly = _layer(back)
+            for th0, th1, hook, near in arcs2:
+                if near:
+                    _, cl, ws = _stroke(st2[1], py, st2[2] * (1 + 0.14 * smooth(0.42, 1, st2[0])), th0, th1, st2[3], d, hook, n=20)
+                    ribbon(ly, cl, [x * 0.45 for x in ws], pal["rim"], a * 0.35)
+            back.paste(ly)
+    for k, (u, cx, R, w, a, heat), arcs in tiers:
+        brk = smooth(0.42, 1, u)
+        Rd = R * (1 + 0.14 * brk)
+        sh = Shape(front)
+        rng = random.Random(70 + k)
+        for th0, th1, hook, near in arcs:
+            if not near: continue
+            poly, cl, ws = _stroke(cx, py, Rd, th0, th1, w, d, hook)
+            sh.poly(poly)
+            # barbs: short thorns torn off the outer edge, trailing behind the stroke's motion
+            if th1 - th0 > 0.7:
+                for v in (0.3, 0.62):
+                    i = int(v * (len(cl) - 1))
+                    (x, y), (x2, y2) = cl[i], cl[i + 1]
+                    tang = math.atan2(y2 - y, x2 - x) + (math.pi if hook > 0 else 0)
+                    outw = math.atan2(y - py, (x - cx) * 2.5)
+                    ang = tang + 0.45 * math.sin(outw - tang)
+                    sh.poly(thorn(x, y, ang, (0.16 + 0.1 * rng.random()) * R * (1 - 0.5 * brk), ws[i] * 0.75, bend=0.35 * (1 if hook > 0 else -1)))
+            # chips thrown off the ends once it starts to break
+            if brk > 0:
+                for end, sgn in ((cl[2], -1), (cl[-3], 1)):
+                    ang = math.atan2(end[1] - py, (end[0] - cx) * 2.0) + sgn * 0.3
+                    dist = 26 * s * out_cubic(brk) + 4 * s
+                    sz = 1 - smooth(0.6, 1, brk)
+                    if sz > 0.05:
+                        sh.poly(shard(end[0] + math.cos(ang) * dist, end[1] + math.sin(ang) * dist, ang, 13 * s * sz, 7 * s * sz, 0.3))
+        sh.paint(fire_bands(pal, s, heat), a, fillet=3.0, erode=8 * s * smooth(0.55, 1, u), noise=5 * s * smooth(0.42, 1, u), seed=60 + k,
+                 backing=(3.0 * s, pal["back"], 0.3 * (1 - smooth(0.3, 0.9, u))))
+        # a thin second line riding inside the stroke a beat behind it: the double line of a brush, it burns out first
+        ac = a * (1 - smooth(0.25, 0.7, u))
+        if ac > 0.01:
+            ly = _layer(front)
+            for th0, th1, hook, near in arcs:
+                if not near or th1 - th0 < 0.8: continue
+                _, cl, ws = _stroke(cx - d * 10 * s, py, Rd * 0.84, th0 + 0.2, th1 - 0.1, w, d, hook * 0.6, n=24)
+                ribbon(ly, cl, [x * 0.2 + 0.6 * s for x in ws], mix(pal["light"], pal["core"], 0.6 * heat), ac)
+            front.paste(ly)
+    # ---- dark-red ring standing around the fist (the recoil of the shot)
+    um = tf / 0.42
+    if um < 1:
+        am = (1 - smooth(0.3, 1, um))
+        rx, ry = (8 + 6 * out_cubic(um)) * s, (40 + 22 * out_cubic(um)) * s
+        lb, lf = _layer(back), _layer(front)
+        band(lb, X(6), py, rx, ry, 5 * s * (1 - 0.5 * um), pal["back"], am * 0.8, math.pi / 2, 3 * math.pi / 2)
+        band(lf, X(6), py, rx, ry, 5 * s * (1 - 0.5 * um), pal["tip"], am, -math.pi / 2, math.pi / 2)
+        lf2 = _layer(front)
+        band(lf2, X(6) + d * 1.2 * s, py, rx, ry, 1.6 * s * (1 - um), pal["light"], am, -math.pi / 2.4, math.pi / 2.4)
+        back.paste(lb); front.paste(lf); front.paste(lf2)
+    # ---- dim speed streaks behind the beam
+    rng = random.Random(90)
+    ly = _layer(back)
+    for j in range(7):
+        y0, dl, sp, w0 = rng.uniform(-30, 30) * s, rng.uniform(0, 0.06), rng.uniform(900, 1300) * s, rng.uniform(1.2, 2.2) * s
+        _tracer(ly, X(20), py + y0, rng.uniform(-0.04, 0.04), sp, tf - dl, 0.42, w0, pal, 0.45, head=False, d=d)
+    back.paste(ly)
+    # ---- the beam fused with the muzzle flash: one silhouette, white-hot in the thick middle
+    ub = tf / 0.38
+    if ub < 0.3:
+        ly = _layer(front); stepped_glow(ly, X(10), py, 34 * s * (1 - ub / 0.3), pal, 0.75 * (1 - ub / 0.3)); front.paste(ly)
+    if ub < 1:
+        sh = Shape(front)
+        L = 260 * s * out_expo(min(1, ub * 3.0 + 0.4)) * (1 - 0.35 * smooth(0.4, 1, ub))
+        base = X(8 + 140 * smooth(0.3, 1, ub) ** 1.3)                     # the beam leaves the fist and runs out
+        Wb = 30 * s * (1 - 0.6 * smooth(0.1, 1, ub))
+        ang0 = 0 if d > 0 else math.pi
+        if L > 2:
+            sh.poly(thorn(base, py, ang0, L, Wb, 0.0, p=1.15))
+            for sy in (-1, 1):
+                sh.poly(thorn(base, py + sy * 4 * s, ang0 + sy * 0.05 * d, L * 0.55, Wb * 0.55, -sy * 0.1 * d, p=2.2))
+        uf = tf / 0.26
+        if uf < 1:
+            mx = X(10)
+            sh.poly(blob(mx, py, 15 * s * (1 + 0.3 * uf) * (1 - smooth(0.5, 1, uf)) + 0.5, wob=0.15, freq=5, phase=1))
+            A = (lambda deg: math.radians(deg) if d > 0 else math.pi - math.radians(deg))
+            jag = [(-24, 66, 12, -0.1, 8), (22, 62, 12, 0.1, 8), (-44, 56, 11, -0.16, 8), (41, 52, 11, 0.16, 8),     # a cone of spikes
+                   (-68, 40, 10, -0.22, 7), (70, 36, 10, 0.22, 7), (-96, 26, 9, -0.25, 6), (98, 24, 9, 0.25, 6),
+                   (-12, 50, 10, 0.0, 8), (11, 46, 10, 0.0, 8), (-140, 18, 8, -0.2, 5), (142, 16, 8, 0.2, 5), (180, 24, 10, 0.0, 5),
+                   (-33, 92, 4, -0.04, 6, 0.01), (34, 84, 4, 0.04, 6, 0.01), (-58, 70, 4, -0.06, 6, 0.017), (57, 74, 4, 0.06, 6, 0.017)]
+            thorns_at(sh, mx, py, [(A(a_), L_ * s, W_ * s, b_ * d, r_ * s) + tuple(x[5:]) for x in jag for a_, L_, W_, b_, r_ in [x[:5]]],
+                      tf, 0.26, thin_by=0.6, detach=0.45, start=0.85)
+        heat = 1 - smooth(0.12, 1, ub)
+        bands = [(1.2 * s, pal["light"]), (None, pal["white"])] if first else fire_bands(pal, s, heat)
+        sh.paint(bands, 1 - smooth(0.7, 1, ub), fillet=4.0, erode=8 * s * smooth(0.55, 1, ub), noise=4 * s * smooth(0.45, 1, ub), seed=80,
+                 backing=(3.5 * s, pal["back"], 0.35 * (1 - smooth(0.3, 0.8, ub))))
+    # ---- tracers: the scatter of bright streaks with arrow heads, fanning out a little
+    rng = random.Random(91)
+    ly = _layer(front)
+    for j, (yo, ang) in enumerate(((-20, -0.07), (-12, -0.04), (-5, -0.018), (4, 0.012), (11, 0.035), (19, 0.062), (0, 0.0), (-8, -0.1), (8, 0.09))):
+        dl, sp = rng.uniform(0.0, 0.05), rng.uniform(1300, 1650) * s
+        _tracer(ly, X(22), py + yo * s, ang, sp, tf - dl, 0.55, (3.4 if j < 6 else 4.4 if j == 6 else 2.4) * s, pal, 1.0, head=j < 7, d=d)
+    front.paste(ly)
+    # ---- sparks sprayed from the flash, mostly forward
+    rng = random.Random(92)
+    ly = _layer(front)
+    for j in range(22):
+        dl = rng.uniform(0, 0.05); ue = tf - dl; life = rng.uniform(0.2, 0.32)
+        if not 0 < ue < life: continue
+        th = rng.gauss(0, 0.9) if j < 16 else rng.uniform(-math.pi, math.pi)
+        sp = rng.uniform(260, 560) * s
+        x, y, vx, vy = drag_pos(X(14), py, d * math.cos(th) * sp, math.sin(th) * sp, ue, k=6, g=60 * s)
+        spark(ly, x, y, vx, vy, rng.uniform(6, 13) * s, rng.uniform(1.6, 2.6) * s, pal["light"] if j % 3 else pal["core"], 1 - ue / life, core=pal["white"])
+    front.paste(ly)
+    # ---- embers peeling off the ring ends, rising as they cool
+    lf, lb = _layer(front), _layer(back)
+    for k in range(4):
+        rng = random.Random(100 + k)
+        for j in range(7):
+            ub_ = rng.uniform(0.12, 0.55)
+            tb = T_FIRE + INF_TIERS[k][0] + ub_ * INF_TIERS[k][6]
+            ue = t - tb; life = rng.uniform(0.22, 0.34)
+            if not 0 < ue < life: continue
+            st, arcs = _tier_arcs(k, tb, s, d, P)
+            if not st or not arcs: continue
+            th0, th1, hook, near = arcs[j % len(arcs)]
+            th = th1 if j % 2 else th0
+            x0p, y0p = _ring_pt(st[1], py, st[2], th, d)
+            out = math.atan2(y0p - py, (x0p - st[1]) * 2.0)
+            sp = rng.uniform(90, 190) * s
+            x, y, vx, vy = drag_pos(x0p, y0p, math.cos(out) * sp + d * 70 * s, math.sin(out) * sp, ue, k=3.5, g=-70 * s)
+            spark(lf if near else lb, x, y, vx, vy, 7 * s, 2.2 * s, pal["light"] if j % 2 else pal["body"], (1 - ue / life) * (1 if near else 0.6), core=pal["core"])
+    front.paste(lf); back.paste(lb)
+
+
+def _tracer(c, x0, y0, ang, sp, u, life, w, pal, a, head=True, d=1):
+    """A streak shot from (x0, y0) at angle ang (radians off the axis): fast with a little drag, its tail catching up as it fades."""
+    if u <= 0 or u >= life: return
+    k = 2.0
+    dist = sp * (1 - math.exp(-k * u)) / k
+    tail_len = min(dist, (300 - 230 * smooth(0.3, 1, u / life)) * w / 3.4)
+    ca, sa = math.cos(ang), math.sin(ang)
+    hx, hy = x0 + d * dist * ca, y0 + dist * sa
+    tx, ty = x0 + d * (dist - tail_len) * ca, y0 + (dist - tail_len) * sa
+    al = a * smooth(0, 0.05, u / life) * (1 - smooth(0.55, 1, u / life))
+    if al <= 0.003: return
+    nx, ny = -sa, d * ca
+    ww = w * (1 - 0.4 * u / life)
+    c.poly([(tx, ty), (hx + nx * ww / 2, hy + ny * ww / 2), (hx - nx * ww / 2, hy - ny * ww / 2)], pal["body"], al)
+    c.poly([(tx + (hx - tx) * 0.3, ty + (hy - ty) * 0.3), (hx + nx * ww / 5, hy + ny * ww / 5), (hx - nx * ww / 5, hy - ny * ww / 5)], pal["light"], al)
+    if head:
+        L, Wh = 5.5 * ww, 2.4 * ww
+        bx, by = hx - d * ca * L * 0.35, hy - sa * L * 0.35
+        lens(c, (bx, by), (hx + d * ca * L * 0.65, hy + sa * L * 0.65), Wh, pal["light"], al, n=10)
+        lens(c, (bx + d * ca * L * 0.15, by + sa * L * 0.15), (hx + d * ca * L * 0.55, hy + sa * L * 0.55), Wh * 0.5, pal["white"], al, n=10)
+
+
+VARIANTS = {"tiers": shock_tiers, "vapor": shock_vapor, "drill": shock_drill, "shatter": shock_shatter, "bloom": shock_bloom,
+            "inferno": shock_inferno}

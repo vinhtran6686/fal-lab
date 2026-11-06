@@ -56,6 +56,8 @@ tàn lửa rời từ mũi cánh).
 | Mảnh xoay ngược chiều nhau dồn thành cặp | xoay cùng chiều, cách đều |
 | Đường nối giữa các đoạn | vẽ theo lượt (viền hết → thân hết → sáng), các đoạn gối nhau một chút |
 | Lũy thừa của sin âm thành số phức | kẹp `max(0, sin(...)) ** p` |
+| Nét mờ (alpha < 1) vẽ sau một hình làm thủng hình đó | `fxcore.Canvas` vẽ bằng ImageDraw, **ghi đè** điểm ảnh chứ không trộn; vẽ nét mờ lên một lớp riêng rồi `paste` (alpha_composite), như `_layer` trong `force/shock/shock.py` |
+| Vòng chia thành nhiều đoạn ngắn trông như lá rời, không ra vòng | mỗi vòng 2-3 cung dài (1,5-2,5 rad), khe hẹp; vòng rộng hơn (`sq` 0,44) và nghiêng đầu về trước |
 
 ## 7. Quy trình kiểm tra trước khi đưa user xem
 
@@ -71,3 +73,15 @@ thon, khối méo, giọt**, bo góc lõm bằng closing, tô màu theo **khoả
 bằng **ăn mòn có nhiễu**, đặt trên một **nền tối trong suốt** thay cho viền. Khói là các cụm gộp lại, tô 3 tông theo hướng sáng.
 Code: `_core/organic.py`. Nghiên cứu, nguồn, công thức và nhật ký lặp: [RESEARCH-organic-impact.md](RESEARCH-organic-impact.md).
 Hiệu ứng mới nên dùng cách này cho hình chính; hình học cơ bản (`fxcore`) vẫn hợp cho vòng sạch, dải, xoắn.
+
+## 9. Nhiều lớp: bộ `force/shock/inferno` (Hỏa xung tầng)
+
+Làm theo ảnh tham khảo "scatter gun" (2026-11-06), để trả lời nhận xét "hiệu ứng cũ ít lớp nên nhìn chưa đã". Mười hai lớp, sau ra trước:
+nửa xa của vòng (tối, lớp `back`) → vệt mờ của vòng (chỗ vừa đi qua) → vòng áp suất dẫn đầu (đỏ sẫm, mảnh, to nhất) → nón áp suất rất
+mờ → vệt tốc độ mờ → vòng đỏ sẫm đứng quanh nắm đấm → tia lõi trắng nóng gộp với chớp gai thành **một** hình tự do → nửa gần của bốn tầng
+vòng (nét bút thư pháp: giữa dày trắng vàng, hai đầu nhọn cam đỏ, móc cuộn vào trong, gai ngắn ở mép ngoài) → nét phụ mảnh chạy bên trong
+mỗi vòng (cháy hết trước) → tia đạn có đầu mũi tên → tia lửa từ chớp → tàn lửa bay lên từ đầu các cung, mảnh vụn khi vòng vỡ.
+
+Luật vật lý của sóng: **vòng sinh trước bay xa nhất và nở to nhất**; mỗi vòng vừa bay vừa nở, nguội màu (trắng → vàng → cam → đỏ), mờ dần
+rồi vỡ thành móc và mảnh (ăn mòn có nhiễu). Ở mọi frame vòng gần nhỏ và nóng, vòng xa to và nhạt. Khung 640x400 @2x, neo (60,200), 0,78 s.
+

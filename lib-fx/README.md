@@ -43,6 +43,8 @@ Code của cả họ nằm cạnh đó: `force/shock/shock.py`. Hiện chỉ xu�
    (khuôn: `force/shock/shock.py`), dùng hình trong `_core/fxcore.py`.
 2. Module khai báo `VARIANTS`, `CATALOG` (tên, mô tả, `status`: draft / approved / rework, tag), `TAGS`, `PAL_SUN`, `DUR`,
    `FRAME`, `ANCHOR`, `FPS`. `build.py` tự tìm module, không cần đăng ký.
+   Một mục `CATALOG` có thể ghi đè riêng cho hiệu ứng đó: `frame`, `anchor`, `dur`, `palette` (bảng màu ghi vào meta), `glow` (màu quầng
+   sáng) và `halo` (độ đậm, độ nhòe của quầng).
 3. `python lib-fx/build.py <nhóm>/<họ>`, xem gallery, duyệt rồi đổi `status` thành `approved`.
 4. Họ vừa có hiệu ứng đầu tiên: xóa README "chưa có hiệu ứng" của họ đó, cập nhật cột "Hiện có" trong GUIDE.md.
 

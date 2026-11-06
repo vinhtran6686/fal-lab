@@ -60,7 +60,7 @@ Năng lượng thuần không thuộc nguyên tố nào: khí công, chưởng, 
 
 | Thư mục | Tên | Chứa gì | Ví dụ | Hiện có |
 |---|---|---|---|---|
-| `force/shock/` | Sóng xung kích | luồng lực bùng ra dọc một trục tại điểm chạm của đòn thẳng (đá, đấm, chưởng) | tầng vòng, khoan xoắn, vòng vỡ | Hoa nổ (draft), Khoan xoắn (draft), Vòng vỡ (draft), Tầng vòng (draft), Nón hơi (draft) |
+| `force/shock/` | Sóng xung kích | luồng lực bùng ra dọc một trục tại điểm chạm của đòn thẳng (đá, đấm, chưởng) | tầng vòng, khoan xoắn, vòng vỡ | Hoa nổ (draft), Khoan xoắn (draft), Vòng vỡ (draft), Tầng vòng (draft), Nón hơi (draft), Hỏa xung tầng (draft) |
 | `force/wave/` | Sóng lan | sóng lực lan trên mặt đất hoặc bay đi như một bức tường | sóng chưởng bay, sóng lan đất | - |
 | `force/beam/` | Tia năng lượng | tia bắn thẳng liên tục (kame-style), có đầu, thân, điểm chạm | tia chưởng, tia khí | - |
 | `force/charge/` | Tụ khí | gom lực trước đòn: hạt bay vào, quầng sáng lớn dần, bùng khí | tụ khí tay, bùng khí toàn thân | - |

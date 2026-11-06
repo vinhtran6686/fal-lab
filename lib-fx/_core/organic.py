@@ -67,8 +67,9 @@ class Shape:
             self.h = Image.new("L", self.m.size, 0); self.hd = ImageDraw.Draw(self.h)
         self.hd.ellipse([(x - rx) * self.ss, (y - ry) * self.ss, (x + rx) * self.ss, (y + ry) * self.ss], fill=255)
 
-    def mask(self, fillet=3.0):
+    def mask(self, fillet=3.0, box=None):
         m0 = np.asarray(self.m) > 127
+        if box is not None: m0 = m0[box]
         if not m0.any() or fillet <= 0: return m0
         r = fillet * self.ss                                              # closing: dilate then erode by the same radius
         dil = ndimage.distance_transform_edt(~m0) <= r
@@ -78,22 +79,28 @@ class Shape:
         """bands = [(max distance from the edge in px, colour), ..., (None, colour)]. erode (px) + noise (px) dissolve the shape;
         backing = (px, colour, alpha) draws a darker halo of the silhouette behind it."""
         if a <= 0.003: return
-        m = self.mask(fillet)
-        if not m.any(): return
+        bb = self.m.getbbox()                                             # work on the shape's box only (same pixels, much faster)
+        if bb is None: return
         ss = self.ss
+        pad = int(math.ceil((max(fillet, backing[0] if backing else 0.0) + 2) * ss))
+        W, H = self.m.size
+        x0, y0, x1, y1 = max(0, bb[0] - pad), max(0, bb[1] - pad), min(W, bb[2] + pad), min(H, bb[3] + pad)
+        box = (slice(y0, y1), slice(x0, x1))
+        m = self.mask(fillet, box)
+        if not m.any(): return
         dist = ndimage.distance_transform_edt(m) / ss
         if erode > 0 or noise > 0:
-            thr = erode + noise * noise_field(m.shape, seed, 5 * ss)
+            thr = erode + noise * noise_field((H, W), seed, 5 * ss)[box]
             m = m & (dist > thr)
             dist = dist - np.maximum(thr, 0)
             if not m.any(): return
         if self.h is not None:
-            m = m & ~(np.asarray(self.h) > 127)
+            m = m & ~(np.asarray(self.h)[box] > 127)
         if backing:
             px, col, al = backing
             bk = ndimage.distance_transform_edt(~m) <= px * ss
             bimg = np.zeros(m.shape + (4,), np.uint8); bimg[bk] = tuple(col) + (int(255 * al * a),)
-            self.c.img.alpha_composite(Image.fromarray(bimg, "RGBA"))
+            self.c.img.alpha_composite(Image.fromarray(bimg, "RGBA"), (x0, y0))
         rgb = np.zeros(m.shape + (3,), np.uint8)
         left = m.copy()
         for lim, col in bands:
@@ -101,7 +108,7 @@ class Shape:
             rgb[sel] = col
             left &= ~sel
         alpha = (m * (255 * min(1.0, a))).astype(np.uint8)
-        self.c.img.alpha_composite(Image.fromarray(np.dstack([rgb, alpha]), "RGBA"))
+        self.c.img.alpha_composite(Image.fromarray(np.dstack([rgb, alpha]), "RGBA"), (x0, y0))
 
 
 # ---------------------------------------------------------------- parts (all in canvas px)
