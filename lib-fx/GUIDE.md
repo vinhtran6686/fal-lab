@@ -1,7 +1,7 @@
 # Hướng dẫn thư viện lib-fx
 
 Thư viện hiệu ứng (fx) chuẩn của dự án, dùng chung cho mọi nhân vật. Mỗi hiệu ứng vẽ bằng code (0 USD) và lưu **riêng lẻ, không kèm nhân vật**.
-File này mô tả từng thư mục chứa gì. Luật nhìn, lệnh dựng và cách thêm hiệu ứng nằm trong `README.md`; phương pháp thiết kế trong `DESIGN.md`; cách sinh hình tự do (gai, toé, khói) trong `RESEARCH-organic-impact.md`; công thức hiệu ứng nhiều lớp đã duyệt: `RECIPE-inferno.md`.
+File này mô tả từng thư mục chứa gì. Luật nhìn, lệnh dựng và cách thêm hiệu ứng nằm trong `README.md`; phương pháp thiết kế trong `DESIGN.md`; cách sinh hình tự do (gai, toé, khói) trong `RESEARCH-organic-impact.md`; công thức hiệu ứng nhiều lớp: `RECIPE-inferno.md` (đã duyệt), `RECIPE-tiger-dash.md`.
 
 ## Cách chia
 
@@ -150,7 +150,7 @@ Những lúc nhân vật xuất hiện, biến mất, đổi trạng thái lớn
 | `life/respawn/` | Hồi sinh | hero sống lại | cột sáng hồi sinh | - |
 | `life/levelup/` | Lên cấp | hero lên cấp | hào quang lên cấp | - |
 | `life/teleport/` | Dịch chuyển | biến mất ở chỗ này, hiện ra chỗ khác | chớp dịch chuyển, cổng | - |
-| `life/dash/` | Lướt | lướt nhanh: bóng mờ, vệt tốc độ, bụi | bóng mờ lướt, vệt tốc độ | - |
+| `life/dash/` | Lướt | lướt nhanh: bóng mờ, vệt tốc độ, bụi, một nguyên tố đi kèm (lửa, gió...) | bóng mờ lướt, vệt tốc độ, hổ lửa | Hỏa hổ lướt (draft, công thức: RECIPE-tiger-dash.md) |
 
 ## `ui/`: Giao diện
 

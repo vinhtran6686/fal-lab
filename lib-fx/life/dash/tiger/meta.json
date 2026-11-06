@@ -1,0 +1,72 @@
+{
+ "id": "life/dash/tiger",
+ "name": "Hỏa hổ lướt",
+ "desc": "a dash wrapped in a charging fire tiger: a white-hot beast head with an open maw, ears and a flaming mane leads the dash; behind it flame tongues lick up and back, cooling from yellow to orange to red as they are left behind, lift, tear and scatter red flecks; long yellow streaks trail the head while it is fast; grey and light-grey layers (ground haze, toon smoke with swept tails, a dust kick at the start, wind shards, a swoosh arc, dark speed lines) give it weight; at the end the head bursts forward into flame",
+ "status": "draft",
+ "tags": [
+  "dash",
+  "travel",
+  "one-shot",
+  "directional",
+  "anchor:start",
+  "fire",
+  "heavy",
+  "beast",
+  "organic",
+  "smoke"
+ ],
+ "fps": 30,
+ "frames": 28,
+ "frame_size_2x": [
+  800,
+  340
+ ],
+ "anchor_2x": [
+  130,
+  190
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "tip": [
+   212,
+   56,
+   54
+  ],
+  "rim": [
+   234,
+   92,
+   50
+  ],
+  "body": [
+   246,
+   138,
+   54
+  ],
+  "light": [
+   252,
+   188,
+   70
+  ],
+  "core": [
+   255,
+   228,
+   136
+  ],
+  "white": [
+   255,
+   250,
+   222
+  ],
+  "back": [
+   118,
+   30,
+   30
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/tiger_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/life/dash/dash.py: dash_tiger"
+}

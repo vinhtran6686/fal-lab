@@ -250,3 +250,33 @@ def cloud(canvas, puffs, pal=DUST, a=1.0, light=(-0.55, -0.83), off=5.0, fillet=
             cd.line([(px * ss, py * ss) for px, py in pts], fill=tuple(pal["curl"]) + (int(200 * a),), width=max(1, int(1.6 * ss)), joint="curve")
         arr = np.asarray(img).copy(); arr[~m] = 0; img = Image.fromarray(arr, "RGBA")
     canvas.img.alpha_composite(img)
+
+
+def shade(sh, pal, a=1.0, light=(-0.35, -0.94), off=4.0, fillet=4.0, erode=0.0, noise=0.0, seed=3, tones=("shadow", "base", "light")):
+    """Paint any Shape (puffs, thorns, wisps) as flat toon smoke: base tone, the side facing the light in the light tone, the side away
+    from it in the shadow tone (the silhouette shifted towards / away from the light, as in cloud()). Works on the shape's box only."""
+    if a <= 0.003: return
+    bb = sh.m.getbbox()
+    if bb is None: return
+    ss = sh.ss
+    pad = int(math.ceil((fillet + off * 1.6 + 2) * ss))
+    W, H = sh.m.size
+    x0, y0, x1, y1 = max(0, bb[0] - pad), max(0, bb[1] - pad), min(W, bb[2] + pad), min(H, bb[3] + pad)
+    box = (slice(y0, y1), slice(x0, x1))
+    m = sh.mask(fillet, box)
+    if not m.any(): return
+    if erode > 0 or noise > 0:
+        dist = ndimage.distance_transform_edt(m) / ss
+        m = m & (dist > erode + noise * noise_field((H, W), seed, 6 * ss)[box])
+    if sh.h is not None:
+        m = m & ~(np.asarray(sh.h)[box] > 127)
+    if not m.any(): return
+    o = int(off * ss)
+    lx, ly = light
+    toward = np.roll(np.roll(m, int(round(-lx * o)), axis=1), int(round(-ly * o)), axis=0)
+    away = np.roll(np.roll(m, int(round(lx * o * 1.6)), axis=1), int(round(ly * o * 1.6)), axis=0)
+    rgb = np.zeros(m.shape + (3,), np.uint8)
+    rgb[m] = pal[tones[1]]
+    rgb[m & ~away] = pal[tones[2]]
+    rgb[m & ~toward] = pal[tones[0]]
+    sh.c.img.alpha_composite(Image.fromarray(np.dstack([rgb, (m * 255 * min(1.0, a)).astype(np.uint8)]), "RGBA"), (x0, y0))
