@@ -122,6 +122,13 @@ Ngẫu nhiên nhỏ (±15% chiều dài, ±10° góc) **không** phải là đa 
 8. **Mỗi pha có dáng riêng**: báo trước, bùng, đỉnh, vỡ, tan phải có hình bao (silhouette) khác hẳn nhau; nếu dáng ở frame 6 và frame 12
    gần như nhau thì hiệu ứng đang đứng yên.
 9. **Theo ảnh từng bước**: khi user có ảnh tham khảo chia bước (key pose), dựng đúng từng key pose trước, rồi mới làm chuyển tiếp giữa chúng.
+10. **Mỗi phần tử là một hình độc lập** khi nó phải sống riêng (từng ngọn lửa dưới đất có chiều cao, độ lắc, nhịp chập chờn, đời và
+    số phận riêng). Chỉ gộp chung một hình khi các phần là MỘT vật (một tia tóe, một vòng): gộp để không có đường nối, tách để sinh động.
+11. **Mỗi lớp một bộ màu**: lớp sau tối (tím đậm), lớp giữa (xanh), lớp trước sáng (cyan); phần tóe ra có dải màu sáng nhất riêng của nó.
+    Màu kể chiều sâu và làm nổi phần tóe, không phải mọi thứ chung một dải.
+12. **Chỉ vẽ hiệu ứng**: không vẽ thân mục tiêu hay nhân vật (kể cả dạng bóng ma); điểm trúng chỉ là một vị trí.
+13. **Hình nhân vật hiệu ứng phải đúng chất liệu**: một linh hồn lửa là một ngọn lửa (lưỡi lửa có bụng, đầu cong, vừa trôi về sau vừa
+    bốc lên), không phải một quả cầu có đuôi. Lưỡi lửa dùng `tongue()` (bụng tròn, đuôi cong), gai dùng `thorn()`.
 
 **Kiểm tra trước khi đưa user xem** (thêm vào §7)
 
