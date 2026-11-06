@@ -1,5 +1,8 @@
 # Công thức: Hỏa hổ lướt (`life/dash/tiger`)
 
+> **Trạng thái: rework.** User đánh giá chưa đạt (2026-11-06): các lớp giống nhau quá, lặp lại, không linh động, khô cứng. Đây là
+> **ví dụ cần tránh** về lặp lại: xem DESIGN.md §10. Phần dưới vẫn đúng với code, giữ lại để biết đã làm gì và vì sao chưa đạt.
+
 Hiệu ứng lướt có một con hổ lửa lao đi trước, dựng theo ảnh tham khảo của user ngày 2026-11-06 (concept lướt lửa: đầu hổ lửa, lưỡi lửa,
 khói xám, mảnh gió). Code: `life/dash/dash.py` (`dash_tiger`). Phương pháp nhiều lớp và các kỹ thuật dùng chung: [RECIPE-inferno.md](RECIPE-inferno.md).
 

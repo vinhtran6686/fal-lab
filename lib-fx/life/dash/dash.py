@@ -20,7 +20,7 @@ SMOKE = dict(dark=(100, 104, 112), shadow=(138, 140, 148), base=(184, 186, 192),
 PAL_SUN = FLAME
 HALO = 0.4
 CATALOG = {
-    "tiger": dict(name="Hỏa hổ lướt", status="draft", tags=["fire", "heavy", "beast", "organic", "smoke"], glow=(255, 130, 60),
+    "tiger": dict(name="Hỏa hổ lướt", status="rework", tags=["fire", "heavy", "beast", "organic", "smoke"], glow=(255, 130, 60),
                   halo=(0.45, 10),
                   desc="a dash wrapped in a charging fire tiger: a white-hot beast head with an open maw, ears and a flaming mane "
                        "leads the dash; behind it flame tongues lick up and back, cooling from yellow to orange to red as they are "

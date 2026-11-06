@@ -65,6 +65,7 @@ tàn lửa rời từ mũi cánh).
 2. Xem **từng frame liên tiếp** ở các chỗ chuyển nhịp (gallery chỉ có frame cách 1, giật 1 frame sẽ lọt).
 3. Kiểm tra không frame nào chạm mép khung (bbox alpha > 8 của từng frame).
 4. Hiệu ứng mới để `draft`; chỉ đổi `approved` khi user duyệt.
+5. Kiểm tra lặp lại và khô cứng theo §10 (frame dừng, khoảng cách, dáng qua 4-6 frame, số kiểu hình mỗi nhóm màu).
 
 ## 8. Hình tự do (organic): bước tiến từ bộ impact
 
@@ -87,4 +88,45 @@ rồi vỡ thành móc và mảnh (ăn mòn có nhiễu). Ở mọi frame vòng 
 User duyệt (approved). Công thức đầy đủ (lớp, dòng thời gian, tham số, kỹ thuật, nhật ký lặp): [RECIPE-inferno.md](RECIPE-inferno.md).
 
 Bộ thứ hai theo cùng cách, thêm lớp xám (khói, gió, bụi) và một hình nhân vật dựng tay (đầu hổ): `life/dash/tiger`,
-[RECIPE-tiger-dash.md](RECIPE-tiger-dash.md).
+[RECIPE-tiger-dash.md](RECIPE-tiger-dash.md). User đánh giá **chưa đạt** (rework): lặp lại, khô cứng. Lý do và luật sửa ở §10.
+
+## 10. Tránh lặp lại và khô cứng (bắt buộc cho mọi hiệu ứng nhiều phần tử)
+
+User nhận xét `life/dash/tiger` (2026-11-06): **các lớp giống nhau quá, hiệu ứng có cảm giác trùng lặp, không linh động, khô cứng**. Nhiều
+lớp không tự làm hiệu ứng đẹp; nhiều lớp **cùng một kiểu** chỉ nhân sự đơn điệu lên. Trong `tiger` lỗi nằm ở:
+
+| Chỗ | Lỗi lặp |
+|---|---|
+| 22 lưỡi lửa | cùng một hình (chữ S), cách đều 19,5 px, cùng vòng đời (mọc → bốc lên → nguội → tan), chỉ khác vài số ngẫu nhiên |
+| 8 cụm khói | cùng một khuôn (3 cụm tròn + 3 đuôi), cách đều, cùng tốc độ bay |
+| 10 nét tốc độ, 14 mảnh gió | cùng cỡ, cùng nhịp sinh đều đặn |
+| Cả hiệu ứng | mọi thứ đi cùng một hướng, cùng một tốc độ, cùng lúc, nên khung nào cũng giống khung trước |
+
+Ngẫu nhiên nhỏ (±15% chiều dài, ±10° góc) **không** phải là đa dạng: mắt vẫn thấy một khuôn được nhân bản.
+
+**Luật**
+
+1. **Mỗi lớp một vai trò khác hẳn**, khác nhau ở ít nhất 3 trục: cỡ, hình, tốc độ, độ sắc của mép (sắc / mềm), độ đậm, thời điểm, hướng.
+   Hai lớp giống nhau ở 3 trục trở lên thì gộp lại hoặc bỏ một.
+2. **Nhịp lớn, vừa, nhỏ**: trong một nhóm phần tử luôn có 1-2 phần tử **chính** (to, rõ, khác hình), vài phần tử vừa, nhiều phần tử nhỏ.
+   Tỉ lệ cỡ chính : vừa : nhỏ khoảng 3 : 1,5 : 1, không phải mọi thứ cùng một cỡ.
+3. **Bộ hình**: mỗi nhóm màu dùng ít nhất 3 kiểu hình (lưỡi dài, móc cuộn, giọt, mảnh vỡ góc cạnh, sợi mảnh, đốm), không nhân một
+   kiểu cho cả nhóm.
+4. **Khoảng cách theo cụm**, không cách đều: cụm dày, khoảng trống, phần tử lẻ. Khoảng trống cũng là thiết kế (chỗ cho mắt nghỉ).
+5. **Mỗi phần tử có số phận riêng**: cái tách đôi, cái cuộn lại, cái bị kéo dài rồi đứt, cái co lại thành giọt, cái bị gió thổi lệch.
+   Không dùng một vòng đời chung cho cả nhóm.
+6. **Lệch pha, chồng nhịp**: các phần không bắt đầu, đạt đỉnh và kết thúc cùng lúc; mỗi nhóm có easing riêng; có chuyển động theo sau
+   (follow-through), trễ, vượt đà ở những chỗ khác nhau.
+7. **Bất đối xứng và hướng phụ**: ngoài hướng chính phải có lực phụ (bốc lên, xoáy, bị hút ngược, rơi), để khung hình không chỉ là
+   "mọi thứ trôi về sau".
+8. **Mỗi pha có dáng riêng**: báo trước, bùng, đỉnh, vỡ, tan phải có hình bao (silhouette) khác hẳn nhau; nếu dáng ở frame 6 và frame 12
+   gần như nhau thì hiệu ứng đang đứng yên.
+9. **Theo ảnh từng bước**: khi user có ảnh tham khảo chia bước (key pose), dựng đúng từng key pose trước, rồi mới làm chuyển tiếp giữa chúng.
+
+**Kiểm tra trước khi đưa user xem** (thêm vào §7)
+
+- Dừng ở một frame: có thấy hình nào giống hệt hình bên cạnh (chỉ khác vị trí) không? Có thì đổi hình, cỡ hoặc số phận của nó.
+- Nhìn dọc đường đi: khoảng cách giữa các phần có đều như hàng rào không?
+- Đặt frame cách nhau 4-6 frame cạnh nhau: dáng tổng thể có thay đổi rõ không?
+- Đếm kiểu hình trong mỗi nhóm màu: dưới 3 là đơn điệu.
+

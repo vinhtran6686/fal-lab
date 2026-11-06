@@ -150,7 +150,7 @@ Những lúc nhân vật xuất hiện, biến mất, đổi trạng thái lớn
 | `life/respawn/` | Hồi sinh | hero sống lại | cột sáng hồi sinh | - |
 | `life/levelup/` | Lên cấp | hero lên cấp | hào quang lên cấp | - |
 | `life/teleport/` | Dịch chuyển | biến mất ở chỗ này, hiện ra chỗ khác | chớp dịch chuyển, cổng | - |
-| `life/dash/` | Lướt | lướt nhanh: bóng mờ, vệt tốc độ, bụi, một nguyên tố đi kèm (lửa, gió...) | bóng mờ lướt, vệt tốc độ, hổ lửa | Hỏa hổ lướt (draft, công thức: RECIPE-tiger-dash.md) |
+| `life/dash/` | Lướt | lướt nhanh: bóng mờ, vệt tốc độ, bụi, một nguyên tố đi kèm (lửa, gió...) | bóng mờ lướt, vệt tốc độ, hổ lửa | Hỏa hổ lướt (rework, xem DESIGN.md §10) |
 
 ## `ui/`: Giao diện
 
