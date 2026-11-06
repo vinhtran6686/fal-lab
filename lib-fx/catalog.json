@@ -428,5 +428,33 @@
    190
   ],
   "dir": "life/dash/tiger"
+ },
+ "magic/spirit/soulstrike": {
+  "name": "Xuất hồn kích",
+  "status": "draft",
+  "tags": [
+   "magic",
+   "spirit",
+   "one-shot",
+   "directional",
+   "anchor:caster",
+   "target:+340,+62",
+   "heavy",
+   "homing",
+   "organic",
+   "ground"
+  ],
+  "desc": "spirit flames are born at the caster's chest, swell and leap out in many directions; six spirits of three sizes each take their own path (a high arc and a steep dive, a low skim that hooks back, a corkscrew, a zigzag that hits the ground first, a lazy one that fizzles out, one that circles the caster first) and strike the target one after another; the big dive bursts on the head, spreads a wave of cyan ground fire with lilac tips and covers the target in a ghost silhouette; purple wisps and motes rise as it all fades. The target stands 340 px ahead of the anchor on the ground (+62 px); the ghost is drawn on a generic dummy mask (no dummy body is drawn)",
+  "fps": 30,
+  "frames": 45,
+  "frame_size_2x": [
+   720,
+   420
+  ],
+  "anchor_2x": [
+   150,
+   240
+  ],
+  "dir": "magic/spirit/soulstrike"
  }
 }

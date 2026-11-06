@@ -18,7 +18,7 @@ Liên hệ với game thủ thành: tháp cung → `ranged/bow`, tháp phép →
 
 | Thư mục | Chứa gì |
 |---|---|
-| `_core/` | Bộ vẽ dùng chung, không chứa hiệu ứng. `fxcore.py`: canvas siêu mẫu, hình cơ bản (lưỡi liềm, dải, thấu kính, ribbon, lấp lánh), easing, quầng sáng. `palettes.py`: 13 bảng màu chuẩn (sun, fire, ice, water, lightning, earth, wind, nature, poison, holy, shadow, arcane, blood). Hạt, khói, mảnh vỡ dùng chung sẽ thêm vào đây khi cần. |
+| `_core/` | Bộ vẽ dùng chung, không chứa hiệu ứng. `fxcore.py`: canvas siêu mẫu, hình cơ bản (lưỡi liềm, dải, thấu kính, ribbon, lấp lánh), easing, quầng sáng. `palettes.py`: 14 bảng màu chuẩn (sun, fire, ice, water, lightning, earth, wind, nature, poison, holy, shadow, arcane, blood, spirit). `organic.py`: hình tự do (gai, giọt, khối méo, lưỡi lửa chữ S `flame`, viền spline), tô theo khoảng cách tới mép, khói toon (`cloud`, `shade`). |
 | `_gallery/` | Ảnh xem trước sinh tự động, mỗi họ một cặp: `<nhóm>-<họ>.png` (mọi hiệu ứng, frame cách 1) và `.gif` (chạy cùng lúc, đúng tốc độ). |
 | `catalog.json` | Danh mục toàn bộ hiệu ứng: tên, trạng thái, tag, mô tả, fps, số frame, cỡ, điểm neo, thư mục. |
 | `build.py` | Dựng lại asset và gallery: `python lib-fx/build.py [nhóm[/họ[/id]]]`. |
@@ -92,6 +92,8 @@ Mỗi thư mục con chia tiếp theo chức năng:
 ## `magic/`: Trường phái phép
 
 Phép không phải nguyên tố vật lý: thần thánh, bóng tối, ma thuật. Chia theo chức năng chuẩn như nguyên tố.
+Một chiêu trọn bộ (tụ phép → bay → trúng → bám mục tiêu) có thể nằm ngay ở cấp họ (vd. `magic/spirit/soulstrike`); các phần lẻ
+làm sau thì vào thư mục chức năng (`cast/`, `projectile/`...).
 
 Mỗi thư mục con chia tiếp theo chức năng:
 
@@ -108,6 +110,7 @@ Mỗi thư mục con chia tiếp theo chức năng:
 | `magic/shadow/` | Bóng tối | khói đen, tay bóng tối, mắt, hư không | lỗ đen, trói bóng, nguyền | - |
 | `magic/arcane/` | Ma thuật | rune, vòng phép, tinh thể tím, dịch chuyển | vòng phép, tên ma thuật, cổng | - |
 | `magic/blood/` | Huyết thuật | máu, hút máu, gai máu | hút máu, gai máu | - |
+| `magic/spirit/` | Linh hồn | hồn lửa (ma trơi) rời khỏi thân, bay, nhập và đốt mục tiêu; lửa hồn dưới đất; bóng ma bám mục tiêu | xuất hồn kích | Xuất hồn kích (draft) |
 
 ## `explosion/`: Vụ nổ
 

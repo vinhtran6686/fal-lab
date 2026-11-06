@@ -1,0 +1,97 @@
+{
+ "id": "magic/spirit/soulstrike",
+ "name": "Xuất hồn kích",
+ "desc": "spirit flames are born at the caster's chest, swell and leap out in many directions; six spirits of three sizes each take their own path (a high arc and a steep dive, a low skim that hooks back, a corkscrew, a zigzag that hits the ground first, a lazy one that fizzles out, one that circles the caster first) and strike the target one after another; the big dive bursts on the head, spreads a wave of cyan ground fire with lilac tips and covers the target in a ghost silhouette; purple wisps and motes rise as it all fades. The target stands 340 px ahead of the anchor on the ground (+62 px); the ghost is drawn on a generic dummy mask (no dummy body is drawn)",
+ "status": "draft",
+ "tags": [
+  "magic",
+  "spirit",
+  "one-shot",
+  "directional",
+  "anchor:caster",
+  "target:+340,+62",
+  "heavy",
+  "homing",
+  "organic",
+  "ground"
+ ],
+ "fps": 30,
+ "frames": 45,
+ "frame_size_2x": [
+  720,
+  420
+ ],
+ "anchor_2x": [
+  150,
+  240
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "rim": [
+   38,
+   76,
+   200
+  ],
+  "body": [
+   52,
+   132,
+   238
+  ],
+  "light": [
+   82,
+   208,
+   252
+  ],
+  "core": [
+   178,
+   242,
+   255
+  ],
+  "white": [
+   238,
+   252,
+   255
+  ],
+  "dark": [
+   26,
+   36,
+   112
+  ],
+  "deep": [
+   38,
+   76,
+   200
+  ],
+  "blue": [
+   52,
+   132,
+   238
+  ],
+  "cyan": [
+   82,
+   208,
+   252
+  ],
+  "pale": [
+   178,
+   242,
+   255
+  ],
+  "violet": [
+   128,
+   96,
+   226
+  ],
+  "lilac": [
+   190,
+   156,
+   244
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/soulstrike_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/magic/spirit/spirit.py: spirit_soulstrike"
+}

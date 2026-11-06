@@ -280,3 +280,30 @@ def shade(sh, pal, a=1.0, light=(-0.35, -0.94), off=4.0, fillet=4.0, erode=0.0, 
     rgb[m & ~away] = pal[tones[2]]
     rgb[m & ~toward] = pal[tones[0]]
     sh.c.img.alpha_composite(Image.fromarray(np.dstack([rgb, (m * 255 * min(1.0, a)).astype(np.uint8)]), "RGBA"), (x0, y0))
+
+
+def spline(pts, k=6):
+    """A closed Catmull-Rom curve through pts: rounds a hand-placed silhouette."""
+    out, n = [], len(pts)
+    for i in range(n):
+        p0, p1, p2, p3 = pts[i - 1], pts[i], pts[(i + 1) % n], pts[(i + 2) % n]
+        for j in range(k):
+            u = j / k; u2, u3 = u * u, u * u * u
+            out.append(tuple(0.5 * (2 * b + (-a + c) * u + (2 * a - 5 * b + 4 * c - e) * u2 + (-a + 3 * b - 3 * c + e) * u3)
+                             for a, b, c, e in zip(p0, p1, p2, p3)))
+    return out
+
+
+def flame(x, y, ang, L, W, bend=0.0, wave=0.0, p=1.15, n=22):
+    """A flame tongue from its base (x, y): like organic.thorn but its spine can sway in an S (wave) as well as curl (bend)."""
+    left, right = [], []
+    px, py = x, y
+    for i in range(n + 1):
+        s = i / n
+        a = ang + bend * s * s + wave * math.sin(1.6 * math.pi * s)
+        if i:
+            px += math.cos(a) * L / n; py += math.sin(a) * L / n
+        w = W / 2 * (1 - s) ** p * (0.75 + 0.25 * math.sin(math.pi * min(1.0, s * 2.2)))
+        nx, ny = -math.sin(a), math.cos(a)
+        left.append((px + nx * w, py + ny * w)); right.append((px - nx * w, py - ny * w))
+    return left + right[::-1]

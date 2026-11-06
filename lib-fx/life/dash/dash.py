@@ -8,7 +8,7 @@ The character moves with the head of the effect: head_x(t) in each design's docs
 """
 import math, random
 from fxcore import Canvas, mix, clamp, smooth, out_cubic, out_back, lens, ribbon, drag_pos
-from organic import Shape, thorn, shard, blob, shade
+from organic import Shape, thorn, shard, blob, shade, flame, spline
 
 DUR = 0.88
 FRAME, ANCHOR, FPS = (800, 340), (160, 190), 30
@@ -54,18 +54,6 @@ def flame_bands(pal, s=1.0, heat=1.0):
 def _layer(c): return Canvas(c.w, c.h, c.ss)
 
 
-def spline(pts, k=6):
-    """A closed Catmull-Rom curve through pts: rounds a hand-placed silhouette."""
-    out, n = [], len(pts)
-    for i in range(n):
-        p0, p1, p2, p3 = pts[i - 1], pts[i], pts[(i + 1) % n], pts[(i + 2) % n]
-        for j in range(k):
-            u = j / k; u2, u3 = u * u, u * u * u
-            out.append(tuple(0.5 * (2 * b + (-a + c) * u + (2 * a - 5 * b + 4 * c - e) * u2 + (-a + 3 * b - 3 * c + e) * u3)
-                             for a, b, c, e in zip(p0, p1, p2, p3)))
-    return out
-
-
 # a tiger's head in profile facing +x (units: px at s=1, centre of the skull at 0,0): brow, nose, upper jaw, open maw, lower jaw, ruff
 TIGER_HEAD = [(-38, -2), (-32, -22), (-16, -33), (2, -35), (20, -29), (34, -20), (46, -14), (55, -9), (54, -1), (46, 3), (30, 6),
               (20, 10), (30, 15), (44, 20), (46, 26), (38, 31), (18, 33), (-4, 32), (-24, 26), (-36, 14)]
@@ -73,21 +61,6 @@ TIGER_MAW = [(22, 9), (50, 1), (47, 17), (32, 15)]
 TIGER_FACE = [((10, -17), (26, -13), 4.4), ((4, -25), (26, -21), 3.0), ((44, -13), (53, -9), 3.0), ((-22, -18), (-4, -9), 3.8),
               ((-28, -2), (-8, 3), 3.8), ((-20, 14), (-4, 10), 3.2), ((-34, -12), (-24, -6), 2.6), ((20, 12), (30, 13), 2.4)]
 TIGER_FANGS = [[(41, 3), (47, 2), (44, 13)], [(35, 17), (40, 16), (37, 8)], [(28, 7), (32, 7), (30, 13)]]
-
-
-def flame(x, y, ang, L, W, bend=0.0, wave=0.0, p=1.15, n=22):
-    """A flame tongue from its base (x, y): like organic.thorn but its spine can sway in an S (wave) as well as curl (bend)."""
-    left, right = [], []
-    px, py = x, y
-    for i in range(n + 1):
-        s = i / n
-        a = ang + bend * s * s + wave * math.sin(1.6 * math.pi * s)
-        if i:
-            px += math.cos(a) * L / n; py += math.sin(a) * L / n
-        w = W / 2 * (1 - s) ** p * (0.75 + 0.25 * math.sin(math.pi * min(1.0, s * 2.2)))
-        nx, ny = -math.sin(a), math.cos(a)
-        left.append((px + nx * w, py + ny * w)); right.append((px - nx * w, py - ny * w))
-    return left + right[::-1]
 
 
 def dash_tiger(t, P, front, back, pal=FLAME, s=1.0, d=1):

@@ -16,7 +16,10 @@ POISON = dict(rim=(60, 90, 20), body=(140, 200, 40), light=(195, 235, 90), core=
 HOLY = dict(rim=(170, 120, 40), body=(255, 210, 90), light=(255, 238, 160), core=(255, 250, 225), white=(255, 255, 255))
 SHADOW = dict(rim=(30, 15, 50), body=(90, 50, 140), light=(150, 100, 200), core=(210, 175, 245), white=(240, 225, 255))
 ARCANE = dict(rim=(70, 30, 120), body=(160, 80, 230), light=(205, 150, 255), core=(240, 215, 255), white=(255, 250, 255))
+SPIRIT = dict(rim=(38, 76, 200), body=(52, 132, 238), light=(82, 208, 252), core=(178, 242, 255), white=(238, 252, 255),   # soul fire
+              dark=(26, 36, 112), deep=(38, 76, 200), blue=(52, 132, 238), cyan=(82, 208, 252), pale=(178, 242, 255),
+              violet=(128, 96, 226), lilac=(190, 156, 244))                 # extra steps: the tail ramp cyan -> blue -> violet -> lilac
 BLOOD = dict(rim=(80, 10, 15), body=(170, 25, 35), light=(220, 70, 70), core=(250, 160, 150), white=(255, 225, 220))
 
 PALETTES = {"sun": SUN, "fire": FIRE, "ice": ICE, "water": WATER, "lightning": LIGHTNING, "earth": EARTH, "wind": WIND,
-            "nature": NATURE, "poison": POISON, "holy": HOLY, "shadow": SHADOW, "arcane": ARCANE, "blood": BLOOD}
+            "nature": NATURE, "poison": POISON, "holy": HOLY, "shadow": SHADOW, "arcane": ARCANE, "blood": BLOOD, "spirit": SPIRIT}
