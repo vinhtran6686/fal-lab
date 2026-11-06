@@ -307,3 +307,14 @@ def flame(x, y, ang, L, W, bend=0.0, wave=0.0, p=1.15, n=22):
         nx, ny = -math.sin(a), math.cos(a)
         left.append((px + nx * w, py + ny * w)); right.append((px - nx * w, py - ny * w))
     return left + right[::-1]
+
+
+def flame_point(x, y, ang, L_, bend, wave, v, n=22):
+    """The point a fraction v up the spine of flame() with the same arguments (to attach parts to a tongue)."""
+    px, py = x, y
+    m = int(v * n)
+    for i in range(1, m + 1):
+        s_ = i / n
+        a = ang + bend * s_ * s_ + wave * math.sin(1.6 * math.pi * s_)
+        px += math.cos(a) * L_ / n; py += math.sin(a) * L_ / n
+    return px, py

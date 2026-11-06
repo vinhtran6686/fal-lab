@@ -132,11 +132,13 @@ def main():
     hit = False
     for fam, mod in fams.items():
         if want and not (fam == want or fam.startswith(want + "/") or want.startswith(fam + "/")): continue
+        if want.startswith(fam + "/") and any(f != fam and f.startswith(fam + "/") and (want == f or want.startswith(f + "/")) for f in fams):
+            continue                                                        # the wanted path belongs to a family nested deeper
         names = [want[len(fam) + 1:]] if want.startswith(fam + "/") else list(mod.VARIANTS)
         if names[0] not in mod.VARIANTS: sys.exit(f"no effect {want}; {fam} has {', '.join(mod.VARIANTS)}")
         hit = True
         if len(names) == len(mod.VARIANTS):                                 # a whole family: drop entries of effects that no longer exist
-            catalog = {k: v for k, v in catalog.items() if not k.startswith(fam + "/")}
+            catalog = {k: v for k, v in catalog.items() if k.rsplit("/", 1)[0] != fam}   # only this family's own effects
         rows = []
         for name in names:
             fr = render(mod, name); meta = write_effect(fam, mod, name, fr); rows.append((name, fr))

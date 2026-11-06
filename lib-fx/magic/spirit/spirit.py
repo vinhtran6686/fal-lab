@@ -10,7 +10,7 @@ others in size, shape, speed, edge and opacity.
 """
 import math, random
 from fxcore import Canvas, mix, clamp, smooth, out_cubic, out_back, lens, ribbon, drag_pos, stepped_glow, spark
-from organic import Shape, thorn, shard, blob, shade, flame, ring_halves, noise_field
+from organic import Shape, thorn, shard, blob, shade, flame, flame_point, ring_halves, noise_field
 from palettes import SPIRIT
 from PIL import Image, ImageDraw
 import numpy as np
@@ -88,27 +88,27 @@ def hover(f, out=0.3, hold=0.14, drift=0.04, pw=1.7):
 # r: head radius; spawn/launch/end: s; path: waypoints; ease; tail: seconds of history; wig: (amplitude, cycles/s); fate
 SPIRITS = [
     # the hero: bursts up, hangs high over the field, then dives steeply onto the head (the climax)
-    dict(name="hero", r=19, spawn=0.02, launch=0.12, end=0.74, tail=0.13, wig=(8, 2.0), drips=True, flicks=3, tear=0.0, tailw=1.0, strands=1,
+    dict(name="hero", r=24, spawn=0.02, launch=0.12, end=0.74, tail=0.13, wig=(8, 2.0), drips=True, flicks=3, tear=0.0, tailw=0.85, strands=1, phase=0.4,
          path=[(-4, -16), (26, -92), (120, -156), (236, -172), (318, -132), HEAD],
          ease=hover(0.4, out=0.32, hold=0.16, drift=0.05, pw=2.0), fate="dive"),
     # skims low past the target, hooks back and hits the torso from behind
-    dict(name="skim", r=14, spawn=0.0, launch=0.06, end=0.6, tail=0.1, wig=(5, 3.2), drips=False, flicks=2, tear=0.3, tailw=0.85, strands=1,
+    dict(name="skim", r=14, spawn=0.0, launch=0.06, end=0.6, tail=0.1, wig=(5, 3.2), drips=False, flicks=2, tear=0.3, tailw=0.85, strands=1, phase=2.1,
          path=[(8, -2), (92, 22), (170, 40), (296, 44), (388, 18), (394, -22), (360, -10), TORSO],
          ease=hover(2 / 7, out=0.26, hold=0.1, drift=0.03, pw=1.3), fate="split"),
     # rises, turns one corkscrew loop, then lands on the head
-    dict(name="corkscrew", r=13, spawn=0.02, launch=0.1, end=0.68, tail=0.12, wig=(4, 1.6), drips=False, flicks=2, tear=0.2, tailw=0.8, strands=2,
+    dict(name="corkscrew", r=13, spawn=0.02, launch=0.1, end=0.68, tail=0.12, wig=(4, 1.6), drips=False, flicks=2, tear=0.2, tailw=0.8, strands=2, phase=4.0,
          path=[(4, -22), (64, -84), (118, -98), (150, -66), (118, -40), (98, -80), (160, -108), (268, -92), HEAD],
          ease=hover(1 / 8, out=0.22, hold=0.08, drift=0.02, pw=1.15), fate="ring"),
     # small and nervous: zigzags low and hits the ground first, ahead of the target
-    dict(name="zigzag", r=9, spawn=0.05, launch=0.12, end=0.46, tail=0.09, wig=(3, 5.0), drips=False, flicks=1, tear=0.6, tailw=0.5, strands=1,
+    dict(name="zigzag", r=9, spawn=0.05, launch=0.12, end=0.46, tail=0.09, wig=(3, 5.0), drips=False, flicks=0, tear=0.95, tailw=0.5, strands=1, phase=1.3,
          path=[(10, 8), (70, 40), (130, 20), (190, 52), (250, 32), (300, GROUND)],
          ease=lambda u: u, fate="ground"),
     # small and lazy: floats up and back over the caster and fizzles out, never arrives
-    dict(name="lazy", r=8.5, spawn=0.06, launch=0.18, end=0.6, tail=0.16, wig=(7, 1.1), drips=False, flicks=0, tear=0.5, tailw=0.6, strands=1,
+    dict(name="lazy", r=8.5, spawn=0.06, launch=0.18, end=0.6, tail=0.16, wig=(7, 1.1), drips=False, flicks=0, tear=0.5, tailw=0.6, strands=1, phase=5.2,
          path=[(-4, -28), (-34, -84), (14, -134), (86, -146)],
          ease=lambda u: math.sin(u * math.pi / 2), fate="fizzle"),
     # small: circles the caster once, then darts in last, into the burning ghost
-    dict(name="orbit", r=9, spawn=0.09, launch=0.18, end=0.88, tail=0.12, wig=(3, 2.8), drips=False, flicks=1, tear=0.7, tailw=0.45, strands=1,
+    dict(name="orbit", r=9, spawn=0.09, launch=0.18, end=0.88, tail=0.12, wig=(3, 2.8), drips=False, flicks=1, tear=0.9, tailw=0.45, strands=1, phase=3.3,
          path=[(0, -6), (42, -38), (4, -74), (-44, -40), (-12, 12), (58, -8), (200, -62), (296, -64), (TX - 4, GROUND - 92)],
          ease=lambda u: u ** 1.2, fate="flare"),
 ]
@@ -128,7 +128,10 @@ def _pos(sp, t):
 
 # ---------------------------------------------------------------- the effect
 def spirit_soulstrike(t, P, front, back, pal=SOUL, s=1.0, d=1):
-    pal = dict(SOUL, **pal)
+    pal = dict(pal)                                                       # a 5-step palette works too: the extra steps are derived
+    for k, src in (("deep", "rim"), ("blue", "body"), ("cyan", "light"), ("pale", "core")): pal.setdefault(k, pal[src])
+    pal.setdefault("violet", mix(pal["rim"], pal["body"], 0.3)); pal.setdefault("lilac", mix(pal["body"], pal["core"], 0.45))
+    pal.setdefault("dark", mix(pal["rim"], (0, 0, 0), 0.5))
     L = lambda x, y: (P[0] + d * x * s, P[1] + y * s)                    # local px -> canvas
     A = lambda a: a if d > 0 else math.pi - a                           # an angle drawn for +x, mirrored
     gy = P[1] + GROUND * s
@@ -227,8 +230,7 @@ def _tail_time(sp, t):
 
 def _spirit(t, sp, L, A, d, s, pal, front, back, events):
     r, fate = sp["r"] * s, sp["fate"]
-    if t >= sp["end"] and fate != "fizzle": return
-    if fate == "fizzle" and t >= sp["end"]: return
+    if t >= sp["end"]: return
     head, g = _pos(sp, t)
     shrink = 1.0
     if fate == "fizzle":                                                  # loses its shape in the last third and comes apart
@@ -252,7 +254,7 @@ def _spirit(t, sp, L, A, d, s, pal, front, back, events):
             p, gk = _pos(sp, tk)
             vx, vy, _ = _heading(sp, tk)
             vl = math.hypot(vx, vy) or 1
-            ph = len(sp["name"]) + strand * math.pi
+            ph = sp["phase"] + strand * math.pi
             w = amp * math.sin(2 * math.pi * freq * tk + ph) * (k / N) ** 0.8 + off * r / s * (k / N) ** 0.6 * 1.6
             pts.append(L(p[0] - vy / vl * w, p[1] + vx / vl * w))
             ws.append(2 * r * 1.05 * gk * shrink * sp["tailw"] * (0.6 if sp["strands"] > 1 else 1) * (1 - k / N) ** 0.85)
@@ -277,7 +279,7 @@ def _spirit(t, sp, L, A, d, s, pal, front, back, events):
     # ---- head: its own proportions (round and heavy, or a teardrop), squash and stretch from the smoothed speed, own flick count
     hx, hy = L(*head)
     vx, vy, spd = _heading(sp, t)
-    ang = math.atan2(vy, vx * d) if spd > 20 else -math.pi / 2
+    ang = math.atan2(vy, vx * d) if (spd > 20 and t >= sp["launch"]) else -math.pi / 2     # pointing up while it grows
     stretch = min(0.5, spd / 1500)
     rr = r * g * shrink
     tear = sp["tear"]
@@ -287,14 +289,14 @@ def _spirit(t, sp, L, A, d, s, pal, front, back, events):
         sh.poly(thorn(hx - math.cos(ang) * rr * 0.4, hy - math.sin(ang) * rr * 0.4, ang + math.pi, rr * (1.2 + 1.6 * tear), rr * 1.6, 0.0, p=1.2))
     up = 1 if math.cos(ang) >= 0 else -1                                  # flicks stand on the upper back of the head
     for j in range(sp["flicks"]):                                         # flicks on the upper back of the head, each a different size
-        fa = ang + math.pi + up * (0.7 + 0.45 * j)
-        Lk = (0.95, 0.7, 0.5)[j]
-        sh.poly(flame(hx + math.cos(fa) * rr * 0.6, hy + math.sin(fa) * rr * 0.6, fa, rr * 1.2 * Lk, rr * (0.8 - 0.15 * j), -0.9 * up, 0.25, p=1.0))
+        fa = ang + math.pi + up * (0.65 + 0.55 * j)
+        Lk = (1.45, 1.0, 0.6)[j]
+        sh.poly(flame(hx + math.cos(fa) * rr * 0.6, hy + math.sin(fa) * rr * 0.6, fa, rr * 1.2 * Lk, rr * (0.8 - 0.1 * j), -0.9 * up, 0.25, p=1.0))
     sh.poly(thorn(hx - math.cos(ang) * rr * 0.5, hy - math.sin(ang) * rr * 0.5, math.atan2(pts0[min(3, len(pts0) - 1)][1] - hy,
                   pts0[min(3, len(pts0) - 1)][0] - hx), rr * 1.6, rr * 1.5, 0.0, p=1.0))          # the neck into the tail
     tones = dict(shadow=pal["deep"], base=pal["cyan"], light=pal["pale"])
     shade(sh, tones, 1.0, light=(0.15, 0.98), off=max(1.5, rr * 0.28), fillet=2.0)   # lit from above: pale top, deep-blue belly
-    if rr > 4:                                                            # the hot point in the head
+    if sp["name"] in ("skim", "corkscrew"):                                # a hot point only in the two medium heads
         ly = _layer(c); ly.ellipse(hx + math.cos(ang) * rr * 0.25, hy + math.sin(ang) * rr * 0.25 - rr * 0.2, rr * 0.32, rr * 0.24, pal["white"], 0.9)
         c.paste(ly)
     # ---- drips falling off the hero's tail (only the hero: heavy and slow)
@@ -398,8 +400,7 @@ def _hit_dive(t, L, A, d, s, pal, front, back):
     sh.poly(_ellipse(cx, cy - 6 * s, 20 * s * (1 + 0.5 * u), 12 * s * (1 - 0.4 * u), 0.0, 0.1, 2))     # the spirit flattens over the head
     _drops(sh, cx, cy, [(math.radians(a), sp, sz) for a, sp, sz in ((-160, 300, 5), (-135, 240, 4), (-100, 330, 3.5), (-70, 280, 4.5),
                                                                       (-40, 250, 3), (-12, 200, 4), (20, 160, 3), (190, 180, 3.5))], u, 0.4, d, s, g=520)
-    first = t - T_HIT < 1 / 30
-    bands = [(1.4 * s, pal["cyan"]), (None, pal["white"])] if first else soul_bands(pal, s, 1 - u)
+    bands = soul_bands(pal, s, 1 - u)
     sh.paint(bands, 1.0, fillet=3.0, erode=8 * s * smooth(0.55, 1, u), noise=6 * s * smooth(0.3, 1, u), seed=13,
              backing=(2.5 * s, pal["dark"], 0.25 * (1 - u)))
     # a flat ring racing out on the floor
@@ -448,7 +449,7 @@ def _ground_fire(t, L, A, d, s, pal, front, back):
     # front, then sinks and breaks up. It ties every tongue together (the tongues are separate silhouettes on top of it).
     ub = (t - T_HIT - 0.02) / (DUR - T_HIT - 0.02)
     if 0 <= ub < 1:
-        R = FIRE_R * out_cubic(min(1, ub / (FIRE_T / (DUR - T_HIT)))) + 8
+        R = (FIRE_R * out_cubic(min(1, ub / (FIRE_T / (DUR - T_HIT)))) + 8) * (1 - 0.7 * smooth(0.5, 1, ub))   # the bed pulls in to the feet
         n = 48
         xs = [-R + 2 * R * i / n for i in range(n + 1)]
         def hgt(x):
@@ -459,7 +460,7 @@ def _ground_fire(t, L, A, d, s, pal, front, back):
         bot = [L(TX + x, GROUND + 3) for x in xs[::-1]]
         sh = Shape(front)
         sh.poly(top + bot)
-        sh.paint(soul_bands(pal, s, 0.45 * (1 - ub)), 0.95, fillet=2.5, erode=6 * s * smooth(0.55, 1, ub), noise=5 * s * smooth(0.35, 1, ub), seed=29)
+        sh.paint(soul_bands(pal, s, 0.45 * (1 - ub)), 0.95, fillet=2.5, erode=3 * s * smooth(0.7, 1, ub), noise=3 * s * smooth(0.6, 1, ub), seed=29)
     for k, (dx, kind, h, w, lean, fate, life, tb) in enumerate(tongues):
         u = (t - tb) / life
         if not 0 <= u < 1: continue
@@ -476,7 +477,7 @@ def _ground_fire(t, L, A, d, s, pal, front, back):
             sh = Shape(c)
             sh.poly(flame(bx - side * d * Lw * 0.3, by + 2 * s, ang, Lw, Hh, -side * d * 2.4 * (0.6 + 0.4 * ext), 0.0, p=0.9))
             sh.poly(_ellipse(bx, by, Lw * 0.6, 3 * s, 0.0))
-            sh.paint(soul_bands(pal, s, 0.55 * (1 - u)), 1.0, fillet=2.5, erode=5 * s * smooth(0.6, 1, u), noise=4 * s * smooth(0.35, 1, u), seed=31 + k % 3)
+            sh.paint(soul_bands(pal, s, 0.55 * (1 - u)), 1.0, fillet=2.5, erode=7 * s * smooth(0.4, 1, u), noise=9 * s * smooth(0.25, 1, u), seed=31 + k % 3)   # crests foam apart
             continue
         rise = out_back(min(1, u / (0.22 if kind == "tall" else 0.1)), 2.4)
         sway = 0.12 * math.sin(14 * t + k * 1.9)
@@ -490,12 +491,15 @@ def _ground_fire(t, L, A, d, s, pal, front, back):
         sh = Shape(c)
         sh.poly(flame(bx, by + 2 * s, ang, H, W, bend, 0.25 * side * d, p=0.85))
         sh.poly(_ellipse(bx, by, W * 0.8, 3 * s, 0.0))                  # the foot spreads on the floor
-        sh.paint(soul_bands(pal, s, 0.7 * (1 - u)), 1.0, fillet=2.5, erode=6 * s * smooth(0.6, 1, u), noise=4 * s * smooth(0.4, 1, u), seed=30 + k % 4)
+        if kind == "flick":                                               # flicks just blink out, no erosion
+            sh.paint(soul_bands(pal, s, 0.8), 1.0, fillet=2.0)
+        else:
+            sh.paint(soul_bands(pal, s, 0.7 * (1 - u)), 1.0, fillet=2.5, erode=6 * s * smooth(0.6, 1, u), noise=4 * s * smooth(0.4, 1, u), seed=30 + k % 4)
         if kind == "flick": continue
         # lilac tip: the upper part of a tall tongue, its own colour; it leaves when the fate says so
         tip_from = 0.5
         lift = 46 * s * smooth(0.45, 1, u) ** 1.2 if fate == "detach" else 0.0
-        tx, ty = _flame_at(bx, by + 2 * s, ang, H, bend, 0.25 * side * d, tip_from)
+        tx, ty = flame_point(bx, by + 2 * s, ang, H, bend, 0.25 * side * d, tip_from)
         ta = ang + bend * tip_from ** 2
         sh2 = Shape(c)
         sh2.poly(flame(tx, ty - lift, ta, H * (1 - tip_from) * (1.1 if fate == "detach" else 1), W * 0.7, bend * 0.6, 0.3 * side * d, p=1.0))
@@ -513,26 +517,13 @@ def _ground_fire(t, L, A, d, s, pal, front, back):
 def gy_of(L): return L(0, GROUND)[1]
 
 
-def _flame_at(x, y, ang, L_, bend, wave, v, n=22):
-    """The point a fraction v up the spine of organic.flame()."""
-    px, py = x, y
-    m = int(v * n)
-    for i in range(1, m + 1):
-        s_ = i / n
-        a = ang + bend * s_ * s_ + wave * math.sin(1.6 * math.pi * s_)
-        px += math.cos(a) * L_ / n; py += math.sin(a) * L_ / n
-    return px, py
-
-
 # ---------------------------------------------------------------- possession: the target becomes a ghost
-def _dummy(sh, L, s, wipe=None, grow=1.0):
-    """A generic target silhouette (head, neck, body, skirt, pole)."""
+def _dummy(sh, L, s, d, wipe=None, grow=1.0):
+    """A generic target mask (head and body only; a character would pass its own alpha mask instead)."""
     hx, hy = L(*HEAD)
     sh.poly(_ellipse(hx, hy, 16 * s * grow, 15 * s * grow, 0.0))
     sh.poly(_ellipse(hx, hy + 30 * s, 20 * s * grow, 26 * s * grow, 0.0))
-    sh.poly(_ellipse(hx, hy + 60 * s, 16 * s * grow, 7 * s * grow, 0.0))
-    sh.poly([(hx - 3 * s, hy + 60 * s), (hx + 3 * s, hy + 60 * s), (hx + 3 * s, hy + 104 * s), (hx - 3 * s, hy + 104 * s)])
-    sh.poly([(hx - 7 * s, hy - 12 * s), (hx - 2 * s, hy - 24 * s), (hx + 2 * s, hy - 13 * s)])          # a tuft on top
+    sh.poly([(hx - 7 * s * d, hy - 12 * s), (hx - 2 * s * d, hy - 24 * s), (hx + 2 * s * d, hy - 13 * s)])          # a tuft on top
     if wipe is not None:
         sh.poly([(hx - 60 * s, wipe), (hx + 60 * s, wipe), (hx + 60 * s, hy + 140 * s), (hx - 60 * s, hy + 140 * s)], on=False)
 
@@ -541,10 +532,11 @@ def _possession(t, L, A, d, s, pal, front, back):
     u = (t - T_HIT - 0.04) / (DUR - T_HIT - 0.04)
     if not 0 <= u < 1: return
     hx, hy = L(*HEAD)
-    wipe = hy - 20 * s + 140 * s * out_cubic(min(1, u / 0.25))          # the ghost runs down the body from the head
-    a = smooth(0, 0.05, u) * (1 - smooth(0.6, 1, u))
+    wipe = hy - 20 * s + 140 * s * out_cubic(min(1, u / 0.25))          # the ghost runs down the body from the head ...
+    wipe = min(wipe, hy + 70 * s - 100 * s * smooth(0.55, 1, u) ** 0.8)     # ... and drains back up out of it at the end
+    a = smooth(0, 0.05, u) * (1 - smooth(0.85, 1, u))
     sh = Shape(front)
-    _dummy(sh, L, s, wipe, 1.0 + 0.04 * math.sin(30 * t))
+    _dummy(sh, L, s, d, wipe, 1.0 + 0.04 * math.sin(30 * t))
     sh.paint([(2.6 * s, pal["cyan"]), (4.4 * s, pal["blue"]), (None, pal["deep"])], 0.8 * a, fillet=3.0,
              erode=3 * s * smooth(0.55, 1, u), noise=4 * s * smooth(0.4, 1, u), seed=61)
     # lilac flames rising off the head and shoulders: tall, thin, slow, see-through (unlike the ground fire)
