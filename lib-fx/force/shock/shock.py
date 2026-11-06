@@ -415,7 +415,7 @@ def shock_bloom(t, P, front, back, pal=PAL_SUN, s=1.0, d=1):
 # ends orange-red. The first ring born travels farthest and grows biggest: a shock wave widens, cools and fades as it spreads.
 INFERNO = dict(tip=(172, 32, 20), rim=(226, 70, 24), body=(246, 116, 32), light=(255, 168, 60), core=(255, 224, 146),
                white=(255, 250, 234), back=(92, 18, 12))
-CATALOG["inferno"]["palette"] = INFERNO
+CATALOG["inferno"]["palette"] = INFERNO                               # set here: the palette is defined after CATALOG
 T_FIRE = 2 / 30                                                           # two drawings of build-up, then the burst
 SQ, LEAN = 0.44, 0.32                                                      # ring seen three-quarters; its top leans forward
 # tier: born (s after the burst), start x, travel, start radius, end radius, stroke width, life (s), seed; tier 0 is the oldest
@@ -511,7 +511,11 @@ def _layer(c):
 
 
 def shock_inferno(t, P, front, back, pal=INFERNO, s=1.0, d=1):
+    """Frame size scales with s: at s > 1 give it a canvas of about (640, 400) * s, anchor (60, 200) * s."""
+    pal = dict(pal)
+    pal.setdefault("tip", tone(pal["rim"], 0.8)); pal.setdefault("back", tone(pal["rim"], 0.45))   # any standard palette works
     X, py = _x(P, d, s), P[1]
+    off = 0.0 if d > 0 else math.pi                                       # the near half of a ring faces the way the shot goes
     # ---- build-up: rays rush into a growing orb at the fist, a ring closes in around it
     if t < T_FIRE - 1e-6:
         k = t / T_FIRE + 0.5
@@ -523,8 +527,8 @@ def shock_inferno(t, P, front, back, pal=INFERNO, s=1.0, d=1):
             p0 = (cx + d * math.cos(th) * r_out, py + math.sin(th) * r_out * 0.8)
             p1 = (cx + d * math.cos(th) * r_in, py + math.sin(th) * r_in * 0.8)
             lens(front, p0, p1, 3.4 * s, pal["light"], 0.5 + 0.5 * k)
-        band(back, cx, py, 10 * s, (64 - 30 * k) * s, 3 * s, pal["rim"], 0.6, math.pi / 2, 3 * math.pi / 2)
-        band(front, cx, py, 10 * s, (64 - 30 * k) * s, 3 * s, pal["light"], 0.8, -math.pi / 2, math.pi / 2)
+        band(back, cx, py, 10 * s, (64 - 30 * k) * s, 3 * s, pal["rim"], 0.6, math.pi / 2 + off, 3 * math.pi / 2 + off)
+        band(front, cx, py, 10 * s, (64 - 30 * k) * s, 3 * s, pal["light"], 0.8, -math.pi / 2 + off, math.pi / 2 + off)
         front.ellipse(cx, py, (6 + 3 * k) * s, (6 + 3 * k) * s, pal["white"], 1)
         return
     tf = t - T_FIRE
@@ -586,7 +590,7 @@ def shock_inferno(t, P, front, back, pal=INFERNO, s=1.0, d=1):
                     tang = math.atan2(y2 - y, x2 - x) + (math.pi if hook > 0 else 0)
                     outw = math.atan2(y - py, (x - cx) * 2.5)
                     ang = tang + 0.45 * math.sin(outw - tang)
-                    sh.poly(thorn(x, y, ang, (0.16 + 0.1 * rng.random()) * R * (1 - 0.5 * brk), ws[i] * 0.75, bend=0.35 * (1 if hook > 0 else -1)))
+                    sh.poly(thorn(x, y, ang, (0.16 + 0.1 * rng.random()) * R * (1 - 0.5 * brk), ws[i] * 0.75, bend=0.35 * d * (1 if hook > 0 else -1)))
             # chips thrown off the ends once it starts to break
             if brk > 0:
                 for end, sgn in ((cl[2], -1), (cl[-3], 1)):
@@ -594,7 +598,7 @@ def shock_inferno(t, P, front, back, pal=INFERNO, s=1.0, d=1):
                     dist = 26 * s * out_cubic(brk) + 4 * s
                     sz = 1 - smooth(0.6, 1, brk)
                     if sz > 0.05:
-                        sh.poly(shard(end[0] + math.cos(ang) * dist, end[1] + math.sin(ang) * dist, ang, 13 * s * sz, 7 * s * sz, 0.3))
+                        sh.poly(shard(end[0] + math.cos(ang) * dist, end[1] + math.sin(ang) * dist, ang, 13 * s * sz, 7 * s * sz, 0.3 * d))
         sh.paint(fire_bands(pal, s, heat), a, fillet=3.0, erode=8 * s * smooth(0.55, 1, u), noise=5 * s * smooth(0.42, 1, u), seed=60 + k,
                  backing=(3.0 * s, pal["back"], 0.3 * (1 - smooth(0.3, 0.9, u))))
         # a thin second line riding inside the stroke a beat behind it: the double line of a brush, it burns out first
@@ -612,10 +616,10 @@ def shock_inferno(t, P, front, back, pal=INFERNO, s=1.0, d=1):
         am = (1 - smooth(0.3, 1, um))
         rx, ry = (8 + 6 * out_cubic(um)) * s, (40 + 22 * out_cubic(um)) * s
         lb, lf = _layer(back), _layer(front)
-        band(lb, X(6), py, rx, ry, 5 * s * (1 - 0.5 * um), pal["back"], am * 0.8, math.pi / 2, 3 * math.pi / 2)
-        band(lf, X(6), py, rx, ry, 5 * s * (1 - 0.5 * um), pal["tip"], am, -math.pi / 2, math.pi / 2)
+        band(lb, X(6), py, rx, ry, 5 * s * (1 - 0.5 * um), pal["back"], am * 0.8, math.pi / 2 + off, 3 * math.pi / 2 + off)
+        band(lf, X(6), py, rx, ry, 5 * s * (1 - 0.5 * um), pal["tip"], am, -math.pi / 2 + off, math.pi / 2 + off)
         lf2 = _layer(front)
-        band(lf2, X(6) + d * 1.2 * s, py, rx, ry, 1.6 * s * (1 - um), pal["light"], am, -math.pi / 2.4, math.pi / 2.4)
+        band(lf2, X(6) + d * 1.2 * s, py, rx, ry, 1.6 * s * (1 - um), pal["light"], am, -math.pi / 2.4 + off, math.pi / 2.4 + off)
         back.paste(lb); front.paste(lf); front.paste(lf2)
     # ---- dim speed streaks behind the beam
     rng = random.Random(90)

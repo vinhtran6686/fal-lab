@@ -52,4 +52,5 @@ Code của cả họ nằm cạnh đó: `force/shock/shock.py`. Hiện chỉ xu�
 
 Lấy `sheet.png` hoặc `frames/` của hiệu ứng, đặt điểm neo (`anchor_2x` trong `meta.json`) vào điểm chạm của nhân vật
 (vd. mũi chân khi đá), bắt đầu ở frame trúng đòn, lật ngang nếu nhân vật quay trái. Muốn đổi màu hay cỡ thì gọi thẳng hàm
-với `pal` / `s` khác thay vì sửa ảnh.
+với `pal` / `s` khác thay vì sửa ảnh. Khi `s` > 1 thì khung và điểm neo cũng nhân theo `s` (vd. `inferno`: khoảng 640x400 nhân `s`), không thì
+hiệu ứng chạm mép.
