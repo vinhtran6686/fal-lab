@@ -1,0 +1,38 @@
+{
+ "id": "impact/ground/slam",
+ "name": "Nện bụi",
+ "desc": "a fist or weapon slams the floor: light thorns erupt out of a rolling dust bank (a dark back bank and a light front bank, both rolling outward), pebbles arc to both sides, the middle clears first",
+ "status": "draft",
+ "tags": [
+  "impact",
+  "ground",
+  "one-shot",
+  "anchor:ground",
+  "heavy",
+  "dust"
+ ],
+ "fps": 30,
+ "frames": 25,
+ "frame_size_2x": [
+  440,
+  300
+ ],
+ "anchor_2x": [
+  220,
+  236
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "light": [
+   255,
+   222,
+   150
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/slam_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/impact/ground/ground.py: ground_slam"
+}

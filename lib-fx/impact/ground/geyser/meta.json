@@ -1,0 +1,38 @@
+{
+ "id": "impact/ground/geyser",
+ "name": "Phun đất",
+ "desc": "a fountain of light thorns shoots straight up from the impact over a low dust skirt, then droplets rain back down while the skirt rolls outward",
+ "status": "draft",
+ "tags": [
+  "impact",
+  "ground",
+  "one-shot",
+  "anchor:ground",
+  "heavy",
+  "vertical"
+ ],
+ "fps": 30,
+ "frames": 25,
+ "frame_size_2x": [
+  440,
+  300
+ ],
+ "anchor_2x": [
+  220,
+  236
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "light": [
+   255,
+   222,
+   150
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/geyser_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/impact/ground/ground.py: ground_geyser"
+}

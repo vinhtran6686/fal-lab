@@ -37,20 +37,26 @@ def families():
     return out
 
 
+def frame_of(mod, name):
+    """Frame size and anchor: per effect when its CATALOG entry says so, else the family's."""
+    c = mod.CATALOG[name]
+    return tuple(c.get("frame", mod.FRAME)), tuple(c.get("anchor", mod.ANCHOR))
+
+
 def render(mod, name):
-    (W, H), P, fps = mod.FRAME, mod.ANCHOR, mod.FPS
-    n = int(math.ceil(mod.DUR * fps)) + 1
+    (W, H), P = frame_of(mod, name); fps = mod.FPS
+    n = int(math.ceil(mod.CATALOG[name].get("dur", mod.DUR) * fps)) + 1
     frames = []
     for i in range(n):
         fc, bc = fxcore.Canvas(W, H), fxcore.Canvas(W, H)
         mod.VARIANTS[name](i / fps, P, fc, bc)
         img = bc.done(); img.alpha_composite(fc.done())
-        frames.append(fxcore.halo(img, mod.PAL_SUN["light"], 0.45, 8))
+        frames.append(fxcore.halo(img, mod.PAL_SUN["light"], getattr(mod, "HALO", 0.45), 8))
     return frames
 
 
 def write_effect(fam, mod, name, frames):
-    (W, H), fps = mod.FRAME, mod.FPS
+    (W, H), anchor = frame_of(mod, name); fps = mod.FPS
     d = HERE / fam / name
     (d / "frames").mkdir(parents=True, exist_ok=True)
     for old in (d / "frames").glob("*.png"): old.unlink()
@@ -65,7 +71,7 @@ def write_effect(fam, mod, name, frames):
     c = mod.CATALOG[name]
     meta = {"id": f"{fam}/{name}", "name": c["name"], "desc": c["desc"], "status": c.get("status", "draft"),
             "tags": list(dict.fromkeys(list(getattr(mod, "TAGS", [])) + list(c.get("tags", [])))),
-            "fps": fps, "frames": len(frames), "frame_size_2x": [W, H], "anchor_2x": list(mod.ANCHOR), "direction": "+x (mirror for -x)",
+            "fps": fps, "frames": len(frames), "frame_size_2x": [W, H], "anchor_2x": list(anchor), "direction": "+x (mirror for -x)",
             "palette": mod.PAL_SUN, "files": {"sheet": "sheet.png", "frames": f"frames/{name}_NN.png", "preview": "preview.gif"},
             "source": f"lib-fx/{fam}/{pathlib.Path(mod.__file__).name}: {mod.VARIANTS[name].__name__}"}
     (d / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf8")
@@ -74,7 +80,7 @@ def write_effect(fam, mod, name, frames):
 
 def gallery(fam, mod, rows):
     """A still contact sheet (every other frame) and an animated grid with every effect of the family playing together."""
-    (W, H), fps = mod.FRAME, mod.FPS
+    W = max(frame_of(mod, n)[0][0] for n, _ in rows); H = max(frame_of(mod, n)[0][1] for n, _ in rows); fps = mod.FPS
     out = HERE / "_gallery"; out.mkdir(exist_ok=True)
     stem = fam.replace("/", "-")
     f_lab, f_small = fxcore.font(22), fxcore.font(15)
@@ -89,7 +95,7 @@ def gallery(fam, mod, rows):
         d.text((14, y + H // 2 + 16), st, fill=STATUS_COL.get(st, STATUS_COL["draft"]), font=f_small)
         for c, i in enumerate(cols):
             if i < len(fr):
-                cell = Image.new("RGBA", (W, H), BG + (255,)); cell.alpha_composite(fr[i]); sheet.paste(cell.convert("RGB"), (lab + c * W, y))
+                cell = Image.new("RGBA", (W, H), BG + (255,)); cell.alpha_composite(fr[i], ((W - fr[i].width) // 2, (H - fr[i].height) // 2)); sheet.paste(cell.convert("RGB"), (lab + c * W, y))
         d.line([(0, y), (sheet.width, y)], fill=(48, 54, 50))
     sheet.save(out / f"{stem}.png")
     k = 1.5; cw, ch = round(W * k), round(H * k)
@@ -97,7 +103,7 @@ def gallery(fam, mod, rows):
     for i in range(n):
         g = Image.new("RGB", (cw * len(rows), ch + 40), BG); dg = ImageDraw.Draw(g)
         for r, (name, fr) in enumerate(rows):
-            cell = Image.new("RGBA", (W, H), BG + (255,)); cell.alpha_composite(fr[min(i, len(fr) - 1)])
+            f = fr[min(i, len(fr) - 1)]; cell = Image.new("RGBA", (W, H), BG + (255,)); cell.alpha_composite(f, ((W - f.width) // 2, (H - f.height) // 2))
             g.paste(cell.resize((cw, ch), Image.LANCZOS).convert("RGB"), (r * cw, 0))
             dg.text((r * cw + 12, ch + 8), f"{r + 1}. {mod.CATALOG[name]['name']}", fill=(255, 226, 140), font=f_lab)
         anim.append(g)

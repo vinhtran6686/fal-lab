@@ -1,0 +1,38 @@
+{
+ "id": "impact/ground/crater",
+ "name": "Vòng chấn đất",
+ "desc": "a spiky ring flat on the ground races out from the impact while a short burst of light stands up in the middle; rocks are thrown to both sides and small dust puffs rise where the ring dies",
+ "status": "draft",
+ "tags": [
+  "impact",
+  "ground",
+  "one-shot",
+  "anchor:ground",
+  "heavy",
+  "ring"
+ ],
+ "fps": 30,
+ "frames": 25,
+ "frame_size_2x": [
+  440,
+  300
+ ],
+ "anchor_2x": [
+  220,
+  236
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "light": [
+   255,
+   222,
+   150
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/crater_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/impact/ground/ground.py: ground_crater"
+}

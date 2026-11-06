@@ -1,0 +1,39 @@
+{
+ "id": "impact/dash/wall",
+ "name": "Vách lưỡi liềm",
+ "desc": "a tall white crescent slams up at the contact, its back edge torn into short curled thorns that trail along the dash; droplets peel off both tips",
+ "status": "draft",
+ "tags": [
+  "impact",
+  "dash",
+  "melee",
+  "one-shot",
+  "directional",
+  "anchor:contact",
+  "medium"
+ ],
+ "fps": 30,
+ "frames": 15,
+ "frame_size_2x": [
+  340,
+  280
+ ],
+ "anchor_2x": [
+  236,
+  140
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "light": [
+   255,
+   214,
+   110
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/wall_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/impact/dash/dash.py: dash_wall"
+}

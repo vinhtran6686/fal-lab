@@ -1,0 +1,39 @@
+{
+ "id": "impact/hit/chevron",
+ "name": "Mũi chéo",
+ "desc": "a directional spray: two wide wings open into a chevron from the contact, thorns and slivers stream away along the hit",
+ "status": "draft",
+ "tags": [
+  "impact",
+  "hit",
+  "melee",
+  "one-shot",
+  "anchor:contact",
+  "directional",
+  "medium"
+ ],
+ "fps": 30,
+ "frames": 14,
+ "frame_size_2x": [
+  320,
+  260
+ ],
+ "anchor_2x": [
+  74,
+  130
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "light": [
+   255,
+   214,
+   110
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/chevron_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/impact/hit/hit.py: hit_chevron"
+}

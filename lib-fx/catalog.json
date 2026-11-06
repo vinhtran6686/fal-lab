@@ -123,5 +123,254 @@
    160
   ],
   "dir": "force/shock/vapor"
+ },
+ "impact/dash/comet": {
+  "name": "Sao chổi",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "dash",
+   "melee",
+   "one-shot",
+   "directional",
+   "anchor:contact",
+   "fast",
+   "light"
+  ],
+  "desc": "speed thorns converge from behind into a forward-pointing burst at the contact; slivers keep flying ahead",
+  "fps": 30,
+  "frames": 15,
+  "frame_size_2x": [
+   400,
+   280
+  ],
+  "anchor_2x": [
+   236,
+   140
+  ],
+  "dir": "impact/dash/comet"
+ },
+ "impact/dash/pierce": {
+  "name": "Xuyên vòng",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "dash",
+   "melee",
+   "one-shot",
+   "directional",
+   "anchor:contact",
+   "heavy",
+   "piercing"
+  ],
+  "desc": "a white bulge punches through a standing ring of air while long thorns stream back along the dash like a comet",
+  "fps": 30,
+  "frames": 15,
+  "frame_size_2x": [
+   340,
+   280
+  ],
+  "anchor_2x": [
+   236,
+   140
+  ],
+  "dir": "impact/dash/pierce"
+ },
+ "impact/dash/wall": {
+  "name": "Vách lưỡi liềm",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "dash",
+   "melee",
+   "one-shot",
+   "directional",
+   "anchor:contact",
+   "medium"
+  ],
+  "desc": "a tall white crescent slams up at the contact, its back edge torn into short curled thorns that trail along the dash; droplets peel off both tips",
+  "fps": 30,
+  "frames": 15,
+  "frame_size_2x": [
+   340,
+   280
+  ],
+  "anchor_2x": [
+   236,
+   140
+  ],
+  "dir": "impact/dash/wall"
+ },
+ "impact/ground/crater": {
+  "name": "Vòng chấn đất",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "ground",
+   "one-shot",
+   "anchor:ground",
+   "heavy",
+   "ring"
+  ],
+  "desc": "a spiky ring flat on the ground races out from the impact while a short burst of light stands up in the middle; rocks are thrown to both sides and small dust puffs rise where the ring dies",
+  "fps": 30,
+  "frames": 25,
+  "frame_size_2x": [
+   440,
+   300
+  ],
+  "anchor_2x": [
+   220,
+   236
+  ],
+  "dir": "impact/ground/crater"
+ },
+ "impact/ground/geyser": {
+  "name": "Phun đất",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "ground",
+   "one-shot",
+   "anchor:ground",
+   "heavy",
+   "vertical"
+  ],
+  "desc": "a fountain of light thorns shoots straight up from the impact over a low dust skirt, then droplets rain back down while the skirt rolls outward",
+  "fps": 30,
+  "frames": 25,
+  "frame_size_2x": [
+   440,
+   300
+  ],
+  "anchor_2x": [
+   220,
+   236
+  ],
+  "dir": "impact/ground/geyser"
+ },
+ "impact/ground/slam": {
+  "name": "Nện bụi",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "ground",
+   "one-shot",
+   "anchor:ground",
+   "heavy",
+   "dust"
+  ],
+  "desc": "a fist or weapon slams the floor: light thorns erupt out of a rolling dust bank (a dark back bank and a light front bank, both rolling outward), pebbles arc to both sides, the middle clears first",
+  "fps": 30,
+  "frames": 25,
+  "frame_size_2x": [
+   440,
+   300
+  ],
+  "anchor_2x": [
+   220,
+   236
+  ],
+  "dir": "impact/ground/slam"
+ },
+ "impact/hit/chevron": {
+  "name": "Mũi chéo",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "hit",
+   "melee",
+   "one-shot",
+   "anchor:contact",
+   "directional",
+   "medium"
+  ],
+  "desc": "a directional spray: two wide wings open into a chevron from the contact, thorns and slivers stream away along the hit",
+  "fps": 30,
+  "frames": 14,
+  "frame_size_2x": [
+   320,
+   260
+  ],
+  "anchor_2x": [
+   74,
+   130
+  ],
+  "dir": "impact/hit/chevron"
+ },
+ "impact/hit/cross": {
+  "name": "Chữ thập chí mạng",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "hit",
+   "melee",
+   "one-shot",
+   "anchor:contact",
+   "crit",
+   "heavy"
+  ],
+  "desc": "the critical hit: four long straight pillars in an X, four short curled thorns between them, a thin ring racing out and droplets off the pillar tips",
+  "fps": 30,
+  "frames": 14,
+  "frame_size_2x": [
+   300,
+   300
+  ],
+  "anchor_2x": [
+   150,
+   150
+  ],
+  "dir": "impact/hit/cross"
+ },
+ "impact/hit/ring": {
+  "name": "Vòng gai",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "hit",
+   "melee",
+   "one-shot",
+   "anchor:contact",
+   "radial",
+   "heavy"
+  ],
+  "desc": "a spiky ring: the core is punched out from the start and keeps widening, its rim stays white-hot while thorns of three sizes spray off the outside",
+  "fps": 30,
+  "frames": 14,
+  "frame_size_2x": [
+   300,
+   300
+  ],
+  "anchor_2x": [
+   150,
+   150
+  ],
+  "dir": "impact/hit/ring"
+ },
+ "impact/hit/star": {
+  "name": "Nổ sao",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "hit",
+   "melee",
+   "one-shot",
+   "anchor:contact",
+   "radial",
+   "medium"
+  ],
+  "desc": "the classic hit spark: a white-hot core with two long hero thorns, four medium and three nubs curling one way, two straight rays across it, droplets flung from the hero tips",
+  "fps": 30,
+  "frames": 14,
+  "frame_size_2x": [
+   300,
+   300
+  ],
+  "anchor_2x": [
+   150,
+   150
+  ],
+  "dir": "impact/hit/star"
  }
 }

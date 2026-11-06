@@ -1,0 +1,39 @@
+{
+ "id": "impact/hit/ring",
+ "name": "Vòng gai",
+ "desc": "a spiky ring: the core is punched out from the start and keeps widening, its rim stays white-hot while thorns of three sizes spray off the outside",
+ "status": "draft",
+ "tags": [
+  "impact",
+  "hit",
+  "melee",
+  "one-shot",
+  "anchor:contact",
+  "radial",
+  "heavy"
+ ],
+ "fps": 30,
+ "frames": 14,
+ "frame_size_2x": [
+  300,
+  300
+ ],
+ "anchor_2x": [
+  150,
+  150
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "light": [
+   255,
+   214,
+   110
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/ring_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/impact/hit/hit.py: hit_ring"
+}

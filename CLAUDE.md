@@ -35,6 +35,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   shared kit in `lib-fx/_core/` (`fxcore.py`, `palettes.py`). `python lib-fx/build.py [group[/family[/id]]]` renders each effect
   (`sheet.png`, `frames/`, `preview.gif`, `meta.json` with status draft|approved|rework) plus `lib-fx/_gallery/<group>-<family>.png|gif`
   and `lib-fx/catalog.json`. New effects go into the library first; characters use them from there. Show fx alone for review.
+  Design method: `lib-fx/DESIGN.md`; hand-drawn organic shapes (thorns, splats, toon dust via `_core/organic.py`): `lib-fx/RESEARCH-organic-impact.md`.
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.

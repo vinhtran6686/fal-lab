@@ -1,7 +1,7 @@
 # Hướng dẫn thư viện lib-fx
 
 Thư viện hiệu ứng (fx) chuẩn của dự án, dùng chung cho mọi nhân vật. Mỗi hiệu ứng vẽ bằng code (0 USD) và lưu **riêng lẻ, không kèm nhân vật**.
-File này mô tả từng thư mục chứa gì. Luật nhìn, lệnh dựng và cách thêm hiệu ứng nằm trong `README.md`.
+File này mô tả từng thư mục chứa gì. Luật nhìn, lệnh dựng và cách thêm hiệu ứng nằm trong `README.md`; phương pháp thiết kế trong `DESIGN.md`; cách sinh hình tự do (gai, toé, khói) trong `RESEARCH-organic-impact.md`.
 
 ## Cách chia
 
@@ -125,9 +125,10 @@ Hiệu ứng trúng đòn nhỏ, dùng nhiều nhất, không thuộc vũ khí h
 
 | Thư mục | Tên | Chứa gì | Ví dụ | Hiện có |
 |---|---|---|---|---|
-| `impact/hit/` | Trúng đòn | tia trúng, chớp trắng, vòng nhỏ tại điểm trúng | tia trúng thường, chớp trúng | - |
+| `impact/hit/` | Trúng đòn cận chiến | tia trúng của đấm, kiếm, búa: lõi trắng, gai cong, giọt văng (hình tự do, xem RESEARCH-organic-impact.md) | nổ sao, mũi chéo, vòng gai, chữ thập chí mạng | Mũi chéo (draft), Chữ thập chí mạng (draft), Vòng gai (draft), Nổ sao (draft) |
+| `impact/dash/` | Lướt va chạm | cú va ở cuối một cú lướt / lao: mép sáng phía trước, gai chảy về sau dọc đường lao, giọt bay tới trước | vách lưỡi liềm, xuyên vòng, sao chổi | Sao chổi (draft), Xuyên vòng (draft), Vách lưỡi liềm (draft) |
 | `impact/crit/` | Chí mạng | trúng mạnh nổi bật hơn hit thường | tia chí mạng, vỡ kính | - |
-| `impact/ground/` | Mặt đất | đập đất, nứt, bụi bước chân, bụi tiếp đất | nứt đất, bụi tiếp đất | - |
+| `impact/ground/` | Mặt đất | nện, đập, tiếp đất: khói nhiều tầng là chính, gai sáng, đá văng, vòng dẹt trên mặt đất | nện bụi, vòng chấn đất, phun đất | Vòng chấn đất (draft), Phun đất (draft), Nện bụi (draft) |
 
 ## `status/`: Trạng thái
 

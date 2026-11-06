@@ -1,0 +1,40 @@
+{
+ "id": "impact/dash/pierce",
+ "name": "Xuyên vòng",
+ "desc": "a white bulge punches through a standing ring of air while long thorns stream back along the dash like a comet",
+ "status": "draft",
+ "tags": [
+  "impact",
+  "dash",
+  "melee",
+  "one-shot",
+  "directional",
+  "anchor:contact",
+  "heavy",
+  "piercing"
+ ],
+ "fps": 30,
+ "frames": 15,
+ "frame_size_2x": [
+  340,
+  280
+ ],
+ "anchor_2x": [
+  236,
+  140
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "light": [
+   255,
+   214,
+   110
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/pierce_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/impact/dash/dash.py: dash_pierce"
+}
