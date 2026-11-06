@@ -22,7 +22,7 @@ TAGS = ["magic", "spirit", "one-shot", "directional", "anchor:caster", "target:+
 SOUL = SPIRIT                                                             # _core/palettes.py; any palette with the same keys works
 PAL_SUN = SOUL
 CATALOG = {
-    "soulstrike": dict(name="Xuất hồn kích", status="draft", tags=["heavy", "homing", "spirit", "organic", "ground"],
+    "soulstrike": dict(name="Xuất hồn kích", status="rework", tags=["heavy", "homing", "spirit", "organic", "ground"],
                        glow=(110, 196, 255), halo=(0.5, 10),
                        desc="spirit flames are born at the caster's chest, swell and fan out; six spirits of three sizes (the big one a "
                             "layered blue flame, the small ones flat-shaded teardrops) each take their own path and strike one after "

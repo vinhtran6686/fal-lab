@@ -137,3 +137,8 @@ Ngẫu nhiên nhỏ (±15% chiều dài, ±10° góc) **không** phải là đa 
 - Đặt frame cách nhau 4-6 frame cạnh nhau: dáng tổng thể có thay đổi rõ không?
 - Đếm kiểu hình trong mỗi nhóm màu: dưới 3 là đơn điệu.
 
+## 11. Xuất hồn kích (`magic/spirit/soulstrike`): rework, giữ phần linh hồn nhỏ
+
+Sau 4 vòng sửa, user đánh giá: **linh hồn nhỏ và cách chúng chuyển động đạt**, còn linh hồn lớn, các cú tóe và lửa dưới đất chưa đẹp.
+Phần đạt được ghi trong [RECIPE-soul-spirits.md](RECIPE-soul-spirits.md). Dựng lại hiệu ứng từ GIF tham khảo: [REFERENCE-GIF.md](REFERENCE-GIF.md).
+

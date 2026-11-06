@@ -2,7 +2,7 @@
  "id": "magic/spirit/soulstrike",
  "name": "Xuất hồn kích",
  "desc": "spirit flames are born at the caster's chest, swell and fan out; six spirits of three sizes (the big one a layered blue flame, the small ones flat-shaded teardrops) each take their own path and strike one after another, every hit a bright organic splash of its own shape (a chevron on the torso, a hollow ring at the back of the head, a star flat on the floor, the climax on the head, a fountain at the chest); a spiky crater ring races out on the floor and independent soul flames stand in three rows (dark violet behind, blue, bright cyan in front), each with its own sway, flicker, life and fate (sink, split, tip floats off). The target point is 340 px ahead of the anchor; no target body is drawn",
- "status": "draft",
+ "status": "rework",
  "tags": [
   "magic",
   "spirit",

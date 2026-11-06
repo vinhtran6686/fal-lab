@@ -1,7 +1,7 @@
 # Hướng dẫn thư viện lib-fx
 
 Thư viện hiệu ứng (fx) chuẩn của dự án, dùng chung cho mọi nhân vật. Mỗi hiệu ứng vẽ bằng code (0 USD) và lưu **riêng lẻ, không kèm nhân vật**.
-File này mô tả từng thư mục chứa gì. Luật nhìn, lệnh dựng và cách thêm hiệu ứng nằm trong `README.md`; phương pháp thiết kế trong `DESIGN.md`; cách sinh hình tự do (gai, toé, khói) trong `RESEARCH-organic-impact.md`; công thức hiệu ứng nhiều lớp: `RECIPE-inferno.md` (đã duyệt), `RECIPE-tiger-dash.md`.
+File này mô tả từng thư mục chứa gì. Luật nhìn, lệnh dựng và cách thêm hiệu ứng nằm trong `README.md`; phương pháp thiết kế trong `DESIGN.md`; cách sinh hình tự do (gai, toé, khói) trong `RESEARCH-organic-impact.md`; công thức hiệu ứng nhiều lớp: `RECIPE-inferno.md` (đã duyệt), `RECIPE-soul-spirits.md` (linh hồn nhỏ, đạt), `RECIPE-tiger-dash.md` (rework); dựng lại từ GIF tham khảo: `REFERENCE-GIF.md` + `_tools/study_ref.py`.
 
 ## Cách chia
 
@@ -110,7 +110,7 @@ Mỗi thư mục con chia tiếp theo chức năng:
 | `magic/shadow/` | Bóng tối | khói đen, tay bóng tối, mắt, hư không | lỗ đen, trói bóng, nguyền | - |
 | `magic/arcane/` | Ma thuật | rune, vòng phép, tinh thể tím, dịch chuyển | vòng phép, tên ma thuật, cổng | - |
 | `magic/blood/` | Huyết thuật | máu, hút máu, gai máu | hút máu, gai máu | - |
-| `magic/spirit/` | Linh hồn | hồn lửa (ma trơi) rời khỏi thân, bay, nhập và đốt mục tiêu; lửa hồn dưới đất; bóng ma bám mục tiêu | xuất hồn kích | Xuất hồn kích (draft) |
+| `magic/spirit/` | Linh hồn | hồn lửa (ma trơi) rời khỏi thân, bay, nhập và đốt mục tiêu; lửa hồn dưới đất; bóng ma bám mục tiêu | xuất hồn kích | Xuất hồn kích (rework; phần linh hồn nhỏ đạt: RECIPE-soul-spirits.md) |
 
 ## `explosion/`: Vụ nổ
 
