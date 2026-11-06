@@ -11,7 +11,7 @@ from fxcore import Canvas, mix, clamp, smooth, out_cubic, out_back, lens, ribbon
 from organic import Shape, thorn, shard, blob, shade
 
 DUR = 0.88
-FRAME, ANCHOR, FPS = (800, 340), (130, 190), 30
+FRAME, ANCHOR, FPS = (800, 340), (160, 190), 30
 TAGS = ["dash", "travel", "one-shot", "directional", "anchor:start"]
 # layers of a flat, outline-free look: red, orange, yellow for the fire; grey and light grey for smoke, wind and dust
 FLAME = dict(tip=(212, 56, 54), rim=(234, 92, 50), body=(246, 138, 54), light=(252, 188, 70), core=(255, 228, 136),
@@ -109,7 +109,7 @@ def dash_tiger(t, P, front, back, pal=FLAME, s=1.0, d=1):
         n = 16
         xs = [tail + (hx - tail) * k / n for k in range(n + 1)]
         th = [math.sin(math.pi * k / n) ** 0.5 for k in range(n + 1)]     # pointed at both ends
-        top = [(x, gy - 4 * s - 18 * s * h - 4 * s * math.sin(x * 0.05)) for x, h in zip(xs, th)]
+        top = [(x, gy - 4 * s - 18 * s * h - 4 * s * math.sin(d * (x - P[0]) / s * 0.05)) for x, h in zip(xs, th)]
         bot = [(x, gy + 2 * s + 4 * s * h) for x, h in zip(xs, th)]
         ly.poly(top + bot[::-1], SMOKE["shadow"], ah)
         back.paste(ly)
@@ -200,7 +200,7 @@ def dash_tiger(t, P, front, back, pal=FLAME, s=1.0, d=1):
         sh.poly(blob(bx, by, Wr * 0.42, wob=0.2, freq=3, phase=ph * 6))
         heat = 0.9 * (1 - smooth(0.0, 0.8, u))
         sh.paint(flame_bands(pal, s, heat), 1 - smooth(0.72, 1, u), fillet=3.0, erode=9 * s * smooth(0.45, 1, u),
-                 noise=6 * s * smooth(0.28, 1, u), seed=int(ph * 1000))
+                 noise=6 * s * smooth(0.28, 1, u), seed=50 + int(ph * 3))                   # few seeds: the noise cache stays small
     # red flecks torn off the flame tips, drifting up and back long after
     sh = Shape(front)
     for tb, xi, life, up, spec, ph in tongues:
@@ -216,7 +216,7 @@ def dash_tiger(t, P, front, back, pal=FLAME, s=1.0, d=1):
             vx, vy = -d * rng.uniform(40, 110) * s, -rng.uniform(50, 120) * s
             x, y, vx2, vy2 = drag_pos(x0p, y0p, vx, vy, ue * 0.5, k=2.0, g=-30 * s)
             sz = 1 - smooth(0.5, 1, ue)
-            sh.poly(shard(x, y, math.atan2(vy2, vx2) + 0.5 * math.sin(9 * t + m), rng.uniform(12, 20) * s * sz, rng.uniform(6, 10) * s * sz, 0.6 * d))
+            sh.poly(shard(x, y, math.atan2(vy2, vx2) + 0.5 * d * math.sin(9 * t + m), rng.uniform(12, 20) * s * sz, rng.uniform(6, 10) * s * sz, 0.6 * d))
     sh.paint(flame_bands(pal, s, 0.2), 0.95, fillet=2.0)
 
     # ================================================================ the head and what it drags
@@ -291,9 +291,9 @@ def dash_tiger(t, P, front, back, pal=FLAME, s=1.0, d=1):
         sp = rng.uniform(160, 320) * s
         x, y, vx, vy = drag_pos(x0p, y0p, math.cos(ang) * sp, math.sin(ang) * sp, u * 0.36, k=4)
         L, Wd = rng.uniform(40, 70) * s * (1 - 0.4 * u), rng.uniform(6, 10) * s * (1 - 0.5 * u)
-        rot = ang + 0.3 * math.sin(6 * u + j)
+        rot = ang + 0.3 * d * math.sin(6 * u + j)
         ca, sa = math.cos(rot), math.sin(rot)
-        zig = [(0, 0), (0.35, 0.8), (0.55, -0.6), (1.0, 0.0)]            # a jagged sliver: a zigzag spine, thin at both ends
+        zig = [(0, 0), (0.35, 0.8 * d), (0.55, -0.6 * d), (1.0, 0.0)]            # a jagged sliver: a zigzag spine, thin at both ends
         top_ = [(x + ca * L * a_ - sa * (b_ * Wd + Wd * 0.5 * math.sin(math.pi * a_)), y + sa * L * a_ + ca * (b_ * Wd + Wd * 0.5 * math.sin(math.pi * a_))) for a_, b_ in zig]
         bot_ = [(x + ca * L * a_ - sa * (b_ * Wd - Wd * 0.5 * math.sin(math.pi * a_)), y + sa * L * a_ + ca * (b_ * Wd - Wd * 0.5 * math.sin(math.pi * a_))) for a_, b_ in zig]
         ly.poly(top_ + bot_[::-1], SMOKE["light"], 0.95 * (1 - smooth(0.55, 1, u)))

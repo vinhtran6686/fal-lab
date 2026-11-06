@@ -4,7 +4,7 @@ Hiệu ứng lướt có một con hổ lửa lao đi trước, dựng theo ản
 khói xám, mảnh gió). Code: `life/dash/dash.py` (`dash_tiger`). Phương pháp nhiều lớp và các kỹ thuật dùng chung: [RECIPE-inferno.md](RECIPE-inferno.md).
 
 ```
-python lib-fx/build.py life/dash/tiger          # 28 frame, 800x340 @2x, neo (130, 190), 0,88 s, 30 fps
+python lib-fx/build.py life/dash/tiger          # 28 frame, 800x340 @2x, neo (160, 190), 0,88 s, 30 fps
 ```
 
 **Neo và nhân vật.** Điểm neo là ngực nhân vật lúc bắt đầu lướt. Đầu hổ chạy `450·s` px trong 0,4 s, nhanh rồi chậm dần:
@@ -14,7 +14,7 @@ python lib-fx/build.py life/dash/tiger          # 28 frame, 800x340 @2x, neo (13
 
 | Trong ảnh | Thành lớp |
 |---|---|
-| Đầu hổ lửa trắng vàng, há miệng, nét mặt cam đỏ | đầu hổ (lớp 10, 11) |
+| Đầu hổ lửa trắng vàng, há miệng, nét mặt cam đỏ | đầu hổ (lớp 9), nét mặt (lớp 10), bùng khi dừng (lớp 11) |
 | Lưỡi lửa uốn cong sau đầu: vàng gần đầu, cam ở giữa, đỏ ở xa | lưỡi lửa (lớp 6) |
 | Mảnh lửa đỏ nhỏ rải phía sau | tàn đỏ (lớp 7) |
 | Vệt lửa vàng dài nằm ngang (khung trên) | vệt vàng (lớp 8) |
@@ -33,7 +33,7 @@ Bảng màu đúng như ảnh: **đỏ, cam, vàng** cho lửa (`FLAME`), **xám
 | 2 | Hai cung gió xám | `ribbon` thon theo cung elip | cung mở ra rồi đuôi đuổi theo |
 | 3 | Nét tốc độ xám tối | `lens` mảnh, 10 nét lần lượt | dài khi nhanh, ngắn khi chậm |
 | 4 | Khói toon sát đất (8 cụm) | `Shape`: 3 `blob` + 3 đuôi `flame`, tô bằng `organic.shade` | to ra, bay lên, trôi về sau, ăn mòn |
-| 5 | Bụi đạp ở chân lúc bắt đầu | 5 móng `thorn` + 4 `blob`, `shade` | to nhất ở 0,06 s, tan trong 0,5 s |
+| 5 | Bụi đạp ở chân lúc bắt đầu | 5 móng `thorn` + 4 `blob`, `shade` | bật ra trong khoảng 0,04 s, nở tiếp tới 1,3 lần, tan trong 0,5 s |
 | 6 | 22 lưỡi lửa dọc đường lướt | `flame` (hình chữ S) + nhánh nhỏ, `flame_bands` | sinh khi đầu đi qua; nguội vàng → cam → đỏ |
 | 7 | Tàn đỏ từ đỉnh lưỡi lửa | `shard`, bay lên và lùi lại, sống 0,5 s | dải màu nguội (`heat 0.2`) |
 | 8 | 4 vệt lửa vàng sau đầu | `thorn` nằm ngang | dài theo tốc độ, ngắn lại khi chậm |
@@ -48,8 +48,8 @@ Bảng màu đúng như ảnh: **đỏ, cam, vàng** cho lửa (`FLAME`), **xám
 |---|---|---|
 | 1-3 | 0-0,07 s | Đầu hổ bật ra (vượt đà), bụi đạp tung ở chân, mảnh gió bay ra |
 | 4-12 | 0,1-0,37 s | Đầu lao đi; lưỡi lửa mọc lên sau đầu, lửa gần đầu vàng, xa đầu đỏ; khói phủ sát đất |
-| 13-17 | 0,4-0,56 s | Đầu dừng, bùng: rỗng giữa, vỡ thành vòng lửa, 4 lưỡi lửa phóng tới trước |
-| 18-28 | 0,6-0,88 s | Lưỡi lửa cuối bốc lên và tan, tàn đỏ trôi, khói cuối cùng tan hết |
+| 13-20 | 0,4-0,63 s | Đầu dừng, bùng (từ 0,38 tới 0,64 s): rỗng giữa, vỡ thành vòng lửa, 4 lưỡi lửa phóng tới trước |
+| 21-28 | 0,67-0,9 s | Lưỡi lửa cuối bốc lên và tan, tàn đỏ trôi, khói cuối cùng tan hết |
 
 ## 4. Kỹ thuật mới (so với Hỏa xung tầng)
 
@@ -67,7 +67,7 @@ viền cam. Nét mặt là các `lens` màu `rim` vẽ đè lên. Tọa độ nh
 dịch bóng hình về phía/ra xa nguồn sáng (`shadow`, `base`, `light`). Chỉ xử lý trong khung bao của hình.
 
 **Tan đầu to mà không "bụp".** Hình rất dày thì ăn mòn chỉ gọt mép thành một cục phẳng. Cách làm: khoét lỗ ở giữa (`hole`, lớn dần) +
-nhiễu mạnh (16 px), để đầu thành vòng lửa rồi vỡ thành các cung; kéo dài 0,24 s.
+nhiễu mạnh (16 px), để đầu thành vòng lửa rồi vỡ thành các cung; kéo dài 0,26 s.
 
 ## 5. Nhật ký lặp
 
@@ -77,6 +77,7 @@ nhiễu mạnh (16 px), để đầu thành vòng lửa rồi vỡ thành các c
 | 1 | Khói thành một dải liền như khúc gỗ | 8 cụm thưa (cách 56 px), đuôi dài, ăn mòn sớm hơn |
 | 1 | Đầu là quả cầu gai, không ra hổ | dựng đầu bằng 20 điểm spline, miệng khoét, 3 nanh, 6 bờm rộng thay 9 gai |
 | 1 | Hình chạm mép trái (móng bụi, nét tốc độ) | neo 130, móng ngắn hơn, nét tốc độ không vượt quá 70 px sau neo |
+| 4 (review) | Mảnh gió lúc đạp chỉ cách mép trái 2 px; 34 trường nhiễu (khoảng 330 MB) | neo 160; lưỡi lửa dùng 3 seed nhiễu chung |
 | 2 | Dải sương thành tấm xám chữ nhật | dải nhọn hai đầu, mờ hơn, tan trước 0,7 s |
 | 2 | Đầu tan thành một khối vàng trong mờ | vẽ đầu luôn đậm (alpha 1), chỉ tan bằng ăn mòn |
 | 3 | Đầu tan thành cục cam phẳng rồi mất trong 1 frame | lỗ rỗng giữa + nhiễu mạnh, bùng kéo dài 0,24 s |
@@ -85,4 +86,5 @@ nhiễu mạnh (16 px), để đầu thành vòng lửa rồi vỡ thành các c
 
 - Đổi màu: `pal=` bảng màu khác (thiếu `tip`, `back` thì tự suy); khói giữ màu xám.
 - Không phải hổ: thay `TIGER_HEAD` / `TIGER_FACE` / `TIGER_FANGS` bằng điểm của con khác (rồng, sói), giữ nguyên thân lửa.
-- Lướt ngắn hơn: đổi `T_RUN`, `RUN`; lưỡi lửa và khói tự sinh theo `_passes(x)`.
+- Lướt ngắn hơn: đổi `T_RUN`, `RUN`, và **sửa tay** các vị trí đang ghi cứng theo quãng 450 px: lưỡi lửa (tới 443 px), khói (tới 426), mảnh gió (tới 418),
+  đuôi sương (420), cung gió, docstring. `_passes(x)` chỉ tính lúc đầu đi qua x; x vượt `RUN` sẽ sinh ngay chỗ đầu dừng.
