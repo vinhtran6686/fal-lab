@@ -18,7 +18,7 @@ Liên hệ với game thủ thành: tháp cung → `ranged/bow`, tháp phép →
 
 | Thư mục | Chứa gì |
 |---|---|
-| `_core/` | Bộ vẽ dùng chung, không chứa hiệu ứng. `fxcore.py`: canvas siêu mẫu, hình cơ bản (lưỡi liềm, dải, thấu kính, ribbon, lấp lánh), easing, quầng sáng. `palettes.py`: 16 bảng màu chuẩn (sun, fire, ice, water, lightning, earth, wind, nature, poison, holy, shadow, arcane, blood, spirit, blaze, frost). `fxcore.glow_under`: quầng sáng nhiều cỡ chỉ từ một lớp. `organic.py`: hình tự do (gai, giọt, khối méo, lưỡi lửa chữ S `flame`, viền spline), tô theo khoảng cách tới mép, khói toon (`cloud`, `shade`). |
+| `_core/` | Bộ vẽ dùng chung, không chứa hiệu ứng. `fxcore.py`: canvas siêu mẫu, hình cơ bản (lưỡi liềm, dải, thấu kính, ribbon, lấp lánh), easing, quầng sáng. `palettes.py`: 16 bảng màu chuẩn (sun, fire, ice, water, lightning, earth, wind, nature, poison, holy, shadow, arcane, blood, spirit, blaze, frost). `fxcore.glow_under`: quầng sáng nhiều cỡ chỉ từ một lớp. `fieldfx.py`: trường nhiệt cắt tầng màu phẳng, quầng bậc thang (luật: `SHAPE-RULES.md`). `organic.py`: hình tự do (gai, giọt, khối méo, lưỡi lửa chữ S `flame`, viền spline), tô theo khoảng cách tới mép, khói toon (`cloud`, `shade`). |
 | `_gallery/` | Ảnh xem trước sinh tự động, mỗi họ một cặp: `<nhóm>-<họ>.png` (mọi hiệu ứng, frame cách 1) và `.gif` (chạy cùng lúc, đúng tốc độ). |
 | `catalog.json` | Danh mục toàn bộ hiệu ứng: tên, trạng thái, tag, mô tả, fps, số frame, cỡ, điểm neo, thư mục. |
 | `build.py` | Dựng lại asset và gallery: `python lib-fx/build.py [nhóm[/họ[/id]]]`. |

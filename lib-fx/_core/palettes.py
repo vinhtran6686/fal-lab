@@ -19,8 +19,8 @@ ARCANE = dict(rim=(70, 30, 120), body=(160, 80, 230), light=(205, 150, 255), cor
 SPIRIT = dict(rim=(38, 76, 200), body=(52, 132, 238), light=(82, 208, 252), core=(178, 242, 255), white=(238, 252, 255),   # soul fire
               dark=(26, 36, 112), deep=(38, 76, 200), blue=(52, 132, 238), cyan=(82, 208, 252), pale=(178, 242, 255),
               violet=(128, 96, 226), lilac=(190, 156, 244))                 # extra steps: the tail ramp cyan -> blue -> violet -> lilac
-BLAZE = dict(rim=(170, 32, 68), body=(254, 68, 123), light=(255, 152, 58), core=(255, 215, 113), white=(255, 236, 180),   # pink fire
-             crimson=(170, 32, 68), hotpink=(254, 68, 123), pink=(255, 100, 142), amber=(255, 175, 77), yellow=(255, 215, 113))
+BLAZE = dict(rim=(209, 47, 87), body=(255, 98, 140), light=(255, 152, 58), core=(255, 215, 113), white=(255, 236, 180),   # pink fire
+             crimson=(209, 47, 87), hotpink=(254, 68, 123), pink=(255, 98, 140), amber=(254, 172, 76), yellow=(255, 214, 112))
 FROST = dict(rim=(37, 93, 128), body=(60, 170, 227), light=(105, 231, 255), core=(239, 255, 255), white=(250, 255, 255),   # frost
              deep=(37, 93, 128), blue=(34, 119, 172), mid=(60, 170, 227), cyan=(105, 231, 255), ice=(239, 255, 255), ghost=(30, 80, 115))
 BLOOD = dict(rim=(80, 10, 15), body=(170, 25, 35), light=(220, 70, 70), core=(250, 160, 150), white=(255, 225, 220))

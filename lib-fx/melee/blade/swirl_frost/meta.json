@@ -1,7 +1,7 @@
 {
  "id": "melee/blade/swirl_frost",
  "name": "Xoáy chém băng",
- "desc": "a frost swirl slash: an ice-white blade with feathered cyan and blue zones that cool from the tail toward the head sweeps and hooks inward over a dark-blue see-through after-image; the blue zones open into long holes and the blade dissolves into shards while thin, dim crack lines in two clusters stay a while",
+ "desc": "a frost swirl slash in four flat tiers (white, cyan, blue, deep blue) cut from one field with feathered streaks: a crescent sweeps and hooks over a flat see-through navy after-image, cools from the tail, opens into pieces, and leaves thin flat crack lines that fade in steps; stepped flat glow",
  "status": "draft",
  "tags": [
   "melee",
@@ -12,7 +12,8 @@
   "anchor:centre",
   "ice",
   "water",
-  "medium"
+  "medium",
+  "field"
  ],
  "fps": 30,
  "frames": 30,

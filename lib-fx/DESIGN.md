@@ -142,3 +142,9 @@ Ngẫu nhiên nhỏ (±15% chiều dài, ±10° góc) **không** phải là đa 
 Sau 4 vòng sửa, user đánh giá: **linh hồn nhỏ và cách chúng chuyển động đạt**, còn linh hồn lớn, các cú tóe và lửa dưới đất chưa đẹp.
 Phần đạt được ghi trong [RECIPE-soul-spirits.md](RECIPE-soul-spirits.md). Dựng lại hiệu ứng từ GIF tham khảo: [REFERENCE-GIF.md](REFERENCE-GIF.md).
 
+## 12. Nhiều tầng màu phẳng: một trường, nhiều ngưỡng
+
+Từ phân tích GIF xoáy chém (2026-11-07): hiệu ứng stylized đẹp và liền mạch vì mọi tầng màu của một vật được cắt từ **một** trường xám
+liên tục bằng các ngưỡng cứng, không phải vẽ từng mảng riêng, và không có gradient. Luật và công thức: [SHAPE-RULES.md](SHAPE-RULES.md);
+code `_core/fieldfx.py`; ví dụ `melee/blade/blade.py`.
+

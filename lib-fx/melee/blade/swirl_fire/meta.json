@@ -1,7 +1,7 @@
 {
  "id": "melee/blade/swirl_fire",
  "name": "Xoáy chém lửa",
- "desc": "a pink-fire swirl slash: a thick yellow blade with a pink band on its inner side, pink licks reaching back into the yellow and a needle tail sweeps 330 degrees in four drawings and hooks into the centre, then breaks in place into four crescents of different sizes and fates (fade, split, curl tighter) that thin, turn and drift out, cooling to amber and pink, ending in sparks; two-scale pink glow",
+ "desc": "a pink-fire swirl slash in four flat tiers (yellow, amber, pink, red) cut from one heat field: it sweeps 330 degrees in four drawings with a needle tail and hooks into the centre; pink licks reach back into the yellow; it cools tier by tier (yellow first, red last) and breaks into pointed pieces along the outer edge; stepped flat glow",
  "status": "draft",
  "tags": [
   "melee",
@@ -11,29 +11,30 @@
   "one-shot",
   "anchor:centre",
   "fire",
-  "medium"
+  "medium",
+  "field"
  ],
  "fps": 30,
- "frames": 17,
+ "frames": 13,
  "frame_size_2x": [
-  460,
-  460
+  380,
+  380
  ],
  "anchor_2x": [
-  230,
-  230
+  190,
+  190
  ],
  "direction": "+x (mirror for -x)",
  "palette": {
   "rim": [
-   170,
-   32,
-   68
+   209,
+   47,
+   87
   ],
   "body": [
-   254,
-   68,
-   123
+   255,
+   98,
+   140
   ],
   "light": [
    255,
@@ -51,9 +52,9 @@
    180
   ],
   "crimson": [
-   170,
-   32,
-   68
+   209,
+   47,
+   87
   ],
   "hotpink": [
    254,
@@ -62,18 +63,18 @@
   ],
   "pink": [
    255,
-   100,
-   142
+   98,
+   140
   ],
   "amber": [
-   255,
-   175,
-   77
+   254,
+   172,
+   76
   ],
   "yellow": [
    255,
-   215,
-   113
+   214,
+   112
   ]
  },
  "files": {
