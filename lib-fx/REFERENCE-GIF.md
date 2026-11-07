@@ -25,7 +25,7 @@ Ghi ngày 2026-11-06, trước khi nhận GIF đầu tiên.
 - Thường cần **2-4 vòng**: vòng 1 khớp nhịp và bố cục, các vòng sau sửa hình.
 
 **Bản quyền**: GIF tham khảo (thường từ game thương mại) chỉ để **học** nhịp, bố cục, cách xếp lớp. Không truy (trace) lại hình 1:1 để
-dùng làm asset, không commit file tham khảo (`lib-fx/_study/` nằm trong `.gitignore`), không ghi tên game trong code hay tài liệu.
+dùng làm asset, không commit file tham khảo (`lib-fx/_study/` nằm trong `.gitignore`), trừ khi user yêu cầu lưu (khi đó đặt ở `ref/vfx/<tên>/`, ví dụ `ref/vfx/swirl-slash/`), không ghi tên game trong code hay tài liệu.
 Có thể dùng chính mặt nạ của bản gốc để **thử** cách tô màu, nhưng asset cuối phải là hình mình dựng.
 
 ## 2. GIF nên gửi thế nào (càng đủ càng tốt)
