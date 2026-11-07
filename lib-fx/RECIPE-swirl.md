@@ -81,7 +81,8 @@ Bản gốc không có nhịp báo trước; mình giữ đúng như vậy (ngo�
 | Vòng | Cách làm | Kết quả |
 |---|---|---|
 | 1-5 (2026-11-06) | vẽ từng lớp bằng hình riêng (dải, lưỡi liếm, mảnh vỡ) + quầng mờ Gaussian | user: chưa mượt, chưa rõ, nét chưa liền như bản gốc; có gradient |
-| 6 (2026-11-07) | phân tích lớp bằng đếm mã màu; chuyển sang trường nhiệt cắt tầng; quầng bậc thang; bóng mờ phẳng | các tầng liền mạch, không gradient, vỡ thành mảnh nhọn tự nhiên |
+| 6 (2026-11-07) | phân tích lớp bằng đếm mã màu; chuyển sang trường nhiệt cắt tầng; quầng bậc thang; bóng mờ phẳng | user: diễn đạt đúng nhưng hình sai; răng cưa tuần hoàn thành một dải (xấu nhất) |
+| 7 (2026-11-07) | tách từng lớp ở độ phân giải gốc; ranh giới tầng là đường cong trơn; lưỡi lửa / lông vũ / vệt / lỗ / khe vỡ đặt tay, mỗi cái một cỡ; băng = hai hình cạnh nhau (lưỡi trắng + ngọn lửa xanh) với đường nối tối | hình gần bản gốc hơn, không còn dải lặp (SHAPE-RULES.md §5) |
 
 **Còn khác bản gốc:**
 - Phần móc ở tâm bản lửa gốc to và vàng hơn.

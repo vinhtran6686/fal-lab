@@ -1,7 +1,7 @@
 {
  "id": "melee/blade/swirl_frost",
  "name": "Xoáy chém băng",
- "desc": "a frost swirl slash in four flat tiers (white, cyan, blue, deep blue) cut from one field with feathered streaks: a crescent sweeps and hooks over a flat see-through navy after-image, cools from the tail, opens into pieces, and leaves thin flat crack lines that fade in steps; stepped flat glow",
+ "desc": "a frost swirl slash made of two shapes side by side: a white blade on the outside and a blue flame on the inside with a few large cyan feathers and deep streaks, split by a thin dark seam; it sweeps over a flat see-through after-image, the white shrinks, holes open, it breaks into pieces and thin cracks fade in steps; stepped flat glow",
  "status": "draft",
  "tags": [
   "melee",
@@ -28,19 +28,19 @@
  "direction": "+x (mirror for -x)",
  "palette": {
   "rim": [
-   37,
-   93,
-   128
+   30,
+   109,
+   157
   ],
   "body": [
-   60,
-   170,
-   227
+   59,
+   169,
+   226
   ],
   "light": [
    105,
    231,
-   255
+   254
   ],
   "core": [
    239,
@@ -53,9 +53,9 @@
    255
   ],
   "deep": [
-   37,
-   93,
-   128
+   30,
+   109,
+   157
   ],
   "blue": [
    34,
@@ -63,14 +63,14 @@
    172
   ],
   "mid": [
-   60,
-   170,
-   227
+   59,
+   169,
+   226
   ],
   "cyan": [
    105,
    231,
-   255
+   254
   ],
   "ice": [
    239,
@@ -78,9 +78,9 @@
    255
   ],
   "ghost": [
-   30,
-   80,
-   115
+   28,
+   74,
+   104
   ]
  },
  "files": {

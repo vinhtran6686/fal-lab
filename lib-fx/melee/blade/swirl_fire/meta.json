@@ -1,7 +1,7 @@
 {
  "id": "melee/blade/swirl_fire",
  "name": "Xoáy chém lửa",
- "desc": "a pink-fire swirl slash in four flat tiers (yellow, amber, pink, red) cut from one heat field: it sweeps 330 degrees in four drawings with a needle tail and hooks into the centre; pink licks reach back into the yellow; it cools tier by tier (yellow first, red last) and breaks into pointed pieces along the outer edge; stepped flat glow",
+ "desc": "a pink-fire swirl slash: a thick yellow band outside, pink then crimson inside, an amber rim, each boundary smooth with a few hand-placed flame licks pointing back along the sweep; a straight needle tail; it sweeps 330 degrees in four drawings, curls into the centre, cools (yellow first) and breaks into four claw pieces of different sizes; stepped flat glow",
  "status": "draft",
  "tags": [
   "melee",

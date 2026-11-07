@@ -68,7 +68,23 @@ Nguồn: [alpha erosion (VFX doc)](https://vfxdoc.readthedocs.io/en/latest/shade
 - **Đo trước, chỉnh sau**: lấy nhịp quét, màu và vòng đời từng tầng (số điểm ảnh theo frame) từ bản gốc bằng `_tools/study_ref.py`
   và đếm mã màu (RECIPE-swirl.md §1), rồi mới chỉnh tham số.
 
-## 5. Khi nào không dùng
+## 5. Bài học vòng 7 (user, 2026-11-07): KHÔNG dùng kết cấu tuần hoàn cho hình
+
+Vòng 6 dùng sawtooth nghiêng `saw(v·k + …)` để sinh răng cưa / lông vũ: đúng cách diễn đạt (tầng phẳng, liền mạch) nhưng **sai hình**.
+Các răng cùng một khuôn lặp đều thành một dải, user đánh giá đây là điểm xấu nhất. Tách riêng từng lớp màu của GIF gốc ở độ phân giải đầy
+đủ cho thấy bản gốc là **vài hình lớn khác nhau**:
+- lửa: ranh giới vàng/hồng và hồng/đỏ là những đường cong trơn, chỉ có 4-6 lưỡi lửa, mỗi cái một cỡ;
+- băng: **hai hình đặt cạnh nhau** (lưỡi trắng phía ngoài, ngọn lửa xanh phía trong) với đường nối tối mảnh, bên trong có 3-6 mảng cyan
+  to hình lông vũ và vài vệt xanh đậm, cũng mỗi cái một cỡ.
+
+Luật thay thế:
+- Ranh giới tầng = đường cong trơn trong toạ độ nét (`C = ngưỡng(v, tuổi, nguội)` với nhiễu chậm, biên độ nhỏ), không có tuần hoàn.
+- Chi tiết (lưỡi lửa, lông vũ, vệt, lỗ, khe vỡ) = **danh sách đặt tay**, mỗi phần tử có vị trí, độ dài, bề rộng, độ nghiêng, độ cong
+  riêng, vẽ bằng `tongue_poly` (lưỡi nhọn) hoặc `lens_poly` (lông vũ) trong toạ độ nét, nên luôn bám theo đường cong của vệt chém.
+- Khe vỡ cũng đặt tay (vị trí, bề rộng), để các mảnh có 3-4 cỡ khác nhau.
+- Kết cấu tuần hoàn chỉ dùng cho thứ thật sự đều (vân nước nhỏ, hạt mịn), không bao giờ cho hình chính.
+
+## 6. Khi nào không dùng
 
 - Hình có cấu trúc rời rõ ràng (hạt, mảnh đá, tia lửa bay): vẽ từng phần tử (`organic`, `fxcore`).
 - Hình cần chiều sâu 3D (vòng nửa trước / nửa sau): vẫn dùng được trường, nhưng tách lớp `front` / `back` theo nửa.
