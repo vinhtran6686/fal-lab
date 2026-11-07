@@ -1,0 +1,81 @@
+# Kết luận: hình xoáy chém dựng lại bằng path Bézier (2026-11-07)
+
+Ảnh: [compare_fire.png](compare_fire.png), [compare_frost.png](compare_frost.png) (gốc | mục tiêu màu phẳng | dựng lại từ công thức |
+bản đồ lỗi), [generated_demo.png](generated_demo.png) (hình mới, không lấy toạ độ nào từ GIF). Số liệu: `out/rebuild_report.json`,
+`out/analysis.json`, `out/trace_stats.json`.
+
+## 1. Giả thuyết "mỗi lớp màu là một path Bézier khép kín tô phẳng": ĐÚNG
+
+- **Mã màu phẳng tuyệt đối**: trong frame lửa 4, 11 089 điểm ảnh đúng `211,48,85`, 13 552 điểm đúng `255,100,142`. Mặt nạ cũ
+  (`layers/`, sai số < 30) lẫn **quầng sáng**: lớp đỏ sẫm của lửa và xanh sẫm của băng ở đó phần lớn là quầng, không phải hình. Mặt nạ
+  đúng = sai số < 12 (`masks.py`); riêng lưỡi trắng băng bị quầng cộng thêm màu cyan ở mép nên lấy mọi điểm gần trắng (R>200, G,B>235).
+- **Vector hoá** (`vectorize.py`): mọi lớp f3-f5 khớp bằng Bézier bậc 3 với sai số tối đa 1,0-1,41 px, trung bình 0,3-0,46 px.
+- **Rất ít điểm neo**: lớp lớn chỉ 21-34 điểm neo (vàng f3: 34, trắng f3: 21), trung bình **26 px viền / một điểm neo**. Đúng kiểu
+  vẽ bằng bút vector: vài đường cong dài, không phải nét run tay.
+- **Tay nắm theo luật 1/3**: độ dài tay nắm / dây cung: trung vị **0,32**, 80% nằm trong 0,21-0,38. Không có tay nắm kéo dài. Mỗi
+  đoạn là một cung "êm" gần cung tròn; độ cong dồn vào điểm neo chứ không vào tay nắm.
+- **Góc nhọn** (điểm neo không trơn) có góc trong trung vị **62°**; theo lớp: đỏ sẫm 51°, xanh 52° (mũi kim), hồng 68°, cyan 64°,
+  trắng 83°, vàng **102°** (vàng gần như không có mũi: đầu tù, mép trơn). Mũi nhọn nằm ở lớp nguội / lớp trong, không ở lớp nóng.
+- **Hai lớp không bao giờ chung một cạnh**: không có điểm ảnh vàng nào cách một lớp khác ≤ 3 px; giữa các lớp luôn có dải chuyển
+  2-4 px (đường tối mảnh hoặc pha màu). Nên mỗi lớp là một path riêng tô riêng, không phải một path chung cắt đôi.
+
+## 2. Công thức: mọi loại hình là MỘT nét thon trong toạ độ của xoáy
+
+Mở ảnh sang toạ độ cực quanh tâm xoáy (tâm = đường tròn khớp với viền ngoài): lưỡi liềm thành dải ngang, lưỡi lửa thành gai ngang.
+Mỗi hình = một **nét thon** (`shapes.py`):
+
+```
+t ∈ [0,1] chạy theo chiều quét, θ = θ0 + (θ1-θ0)·t
+xương sống  r_c(t) = Bernstein(b0..bn)                       vị trí (bán kính) của nét
+bề rộng     w(t)   = W · (t+e0)^a · (1-t+e1)^b · (1 + Bernstein(m1..mk))
+mép         r = r_c ± w/2  -> toạ độ màn hình -> fit Bézier bậc 3, mũi nhọn = điểm neo góc
+```
+
+- `a`, `b` = **độ nhọn hai đầu**: < 1 đầu tròn/phình (cạnh lồi), ≈ 1 nêm thẳng, > 1 **mũi kim** (cạnh lõm). `e0`, `e1` = 0 cho mũi
+  nhọn, > 0 cho đầu cụt (gốc lưỡi cắm vào thân). Đây là tham số quan trọng nhất cho "điểm nhọn và chỗ lồi lõm".
+- `m1..mk` (lượn) chỉ dùng cho nét dài (mỗi ~25 px một hệ số); lưỡi ngắn không cần.
+- Hình nào mũi chĩa theo bán kính (móc trắng của băng): dùng cùng công thức theo trục `r` (`axis="r"`).
+- **Thứ tự dựng một lớp** (`rebuild.py`): thân trơn trước (fit bền vững: gốc lưỡi lửa dính vào thân bị coi là ngoại lai), rồi cộng
+  lưỡi lửa / lông vũ và **khoét** vết (nét thon trừ đi), chỉ giữ mảnh làm IoU tăng ≥ 0,003. Khoét vết là có thật: 1-5 vết mỗi lớp,
+  bề rộng ~6 px, dài ~4 lần rộng, hai đầu tròn (a, b ≈ 0,4).
+
+## 3. Kết quả dựng lại f3-f5 (IoU với mặt nạ màu đúng)
+
+| Lớp | f3 | f4 | f5 | Ngưỡng |
+|---|---|---|---|---|
+| vàng | 0,954 | 0,952 | 0,941 | 0,85 |
+| hồng | 0,895 | 0,900 | 0,896 | 0,85 |
+| trắng (băng) | 0,966 | 0,960 | 0,905 | 0,85 |
+| xanh (băng) | 0,863 | 0,882 | 0,855 | 0,85 |
+| hổ phách | 0,766 | 0,819 | 0,781 | 0,7 |
+| đỏ sẫm | 0,855 | 0,888 | 0,816 | 0,7 |
+| cyan | 0,896 | 0,930 | 0,915 | 0,7 |
+| xanh sẫm | 0,815 | 0,813 | 0,819 | 0,7 |
+
+Đạt ở cả 24 lớp. So với mặt nạ cũ `layers/` (có quầng) IoU thấp hơn, nhất là đỏ sẫm (0,58-0,65) và xanh sẫm (0,29-0,34): phần
+chênh là quầng sáng, nằm ngoài phạm vi. Số nét mỗi lớp: 2-27; số điểm neo của path sinh ra ≈ 1,1-2 lần path vẽ tay (vàng f3: 38
+so với 34; xanh f5: 126 so với 62). Nghĩa là công thức đúng hình nhưng **chưa gọn bằng designer** ở lớp nhiều chi tiết.
+
+## 4. Số đo theo loại hình (trung vị, `out/analysis.json`)
+
+| Loại | a (đầu cũ) | b (đầu mới) | dài / rộng | rộng | Ghi chú |
+|---|---|---|---|---|---|
+| lưỡi liềm chính | 0,74 | 0,47 | 6,9 | 49 px | quét ~118°; đầu mới tròn, đuôi thon (mũi kim là lớp đỏ / xanh nằm trong) |
+| lưỡi lửa / gai | 0,60 | 0,45 | 2,4 | 9 px | cạnh **lồi**, không lõm; 55% chĩa ngược chiều quét, 45% xuôi |
+| lông vũ cyan / xanh | 0,53 | 0,62 | 2,5 | 14 px | hai đầu nhọn, bụng gần giữa |
+| viền hổ phách | 1,46 | 2,55 | 9,4 | 4,5 px | dải mỏng, hai đầu kim, đứt đoạn chứ không bao kín |
+| vết khoét | 0,40 | 0,42 | 4,3 | 6 px | trừ vào lớp, đầu tròn |
+| móc / mảnh nhỏ | 1,73 | 1,02 | 1,5 | 5,5 px | ngắn, mũi kim một đầu |
+
+**Nhịp to-nhỏ** (lưỡi / lông vũ xếp theo chiều quét): tỉ lệ độ dài hai chi tiết liền nhau trung vị **2,3-5** (không bao giờ ≈ 1,
+trừ 4 lông vũ cyan f4: 1,2), hệ số biến thiên khoảng cách **0,54-1,2**. Đây là định lượng của "không lặp khuôn".
+
+## 5. Cái gì đúng, cái gì chưa
+
+- Đúng: ngôn ngữ đường nét = ít điểm neo, tay nắm ≈ 1/3 dây cung, độ nhọn nằm ở số mũ hai đầu (a, b), chi tiết theo chiều quét.
+- Đúng: phân rã "thân + lưỡi cộng + vết khoét" khớp mọi lớp với ít tham số đọc được (mỗi nét 10-30 số).
+- Chưa: tham số ở bước 4 là **đo** từ GIF (công thức là chung, con số là của frame đó). Dựng hình mới cần luật bố cục: `generate.py`
+  là bản thử đầu (thân + viền + lưỡi theo nhịp đo được), đúng ngôn ngữ nhưng còn thưa và gốc lưỡi còn cụt; chưa đạt độ đẹp của gốc.
+- Chưa: mũi móc chĩa theo bán kính (đáy lưỡi trắng f4-f5) vẫn hơi tròn; nét theo trục `r` ít khi được chọn. Cần một nét tự do
+  (xương sống Bézier bất kỳ, không theo cực) cho các móc này.
+- Chưa: path sinh ra nhiều điểm neo hơn path vẽ tay ở lớp nhiều chi tiết (xanh, đỏ sẫm): bước sau là gộp nét kề nhau.

@@ -89,3 +89,21 @@ Luật thay thế:
 - Hình có cấu trúc rời rõ ràng (hạt, mảnh đá, tia lửa bay): vẽ từng phần tử (`organic`, `fxcore`).
 - Hình cần chiều sâu 3D (vòng nửa trước / nửa sau): vẫn dùng được trường, nhưng tách lớp `front` / `back` theo nửa.
 - Khói toon có mặt sáng tối theo hướng đèn: `organic.shade` / `cloud` hợp hơn.
+
+## 7. Đo bằng path Bézier (2026-11-07, [research/bezier-shapes/](research/bezier-shapes/FINDINGS.md))
+
+Vector hoá từng lớp màu của GIF xoáy chém (sai số ≤ 1,4 px) và dựng lại f3-f5 bằng công thức (IoU 0,77-0,97, đạt cả 24 lớp) cho
+các luật đo được, dùng khi vẽ hình bằng path:
+
+- **Mặt nạ đo phải đúng mã màu** (sai số < 12), không lấy sai số lớn: sai số 30 lẫn quầng sáng vào lớp tối.
+- **Ít điểm neo**: ~26 px viền mỗi điểm neo; lớp lớn 20-35 điểm. **Tay nắm ≈ 1/3 dây cung** (0,21-0,38). Đường cong dài, êm.
+- **Mỗi hình là một nét thon** trong toạ độ của hiệu ứng (cực quanh tâm xoáy): xương sống Bernstein + bề rộng
+  `W·(t+e0)^a·(1-t+e1)^b`. `a`, `b` quyết định mũi: < 1 tròn, ≈ 1 nêm, > 1 kim. `e > 0` = đầu cụt cắm vào hình khác.
+- **Một lớp = thân trơn + lưỡi cộng + vết khoét**: lưỡi lửa ngắn (dài ≈ 2,4 lần rộng, cạnh lồi), lông vũ hai đầu nhọn, viền mỏng
+  đứt đoạn hai đầu kim, vết khoét đầu tròn.
+- **Mũi nhọn ở lớp nguội**: góc trong trung vị 62°; đỏ sẫm / xanh 51-52°, vàng 102° (lớp nóng gần như không có mũi).
+- **Hai lớp không chung cạnh**: luôn cách nhau dải 2-4 px; mỗi lớp là path riêng.
+- **Nhịp**: hai chi tiết liền nhau chênh độ dài 2-5 lần, khoảng cách hệ số biến thiên ≥ 0,5. Mỗi chi tiết một bộ tham số riêng.
+
+Điều này chỉnh lại §4 "không vẽ tầng nào bằng hình riêng": với hình vẽ tay kiểu này, vẽ tầng bằng **path riêng cho từng lớp** là
+đúng cách của designer; phương pháp trường (§1-§3) vẫn hợp cho xói mòn / tan theo thời gian.
