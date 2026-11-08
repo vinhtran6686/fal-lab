@@ -21,9 +21,11 @@ Mọi thứ đã biết về nhát chém vẽ tay flat-colour: đọc bản gố
 | Tên | Kiểu | User |
 |---|---|---|
 | `gen-slash-blue` | lưỡi liềm (v0) | 7/10 |
-| `gen-slash-loop-blue` | xoay tại chỗ, vòng quanh thân, bản thường | 8-9/10, "khá đẹp" |
-| `gen-slash-loop-heavy-blue` | xoay tại chỗ, vũ khí lớn (trọng kiếm, đại đao, katana) | "khá đẹp" |
-| `gen-slash-front-heavy-blue` | một nhát trước mặt, chữ C hở, vũ khí lớn | chưa chấm |
+| `gen-slash-loop-blue` | xoay tại chỗ, vòng quanh thân, bản thường | ổn |
+| `gen-slash-loop-heavy-blue` | xoay tại chỗ, vũ khí lớn (trọng kiếm, đại đao, katana) | ổn |
+| `gen-slash-front-heavy-blue` | một nhát trước mặt, chữ C hở, vũ khí lớn | ổn |
+
+User (2026-11-09): sáng tạo slash đơn bằng tool đã khá ổn. Câu hỏi mở: slash theo quỹ đạo vẽ trước cho một nhân vật: [../../../STATUS.md](../../../STATUS.md) §3.1.
 
 **Luật cốt lõi** (chi tiết và số đo trong hai file trên):
 - Sinh từ một đầu nét và **dài ra theo đường quét**; bùng 1-3 frame; tàn nhanh (diện tích ×0,3 mỗi frame ở bản gốc); vẽ on ones, on twos ở tia cuối.

@@ -42,6 +42,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   outputs in `lib-fx/_study/<name>/vector/` (git-ignored). Guide `lib-fx/_core/vector/README.md`; history `lib-fx/research/bezier-shapes/RETROSPECTIVE.md`.
   Design foundation (layers, smooth lines, colour hierarchy, lifecycle and per-piece decay, reading references, generator spec): `lib-fx/_core/vector/foundation/`;
   per VFX type (slash, explosion: references, rules, generators, open work): `lib-fx/_core/vector/foundation/vfx/`.
+  **Continuing vector-kit work in a new session: read `lib-fx/_core/vector/STATUS.md` first** (current state, parked work, open questions).
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.

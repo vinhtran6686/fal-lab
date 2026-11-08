@@ -1,5 +1,10 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.8.1 (2026-11-09): docs
+
+- `STATUS.md`: điểm nối giữa các session (đã làm, việc để dành, câu hỏi mở: slash theo quỹ đạo user vẽ cho một nhân vật, đánh giá khả thi).
+- User chốt: 3 slash (xoay thường, xoay nặng, chém trước mặt) "ổn"; sáng tạo slash đơn bằng tool đã khá ổn.
+
 ## 1.8 (2026-11-09): chém trước mặt, docs theo loại VFX
 
 - `gen_slash_loop`: kiểu `front-heavy` (`--style front-heavy`): một nhát vũ khí lớn trước mặt, chữ C hở ~230°, elip tròn hơn (k 0,42), không

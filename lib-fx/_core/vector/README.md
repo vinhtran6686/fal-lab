@@ -1,4 +1,6 @@
-# lib-fx/_core/vector: bộ dựng VFX vẽ tay bằng path vector (v1.0)
+# lib-fx/_core/vector: bộ dựng VFX vẽ tay bằng path vector
+
+> **Mở session mới: đọc [STATUS.md](STATUS.md) trước** (trạng thái hiện tại v1.8, việc để dành, câu hỏi mở). Nhật ký thay đổi: [CHANGELOG.md](CHANGELOG.md).
 
 **Phiên bản 1.0, chốt 2026-11-08**, sau hai bài test được user chấm 9-10/10: `swirl-slash` (2 hiệu ứng xoáy chém) và `element-trio`
 (3 hiệu ứng phun từ đất: lửa, Arcane, Toxic, cả ba 10/10). Lịch sử: [CHANGELOG.md](CHANGELOG.md); quá trình nghiên cứu gốc:
@@ -18,8 +20,8 @@ mượt như vẽ bằng pen tool, kèm gradient, glow, độ đục và nhịp 
 
 | Làm được (v1.0, đã kiểm chứng) | Chưa làm được |
 |---|---|
-| Dựng lại hiệu ứng flat-colour vẽ tay từ GIF: hình từng lớp, thứ tự tô, gradient mép, glow, độ đục theo frame | **Sinh hiệu ứng mới hoàn toàn** từ luật (mới có bản thử `research/.../generate.py`) |
-| Hình dạng: xoáy / lưỡi liềm (khung cực), phun từ đất / thẳng (khung thẳng) | Theo dõi **từng hình** qua các frame (mới đo tổng thể: diện tích, số mảnh) |
+| Dựng lại hiệu ứng flat-colour vẽ tay từ GIF: hình từng lớp, thứ tự tô, gradient mép, glow, độ đục theo frame | Sinh hiệu ứng mới cho loại **khác slash** (nổ / phun chưa có bộ sinh); slash theo **quỹ đạo user vẽ** (STATUS §3.1) |
+| Hình dạng: xoáy / lưỡi liềm (khung cực), phun từ đất / thẳng (khung thẳng), vòng elip phối cảnh (`EllipseFrame`), phản chiếu sàn (`ReflectFrame`); **sinh slash mới** (4 kiểu, `gen-slash`) | Theo dõi **từng hình** qua các frame (mới đo tổng thể: diện tích, số mảnh) |
 | Lớp đặc, lớp trong mờ (màn), lớp tối trong mờ (bóng khói), mảnh vỡ mờ dần | Gradient tô trong thân theo chiều cao / theo vùng (chỉ có gradient theo mép) |
 | Làm đều nét kiểu Illustrator (0 điểm gãy), xuất SVG mỗi lớp một path | Hạt bay có quỹ đạo (tàn lửa chỉ được dựng lại như hình tĩnh từng frame) |
 | Đo vòng đời: pha bùng / đỉnh / vỡ / tàn, frame giữ (vẽ "on twos") | Xuất thẳng sang chuẩn lib-fx (`sheet.png`, `meta.json`, @2x, nền trong suốt) |

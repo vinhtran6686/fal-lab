@@ -5,7 +5,7 @@ Mỗi loại hiệu ứng có một thư mục riêng: bản gốc đã đọc, 
 
 | Loại | Thư mục | Bản gốc đã dựng | Bộ sinh | Trạng thái |
 |---|---|---|---|---|
-| **Slash** (nhát chém) | [slash/](slash/README.md) | `swirl-slash` (lửa, băng), `slash-trio` (xanh, hồng, vàng) | lưỡi liềm; xoay tại chỗ thường / nặng; chém trước mặt chữ C | có bộ sinh, user chấm 7 → 8-9/10 |
+| **Slash** (nhát chém) | [slash/](slash/README.md) | `swirl-slash` (lửa, băng), `slash-trio` (xanh, hồng, vàng) | lưỡi liềm; xoay tại chỗ thường / nặng; chém trước mặt chữ C | có bộ sinh; user: slash đơn "ổn" (2026-11-09) |
 | **Explosion** (nổ / phun từ đất) | [explosion/](explosion/README.md) | `element-trio` (lửa phun, Arcane, Toxic) | chưa có | đọc xong, 10/10 |
 
 Thêm loại mới: tạo `vfx/<loại>/README.md` theo cùng mẫu (bản gốc + profile + showcase, lớp và màu, vòng đời, luật, bẫy khi đọc, bộ sinh, việc còn
