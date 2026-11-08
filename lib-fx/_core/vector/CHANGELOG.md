@@ -1,5 +1,12 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.4 (2026-11-09): tự động hoá khâu đọc bản gốc
+
+- `auto.py`: `propose_crops` (vùng hiệu ứng tách rời, gộp vùng cùng màu chồng nhau, tách phản chiếu dưới sàn theo khe hàng, đặt tên theo
+  màu), `suggest_layers` (cụm màu trên 3 frame lớn nhất; loại glow bằng: pha với nền, độ biến thiên màu, độ sáng < 40% lớp sáng nhất; gộp màu
+  gần thành đường màu), `mask_check` (điểm ảnh sáng không lớp nào nhận, gộp mọi frame; một màu chiếm > 40% = thiếu lớp), `init_profile`.
+- Lệnh `init GIF NAME`, `check PROFILE`.
+
 ## 1.3 (2026-11-09)
 
 - Profile `slash-trio` (3 nhát chém + 3 phản chiếu dưới sàn), không cần thêm tính năng mới cho bộ tool; `foundation/06-slash.md`.

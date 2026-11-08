@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """CLI for the lib-fx vector kit (lib-fx/_core/vector). 0 USD, no model.
 
+  python lib-fx/_tools/vectorfx.py init     GIF NAME                            draft profile: auto crops (+ reflections), frames, suggested layers
+  python lib-fx/_tools/vectorfx.py check    PROFILE                             bright pixels no layer claims, per frame (+ image of the worst frame)
   python lib-fx/_tools/vectorfx.py palette  PROFILE [--variant V] [--frame N]   flat-colour candidates + colour clusters (to write a profile)
   python lib-fx/_tools/vectorfx.py ingest   PROFILE                             cut source.gif into frames (source.crops)
   python lib-fx/_tools/vectorfx.py measure  PROFILE [--frames 3-5]              fit layer gradients + halo, write them into PROFILE
@@ -28,17 +30,39 @@ def rng(s):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["palette", "ingest", "measure", "rebuild", "review", "all", "lifecycle", "track", "showcase", "study"])
+    ap.add_argument("cmd", choices=["init", "check", "palette", "ingest", "measure", "rebuild", "review", "all", "lifecycle", "track", "showcase", "study"])
     ap.add_argument("profile")
+    ap.add_argument("name", nargs="?", help="init only: profile name")
     ap.add_argument("--frames"); ap.add_argument("--variants"); ap.add_argument("--variant"); ap.add_argument("--frame", type=int)
     ap.add_argument("--refit", action="store_true")
     a = ap.parse_args()
+    if a.cmd == "init":
+        from vector import auto
+        name = a.name or pathlib.Path(a.profile).parent.name
+        out = HERE / "_core/vector/profiles" / f"{name}.json"
+        prof = auto.init_profile(a.profile, name, out)
+        print("draft profile:", out)
+        for v in prof.variants:
+            print(" ", v, prof.d["source"]["crops"][v], {l: x["colours"] for l, x in prof.layers(v).items()})
+        print("next: check the layers by eye (palette / check), then measure, all")
+        return
     p = pathlib.Path(a.profile)
     if not p.exists():
         p = HERE / "_core/vector/profiles" / f"{a.profile}.json"
     prof = Profile(p)
     fr, vs = rng(a.frames), (a.variants.split(",") if a.variants else None)
-    if a.cmd == "palette":
+    if a.cmd == "check":
+        from vector import auto
+        for v in vs or prof.variants:
+            img = prof.out_dir() / f"check_{v}.png"
+            rows = auto.mask_check(prof, v, fr, image=img)
+            tot = rows[-1] if rows else {"unclaimed_share": 0, "colours": []}
+            dom = tot["colours"][0][1] / max(tot["unclaimed_px"], 1) if tot["colours"] else 0
+            # a missing layer = ONE colour dominating the unclaimed pixels; spread colours are edge blends / bright glow
+            flag = ("  <-- MISSING LAYER likely: add %s" % (tot["colours"][0][0],)) if tot["unclaimed_share"] > 0.05 and dom > 0.4 else "  ok"
+            print(v, "unclaimed", tot["unclaimed_share"], "top colour share", round(dom, 2), "top colours", tot["colours"][:3], flag)
+            print("   image:", img)
+    elif a.cmd == "palette":
         v = a.variant or prof.variants[0]
         f = a.frame or prof.frames()[len(prof.frames()) // 3]
         rgb = measure.load_frame(prof, v, f)

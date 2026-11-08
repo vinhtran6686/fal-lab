@@ -57,6 +57,8 @@ Trang review: Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdK
 ## 4. Lệnh
 
 ```
+python lib-fx/_tools/vectorfx.py init      GIF NAME                            bản nháp profile: tự tìm khung cắt (+ phản chiếu), frame, lớp màu
+python lib-fx/_tools/vectorfx.py check     PROFILE                             điểm ảnh sáng không lớp nào nhận; báo "MISSING LAYER" khi một màu chiếm phần lớn
 python lib-fx/_tools/vectorfx.py palette   PROFILE [--variant V] [--frame N]   màu phẳng + cụm màu + ảnh mặt nạ từng màu
 python lib-fx/_tools/vectorfx.py ingest    PROFILE                             cắt source.gif thành frame (source.crops, source.scale)
 python lib-fx/_tools/vectorfx.py measure   PROFILE [--frames 3-5]              đo gradient, glow, độ đục; ghi vào PROFILE
@@ -80,6 +82,12 @@ from vector import Profile, pipeline, review, smooth_simplify, crescent, tongue,
 ```
 
 ## 5. Quy trình cho một bản gốc mới
+
+**Nhanh (1.4):** `init GIF NAME` → xem `check` (và ảnh `check_<v>.png`) → chỉnh lớp nếu cần (thêm màu được báo thiếu; lớp tối trong mờ /
+màn mờ vẫn phải thêm tay: `darker_than_bg`, `alpha`) → `measure` → `all`. Kiểm chứng trên `slash-trio`: tự ra đúng 6 vùng (3 nhát + 3 phản
+chiếu) và đúng lớp của nhát xanh, bắt được lớp thân hồng mà lần làm tay suýt bỏ sót; trên `element-trio`: đúng 3 vùng, tự chọn phóng 3x.
+
+**Đầy đủ (từng bước bằng tay):**
 
 1. GIF vào `ref/vfx/<tên>/reference.gif`. Xem một tấm tổng hợp các frame để biết có mấy hiệu ứng, cạnh nhau hay nối tiếp, cỡ bao nhiêu.
 2. Profile mới: `name`, `source` (`gif`, `crops` từng biến thể, `scale` = 3 nếu mỗi hiệu ứng < ~250 px, `frames`, `background_frame` nếu có
