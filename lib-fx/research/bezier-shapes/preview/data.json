@@ -1,0 +1,471 @@
+{
+ "fire": {
+  "frames": {
+   "02": {
+    "layers": {
+     "yellow": {
+      "img": "fire_02_yellow.png",
+      "iou": 0.949,
+      "strokes": 1,
+      "cuts": 0,
+      "px": 4839
+     },
+     "amber": {
+      "img": "fire_02_amber.png",
+      "iou": 0.795,
+      "strokes": 7,
+      "cuts": 4,
+      "px": 3981
+     },
+     "pink": {
+      "img": "fire_02_pink.png",
+      "iou": 0.887,
+      "strokes": 12,
+      "cuts": 3,
+      "px": 6422
+     },
+     "crimson": {
+      "img": "fire_02_crimson.png",
+      "iou": 0.849,
+      "strokes": 24,
+      "cuts": 7,
+      "px": 6628
+     }
+    }
+   },
+   "03": {
+    "layers": {
+     "yellow": {
+      "img": "fire_03_yellow.png",
+      "iou": 0.954,
+      "strokes": 3,
+      "cuts": 2,
+      "px": 22251
+     },
+     "amber": {
+      "img": "fire_03_amber.png",
+      "iou": 0.766,
+      "strokes": 11,
+      "cuts": 4,
+      "px": 4899
+     },
+     "pink": {
+      "img": "fire_03_pink.png",
+      "iou": 0.895,
+      "strokes": 9,
+      "cuts": 1,
+      "px": 7709
+     },
+     "crimson": {
+      "img": "fire_03_crimson.png",
+      "iou": 0.855,
+      "strokes": 19,
+      "cuts": 3,
+      "px": 10763
+     }
+    }
+   },
+   "04": {
+    "layers": {
+     "yellow": {
+      "img": "fire_04_yellow.png",
+      "iou": 0.952,
+      "strokes": 3,
+      "cuts": 2,
+      "px": 16996
+     },
+     "amber": {
+      "img": "fire_04_amber.png",
+      "iou": 0.819,
+      "strokes": 12,
+      "cuts": 0,
+      "px": 6891
+     },
+     "pink": {
+      "img": "fire_04_pink.png",
+      "iou": 0.9,
+      "strokes": 13,
+      "cuts": 2,
+      "px": 15258
+     },
+     "crimson": {
+      "img": "fire_04_crimson.png",
+      "iou": 0.888,
+      "strokes": 19,
+      "cuts": 6,
+      "px": 17952
+     }
+    }
+   },
+   "05": {
+    "layers": {
+     "yellow": {
+      "img": "fire_05_yellow.png",
+      "iou": 0.941,
+      "strokes": 6,
+      "cuts": 2,
+      "px": 11614
+     },
+     "amber": {
+      "img": "fire_05_amber.png",
+      "iou": 0.781,
+      "strokes": 21,
+      "cuts": 2,
+      "px": 6389
+     },
+     "pink": {
+      "img": "fire_05_pink.png",
+      "iou": 0.896,
+      "strokes": 13,
+      "cuts": 6,
+      "px": 11723
+     },
+     "crimson": {
+      "img": "fire_05_crimson.png",
+      "iou": 0.816,
+      "strokes": 22,
+      "cuts": 1,
+      "px": 14068
+     }
+    }
+   },
+   "06": {
+    "layers": {
+     "yellow": {
+      "img": "fire_06_yellow.png",
+      "iou": 0.767,
+      "strokes": 2,
+      "cuts": 0,
+      "px": 448
+     },
+     "amber": {
+      "img": "fire_06_amber.png",
+      "iou": 0.777,
+      "strokes": 19,
+      "cuts": 4,
+      "px": 6646
+     },
+     "pink": {
+      "img": "fire_06_pink.png",
+      "iou": 0.886,
+      "strokes": 9,
+      "cuts": 2,
+      "px": 8143
+     },
+     "crimson": {
+      "img": "fire_06_crimson.png",
+      "iou": 0.787,
+      "strokes": 30,
+      "cuts": 2,
+      "px": 7163
+     }
+    }
+   },
+   "07": {
+    "layers": {
+     "amber": {
+      "img": "fire_07_amber.png",
+      "iou": 0.82,
+      "strokes": 7,
+      "cuts": 3,
+      "px": 2412
+     },
+     "pink": {
+      "img": "fire_07_pink.png",
+      "iou": 0.852,
+      "strokes": 6,
+      "cuts": 0,
+      "px": 2865
+     },
+     "crimson": {
+      "img": "fire_07_crimson.png",
+      "iou": 0.721,
+      "strokes": 23,
+      "cuts": 3,
+      "px": 3853
+     }
+    }
+   },
+   "08": {
+    "layers": {
+     "amber": {
+      "img": "fire_08_amber.png",
+      "iou": 0.731,
+      "strokes": 1,
+      "cuts": 0,
+      "px": 143
+     },
+     "pink": {
+      "img": "fire_08_pink.png",
+      "iou": 0.802,
+      "strokes": 3,
+      "cuts": 0,
+      "px": 275
+     },
+     "crimson": {
+      "img": "fire_08_crimson.png",
+      "iou": 0.688,
+      "strokes": 15,
+      "cuts": 3,
+      "px": 1570
+     }
+    }
+   },
+   "09": {
+    "layers": {
+     "crimson": {
+      "img": "fire_09_crimson.png",
+      "iou": 0.548,
+      "strokes": 9,
+      "cuts": 2,
+      "px": 385
+     }
+    }
+   },
+   "10": {
+    "layers": {
+     "crimson": {
+      "img": "fire_10_crimson.png",
+      "iou": 0.548,
+      "strokes": 9,
+      "cuts": 2,
+      "px": 385
+     }
+    }
+   },
+   "11": {
+    "layers": {
+     "crimson": {
+      "img": "fire_11_crimson.png",
+      "iou": 0.512,
+      "strokes": 2,
+      "cuts": 0,
+      "px": 58
+     }
+    }
+   },
+   "12": {
+    "layers": {
+     "crimson": {
+      "img": "fire_12_crimson.png",
+      "iou": 0.512,
+      "strokes": 2,
+      "cuts": 0,
+      "px": 58
+     }
+    }
+   }
+  }
+ },
+ "frost": {
+  "frames": {
+   "02": {
+    "layers": {
+     "ice": {
+      "img": "frost_02_ice.png",
+      "iou": 0.952,
+      "strokes": 4,
+      "cuts": 2,
+      "px": 14896
+     },
+     "cyan": {
+      "img": "frost_02_cyan.png",
+      "iou": 0.896,
+      "strokes": 7,
+      "cuts": 3,
+      "px": 3285
+     },
+     "mid": {
+      "img": "frost_02_mid.png",
+      "iou": 0.837,
+      "strokes": 13,
+      "cuts": 5,
+      "px": 4686
+     }
+    }
+   },
+   "03": {
+    "layers": {
+     "ice": {
+      "img": "frost_03_ice.png",
+      "iou": 0.966,
+      "strokes": 4,
+      "cuts": 1,
+      "px": 31167
+     },
+     "cyan": {
+      "img": "frost_03_cyan.png",
+      "iou": 0.896,
+      "strokes": 7,
+      "cuts": 1,
+      "px": 7184
+     },
+     "mid": {
+      "img": "frost_03_mid.png",
+      "iou": 0.863,
+      "strokes": 16,
+      "cuts": 2,
+      "px": 11347
+     },
+     "deep": {
+      "img": "frost_03_deep.png",
+      "iou": 0.815,
+      "strokes": 2,
+      "cuts": 0,
+      "px": 1946
+     }
+    }
+   },
+   "04": {
+    "layers": {
+     "ice": {
+      "img": "frost_04_ice.png",
+      "iou": 0.96,
+      "strokes": 5,
+      "cuts": 3,
+      "px": 18947
+     },
+     "cyan": {
+      "img": "frost_04_cyan.png",
+      "iou": 0.93,
+      "strokes": 4,
+      "cuts": 0,
+      "px": 8238
+     },
+     "mid": {
+      "img": "frost_04_mid.png",
+      "iou": 0.882,
+      "strokes": 15,
+      "cuts": 4,
+      "px": 15835
+     },
+     "deep": {
+      "img": "frost_04_deep.png",
+      "iou": 0.813,
+      "strokes": 8,
+      "cuts": 0,
+      "px": 2871
+     }
+    }
+   },
+   "05": {
+    "layers": {
+     "ice": {
+      "img": "frost_05_ice.png",
+      "iou": 0.905,
+      "strokes": 7,
+      "cuts": 5,
+      "px": 8032
+     },
+     "cyan": {
+      "img": "frost_05_cyan.png",
+      "iou": 0.915,
+      "strokes": 9,
+      "cuts": 2,
+      "px": 5585
+     },
+     "mid": {
+      "img": "frost_05_mid.png",
+      "iou": 0.855,
+      "strokes": 23,
+      "cuts": 4,
+      "px": 9375
+     },
+     "deep": {
+      "img": "frost_05_deep.png",
+      "iou": 0.819,
+      "strokes": 4,
+      "cuts": 0,
+      "px": 2629
+     }
+    }
+   },
+   "06": {
+    "layers": {
+     "ice": {
+      "img": "frost_06_ice.png",
+      "iou": 0.864,
+      "strokes": 9,
+      "cuts": 5,
+      "px": 2719
+     },
+     "cyan": {
+      "img": "frost_06_cyan.png",
+      "iou": 0.896,
+      "strokes": 5,
+      "cuts": 2,
+      "px": 3316
+     },
+     "mid": {
+      "img": "frost_06_mid.png",
+      "iou": 0.806,
+      "strokes": 15,
+      "cuts": 6,
+      "px": 3642
+     },
+     "deep": {
+      "img": "frost_06_deep.png",
+      "iou": 0.766,
+      "strokes": 6,
+      "cuts": 1,
+      "px": 1755
+     }
+    }
+   },
+   "07": {
+    "layers": {
+     "ice": {
+      "img": "frost_07_ice.png",
+      "iou": 0.84,
+      "strokes": 5,
+      "cuts": 0,
+      "px": 691
+     },
+     "cyan": {
+      "img": "frost_07_cyan.png",
+      "iou": 0.846,
+      "strokes": 3,
+      "cuts": 0,
+      "px": 377
+     },
+     "mid": {
+      "img": "frost_07_mid.png",
+      "iou": 0.731,
+      "strokes": 10,
+      "cuts": 1,
+      "px": 1150
+     }
+    }
+   },
+   "08": {
+    "layers": {
+     "ice": {
+      "img": "frost_08_ice.png",
+      "iou": 0.673,
+      "strokes": 1,
+      "cuts": 0,
+      "px": 39
+     },
+     "mid": {
+      "img": "frost_08_mid.png",
+      "iou": 0.788,
+      "strokes": 5,
+      "cuts": 0,
+      "px": 369
+     }
+    }
+   },
+   "09": {
+    "layers": {
+     "mid": {
+      "img": "frost_09_mid.png",
+      "iou": 0.674,
+      "strokes": 2,
+      "cuts": 0,
+      "px": 32
+     }
+    }
+   }
+  }
+ }
+}

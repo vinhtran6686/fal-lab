@@ -1,0 +1,181 @@
+<title>Swirl Slash Shapes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one dark light-table; sections stacked: overview -> shape-by-frame inspector -> merged motion */
+:root{
+  --bg:#121315; --panel:#1b1d21; --line:#2c2f35; --fg:#e9e6e1; --muted:#9a968f;
+  --fire:#ff8a5c; --frost:#69c8fe; --ok:#5fd38a; --bad:#ff6b6b;
+  --display:"Bricolage Grotesque", "IBM Plex Sans", system-ui, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme:dark;
+}
+body{background:var(--bg);color:var(--fg);font:15px/1.55 var(--body)}
+.wrap{max-width:1240px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:44px}
+h1{font:700 clamp(30px,5vw,46px)/1.05 var(--display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font:700 24px/1.2 var(--display);margin:0 0 4px;text-wrap:balance}
+h3{font:600 16px/1.3 var(--body);margin:0}
+p{margin:0;max-width:68ch;color:var(--muted)}
+.lead{color:var(--fg);opacity:.85}
+section{display:flex;flex-direction:column;gap:16px}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+figure{margin:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:6px;background:#141414}
+figcaption{font:13px var(--body);color:var(--muted)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:20px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button{font:500 13px var(--mono);color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:7px 11px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--frost);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.variant[data-v="fire"][aria-pressed="true"]{background:var(--fire);border-color:var(--fire);color:#1a0f0a}
+.variant[data-v="frost"][aria-pressed="true"]{background:var(--frost);border-color:var(--frost);color:#06141c}
+.frame-btn{min-width:46px;font-variant-numeric:tabular-nums}
+.frame-btn .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-left:5px;vertical-align:middle;background:transparent}
+.frame-btn.has-bad .dot{background:var(--bad)} .frame-btn.all-ok .dot{background:var(--ok)}
+.heads{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:0;font:12px var(--mono);color:var(--muted)}
+.heads span{padding:0 4px}
+.layer{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.layer-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between}
+.sw{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:8px;border:1px solid #0006}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font:12px var(--mono);font-variant-numeric:tabular-nums}
+.chip{padding:3px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.chip.pass{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.chip.fail{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}
+.review{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
+.review textarea{flex:1 1 260px;min-height:38px;resize:vertical;font:13px var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px}
+.rv[data-r="ok"][aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#06150c}
+.rv[data-r="fix"][aria-pressed="true"]{background:var(--bad);border-color:var(--bad);color:#1c0606}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font:12px var(--mono);color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.gifgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,560px),1fr));gap:20px}
+.note{font:13px var(--body);color:var(--muted)}
+#copied{font:12px var(--mono);color:var(--ok)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="eyebrow">lib-fx / research / bezier-shapes</span>
+  <h1>Swirl Slash Shapes</h1>
+  <p class="lead">Hình xoáy chém dựng lại từ công thức nét thon Bézier. Xem tổng quan, rồi duyệt từng lớp màu theo từng frame, cuối cùng xem chuyển động khi gộp các frame dựng lại.</p>
+</header>
+
+<section id="overview">
+  <div><span class="eyebrow">1 · Tổng quan</span><h2>Ảnh vừa tạo</h2>
+  <p>Mỗi hàng là một frame (3, 4, 5). Từ trái sang: gốc · mục tiêu (đúng mã màu phẳng) · dựng lại từ công thức · lỗi (xanh lá thiếu, đỏ thừa).</p></div>
+  <div class="cols">
+    <figure><img src="compare_fire.png" alt="So sánh biến thể lửa, frame 3 đến 5" loading="lazy"><figcaption>Lửa, frame 3–5</figcaption></figure>
+    <figure><img src="compare_frost.png" alt="So sánh biến thể băng, frame 3 đến 5" loading="lazy"><figcaption>Băng, frame 3–5</figcaption></figure>
+  </div>
+  <figure style="max-width:760px"><img src="generated_demo.png" alt="Ba hình xoáy mới sinh từ luật" loading="lazy"><figcaption>Hình mới sinh chỉ từ công thức + luật đo được (3 seed, bản thử đầu, chưa đạt độ đẹp của gốc).</figcaption></figure>
+</section>
+
+<section id="shapes">
+  <div><span class="eyebrow">2 · Từng shape theo frame</span><h2>Duyệt từng lớp màu</h2>
+  <p>Chọn biến thể và frame (phím ← → để chuyển frame). Mỗi lớp có 4 ô: mục tiêu · dựng lại · các nét tạo nên nó (mỗi nét một sắc, vết khoét màu đỏ sẫm) · lỗi. Đánh dấu Đạt / Cần sửa và ghi chú; nhận xét lưu trong trình duyệt này, bấm “Sao chép nhận xét” để gửi lại.</p></div>
+  <div class="bar" role="group" aria-label="Biến thể">
+    <button class="variant" data-v="fire" aria-pressed="true">Lửa</button>
+    <button class="variant" data-v="frost" aria-pressed="false">Băng</button>
+  </div>
+  <div class="bar" id="frames" role="group" aria-label="Frame"></div>
+  <figure><img id="frameimg" alt="Frame gốc, mục tiêu và bản dựng lại"><figcaption id="framecap"></figcaption></figure>
+  <div class="legend"><span><i style="background:#28dc3c"></i>thiếu (có ở gốc, không có ở bản dựng)</span><span><i style="background:#eb3232"></i>thừa</span><span>ngưỡng IoU: lớp lớn ≥ 0,85 · lớp nhỏ ≥ 0,70</span></div>
+  <div id="layers" style="display:flex;flex-direction:column;gap:16px"></div>
+  <div class="bar"><button id="copy">Sao chép nhận xét</button><span id="copied" aria-live="polite"></span></div>
+  <textarea id="copybox" hidden readonly style="width:100%;min-height:120px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:8px;font:12px var(--mono)"></textarea>
+</section>
+
+<section id="motion">
+  <div><span class="eyebrow">3 · Chuyển động</span><h2>Gộp các frame dựng lại</h2>
+  <p>Mỗi frame được dựng độc lập từ công thức (chưa có ràng buộc giữa các frame), nên đây là phép thử: hình có giữ được nhịp quét và cách vỡ của gốc khi chạy liền không. Trái: gốc · phải: dựng lại. Lửa frame 2–12, băng frame 2–9.</p></div>
+  <div class="bar" role="group" aria-label="Tốc độ">
+    <button class="speed" data-s="" aria-pressed="true">25 fps (gốc)</button>
+    <button class="speed" data-s="_slow" aria-pressed="false">8 fps (chậm)</button>
+  </div>
+  <div class="gifgrid">
+    <figure><img class="gif" data-base="preview/fire_side" src="preview/fire_side.gif" alt="Lửa: gốc và dựng lại chạy liền"><figcaption>Lửa · gốc | dựng lại</figcaption></figure>
+    <figure><img class="gif" data-base="preview/frost_side" src="preview/frost_side.gif" alt="Băng: gốc và dựng lại chạy liền"><figcaption>Băng · gốc | dựng lại</figcaption></figure>
+  </div>
+  <div class="gifgrid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),420px))">
+    <figure><img class="gif" data-base="preview/fire_rebuilt" src="preview/fire_rebuilt.gif" alt="Lửa dựng lại"><figcaption>Lửa · chỉ bản dựng lại</figcaption></figure>
+    <figure><img class="gif" data-base="preview/frost_rebuilt" src="preview/frost_rebuilt.gif" alt="Băng dựng lại"><figcaption>Băng · chỉ bản dựng lại</figcaption></figure>
+  </div>
+  <p class="note">Ghi chú: frame 9–12 của lửa chỉ còn vài móc đỏ sẫm rất nhỏ (IoU 0,51–0,55), frame 8–9 của băng còn mảnh nhỏ (0,67–0,79); các mảnh dưới ~400 điểm ảnh khó khớp bằng nét thon.</p>
+</section>
+</div>
+<script>
+const DATA = {"fire": {"frames": {"02": {"layers": {"yellow": {"img": "fire_02_yellow.png", "iou": 0.949, "strokes": 1, "cuts": 0, "px": 4839}, "amber": {"img": "fire_02_amber.png", "iou": 0.795, "strokes": 7, "cuts": 4, "px": 3981}, "pink": {"img": "fire_02_pink.png", "iou": 0.887, "strokes": 12, "cuts": 3, "px": 6422}, "crimson": {"img": "fire_02_crimson.png", "iou": 0.849, "strokes": 24, "cuts": 7, "px": 6628}}}, "03": {"layers": {"yellow": {"img": "fire_03_yellow.png", "iou": 0.954, "strokes": 3, "cuts": 2, "px": 22251}, "amber": {"img": "fire_03_amber.png", "iou": 0.766, "strokes": 11, "cuts": 4, "px": 4899}, "pink": {"img": "fire_03_pink.png", "iou": 0.895, "strokes": 9, "cuts": 1, "px": 7709}, "crimson": {"img": "fire_03_crimson.png", "iou": 0.855, "strokes": 19, "cuts": 3, "px": 10763}}}, "04": {"layers": {"yellow": {"img": "fire_04_yellow.png", "iou": 0.952, "strokes": 3, "cuts": 2, "px": 16996}, "amber": {"img": "fire_04_amber.png", "iou": 0.819, "strokes": 12, "cuts": 0, "px": 6891}, "pink": {"img": "fire_04_pink.png", "iou": 0.9, "strokes": 13, "cuts": 2, "px": 15258}, "crimson": {"img": "fire_04_crimson.png", "iou": 0.888, "strokes": 19, "cuts": 6, "px": 17952}}}, "05": {"layers": {"yellow": {"img": "fire_05_yellow.png", "iou": 0.941, "strokes": 6, "cuts": 2, "px": 11614}, "amber": {"img": "fire_05_amber.png", "iou": 0.781, "strokes": 21, "cuts": 2, "px": 6389}, "pink": {"img": "fire_05_pink.png", "iou": 0.896, "strokes": 13, "cuts": 6, "px": 11723}, "crimson": {"img": "fire_05_crimson.png", "iou": 0.816, "strokes": 22, "cuts": 1, "px": 14068}}}, "06": {"layers": {"yellow": {"img": "fire_06_yellow.png", "iou": 0.767, "strokes": 2, "cuts": 0, "px": 448}, "amber": {"img": "fire_06_amber.png", "iou": 0.777, "strokes": 19, "cuts": 4, "px": 6646}, "pink": {"img": "fire_06_pink.png", "iou": 0.886, "strokes": 9, "cuts": 2, "px": 8143}, "crimson": {"img": "fire_06_crimson.png", "iou": 0.787, "strokes": 30, "cuts": 2, "px": 7163}}}, "07": {"layers": {"amber": {"img": "fire_07_amber.png", "iou": 0.82, "strokes": 7, "cuts": 3, "px": 2412}, "pink": {"img": "fire_07_pink.png", "iou": 0.852, "strokes": 6, "cuts": 0, "px": 2865}, "crimson": {"img": "fire_07_crimson.png", "iou": 0.721, "strokes": 23, "cuts": 3, "px": 3853}}}, "08": {"layers": {"amber": {"img": "fire_08_amber.png", "iou": 0.731, "strokes": 1, "cuts": 0, "px": 143}, "pink": {"img": "fire_08_pink.png", "iou": 0.802, "strokes": 3, "cuts": 0, "px": 275}, "crimson": {"img": "fire_08_crimson.png", "iou": 0.688, "strokes": 15, "cuts": 3, "px": 1570}}}, "09": {"layers": {"crimson": {"img": "fire_09_crimson.png", "iou": 0.548, "strokes": 9, "cuts": 2, "px": 385}}}, "10": {"layers": {"crimson": {"img": "fire_10_crimson.png", "iou": 0.548, "strokes": 9, "cuts": 2, "px": 385}}}, "11": {"layers": {"crimson": {"img": "fire_11_crimson.png", "iou": 0.512, "strokes": 2, "cuts": 0, "px": 58}}}, "12": {"layers": {"crimson": {"img": "fire_12_crimson.png", "iou": 0.512, "strokes": 2, "cuts": 0, "px": 58}}}}}, "frost": {"frames": {"02": {"layers": {"ice": {"img": "frost_02_ice.png", "iou": 0.952, "strokes": 4, "cuts": 2, "px": 14896}, "cyan": {"img": "frost_02_cyan.png", "iou": 0.896, "strokes": 7, "cuts": 3, "px": 3285}, "mid": {"img": "frost_02_mid.png", "iou": 0.837, "strokes": 13, "cuts": 5, "px": 4686}}}, "03": {"layers": {"ice": {"img": "frost_03_ice.png", "iou": 0.966, "strokes": 4, "cuts": 1, "px": 31167}, "cyan": {"img": "frost_03_cyan.png", "iou": 0.896, "strokes": 7, "cuts": 1, "px": 7184}, "mid": {"img": "frost_03_mid.png", "iou": 0.863, "strokes": 16, "cuts": 2, "px": 11347}, "deep": {"img": "frost_03_deep.png", "iou": 0.815, "strokes": 2, "cuts": 0, "px": 1946}}}, "04": {"layers": {"ice": {"img": "frost_04_ice.png", "iou": 0.96, "strokes": 5, "cuts": 3, "px": 18947}, "cyan": {"img": "frost_04_cyan.png", "iou": 0.93, "strokes": 4, "cuts": 0, "px": 8238}, "mid": {"img": "frost_04_mid.png", "iou": 0.882, "strokes": 15, "cuts": 4, "px": 15835}, "deep": {"img": "frost_04_deep.png", "iou": 0.813, "strokes": 8, "cuts": 0, "px": 2871}}}, "05": {"layers": {"ice": {"img": "frost_05_ice.png", "iou": 0.905, "strokes": 7, "cuts": 5, "px": 8032}, "cyan": {"img": "frost_05_cyan.png", "iou": 0.915, "strokes": 9, "cuts": 2, "px": 5585}, "mid": {"img": "frost_05_mid.png", "iou": 0.855, "strokes": 23, "cuts": 4, "px": 9375}, "deep": {"img": "frost_05_deep.png", "iou": 0.819, "strokes": 4, "cuts": 0, "px": 2629}}}, "06": {"layers": {"ice": {"img": "frost_06_ice.png", "iou": 0.864, "strokes": 9, "cuts": 5, "px": 2719}, "cyan": {"img": "frost_06_cyan.png", "iou": 0.896, "strokes": 5, "cuts": 2, "px": 3316}, "mid": {"img": "frost_06_mid.png", "iou": 0.806, "strokes": 15, "cuts": 6, "px": 3642}, "deep": {"img": "frost_06_deep.png", "iou": 0.766, "strokes": 6, "cuts": 1, "px": 1755}}}, "07": {"layers": {"ice": {"img": "frost_07_ice.png", "iou": 0.84, "strokes": 5, "cuts": 0, "px": 691}, "cyan": {"img": "frost_07_cyan.png", "iou": 0.846, "strokes": 3, "cuts": 0, "px": 377}, "mid": {"img": "frost_07_mid.png", "iou": 0.731, "strokes": 10, "cuts": 1, "px": 1150}}}, "08": {"layers": {"ice": {"img": "frost_08_ice.png", "iou": 0.673, "strokes": 1, "cuts": 0, "px": 39}, "mid": {"img": "frost_08_mid.png", "iou": 0.788, "strokes": 5, "cuts": 0, "px": 369}}}, "09": {"layers": {"mid": {"img": "frost_09_mid.png", "iou": 0.674, "strokes": 2, "cuts": 0, "px": 32}}}}}};
+const BIG = new Set(["yellow","pink","ice","mid"]);
+const NAMES = {"yellow": "vàng", "amber": "hổ phách", "pink": "hồng", "crimson": "đỏ sẫm", "ice": "trắng (lưỡi băng)", "cyan": "cyan (lông vũ)", "mid": "xanh (ngọn lửa xanh)", "deep": "xanh sẫm (viền)"};
+const PAL = {"fire": {"yellow": "#ffd670", "amber": "#feac4c", "pink": "#ff628c", "crimson": "#d12f57"}, "frost": {"ice": "#efffff", "cyan": "#69e7fe", "mid": "#3ba9e2", "deep": "#1e6d9d"}};
+let v = "fire", f = null;
+const store = {get(){try{return JSON.parse(localStorage.getItem("swirl-review")||"{}")}catch(e){return {}}},
+               set(o){try{localStorage.setItem("swirl-review",JSON.stringify(o))}catch(e){}}};
+let rev = store.get();
+const fmt = x => x.toFixed(3).replace(".", ",");
+function frames(){return Object.keys(DATA[v].frames)}
+function pass(l, iou){return iou >= (BIG.has(l) ? 0.85 : 0.70)}
+function drawFrames(){
+  const box = document.getElementById("frames"); box.innerHTML = "";
+  frames().forEach(k => {
+    const L = DATA[v].frames[k].layers, ls = Object.keys(L);
+    const b = document.createElement("button");
+    b.className = "frame-btn" + (ls.length && ls.every(l => pass(l, L[l].iou)) ? " all-ok" : ls.some(l => !pass(l, L[l].iou)) ? " has-bad" : "");
+    b.innerHTML = "f" + k + '<span class="dot"></span>';
+    b.setAttribute("aria-pressed", k === f); b.onclick = () => {f = k; draw()};
+    box.appendChild(b);
+  });
+}
+function draw(){
+  if (!frames().includes(f)) f = frames().includes("04") ? "04" : frames()[0];
+  document.querySelectorAll(".variant").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v));
+  drawFrames();
+  document.getElementById("frameimg").src = `preview/${v}_${f}_frame.png`;
+  document.getElementById("framecap").textContent = `${v === "fire" ? "Lửa" : "Băng"} · frame ${+f} · gốc | mục tiêu màu phẳng | dựng lại`;
+  const box = document.getElementById("layers"); box.innerHTML = "";
+  const L = DATA[v].frames[f].layers;
+  if (!Object.keys(L).length) box.innerHTML = '<p>Frame này không còn lớp màu nào.</p>';
+  for (const [l, d] of Object.entries(L)) {
+    const key = `${v}/${f}/${l}`, r = rev[key] || {};
+    const el = document.createElement("article"); el.className = "layer";
+    el.innerHTML = `
+      <div class="layer-top"><h3><span class="sw" style="background:${PAL[v][l]}"></span>${NAMES[l]} <span class="eyebrow">· ${BIG.has(l) ? "lớp lớn" : "lớp nhỏ"}</span></h3>
+        <div class="chips"><span class="chip ${pass(l, d.iou) ? "pass" : "fail"}">IoU ${fmt(d.iou)}</span><span class="chip">${d.strokes} nét</span><span class="chip">${d.cuts} vết khoét</span><span class="chip">${d.px.toLocaleString("vi-VN")} px</span></div></div>
+      <div class="heads" style="--n:4"><span>mục tiêu</span><span>dựng lại</span><span>các nét</span><span>lỗi</span></div>
+      <img src="preview/${d.img}" alt="${NAMES[l]} frame ${+f}: mục tiêu, dựng lại, các nét, lỗi" loading="lazy" style="width:100%;height:auto;border-radius:6px;display:block">
+      <div class="review">
+        <button class="rv" data-r="ok" aria-pressed="${r.r === "ok"}">Đạt</button>
+        <button class="rv" data-r="fix" aria-pressed="${r.r === "fix"}">Cần sửa</button>
+        <textarea id="note-${v}-${f}-${l}" placeholder="Ghi chú cho lớp này (vd: mũi lưỡi thứ 2 phải nhọn hơn)">${r.n ? r.n.replace(/</g,"&lt;") : ""}</textarea>
+      </div>`;
+    el.querySelectorAll(".rv").forEach(b => b.onclick = () => {
+      const cur = rev[key] || {}; cur.r = cur.r === b.dataset.r ? null : b.dataset.r; rev[key] = cur; store.set(rev);
+      el.querySelectorAll(".rv").forEach(x => x.setAttribute("aria-pressed", x.dataset.r === cur.r));
+    });
+    el.querySelector("textarea").oninput = e => {const cur = rev[key] || {}; cur.n = e.target.value; rev[key] = cur; store.set(rev)};
+    box.appendChild(el);
+  }
+}
+document.querySelectorAll(".variant").forEach(b => b.onclick = () => {v = b.dataset.v; draw()});
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "TEXTAREA") return;
+  const fs = frames(), i = fs.indexOf(f);
+  if (e.key === "ArrowRight" && i < fs.length - 1) {f = fs[i + 1]; draw()}
+  if (e.key === "ArrowLeft" && i > 0) {f = fs[i - 1]; draw()}
+});
+document.querySelectorAll(".speed").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".speed").forEach(x => x.setAttribute("aria-pressed", x === b));
+  document.querySelectorAll("img.gif").forEach(g => g.src = g.dataset.base + b.dataset.s + ".gif");
+});
+document.getElementById("copy").onclick = () => {
+  const lines = Object.entries(rev).filter(([k, r]) => r.r || (r.n && r.n.trim()))
+    .map(([k, r]) => {const [vv, ff, l] = k.split("/"); return `${vv} f${+ff} ${l}: ${r.r === "ok" ? "ĐẠT" : r.r === "fix" ? "CẦN SỬA" : "-"}${r.n && r.n.trim() ? " — " + r.n.trim() : ""}`});
+  const txt = lines.length ? lines.join("\n") : "(chưa có nhận xét)";
+  const box = document.getElementById("copybox"), msg = document.getElementById("copied");
+  box.value = txt;
+  const fallback = () => {box.hidden = false; box.select(); msg.textContent = "Không sao chép tự động được: chọn và copy ở ô bên dưới."};
+  try {navigator.clipboard.writeText(txt).then(() => {msg.textContent = `Đã sao chép ${lines.length} nhận xét.`}, fallback)} catch (e) {fallback()}
+};
+draw();
+</script>

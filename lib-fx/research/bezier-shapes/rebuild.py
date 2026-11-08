@@ -75,6 +75,10 @@ def main(frames=(3, 4, 5)):
             U = np.zeros((700, 700), bool)
             for m in masks.values():
                 U |= m
+            if U.sum() < 30:  # effect finished: empty frame
+                (OUT / f"rebuild_{v}_{f:02d}.svg").write_text(svg_doc(700, 700, "", "#141414"))
+                (OUT / f"params_{v}_{f:02d}.json").write_text(json.dumps({"layers": {}}))
+                continue
             cx, cy, R = fit_centre(U)
             seam = seam_angle(U, (cx, cy))
             canvas = np.zeros((700, 700, 3), np.uint8) + 20
@@ -93,6 +97,7 @@ def main(frames=(3, 4, 5)):
                     svg.append(f'<mask id="m{mid}"><rect width="700" height="700" fill="#fff"/><path fill="#000" d="{cuts}"/></mask>')
                 svg.append(f'<path fill="{col}" d="{adds}"' + (f' mask="url(#m{mid})"' if cuts else "") + "/>")
                 raw = raw_mask(v, f, l)
+                raw = raw if raw is not None else np.zeros_like(rm)
                 key = f"{v}_{f:02d}_{l}"
                 report[key] = dict(iou_clean=round(iou(rm, masks[l]), 3), iou_raw=round(iou(rm, raw), 3),
                                    shapes=len(shapes), cuts=sum(p['op']=='cut' for p in shapes), params=int(sum(p["npar"] for p in shapes)),
@@ -102,9 +107,13 @@ def main(frames=(3, 4, 5)):
             (OUT / f"params_{v}_{f:02d}.json").write_text(json.dumps(params, indent=0))
             orig = frame_rgb(v, f).astype(np.uint8)
             Image.fromarray(np.hstack([orig, canvas])).save(OUT / f"compare_{v}_{f:02d}.png")
-    (OUT / "rebuild_report.json").write_text(json.dumps(report, indent=1))
+    rp = OUT / "rebuild_report.json"
+    old = json.loads(rp.read_text()) if rp.exists() else {}
+    old.update(report)
+    rp.write_text(json.dumps(dict(sorted(old.items())), indent=1))
     for k, r in report.items():
         print(k, r)
 
 if __name__ == "__main__":
-    main()
+    fr = tuple(int(x) for x in sys.argv[1].split(",")) if len(sys.argv) > 1 else (3, 4, 5)
+    main(fr)
