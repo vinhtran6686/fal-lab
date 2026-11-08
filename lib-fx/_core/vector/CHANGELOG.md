@@ -1,5 +1,12 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.5 (2026-11-09): bộ sinh đầu tiên
+
+- `gen_slash.py` (lệnh `gen-slash`): sinh một nhát chém MỚI chỉ từ luật trong `foundation/` (lưỡi liềm nét thon, 2 lớp tô chồng, sinh từ đầu
+  nét, bùng 2 hình, đầu nét chạy tiếp, vỡ thành mảnh cong hai đầu nhọn tại điểm cắt không đều, tia trôi theo hướng chém, glow giữ sáng,
+  on twos cho tia). Bảng màu đo trên slash-trio: blue, pink, gold. Bản thử: nhát chém ngang xanh `showcase/generated/gen-slash-blue/`,
+  trang https://claude.ai/artifact/WSPsgRkzRos6fW6BfDrsNM.
+
 ## 1.4 (2026-11-09): tự động hoá khâu đọc bản gốc
 
 - `auto.py`: `propose_crops` (vùng hiệu ứng tách rời, gộp vùng cùng màu chồng nhau, tách phản chiếu dưới sàn theo khe hàng, đặt tên theo

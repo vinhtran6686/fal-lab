@@ -18,3 +18,9 @@ Xuất bằng `python lib-fx/_tools/vectorfx.py showcase PROFILE` (bộ tool kh�
 Trang review đầy đủ (từng lớp, từng frame): Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdKGR,
 Element Trio https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn, Slash Trio https://claude.ai/artifact/69ermXASZKmFccapxfCYis.
 Bản gốc: `ref/vfx/swirl-slash/`, `ref/vfx/element-trio/`, `ref/vfx/slash-trio/`.
+
+## Hiệu ứng sinh mới (không có bản gốc)
+
+| Tên | Lệnh | Thư mục | Trang |
+|---|---|---|---|
+| Nhát chém ngang xanh | `vectorfx.py gen-slash gen-slash-blue --variant blue --frame 7` | [generated/gen-slash-blue](generated/gen-slash-blue/) (`preview.gif`, `frames/`, `svg/`, `design.json`) | https://claude.ai/artifact/WSPsgRkzRos6fW6BfDrsNM |

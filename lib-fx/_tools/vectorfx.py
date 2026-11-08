@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """CLI for the lib-fx vector kit (lib-fx/_core/vector). 0 USD, no model.
 
+  python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED]   generate a NEW slash from the foundation rules
   python lib-fx/_tools/vectorfx.py init     GIF NAME                            draft profile: auto crops (+ reflections), frames, suggested layers
   python lib-fx/_tools/vectorfx.py check    PROFILE                             bright pixels no layer claims, per frame (+ image of the worst frame)
   python lib-fx/_tools/vectorfx.py palette  PROFILE [--variant V] [--frame N]   flat-colour candidates + colour clusters (to write a profile)
@@ -30,12 +31,29 @@ def rng(s):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["init", "check", "palette", "ingest", "measure", "rebuild", "review", "all", "lifecycle", "track", "showcase", "study"])
+    ap.add_argument("cmd", choices=["gen-slash", "init", "check", "palette", "ingest", "measure", "rebuild", "review", "all", "lifecycle", "track", "showcase", "study"])
     ap.add_argument("profile")
     ap.add_argument("name", nargs="?", help="init only: profile name")
     ap.add_argument("--frames"); ap.add_argument("--variants"); ap.add_argument("--variant"); ap.add_argument("--frame", type=int)
     ap.add_argument("--refit", action="store_true")
     a = ap.parse_args()
+    if a.cmd == "gen-slash":
+        import shutil
+        from vector import gen_slash
+        out, stats = gen_slash.build(a.profile, a.variant or "blue", a.frame or 7)
+        dst = HERE / "_core/vector/showcase/generated" / a.profile
+        if dst.exists():
+            shutil.rmtree(dst)
+        dst.mkdir(parents=True)
+        for f in ("preview.gif", "preview_slow.gif", "design.json"):
+            shutil.copy(out / f, dst / f)
+        shutil.copytree(out / "svg", dst / "svg")
+        shutil.copytree(out / "frames", dst / "frames")
+        pk = max(s["area"] for s in stats)
+        for s in stats:
+            print(f"drawing {s['drawing']} frames {s['frames']} area {s['area'] / pk:.3f} pieces {s['pieces']}")
+        print("out:", out, "| showcase:", dst)
+        return
     if a.cmd == "init":
         from vector import auto
         name = a.name or pathlib.Path(a.profile).parent.name
