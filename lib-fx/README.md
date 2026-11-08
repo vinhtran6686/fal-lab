@@ -48,6 +48,12 @@ Code của cả họ nằm cạnh đó: `force/shock/shock.py`. Hiện chỉ xu�
 3. `python lib-fx/build.py <nhóm>/<họ>`, xem gallery, duyệt rồi đổi `status` thành `approved`.
 4. Họ vừa có hiệu ứng đầu tiên: xóa README "chưa có hiệu ứng" của họ đó, cập nhật cột "Hiện có" trong GUIDE.md.
 
+## Dựng lại hiệu ứng tham khảo bằng path vector
+
+`_core/vector/` + `_tools/vectorfx.py`: đọc một GIF tham khảo (lớp màu, gradient mép, quầng), khớp mỗi lớp bằng nét thon, làm đều nét
+kiểu Illustrator Simplify, tô chồng, xuất PNG + SVG và trang review. Mỗi hiệu ứng một profile JSON trong `_core/vector/profiles/`.
+Hướng dẫn: [_core/vector/README.md](_core/vector/README.md).
+
 ## Dùng cho nhân vật
 
 Lấy `sheet.png` hoặc `frames/` của hiệu ứng, đặt điểm neo (`anchor_2x` trong `meta.json`) vào điểm chạm của nhân vật

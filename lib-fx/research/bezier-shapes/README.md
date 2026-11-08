@@ -1,5 +1,9 @@
 # bezier-shapes: dựng lại hình VFX vẽ tay bằng path Bézier
 
+> **Lưu trữ (đóng 2026-11-08).** Code dùng tiếp đã được đóng gói thành [`lib-fx/_core/vector/`](../../_core/vector/README.md)
+> (CLI `lib-fx/_tools/vectorfx.py`, profile `swirl-slash.json`). Thư mục này giữ nguyên để tra cứu: các bản v1/v2/v3, số liệu và
+> [RETROSPECTIVE.md](RETROSPECTIVE.md). Không sửa code ở đây nữa.
+
 Nhiệm vụ: [BRIEF.md](BRIEF.md). Kết luận: [FINDINGS.md](FINDINGS.md). Tổng kết toàn bộ quá trình: [RETROSPECTIVE.md](RETROSPECTIVE.md). Dữ liệu: [ref/vfx/swirl-slash/](../../../ref/vfx/swirl-slash/README.md).
 
 ## Chạy (theo thứ tự, ~1 phút, 0 USD)

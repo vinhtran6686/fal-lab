@@ -122,3 +122,8 @@ các luật đo được, dùng khi vẽ hình bằng path:
 Mọi path xuất ra đi qua `smooth_simplify`: nối khe nhỏ, góc thật phải nhọn ở hai tầm, làm trơn theo độ cong biến thiên ít nhất giữa các
 góc, neo gãy < 35° thành neo trơn, gộp đoạn khi sai số ≤ 0,9 px, tay nắm ≤ 0,45 dây cung. Kết quả trên xoáy chém: 0 điểm gãy, độ cong
 đều hơn v2 2-14 lần, ít điểm neo hơn.
+
+### 7d. Bộ tool
+
+Các luật §7-§7c đã thành code dùng chung: [`_core/vector/`](_core/vector/README.md) (profile JSON cho từng hiệu ứng, CLI
+`_tools/vectorfx.py`). Hiệu ứng vẽ tay mới dựng bằng bộ này thay vì viết lại từ đầu.
