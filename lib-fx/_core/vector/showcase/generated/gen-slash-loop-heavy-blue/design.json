@@ -13,7 +13,7 @@
   "R": 380,
   "k": 0.24,
   "tilt": -0.04,
-  "width": 70.0,
+  "width": 98.0,
   "u_start": -3.001966313430247,
   "back": 0.42,
   "front": 2.2,
@@ -143,7 +143,7 @@
     "drift": 0.045349602098744626
    }
   ],
-  "floor": 352
+  "floor": 360
  },
  "timeline": [
   {
@@ -279,7 +279,7 @@
   "13": 1.15,
   "14": 1.15
  },
- "style": "loop-heavy",
+ "style": "heavy",
  "reflection": {
   "squash": 0.27,
   "dim": 0.8,
@@ -292,7 +292,7 @@
    255
   ],
   "tint_mix": 0.35,
-  "floor": 352
+  "floor": 360
  },
  "idea": "ref/vfx/axe-swing-idea/reference.png",
  "stats": [
@@ -303,7 +303,7 @@
     0,
     1
    ],
-   "area": 853,
+   "area": 1143,
    "pieces": 1
   },
   {
@@ -312,8 +312,8 @@
    "frames": [
     2
    ],
-   "area": 8556,
-   "pieces": 5
+   "area": 10984,
+   "pieces": 3
   },
   {
    "drawing": 2,
@@ -321,8 +321,8 @@
    "frames": [
     3
    ],
-   "area": 20135,
-   "pieces": 2
+   "area": 26380,
+   "pieces": 3
   },
   {
    "drawing": 3,
@@ -330,7 +330,7 @@
    "frames": [
     4
    ],
-   "area": 35062,
+   "area": 47390,
    "pieces": 1
   },
   {
@@ -340,8 +340,8 @@
     5,
     6
    ],
-   "area": 42683,
-   "pieces": 1
+   "area": 57337,
+   "pieces": 4
   },
   {
    "drawing": 5,
@@ -349,8 +349,8 @@
    "frames": [
     7
    ],
-   "area": 38416,
-   "pieces": 4
+   "area": 51551,
+   "pieces": 3
   },
   {
    "drawing": 6,
@@ -358,8 +358,8 @@
    "frames": [
     8
    ],
-   "area": 28940,
-   "pieces": 6
+   "area": 38024,
+   "pieces": 5
   },
   {
    "drawing": 7,
@@ -368,7 +368,7 @@
     9,
     10
    ],
-   "area": 18490,
+   "area": 23854,
    "pieces": 10
   },
   {
@@ -378,8 +378,8 @@
     11,
     12
    ],
-   "area": 8403,
-   "pieces": 22
+   "area": 10655,
+   "pieces": 23
   },
   {
    "drawing": 9,
@@ -388,8 +388,8 @@
     13,
     14
    ],
-   "area": 2253,
-   "pieces": 24
+   "area": 2963,
+   "pieces": 16
   }
  ]
 }

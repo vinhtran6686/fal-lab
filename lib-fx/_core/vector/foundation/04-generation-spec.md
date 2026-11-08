@@ -55,6 +55,7 @@ seed
 - 1.7: **phản chiếu** = cùng nét vẽ lại trong khung lật qua sàn (dẹt ~1/4), màu tối và kéo về sắc chính, glow ~40%, bỏ nét < 2 px;
   **khép vòng** = đầu nét chạy > 2π ở đỉnh; răng khía phải cắn từ mép (hở), không nằm giữa dải (thành lỗ). **Vũ khí lớn** = cùng ngôn ngữ,
   khác ở: độ rộng lưỡi ×2, phía sau dày hơn, ít sợi hơn nhưng đậm, đầu nét cùn, vụn to, nhịp chậm (lấy đà và va chạm giữ 2 frame).
+- 1.8: kiểu chém trước mặt (`front-heavy`, chữ C hở). Toàn bộ về bộ sinh slash nay ở `vfx/slash/generators.md`.
 
 ## 4. Kế hoạch đề xuất
 

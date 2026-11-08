@@ -53,13 +53,33 @@ GAIN_HEAVY = {0: 1.1, 1: 1.1, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.05, 8
               13: 1.15, 14: 1.15}
 
 STYLES = {
-    "light": dict(width=36.0, timeline=TIMELINE, gain=GAIN, back=0.30, front=2.4, fingers_off=[-0.38, -0.05, 0.30, 0.55],
+    "light": dict(width=47.0, timeline=TIMELINE, gain=GAIN, back=0.30, front=2.4, fingers_off=[-0.38, -0.05, 0.30, 0.55],
                   fingers_w=[0.30, 0.48, 0.30, 0.16], finger_b=1.6, n_teeth=6, teeth=(0.6, 1.6), lines=[24, 44, -30],
                   line_w=[3.2, 2.4, 2.8], debris_L=(14, 30), inner_w=0.85, deep_w=0.34, floor=338),
-    "heavy": dict(width=70.0, timeline=TIMELINE_HEAVY, gain=GAIN_HEAVY, back=0.42, front=2.2, fingers_off=[-0.30, 0.05, 0.38],
+    "heavy": dict(width=98.0, timeline=TIMELINE_HEAVY, gain=GAIN_HEAVY, back=0.42, front=2.2, fingers_off=[-0.30, 0.05, 0.38],
                   fingers_w=[0.42, 0.62, 0.36], finger_b=0.9, n_teeth=5, teeth=(1.0, 2.0), lines=[30, -40],
-                  line_w=[5.0, 4.2], debris_L=(26, 52), inner_w=0.75, deep_w=0.42, floor=352),
+                  line_w=[5.0, 4.2], debris_L=(26, 52), inner_w=0.75, deep_w=0.42, floor=360),
 }
+# "spin" = the two styles above: the fighter spins in place, the slash circles the body and closes at the peak.
+# "front" = heavy blade, ONE swing in front of the body: an open C (about 230 deg, never closes), rounder (k 0.42), smaller,
+# sitting in front of the fighter (to the right on screen, opening toward the body), as in the idea sheet's 3rd/4th drawings.
+TIMELINE_FRONT = [
+    dict(head=0.40, tail=0.00, w=0.45, spread=0.0, brk=0.0, frames=[0, 1], label="lấy đà: nét nhỏ phía sau (giữ 2 frame)"),
+    dict(head=1.60, tail=0.05, w=0.70, spread=0.0, brk=0.0, frames=[2], label="bùng: vung qua phía trên"),
+    dict(head=2.80, tail=0.15, w=0.95, spread=0.0, brk=0.0, frames=[3], label="quay đầu phía trước"),
+    dict(head=3.70, tail=0.30, w=1.00, spread=0.0, brk=0.0, frames=[4], label="vòng xuống dưới, dày"),
+    dict(head=4.00, tail=0.45, w=1.00, spread=0.0, brk=0.0, frames=[5, 6], label="đỉnh: chữ C hở, giữ 2 frame (va chạm)"),
+    dict(head=4.25, tail=1.10, w=0.90, spread=0.45, brk=0.0, frames=[7], label="sợi tách ra theo chiều dài"),
+    dict(head=4.40, tail=1.90, w=0.72, spread=0.85, brk=0.45, frames=[8], label="mỗi sợi đứt ở chỗ riêng"),
+    dict(head=4.50, tail=2.60, w=0.50, spread=1.15, brk=1.00, frames=[9, 10], label="vệt co lại (giữ 2 frame)"),
+    dict(head=4.55, tail=3.20, w=0.30, spread=1.35, brk=1.50, frames=[11, 12], label="mảnh vụn to (giữ 2 frame)"),
+    dict(head=4.60, tail=3.70, w=0.12, spread=1.50, brk=2.00, frames=[13, 14], label="tàn (giữ 2 frame)"),
+]
+STYLES["front-heavy"] = dict(STYLES["heavy"], timeline=TIMELINE_FRONT, front=1.6, back=0.45, floor=392, size=(960, 480),
+                             centre=(500, 205), radius=300, k=0.42, tilt=-0.06, u_start=-150, lines=[26, -34], width=86.0)
+for _s in STYLES.values():                        # spin defaults: a wide flat ring around the body
+    _s.setdefault("size", (960, 460)); _s.setdefault("centre", (480, 190)); _s.setdefault("radius", 380)
+    _s.setdefault("k", 0.24); _s.setdefault("tilt", -0.04); _s.setdefault("u_start", -172)
 
 REFLECTION = dict(squash=0.27, dim=0.80, sat=0.85, halo=0.4, opacity=0.9, tint=PALETTE["blue"], tint_mix=0.35)    # slash-trio: ~1/4 height, luma 0.7-0.85
 
@@ -72,10 +92,11 @@ def _uneven(rng, n, lo, hi, min_gap):
     return np.linspace(lo, hi, n)
 
 
-def design(seed=11, style="light", size=(960, 460), centre=(480, 190), radius=380, k=0.24, tilt=-0.04):
+def design(seed=11, style="light"):
     S = STYLES[style]
+    size, centre, radius, k, tilt = S["size"], S["centre"], S["radius"], S["k"], S["tilt"]
     rng = np.random.default_rng(seed)
-    u_start = np.radians(-172)                       # back-left, swinging clockwise on screen: top -> right -> bottom
+    u_start = np.radians(S["u_start"])               # back-left, swinging clockwise on screen: top -> right -> bottom
     nf = len(S["fingers_off"])
     fingers = [dict(off=o, ext=float(e), w=w) for o, e, w in zip(S["fingers_off"], rng.uniform(0.0, 0.12, nf), S["fingers_w"])]
     teeth = _uneven(rng, S["n_teeth"], 0.25, 0.92, 0.07).tolist()
@@ -197,5 +218,5 @@ def build(name="gen-slash-loop-blue", seed=11, style="light", reflection=True):
     drawings = [dict(strokes=drawing(D, k, S["timeline"]), frames=T["frames"], label=T["label"]) for k, T in enumerate(S["timeline"])]
     refl = dict(REFLECTION, floor=D["floor"]) if reflection else None
     return render_sequence(name, drawings, frame, D["size"], PALETTE, HALO, S["gain"], reflection=refl,
-                           meta=dict(design=D, timeline=S["timeline"], gain=S["gain"], style="loop-" + style, reflection=refl,
+                           meta=dict(design=D, timeline=S["timeline"], gain=S["gain"], style=style, reflection=refl,
                                      idea="ref/vfx/axe-swing-idea/reference.png"))

@@ -1,9 +1,11 @@
-# 06. Dạng "nhát chém" (slash): 3 mẫu mới + so với xoáy chém
+# Slash: đọc bản gốc (5 mẫu tham khảo)
+
+(Trước đây là `foundation/06-slash.md`.)
 
 Bản gốc: `ref/vfx/slash-trio/dmitry-sarkisov-twitch-fx-2.gif` (2255x1000, 22 frame, 25 fps): ba nhát chém cạnh nhau, cùng lúc: **xanh** (lưỡi liềm),
 **hồng** (nhát gãy góc hình chữ L), **vàng** (lưỡi liềm), mỗi nhát có **bóng phản chiếu** dưới sàn. Profile `slash-trio` (6 biến thể: 3 nhát +
 3 phản chiếu `*_refl`). Dựng lại: frame 3-5 các lớp chính 0,86-0,96, 0 điểm gãy; trang review Slash Trio
-https://claude.ai/artifact/69ermXASZKmFccapxfCYis; showcase `../showcase/slash-trio/`. Số liệu: `data/*_slash-trio.json`.
+https://claude.ai/artifact/69ermXASZKmFccapxfCYis; showcase [`showcase/slash-trio/`](../../../showcase/slash-trio/). Số liệu: [`data/*_slash-trio.json`](../../data/).
 Cùng dạng với `swirl-slash` (2 mẫu) → dạng chém nay có **5 mẫu**.
 
 ## 1. Lớp và màu

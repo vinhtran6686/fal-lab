@@ -1,5 +1,13 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.8 (2026-11-09): chém trước mặt, docs theo loại VFX
+
+- `gen_slash_loop`: kiểu `front-heavy` (`--style front-heavy`): một nhát vũ khí lớn trước mặt, chữ C hở ~230°, elip tròn hơn (k 0,42), không
+  vòng qua sau lưng. Bản thường dày hơn (lưỡi 36 → 47), bản nặng +40% (70 → 98). Tham số elip, điểm bắt đầu, khung ảnh, sàn nay nằm trong `STYLES`.
+  Kiểu `loop` / `loop-heavy` được gọi là "xoay tại chỗ" (spin).
+- `foundation/vfx/`: docs theo từng loại VFX: `slash/` (`references.md` = 06-slash cũ, `generators.md`: 4 bộ sinh, luật, điểm chấm, việc còn
+  thiếu để đạt 9-10/10), `explosion/` (nổ / phun: element-trio).
+
 ## 1.7 (2026-11-09): phản chiếu, khép vòng, bản vũ khí lớn
 
 - `gen_render.render_sequence(..., reflection=dict(floor, squash, dim, sat, halo, opacity, tint, tint_mix))`: phản chiếu dưới sàn vẽ lại
@@ -35,7 +43,7 @@
 
 ## 1.3 (2026-11-09)
 
-- Profile `slash-trio` (3 nhát chém + 3 phản chiếu dưới sàn), không cần thêm tính năng mới cho bộ tool; `foundation/06-slash.md`.
+- Profile `slash-trio` (3 nhát chém + 3 phản chiếu dưới sàn), không cần thêm tính năng mới cho bộ tool; `foundation/06-slash.md` (nay là `foundation/vfx/slash/references.md`).
 
 ## 1.2 (2026-11-08)
 

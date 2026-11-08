@@ -40,7 +40,8 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   layer colours + edge gradients + halo, fit tapered strokes, Illustrator-style smooth & simplify, stacked render, review page).
   One JSON profile per effect in `lib-fx/_core/vector/profiles/`; CLI `python lib-fx/_tools/vectorfx.py palette|ingest|measure|rebuild|review|all PROFILE`;
   outputs in `lib-fx/_study/<name>/vector/` (git-ignored). Guide `lib-fx/_core/vector/README.md`; history `lib-fx/research/bezier-shapes/RETROSPECTIVE.md`.
-  Design foundation (layers, smooth lines, colour hierarchy, lifecycle and per-piece decay, reading references, generator spec): `lib-fx/_core/vector/foundation/`.
+  Design foundation (layers, smooth lines, colour hierarchy, lifecycle and per-piece decay, reading references, generator spec): `lib-fx/_core/vector/foundation/`;
+  per VFX type (slash, explosion: references, rules, generators, open work): `lib-fx/_core/vector/foundation/vfx/`.
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.

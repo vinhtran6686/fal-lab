@@ -12,7 +12,7 @@ gốc trong [data/](data/), tạo lại bằng `python lib-fx/_tools/vectorfx.py
 | [03-reading-references.md](03-reading-references.md) | cách đọc đúng một bản gốc (các lỗi đo đã gặp và cách tránh) |
 | [04-generation-spec.md](04-generation-spec.md) | bản đặc tả cho bộ sinh hiệu ứng mới: tham số, luật, cái đã đủ và cái còn thiếu |
 | [05-birth-erosion-composition.md](05-birth-erosion-composition.md) | lúc sinh (ở đâu, bung thế nào), cách mép bị ăn khi tàn, bố cục lưỡi ở đỉnh |
-| [06-slash.md](06-slash.md) | dạng nhát chém: 3 mẫu mới (`slash-trio`) + so với xoáy chém; phản chiếu dưới sàn; glow giữ sáng trên tia |
+| [vfx/](vfx/README.md) | **theo từng loại VFX**: [slash](vfx/slash/README.md) (bản gốc + bộ sinh + việc còn thiếu), [explosion](vfx/explosion/README.md) (nổ / phun) |
 | [data/](data/) | `lifecycle_*.json` (từng frame), `tracking_*.json` (tóm tắt theo dõi từng mảnh), `shape_study_*.json`, `colour_hierarchy.json` |
 
 Xem kết quả dựng lại của các hiệu ứng (GIF so với bản gốc, frame, SVG): [../showcase/](../showcase/README.md).

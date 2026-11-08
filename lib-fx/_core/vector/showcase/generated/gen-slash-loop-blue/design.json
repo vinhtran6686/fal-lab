@@ -13,7 +13,7 @@
   "R": 380,
   "k": 0.24,
   "tilt": -0.04,
-  "width": 36.0,
+  "width": 47.0,
   "u_start": -3.001966313430247,
   "back": 0.3,
   "front": 2.4,
@@ -288,7 +288,7 @@
   "11": 1.15,
   "12": 1.15
  },
- "style": "loop-light",
+ "style": "light",
  "reflection": {
   "squash": 0.27,
   "dim": 0.8,
@@ -311,7 +311,7 @@
    "frames": [
     0
    ],
-   "area": 469,
+   "area": 542,
    "pieces": 1
   },
   {
@@ -320,8 +320,8 @@
    "frames": [
     1
    ],
-   "area": 4822,
-   "pieces": 14
+   "area": 5429,
+   "pieces": 23
   },
   {
    "drawing": 2,
@@ -329,8 +329,8 @@
    "frames": [
     2
    ],
-   "area": 11015,
-   "pieces": 3
+   "area": 11279,
+   "pieces": 5
   },
   {
    "drawing": 3,
@@ -338,7 +338,7 @@
    "frames": [
     3
    ],
-   "area": 18411,
+   "area": 21235,
    "pieces": 2
   },
   {
@@ -347,7 +347,7 @@
    "frames": [
     4
    ],
-   "area": 26629,
+   "area": 31918,
    "pieces": 2
   },
   {
@@ -356,8 +356,8 @@
    "frames": [
     5
    ],
-   "area": 23959,
-   "pieces": 17
+   "area": 29632,
+   "pieces": 6
   },
   {
    "drawing": 6,
@@ -365,7 +365,7 @@
    "frames": [
     6
    ],
-   "area": 17255,
+   "area": 21264,
    "pieces": 9
   },
   {
@@ -375,8 +375,8 @@
     7,
     8
    ],
-   "area": 10287,
-   "pieces": 10
+   "area": 11599,
+   "pieces": 15
   },
   {
    "drawing": 8,
@@ -385,8 +385,8 @@
     9,
     10
    ],
-   "area": 3926,
-   "pieces": 35
+   "area": 4496,
+   "pieces": 45
   },
   {
    "drawing": 9,
@@ -395,8 +395,8 @@
     11,
     12
    ],
-   "area": 680,
-   "pieces": 21
+   "area": 942,
+   "pieces": 11
   }
  ]
 }
