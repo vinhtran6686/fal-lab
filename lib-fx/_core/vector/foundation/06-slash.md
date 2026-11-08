@@ -38,8 +38,9 @@ Luật cho dạng chém (5 mẫu):
    từ trên xuống, cy 0,08-0,11 → 0,39-0,41 → 0,6-0,72). Nhát chém **dài ra theo đường đi**, không phình từ tâm.
 2. **Bùng cực nhanh** (2-3 frame, ×7-8 diện tích mỗi hình) rồi **tàn cực nhanh**: diện tích còn ~0,3 mỗi frame, cả đời chỉ 6-8 frame. Nhát chém là dạng
    ngắn và gắt nhất trong 4 dạng đã đo.
-3. **Đầu nét vẫn chạy sau đỉnh diện tích**: chiều dài khung còn tăng 1-2 frame sau khi diện tích đã giảm (xanh: cao 361 → 421 → 442 px trong khi
-   diện tích 50 000 → 29 000 → 11 000): đầu nét đi tiếp, thân mỏng đi, **đuôi tan trước**.
+3. **Đầu nét có thể chạy tiếp sau đỉnh diện tích**: ở nhát xanh, khung còn dài ra 2 frame sau khi diện tích đã giảm (cao 361 → 421 → 442 px trong khi
+   diện tích 50 000 → 29 000 → 11 000): đầu nét đi tiếp, thân mỏng đi, đuôi tan trước. Nhát hồng giữ khung (486 → 490), nhát vàng co nhẹ (487 → 478):
+   không phải luật cứng, là một lựa chọn của designer cho nhát chém dài.
 4. **Tàn bằng vết cắt và lỗ**, không chỉ mòn mép: 44-64% phần mất là lỗ / cắt sâu (giống xoáy, khác lửa và pha lê ~15%); thân tách thành 2-6 mảnh
    cong, mỗi mảnh co mạnh (còn ~25% mỗi hình), cuối cùng thành tia lửa nhỏ.
 5. **Glow giữ sáng tới cuối**: độ mạnh glow (so với cỡ hình) đi từ ~1 ở đỉnh lên 1,2-2,0 ở các frame tàn: tia và mảnh vụn vẫn rực. Khác với lửa
