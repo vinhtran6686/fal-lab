@@ -116,3 +116,9 @@ các luật đo được, dùng khi vẽ hình bằng path:
 - **Pen pass bắt buộc**: viền mỗi lớp làm trơn giữa các góc thật (góc trong < 150°), fit Bézier nối G1. Đây là thứ làm nét "mềm như
   pen tool" thay vì gấp khúc ở chỗ nối các nét công thức.
 - **Quầng sáng sau hình** = màu chính × exp(-d/s), s ≈ 27-38 px; tô theo bậc khi cần kiểu toon (§3 bước 6).
+
+### 7c. Tự làm đều nét (2026-11-08, `research/bezier-shapes/fair.py`)
+
+Mọi path xuất ra đi qua `smooth_simplify`: nối khe nhỏ, góc thật phải nhọn ở hai tầm, làm trơn theo độ cong biến thiên ít nhất giữa các
+góc, neo gãy < 35° thành neo trơn, gộp đoạn khi sai số ≤ 0,9 px, tay nắm ≤ 0,45 dây cung. Kết quả trên xoáy chém: 0 điểm gãy, độ cong
+đều hơn v2 2-14 lần, ít điểm neo hơn.

@@ -7,3 +7,5 @@ __pycache__/
 preview/*.png
 preview2/*.png
 out2/*.png
+preview3/*.png
+out3/*.png

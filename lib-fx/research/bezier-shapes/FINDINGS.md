@@ -111,3 +111,36 @@ Frame 8-12 chỉ còn móc vụn vài trăm điểm ảnh: IoU 0,25-0,66, nhìn 
 
 **Luật rút ra:** đo hình phải đo cả gradient trong của lớp (không lấy đúng mã màu); dựng lớp bằng cách tô chồng, lớp dưới liền khối;
 mọi viền đi qua một bước "pen" (làm trơn giữa các góc thật) trước khi xuất; quầng sáng là hàm của khoảng cách tới hình.
+
+## 7. Bản v3: tự làm đều nét (2026-11-08)
+
+User chấm v2 ~7/10 và yêu cầu cơ chế tự làm đều nét như Illustrator. Code: `fair.py` (`smooth_simplify`), `rebuild3.py` (giữ nguyên
+nét công thức của v2 trong `out2/params_*.json`, chỉ thay bước viền), `smoothness.py` (thước đo). Số liệu: `out3/report.json`,
+`out3/smoothness_f3-5.json`.
+
+Tham khảo: Illustrator Object > Path > Simplify (độ bám đường + ngưỡng góc:
+[Adobe help](https://helpx.adobe.com/illustrator/desktop/draw-shapes-and-paths/modify-paths/simplify-paths-advanced-options-overview.html)),
+Potrace / Image Trace (`alphamax` = ngưỡng góc, `opttolerance` = gộp các đoạn Bézier liền kề: [potrace(1)](https://www.mankier.com/1/potrace)),
+fair curve / minimum variation curve (Moreton 1993: đường đẹp = độ cong biến thiên ít nhất:
+[Berkeley tech report](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1993/5219.html)).
+
+6 bước cho mỗi viền: nối khe < 1,5 px và bỏ vụn → góc thật phải nhọn ở cả hai tầm (±4 px < 145° và ±8 px < 165°) → làm trơn giữa hai
+góc bằng hệ tuyến tính min |q-p|² + λ₂|D²q|² + λ₃|D³q|² (σ 4,5 px, góc ghim, bù diện tích bị co) → fit Bézier G1 → neo gãy < 35° nắn
+thành neo trơn, rồi gộp đoạn liền kề khi sai số ≤ 0,9 px → tay nắm ≤ 0,45 dây cung.
+
+Trung bình frame 3-5 (điểm neo / điểm gãy 5-35° / độ biến thiên độ cong mỗi 100 px):
+
+| Lớp | Đường vẽ tay của gốc | v2 | v3 |
+|---|---|---|---|
+| vàng | 53 / 0 / 2,82 | 53 / 5,3 / 1,41 | 45 / 0,3 / 0,73 |
+| hồng | 80 / 0 / 0,87 | 88 / 8,3 / 10,21 | 80 / 0 / 0,71 |
+| đỏ sẫm | 89 / 0 / 1,57 | 78 / 7,0 / 2,87 | 62 / 0,3 / 1,00 |
+| trắng | 29 / 0 / 0,28 | 41 / 3,7 / 1,24 | 36 / 0,3 / 0,55 |
+| cyan | 40 / 0 / 0,63 | 34 / 2,0 / 0,35 | 34 / 0 / 0,58 |
+| xanh | 56 / 0 / 0,50 | 60 / 6,3 / 2,42 | 49 / 0,3 / 0,72 |
+| xanh sẫm | 41 / 0 / 5,33 | 30 / 3,0 / 0,99 | 24 / 0 / 0,88 |
+
+(Đường vẽ tay của gốc được đo bằng cách vector hoá mặt nạ; độ biến thiên của nó ở vàng và xanh sẫm cao vì mặt nạ còn răng cưa điểm ảnh.)
+v3 hết điểm gãy, độ biến thiên độ cong giảm 2-14 lần so với v2, số điểm neo bằng hoặc ít hơn đường vẽ tay. Số điểm uốn (đổi chiều cong)
+tăng nhẹ (1,5-2,3 mỗi 100 px so với 1,1-1,8 ở v2). IoU gần như giữ nguyên ở frame 2-5 (thay đổi trong khoảng ±0,03; hồng f5 0,796,
+đỏ sẫm f5 0,796), giảm thêm ở frame vụn 7-12.
