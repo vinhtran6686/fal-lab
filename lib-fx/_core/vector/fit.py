@@ -81,10 +81,14 @@ def _fit_all(mask, frame, robust, min_area, op, axes, edge_bias=(0.0, 0.0)):
 
 
 def fit_layer(mask, frame, passes=4, min_area=6, min_gain=0.0008, axes=("u", "v"), edge_bias=(0.0, 0.0)):
-    """mask -> list of strokes (body + tongues + notches)."""
+    """mask -> list of strokes (body + tongues + notches).
+    Each candidate is scored incrementally: (adds | candidate) & ~cuts, instead of re-rendering the whole layer
+    (same result up to anti-aliased edge pixels, and linear instead of quadratic in the number of pieces)."""
     shape = mask.shape
     strokes = _fit_all(mask, frame, True, min_area, "add", ("u",), edge_bias)
-    cur = render_strokes(strokes, frame, shape) >= 0.5 if strokes else np.zeros(shape, bool)
+    A = render_strokes(strokes, frame, shape) >= 0.5 if strokes else np.zeros(shape, bool)
+    C = np.zeros(shape, bool)
+    cur = A & ~C
     st = ndi.generate_binary_structure(2, 1)
     for _ in range(passes):
         add = ndi.binary_opening(mask & ~cur, st)
@@ -93,10 +97,13 @@ def fit_layer(mask, frame, passes=4, min_area=6, min_gain=0.0008, axes=("u", "v"
         new.sort(key=lambda p: -p["area"])
         base, took = _iou(cur, mask), False
         for p in new:
-            trial = render_strokes(strokes + [p], frame, shape) >= 0.5
+            r = raster_union([to_path(p, frame)], shape) >= 0.5
+            A2, C2 = (A | r, C) if p["op"] == "add" else (A, C | r)
+            trial = A2 & ~C2
             g = _iou(trial, mask)
             if g - base >= min_gain:
-                strokes, cur, base, took = strokes + [p], trial, g, True
+                strokes.append(p)
+                A, C, cur, base, took = A2, C2, trial, g, True
         if not took:
             break
     return strokes

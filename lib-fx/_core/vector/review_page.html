@@ -1,4 +1,4 @@
-<title>__TITLE__ review</title>
+<title>__TITLE__</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -58,22 +58,22 @@ button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:va
 <header style="display:flex;flex-direction:column;gap:10px">
   <span class="eyebrow">lib-fx / _core / vector · review</span>
   <h1>__TITLE__</h1>
-  <p class="lead">Rebuilt from vector strokes. Motion first, then every layer of every frame: target · rebuilt (flat) · pen path (white = smooth anchor, red = corner).</p>
+  <p class="lead">Dựng lại bằng path vector. Xem chuyển động trước, sau đó từng lớp của từng frame: mục tiêu · bản dựng (màu phẳng) · đường pen (neo trắng = trơn, đỏ = góc nhọn).</p>
 </header>
 <section>
-  <div class="bar" role="group" aria-label="Variant" id="vbar"></div>
-  <div class="bar" role="group" aria-label="Speed">
-    <button class="speed" data-s="" aria-pressed="true">reference speed</button>
-    <button class="speed" data-s="_slow" aria-pressed="false">8 fps</button>
+  <div class="bar" role="group" aria-label="Biến thể" id="vbar"></div>
+  <div class="bar" role="group" aria-label="Tốc độ">
+    <button class="speed" data-s="" aria-pressed="true">tốc độ gốc</button>
+    <button class="speed" data-s="_slow" aria-pressed="false">8 fps (chậm)</button>
   </div>
-  <figure><img id="gif" alt="reference | rebuilt"><figcaption>reference | rebuilt</figcaption></figure>
+  <figure><img id="gif" alt="gốc | dựng lại"><figcaption>gốc | dựng lại</figcaption></figure>
 </section>
 <section>
   <div class="bar" id="frames" role="group" aria-label="Frame"></div>
-  <figure><div class="heads" style="--n:4"><span>reference</span><span>target layers</span><span>rebuilt flat</span><span>rebuilt final</span></div><img id="frameimg" alt="frame"></figure>
-  <div class="legend"><span>IoU pass: big layers ≥ 0.85 · small ≥ 0.70 (set per layer in the page data)</span></div>
+  <figure><div class="heads" style="--n:4"><span>gốc</span><span>lớp mục tiêu</span><span>dựng lại (phẳng)</span><span>dựng lại (hoàn chỉnh)</span></div><img id="frameimg" alt="frame: gốc, mục tiêu, dựng lại"></figure>
+  <div class="legend"><span>IoU: xanh khi ≥ 0,70. Phím ← → để chuyển frame.</span></div>
   <div id="layers" style="display:flex;flex-direction:column;gap:16px"></div>
-  <div class="bar"><button id="copy">Copy review notes</button><span id="copied" aria-live="polite"></span></div>
+  <div class="bar"><button id="copy">Sao chép nhận xét</button><span id="copied" aria-live="polite"></span></div>
   <textarea id="copybox" hidden readonly style="width:100%;min-height:120px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:8px;font:12px var(--mono)"></textarea>
 </section>
 </div>
@@ -104,13 +104,13 @@ function draw(){
     const key = `${v}/${f}/${l}`, r = rev[key] || {};
     const el = document.createElement("article"); el.className = "layer";
     el.innerHTML = `<div class="layer-top"><h3><span class="sw" style="background:${DATA.variants[v].palette[l]}"></span>${l}</h3>
-      <div class="chips"><span class="chip ${pass(d) ? "pass" : "fail"}">IoU ${fmt(d.iou)}</span><span class="chip">${d.anchors} anchors</span>
-      <span class="chip">${d.kinks} kinks</span><span class="chip">curvature var ${d.curv_var}</span></div></div>
-      <div class="heads" style="--n:3"><span>target</span><span>rebuilt flat</span><span>pen path</span></div>
+      <div class="chips"><span class="chip ${pass(d) ? "pass" : "fail"}">IoU ${fmt(d.iou)}</span><span class="chip">${d.anchors} điểm neo</span>
+      <span class="chip">${d.kinks} điểm gãy</span><span class="chip">độ cong đổi ${d.curv_var}</span></div></div>
+      <div class="heads" style="--n:3"><span>mục tiêu</span><span>dựng lại (phẳng)</span><span>đường pen</span></div>
       <img src="img/${d.img}" alt="${l} frame ${f}" loading="lazy" style="width:100%;height:auto;border-radius:6px;display:block">
-      <div class="review"><button class="rv" data-r="ok" aria-pressed="${r.r === "ok"}">OK</button>
-      <button class="rv" data-r="fix" aria-pressed="${r.r === "fix"}">Needs work</button>
-      <textarea id="note-${v}-${f}-${l}" placeholder="Note for this layer">${r.n ? r.n.replace(/</g, "&lt;") : ""}</textarea></div>`;
+      <div class="review"><button class="rv" data-r="ok" aria-pressed="${r.r === "ok"}">Đạt</button>
+      <button class="rv" data-r="fix" aria-pressed="${r.r === "fix"}">Cần sửa</button>
+      <textarea id="note-${v}-${f}-${l}" placeholder="Ghi chú cho lớp này">${r.n ? r.n.replace(/</g, "&lt;") : ""}</textarea></div>`;
     el.querySelectorAll(".rv").forEach(b => b.onclick = () => { const c = rev[key] || {}; c.r = c.r === b.dataset.r ? null : b.dataset.r; rev[key] = c; save();
       el.querySelectorAll(".rv").forEach(x => x.setAttribute("aria-pressed", x.dataset.r === c.r)) });
     el.querySelector("textarea").oninput = e => { const c = rev[key] || {}; c.n = e.target.value; rev[key] = c; save() };
@@ -123,9 +123,9 @@ document.addEventListener("keydown", e => { if (e.target.tagName === "TEXTAREA")
   if (e.key === "ArrowRight" && i < fs.length - 1) { f = fs[i + 1]; draw() } if (e.key === "ArrowLeft" && i > 0) { f = fs[i - 1]; draw() } });
 document.getElementById("copy").onclick = () => {
   const lines = Object.entries(rev).filter(([k, r]) => r.r || (r.n && r.n.trim())).map(([k, r]) => { const [a, b, c] = k.split("/");
-    return `${DATA.name} ${a} f${+b} ${c}: ${r.r === "ok" ? "OK" : r.r === "fix" ? "NEEDS WORK" : "-"}${r.n && r.n.trim() ? " - " + r.n.trim() : ""}` });
-  const txt = lines.length ? lines.join("\n") : "(no notes yet)", box = document.getElementById("copybox"), msg = document.getElementById("copied");
-  box.value = txt; const fb = () => { box.hidden = false; box.select(); msg.textContent = "Copy did not work: select the text below." };
-  try { navigator.clipboard.writeText(txt).then(() => { msg.textContent = `Copied ${lines.length} notes.` }, fb) } catch (e) { fb() } };
+    return `${DATA.name} ${a} f${+b} ${c}: ${r.r === "ok" ? "ĐẠT" : r.r === "fix" ? "CẦN SỬA" : "-"}${r.n && r.n.trim() ? " - " + r.n.trim() : ""}` });
+  const txt = lines.length ? lines.join("\n") : "(chưa có nhận xét)", box = document.getElementById("copybox"), msg = document.getElementById("copied");
+  box.value = txt; const fb = () => { box.hidden = false; box.select(); msg.textContent = "Không sao chép tự động được: chọn và copy ở ô bên dưới." };
+  try { navigator.clipboard.writeText(txt).then(() => { msg.textContent = `Đã sao chép ${lines.length} nhận xét.` }, fb) } catch (e) { fb() } };
 draw();
 </script>

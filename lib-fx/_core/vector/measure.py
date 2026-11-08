@@ -24,11 +24,15 @@ def ingest(prof):
     out = prof.resolve(s["frames_dir"])
     out.mkdir(parents=True, exist_ok=True)
     im = Image.open(prof.resolve(s["gif"]))
+    k = s.get("scale", 1)  # small references are upscaled so the px-based tool settings keep their meaning
     n = 0
     for i, fr in enumerate(ImageSequence.Iterator(im)):
         rgb = fr.convert("RGB")
         for v, box in s.get("crops", {"main": None}).items():
-            (rgb.crop(tuple(box)) if box else rgb).save(out / s.get("pattern", "{variant}_{frame:02d}.png").format(variant=v, frame=i))
+            c = rgb.crop(tuple(box)) if box else rgb
+            if k != 1:
+                c = c.resize((round(c.width * k), round(c.height * k)), Image.LANCZOS)
+            c.save(out / s.get("pattern", "{variant}_{frame:02d}.png").format(variant=v, frame=i))
         n += 1
     return n
 
@@ -114,12 +118,30 @@ def _drop_small(m, min_area):
     return m
 
 
+_BG = {}
+
+
+def _bg_cached(prof, v):
+    k = (str(prof.path), v)
+    if k not in _BG:
+        _BG[k] = background(prof, v)
+    return _BG[k]
+
+
 def layer_masks(prof, v, rgb, tol_scale=1.0):
-    """Each pixel goes to the layer whose colour polyline is closest (relative to that layer's tolerance)."""
+    """Each pixel goes to the layer whose colour polyline is closest (relative to that layer's tolerance).
+    A layer with "darker_than_bg": N (a translucent dark shape, e.g. a smoke shadow) only takes pixels at least N
+    luminance levels darker than the reference background at that spot, so the backdrop itself never matches."""
     L = prof.layers(v)
     names = list(L)
     a = rgb.astype(float)
     D = np.stack([_dist_poly(a, L[l]["colours"]) / (L[l].get("tol", 15) * tol_scale) for l in names])
+    if any("darker_than_bg" in L[l] for l in names):
+        lum = lambda x: x[..., 0] * 0.299 + x[..., 1] * 0.587 + x[..., 2] * 0.114
+        dark = lum(_bg_cached(prof, v)) - lum(a)
+        for i, l in enumerate(names):
+            if "darker_than_bg" in L[l]:
+                D[i][dark < L[l]["darker_than_bg"]] = 9e9
     best, ok = np.argmin(D, 0), np.min(D, 0) < 1
     out = {}
     for i, l in enumerate(names):
@@ -213,7 +235,7 @@ def measure_profile(prof, frames=None, write=True):
                 g = fit_edge_gradient(smp, prof.layers(v)[l]["colours"][0])
                 report[v][l] = g
                 if write:
-                    if g["s"] >= 25 or g["rms"] > 0.9 * g["rms_flat"]:  # no real edge gradient: keep the layer flat
+                    if g["s"] >= 25 or g["s"] < 1.0 or g["rms"] > 0.9 * g["rms_flat"]:  # none, or only anti-aliasing: keep flat
                         prof.layers(v)[l].pop("gradient", None)
                     else:
                         prof.layers(v)[l]["gradient"] = {"edge": g["edge"], "s": g["s"]}

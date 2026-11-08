@@ -52,7 +52,7 @@ def fit_frame(prof, v, f):
         U |= m
     if U.sum() < 30:
         return {"empty": True}
-    fr = make_frame(prof.get("frame"), U)
+    fr = make_frame(prof.var(v).get("frame") or prof.get("frame"), U)
     groups = prof.groups(v)
     T = measure.full_targets(masks, groups)
     fp = prof.get("fit")
@@ -101,5 +101,7 @@ def rebuild(prof, frames=None, variants=None, refit=False, log=print):
                 r = dict(iou=round(iou(vis[l], T[l]), 3), **path_fairness(paths[l]))
                 report[f"{v}_{f:02d}_{l}"] = r
                 log(f"{v}_{f:02d}_{l} {r}")
-    rp.write_text(json.dumps(dict(sorted(report.items())), indent=1))
+    fresh = json.loads(rp.read_text()) if rp.exists() else {}  # merge: several rebuilds (variants) may run in parallel
+    fresh.update(report)
+    rp.write_text(json.dumps(dict(sorted(fresh.items())), indent=1))
     return report

@@ -3,7 +3,7 @@
 {
   "name": "swirl-slash",
   "source": {"frames_dir": "...", "pattern": "{variant}_{frame:02d}.png", "frames": [2, 12],        # inclusive range
-             "gif": "...", "crops": {"fire": [x0, y0, x1, y1]}, "background_frame": 13},
+             "gif": "...", "crops": {"fire": [x0, y0, x1, y1]}, "scale": 1, "background_frame": 13},   # scale: ingest upscale
   "frame": {"type": "polar"} | {"type": "linear", "angle": null},
   "fit":    {"underlay_px": 10, "passes": 4, "min_area": 6, "min_gain": 0.0008, "axes": ["u", "v"],
              "edge_bias": [0, 0]},                                  # band edge shift in samples (frames.bands)
@@ -18,7 +18,8 @@
                             "gradient": {"edge": [255,163,69], "s": 8.08}}},   # inner edge gradient (optional)
       "halo": {"s_near": .., "c_near": [..], "s_far": .., "c_far": [..]},     # glow behind the shapes (optional)
       "near_halo": true,
-      "smooth": {...}                                               # per-variant override
+      "smooth": {...},                                              # per-variant override
+      "frame": {...}                                                # per-variant override
     }
   }
 }"""

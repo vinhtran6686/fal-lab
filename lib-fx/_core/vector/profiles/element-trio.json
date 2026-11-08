@@ -1,0 +1,252 @@
+{
+ "name": "element-trio",
+ "about": "Reference: ref/vfx/element-trio/reference.gif (787x443, 38 frames, 25 fps): three ground eruptions side by side, staggered: fire (left), arcane crystal + ring (middle), toxic (right).",
+ "source": {
+  "gif": "ref/vfx/element-trio/reference.gif",
+  "crops": {
+   "fire": [
+    70,
+    100,
+    300,
+    380
+   ],
+   "arcane": [
+    290,
+    100,
+    510,
+    380
+   ],
+   "toxic": [
+    490,
+    100,
+    720,
+    380
+   ]
+  },
+  "scale": 3,
+  "frames_dir": "lib-fx/_study/element-trio/frames",
+  "pattern": "{variant}_{frame:02d}.png",
+  "frames": [
+   0,
+   22
+  ]
+ },
+ "frame": {
+  "type": "linear",
+  "angle": -90
+ },
+ "fit": {
+  "underlay_px": 10,
+  "passes": 4,
+  "min_area": 6,
+  "min_gain": 0.0008,
+  "axes": [
+   "u",
+   "v"
+  ],
+  "edge_bias": [
+   0,
+   0
+  ]
+ },
+ "masks": {
+  "min_area": 30
+ },
+ "smooth": {
+  "sigma": 4.5,
+  "corner_deg": 145,
+  "merge_tol": 0.9,
+  "min_area": 24,
+  "close_px": 1.5
+ },
+ "background": [
+  30,
+  36,
+  46
+ ],
+ "variants": {
+  "fire": {
+   "order": [
+    "orange",
+    "yellow"
+   ],
+   "layers": {
+    "orange": {
+     "colours": [
+      [
+       245,
+       140,
+       55
+      ],
+      [
+       253,
+       154,
+       64
+      ],
+      [
+       255,
+       152,
+       86
+      ],
+      [
+       255,
+       170,
+       100
+      ]
+     ],
+     "tol": 20
+    },
+    "yellow": {
+     "colours": [
+      [
+       255,
+       204,
+       95
+      ],
+      [
+       255,
+       226,
+       150
+      ]
+     ],
+     "tol": 28
+    }
+   },
+   "halo": {
+    "s_near": 1.36,
+    "s_far": 34.54,
+    "c_near": [
+     77.8,
+     73.8,
+     10.5
+    ],
+    "c_far": [
+     136.7,
+     46.1,
+     -1.4
+    ]
+   },
+   "near_halo": false
+  },
+  "arcane": {
+   "order": [
+    "lilac",
+    "blue"
+   ],
+   "layers": {
+    "lilac": {
+     "colours": [
+      [
+       223,
+       194,
+       253
+      ],
+      [
+       190,
+       160,
+       248
+      ]
+     ],
+     "tol": 26
+    },
+    "blue": {
+     "colours": [
+      [
+       150,
+       217,
+       254
+      ],
+      [
+       138,
+       181,
+       241
+      ],
+      [
+       205,
+       245,
+       255
+      ]
+     ],
+     "tol": 24
+    }
+   },
+   "halo": {
+    "s_near": 1.18,
+    "s_far": 43.2,
+    "c_near": [
+     123.8,
+     182.7,
+     179.1
+    ],
+    "c_far": [
+     54.6,
+     31.8,
+     77.7
+    ]
+   },
+   "near_halo": false
+  },
+  "toxic": {
+   "order": [
+    "shadow",
+    "mint"
+   ],
+   "layers": {
+    "shadow": {
+     "colours": [
+      [
+       22,
+       32,
+       36
+      ],
+      [
+       15,
+       21,
+       22
+      ]
+     ],
+     "tol": 16,
+     "darker_than_bg": 10
+    },
+    "mint": {
+     "colours": [
+      [
+       133,
+       251,
+       217
+      ],
+      [
+       87,
+       207,
+       172
+      ]
+     ],
+     "tol": 30,
+     "gradient": {
+      "edge": [
+       76,
+       193,
+       158
+      ],
+      "s": 2.62
+     }
+    }
+   },
+   "halo": {
+    "s_near": 2.85,
+    "s_far": 106.07,
+    "c_near": [
+     10.9,
+     85.8,
+     51.0
+    ],
+    "c_far": [
+     0.6,
+     1.9,
+     1.9
+    ]
+   },
+   "near_halo": true
+  }
+ }
+}
