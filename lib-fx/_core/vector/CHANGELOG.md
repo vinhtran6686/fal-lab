@@ -1,5 +1,9 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.3 (2026-11-09)
+
+- Profile `slash-trio` (3 nhát chém + 3 phản chiếu dưới sàn), không cần thêm tính năng mới cho bộ tool; `foundation/06-slash.md`.
+
 ## 1.2 (2026-11-08)
 
 - `showcase/`: kết quả 5 hiệu ứng đã dựng (GIF so sánh, frame, SVG) nằm trong git; lệnh `showcase`.

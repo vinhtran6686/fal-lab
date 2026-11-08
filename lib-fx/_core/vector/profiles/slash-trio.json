@@ -1,0 +1,572 @@
+{
+ "name": "slash-trio",
+ "about": "Reference: ref/vfx/slash-trio/dmitry-sarkisov-twitch-fx-2.gif (2255x1000, 22 frames, 25 fps): three slashes side by side (blue crescent, pink angular, gold crescent), each with a floor reflection (separate variant *_refl).",
+ "source": {
+  "gif": "ref/vfx/slash-trio/dmitry-sarkisov-twitch-fx-2.gif",
+  "crops": {
+   "blue": [
+    40,
+    120,
+    760,
+    735
+   ],
+   "blue_refl": [
+    40,
+    735,
+    760,
+    965
+   ],
+   "pink": [
+    760,
+    120,
+    1460,
+    735
+   ],
+   "pink_refl": [
+    760,
+    735,
+    1460,
+    965
+   ],
+   "gold": [
+    1460,
+    120,
+    2220,
+    735
+   ],
+   "gold_refl": [
+    1460,
+    735,
+    2220,
+    965
+   ]
+  },
+  "scale": 1,
+  "frames_dir": "lib-fx/_study/slash-trio/frames",
+  "pattern": "{variant}_{frame:02d}.png",
+  "frames": [
+   2,
+   15
+  ],
+  "background_frame": 21
+ },
+ "frame": {
+  "type": "polar"
+ },
+ "fit": {
+  "underlay_px": 10,
+  "passes": 4,
+  "min_area": 6,
+  "min_gain": 0.0008,
+  "axes": [
+   "u",
+   "v"
+  ],
+  "edge_bias": [
+   0,
+   0
+  ]
+ },
+ "masks": {
+  "min_area": 12
+ },
+ "smooth": {
+  "sigma": 4.5,
+  "corner_deg": 145,
+  "merge_tol": 0.9,
+  "min_area": 8,
+  "close_px": 1.5
+ },
+ "background": [
+  18,
+  17,
+  24
+ ],
+ "variants": {
+  "blue": {
+   "order": [
+    "blue",
+    "ice"
+   ],
+   "layers": {
+    "blue": {
+     "colours": [
+      [
+       106,
+       190,
+       255
+      ],
+      [
+       142,
+       214,
+       253
+      ],
+      [
+       76,
+       138,
+       201
+      ]
+     ],
+     "tol": 24
+    },
+    "ice": {
+     "colours": [
+      [
+       227,
+       251,
+       253
+      ],
+      [
+       200,
+       240,
+       253
+      ]
+     ],
+     "tol": 22
+    }
+   },
+   "halo_model": "blur",
+   "halo": {
+    "model": "blur",
+    "sigma": [
+     8.57,
+     51.43
+    ],
+    "c": [
+     [
+      41.7,
+      114.3,
+      142.7
+     ],
+     [
+      89.2,
+      148.9,
+      249.4
+     ]
+    ],
+    "gain": {
+     "2": 1.27,
+     "3": 0.988,
+     "4": 0.998,
+     "5": 1.026,
+     "6": 1.157,
+     "7": 1.301,
+     "8": 1.259,
+     "9": 1.175
+    }
+   },
+   "near_halo": false
+  },
+  "pink": {
+   "order": [
+    "crimson",
+    "rose",
+    "pale"
+   ],
+   "layers": {
+    "crimson": {
+     "colours": [
+      [
+       224,
+       68,
+       89
+      ],
+      [
+       155,
+       41,
+       64
+      ]
+     ],
+     "tol": 20,
+     "gradient": {
+      "edge": [
+       169,
+       47,
+       70
+      ],
+      "s": 17.58
+     }
+    },
+    "rose": {
+     "colours": [
+      [
+       255,
+       95,
+       115
+      ],
+      [
+       250,
+       80,
+       100
+      ]
+     ],
+     "tol": 20
+    },
+    "pale": {
+     "colours": [
+      [
+       255,
+       232,
+       232
+      ],
+      [
+       255,
+       214,
+       221
+      ],
+      [
+       255,
+       189,
+       201
+      ],
+      [
+       253,
+       157,
+       176
+      ]
+     ],
+     "tol": 22
+    }
+   },
+   "halo_model": "blur",
+   "halo": {
+    "model": "blur",
+    "sigma": [
+     7.98,
+     48.09
+    ],
+    "c": [
+     [
+      114.2,
+      34.8,
+      36.8
+     ],
+     [
+      216.3,
+      24.1,
+      55.9
+     ]
+    ],
+    "gain": {
+     "2": 1.489,
+     "3": 1.004,
+     "4": 0.978,
+     "5": 0.967,
+     "6": 1.079,
+     "7": 1.232,
+     "8": 1.794,
+     "9": 2.0,
+     "10": 2.0,
+     "11": 2.0
+    }
+   },
+   "near_halo": false
+  },
+  "gold": {
+   "order": [
+    "orange",
+    "cream"
+   ],
+   "layers": {
+    "orange": {
+     "colours": [
+      [
+       254,
+       210,
+       70
+      ],
+      [
+       254,
+       186,
+       49
+      ],
+      [
+       250,
+       147,
+       25
+      ],
+      [
+       205,
+       66,
+       34
+      ]
+     ],
+     "tol": 24,
+     "gradient": {
+      "edge": [
+       233,
+       125,
+       32
+      ],
+      "s": 19.88
+     }
+    },
+    "cream": {
+     "colours": [
+      [
+       254,
+       244,
+       207
+      ],
+      [
+       254,
+       225,
+       150
+      ]
+     ],
+     "tol": 22
+    }
+   },
+   "halo_model": "blur",
+   "halo": {
+    "model": "blur",
+    "sigma": [
+     39.62,
+     101.74
+    ],
+    "c": [
+     [
+      241.9,
+      67.4,
+      11.5
+     ],
+     [
+      241.4,
+      -23.6,
+      44.1
+     ]
+    ],
+    "gain": {
+     "2": 1.449,
+     "3": 0.973,
+     "4": 0.953,
+     "5": 1.018,
+     "6": 1.145,
+     "7": 1.595,
+     "8": 1.974,
+     "9": 1.807,
+     "10": 1.187
+    }
+   },
+   "near_halo": false
+  },
+  "blue_refl": {
+   "order": [
+    "blue",
+    "ice"
+   ],
+   "frame": {
+    "type": "linear",
+    "angle": 0
+   },
+   "layers": {
+    "blue": {
+     "colours": [
+      [
+       79,
+       130,
+       172
+      ],
+      [
+       120,
+       160,
+       191
+      ]
+     ],
+     "tol": 20
+    },
+    "ice": {
+     "colours": [
+      [
+       176,
+       207,
+       228
+      ]
+     ],
+     "tol": 22
+    }
+   },
+   "halo_model": "blur",
+   "halo": {
+    "model": "blur",
+    "sigma": [
+     7.96,
+     48.49
+    ],
+    "c": [
+     [
+      55.7,
+      120.6,
+      160.6
+     ],
+     [
+      62.0,
+      103.9,
+      179.6
+     ]
+    ],
+    "gain": {
+     "2": 1.651,
+     "3": 1.03,
+     "4": 0.98,
+     "5": 0.981,
+     "6": 1.119,
+     "7": 0.994
+    }
+   },
+   "near_halo": false
+  },
+  "pink_refl": {
+   "order": [
+    "crimson",
+    "pale"
+   ],
+   "frame": {
+    "type": "linear",
+    "angle": 0
+   },
+   "layers": {
+    "crimson": {
+     "colours": [
+      [
+       182,
+       62,
+       82
+      ],
+      [
+       135,
+       44,
+       61
+      ]
+     ],
+     "tol": 20,
+     "gradient": {
+      "edge": [
+       162,
+       61,
+       77
+      ],
+      "s": 16.05
+     }
+    },
+    "pale": {
+     "colours": [
+      [
+       223,
+       165,
+       173
+      ],
+      [
+       210,
+       122,
+       137
+      ]
+     ],
+     "tol": 22
+    }
+   },
+   "halo_model": "blur",
+   "halo": {
+    "model": "blur",
+    "sigma": [
+     8.13,
+     45.94
+    ],
+    "c": [
+     [
+      133.0,
+      42.6,
+      51.1
+     ],
+     [
+      206.2,
+      14.9,
+      45.3
+     ]
+    ],
+    "gain": {
+     "2": 1.022,
+     "3": 0.849,
+     "4": 0.985,
+     "5": 0.965,
+     "6": 1.095,
+     "7": 1.247,
+     "8": 1.326,
+     "9": 1.509
+    }
+   },
+   "near_halo": false
+  },
+  "gold_refl": {
+   "order": [
+    "orange",
+    "cream"
+   ],
+   "frame": {
+    "type": "linear",
+    "angle": 0
+   },
+   "layers": {
+    "orange": {
+     "colours": [
+      [
+       171,
+       114,
+       32
+      ],
+      [
+       147,
+       83,
+       27
+      ],
+      [
+       180,
+       129,
+       70
+      ]
+     ],
+     "tol": 20
+    },
+    "cream": {
+     "colours": [
+      [
+       225,
+       192,
+       139
+      ]
+     ],
+     "tol": 22
+    }
+   },
+   "halo_model": "blur",
+   "halo": {
+    "model": "blur",
+    "sigma": [
+     7.14,
+     60.58
+    ],
+    "c": [
+     [
+      106.8,
+      104.6,
+      -4.1
+     ],
+     [
+      394.2,
+      18.9,
+      47.8
+     ]
+    ],
+    "gain": {
+     "2": 1.225,
+     "3": 0.844,
+     "4": 1.016,
+     "5": 1.241,
+     "6": 1.713,
+     "7": 2.0
+    }
+   },
+   "near_halo": false
+  }
+ }
+}

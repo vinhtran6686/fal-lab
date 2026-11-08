@@ -11,6 +11,10 @@ Xuất bằng `python lib-fx/_tools/vectorfx.py showcase PROFILE` (bộ tool kh�
 | `element-trio` | lửa phun | [element-trio/fire](element-trio/fire/) | 10/10 |
 | | Arcane | [element-trio/arcane](element-trio/arcane/) | 10/10 |
 | | Toxic | [element-trio/toxic](element-trio/toxic/) | 10/10 |
+| `slash-trio` | nhát chém xanh | [slash-trio/blue](slash-trio/blue/) (+ phản chiếu `blue_refl`) | chờ chấm |
+| | nhát chém hồng | [slash-trio/pink](slash-trio/pink/) (+ `pink_refl`) | chờ chấm |
+| | nhát chém vàng | [slash-trio/gold](slash-trio/gold/) (+ `gold_refl`) | chờ chấm |
 
 Trang review đầy đủ (từng lớp, từng frame): Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdKGR,
-Element Trio https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn. Bản gốc: `ref/vfx/swirl-slash/`, `ref/vfx/element-trio/`.
+Element Trio https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn, Slash Trio https://claude.ai/artifact/69ermXASZKmFccapxfCYis.
+Bản gốc: `ref/vfx/swirl-slash/`, `ref/vfx/element-trio/`, `ref/vfx/slash-trio/`.

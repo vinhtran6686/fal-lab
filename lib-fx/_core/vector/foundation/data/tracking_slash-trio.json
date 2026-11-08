@@ -1,0 +1,279 @@
+{
+ "blue": {
+  "peak_frame": 4,
+  "growth_ratio_before_peak": {
+   "n": 2,
+   "p25": 4.6,
+   "med": 8.05,
+   "p75": 11.51
+  },
+  "shrink_ratio_after_peak_big": {
+   "n": 10,
+   "p25": 0.18,
+   "med": 0.22,
+   "p75": 0.37
+  },
+  "shrink_ratio_after_peak_small": {},
+  "split_share_after_peak": 0.2,
+  "children_when_split": {
+   "n": 2,
+   "p25": 2.0,
+   "med": 2.0,
+   "p75": 2.0
+  },
+  "largest_child_share_when_split": {
+   "n": 2,
+   "p25": 0.8,
+   "med": 0.82,
+   "p75": 0.84
+  },
+  "area_at_death": {
+   "n": 3,
+   "p25": 32.0,
+   "med": 34.0,
+   "p75": 41.0
+  },
+  "drift_dy_px": {
+   "n": 10,
+   "p25": -13.13,
+   "med": -0.6,
+   "p75": 4.48
+  },
+  "births_after_peak": 2
+ },
+ "pink": {
+  "peak_frame": 5,
+  "growth_ratio_before_peak": {
+   "n": 3,
+   "p25": 1.37,
+   "med": 1.73,
+   "p75": 6.3
+  },
+  "shrink_ratio_after_peak_big": {
+   "n": 17,
+   "p25": 0.17,
+   "med": 0.27,
+   "p75": 0.34
+  },
+  "shrink_ratio_after_peak_small": {
+   "n": 1,
+   "p25": 0.28,
+   "med": 0.28,
+   "p75": 0.28
+  },
+  "split_share_after_peak": 0.22,
+  "children_when_split": {
+   "n": 4,
+   "p25": 2.0,
+   "med": 2.0,
+   "p75": 2.5
+  },
+  "largest_child_share_when_split": {
+   "n": 4,
+   "p25": 0.72,
+   "med": 0.86,
+   "p75": 0.91
+  },
+  "area_at_death": {
+   "n": 6,
+   "p25": 14.25,
+   "med": 16.5,
+   "p75": 21.75
+  },
+  "drift_dy_px": {
+   "n": 18,
+   "p25": -2.7,
+   "med": -0.3,
+   "p75": 4.82
+  },
+  "births_after_peak": 0
+ },
+ "gold": {
+  "peak_frame": 4,
+  "growth_ratio_before_peak": {
+   "n": 2,
+   "p25": 4.28,
+   "med": 7.37,
+   "p75": 10.45
+  },
+  "shrink_ratio_after_peak_big": {
+   "n": 15,
+   "p25": 0.15,
+   "med": 0.23,
+   "p75": 0.36
+  },
+  "shrink_ratio_after_peak_small": {
+   "n": 1,
+   "p25": 0.42,
+   "med": 0.42,
+   "p75": 0.42
+  },
+  "split_share_after_peak": 0.31,
+  "children_when_split": {
+   "n": 5,
+   "p25": 2.0,
+   "med": 2.0,
+   "p75": 2.0
+  },
+  "largest_child_share_when_split": {
+   "n": 5,
+   "p25": 0.71,
+   "med": 0.77,
+   "p75": 0.81
+  },
+  "area_at_death": {
+   "n": 4,
+   "p25": 36.75,
+   "med": 59.5,
+   "p75": 76.0
+  },
+  "drift_dy_px": {
+   "n": 16,
+   "p25": -0.88,
+   "med": 1.44,
+   "p75": 3.75
+  },
+  "births_after_peak": 0
+ },
+ "blue_refl": {
+  "peak_frame": 4,
+  "growth_ratio_before_peak": {
+   "n": 2,
+   "p25": 9.08,
+   "med": 17.01,
+   "p75": 24.93
+  },
+  "shrink_ratio_after_peak_big": {
+   "n": 4,
+   "p25": 0.14,
+   "med": 0.25,
+   "p75": 0.42
+  },
+  "shrink_ratio_after_peak_small": {
+   "n": 2,
+   "p25": 1.22,
+   "med": 2.29,
+   "p75": 3.35
+  },
+  "split_share_after_peak": 0.33,
+  "children_when_split": {
+   "n": 2,
+   "p25": 2.0,
+   "med": 2.0,
+   "p75": 2.0
+  },
+  "largest_child_share_when_split": {
+   "n": 2,
+   "p25": 0.76,
+   "med": 0.81,
+   "p75": 0.86
+  },
+  "area_at_death": {
+   "n": 4,
+   "p25": 44.75,
+   "med": 98.0,
+   "p75": 156.25
+  },
+  "drift_dy_px": {
+   "n": 6,
+   "p25": -2.42,
+   "med": -1.09,
+   "p75": 1.34
+  },
+  "births_after_peak": 1
+ },
+ "pink_refl": {
+  "peak_frame": 5,
+  "growth_ratio_before_peak": {
+   "n": 3,
+   "p25": 1.28,
+   "med": 1.5,
+   "p75": 6.02
+  },
+  "shrink_ratio_after_peak_big": {
+   "n": 8,
+   "p25": 0.23,
+   "med": 0.33,
+   "p75": 0.45
+  },
+  "shrink_ratio_after_peak_small": {
+   "n": 7,
+   "p25": 0.68,
+   "med": 1.03,
+   "p75": 1.26
+  },
+  "split_share_after_peak": 0.47,
+  "children_when_split": {
+   "n": 7,
+   "p25": 2.0,
+   "med": 2.0,
+   "p75": 3.0
+  },
+  "largest_child_share_when_split": {
+   "n": 7,
+   "p25": 0.69,
+   "med": 0.79,
+   "p75": 0.82
+  },
+  "area_at_death": {
+   "n": 19,
+   "p25": 17.5,
+   "med": 22.0,
+   "p75": 43.5
+  },
+  "drift_dy_px": {
+   "n": 15,
+   "p25": -2.01,
+   "med": -1.34,
+   "p75": 0.57
+  },
+  "births_after_peak": 3
+ },
+ "gold_refl": {
+  "peak_frame": 4,
+  "growth_ratio_before_peak": {
+   "n": 2,
+   "p25": 4.41,
+   "med": 7.68,
+   "p75": 10.96
+  },
+  "shrink_ratio_after_peak_big": {
+   "n": 5,
+   "p25": 0.12,
+   "med": 0.2,
+   "p75": 0.46
+  },
+  "shrink_ratio_after_peak_small": {
+   "n": 2,
+   "p25": 0.74,
+   "med": 0.93,
+   "p75": 1.12
+  },
+  "split_share_after_peak": 0.43,
+  "children_when_split": {
+   "n": 3,
+   "p25": 2.5,
+   "med": 3.0,
+   "p75": 4.5
+  },
+  "largest_child_share_when_split": {
+   "n": 3,
+   "p25": 0.48,
+   "med": 0.49,
+   "p75": 0.66
+  },
+  "area_at_death": {
+   "n": 8,
+   "p25": 13.5,
+   "med": 23.0,
+   "p75": 109.0
+  },
+  "drift_dy_px": {
+   "n": 7,
+   "p25": -2.81,
+   "med": -1.6,
+   "p75": -0.36
+  },
+  "births_after_peak": 0
+ }
+}

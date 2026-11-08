@@ -50,6 +50,7 @@ mượt như vẽ bằng pen tool, kèm gradient, glow, độ đục và nhịp 
 | `element-trio` | fire | phun lửa, khung thẳng, 2 lớp | 10 | glow là bản làm nhoè hình, tắt dần (gain 1 → 0 từ frame 19) |
 | | arcane | pha lê + cánh, 3 lớp | 10 | màn cánh trong mờ (độ đục ~0,45); tím nhạt mờ dần 1 → 0,59 |
 | | toxic | khói độc + vòng sáng, 2 lớp | 10 | bóng tối trong mờ (`darker_than_bg`); không có gradient mép |
+| `slash-trio` | blue, pink, gold (+ `*_refl`) | nhát chém, khung cực; phản chiếu khung thẳng ngang, 2-3 lớp | chờ chấm | glow giữ sáng trên tia; phản chiếu là biến thể riêng |
 
 Trang review: Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdKGR, Element Trio https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn.
 
