@@ -127,3 +127,11 @@ góc, neo gãy < 35° thành neo trơn, gộp đoạn khi sai số ≤ 0,9 px, t
 
 Các luật §7-§7c đã thành code dùng chung: [`_core/vector/`](_core/vector/README.md) (profile JSON cho từng hiệu ứng, CLI
 `_tools/vectorfx.py`). Hiệu ứng vẽ tay mới dựng bằng bộ này thay vì viết lại từ đầu.
+
+### 7e. Thời gian của glow, độ đục và gradient (2026-11-08, element-trio)
+
+- Glow = bản làm nhoè của chính hình × độ mạnh theo frame; độ mạnh giữ ở đỉnh rồi tắt **trước** khi hình tan hết (lửa: 0 từ frame 19 trong khi
+  tàn lửa còn tới frame 22). Glow cố định theo khoảng cách làm đốm tàn sáng gấp 5-8 lần bản gốc.
+- Hình mờ dần ở giai đoạn tan (độ đục 1 → ~0,6) và có thể có màn trong mờ cố định (~0,45) bên cạnh phần đặc cùng màu.
+- Gradient/viền chỉ thật khi rộng hơn 1,5 px ở độ phân giải gốc; hẹp hơn là khử răng cưa hoặc vệt phóng to.
+Code: `_core/vector` (`halo_model: blur`, lớp `alpha` + `opacity`, luật trong `measure`).

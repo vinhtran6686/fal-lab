@@ -128,14 +128,31 @@ def _bg_cached(prof, v):
     return _BG[k]
 
 
+def alpha_of(a, bg, colour):
+    """Opacity of a flat colour laid over the background: a = bg + alpha * (colour - bg). Returns (alpha, residual)."""
+    d = np.array(colour, float) - bg
+    al = ((a - bg) * d).sum(-1) / np.maximum((d * d).sum(-1), 1.0)
+    res = np.linalg.norm(a - (bg + al[..., None] * d), axis=-1)
+    return al, res
+
+
 def layer_masks(prof, v, rgb, tol_scale=1.0):
     """Each pixel goes to the layer whose colour polyline is closest (relative to that layer's tolerance).
+    A layer with "alpha": [lo, hi] is matched by OPACITY instead: pixel = bg + alpha * (colour - bg) with alpha in
+    [lo, hi] and a small residual. Use it for translucent layers (veils) and for layers that fade out over time.
     A layer with "darker_than_bg": N (a translucent dark shape, e.g. a smoke shadow) only takes pixels at least N
     luminance levels darker than the reference background at that spot, so the backdrop itself never matches."""
     L = prof.layers(v)
     names = list(L)
     a = rgb.astype(float)
     D = np.stack([_dist_poly(a, L[l]["colours"]) / (L[l].get("tol", 15) * tol_scale) for l in names])
+    if any("alpha" in L[l] for l in names):
+        bgf = _bg_cached(prof, v)
+        for i, l in enumerate(names):
+            if "alpha" in L[l]:
+                al, res = alpha_of(a, bgf, L[l]["colours"][0])
+                lo, hi = L[l]["alpha"]
+                D[i] = np.where((al >= lo) & (al <= hi), res / L[l].get("tol", 15), 9e9)
     if any("darker_than_bg" in L[l] for l in names):
         lum = lambda x: x[..., 0] * 0.299 + x[..., 1] * 0.587 + x[..., 2] * 0.114
         dark = lum(_bg_cached(prof, v)) - lum(a)
@@ -205,6 +222,7 @@ def fit_halo(samples):
 def measure_profile(prof, frames=None, write=True):
     """Fill `gradient` for every layer and `halo` for every variant from the reference frames."""
     frames = frames or prof.frames()
+    k = prof.d["source"].get("scale", 1)
     report = {}
     for v in prof.variants:
         bg = background(prof, v)
@@ -235,16 +253,100 @@ def measure_profile(prof, frames=None, write=True):
                 g = fit_edge_gradient(smp, prof.layers(v)[l]["colours"][0])
                 report[v][l] = g
                 if write:
-                    if g["s"] >= 25 or g["s"] < 1.0 or g["rms"] > 0.9 * g["rms_flat"]:  # none, or only anti-aliasing: keep flat
+                    # no gradient, or only anti-aliasing / upscale blur (a real designer gradient is wider than 1.5 source px)
+                    if g["s"] >= 25 or g["s"] < 1.5 * k or g["rms"] > 0.9 * g["rms_flat"]:
                         prof.layers(v)[l].pop("gradient", None)
                     else:
                         prof.layers(v)[l]["gradient"] = {"edge": g["edge"], "s": g["s"]}
-        if halo:
+        op = measure_opacity(prof, v, prof.frames())
+        for l, series in op.items():
+            report[v][l + "_opacity"] = series
+            if write:
+                prof.layers(v)[l]["opacity"] = series
+        if prof.var(v).get("halo_model") == "blur":
+            hb = fit_halo_blur(prof, v, prof.frames())
+            report[v]["halo"] = hb
+            if hb:  # a blur narrower than 1.5 source px is the reference's anti-aliasing fringe, not glow: drop it
+                keep = [i for i, sg in enumerate(hb["sigma"]) if sg >= 1.5 * k]
+                hb["sigma"], hb["c"] = [hb["sigma"][i] for i in keep], [hb["c"][i] for i in keep]
+            if write and hb:
+                prof.var(v)["halo"] = hb
+                prof.var(v)["near_halo"] = False
+        elif halo:
             h = fit_halo(halo)
             report[v]["halo"] = h
             if write:
                 prof.var(v)["halo"] = {k: h[k] for k in ("s_near", "s_far", "c_near", "c_far")}
-                prof.var(v)["near_halo"] = h["s_near"] >= 1.5  # a sub-1.5 px component is anti-aliasing, not glow
+                prof.var(v)["near_halo"] = h["s_near"] >= 1.5 * k  # narrower than 1.5 source px: anti-aliasing, not glow
     if write:
         prof.save()
     return report
+
+
+def fit_halo_blur(prof, v, frames, peak_share=0.4, rng_seed=0):
+    """Glow as a BLURRED COPY of the shapes (two gaussians, global colours) times a per-frame opacity `gain`.
+    Measured on element-trio: a distance-based halo needs its strength scaled from ~1.6 (peak) down to ~0.15 (last
+    frames), i.e. the designer fades the glow layer out while the effect dissolves; the blur model also fills the holes
+    inside a flame the way the reference does. Fit: colours and sigmas on the biggest frames (gain 1), then one
+    least-squares gain per frame, clipped to [0, 2]."""
+    bg = background(prof, v)
+    data = []
+    for f in frames:
+        rgb = load_frame(prof, v, f)
+        if rgb is None:
+            continue
+        U = np.zeros(rgb.shape[:2], bool)
+        for m in layer_masks(prof, v, rgb).values():
+            U |= m
+        if U.sum() < 50:
+            continue
+        d = ndi.distance_transform_edt(~U)
+        sel = np.flatnonzero((d.ravel() > 3) & (d.ravel() < 150))
+        idx = np.random.default_rng(rng_seed + f).choice(sel, min(6000, len(sel)), replace=False)
+        data.append((f, U, idx, (rgb.astype(float) - bg).reshape(-1, 3)[idx]))
+    if not data:
+        return None
+    areas = np.array([U.sum() for _, U, _, _ in data])
+    peak = [x for x, a in zip(data, areas) if a >= np.quantile(areas, 1 - peak_share)]
+    cache = {}
+
+    def feats(f, U, idx, s1, s2):
+        key = (f, round(s1, 1), round(s2, 1))
+        if key not in cache:
+            u = U.astype(float)
+            cache[key] = (ndi.gaussian_filter(u, s1).ravel()[idx], ndi.gaussian_filter(u, s2).ravel()[idx])
+        return cache[key]
+
+    def r(x):
+        out = []
+        for f, U, idx, y in peak:
+            a, b = feats(f, U, idx, x[0], x[1])
+            out.append((a[:, None] * x[2:5] + b[:, None] * x[5:8] - y).ravel())
+        return np.concatenate(out)
+    x = least_squares(r, [8, 40, 300, 200, 100, 300, 100, 100], bounds=([1, 5] + [-100] * 6, [40, 200] + [3000] * 6),
+                      diff_step=0.05).x
+    gain = {}
+    for f, U, idx, y in data:
+        a, b = feats(f, U, idx, x[0], x[1])
+        p = a[:, None] * x[2:5] + b[:, None] * x[5:8]
+        gain[f] = float(np.clip((p * y).sum() / max((p * p).sum(), 1e-9), 0, 2))
+    return {"model": "blur", "sigma": [round(float(x[0]), 2), round(float(x[1]), 2)],
+            "c": [[round(float(c), 1) for c in x[2:5]], [round(float(c), 1) for c in x[5:8]]],
+            "gain": {str(f): round(g, 3) for f, g in sorted(gain.items())}}
+
+
+def measure_opacity(prof, v, frames):
+    """Per-frame opacity of every "alpha" layer: median alpha over its mask, capped at 1. Designers fade shapes out
+    (element-trio arcane: 1.0 at the peak, 0.83, 0.62, 0.56 in the last frames) and draw veils at ~0.5-0.6."""
+    bg = background(prof, v)
+    out = {}
+    for f in frames:
+        rgb = load_frame(prof, v, f)
+        if rgb is None:
+            continue
+        M = layer_masks(prof, v, rgb)
+        for l, cfg in prof.layers(v).items():
+            if "alpha" in cfg and M[l].sum() >= 30:
+                al, _ = alpha_of(rgb.astype(float), bg, cfg["colours"][0])
+                out.setdefault(l, {})[str(f)] = round(float(min(np.median(al[M[l]]), 1.0)), 3)
+    return out

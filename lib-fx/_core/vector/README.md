@@ -137,3 +137,25 @@ Trang review: Element Trio, https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn. P
   không đánh dấu được màu nào; phải gom cụm màu (k-means) rồi xem bản đồ từng cụm bằng mắt. Nên thêm k-means vào lệnh `palette`.
 - **Còn thiếu so với bản gốc**: các cánh xanh trong mờ của pha lê (lớp sáng trong mờ, hạng mục C), vòng sáng của pha lê bị gộp vào lớp xanh
   (cùng màu), lỗ trong lửa ở bản gốc được quầng sáng phủ (bản dựng thấy nền tối hơn), vòng elip mảnh dưới chân lửa.
+
+### element-trio, vòng sửa 1 (2026-11-08): thời gian của gradient, glow và độ đục
+
+User chấm lửa và pha lê ~9/10 ("frame cuối gradient/glow vẫn nhiều làm các đốm sáng lên"), toxic 8/10 ("viền xanh đậm quanh hình bạc hà").
+Đo lại theo từng frame, cả hai nhận xét đều đúng:
+
+1. **Glow tắt dần theo thời gian.** Quầng theo khoảng cách (cố định) phải nhân hệ số ~1,6 ở đỉnh nhưng ~0,15-0,2 ở frame cuối mới khớp
+   gốc: bản dựng sáng gấp 5-8 lần ở frame tàn. Mô hình mới `halo_model: "blur"`: glow = bản làm nhoè của chính hình (2 gauss, màu đo được)
+   × `gain[frame]` đo từng frame. Đốm nhỏ tự có quầng nhỏ, lỗ trong lửa được quầng phủ như gốc. Lửa: gain ≈ 1 tới frame 12, 0,5 ở 15-16,
+   0,18 ở 17-18, 0 từ 19.
+2. **Hình cũng mờ dần.** Lớp có `"alpha": [lo, hi]` được nhận theo độ đục so với nền và tô với `opacity[frame]` đo được. Pha lê: tím nhạt
+   1,0 tới frame 8 rồi 0,89 → 0,75 → 0,64 → 0,59; các cánh xanh là **hai lớp**: cánh đặc (0,95-1) và màn trong mờ (0,41-0,48), đúng phần
+   "cánh xanh trong mờ" trước đây bị thiếu. Mặt nạ theo màu phẳng đã làm rơi các mảnh vỡ mờ ở frame cuối.
+3. **Viền đậm ở toxic là lỗi đo.** Ở độ phân giải gốc, màu bạc hà phẳng sát mép (chỉ 1 px khử răng cưa); "gradient mép" s 2,6 px đo trên
+   ảnh đã phóng 3x chỉ là vệt nhoè của phép phóng to. Luật mới trong `measure`: gradient và quầng gần chỉ được nhận khi rộng hơn
+   1,5 × `source.scale` px.
+
+Luật rút ra (dùng cho mọi hiệu ứng có giai đoạn tan):
+- Đo **theo từng frame**, không chỉ ở frame đỉnh: glow, độ đục và gradient đều có đường cong thời gian riêng.
+- Glow là bản làm nhoè của hình, không phải viền theo khoảng cách; độ mạnh của nó là một đường cong (giữ ở đỉnh, tắt trước khi hình tan hết).
+- Một lớp có thể có nhiều mức độ đục cố định (đặc / màn mờ): tách thành nhiều lớp cùng màu, khác dải alpha.
+- Đừng đo gradient trên ảnh đã phóng to mà không quy về px gốc.

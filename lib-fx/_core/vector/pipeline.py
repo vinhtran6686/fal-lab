@@ -91,7 +91,7 @@ def rebuild(prof, frames=None, variants=None, refit=False, log=print):
                 paths[l], covers[l] = pl, raster_evenodd(pl, shape)
             if not covers:
                 continue
-            img, flat, vis = compose.composite(covers, prof.order(v), prof, v)
+            img, flat, vis = compose.composite(covers, prof.order(v), prof, v, f)
             Image.fromarray(img).save(out / "frames" / f"{v}_{f:02d}.png")
             Image.fromarray(flat).save(out / "flat" / f"{v}_{f:02d}.png")
             (out / "svg" / f"{v}_{f:02d}.svg").write_text(compose.svg(paths, prof.order(v), prof, v, shape))

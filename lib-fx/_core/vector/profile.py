@@ -15,8 +15,12 @@
       "groups": {"yellow": 0, ...},                                 # optional; layers of one group run under each other
       "layers": {"yellow": {"colours": [[255,214,112], ...],       # colour polyline: flat fill first, then its edge tint
                             "tol": 26,
-                            "gradient": {"edge": [255,163,69], "s": 8.08}}},   # inner edge gradient (optional)
+                            "gradient": {"edge": [255,163,69], "s": 8.08},     # inner edge gradient (optional)
+                            "alpha": [0.3, 0.7],          # optional: match by opacity over the background (veils, fading)
+                            "opacity": {"9": 0.89, ...},  # per-frame opacity of an alpha layer (written by measure)
+                            "darker_than_bg": 10}},       # optional: dark translucent layer (smoke shadow)
       "halo": {"s_near": .., "c_near": [..], "s_far": .., "c_far": [..]},     # glow behind the shapes (optional)
+      "halo_model": "blur",          # glow = blurred copy of the shapes x gain per frame: {"sigma": [..], "c": [[..]], "gain": {"0": ..}}
       "near_halo": true,
       "smooth": {...},                                              # per-variant override
       "frame": {...}                                                # per-variant override

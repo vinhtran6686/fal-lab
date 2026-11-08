@@ -27,11 +27,23 @@ def visible(covers, order):
     return vis
 
 
-def halo(covers, h, near=True):
-    """c_near*exp(-d/s_near) + c_far*exp(-d/s_far), d = px to the silhouette."""
+def halo(covers, h, near=True, frame=None):
+    """Two models (profile `halo_model`):
+    distance (default): c_near*exp(-d/s_near) + c_far*exp(-d/s_far), d = px to the silhouette; constant over time.
+    blur: gain[frame] * (G(sigma0) * silhouette * c0 + G(sigma1) * silhouette * c1): a blurred copy of the shapes, so
+          small specks glow weakly and holes fill with glow, with the glow opacity animated (fades out at the end)."""
     sil = np.zeros(next(iter(covers.values())).shape)
     for c in covers.values():
         sil = np.maximum(sil, c)
+    if h.get("model") == "blur":
+        g = h.get("gain", {})
+        if frame is not None and g:
+            keys = sorted(int(k) for k in g)
+            gain = g[str(min(keys, key=lambda k: abs(k - frame)))] if str(frame) not in g else g[str(frame)]
+        else:
+            gain = 1.0
+        out = sum(ndi.gaussian_filter(sil, s)[..., None] * np.array(c, float) for s, c in zip(h["sigma"], h["c"]))
+        return np.clip(out * gain, 0, None)
     d = ndi.distance_transform_edt(sil < 0.5)
     out = np.exp(-d / h["s_far"])[..., None] * np.array(h["c_far"], float)
     if near:
@@ -50,18 +62,29 @@ def layer_colour(vis, flat, grad):
     return np.array(flat, float) * (1 - w) + np.array(grad["edge"], float) * w
 
 
-def composite(covers, order, prof, v):
+def layer_opacity(cfg, frame):
+    """Measured per-frame opacity of a layer (nearest measured frame), 1 when the layer has none."""
+    op = cfg.get("opacity")
+    if not op or frame is None:
+        return 1.0
+    if str(frame) in op:
+        return float(op[str(frame)])
+    k = min((int(x) for x in op), key=lambda x: abs(x - frame))
+    return float(op[str(k)])
+
+
+def composite(covers, order, prof, v, frame=None):
     """-> (final RGB with gradient + halo, flat RGB, visible masks)."""
     var = prof.var(v)
     shape = next(iter(covers.values())).shape
     img = np.zeros(shape + (3,)) + np.array(prof.get("background"), float)
     if var.get("halo"):
-        img = img + halo(covers, var["halo"], var.get("near_halo", True))
+        img = img + halo(covers, var["halo"], var.get("near_halo", True), frame)
     flat = np.zeros(shape + (3,)) + 20
     vis = visible(covers, order)
     for l in order:
         if l in covers:
-            a = covers[l][..., None]
+            a = covers[l][..., None] * layer_opacity(prof.layers(v)[l], frame)
             col = prof.flat(v, l)
             img = img * (1 - a) + layer_colour(vis[l], col, prof.layers(v)[l].get("gradient")) * a
             flat = flat * (1 - a) + np.array(col, float) * a
