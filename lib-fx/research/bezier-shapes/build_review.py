@@ -33,6 +33,7 @@ table.metrics td:last-child{{color:var(--ok)}}
   <span class="eyebrow">lib-fx / research / bezier-shapes · bản v3: tự làm đều nét</span>
   <h1>Swirl Slash Shapes</h1>
   <p class="lead">V3 thêm bước tự làm đều nét theo kiểu Illustrator: nối nét, giữ góc thật, làm trơn độ cong, gộp đoạn và bỏ điểm neo thừa. Hình và màu giữ như v2. Bản v2 và v1 ở cuối trang.</p>
+  <p class="lead"><strong>Cập nhật băng (mượt tối đa):</strong> bỏ đường tối giữa lưỡi trắng và ngọn lửa xanh (đo lại thì đó chỉ là 2 px pha màu, không phải nét), bỏ viền sáng lấm tấm quanh mép, làm trơn mạnh hơn (σ 7 px), gộp đoạn dài hơn và nối khe tới 2,5 px.</p>
 </header>
 
 <section id="changes">

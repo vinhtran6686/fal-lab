@@ -158,10 +158,10 @@ def unify_corners(segs, smooth, smooth_below=35.0):
     return [tuple(s) for s in segs], smooth
 
 # ---------- driver ----------
-def smooth_simplify(cover, ss=2, corner_deg=145, sigma=4.5, tol=0.5, merge_tol=0.9, min_area=8):
+def smooth_simplify(cover, ss=2, corner_deg=145, sigma=4.5, tol=0.5, merge_tol=0.9, min_area=8, close_px=1.5):
     """cover: coverage image at ss x frame resolution. Returns (paths, stats); paths are closed segment lists in frame px
     (fill even-odd); stats: anchors, corners."""
-    m = join_clean(cover, ss, min_area)
+    m = join_clean(cover, ss, min_area, close_px)
     f = ndi.gaussian_filter(np.pad(m.astype(float), 2), 0.6 * ss)
     paths, n_anchor, n_corner = [], 0, 0
     l2, l3 = 0.5 * sigma**4, 0.25 * sigma**6

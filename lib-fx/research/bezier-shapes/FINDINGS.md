@@ -144,3 +144,20 @@ Trung bình frame 3-5 (điểm neo / điểm gãy 5-35° / độ biến thiên �
 v3 hết điểm gãy, độ biến thiên độ cong giảm 2-14 lần so với v2, số điểm neo bằng hoặc ít hơn đường vẽ tay. Số điểm uốn (đổi chiều cong)
 tăng nhẹ (1,5-2,3 mỗi 100 px so với 1,1-1,8 ở v2). IoU gần như giữ nguyên ở frame 2-5 (thay đổi trong khoảng ±0,03; hồng f5 0,796,
 đỏ sẫm f5 0,796), giảm thêm ở frame vụn 7-12.
+
+### 7.1 Băng mượt tối đa (sau review: lửa 9/10, băng 8/10 "còn nứt nẻ")
+
+Ba nguyên nhân "nứt nẻ" ở bản băng và cách sửa:
+1. **Đường tối giữa lưỡi trắng và ngọn lửa xanh là đọc sai**: đo dải 2 px giữa hai lớp trên f3-f5 được màu `91,195,236`, tức pha giữa
+   trắng và xanh (khử răng cưa), không phải nét tối. V2/v3 giữ nó thành khe tối, nhìn như vết nứt. Nay băng là một nhóm: lớp xanh chạy
+   liền dưới lưỡi trắng (`rebuild2.GROUP`), nét công thức của băng được khớp lại.
+2. **Viền sáng lấm tấm**: thành phần quầng gần của băng (s 0,5 px) là khử răng cưa của GIF, vẽ ra thành chấm sáng quanh mép. Bỏ
+   (`rebuild3.NEAR_HALO`).
+3. **Làm trơn mạnh hơn cho băng** (`rebuild3.SMOOTH`): σ 7 px, ngưỡng góc 142° (130° làm tròn mũi lông vũ), gộp đoạn khi sai số ≤ 1,5 px,
+   nối khe ≤ 2,5 px, bỏ vụn < 40 px.
+
+Trung bình f3-5 (điểm neo / điểm gãy / độ biến thiên độ cong): trắng 23 / 0 / 0,41 · cyan 36 / 0 / 0,60 · xanh 34 / 0,3 / 0,48 ·
+xanh sẫm 19 / 0 / 0,36. Ít điểm neo hơn đường vẽ tay của gốc (29 / 40 / 56 / 41). Đổi lại IoU giảm nhẹ: xanh f3 0,821, f5 0,789,
+cyan f3 0,814; frame vụn 6-9 giảm rõ (bỏ vụn < 40 px).
+Khác biệt còn lại dễ thấy nhất với gốc: phía sau ngọn lửa xanh của bản gốc có một mảng xanh sẫm trong mờ lớn, có lỗ hình bầu dục.
+Mặt nạ đúng màu chỉ bắt được một phần nhỏ của mảng này, nên bản dựng chưa có nó.

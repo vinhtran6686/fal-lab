@@ -23,7 +23,10 @@ import cv2
 
 OUT = Path(__file__).parent / "out2"
 ORDER = {"fire": ["yellow", "pink", "crimson"], "frost": ["deep", "mid", "cyan", "ice"]}
-GROUP = {"fire": {"yellow": 0, "pink": 0, "crimson": 0}, "frost": {"deep": 0, "mid": 0, "cyan": 0, "ice": 1}}
+# One group per variant: every layer may run under the layers above it. (v2/v3 kept the frost blade apart to preserve a
+# "dark line" between blade and blue flame; measuring that 2 px gap on f3-f5 gives 91,195,236 = a blend of the two
+# colours, i.e. anti-aliasing, not a line. Keeping it made the frost look cracked.)
+GROUP = {"fire": {"yellow": 0, "pink": 0, "crimson": 0}, "frost": {"deep": 0, "mid": 0, "cyan": 0, "ice": 0}}
 BGCOL = np.array([24, 25, 28], float)
 R_UNDER = 10
 
@@ -82,7 +85,7 @@ def main(frames):
     gfit = json.loads((Path(__file__).parent / "out/edge_gradient_fit.json").read_text())
     rp = OUT / "report.json"
     report = json.loads(rp.read_text()) if rp.exists() else {}
-    for v in LAYERS:
+    for v in VARIANTS:
         pal = {l: FAMILY[v][l][0] for l in FAMILY[v]}
         for f in frames:
             masks = family_masks(v, f)
@@ -145,5 +148,9 @@ def main(frames):
                 print(f"{v}_{f:02d}_{l}", report[f"{v}_{f:02d}_{l}"], flush=True)
     rp.write_text(json.dumps(dict(sorted(report.items())), indent=1))
 
+VARIANTS = list(LAYERS)
+
 if __name__ == "__main__":
+    if len(sys.argv) > 2:
+        VARIANTS = sys.argv[2].split(",")
     main(tuple(int(x) for x in (sys.argv[1] if len(sys.argv) > 1 else "4").split(",")))
