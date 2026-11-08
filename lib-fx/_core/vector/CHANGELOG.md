@@ -1,5 +1,11 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.1 (2026-11-08): nền tảng thiết kế
+
+- Thư mục `foundation/`: phong cách (lớp, nét mịn, cấp bậc màu), hoạt hoạ (vòng đời + theo dõi từng mảnh), cách đọc bản gốc (12 bẫy đã gặp),
+  đặc tả bộ sinh; số liệu trong `foundation/data/`.
+- Lệnh `track` (`tracking.py`): theo dõi từng mảnh giữa các hình vẽ (lớn, tách, co, trôi, chết).
+
 ## 1.0 (2026-11-08): bản chốt sau bài test element-trio
 
 - Glow mô hình `blur`: bản làm nhoè của hình (2 gauss, màu đo được) × độ mạnh đo từng frame (glow tắt dần ở pha tàn).

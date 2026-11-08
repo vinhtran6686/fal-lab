@@ -1,0 +1,143 @@
+{
+ "fire": {
+  "peak_frame": 3,
+  "growth_ratio_before_peak": {
+   "n": 4,
+   "p25": 3.34,
+   "med": 8.62,
+   "p75": 13.29
+  },
+  "shrink_ratio_after_peak_big": {
+   "n": 46,
+   "p25": 0.59,
+   "med": 0.83,
+   "p75": 1.0
+  },
+  "shrink_ratio_after_peak_small": {
+   "n": 61,
+   "p25": 0.57,
+   "med": 0.99,
+   "p75": 1.0
+  },
+  "split_share_after_peak": 0.24,
+  "children_when_split": {
+   "n": 26,
+   "p25": 2.0,
+   "med": 2.0,
+   "p75": 3.0
+  },
+  "largest_child_share_when_split": {
+   "n": 26,
+   "p25": 0.69,
+   "med": 0.85,
+   "p75": 0.97
+  },
+  "area_at_death": {
+   "n": 68,
+   "p25": 7.08,
+   "med": 8.06,
+   "p75": 13.61
+  },
+  "drift_dy_px": {
+   "n": 107,
+   "p25": -0.08,
+   "med": 0.0,
+   "p75": 1.9
+  },
+  "births_after_peak": 11
+ },
+ "arcane": {
+  "peak_frame": 5,
+  "growth_ratio_before_peak": {
+   "n": 43,
+   "p25": 0.55,
+   "med": 0.99,
+   "p75": 2.03
+  },
+  "shrink_ratio_after_peak_big": {
+   "n": 24,
+   "p25": 0.36,
+   "med": 0.47,
+   "p75": 0.63
+  },
+  "shrink_ratio_after_peak_small": {
+   "n": 23,
+   "p25": 0.2,
+   "med": 0.33,
+   "p75": 0.97
+  },
+  "split_share_after_peak": 0.28,
+  "children_when_split": {
+   "n": 13,
+   "p25": 2.0,
+   "med": 3.0,
+   "p75": 4.0
+  },
+  "largest_child_share_when_split": {
+   "n": 13,
+   "p25": 0.67,
+   "med": 0.82,
+   "p75": 0.94
+  },
+  "area_at_death": {
+   "n": 56,
+   "p25": 8.64,
+   "med": 10.78,
+   "p75": 15.5
+  },
+  "drift_dy_px": {
+   "n": 47,
+   "p25": -4.79,
+   "med": -1.4,
+   "p75": 0.0
+  },
+  "births_after_peak": 1
+ },
+ "toxic": {
+  "peak_frame": 5,
+  "growth_ratio_before_peak": {
+   "n": 2,
+   "p25": 5.82,
+   "med": 6.91,
+   "p75": 8.01
+  },
+  "shrink_ratio_after_peak_big": {
+   "n": 37,
+   "p25": 0.23,
+   "med": 0.49,
+   "p75": 0.83
+  },
+  "shrink_ratio_after_peak_small": {
+   "n": 7,
+   "p25": 0.55,
+   "med": 1.0,
+   "p75": 1.04
+  },
+  "split_share_after_peak": 0.32,
+  "children_when_split": {
+   "n": 14,
+   "p25": 2.0,
+   "med": 3.0,
+   "p75": 3.0
+  },
+  "largest_child_share_when_split": {
+   "n": 14,
+   "p25": 0.57,
+   "med": 0.67,
+   "p75": 0.81
+  },
+  "area_at_death": {
+   "n": 35,
+   "p25": 10.33,
+   "med": 18.0,
+   "p75": 54.83
+  },
+  "drift_dy_px": {
+   "n": 44,
+   "p25": -6.86,
+   "med": -2.69,
+   "p75": 0.0
+  },
+  "births_after_peak": 3
+ }
+}

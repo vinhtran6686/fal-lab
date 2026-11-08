@@ -8,6 +8,7 @@
   python lib-fx/_tools/vectorfx.py review   PROFILE                             panels, GIFs, review/index.html
   python lib-fx/_tools/vectorfx.py all      PROFILE                             rebuild + review
   python lib-fx/_tools/vectorfx.py lifecycle PROFILE                            how the reference was animated (phases, area, pieces, holds)
+  python lib-fx/_tools/vectorfx.py track     PROFILE                            follow every piece: growth, splits, shrink, drift, death
 
 PROFILE: path, or a name in lib-fx/_core/vector/profiles/ (e.g. swirl-slash). Outputs: lib-fx/_study/<name>/vector/ (not in git)."""
 import argparse, sys, pathlib
@@ -25,7 +26,7 @@ def rng(s):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["palette", "ingest", "measure", "rebuild", "review", "all", "lifecycle"])
+    ap.add_argument("cmd", choices=["palette", "ingest", "measure", "rebuild", "review", "all", "lifecycle", "track"])
     ap.add_argument("profile")
     ap.add_argument("--frames"); ap.add_argument("--variants"); ap.add_argument("--variant"); ap.add_argument("--frame", type=int)
     ap.add_argument("--refit", action="store_true")
@@ -62,6 +63,13 @@ def main():
         for v, d in out.items():
             print(v, json.dumps(d["phases"]))
         print("frames:", path)
+    elif a.cmd == "track":
+        import json
+        from vector import tracking
+        out, path = tracking.report(prof, fr)
+        for v, d in out.items():
+            print(v, json.dumps(d["summary"]))
+        print("events:", path)
     if a.cmd in ("review", "all"):
         print(review.build(prof, fr))
 

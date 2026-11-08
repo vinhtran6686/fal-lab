@@ -1,0 +1,252 @@
+{
+ "fire": {
+  "phases": {
+   "birth": 2,
+   "peak": 4,
+   "break_up": 5,
+   "end": 9,
+   "build_frames": 2,
+   "life_frames": 7,
+   "first_held": 10,
+   "area_ratio_per_frame_after_peak": 0.496,
+   "max_pieces": 10
+  },
+  "frames": [
+   {
+    "frame": 2,
+    "held": false,
+    "area": 31702.0,
+    "pieces": 1,
+    "big_pieces": 1,
+    "largest": 31702.0,
+    "extent_h": 222.0,
+    "extent_w": 311.0
+   },
+   {
+    "frame": 3,
+    "held": false,
+    "area": 59783.0,
+    "pieces": 3,
+    "big_pieces": 1,
+    "largest": 59756.0,
+    "extent_h": 393.0,
+    "extent_w": 439.0
+   },
+   {
+    "frame": 4,
+    "held": false,
+    "area": 72273.0,
+    "pieces": 1,
+    "big_pieces": 1,
+    "largest": 72273.0,
+    "extent_h": 473.0,
+    "extent_w": 419.0
+   },
+   {
+    "frame": 5,
+    "held": false,
+    "area": 60687.0,
+    "pieces": 3,
+    "big_pieces": 1,
+    "largest": 60643.0,
+    "extent_h": 499.0,
+    "extent_w": 401.0
+   },
+   {
+    "frame": 6,
+    "held": false,
+    "area": 33916.0,
+    "pieces": 3,
+    "big_pieces": 3,
+    "largest": 14927.0,
+    "extent_h": 509.0,
+    "extent_w": 331.0
+   },
+   {
+    "frame": 7,
+    "held": false,
+    "area": 14500.0,
+    "pieces": 7,
+    "big_pieces": 4,
+    "largest": 8211.0,
+    "extent_h": 506.0,
+    "extent_w": 337.0
+   },
+   {
+    "frame": 8,
+    "held": false,
+    "area": 4778.0,
+    "pieces": 10,
+    "big_pieces": 4,
+    "largest": 2100.0,
+    "extent_h": 504.0,
+    "extent_w": 340.0
+   },
+   {
+    "frame": 9,
+    "held": false,
+    "area": 1277.0,
+    "pieces": 8,
+    "big_pieces": 3,
+    "largest": 444.0,
+    "extent_h": 498.0,
+    "extent_w": 246.0
+   },
+   {
+    "frame": 10,
+    "held": true,
+    "area": 1277.0,
+    "pieces": 8,
+    "big_pieces": 3,
+    "largest": 444.0,
+    "extent_h": 498.0,
+    "extent_w": 246.0
+   },
+   {
+    "frame": 11,
+    "held": false,
+    "area": 264.0,
+    "pieces": 6,
+    "big_pieces": 0,
+    "largest": 104.0,
+    "extent_h": 485.0,
+    "extent_w": 216.0
+   },
+   {
+    "frame": 12,
+    "held": true,
+    "area": 264.0,
+    "pieces": 6,
+    "big_pieces": 0,
+    "largest": 104.0,
+    "extent_h": 485.0,
+    "extent_w": 216.0
+   }
+  ]
+ },
+ "frost": {
+  "phases": {
+   "birth": 2,
+   "peak": 3,
+   "break_up": 4,
+   "end": 8,
+   "build_frames": 1,
+   "life_frames": 6,
+   "first_held": null,
+   "area_ratio_per_frame_after_peak": 0.356,
+   "max_pieces": 5
+  },
+  "frames": [
+   {
+    "frame": 2,
+    "held": false,
+    "area": 25561.0,
+    "pieces": 1,
+    "big_pieces": 1,
+    "largest": 25561.0,
+    "extent_h": 145.0,
+    "extent_w": 303.0
+   },
+   {
+    "frame": 3,
+    "held": false,
+    "area": 55131.0,
+    "pieces": 1,
+    "big_pieces": 1,
+    "largest": 55131.0,
+    "extent_h": 340.0,
+    "extent_w": 432.0
+   },
+   {
+    "frame": 4,
+    "held": false,
+    "area": 48312.0,
+    "pieces": 3,
+    "big_pieces": 1,
+    "largest": 48279.0,
+    "extent_h": 387.0,
+    "extent_w": 399.0
+   },
+   {
+    "frame": 5,
+    "held": false,
+    "area": 29303.0,
+    "pieces": 2,
+    "big_pieces": 1,
+    "largest": 29224.0,
+    "extent_h": 399.0,
+    "extent_w": 382.0
+   },
+   {
+    "frame": 6,
+    "held": false,
+    "area": 14170.0,
+    "pieces": 5,
+    "big_pieces": 3,
+    "largest": 13572.0,
+    "extent_h": 395.0,
+    "extent_w": 258.0
+   },
+   {
+    "frame": 7,
+    "held": false,
+    "area": 4085.0,
+    "pieces": 2,
+    "big_pieces": 2,
+    "largest": 2279.0,
+    "extent_h": 286.0,
+    "extent_w": 235.0
+   },
+   {
+    "frame": 8,
+    "held": false,
+    "area": 840.0,
+    "pieces": 2,
+    "big_pieces": 2,
+    "largest": 507.0,
+    "extent_h": 228.0,
+    "extent_w": 223.0
+   },
+   {
+    "frame": 9,
+    "held": false,
+    "area": 113.0,
+    "pieces": 2,
+    "big_pieces": 0,
+    "largest": 94.0,
+    "extent_h": 197.0,
+    "extent_w": 203.0
+   },
+   {
+    "frame": 10,
+    "held": false,
+    "area": 0.0,
+    "pieces": 0,
+    "big_pieces": 0,
+    "largest": 0.0,
+    "extent_h": 0.0,
+    "extent_w": 0.0
+   },
+   {
+    "frame": 11,
+    "held": false,
+    "area": 0.0,
+    "pieces": 0,
+    "big_pieces": 0,
+    "largest": 0.0,
+    "extent_h": 0.0,
+    "extent_w": 0.0
+   },
+   {
+    "frame": 12,
+    "held": false,
+    "area": 0.0,
+    "pieces": 0,
+    "big_pieces": 0,
+    "largest": 0.0,
+    "extent_h": 0.0,
+    "extent_w": 0.0
+   }
+  ]
+ }
+}

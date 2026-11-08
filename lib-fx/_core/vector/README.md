@@ -4,6 +4,8 @@
 (3 hiệu ứng phun từ đất: lửa, Arcane, Toxic, cả ba 10/10). Lịch sử: [CHANGELOG.md](CHANGELOG.md); quá trình nghiên cứu gốc:
 [research/bezier-shapes/RETROSPECTIVE.md](../../research/bezier-shapes/RETROSPECTIVE.md).
 
+**Nền tảng thiết kế** (phong cách, màu, vòng đời, cách đọc bản gốc, đặc tả bộ sinh, kèm số đo): [foundation/](foundation/README.md).
+
 0 USD, không gọi model. Python: numpy, scipy, Pillow, opencv-python-headless, scikit-image (`pip install scikit-image opencv-python-headless`).
 Tên module chỉ phương pháp, không gắn với hiệu ứng nào: mọi thứ riêng của một hiệu ứng nằm trong **một file profile JSON** (`profiles/<tên>.json`).
 
@@ -60,6 +62,7 @@ python lib-fx/_tools/vectorfx.py rebuild   PROFILE [--frames a-b] [--variants a,
 python lib-fx/_tools/vectorfx.py review    PROFILE                             ảnh từng lớp, GIF, review/index.html
 python lib-fx/_tools/vectorfx.py all       PROFILE                             rebuild + review
 python lib-fx/_tools/vectorfx.py lifecycle PROFILE                             vòng đời: pha, diện tích, số mảnh, frame giữ
+python lib-fx/_tools/vectorfx.py track     PROFILE                             theo dõi từng mảnh: lớn, tách, co, trôi, chết
 ```
 
 `PROFILE` là đường dẫn hoặc tên trong `profiles/`. Kết quả ở `lib-fx/_study/<tên>/vector/` (không vào git): `strokes/` (nét đã khớp, cache;
@@ -101,6 +104,7 @@ smooth.smooth_simplify ─► compose.composite (gradient trong, glow × gain[fr
 | `profile.py` | đọc/ghi profile, mặc định, mô tả mọi khoá |
 | `measure.py` | ingest, nền, màu phẳng, cụm màu, mặt nạ, lấp khe, gradient, glow (2 mô hình), độ đục |
 | `lifecycle.py` | vòng đời của bản gốc (mục 8) |
+| `tracking.py` | theo dõi từng mảnh qua các hình vẽ (foundation/02 §2) |
 | `frames.py` | khung cực / thẳng, tách mặt nạ thành dải (`edge_bias`) |
 | `strokes.py` | đơn vị hình (nét thon) + preset |
 | `fit.py` | đo tham số nét, khớp lớp (tính điểm tăng dần) |
