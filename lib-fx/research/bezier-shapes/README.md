@@ -1,6 +1,6 @@
 # bezier-shapes: dựng lại hình VFX vẽ tay bằng path Bézier
 
-Nhiệm vụ: [BRIEF.md](BRIEF.md). Kết luận: [FINDINGS.md](FINDINGS.md). Dữ liệu: [ref/vfx/swirl-slash/](../../../ref/vfx/swirl-slash/README.md).
+Nhiệm vụ: [BRIEF.md](BRIEF.md). Kết luận: [FINDINGS.md](FINDINGS.md). Tổng kết toàn bộ quá trình: [RETROSPECTIVE.md](RETROSPECTIVE.md). Dữ liệu: [ref/vfx/swirl-slash/](../../../ref/vfx/swirl-slash/README.md).
 
 ## Chạy (theo thứ tự, ~1 phút, 0 USD)
 
