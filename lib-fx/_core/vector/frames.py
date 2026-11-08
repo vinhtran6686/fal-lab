@@ -101,6 +101,32 @@ class LinearFrame(Frame):
         return {"type": self.kind, "origin": [self.ox, self.oy], "angle": self.angle}
 
 
+class EllipseFrame(Frame):
+    """A circle seen in perspective (a swing around a body, a ground ring): u = angle, v = radius, y squashed by `k`.
+    Widths across the path are squashed too, so the far / near sides read thinner than the turns, as drawn by hand."""
+    kind = "ellipse"
+
+    def __init__(self, centre, k=0.3, tilt=0.0, rmax=1200.0):
+        self.cx, self.cy = centre
+        self.k, self.tilt = k, tilt
+        self.u0, self.du, self.nu = 0.0, 2 * np.pi / 1440, 1440
+        self.v0, self.dv, self.nv = 0.0, 0.5, int(rmax / 0.5)
+
+    def to_xy(self, u, v):
+        x, y = v * np.cos(u), self.k * v * np.sin(u)
+        c, s = np.cos(self.tilt), np.sin(self.tilt)
+        return self.cx + x * c - y * s, self.cy + x * s + y * c
+
+    def u_px(self, du_span, v):
+        return du_span * v * (1 + self.k) / 2
+
+    def u_scale(self):
+        return 200.0
+
+    def to_dict(self):
+        return {"type": self.kind, "centre": [self.cx, self.cy], "k": self.k, "tilt": self.tilt}
+
+
 def make_frame(spec, union):
     """spec: profile['frame'] -> fitted Frame for this image."""
     t = (spec or {}).get("type", "polar")

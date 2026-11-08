@@ -47,6 +47,12 @@ def edges(p, frame, n=None):
     pos = p["pos0"] + (p["pos1"] - p["pos0"]) * t
     c = bern(p["spine"], t)
     w = width_profile(t, p["W"], p["a"], p["b"], p.get("e0", 0), p.get("e1", 0), p.get("wobble", ()))
+    if p.get("wknots"):  # extra thickness along the stroke: [[t, multiplier], ...] (perspective: thin far side, thick near side)
+        kt = np.array(p["wknots"], float)
+        w = w * np.interp(t, kt[:, 0], kt[:, 1])
+    if p.get("min_w"):   # keep a hair line visible over the body of the stroke (tips still taper to a point)
+        tip = np.minimum(t, 1 - t)
+        w = np.maximum(w, p["min_w"] * np.clip(tip / 0.08, 0, 1))
     return pos, c - w / 2, c + w / 2
 
 

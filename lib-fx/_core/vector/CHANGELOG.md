@@ -1,5 +1,15 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.6 (2026-11-09): bộ sinh kiểu "loop"
+
+- `gen_slash_loop.py` (lệnh `gen-slash NAME --style loop`): nhát chém ngang vòng quanh thân theo ý tưởng `ref/vfx/axe-swing-idea/reference.png`
+  (chỉ lấy ý, không đồ). Elip phối cảnh, nhiều sợi (dải sáng, dải xanh, sợi tối, vệt tốc độ), đầu nét chổi khô, răng khía to ở nơi dải dày;
+  sau đỉnh sợi giãn theo chiều dài rồi mới đứt, mỗi sợi đứt ở chỗ riêng. Chưa có phản chiếu.
+  Kết quả `showcase/generated/gen-slash-loop-blue/`, trang https://claude.ai/artifact/2zSWrndFyafkCGZ6a328CM.
+- `gen_render.py`: phần dựng chung cho bộ sinh (làm mịn, tô chồng, glow, xuất PNG / SVG / GIF / design.json).
+- `frames.EllipseFrame` (elip phối cảnh: dẹt `k`, nghiêng `tilt`); `strokes.edges` thêm `wknots` (hệ số độ dày dọc nét) và `min_w`
+  (nét tóc tối thiểu, đầu nét vẫn thon).
+
 ## 1.5 (2026-11-09): bộ sinh đầu tiên
 
 - `gen_slash.py` (lệnh `gen-slash`): sinh một nhát chém MỚI chỉ từ luật trong `foundation/` (lưỡi liềm nét thon, 2 lớp tô chồng, sinh từ đầu

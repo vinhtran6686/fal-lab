@@ -57,7 +57,7 @@ Trang review: Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdK
 ## 4. Lệnh
 
 ```
-python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED]   SINH nhát chém mới từ luật (gen_slash.py)
+python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED] [--style crescent|loop]   SINH nhát chém mới từ luật (gen_slash.py; loop: gen_slash_loop.py)
 python lib-fx/_tools/vectorfx.py init      GIF NAME                            bản nháp profile: tự tìm khung cắt (+ phản chiếu), frame, lớp màu
 python lib-fx/_tools/vectorfx.py check     PROFILE                             điểm ảnh sáng không lớp nào nhận; báo "MISSING LAYER" khi một màu chiếm phần lớn
 python lib-fx/_tools/vectorfx.py palette   PROFILE [--variant V] [--frame N]   màu phẳng + cụm màu + ảnh mặt nạ từng màu

@@ -48,6 +48,10 @@ seed
 - `gen_slash.py` v0 (2026-11-09): dạng chém. Các khung chính được viết dưới dạng **tham số nét theo hình vẽ** (đầu / đuôi nét, độ dày, độ
   rộng vết cắt, lỗ), nên các frame ở giữa liền mạch theo cấu tạo, không cần ghép nét giữa hai ảnh. Số đo của bản thử nằm trong khoảng đo
   (hình đầu 7%, bùng ×7,5, sau đỉnh còn 0,27-0,50 mỗi hình, 9 mảnh, 0 điểm gãy). Chưa tốt: tách mảnh ngay sau đỉnh hơi sớm; chưa có phản chiếu.
+- `gen_slash_loop.py` v1 (2026-11-09, `--style loop`): chém ngang vòng quanh thân trên `EllipseFrame`. Luật thêm sau lần chấm v0 = 7/10 ("nét
+  quá đơn giản"): một nhát chém là **nhiều sợi** (dải sáng + dải giữa + sợi tối + vệt tốc độ), đầu nét chổi khô 3-4 ngón dài ngắn khác nhau,
+  độ dày theo phối cảnh (sau ×0,3, trước ×2,4, nét tóc ≥ 2 px); sau đỉnh sợi **giãn** trước khi **đứt**, mỗi sợi đứt ở chỗ riêng; răng khía chỉ
+  ở nơi dải dày (trên nét tóc chúng cắt vụn nét).
 
 ## 4. Kế hoạch đề xuất
 
