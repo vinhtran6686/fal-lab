@@ -1,38 +1,44 @@
 {
  "design": {
   "seed": 11,
+  "style": "light",
   "size": [
    960,
-   400
+   460
   ],
   "centre": [
-   445,
-   205
+   480,
+   190
   ],
-  "R": 395,
+  "R": 380,
   "k": 0.24,
   "tilt": -0.04,
   "width": 36.0,
   "u_start": -3.001966313430247,
+  "back": 0.3,
+  "front": 2.4,
+  "finger_b": 1.6,
+  "inner_w": 0.85,
+  "deep_w": 0.34,
   "fingers": [
    {
     "off": -0.38,
-    "ext": 0.02385710608307599,
+    "ext": 0.015428424332303953,
     "w": 0.3
    },
    {
     "off": -0.05,
-    "ext": 0.0899566717464069,
+    "ext": 0.05991334349281379,
     "w": 0.48
    },
    {
     "off": 0.3,
-    "ext": 0.018044950728700722,
+    "ext": 0.07217980291480289,
     "w": 0.3
    },
    {
     "off": 0.55,
-    "ext": 0.03114756033487778,
+    "ext": 0.0034426810046333453,
     "w": 0.16
    }
   ],
@@ -55,20 +61,20 @@
   "lines": [
    {
     "dr": 24,
-    "a": 0.927334030700919,
-    "b": 0.2381822911000291,
+    "a": 0.9601348675420218,
+    "b": 0.3645468733000873,
     "w": 3.2
    },
    {
     "dr": 44,
-    "a": 1.5170251394735188,
-    "b": 0.4117419486409124,
+    "a": 0.9374553068417414,
+    "b": 0.23891938444205293,
     "w": 2.4
    },
    {
     "dr": -30,
-    "a": 0.938356042578023,
-    "b": 0.1476064957422006,
+    "a": 1.8304791170895633,
+    "b": 0.24281948722660188,
     "w": 2.8
    }
   ],
@@ -111,49 +117,50 @@
     "t": 0.3700164193174683,
     "dr": -1.5767721509386377,
     "L": 15.713181110761305,
-    "born": 5,
+    "born": 6,
     "drift": 0.03392326586277431
    },
    {
     "t": 0.5012688776418589,
     "dr": -2.5380063096033396,
     "L": 19.583335938918125,
-    "born": 5,
+    "born": 6,
     "drift": 0.0537237855157334
    },
    {
     "t": 0.5913860410639606,
     "dr": 9.546828720708696,
     "L": 28.97146685111573,
-    "born": 5,
+    "born": 6,
     "drift": 0.021817275642971
    },
    {
     "t": 0.6585271993888443,
     "dr": -18.17575698433224,
     "L": 16.550778025710223,
-    "born": 6,
+    "born": 7,
     "drift": 0.05553938597839442
    },
    {
     "t": 0.7462103733716114,
     "dr": 30.431449914065198,
     "L": 18.44301944476696,
-    "born": 6,
+    "born": 7,
     "drift": 0.0294911285500166
    },
    {
     "t": 0.9205485797017006,
     "dr": -16.933698713455485,
     "L": 28.82520109668259,
-    "born": 6,
+    "born": 7,
     "drift": 0.027222661254440474
    }
-  ]
+  ],
+  "floor": 338
  },
  "timeline": [
   {
-   "head": 0.45,
+   "head": 0.5,
    "tail": 0.0,
    "w": 0.4,
    "spread": 0.0,
@@ -164,7 +171,7 @@
    "label": "sinh: m\u1ed9t n\u00e9t nh\u1ecf ph\u00eda sau"
   },
   {
-   "head": 1.45,
+   "head": 1.7,
    "tail": 0.05,
    "w": 0.62,
    "spread": 0.0,
@@ -175,9 +182,9 @@
    "label": "b\u00f9ng: ch\u1ea1y d\u1ecdc v\u00f2ng sau"
   },
   {
-   "head": 2.55,
+   "head": 3.0,
    "tail": 0.2,
-   "w": 0.92,
+   "w": 0.9,
    "spread": 0.0,
    "brk": 0.0,
    "frames": [
@@ -186,71 +193,82 @@
    "label": "quay \u0111\u1ea7u b\u00ean ph\u1ea3i"
   },
   {
-   "head": 3.55,
-   "tail": 0.3,
+   "head": 4.6,
+   "tail": 0.35,
    "w": 1.0,
    "spread": 0.0,
    "brk": 0.0,
    "frames": [
     3
    ],
-   "label": "\u0111\u1ec9nh: c\u1ea3 v\u00f2ng, v\u00f2ng tr\u01b0\u1edbc d\u00e0y"
+   "label": "v\u00f2ng tr\u01b0\u1edbc d\u00e0y"
   },
   {
-   "head": 4.0,
-   "tail": 0.95,
-   "w": 0.88,
-   "spread": 0.55,
+   "head": 6.6,
+   "tail": 0.15,
+   "w": 1.0,
+   "spread": 0.0,
    "brk": 0.0,
    "frames": [
     4
    ],
+   "label": "\u0111\u1ec9nh: v\u00f2ng kh\u00e9p k\u00edn"
+  },
+  {
+   "head": 6.85,
+   "tail": 1.4,
+   "w": 0.88,
+   "spread": 0.55,
+   "brk": 0.0,
+   "frames": [
+    5
+   ],
    "label": "s\u1ee3i t\u00e1ch ra theo chi\u1ec1u d\u00e0i"
   },
   {
-   "head": 4.25,
-   "tail": 1.7,
+   "head": 7.05,
+   "tail": 2.5,
    "w": 0.66,
    "spread": 1.0,
    "brk": 0.45,
    "frames": [
-    5
+    6
    ],
    "label": "m\u1ed7i s\u1ee3i \u0111\u1ee9t \u1edf ch\u1ed7 ri\u00eang"
   },
   {
-   "head": 4.4,
-   "tail": 2.45,
+   "head": 7.2,
+   "tail": 3.6,
    "w": 0.42,
    "spread": 1.35,
    "brk": 1.0,
    "frames": [
-    6,
-    7
+    7,
+    8
    ],
    "label": "v\u1ec7t co l\u1ea1i (gi\u1eef 2 frame)"
   },
   {
-   "head": 4.5,
-   "tail": 3.1,
+   "head": 7.3,
+   "tail": 4.6,
    "w": 0.22,
    "spread": 1.6,
    "brk": 1.5,
    "frames": [
-    8,
-    9
+    9,
+    10
    ],
    "label": "m\u1ea3nh v\u1ee5n (gi\u1eef 2 frame)"
   },
   {
-   "head": 4.55,
-   "tail": 3.7,
+   "head": 7.35,
+   "tail": 5.4,
    "w": 0.09,
    "spread": 1.8,
    "brk": 2.0,
    "frames": [
-    10,
-    11
+    11,
+    12
    ],
    "label": "t\u00e0n (gi\u1eef 2 frame)"
   }
@@ -260,16 +278,31 @@
   "1": 1.0,
   "2": 1.0,
   "3": 1.0,
-  "4": 1.05,
-  "5": 1.15,
-  "6": 1.25,
+  "4": 1.0,
+  "5": 1.05,
+  "6": 1.15,
   "7": 1.25,
-  "8": 1.2,
+  "8": 1.25,
   "9": 1.2,
-  "10": 1.15,
-  "11": 1.15
+  "10": 1.2,
+  "11": 1.15,
+  "12": 1.15
  },
- "style": "loop",
+ "style": "loop-light",
+ "reflection": {
+  "squash": 0.27,
+  "dim": 0.8,
+  "sat": 0.85,
+  "halo": 0.4,
+  "opacity": 0.9,
+  "tint": [
+   106,
+   190,
+   255
+  ],
+  "tint_mix": 0.35,
+  "floor": 338
+ },
  "idea": "ref/vfx/axe-swing-idea/reference.png",
  "stats": [
   {
@@ -278,7 +311,7 @@
    "frames": [
     0
    ],
-   "area": 414,
+   "area": 469,
    "pieces": 1
   },
   {
@@ -287,8 +320,8 @@
    "frames": [
     1
    ],
-   "area": 3395,
-   "pieces": 9
+   "area": 4822,
+   "pieces": 14
   },
   {
    "drawing": 2,
@@ -296,65 +329,74 @@
    "frames": [
     2
    ],
-   "area": 4515,
-   "pieces": 44
+   "area": 11015,
+   "pieces": 3
   },
   {
    "drawing": 3,
-   "label": "\u0111\u1ec9nh: c\u1ea3 v\u00f2ng, v\u00f2ng tr\u01b0\u1edbc d\u00e0y",
+   "label": "v\u00f2ng tr\u01b0\u1edbc d\u00e0y",
    "frames": [
     3
    ],
-   "area": 7879,
-   "pieces": 33
+   "area": 18411,
+   "pieces": 2
   },
   {
    "drawing": 4,
-   "label": "s\u1ee3i t\u00e1ch ra theo chi\u1ec1u d\u00e0i",
+   "label": "\u0111\u1ec9nh: v\u00f2ng kh\u00e9p k\u00edn",
    "frames": [
     4
    ],
-   "area": 10815,
-   "pieces": 19
+   "area": 26629,
+   "pieces": 2
   },
   {
    "drawing": 5,
-   "label": "m\u1ed7i s\u1ee3i \u0111\u1ee9t \u1edf ch\u1ed7 ri\u00eang",
+   "label": "s\u1ee3i t\u00e1ch ra theo chi\u1ec1u d\u00e0i",
    "frames": [
     5
    ],
-   "area": 9628,
-   "pieces": 69
+   "area": 23959,
+   "pieces": 17
   },
   {
    "drawing": 6,
-   "label": "v\u1ec7t co l\u1ea1i (gi\u1eef 2 frame)",
+   "label": "m\u1ed7i s\u1ee3i \u0111\u1ee9t \u1edf ch\u1ed7 ri\u00eang",
    "frames": [
-    6,
-    7
+    6
    ],
-   "area": 6413,
-   "pieces": 42
+   "area": 17255,
+   "pieces": 9
   },
   {
    "drawing": 7,
-   "label": "m\u1ea3nh v\u1ee5n (gi\u1eef 2 frame)",
+   "label": "v\u1ec7t co l\u1ea1i (gi\u1eef 2 frame)",
    "frames": [
-    8,
-    9
+    7,
+    8
    ],
-   "area": 3521,
-   "pieces": 20
+   "area": 10287,
+   "pieces": 10
   },
   {
    "drawing": 8,
+   "label": "m\u1ea3nh v\u1ee5n (gi\u1eef 2 frame)",
+   "frames": [
+    9,
+    10
+   ],
+   "area": 3926,
+   "pieces": 35
+  },
+  {
+   "drawing": 9,
    "label": "t\u00e0n (gi\u1eef 2 frame)",
    "frames": [
-    10,
-    11
+    11,
+    12
    ],
-   "area": 994,
-   "pieces": 4
+   "area": 680,
+   "pieces": 21
   }
  ]
 }

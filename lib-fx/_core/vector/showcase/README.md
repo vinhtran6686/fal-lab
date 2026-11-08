@@ -24,4 +24,5 @@ Bản gốc: `ref/vfx/swirl-slash/`, `ref/vfx/element-trio/`, `ref/vfx/slash-tri
 | Tên | Lệnh | Thư mục | Trang |
 |---|---|---|---|
 | Nhát chém ngang xanh | `vectorfx.py gen-slash gen-slash-blue --variant blue --frame 7` | [generated/gen-slash-blue](generated/gen-slash-blue/) (`preview.gif`, `frames/`, `svg/`, `design.json`) | https://claude.ai/artifact/WSPsgRkzRos6fW6BfDrsNM |
-| Nhát chém ngang xanh, vòng quanh thân | `vectorfx.py gen-slash gen-slash-loop-blue --style loop` | [generated/gen-slash-loop-blue](generated/gen-slash-loop-blue/) | https://claude.ai/artifact/2zSWrndFyafkCGZ6a328CM |
+| Nhát chém ngang xanh, vòng quanh thân (phản chiếu, vòng khép); user 8-9/10 trước khi thêm phản chiếu | `vectorfx.py gen-slash gen-slash-loop-blue --style loop` | [generated/gen-slash-loop-blue](generated/gen-slash-loop-blue/) | https://claude.ai/artifact/2zSWrndFyafkCGZ6a328CM |
+| Như trên, vũ khí lớn (trọng kiếm, đại đao, katana) | `vectorfx.py gen-slash gen-slash-loop-heavy-blue --style loop-heavy` | [generated/gen-slash-loop-heavy-blue](generated/gen-slash-loop-heavy-blue/) | cùng trang (nút "Bản nặng") |

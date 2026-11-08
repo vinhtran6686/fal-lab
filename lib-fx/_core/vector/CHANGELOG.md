@@ -1,5 +1,14 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.7 (2026-11-09): phản chiếu, khép vòng, bản vũ khí lớn
+
+- `gen_render.render_sequence(..., reflection=dict(floor, squash, dim, sat, halo, opacity, tint, tint_mix))`: phản chiếu dưới sàn vẽ lại
+  CÙNG các nét trong `frames.ReflectFrame` (lật qua sàn, dẹt ~1/4 như slash-trio), màu tối hơn và kéo về sắc chính (lớp sáng không hoá xám),
+  glow yếu (`halo_w` theo lớp trong `compose.halo`), nét mảnh < ~2 px bị bỏ trong phản chiếu (tránh vụn chấm chấm).
+- `gen_slash_loop`: vòng khép ở đỉnh (đầu nét chạy ≈ 378°), nét tóc phía sau ≥ ~2 px trên màn hình, răng khía cắn từ mép trong (không
+  thành lỗ); kiểu `heavy` (`--style loop-heavy`: trọng kiếm, đại đao, katana hai tay): lưỡi ×2, ít sợi đậm, đầu nét 3 ngón cùn, vụn to,
+  lấy đà và va chạm giữ 2 frame. Kết quả `showcase/generated/gen-slash-loop-blue/`, `gen-slash-loop-heavy-blue/`.
+
 ## 1.6 (2026-11-09): bộ sinh kiểu "loop"
 
 - `gen_slash_loop.py` (lệnh `gen-slash NAME --style loop`): nhát chém ngang vòng quanh thân theo ý tưởng `ref/vfx/axe-swing-idea/reference.png`

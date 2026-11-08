@@ -27,14 +27,14 @@ def visible(covers, order):
     return vis
 
 
-def halo(covers, h, near=True, frame=None):
+def halo(covers, h, near=True, frame=None, weights=None):
     """Two models (profile `halo_model`):
     distance (default): c_near*exp(-d/s_near) + c_far*exp(-d/s_far), d = px to the silhouette; constant over time.
     blur: gain[frame] * (G(sigma0) * silhouette * c0 + G(sigma1) * silhouette * c1): a blurred copy of the shapes, so
           small specks glow weakly and holes fill with glow, with the glow opacity animated (fades out at the end)."""
     sil = np.zeros(next(iter(covers.values())).shape)
-    for c in covers.values():
-        sil = np.maximum(sil, c)
+    for l, c in covers.items():
+        sil = np.maximum(sil, c * (weights or {}).get(l, 1.0))
     if h.get("model") == "blur":
         g = h.get("gain", {})
         if frame is not None and g:
@@ -79,7 +79,8 @@ def composite(covers, order, prof, v, frame=None):
     shape = next(iter(covers.values())).shape
     img = np.zeros(shape + (3,)) + np.array(prof.get("background"), float)
     if var.get("halo"):
-        img = img + halo(covers, var["halo"], var.get("near_halo", True), frame)
+        w = {l: c["halo_w"] for l, c in prof.layers(v).items() if "halo_w" in c}
+        img = img + halo(covers, var["halo"], var.get("near_halo", True), frame, w or None)
     flat = np.zeros(shape + (3,)) + 20
     vis = visible(covers, order)
     for l in order:

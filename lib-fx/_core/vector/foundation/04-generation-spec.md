@@ -51,7 +51,10 @@ seed
 - `gen_slash_loop.py` v1 (2026-11-09, `--style loop`): chém ngang vòng quanh thân trên `EllipseFrame`. Luật thêm sau lần chấm v0 = 7/10 ("nét
   quá đơn giản"): một nhát chém là **nhiều sợi** (dải sáng + dải giữa + sợi tối + vệt tốc độ), đầu nét chổi khô 3-4 ngón dài ngắn khác nhau,
   độ dày theo phối cảnh (sau ×0,3, trước ×2,4, nét tóc ≥ 2 px); sau đỉnh sợi **giãn** trước khi **đứt**, mỗi sợi đứt ở chỗ riêng; răng khía chỉ
-  ở nơi dải dày (trên nét tóc chúng cắt vụn nét).
+  ở nơi dải dày (trên nét tóc chúng cắt vụn nét). User chấm 8-9/10.
+- 1.7: **phản chiếu** = cùng nét vẽ lại trong khung lật qua sàn (dẹt ~1/4), màu tối và kéo về sắc chính, glow ~40%, bỏ nét < 2 px;
+  **khép vòng** = đầu nét chạy > 2π ở đỉnh; răng khía phải cắn từ mép (hở), không nằm giữa dải (thành lỗ). **Vũ khí lớn** = cùng ngôn ngữ,
+  khác ở: độ rộng lưỡi ×2, phía sau dày hơn, ít sợi hơn nhưng đậm, đầu nét cùn, vụn to, nhịp chậm (lấy đà và va chạm giữ 2 frame).
 
 ## 4. Kế hoạch đề xuất
 

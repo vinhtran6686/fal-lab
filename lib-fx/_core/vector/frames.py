@@ -127,6 +127,32 @@ class EllipseFrame(Frame):
         return {"type": self.kind, "centre": [self.cx, self.cy], "k": self.k, "tilt": self.tilt}
 
 
+class ReflectFrame(Frame):
+    """Floor reflection of another frame: mirrored about the floor line y = floor and squashed vertically by `squash`
+    (slash-trio measured ~1/4 of the slash height). Strokes drawn in it are the same strokes, so the reflection keeps
+    every strand, break and timing of the effect above."""
+    kind = "reflect"
+
+    def __init__(self, base, floor, squash=0.27):
+        self.base, self.floor, self.squash = base, float(floor), float(squash)
+        for a in ("u0", "du", "nu", "v0", "dv", "nv"):
+            if hasattr(base, a):
+                setattr(self, a, getattr(base, a))
+
+    def to_xy(self, u, v):
+        x, y = self.base.to_xy(u, v)
+        return x, self.floor + (self.floor - np.asarray(y)) * self.squash
+
+    def u_px(self, du_span, v):
+        return self.base.u_px(du_span, v)
+
+    def u_scale(self):
+        return self.base.u_scale()
+
+    def to_dict(self):
+        return {"type": self.kind, "base": self.base.to_dict(), "floor": self.floor, "squash": self.squash}
+
+
 def make_frame(spec, union):
     """spec: profile['frame'] -> fitted Frame for this image."""
     t = (spec or {}).get("type", "polar")

@@ -19,19 +19,49 @@ from .gen_render import render_sequence
 PALETTE = {"deep": [52, 104, 168], "blue": [106, 190, 255], "ice": [227, 251, 253]}       # bottom -> top
 HALO = {"model": "blur", "sigma": [8.57, 51.43], "c": [[41.7, 114.3, 142.7], [89.2, 148.9, 249.4]]}
 
-# one row per drawing: head / tail (radians travelled along the loop), width scale, strand spread, break amount
+# one row per drawing: head / tail (radians travelled along the loop), width scale, strand spread, break amount.
+# The head travels past 2*pi at the peak, so the loop CLOSES (user, 2026-11-09: "khép vòng").
 TIMELINE = [
-    dict(head=0.45, tail=0.00, w=0.40, spread=0.0, brk=0.0, frames=[0], label="sinh: một nét nhỏ phía sau"),
-    dict(head=1.45, tail=0.05, w=0.62, spread=0.0, brk=0.0, frames=[1], label="bùng: chạy dọc vòng sau"),
-    dict(head=2.55, tail=0.20, w=0.92, spread=0.0, brk=0.0, frames=[2], label="quay đầu bên phải"),
-    dict(head=3.55, tail=0.30, w=1.00, spread=0.0, brk=0.0, frames=[3], label="đỉnh: cả vòng, vòng trước dày"),
-    dict(head=4.00, tail=0.95, w=0.88, spread=0.55, brk=0.0, frames=[4], label="sợi tách ra theo chiều dài"),
-    dict(head=4.25, tail=1.70, w=0.66, spread=1.00, brk=0.45, frames=[5], label="mỗi sợi đứt ở chỗ riêng"),
-    dict(head=4.40, tail=2.45, w=0.42, spread=1.35, brk=1.00, frames=[6, 7], label="vệt co lại (giữ 2 frame)"),
-    dict(head=4.50, tail=3.10, w=0.22, spread=1.60, brk=1.50, frames=[8, 9], label="mảnh vụn (giữ 2 frame)"),
-    dict(head=4.55, tail=3.70, w=0.09, spread=1.80, brk=2.00, frames=[10, 11], label="tàn (giữ 2 frame)"),
+    dict(head=0.50, tail=0.00, w=0.40, spread=0.0, brk=0.0, frames=[0], label="sinh: một nét nhỏ phía sau"),
+    dict(head=1.70, tail=0.05, w=0.62, spread=0.0, brk=0.0, frames=[1], label="bùng: chạy dọc vòng sau"),
+    dict(head=3.00, tail=0.20, w=0.90, spread=0.0, brk=0.0, frames=[2], label="quay đầu bên phải"),
+    dict(head=4.60, tail=0.35, w=1.00, spread=0.0, brk=0.0, frames=[3], label="vòng trước dày"),
+    dict(head=6.60, tail=0.15, w=1.00, spread=0.0, brk=0.0, frames=[4], label="đỉnh: vòng khép kín"),
+    dict(head=6.85, tail=1.40, w=0.88, spread=0.55, brk=0.0, frames=[5], label="sợi tách ra theo chiều dài"),
+    dict(head=7.05, tail=2.50, w=0.66, spread=1.00, brk=0.45, frames=[6], label="mỗi sợi đứt ở chỗ riêng"),
+    dict(head=7.20, tail=3.60, w=0.42, spread=1.35, brk=1.00, frames=[7, 8], label="vệt co lại (giữ 2 frame)"),
+    dict(head=7.30, tail=4.60, w=0.22, spread=1.60, brk=1.50, frames=[9, 10], label="mảnh vụn (giữ 2 frame)"),
+    dict(head=7.35, tail=5.40, w=0.09, spread=1.80, brk=2.00, frames=[11, 12], label="tàn (giữ 2 frame)"),
 ]
-GAIN = {0: 1.1, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.05, 5: 1.15, 6: 1.25, 7: 1.25, 8: 1.2, 9: 1.2, 10: 1.15, 11: 1.15}
+GAIN = {0: 1.1, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.05, 6: 1.15, 7: 1.25, 8: 1.25, 9: 1.2, 10: 1.2, 11: 1.15, 12: 1.15}
+
+# heavy weapon (great sword, glaive, two-handed katana): a much wider blade, fewer but bolder strands, a blunt split
+# head, big teeth and chunky debris; slower: wind-up held on twos and the impact (closed loop) held 2 frames.
+TIMELINE_HEAVY = [
+    dict(head=0.50, tail=0.00, w=0.45, spread=0.0, brk=0.0, frames=[0, 1], label="lấy đà: nét nhỏ phía sau (giữ 2 frame)"),
+    dict(head=2.00, tail=0.05, w=0.70, spread=0.0, brk=0.0, frames=[2], label="bùng: chạy dọc vòng sau"),
+    dict(head=3.80, tail=0.20, w=0.95, spread=0.0, brk=0.0, frames=[3], label="quay đầu bên phải"),
+    dict(head=5.40, tail=0.40, w=1.00, spread=0.0, brk=0.0, frames=[4], label="vòng trước dày"),
+    dict(head=6.60, tail=0.15, w=1.00, spread=0.0, brk=0.0, frames=[5, 6], label="đỉnh: vòng khép, giữ 2 frame (lực nặng)"),
+    dict(head=6.80, tail=1.50, w=0.90, spread=0.45, brk=0.0, frames=[7], label="sợi tách ra theo chiều dài"),
+    dict(head=7.00, tail=2.60, w=0.72, spread=0.85, brk=0.45, frames=[8], label="mỗi sợi đứt ở chỗ riêng"),
+    dict(head=7.10, tail=3.60, w=0.50, spread=1.15, brk=1.00, frames=[9, 10], label="vệt co lại (giữ 2 frame)"),
+    dict(head=7.20, tail=4.50, w=0.30, spread=1.35, brk=1.50, frames=[11, 12], label="mảnh vụn to (giữ 2 frame)"),
+    dict(head=7.25, tail=5.30, w=0.12, spread=1.50, brk=2.00, frames=[13, 14], label="tàn (giữ 2 frame)"),
+]
+GAIN_HEAVY = {0: 1.1, 1: 1.1, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.05, 8: 1.15, 9: 1.25, 10: 1.25, 11: 1.2, 12: 1.2,
+              13: 1.15, 14: 1.15}
+
+STYLES = {
+    "light": dict(width=36.0, timeline=TIMELINE, gain=GAIN, back=0.30, front=2.4, fingers_off=[-0.38, -0.05, 0.30, 0.55],
+                  fingers_w=[0.30, 0.48, 0.30, 0.16], finger_b=1.6, n_teeth=6, teeth=(0.6, 1.6), lines=[24, 44, -30],
+                  line_w=[3.2, 2.4, 2.8], debris_L=(14, 30), inner_w=0.85, deep_w=0.34, floor=338),
+    "heavy": dict(width=70.0, timeline=TIMELINE_HEAVY, gain=GAIN_HEAVY, back=0.42, front=2.2, fingers_off=[-0.30, 0.05, 0.38],
+                  fingers_w=[0.42, 0.62, 0.36], finger_b=0.9, n_teeth=5, teeth=(1.0, 2.0), lines=[30, -40],
+                  line_w=[5.0, 4.2], debris_L=(26, 52), inner_w=0.75, deep_w=0.42, floor=352),
+}
+
+REFLECTION = dict(squash=0.27, dim=0.80, sat=0.85, halo=0.4, opacity=0.9, tint=PALETTE["blue"], tint_mix=0.35)    # slash-trio: ~1/4 height, luma 0.7-0.85
 
 
 def _uneven(rng, n, lo, hi, min_gap):
@@ -42,27 +72,32 @@ def _uneven(rng, n, lo, hi, min_gap):
     return np.linspace(lo, hi, n)
 
 
-def design(seed=11, size=(960, 400), centre=(445, 205), radius=395, k=0.24, tilt=-0.04, width=36.0):
+def design(seed=11, style="light", size=(960, 460), centre=(480, 190), radius=380, k=0.24, tilt=-0.04):
+    S = STYLES[style]
     rng = np.random.default_rng(seed)
     u_start = np.radians(-172)                       # back-left, swinging clockwise on screen: top -> right -> bottom
-    fingers = [dict(off=o, ext=e, w=w) for o, e, w in zip([-0.38, -0.05, 0.30, 0.55], rng.uniform([0.02, 0.06, 0.0, 0.03], [0.05, 0.12, 0.03, 0.07]),
-                                                         [0.30, 0.48, 0.30, 0.16])]
-    teeth = _uneven(rng, 6, 0.25, 0.92, 0.07).tolist()
-    teeth_size = rng.uniform(0.6, 1.6, 6).tolist()
-    lines = [dict(dr=dr, a=a, b=b, w=w) for dr, a, b, w in zip([24, 44, -30], rng.uniform([0.9, 1.5, 0.6], [1.4, 2.0, 1.0]),
-                                                               rng.uniform([0.15, 0.35, 0.1], [0.3, 0.55, 0.25]), [3.2, 2.4, 2.8])]
+    nf = len(S["fingers_off"])
+    fingers = [dict(off=o, ext=float(e), w=w) for o, e, w in zip(S["fingers_off"], rng.uniform(0.0, 0.12, nf), S["fingers_w"])]
+    teeth = _uneven(rng, S["n_teeth"], 0.25, 0.92, 0.07).tolist()
+    teeth_size = rng.uniform(*S["teeth"], S["n_teeth"]).tolist()
+    nl = len(S["lines"])
+    lines = [dict(dr=dr, a=float(a), b=float(b), w=w) for dr, a, b, w in zip(S["lines"], rng.uniform(0.9, 2.0, nl),
+                                                                         rng.uniform(0.1, 0.55, nl), S["line_w"])]
     breaks = _uneven(rng, 5, 0.12, 0.88, 0.09).tolist()
     break_len = rng.uniform(0.5, 1.6, 5).tolist()
     flecks = [dict(u=float(u), r=float(r), L=float(L), born=int(b)) for u, r, L, b in zip(
         rng.uniform(-0.2, 0.5, 3), rng.uniform(-30, 30, 3), rng.uniform(8, 16, 3), [0, 0, 1])]
+    first_brk = next(i for i, T in enumerate(S["timeline"]) if T["brk"] > 0)
     debris = [dict(t=float(t), dr=float(dr), L=float(L), born=int(b), drift=float(df)) for t, dr, L, b, df in zip(
-        _uneven(rng, 6, 0.3, 0.95, 0.06), rng.uniform(-40, 40, 6), rng.uniform(14, 30, 6), [5, 5, 5, 6, 6, 6], rng.uniform(0.02, 0.06, 6))]
-    return dict(seed=seed, size=size, centre=centre, R=radius, k=k, tilt=tilt, width=width, u_start=float(u_start),
+        _uneven(rng, 6, 0.3, 0.95, 0.06), rng.uniform(-40, 40, 6), rng.uniform(*S["debris_L"], 6),
+        [first_brk] * 3 + [first_brk + 1] * 3, rng.uniform(0.02, 0.06, 6))]
+    return dict(seed=seed, style=style, size=size, centre=centre, R=radius, k=k, tilt=tilt, width=S["width"], u_start=float(u_start),
+                back=S["back"], front=S["front"], finger_b=S["finger_b"], inner_w=S["inner_w"], deep_w=S["deep_w"],
                 fingers=fingers, teeth=teeth, teeth_size=teeth_size, lines=lines, breaks=breaks, break_len=break_len,
-                flecks=flecks, debris=debris)
+                flecks=flecks, debris=debris, floor=S["floor"])
 
 
-def _persp(u0, u1, back=0.30, front=2.4, n=9):
+def _persp(u0, u1, back=0.30, front=2.4, n=13):
     """Thickness multipliers along a stroke: far side (top, sin<0) thin, turn 1, near side (bottom) thick; squash k is undone
     on the near side so the ribbon reads thick there, as in the idea sheet."""
     ts = np.linspace(0, 1, n)
@@ -71,19 +106,23 @@ def _persp(u0, u1, back=0.30, front=2.4, n=9):
     return [[float(t), float(v)] for t, v in zip(ts, m)]
 
 
+PERSP = dict(back=0.30, front=2.4, w=1.0)
+
+
 def _stroke(u0, u1, r, W, a, b, persp=True, op="add", r1=None):
     r1 = r if r1 is None else r1
     p = dict(axis="u", pos0=float(u0), pos1=float(u1), spine=[r, (2 * r + r1) / 3, (r + 2 * r1) / 3, r1], a=a, b=b, e0=0.0, e1=0.0,
              W=peak_scale(W, a, b), op=op)
     if op == "add" and persp:  # the far side stays a visible hair line (>= ~2 px), never vanishes
-        p["min_w"] = 2.2
+        p["min_w"] = 9.0 * PERSP["w"]   # loop units: the far side is squashed by k (~0.24), so ~2 px on screen; fades with the stroke
     if persp:
-        p["wknots"] = _persp(u0, u1)
+        p["wknots"] = _persp(u0, u1, PERSP["back"], PERSP["front"])
     return p
 
 
-def drawing(D, k):
-    T = TIMELINE[k]
+def drawing(D, k, timeline=TIMELINE):
+    T = timeline[k]
+    PERSP.update(back=D["back"], front=D["front"], w=T["w"])
     us = D["u_start"]
     R, Wb = D["R"], D["width"]
     h, t = us + T["head"], us + T["tail"]
@@ -98,11 +137,11 @@ def drawing(D, k):
         # dry-brush fingers at the head
         for f in D["fingers"]:
             f0 = main_end - 0.16 * min(L, 1.2)
-            out["ice"].append(_stroke(f0, h + f["ext"] * T["w"], R + f["off"] * W * (1 + sp), W * f["w"], a=0.8, b=1.6))
+            out["ice"].append(_stroke(f0, h + f["ext"] * T["w"], R + f["off"] * W * (1 + sp), W * f["w"], a=0.8, b=D["finger_b"]))
         # inner ribbon (mid tone) and innermost strand (dark): lag behind the head, drift inward as the strands spread
         if L > 0.6:
-            out["blue"].append(_stroke(max(t, h - 2.3), h - 0.12, R - (0.48 + 0.55 * sp) * W, W * 0.85, a=1.3, b=0.7))
-            out["deep"].append(_stroke(max(t, h - 1.5), h - 0.30, R - (1.0 + 0.9 * sp) * W, W * 0.34, a=1.2, b=1.0))
+            out["blue"].append(_stroke(max(t, h - 3.0), h - 0.12, R - (0.48 + 0.55 * sp) * W, W * D["inner_w"], a=1.3, b=0.7))
+            out["deep"].append(_stroke(max(t, h - 2.0), h - 0.30, R - (1.0 + 0.9 * sp) * W, W * D["deep_w"], a=1.2, b=1.0))
         # hair speed lines, outside and inside, spreading
         if L > 1.0:
             for ln in D["lines"]:
@@ -116,7 +155,14 @@ def drawing(D, k):
         for tt, sz in zip(D["teeth"], D["teeth_size"]):
             u = t + tt * (main_end - t)
             if T["brk"] < 1.0 and np.sin(u) > -0.35:   # only where the ribbon is thick: on the far side a tooth would cut the hair line
-                cut = _stroke(u - 0.025 * sz, u + 0.025 * sz, R - W * 0.42, W * 0.35 * sz, a=0.6, b=1.4, op="cut", r1=R - W * 0.15)
+                # a tooth bites IN FROM the inner edge (an open notch, never a hole): place it on the ribbon's local inner edge
+                tn = tt * (main_end - t) / (main_end - t)
+                prof = (tn ** 1.5 * (1 - tn) ** 0.35) / ((0.81 ** 1.5) * (0.19 ** 0.35))
+                s_ = np.sin(u)
+                m = 1 + s_ * (PERSP["front"] - 1) if s_ >= 0 else 1 + s_ * (1 - PERSP["back"])
+                hw = 0.5 * W * m * prof
+                cut = _stroke(u - 0.025 * sz, u + 0.025 * sz, R - 1.6 * hw, 0.55 * hw * sz, a=0.6, b=1.4, op="cut", persp=False,
+                              r1=R - 0.15 * hw)
                 out["ice"].append(cut)
         # break: every strand breaks at ITS OWN points (no dashes lined up across strands); gaps grow, uneven
         if T["brk"] > 0:
@@ -144,9 +190,12 @@ def drawing(D, k):
     return out
 
 
-def build(name="gen-slash-loop-blue", seed=11):
-    D = design(seed)
+def build(name="gen-slash-loop-blue", seed=11, style="light", reflection=True):
+    D = design(seed, style)
+    S = STYLES[style]
     frame = EllipseFrame(D["centre"], D["k"], D["tilt"])
-    drawings = [dict(strokes=drawing(D, k), frames=T["frames"], label=T["label"]) for k, T in enumerate(TIMELINE)]
-    return render_sequence(name, drawings, frame, D["size"], PALETTE, HALO, GAIN,
-                           meta=dict(design=D, timeline=TIMELINE, gain=GAIN, style="loop", idea="ref/vfx/axe-swing-idea/reference.png"))
+    drawings = [dict(strokes=drawing(D, k, S["timeline"]), frames=T["frames"], label=T["label"]) for k, T in enumerate(S["timeline"])]
+    refl = dict(REFLECTION, floor=D["floor"]) if reflection else None
+    return render_sequence(name, drawings, frame, D["size"], PALETTE, HALO, S["gain"], reflection=refl,
+                           meta=dict(design=D, timeline=S["timeline"], gain=S["gain"], style="loop-" + style, reflection=refl,
+                                     idea="ref/vfx/axe-swing-idea/reference.png"))
