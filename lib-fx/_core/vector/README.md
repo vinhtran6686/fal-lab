@@ -1,161 +1,185 @@
-# lib-fx/_core/vector: bộ dựng VFX vẽ tay bằng path vector
+# lib-fx/_core/vector: bộ dựng VFX vẽ tay bằng path vector (v1.0)
 
-Bộ tool chung để **đọc một hiệu ứng tham khảo** (GIF/frame) và **dựng lại nó bằng path Bézier sạch** (lớp màu phẳng, gradient mép,
-quầng sáng), hoặc để **vẽ hình mới** bằng cùng một "đơn vị hình". Đóng gói từ nghiên cứu xoáy chém
-([research/bezier-shapes/](../../research/bezier-shapes/RETROSPECTIVE.md), user chấm 9-10/10). Tên module chỉ phương pháp, không gắn với
-hiệu ứng nào: mọi thứ riêng của một hiệu ứng nằm trong **một file profile JSON** (`profiles/<tên>.json`).
+**Phiên bản 1.0, chốt 2026-11-08**, sau hai bài test được user chấm 9-10/10: `swirl-slash` (2 hiệu ứng xoáy chém) và `element-trio`
+(3 hiệu ứng phun từ đất: lửa, Arcane, Toxic, cả ba 10/10). Lịch sử: [CHANGELOG.md](CHANGELOG.md); quá trình nghiên cứu gốc:
+[research/bezier-shapes/RETROSPECTIVE.md](../../research/bezier-shapes/RETROSPECTIVE.md).
 
 0 USD, không gọi model. Python: numpy, scipy, Pillow, opencv-python-headless, scikit-image (`pip install scikit-image opencv-python-headless`).
+Tên module chỉ phương pháp, không gắn với hiệu ứng nào: mọi thứ riêng của một hiệu ứng nằm trong **một file profile JSON** (`profiles/<tên>.json`).
 
-## 1. Lệnh
+## 1. Mục đích và phạm vi
+
+**Mục đích.** Biến một hiệu ứng VFX 2D vẽ tay (GIF/frame tham khảo) thành **dữ liệu vector sạch và đo được**: mỗi lớp màu là path Bézier
+mượt như vẽ bằng pen tool, kèm gradient, glow, độ đục và nhịp thời gian của bản gốc. Từ đó (a) dựng lại hiệu ứng ở độ phân giải bất kỳ,
+đổi màu, xuất SVG/PNG; (b) học **cách designer vẽ** để về sau **sinh hiệu ứng mới** (mục 9).
+
+| Làm được (v1.0, đã kiểm chứng) | Chưa làm được |
+|---|---|
+| Dựng lại hiệu ứng flat-colour vẽ tay từ GIF: hình từng lớp, thứ tự tô, gradient mép, glow, độ đục theo frame | **Sinh hiệu ứng mới hoàn toàn** từ luật (mới có bản thử `research/.../generate.py`) |
+| Hình dạng: xoáy / lưỡi liềm (khung cực), phun từ đất / thẳng (khung thẳng) | Theo dõi **từng hình** qua các frame (mới đo tổng thể: diện tích, số mảnh) |
+| Lớp đặc, lớp trong mờ (màn), lớp tối trong mờ (bóng khói), mảnh vỡ mờ dần | Gradient tô trong thân theo chiều cao / theo vùng (chỉ có gradient theo mép) |
+| Làm đều nét kiểu Illustrator (0 điểm gãy), xuất SVG mỗi lớp một path | Hạt bay có quỹ đạo (tàn lửa chỉ được dựng lại như hình tĩnh từng frame) |
+| Đo vòng đời: pha bùng / đỉnh / vỡ / tàn, frame giữ (vẽ "on twos") | Xuất thẳng sang chuẩn lib-fx (`sheet.png`, `meta.json`, @2x, nền trong suốt) |
+| Trang review chấm từng lớp từng frame | Kết cấu (texture), vệt nhiễu, hiệu ứng 3D |
+
+## 2. Tính năng
+
+| Nhóm | Tính năng | Ở đâu |
+|---|---|---|
+| Đọc bản gốc | cắt GIF theo khung từng biến thể, phóng to GIF nhỏ (`source.scale`) | `measure.ingest` |
+| | ứng viên màu phẳng (đếm màu đúng mã, chỉ số interior/compact, ảnh mặt nạ) + gom cụm màu k-means cho bản gốc có dither | `palette` |
+| | mặt nạ lớp theo **đường màu** (màu phẳng + màu mép), theo **độ đục** so với nền (`alpha`), hoặc **tối hơn nền** (`darker_than_bg`) | `measure.layer_masks` |
+| | lấp khe khử răng cưa giữa các lớp; nhóm lớp chỉ khi có nét tối thật | `measure.full_targets` |
+| | đo gradient mép, glow (theo khoảng cách hoặc làm nhoè hình × độ mạnh từng frame), độ đục từng frame; tự loại thành phần hẹp hơn 1,5 px gốc | `measure.measure_profile` |
+| | đo vòng đời: diện tích, số mảnh, mảnh lớn nhất, chiều cao, frame giữ, các pha | `lifecycle` |
+| Dựng hình | khung toạ độ của hiệu ứng: cực (xoáy, vòng) / thẳng (phun, đâm), đặt riêng từng biến thể | `frames.py` |
+| | **nét thon** (xương sống Bernstein + bề rộng `W·(t+e0)^a·(1−t+e1)^b`), preset `crescent`, `tongue`, `feather`, `notch` | `strokes.py` |
+| | khớp lớp = thân bền vững + lưỡi cộng + vết khoét, mỗi mảnh phải tăng IoU | `fit.fit_layer` |
+| | **Smooth & Simplify** (nối khe, góc thật hai tầm, làm trơn theo độ cong ít biến thiên, nắn gãy < 35°, gộp đoạn, tay nắm ≤ 0,45) | `smooth.py` |
+| Tô | tô chồng (lớp dưới chạy dưới lớp trên), gradient trong theo mép phần nhìn thấy, glow, độ đục từng frame | `compose.py` |
+| Kiểm tra | IoU, điểm gãy, điểm uốn, độ biến thiên độ cong; trang review có nút Đạt / Cần sửa | `metrics.py`, `review.py` |
+
+## 3. Hiệu ứng đã kiểm chứng
+
+| Profile | Biến thể | Dạng | Điểm user | Điểm đáng chú ý |
+|---|---|---|---|---|
+| `swirl-slash` | fire, frost | xoáy chém, khung cực, 3-4 lớp | 9 / 9-10 | gradient mép vàng → cam; tô chồng; làm mịn mạnh cho băng |
+| `element-trio` | fire | phun lửa, khung thẳng, 2 lớp | 10 | glow là bản làm nhoè hình, tắt dần (gain 1 → 0 từ frame 19) |
+| | arcane | pha lê + cánh, 3 lớp | 10 | màn cánh trong mờ (độ đục ~0,45); tím nhạt mờ dần 1 → 0,59 |
+| | toxic | khói độc + vòng sáng, 2 lớp | 10 | bóng tối trong mờ (`darker_than_bg`); không có gradient mép |
+
+Trang review: Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdKGR, Element Trio https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn.
+
+## 4. Lệnh
 
 ```
-python lib-fx/_tools/vectorfx.py palette  PROFILE [--variant V] [--frame N]   ứng viên màu phẳng + ảnh mặt nạ từng màu
-python lib-fx/_tools/vectorfx.py ingest   PROFILE                             cắt source.gif thành frame theo source.crops
-python lib-fx/_tools/vectorfx.py measure  PROFILE [--frames 3-5]              đo gradient mép từng lớp + quầng sáng, ghi vào PROFILE
-python lib-fx/_tools/vectorfx.py rebuild  PROFILE [--frames 2-12] [--variants a,b] [--refit]
-python lib-fx/_tools/vectorfx.py review   PROFILE                             ảnh từng lớp, GIF, review/index.html
-python lib-fx/_tools/vectorfx.py all      PROFILE                             rebuild + review
+python lib-fx/_tools/vectorfx.py palette   PROFILE [--variant V] [--frame N]   màu phẳng + cụm màu + ảnh mặt nạ từng màu
+python lib-fx/_tools/vectorfx.py ingest    PROFILE                             cắt source.gif thành frame (source.crops, source.scale)
+python lib-fx/_tools/vectorfx.py measure   PROFILE [--frames 3-5]              đo gradient, glow, độ đục; ghi vào PROFILE
+python lib-fx/_tools/vectorfx.py rebuild   PROFILE [--frames a-b] [--variants a,b] [--refit]
+python lib-fx/_tools/vectorfx.py review    PROFILE                             ảnh từng lớp, GIF, review/index.html
+python lib-fx/_tools/vectorfx.py all       PROFILE                             rebuild + review
+python lib-fx/_tools/vectorfx.py lifecycle PROFILE                             vòng đời: pha, diện tích, số mảnh, frame giữ
 ```
 
-`PROFILE` là đường dẫn, hoặc tên trong `profiles/` (vd. `swirl-slash`). Kết quả ở `lib-fx/_study/<tên>/vector/` (không vào git):
-`strokes/` (nét đã khớp, bước chậm, dùng lại trừ khi `--refit`), `frames/` (ảnh hoàn chỉnh), `flat/` (màu phẳng), `svg/` (mỗi lớp một
-`<path id="lớp">`), `report.json`, `review/index.html` (publish bằng Artifact tool cùng thư mục `img/`).
+`PROFILE` là đường dẫn hoặc tên trong `profiles/`. Kết quả ở `lib-fx/_study/<tên>/vector/` (không vào git): `strokes/` (nét đã khớp, cache;
+`--refit` để khớp lại), `frames/`, `flat/`, `svg/`, `report.json`, `lifecycle.json`, `review/index.html` (publish bằng Artifact tool cùng
+`img/`). Khớp nét ~1 phút / frame / biến thể ở ảnh 700-840 px; chạy song song nhiều `rebuild --variants`. Đổi màu, glow, độ đục, độ mượt
+chỉ cần `rebuild` không `--refit` (vài phút).
 
-Dùng trong code:
 ```python
 import sys; sys.path.insert(0, "lib-fx/_core")
-from vector import Profile, pipeline, review, smooth_simplify, crescent, tongue, feather, PolarFrame
+from vector import Profile, pipeline, review, smooth_simplify, crescent, tongue, feather, PolarFrame, LinearFrame
 ```
 
-## 2. Quy trình cho một hiệu ứng tham khảo mới (vd. GIF user gửi)
+## 5. Quy trình cho một bản gốc mới
 
-1. **Dữ liệu**: đặt GIF vào `ref/vfx/<tên>/reference.gif`; nếu có nhiều biến thể cạnh nhau, ghi khung cắt từng biến thể.
-2. **Profile**: chép `profiles/swirl-slash.json` thành `profiles/<tên>.json`, sửa `name`, `source` (`gif`, `crops`, `frames_dir`, `frames`,
-   `background_frame` = một frame không còn hiệu ứng nếu có), `frame.type` (`polar` cho xoáy/vòng/sóng tròn, `linear` cho đâm/tia/chém thẳng).
-3. `ingest` → frame PNG.
-4. `palette` trên một frame giữa → danh sách màu kèm `interior`/`compact`/`likely` và ảnh mặt nạ từng màu. **Nhìn ảnh** rồi chọn màu phẳng
-   của từng lớp (GIF lượng tử hoá cả quầng sáng thành màu đúng mã, chỉ số chỉ là gợi ý).
-5. Viết `variants.<v>.layers`: mỗi lớp `colours` = [màu phẳng] (thêm màu mép nếu thấy lớp ngả màu ở mép), `tol` (12-26), và `order`
-   (tô từ dưới lên: lớp có mũi nhọn đâm vào lớp khác nằm **trên**).
-6. `measure` → đo `gradient` (màu mép, độ dài s) cho từng lớp và `halo` cho từng biến thể, ghi thẳng vào profile. Đọc `rms` / `rms_flat`:
-   gradient chỉ có nghĩa khi rms giảm rõ; s ≥ 25 px là lớp phẳng (xoá `gradient`). Quầng: thành phần có s < 1,5 px là khử răng cưa → đặt
-   `near_halo: false`.
-7. `all` → mở `review/index.html` (publish lên artifact), xem GIF và từng lớp từng frame, chấm OK / Needs work, chỉnh profile, chạy lại
-   (`rebuild` không `--refit` chỉ làm lại bước làm mịn + tô, vài phút).
+1. GIF vào `ref/vfx/<tên>/reference.gif`. Xem một tấm tổng hợp các frame để biết có mấy hiệu ứng, cạnh nhau hay nối tiếp, cỡ bao nhiêu.
+2. Profile mới: `name`, `source` (`gif`, `crops` từng biến thể, `scale` = 3 nếu mỗi hiệu ứng < ~250 px, `frames`, `background_frame` nếu có
+   frame không còn hiệu ứng), `frame` (`polar` cho xoáy/vòng, `linear` + `angle` cho phun/đâm; đặt riêng trong `variants.<v>.frame` khi cần).
+3. `ingest`, rồi `palette` ở một frame giữa. Bản gốc màu phẳng sạch: dùng danh sách màu đúng mã. Bản gốc nhỏ / dither: dùng cụm màu, **xem ảnh**:
+   cụm sáng gọn là lớp, cụm tối lan rộng là glow.
+4. Viết lớp: `colours` (màu phẳng, thêm màu mép nếu có), `tol` 14-30, `order` (dưới → trên; lớp có mũi đâm sang lớp khác nằm trên). Lớp trong
+   mờ / mờ dần: `alpha: [lo, hi]` (tách màn mờ và phần đặc cùng màu thành hai lớp, ngưỡng ~0,7). Bóng tối: `darker_than_bg`. Glow: `halo_model: "blur"`.
+5. Kiểm tra mặt nạ bằng mắt trên 3 frame (đầu, đỉnh, tàn) trước khi khớp.
+6. `measure` (ghi gradient, glow, độ đục vào profile), `lifecycle`, `all`, publish review, sửa theo nhận xét, `rebuild` lại.
 
-## 3. Kiến trúc
+## 6. Kiến trúc
 
 ```
-reference frames ─► measure.layer_masks (đường màu: màu phẳng + gradient mép)  ─► full_targets (lấp khe khử răng cưa)
-                                                                                     │
-frames.make_frame (polar | linear) ◄─────────────────────────────────────────────────┤
-                                                                                     ▼
-fit.fit_layer: dải → nét thon (thân bền vững + lưỡi cộng + vết khoét)  ◄── compose.underlay_target (lớp dưới chạy dưới lớp trên)
-        │
-        ▼
-smooth.smooth_simplify (nối khe → góc thật hai tầm → làm trơn D²/D³ → fit G1 → nắn gãy → gộp đoạn → tay nắm ≤ 0,45)
-        │
-        ▼
-compose.composite (gradient trong theo mép phần nhìn thấy, quầng theo khoảng cách) → PNG + SVG → metrics → review
+GIF ─ ingest ─► frames ─► measure.layer_masks (đường màu | độ đục | tối hơn nền) ─► full_targets
+                                                                                       │
+frames.make_frame (polar | linear) ◄────────────────────────────────────────────────────┤
+                                                                                       ▼
+fit.fit_layer (dải → nét thon: thân + lưỡi + vết khoét) ◄── compose.underlay_target (lớp dưới chạy dưới lớp trên)
+      ▼
+smooth.smooth_simplify ─► compose.composite (gradient trong, glow × gain[frame], opacity[frame]) ─► PNG + SVG ─► metrics ─► review
 ```
 
 | File | Vai trò |
 |---|---|
-| `profile.py` | đọc/ghi profile, giá trị mặc định, mô tả đủ các khoá |
-| `measure.py` | frame, nền, ứng viên màu, mặt nạ theo đường màu, lấp khe, đo gradient mép và quầng, `ingest` |
-| `frames.py` | khung toạ độ của hiệu ứng (`PolarFrame`, `LinearFrame`), tách mặt nạ thành dải |
-| `strokes.py` | **đơn vị hình**: nét thon (xương sống Bernstein + bề rộng `W·(t+e0)^a·(1−t+e1)^b`), xuất path; preset `crescent`, `tongue`, `feather`, `notch` |
-| `fit.py` | đo tham số nét từ dải; `fit_layer` (thân + lưỡi + vết khoét) |
-| `smooth.py` | `smooth_simplify`: làm đều nét kiểu Illustrator Simplify / Potrace / fair curve |
-| `compose.py` | lớp dưới chạy dưới lớp trên, gradient trong, quầng, ảnh, SVG |
-| `metrics.py` | IoU; độ mượt path: `kinks` (neo gãy 5-35°, phải = 0), `wobble` (điểm uốn / 100 px), `curv_var` (độ biến thiên độ cong / 100 px) |
-| `pipeline.py` | `rebuild` từng frame, cache nét, báo cáo |
-| `review.py`, `review_page.html` | ảnh từng lớp, GIF gốc / dựng lại, trang review có nút chấm và sao chép nhận xét |
-| `bezier.py` | Bézier: Schneider fit, góc, viền, raster, SVG, đọc lại path |
+| `profile.py` | đọc/ghi profile, mặc định, mô tả mọi khoá |
+| `measure.py` | ingest, nền, màu phẳng, cụm màu, mặt nạ, lấp khe, gradient, glow (2 mô hình), độ đục |
+| `lifecycle.py` | vòng đời của bản gốc (mục 8) |
+| `frames.py` | khung cực / thẳng, tách mặt nạ thành dải (`edge_bias`) |
+| `strokes.py` | đơn vị hình (nét thon) + preset |
+| `fit.py` | đo tham số nét, khớp lớp (tính điểm tăng dần) |
+| `smooth.py` | Smooth & Simplify |
+| `compose.py` | tô chồng, gradient, glow, độ đục, SVG |
+| `metrics.py` | IoU, độ mượt path |
+| `pipeline.py` | rebuild từng frame, cache nét, báo cáo |
+| `review.py`, `review_page.html` | ảnh, GIF, trang review tiếng Việt |
+| `bezier.py` | Bézier: Schneider fit, góc, viền, raster, SVG |
 
-## 4. Tham số và ý nghĩa (mặc định = giá trị đã kiểm chứng trên xoáy chém)
+## 7. Khoá profile và tham số (mặc định đã kiểm chứng)
 
 | Khoá | Mặc định | Ý nghĩa / khi nào chỉnh |
 |---|---|---|
-| `layers.<l>.tol` | 12-26 | dung sai quanh đường màu; lớp có gradient rộng cần lớn (vàng 26), lớp tối dễ lẫn quầng cần nhỏ (đỏ sẫm 12) |
-| `groups` | tất cả 0 | chỉ tách nhóm khi giữa hai lớp có **nét tối thật** (đo màu dải giữa hai lớp trước; khe 1-3 px gần như luôn là khử răng cưa) |
+| `source.scale` | 1 | phóng to khi ingest (GIF nhỏ: 3) |
+| `layers.<l>.colours`, `tol` | — / 12-30 | đường màu và dung sai; lớp có gradient rộng cần lớn, lớp tối dễ lẫn glow cần nhỏ |
+| `layers.<l>.alpha` | — | nhận theo độ đục [lo, hi]; dùng cho màn mờ và lớp mờ dần; `measure` ghi `opacity` từng frame |
+| `layers.<l>.darker_than_bg` | — | lớp tối trong mờ: phải tối hơn nền ít nhất N mức sáng |
+| `layers.<l>.gradient` | (đo) | `{edge, s}`: chỉ giữ khi s ≥ 1,5 × scale px và < 25 px |
+| `groups` | tất cả 0 | tách nhóm chỉ khi giữa hai lớp có nét tối thật (đo màu khe trước) |
+| `halo_model` | distance | `blur`: glow = làm nhoè hình × `gain[frame]`; nên dùng cho mọi hiệu ứng có pha tàn |
+| `near_halo` | true | `measure` tự tắt khi thành phần gần < 1,5 px gốc |
 | `fit.underlay_px` | 10 | lớp dưới chạy dưới lớp trên bao xa |
-| `fit.min_gain` | 0,0008 | một lưỡi / vết khoét phải tăng IoU ít nhất bao nhiêu mới được giữ (lớn → ít mảnh, gọn hơn) |
-| `smooth.sigma` | 4,5 (băng 7) | độ mạnh làm trơn (px); tăng khi nét còn lượn / nứt nẻ |
-| `smooth.corner_deg` | 145 (băng 142) | góc trong nhỏ hơn mới giữ là góc; giảm → ít góc hơn, mượt hơn nhưng mũi nhọn tròn đi (130 làm tròn mũi lông vũ) |
-| `smooth.merge_tol` | 0,9 (băng 1,5) | gộp hai đoạn khi sai số ≤ giá trị này; lớn → ít neo, đường dài hơn |
-| `smooth.close_px` | 1,5 (băng 2,5) | khe trong cùng lớp được nối |
-| `smooth.min_area` | 8 (băng 40) | vụn nhỏ hơn bị bỏ (frame tan vỡ cần nhỏ) |
-| `variants.<v>.near_halo` | true | false khi thành phần quầng gần có s < 1,5 px (`measure` tự đặt) |
-| `layers.<l>.darker_than_bg` | (không có) | lớp tối trong mờ (bóng khói): chỉ nhận điểm ảnh tối hơn nền tham khảo ít nhất N mức sáng, nên nền và bục không bị nhận nhầm |
-| `source.scale` | 1 | `ingest` phóng to frame (GIF nhỏ: 3) để các tham số tính bằng px giữ nguyên ý nghĩa |
-| `variants.<v>.frame` | theo `frame` chung | khung toạ độ riêng cho một biến thể (vd. một hiệu ứng xoáy, một hiệu ứng phun thẳng) |
+| `fit.min_gain` | 0,0008 | mảnh phải tăng IoU bao nhiêu mới giữ |
+| `fit.edge_bias` | [0, 0] | lệch mép dải theo mẫu; `swirl-slash` dùng [0,5, 1,5] |
+| `smooth.sigma` | 4,5 (mịn tối đa 7) | độ trơn |
+| `smooth.corner_deg` | 145 (142) | góc trong nhỏ hơn mới giữ là góc; thấp quá thì mũi nhọn tròn đi (130 làm tròn lông vũ) |
+| `smooth.merge_tol` | 0,9 (1,5) | sai số gộp đoạn |
+| `smooth.close_px`, `min_area` | 1,5 / 8 | khe được nối, vụn bị bỏ (frame tan vỡ cần nhỏ) |
 
-## 5. Luật đã kiểm chứng (tóm tắt; chi tiết `lib-fx/SHAPE-RULES.md` §7, §7b, §7c)
+## 8. Cách designer vẽ một hiệu ứng (rút ra từ 5 hiệu ứng)
 
-1. **Đo trước, dựng sau**; chuyển mọi nhận xét bằng lời thành một phép đo ("nứt nẻ" → đo màu dải giữa hai lớp; "gấp khúc" → đếm `kinks`).
-2. Lớp = màu phẳng **+ gradient mép của nó**; một màu mỏng bao quanh lớp khác thường chỉ là gradient mép (hổ phách của lửa).
-3. **Tô chồng**: lớp dưới liền khối, chạy dưới lớp trên; lớp có mũi nhọn đâm sang lớp khác nằm trên.
-4. Đường của designer: ~26 px viền / neo, tay nắm ≈ 1/3 dây cung, mũi nhọn ở lớp nguội, chi tiết liền nhau chênh 2-5 lần, khoảng cách không đều.
-5. Mọi viền xuất ra đi qua `smooth_simplify`; mục tiêu `kinks = 0`, `curv_var` ≈ đường vẽ tay (0,3-1 / 100 px).
-6. Quầng sáng = màu chính × exp(−d/s), s 27-38 px; gradient trong 1,5-8 px.
-7. IoU không phải mục tiêu duy nhất: mảnh vụn tăng IoU nhưng làm hình "rác".
+Số đo: `lifecycle` trên `swirl-slash` và `element-trio` (diện tích tính ở px của bản gốc, 25 fps).
 
-## 6. Phần còn thiếu để thành tool animation (thiết kế đã chốt, làm sau khi test GIF thứ hai)
+| | xoáy lửa | xoáy băng | lửa | Arcane | Toxic |
+|---|---|---|---|---|---|
+| Bùng tới đỉnh | 2 frame | 1 | 3 | 4 | 1 |
+| Đỉnh → bắt đầu vỡ | 1 | 1 | 3 | 0 | 0 |
+| Toàn bộ đời (tới < 2% diện tích đỉnh) | 7 | 6 | 21 | 12 | 9 |
+| Diện tích còn lại mỗi frame sau đỉnh | 0,50 | 0,36 | 0,81 | 0,55 | 0,55 |
+| Số mảnh nhiều nhất | 10 | 5 | 36 | 76 | 23 |
+| Bắt đầu giữ frame ("on twos") | frame 10 | — | 14 | 8 | 10 |
 
-| Hạng mục | Vấn đề hiện tại | Thiết kế |
+1. **Một khung chuyển động, một hình chính.** Mọi hình đặt trong một khung: xoay quanh một tâm (xoáy) hoặc dọc một trục (phun lên). Hình
+   chính ra đời nhỏ (lửa: 357 px ở frame 0), **bùng rất nhanh** tới đỉnh trong 1-4 frame (lửa ×22 diện tích sau 2 frame; toxic ×10 trong 1 frame).
+   Hình bung tới đúng **khung kích thước** của hiệu ứng (lửa cao ~190 px) rồi giữ khung đó.
+2. **Giữ đỉnh rất ngắn** (0-3 frame), rồi **vỡ chứ không thu nhỏ đều**: chiều cao bao ngoài gần như giữ nguyên (lửa 190 px từ frame 9 tới 16) trong
+   khi diện tích giảm đều (≈ ×0,8 mỗi frame với lửa, ×0,35-0,55 với xoáy và Arcane). Hình chính tách thành nhiều mảnh (1 → 30-76 mảnh), từng mảnh
+   mỏng dần và nhỏ dần **tại chỗ** (mép bị ăn vào, lỗ mở rộng), mảnh lớn nhất co nhanh hơn tổng.
+3. **Cuối cùng khung mới sụp**: ở vài frame cuối, các mảnh còn lại co về chân / về điểm gốc (chiều cao lửa 190 → 97 px), chỉ còn đốm.
+   Phần nóng (lõi vàng của lửa) ở lại lâu nhất ở chân hiệu ứng; tàn bay lên.
+4. **Lớp nóng / sáng tan trước** (xoáy: vàng hết trước hồng, hồng trước đỏ sẫm); **độ đục giảm ở giai đoạn tàn** (Arcane: 1 → 0,59); **glow tắt
+   trước hình** (lửa: glow 0 từ frame 19, đốm còn tới 22).
+5. **Vẽ "on ones" khi bùng, "on twos" khi tàn**: từ khoảng 60-70% đời hiệu ứng (phần sau của pha tàn), mỗi hình vẽ được giữ 2 frame
+   (12,5 hình/giây). Pha va chạm
+   cần mượt, pha tan cho phép giật nhẹ và tiết kiệm số hình vẽ.
+6. **Mỗi hình là vài đường cong dài** (~26 px viền / điểm neo, tay nắm ≈ 1/3 dây cung), mũi nhọn ở lớp nguội; chi tiết liền nhau chênh 2-5 lần;
+   các lớp tô chồng; glow là bản làm nhoè của hình, màu chính của hiệu ứng.
+
+## 9. Lộ trình: từ dựng lại tới sinh hiệu ứng mới
+
+| Bước | Nội dung | Cần gì |
 |---|---|---|
-| **A. Ổn định giữa các frame** | mỗi frame khớp độc lập → nét đổi số lượng, có thể rung | (1) ghép nét giữa frame k và k+1 theo trùng lặp vùng + khoảng cách tham số (Hungarian); (2) gán ID nét xuyên suốt; (3) làm trơn theo thời gian từng tham số (xương sống, W, a, b) bằng spline, giữ khoá ở frame chính; (4) nét sinh/chết chỉ ở frame có sự kiện (đầu nét đi qua, vỡ). Thước đo: dịch chuyển viền trung bình giữa hai frame so với bản gốc. |
-| **B. Sinh hình mới từ luật** | `research/.../generate.py` là bản thử | style profile = phân phối tham số đo được (dài/rộng, a/b, nhịp to-nhỏ 2-5, CV khoảng cách ≥ 0,5, góc nhọn theo lớp) + hàm sinh có seed; bố cục: thân → lưỡi theo nhịp → vết khoét → tô chồng → `smooth_simplify`. |
-| **C. Lớp trong mờ phía sau** | đã có bước đầu: `darker_than_bg` (dùng cho bóng khói của element-trio/toxic) | còn thiếu: lớp sáng trong mờ (alpha < 1 trên nền) và alpha đo được thay vì màu phẳng. |
-| **D. Mũi rất mảnh / móc tự do** | mũi 3-6 px và móc dưới đáy lưỡi trắng chưa nhọn bằng gốc | nét có xương sống Bézier tự do (không bám khung cực/thẳng), fit từ đường giữa (skeleton) của mảnh. |
-| **E. Xuất cho game / lib-fx** | hiện xuất PNG/SVG từng frame | xuất `sheet.png`, `frames/`, `meta.json` đúng chuẩn lib-fx (`build.py`), @2x, nền trong suốt, điểm neo. |
+| G1. Theo dõi từng hình | ghép mảnh giữa các frame (trùng vùng + khoảng cách tham số nét), đo quỹ đạo từng hình: sinh từ đâu, lớn bao nhanh, vỡ ra mấy mảnh, mảnh co theo luật nào | dữ liệu đã có (5 hiệu ứng) |
+| G2. Bộ sinh "phun từ đất" | khung thẳng + hình chính theo đường cong vòng đời mục 8 + vỡ mảnh + glow/độ đục theo thời gian, tham số có seed, xuất qua `smooth_simplify` + `compose` | G1; 3 mẫu đã có |
+| G3. Bộ sinh "xoáy chém" | như G2 với khung cực | G1; 2 mẫu đã có |
+| G4. Kiểm chứng | sinh hiệu ứng mới, đặt cạnh bản gốc cùng dạng, user chấm | — |
+| G5. Mở rộng dạng | va chạm / nổ tròn, đạn bay, aura lặp, buff | **bản gốc mới cho mỗi dạng** (2-3 GIF mỗi dạng) |
+| E. Xuất lib-fx | `sheet.png`, `frames/`, `meta.json`, @2x, nền trong suốt | — |
 
-Hiệu ứng đã có profile: `swirl-slash` (xoáy, khung cực), `element-trio` (3 hiệu ứng phun từ đất: lửa, pha lê, độc; khung thẳng đứng,
-GIF nhỏ phóng 3x). Thời gian: khớp nét ~1,5 phút / frame / biến thể ở ảnh 700-840 px (cache trong `strokes/`); chạy các biến thể song
-song bằng nhiều lệnh `rebuild --variants`.
+## 10. Nhật ký test
 
-Đề xuất thứ tự: test bộ này với một GIF khác dạng (nổ, đâm thẳng, vòng sóng) → sửa chỗ yếu → A → E → B → C, D.
+**swirl-slash** (2026-11-07/08): xem RETROSPECTIVE. Bài học chính: đo đúng bản gốc (gradient mép, tô chồng) quan trọng hơn công thức;
+làm đều nét kiểu Illustrator xoá điểm gãy; khe 2 px giữa hai lớp là khử răng cưa, không phải nét tối.
 
-## 7. Nhật ký test
-
-### element-trio (2026-11-08, GIF thứ hai, 3 hiệu ứng phun từ đất)
-
-Trang review: Element Trio, https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn. Profile: `profiles/element-trio.json`.
-
-- **Chạy được với bộ tool, chỉ phải thêm 4 thứ** (đều đã vào code):
-  - `source.scale`: GIF nhỏ (787x443, mỗi hiệu ứng cao ~150 px) được phóng 3x khi `ingest`.
-  - Khung thẳng đứng (`frame: linear, angle -90`) cho hiệu ứng phun lên.
-  - `darker_than_bg` cho khối bóng tối của hiệu ứng độc (trùng màu với nền và bục nếu chỉ so màu).
-  - Khớp nét tính điểm từng mảnh tăng dần (frame vỡ vụn từ > 10 phút còn khoảng 1 phút).
-- Kết quả frame 3-8 (IoU phần nhìn thấy so với mặt nạ, 0 điểm gãy ở mọi lớp mọi frame):
-  - lửa: cam 0,80-0,91, vàng 0,87-0,92;
-  - pha lê: tím nhạt 0,83-0,91, xanh 0,79-0,91;
-  - độc: bạc hà 0,89-0,93, bóng tối 0,82-0,94.
-- **Khác với xoáy chém**: màu không phẳng tuyệt đối (GIF nhỏ, dither, lửa chuyển vàng → cam theo chiều cao), nên `palette` (đếm màu đúng mã)
-  không đánh dấu được màu nào; phải gom cụm màu (k-means) rồi xem bản đồ từng cụm bằng mắt. Nên thêm k-means vào lệnh `palette`.
-- **Còn thiếu so với bản gốc**: các cánh xanh trong mờ của pha lê (lớp sáng trong mờ, hạng mục C), vòng sáng của pha lê bị gộp vào lớp xanh
-  (cùng màu), lỗ trong lửa ở bản gốc được quầng sáng phủ (bản dựng thấy nền tối hơn), vòng elip mảnh dưới chân lửa.
-
-### element-trio, vòng sửa 1 (2026-11-08): thời gian của gradient, glow và độ đục
-
-User chấm lửa và pha lê ~9/10 ("frame cuối gradient/glow vẫn nhiều làm các đốm sáng lên"), toxic 8/10 ("viền xanh đậm quanh hình bạc hà").
-Đo lại theo từng frame, cả hai nhận xét đều đúng:
-
-1. **Glow tắt dần theo thời gian.** Quầng theo khoảng cách (cố định) phải nhân hệ số ~1,6 ở đỉnh nhưng ~0,15-0,2 ở frame cuối mới khớp
-   gốc: bản dựng sáng gấp 5-8 lần ở frame tàn. Mô hình mới `halo_model: "blur"`: glow = bản làm nhoè của chính hình (2 gauss, màu đo được)
-   × `gain[frame]` đo từng frame. Đốm nhỏ tự có quầng nhỏ, lỗ trong lửa được quầng phủ như gốc. Lửa: gain ≈ 1 tới frame 12, 0,5 ở 15-16,
-   0,18 ở 17-18, 0 từ 19.
-2. **Hình cũng mờ dần.** Lớp có `"alpha": [lo, hi]` được nhận theo độ đục so với nền và tô với `opacity[frame]` đo được. Pha lê: tím nhạt
-   1,0 tới frame 8 rồi 0,89 → 0,75 → 0,64 → 0,59; các cánh xanh là **hai lớp**: cánh đặc (0,95-1) và màn trong mờ (0,41-0,48), đúng phần
-   "cánh xanh trong mờ" trước đây bị thiếu. Mặt nạ theo màu phẳng đã làm rơi các mảnh vỡ mờ ở frame cuối.
-3. **Viền đậm ở toxic là lỗi đo.** Ở độ phân giải gốc, màu bạc hà phẳng sát mép (chỉ 1 px khử răng cưa); "gradient mép" s 2,6 px đo trên
-   ảnh đã phóng 3x chỉ là vệt nhoè của phép phóng to. Luật mới trong `measure`: gradient và quầng gần chỉ được nhận khi rộng hơn
-   1,5 × `source.scale` px.
-
-Luật rút ra (dùng cho mọi hiệu ứng có giai đoạn tan):
-- Đo **theo từng frame**, không chỉ ở frame đỉnh: glow, độ đục và gradient đều có đường cong thời gian riêng.
-- Glow là bản làm nhoè của hình, không phải viền theo khoảng cách; độ mạnh của nó là một đường cong (giữ ở đỉnh, tắt trước khi hình tan hết).
-- Một lớp có thể có nhiều mức độ đục cố định (đặc / màn mờ): tách thành nhiều lớp cùng màu, khác dải alpha.
-- Đừng đo gradient trên ảnh đã phóng to mà không quy về px gốc.
+**element-trio** (2026-11-08):
+- Bộ tool chạy được, chỉ cần thêm: `source.scale`, khung thẳng theo biến thể, `darker_than_bg`, khớp nét tính điểm tăng dần (frame vỡ vụn từ
+  > 10 phút còn ~1 phút), gom cụm màu.
+- Vòng 1 (user: lửa/Arcane ~9, toxic 8): glow cố định theo khoảng cách làm đốm tàn sáng gấp 5-8 lần bản gốc → glow = làm nhoè hình ×
+  `gain[frame]`; mảnh Arcane mờ dần bị rơi khỏi mặt nạ → lớp theo độ đục + `opacity[frame]`, tách màn cánh trong mờ; viền xanh đậm của toxic
+  là vệt phóng to 3x bị đo thành gradient → luật 1,5 px gốc cho gradient và glow.
+- Vòng 2: user chấm cả ba 10/10.

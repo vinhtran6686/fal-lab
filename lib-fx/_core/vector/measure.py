@@ -350,3 +350,19 @@ def measure_opacity(prof, v, frames):
                 al, _ = alpha_of(rgb.astype(float), bg, cfg["colours"][0])
                 out.setdefault(l, {})[str(f)] = round(float(min(np.median(al[M[l]]), 1.0)), 3)
     return out
+
+
+def colour_clusters(rgb, bg, k=8, min_diff=25, seed=1):
+    """For references whose fills are not exact colours (small GIFs, dither, soft gradients): k-means on the pixels
+    that differ from the background. Returns [(colour, share)] brightest first; inspect the cluster map by eye: dark
+    clusters are usually glow, bright compact ones are fills (element-trio)."""
+    from scipy.cluster.vq import kmeans2
+    a = rgb.astype(float)
+    m = np.linalg.norm(a - bg, axis=-1) > min_diff
+    X = a[m]
+    if len(X) < k:
+        return []
+    C, lab = kmeans2(X, k, seed=seed, minit="++")
+    cnt = np.bincount(lab, minlength=k) / len(X)
+    order = np.argsort(-C.sum(1))
+    return [([int(c) for c in C[i]], round(float(cnt[i]), 3)) for i in order]
