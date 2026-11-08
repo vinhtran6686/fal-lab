@@ -1,0 +1,142 @@
+{
+ "fire": {
+  "birth": {
+   "peak_frame": 4,
+   "frames": [
+    {
+     "frame": 2,
+     "area_share": 0.439,
+     "width_share": 0.74,
+     "height_share": 0.47,
+     "cx": 0.3,
+     "cy": 0.34
+    },
+    {
+     "frame": 3,
+     "area_share": 0.827,
+     "width_share": 1.05,
+     "height_share": 0.83,
+     "cx": 0.59,
+     "cy": 0.41
+    },
+    {
+     "frame": 4,
+     "area_share": 1.0,
+     "width_share": 1.0,
+     "height_share": 1.0,
+     "cx": 0.67,
+     "cy": 0.54
+    }
+   ]
+  },
+  "erosion": {
+   "rim_share": {
+    "n": 16,
+    "p25": 0.36,
+    "med": 0.5,
+    "p75": 0.75
+   },
+   "hole_share": {
+    "n": 16,
+    "p25": 0.25,
+    "med": 0.5,
+    "p75": 0.64
+   },
+   "lost_depth_px": {
+    "n": 16,
+    "p25": 1.41,
+    "med": 2.12,
+    "p75": 3.0
+   },
+   "one_side_bias": {
+    "n": 16,
+    "p25": 0.11,
+    "med": 0.15,
+    "p75": 0.21
+   }
+  },
+  "composition": {
+   "frame": 4,
+   "origin": "centroid",
+   "tongues": 2,
+   "tongue_angles_deg": [
+    -70,
+    160
+   ],
+   "spread_deg": 231.0,
+   "tongue_length_ratio": [
+    1.0,
+    0.78
+   ],
+   "piece_size_ratio": [
+    1.0
+   ]
+  }
+ },
+ "frost": {
+  "birth": {
+   "peak_frame": 3,
+   "frames": [
+    {
+     "frame": 2,
+     "area_share": 0.464,
+     "width_share": 0.7,
+     "height_share": 0.43,
+     "cx": 0.41,
+     "cy": 0.21
+    },
+    {
+     "frame": 3,
+     "area_share": 1.0,
+     "width_share": 1.0,
+     "height_share": 1.0,
+     "cx": 0.68,
+     "cy": 0.44
+    }
+   ]
+  },
+  "erosion": {
+   "rim_share": {
+    "n": 8,
+    "p25": 0.29,
+    "med": 0.44,
+    "p75": 0.57
+   },
+   "hole_share": {
+    "n": 8,
+    "p25": 0.43,
+    "med": 0.56,
+    "p75": 0.71
+   },
+   "lost_depth_px": {
+    "n": 8,
+    "p25": 2.0,
+    "med": 2.41,
+    "p75": 3.49
+   },
+   "one_side_bias": {
+    "n": 8,
+    "p25": 0.1,
+    "med": 0.17,
+    "p75": 0.2
+   }
+  },
+  "composition": {
+   "frame": 3,
+   "origin": "centroid",
+   "tongues": 2,
+   "tongue_angles_deg": [
+    -68,
+    176
+   ],
+   "spread_deg": 243.0,
+   "tongue_length_ratio": [
+    1.0,
+    0.68
+   ],
+   "piece_size_ratio": [
+    1.0
+   ]
+  }
+ }
+}

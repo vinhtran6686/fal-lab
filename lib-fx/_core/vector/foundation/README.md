@@ -11,7 +11,10 @@ gốc trong [data/](data/), tạo lại bằng `python lib-fx/_tools/vectorfx.py
 | [02-animation.md](02-animation.md) | vòng đời: nhỏ → bùng → đỉnh → vỡ và co từng mảnh → mất; nhịp vẽ; glow và độ đục theo thời gian |
 | [03-reading-references.md](03-reading-references.md) | cách đọc đúng một bản gốc (các lỗi đo đã gặp và cách tránh) |
 | [04-generation-spec.md](04-generation-spec.md) | bản đặc tả cho bộ sinh hiệu ứng mới: tham số, luật, cái đã đủ và cái còn thiếu |
-| [data/](data/) | `lifecycle_*.json` (từng frame), `tracking_*.json` (tóm tắt theo dõi từng mảnh), `colour_hierarchy.json` |
+| [05-birth-erosion-composition.md](05-birth-erosion-composition.md) | lúc sinh (ở đâu, bung thế nào), cách mép bị ăn khi tàn, bố cục lưỡi ở đỉnh |
+| [data/](data/) | `lifecycle_*.json` (từng frame), `tracking_*.json` (tóm tắt theo dõi từng mảnh), `shape_study_*.json`, `colour_hierarchy.json` |
+
+Xem kết quả dựng lại của các hiệu ứng (GIF so với bản gốc, frame, SVG): [../showcase/](../showcase/README.md).
 
 ## Năm yếu tố quyết định một hiệu ứng đẹp (tư duy của user, đã kiểm chứng bằng số đo)
 

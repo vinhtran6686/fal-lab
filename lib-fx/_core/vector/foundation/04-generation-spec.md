@@ -35,14 +35,18 @@ seed
 | Màu, lớp, glow, độ đục, gradient | có (5 hiệu ứng) |
 | Đường cong vòng đời, luật mảnh (co, sứt, chết, đứng yên) | có, ở mức thống kê (5 hiệu ứng) |
 | Làm mịn nét, tô, xuất, review | có (v1.0) |
-| **Hình dạng ở pha bùng** (hình nhỏ đầu tiên trông thế nào, bung theo hướng nào) | chưa đo riêng: cần theo dõi hình chính qua 1-4 frame đầu |
-| **Cách mép bị "ăn" khi mảnh co** (mòn đều, mòn từ một phía, lỗ mở) | mới quan sát bằng mắt; cần đo trên dữ liệu theo dõi |
+| Hình ở pha bùng, cách mép bị ăn, bố cục lưỡi ở đỉnh | có (05) |
+| **Vẽ chuyển tiếp giữa các khung chính** (ghép nét giữa hai khung, nội suy tham số theo đường cong thời gian, mảnh tách ra từ đâu) | **chưa có: thiếu lớn nhất** |
+| Thành phần phụ (tàn bay, vòng sáng dưới đất, tia) | chưa có luật (số lượng, thời điểm, quỹ đạo) |
+| Bộ kiểm tra phong cách cho hiệu ứng không có bản gốc (so với các khoảng đo trong foundation) | chưa có |
+| Mẫu "đề bài thiết kế" (nguyên tố, cảm giác, cỡ, thời lượng, frame va chạm, kiểu phối màu) | nháp ở §1 |
 | **Tính liên tục giữa các frame** (cùng một nét qua nhiều frame, không rung) | chưa làm (bộ dựng hiện khớp từng frame độc lập) |
 | Dạng khác: nổ tròn, đạn bay, aura lặp, buff | chưa có mẫu: cần 2-3 GIF mỗi dạng |
 
 ## 4. Kế hoạch đề xuất
 
-1. G1b: đo pha bùng và cách mép bị ăn trên 5 hiệu ứng (dữ liệu sẵn có).
+1. G1b: đo pha bùng, cách mép bị ăn, bố cục (xong: 05).
+1b. Vẽ chuyển tiếp: lấy 3-4 khung chính của lửa phun, cho bộ tool tự vẽ các frame giữa, đặt cạnh bản gốc; đạt khi user chấm 8-9/10.
 2. G2: bộ sinh `eruption` (3 mẫu: lửa, Arcane, Toxic) → sinh 2-3 hiệu ứng mới (vd. phun băng, phun điện) đặt cạnh bản gốc, user chấm.
 3. G3: bộ sinh `swirl` (2 mẫu).
 4. Mỗi dạng mới: 2-3 GIF tham khảo → dựng lại (bộ tool v1.0) → `lifecycle` + `track` → cập nhật 01-04 → mở bộ sinh cho dạng đó.

@@ -9,6 +9,8 @@
   python lib-fx/_tools/vectorfx.py all      PROFILE                             rebuild + review
   python lib-fx/_tools/vectorfx.py lifecycle PROFILE                            how the reference was animated (phases, area, pieces, holds)
   python lib-fx/_tools/vectorfx.py track     PROFILE                            follow every piece: growth, splits, shrink, drift, death
+  python lib-fx/_tools/vectorfx.py study     PROFILE                            birth, erosion and peak composition (foundation/05)
+  python lib-fx/_tools/vectorfx.py showcase  PROFILE                            export GIFs, frames and SVGs into lib-fx/_core/vector/showcase/ (tracked)
 
 PROFILE: path, or a name in lib-fx/_core/vector/profiles/ (e.g. swirl-slash). Outputs: lib-fx/_study/<name>/vector/ (not in git)."""
 import argparse, sys, pathlib
@@ -26,7 +28,7 @@ def rng(s):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["palette", "ingest", "measure", "rebuild", "review", "all", "lifecycle", "track"])
+    ap.add_argument("cmd", choices=["palette", "ingest", "measure", "rebuild", "review", "all", "lifecycle", "track", "showcase", "study"])
     ap.add_argument("profile")
     ap.add_argument("--frames"); ap.add_argument("--variants"); ap.add_argument("--variant"); ap.add_argument("--frame", type=int)
     ap.add_argument("--refit", action="store_true")
@@ -70,6 +72,18 @@ def main():
         for v, d in out.items():
             print(v, json.dumps(d["summary"]))
         print("events:", path)
+    elif a.cmd == "study":
+        import json
+        from vector import shape_study
+        out, path = shape_study.study(prof, fr)
+        for v, d in out.items():
+            print(v, json.dumps({kk: d[kk] for kk in ("erosion", "composition")}))
+            print("   birth", json.dumps(d["birth"]["frames"]))
+        print("data:", path)
+    elif a.cmd == "showcase":
+        from vector import showcase
+        for d in showcase.export(prof, fr):
+            print(d)
     if a.cmd in ("review", "all"):
         print(review.build(prof, fr))
 

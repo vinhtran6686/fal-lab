@@ -1,5 +1,10 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.2 (2026-11-08)
+
+- `showcase/`: kết quả 5 hiệu ứng đã dựng (GIF so sánh, frame, SVG) nằm trong git; lệnh `showcase`.
+- Lệnh `study` (`shape_study.py`): lúc sinh, cách mép bị ăn, bố cục lưỡi ở đỉnh; `foundation/05-birth-erosion-composition.md`.
+
 ## 1.1 (2026-11-08): nền tảng thiết kế
 
 - Thư mục `foundation/`: phong cách (lớp, nét mịn, cấp bậc màu), hoạt hoạ (vòng đời + theo dõi từng mảnh), cách đọc bản gốc (12 bẫy đã gặp),

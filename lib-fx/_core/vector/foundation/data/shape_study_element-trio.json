@@ -1,0 +1,259 @@
+{
+ "fire": {
+  "birth": {
+   "peak_frame": 3,
+   "frames": [
+    {
+     "frame": 0,
+     "area_share": 0.042,
+     "width_share": 0.42,
+     "height_share": 0.36,
+     "cx": 0.43,
+     "cy": 0.86
+    },
+    {
+     "frame": 1,
+     "area_share": 0.242,
+     "width_share": 0.75,
+     "height_share": 0.71,
+     "cx": 0.38,
+     "cy": 0.75
+    },
+    {
+     "frame": 2,
+     "area_share": 0.938,
+     "width_share": 0.91,
+     "height_share": 0.91,
+     "cx": 0.54,
+     "cy": 0.66
+    },
+    {
+     "frame": 3,
+     "area_share": 1.0,
+     "width_share": 1.0,
+     "height_share": 1.0,
+     "cx": 0.53,
+     "cy": 0.58
+    }
+   ]
+  },
+  "erosion": {
+   "rim_share": {
+    "n": 37,
+    "p25": 0.67,
+    "med": 0.84,
+    "p75": 0.97
+   },
+   "hole_share": {
+    "n": 37,
+    "p25": 0.03,
+    "med": 0.16,
+    "p75": 0.33
+   },
+   "lost_depth_px": {
+    "n": 37,
+    "p25": 0.67,
+    "med": 0.94,
+    "p75": 1.33
+   },
+   "one_side_bias": {
+    "n": 37,
+    "p25": 0.15,
+    "med": 0.28,
+    "p75": 0.46
+   }
+  },
+  "composition": {
+   "frame": 3,
+   "origin": "bottom",
+   "tongues": 2,
+   "tongue_angles_deg": [
+    68,
+    124
+   ],
+   "spread_deg": 57.0,
+   "tongue_length_ratio": [
+    1.0,
+    0.69
+   ],
+   "piece_size_ratio": [
+    1.0,
+    0.0
+   ]
+  }
+ },
+ "arcane": {
+  "birth": {
+   "peak_frame": 5,
+   "frames": [
+    {
+     "frame": 1,
+     "area_share": 0.455,
+     "width_share": 0.64,
+     "height_share": 0.38,
+     "cx": 0.48,
+     "cy": 0.81
+    },
+    {
+     "frame": 2,
+     "area_share": 0.895,
+     "width_share": 1.15,
+     "height_share": 0.76,
+     "cx": 0.5,
+     "cy": 0.72
+    },
+    {
+     "frame": 3,
+     "area_share": 0.905,
+     "width_share": 1.03,
+     "height_share": 0.91,
+     "cx": 0.47,
+     "cy": 0.65
+    },
+    {
+     "frame": 4,
+     "area_share": 0.981,
+     "width_share": 1.05,
+     "height_share": 0.98,
+     "cx": 0.44,
+     "cy": 0.62
+    },
+    {
+     "frame": 5,
+     "area_share": 1.0,
+     "width_share": 1.0,
+     "height_share": 1.0,
+     "cx": 0.46,
+     "cy": 0.64
+    }
+   ]
+  },
+  "erosion": {
+   "rim_share": {
+    "n": 25,
+    "p25": 0.72,
+    "med": 0.86,
+    "p75": 0.97
+   },
+   "hole_share": {
+    "n": 25,
+    "p25": 0.03,
+    "med": 0.14,
+    "p75": 0.28
+   },
+   "lost_depth_px": {
+    "n": 25,
+    "p25": 0.67,
+    "med": 0.94,
+    "p75": 1.2
+   },
+   "one_side_bias": {
+    "n": 25,
+    "p25": 0.08,
+    "med": 0.15,
+    "p75": 0.23
+   }
+  },
+  "composition": {
+   "frame": 5,
+   "origin": "bottom",
+   "tongues": 4,
+   "tongue_angles_deg": [
+    16,
+    52,
+    92,
+    122
+   ],
+   "spread_deg": 105.0,
+   "tongue_length_ratio": [
+    1.0,
+    0.81,
+    0.71,
+    0.33
+   ],
+   "piece_size_ratio": [
+    1.0,
+    0.773,
+    0.764,
+    0.257,
+    0.148
+   ]
+  }
+ },
+ "toxic": {
+  "birth": {
+   "peak_frame": 5,
+   "frames": [
+    {
+     "frame": 4,
+     "area_share": 0.098,
+     "width_share": 0.21,
+     "height_share": 0.39,
+     "cx": 0.55,
+     "cy": 0.77
+    },
+    {
+     "frame": 5,
+     "area_share": 1.0,
+     "width_share": 1.0,
+     "height_share": 1.0,
+     "cx": 0.5,
+     "cy": 0.58
+    }
+   ]
+  },
+  "erosion": {
+   "rim_share": {
+    "n": 35,
+    "p25": 0.47,
+    "med": 0.63,
+    "p75": 0.82
+   },
+   "hole_share": {
+    "n": 35,
+    "p25": 0.18,
+    "med": 0.37,
+    "p75": 0.53
+   },
+   "lost_depth_px": {
+    "n": 35,
+    "p25": 1.0,
+    "med": 1.41,
+    "p75": 2.13
+   },
+   "one_side_bias": {
+    "n": 35,
+    "p25": 0.11,
+    "med": 0.15,
+    "p75": 0.29
+   }
+  },
+  "composition": {
+   "frame": 5,
+   "origin": "bottom",
+   "tongues": 5,
+   "tongue_angles_deg": [
+    8,
+    44,
+    80,
+    116,
+    172
+   ],
+   "spread_deg": 165.0,
+   "tongue_length_ratio": [
+    1.0,
+    0.91,
+    0.9,
+    0.68,
+    0.59
+   ],
+   "piece_size_ratio": [
+    1.0,
+    0.511,
+    0.426,
+    0.208,
+    0.087
+   ]
+  }
+ }
+}
