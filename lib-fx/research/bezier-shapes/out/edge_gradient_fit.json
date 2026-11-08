@@ -1,0 +1,72 @@
+{
+ "fire/yellow": {
+  "edge": [
+   255,
+   163,
+   69
+  ],
+  "s": 8.08,
+  "rms_flat": 19.0,
+  "rms_grad": 8.3
+ },
+ "fire/pink": {
+  "edge": [
+   254,
+   77,
+   130
+  ],
+  "s": 2.66,
+  "rms_flat": 10.1,
+  "rms_grad": 8.2
+ },
+ "fire/crimson": {
+  "edge": [
+   208,
+   46,
+   87
+  ],
+  "s": 24.88,
+  "rms_flat": 4.2,
+  "rms_grad": 4.2
+ },
+ "frost/ice": {
+  "edge": [
+   178,
+   253,
+   252
+  ],
+  "s": 3.44,
+  "rms_flat": 12.5,
+  "rms_grad": 6.1
+ },
+ "frost/cyan": {
+  "edge": [
+   88,
+   212,
+   251
+  ],
+  "s": 1.54,
+  "rms_flat": 8.1,
+  "rms_grad": 6.6
+ },
+ "frost/mid": {
+  "edge": [
+   60,
+   170,
+   227
+  ],
+  "s": 30.0,
+  "rms_flat": 3.0,
+  "rms_grad": 2.9
+ },
+ "frost/deep": {
+  "edge": [
+   30,
+   111,
+   160
+  ],
+  "s": 30.0,
+  "rms_flat": 5.0,
+  "rms_grad": 4.6
+ }
+}

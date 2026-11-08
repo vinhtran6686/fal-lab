@@ -79,3 +79,35 @@ trừ 4 lông vũ cyan f4: 1,2), hệ số biến thiên khoảng cách **0,54-1
 - Chưa: mũi móc chĩa theo bán kính (đáy lưỡi trắng f4-f5) vẫn hơi tròn; nét theo trục `r` ít khi được chọn. Cần một nét tự do
   (xương sống Bézier bất kỳ, không theo cực) cho các móc này.
 - Chưa: path sinh ra nhiều điểm neo hơn path vẽ tay ở lớp nhiều chi tiết (xanh, đỏ sẫm): bước sau là gộp nét kề nhau.
+
+## 6. Bản v2 sau review của user (2026-11-08)
+
+User đánh giá v1: tỉ lệ, hướng và góc đúng, nhưng (1) nét lổm chổm, như nhiều nét rời ghép lại, gấp khúc ở chỗ đáng lẽ là đường cong
+trơn; (2) thiếu gradient theo màu chính làm hiệu ứng mượt. Code: `rebuild2.py`, `pen.py`, `masks.family_masks`; số liệu
+`out2/report.json`, `out/edge_gradient_fit.json`, `out/halo_fit.json`; xem trên trang Swirl Slash Shapes (`review.html`).
+
+**Phát hiện chính: mặt nạ v1 đọc sai hình.** Lớp vàng và lưỡi trắng có **gradient trong** sát mép: vàng `255,214,112` ngả dần sang
+cam `255,163,69` trong ~8 px; trắng ngả sang xanh nhạt `178,253,252` trong ~3,4 px (hồng ~2,7 px, cyan ~1,5 px; đỏ sẫm, xanh, xanh sẫm
+phẳng). Mặt nạ "đúng mã màu" bỏ mất dải đó: vàng hụt ~30 % diện tích, mũi lưỡi lửa hồng đâm vào dải cam bị mất, giữa các lớp còn khe
+tối. "Hổ phách" không phải một lớp: đó là dải mép của lớp vàng. Mặt nạ v2 (`family_masks`) coi mỗi lớp là một đường màu
+(màu phẳng → màu mép). Lửa còn 3 lớp: vàng, hồng, đỏ sẫm.
+
+**Cách dựng v2:**
+1. **Tô chồng** theo thứ tự (lửa: vàng → hồng → đỏ sẫm; băng: xanh sẫm → xanh → cyan, lưỡi trắng riêng). Lớp dưới được khớp với vùng
+   của nó cộng phần lớp trên nằm trong 10 px, nên chạy liền dưới lớp trên: hết khe, hết mối nối. Đường tối mảnh giữa lưỡi trắng và
+   ngọn lửa xanh được giữ (là thiết kế).
+2. **Pen pass** (`pen.py`): hợp các nét công thức của một lớp → bỏ vụn < 8 px → viền → chỉ giữ góc thật (góc trong < 150° trên cửa sổ
+   ±4 px) → làm trơn dọc viền giữa hai góc (gauss σ 2,5 px, góc ghim cố định, mảnh nhỏ σ nhỏ hơn) → fit Bézier nối G1. Kết quả: mỗi
+   đoạn giữa hai mũi nhọn là một đường cong liền.
+3. **Gradient trong**: màu = lerp(màu phẳng, màu mép, exp(-d/s)), d = khoảng cách tới mép phần nhìn thấy của lớp.
+4. **Quầng sáng sau hình**: c_far·exp(-d/s_far) (+ thành phần gần rất nhỏ), d = khoảng cách tới hình. Lửa đỏ `195,-8,43`, s 38 px;
+   băng xanh `1,57,91`, s 27 px (đo trên frame 3-5, frame 13 làm nền).
+
+**IoU v2** (phần nhìn thấy của mỗi lớp so với mặt nạ v2, khó hơn v1 vì hình to và nhiều mũi hơn), frame 3 / 4 / 5:
+vàng 0,965 / 0,943 / 0,926 · hồng **0,818 / 0,869 / 0,816** · đỏ sẫm 0,873 / 0,898 / 0,831 · trắng 0,956 / 0,953 / 0,921 ·
+xanh 0,848 / 0,882 / 0,859 · cyan 0,862 / 0,905 / 0,884 · xanh sẫm 0,816 / 0,832 / 0,840.
+Lớp hồng f3, f5 và xanh f3 dưới 0,85: lưỡi lửa mảnh (rộng 3-6 px) mất một phần khi làm trơn và khi lớp đỏ sẫm phía trên lấn sang.
+Frame 8-12 chỉ còn móc vụn vài trăm điểm ảnh: IoU 0,25-0,66, nhìn bằng mắt vẫn đúng chỗ, đúng dáng.
+
+**Luật rút ra:** đo hình phải đo cả gradient trong của lớp (không lấy đúng mã màu); dựng lớp bằng cách tô chồng, lớp dưới liền khối;
+mọi viền đi qua một bước "pen" (làm trơn giữa các góc thật) trước khi xuất; quầng sáng là hàm của khoảng cách tới hình.

@@ -5,3 +5,5 @@ out/overlay_*_05.svg
 __pycache__/
 # review-page panels: rebuilt by preview_assets.py (GIFs and data.json are kept)
 preview/*.png
+preview2/*.png
+out2/*.png

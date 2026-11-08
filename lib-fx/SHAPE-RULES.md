@@ -107,3 +107,12 @@ các luật đo được, dùng khi vẽ hình bằng path:
 
 Điều này chỉnh lại §4 "không vẽ tầng nào bằng hình riêng": với hình vẽ tay kiểu này, vẽ tầng bằng **path riêng cho từng lớp** là
 đúng cách của designer; phương pháp trường (§1-§3) vẫn hợp cho xói mòn / tan theo thời gian.
+
+### 7b. Sau review v1 (2026-11-08)
+
+- **Lớp màu có gradient trong**: vàng ngả cam ~8 px sát mép, trắng ngả xanh nhạt ~3 px. Đo hình phải tính cả dải đó (mặt nạ theo
+  đường màu phẳng → màu mép), nếu không sẽ mất mũi nhọn và sinh khe giữa các lớp. "Viền hổ phách" là dải mép của lớp vàng.
+- **Tô chồng, lớp dưới liền khối**: lớp dưới chạy tiếp ~10 px dưới lớp trên; không ghép các lớp sát mép nhau.
+- **Pen pass bắt buộc**: viền mỗi lớp làm trơn giữa các góc thật (góc trong < 150°), fit Bézier nối G1. Đây là thứ làm nét "mềm như
+  pen tool" thay vì gấp khúc ở chỗ nối các nét công thức.
+- **Quầng sáng sau hình** = màu chính × exp(-d/s), s ≈ 27-38 px; tô theo bậc khi cần kiểu toon (§3 bước 6).

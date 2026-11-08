@@ -1,0 +1,506 @@
+{
+ "fire": {
+  "frames": {
+   "02": {
+    "layers": {
+     "crimson": {
+      "img": "fire_02_crimson.png",
+      "iou": 0.857,
+      "anchors": 54,
+      "strokes": 39,
+      "corners": 45
+     },
+     "pink": {
+      "img": "fire_02_pink.png",
+      "iou": 0.835,
+      "anchors": 61,
+      "strokes": 29,
+      "corners": 34
+     },
+     "yellow": {
+      "img": "fire_02_yellow.png",
+      "iou": 0.924,
+      "anchors": 34,
+      "strokes": 14,
+      "corners": 17
+     }
+    }
+   },
+   "03": {
+    "layers": {
+     "crimson": {
+      "img": "fire_03_crimson.png",
+      "iou": 0.873,
+      "anchors": 62,
+      "strokes": 24,
+      "corners": 39
+     },
+     "pink": {
+      "img": "fire_03_pink.png",
+      "iou": 0.818,
+      "anchors": 68,
+      "strokes": 27,
+      "corners": 44
+     },
+     "yellow": {
+      "img": "fire_03_yellow.png",
+      "iou": 0.965,
+      "anchors": 38,
+      "strokes": 13,
+      "corners": 24
+     }
+    }
+   },
+   "04": {
+    "layers": {
+     "crimson": {
+      "img": "fire_04_crimson.png",
+      "iou": 0.898,
+      "anchors": 79,
+      "strokes": 34,
+      "corners": 60
+     },
+     "pink": {
+      "img": "fire_04_pink.png",
+      "iou": 0.869,
+      "anchors": 98,
+      "strokes": 40,
+      "corners": 66
+     },
+     "yellow": {
+      "img": "fire_04_yellow.png",
+      "iou": 0.943,
+      "anchors": 59,
+      "strokes": 19,
+      "corners": 30
+     }
+    }
+   },
+   "05": {
+    "layers": {
+     "crimson": {
+      "img": "fire_05_crimson.png",
+      "iou": 0.831,
+      "anchors": 93,
+      "strokes": 39,
+      "corners": 63
+     },
+     "pink": {
+      "img": "fire_05_pink.png",
+      "iou": 0.816,
+      "anchors": 97,
+      "strokes": 40,
+      "corners": 73
+     },
+     "yellow": {
+      "img": "fire_05_yellow.png",
+      "iou": 0.926,
+      "anchors": 61,
+      "strokes": 17,
+      "corners": 33
+     }
+    }
+   },
+   "06": {
+    "layers": {
+     "crimson": {
+      "img": "fire_06_crimson.png",
+      "iou": 0.764,
+      "anchors": 84,
+      "strokes": 42,
+      "corners": 68
+     },
+     "pink": {
+      "img": "fire_06_pink.png",
+      "iou": 0.844,
+      "anchors": 84,
+      "strokes": 38,
+      "corners": 56
+     },
+     "yellow": {
+      "img": "fire_06_yellow.png",
+      "iou": 0.864,
+      "anchors": 61,
+      "strokes": 24,
+      "corners": 42
+     }
+    }
+   },
+   "07": {
+    "layers": {
+     "crimson": {
+      "img": "fire_07_crimson.png",
+      "iou": 0.701,
+      "anchors": 64,
+      "strokes": 36,
+      "corners": 52
+     },
+     "pink": {
+      "img": "fire_07_pink.png",
+      "iou": 0.749,
+      "anchors": 67,
+      "strokes": 32,
+      "corners": 54
+     },
+     "yellow": {
+      "img": "fire_07_yellow.png",
+      "iou": 0.811,
+      "anchors": 47,
+      "strokes": 22,
+      "corners": 31
+     }
+    }
+   },
+   "08": {
+    "layers": {
+     "crimson": {
+      "img": "fire_08_crimson.png",
+      "iou": 0.653,
+      "anchors": 41,
+      "strokes": 29,
+      "corners": 35
+     },
+     "pink": {
+      "img": "fire_08_pink.png",
+      "iou": 0.651,
+      "anchors": 43,
+      "strokes": 29,
+      "corners": 36
+     },
+     "yellow": {
+      "img": "fire_08_yellow.png",
+      "iou": 0.662,
+      "anchors": 29,
+      "strokes": 22,
+      "corners": 27
+     }
+    }
+   },
+   "09": {
+    "layers": {
+     "crimson": {
+      "img": "fire_09_crimson.png",
+      "iou": 0.513,
+      "anchors": 15,
+      "strokes": 14,
+      "corners": 15
+     },
+     "pink": {
+      "img": "fire_09_pink.png",
+      "iou": 0.484,
+      "anchors": 20,
+      "strokes": 16,
+      "corners": 18
+     },
+     "yellow": {
+      "img": "fire_09_yellow.png",
+      "iou": 0.567,
+      "anchors": 10,
+      "strokes": 7,
+      "corners": 8
+     }
+    }
+   },
+   "10": {
+    "layers": {
+     "crimson": {
+      "img": "fire_10_crimson.png",
+      "iou": 0.513,
+      "anchors": 15,
+      "strokes": 14,
+      "corners": 15
+     },
+     "pink": {
+      "img": "fire_10_pink.png",
+      "iou": 0.484,
+      "anchors": 20,
+      "strokes": 16,
+      "corners": 18
+     },
+     "yellow": {
+      "img": "fire_10_yellow.png",
+      "iou": 0.567,
+      "anchors": 10,
+      "strokes": 7,
+      "corners": 8
+     }
+    }
+   },
+   "11": {
+    "layers": {
+     "crimson": {
+      "img": "fire_11_crimson.png",
+      "iou": 0.375,
+      "anchors": 4,
+      "strokes": 2,
+      "corners": 4
+     },
+     "pink": {
+      "img": "fire_11_pink.png",
+      "iou": 0.376,
+      "anchors": 10,
+      "strokes": 5,
+      "corners": 9
+     },
+     "yellow": {
+      "img": "fire_11_yellow.png",
+      "iou": 0.455,
+      "anchors": 3,
+      "strokes": 1,
+      "corners": 3
+     }
+    }
+   },
+   "12": {
+    "layers": {
+     "crimson": {
+      "img": "fire_12_crimson.png",
+      "iou": 0.375,
+      "anchors": 4,
+      "strokes": 2,
+      "corners": 4
+     },
+     "pink": {
+      "img": "fire_12_pink.png",
+      "iou": 0.376,
+      "anchors": 10,
+      "strokes": 5,
+      "corners": 9
+     },
+     "yellow": {
+      "img": "fire_12_yellow.png",
+      "iou": 0.455,
+      "anchors": 3,
+      "strokes": 1,
+      "corners": 3
+     }
+    }
+   }
+  }
+ },
+ "frost": {
+  "frames": {
+   "02": {
+    "layers": {
+     "ice": {
+      "img": "frost_02_ice.png",
+      "iou": 0.956,
+      "anchors": 29,
+      "strokes": 14,
+      "corners": 20
+     },
+     "cyan": {
+      "img": "frost_02_cyan.png",
+      "iou": 0.834,
+      "anchors": 30,
+      "strokes": 22,
+      "corners": 25
+     },
+     "mid": {
+      "img": "frost_02_mid.png",
+      "iou": 0.827,
+      "anchors": 51,
+      "strokes": 43,
+      "corners": 42
+     }
+    }
+   },
+   "03": {
+    "layers": {
+     "ice": {
+      "img": "frost_03_ice.png",
+      "iou": 0.956,
+      "anchors": 40,
+      "strokes": 15,
+      "corners": 23
+     },
+     "cyan": {
+      "img": "frost_03_cyan.png",
+      "iou": 0.862,
+      "anchors": 36,
+      "strokes": 21,
+      "corners": 26
+     },
+     "mid": {
+      "img": "frost_03_mid.png",
+      "iou": 0.848,
+      "anchors": 58,
+      "strokes": 26,
+      "corners": 39
+     },
+     "deep": {
+      "img": "frost_03_deep.png",
+      "iou": 0.816,
+      "anchors": 24,
+      "strokes": 9,
+      "corners": 11
+     }
+    }
+   },
+   "04": {
+    "layers": {
+     "ice": {
+      "img": "frost_04_ice.png",
+      "iou": 0.953,
+      "anchors": 42,
+      "strokes": 14,
+      "corners": 24
+     },
+     "cyan": {
+      "img": "frost_04_cyan.png",
+      "iou": 0.905,
+      "anchors": 25,
+      "strokes": 9,
+      "corners": 12
+     },
+     "mid": {
+      "img": "frost_04_mid.png",
+      "iou": 0.882,
+      "anchors": 70,
+      "strokes": 32,
+      "corners": 47
+     },
+     "deep": {
+      "img": "frost_04_deep.png",
+      "iou": 0.832,
+      "anchors": 32,
+      "strokes": 15,
+      "corners": 20
+     }
+    }
+   },
+   "05": {
+    "layers": {
+     "ice": {
+      "img": "frost_05_ice.png",
+      "iou": 0.921,
+      "anchors": 41,
+      "strokes": 19,
+      "corners": 29
+     },
+     "cyan": {
+      "img": "frost_05_cyan.png",
+      "iou": 0.884,
+      "anchors": 41,
+      "strokes": 20,
+      "corners": 30
+     },
+     "mid": {
+      "img": "frost_05_mid.png",
+      "iou": 0.859,
+      "anchors": 53,
+      "strokes": 36,
+      "corners": 46
+     },
+     "deep": {
+      "img": "frost_05_deep.png",
+      "iou": 0.84,
+      "anchors": 35,
+      "strokes": 14,
+      "corners": 20
+     }
+    }
+   },
+   "06": {
+    "layers": {
+     "ice": {
+      "img": "frost_06_ice.png",
+      "iou": 0.852,
+      "anchors": 33,
+      "strokes": 20,
+      "corners": 27
+     },
+     "cyan": {
+      "img": "frost_06_cyan.png",
+      "iou": 0.878,
+      "anchors": 33,
+      "strokes": 18,
+      "corners": 28
+     },
+     "mid": {
+      "img": "frost_06_mid.png",
+      "iou": 0.775,
+      "anchors": 49,
+      "strokes": 29,
+      "corners": 41
+     },
+     "deep": {
+      "img": "frost_06_deep.png",
+      "iou": 0.778,
+      "anchors": 30,
+      "strokes": 21,
+      "corners": 24
+     }
+    }
+   },
+   "07": {
+    "layers": {
+     "ice": {
+      "img": "frost_07_ice.png",
+      "iou": 0.838,
+      "anchors": 18,
+      "strokes": 16,
+      "corners": 16
+     },
+     "cyan": {
+      "img": "frost_07_cyan.png",
+      "iou": 0.849,
+      "anchors": 15,
+      "strokes": 11,
+      "corners": 12
+     },
+     "mid": {
+      "img": "frost_07_mid.png",
+      "iou": 0.66,
+      "anchors": 28,
+      "strokes": 16,
+      "corners": 21
+     }
+    }
+   },
+   "08": {
+    "layers": {
+     "ice": {
+      "img": "frost_08_ice.png",
+      "iou": 0.661,
+      "anchors": 3,
+      "strokes": 2,
+      "corners": 3
+     },
+     "cyan": {
+      "img": "frost_08_cyan.png",
+      "iou": 0.734,
+      "anchors": 10,
+      "strokes": 4,
+      "corners": 8
+     },
+     "mid": {
+      "img": "frost_08_mid.png",
+      "iou": 0.671,
+      "anchors": 11,
+      "strokes": 6,
+      "corners": 11
+     }
+    }
+   },
+   "09": {
+    "layers": {
+     "cyan": {
+      "img": "frost_09_cyan.png",
+      "iou": 0.663,
+      "anchors": 2,
+      "strokes": 1,
+      "corners": 2
+     },
+     "mid": {
+      "img": "frost_09_mid.png",
+      "iou": 0.438,
+      "anchors": 5,
+      "strokes": 3,
+      "corners": 5
+     }
+    }
+   }
+  }
+ }
+}

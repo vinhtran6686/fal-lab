@@ -46,3 +46,50 @@ def raw_mask(variant, f, layer):
 def iou(a, b):
     u = (a | b).sum()
     return float((a & b).sum() / u) if u else 1.0
+
+
+# ---- v2 (after review 2026-11-08): a layer = its flat colour PLUS its own edge gradient --------------------------
+# The flat fills are shaded toward a second colour near their edges (inner glow). Exact-colour masks missed that band,
+# so the yellow lost ~30 % of its area and the pink tongues stabbing into it vanished. Each layer is now a colour
+# polyline (flat -> edge tint); a pixel belongs to the closest polyline. Amber is the edge tint of yellow, not a layer.
+FAMILY = {
+    "fire": {"yellow": [(255, 214, 112), (252, 186, 88), (254, 172, 76), (250, 150, 60)],
+             "pink": [(255, 98, 140), (252, 70, 122)],
+             "crimson": [(209, 47, 87)]},
+    "frost": {"ice": [(239, 255, 255), (215, 255, 255), (168, 252, 240)],
+              "cyan": [(105, 231, 254), (84, 204, 252)],
+              "mid": [(59, 169, 226)],
+              "deep": [(30, 109, 157)]},
+}
+FAMILY_TOL = {"yellow": 26, "pink": 22, "crimson": 12, "ice": 22, "cyan": 18, "mid": 14, "deep": 12}
+
+def _dist_poly(a, pts):
+    pts = [np.array(p, float) for p in pts]
+    if len(pts) == 1:
+        return np.linalg.norm(a - pts[0], axis=-1)
+    d = np.full(a.shape[:-1], 1e9)
+    for p, q in zip(pts, pts[1:]):
+        e = q - p
+        t = np.clip(((a - p) @ e) / (e @ e), 0, 1)
+        d = np.minimum(d, np.linalg.norm(a - (p + t[..., None] * e), axis=-1))
+    return d
+
+def family_masks(variant, f, min_area=12):
+    a = frame_rgb(variant, f).astype(float)
+    fam = FAMILY[variant]
+    names = list(fam)
+    D = np.stack([_dist_poly(a, fam[l]) / FAMILY_TOL[l] for l in names])
+    best = np.argmin(D, 0)
+    ok = np.min(D, 0) < 1
+    out = {}
+    for i, l in enumerate(names):
+        m = ok & (best == i)
+        m = ndi.median_filter(m.astype(np.uint8), 3).astype(bool)
+        for inv in (True, False):
+            tgt = ~m if inv else m
+            lab, n = ndi.label(tgt)
+            if n:
+                sizes = ndi.sum(tgt, lab, range(1, n + 1))
+                m[np.isin(lab, 1 + np.flatnonzero(sizes < min_area))] = inv
+        out[l] = m
+    return out
