@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CLI for the lib-fx vector kit (lib-fx/_core/vector). 0 USD, no model.
 
-  python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED] [--style crescent|loop|loop-heavy|front-heavy|combo]   generate a NEW slash from the foundation rules
+  python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED] [--style crescent|loop|loop-heavy|front-heavy|combo] [--dummy]   generate a NEW slash from the foundation rules
   python lib-fx/_tools/vectorfx.py init     GIF NAME                            draft profile: auto crops (+ reflections), frames, suggested layers
   python lib-fx/_tools/vectorfx.py check    PROFILE                             bright pixels no layer claims, per frame (+ image of the worst frame)
   python lib-fx/_tools/vectorfx.py palette  PROFILE [--variant V] [--frame N]   flat-colour candidates + colour clusters (to write a profile)
@@ -35,13 +35,14 @@ def main():
     ap.add_argument("profile")
     ap.add_argument("name", nargs="?", help="init only: profile name")
     ap.add_argument("--frames"); ap.add_argument("--variants"); ap.add_argument("--variant"); ap.add_argument("--frame", type=int)
-    ap.add_argument("--refit", action="store_true"); ap.add_argument("--style", choices=["crescent", "loop", "loop-heavy", "front-heavy", "combo"], default="crescent")
+    ap.add_argument("--refit", action="store_true"); ap.add_argument("--dummy", action="store_true", help="gen-slash combo: also render a preview with a training dummy")
+    ap.add_argument("--style", choices=["crescent", "loop", "loop-heavy", "front-heavy", "combo"], default="crescent")
     a = ap.parse_args()
     if a.cmd == "gen-slash":
         import shutil
         if a.style == "combo":  # sweep + overhead smash in one effect (idea: ref/vfx/spear-combo-idea)
             from vector import gen_slash_combo
-            out, stats = gen_slash_combo.build(a.profile, a.frame or 11)
+            out, stats = gen_slash_combo.build(a.profile, a.frame or 11, dummy=a.dummy)
         elif a.style != "crescent":  # loop = spin in place around the body, front-heavy = open C in front (idea: ref/vfx/axe-swing-idea)
             from vector import gen_slash_loop
             out, stats = gen_slash_loop.build(a.profile, a.frame or 11,
@@ -57,6 +58,9 @@ def main():
             shutil.copy(out / f, dst / f)
         shutil.copytree(out / "svg", dst / "svg")
         shutil.copytree(out / "frames", dst / "frames")
+        if a.dummy and (out / "dummy" / "preview.gif").exists():     # preview with the training dummy (not part of the effect)
+            shutil.copy(out / "dummy" / "preview.gif", dst / "preview_dummy.gif")
+            shutil.copy(out / "dummy" / "preview_slow.gif", dst / "preview_dummy_slow.gif")
         pk = max(s["area"] for s in stats)
         for s in stats:
             print(f"drawing {s['drawing']} frames {s['frames']} area {s['area'] / pk:.3f} pieces {s['pieces']}")

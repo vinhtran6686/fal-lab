@@ -17,7 +17,7 @@ https://claude.ai/artifact/2zSWrndFyafkCGZ6a328CM (3 bản dưới đây).
 | `gen-slash-loop-blue` | `loop` | **xoay tại chỗ**, vòng quanh thân, bản thường | `gen_slash_loop.py` (`STYLES["light"]`) | 14 | 8-9/10 (trước khi thêm phản chiếu); "khá đẹp" sau phản chiếu + khép vòng; dày hơn (v1.8): **ổn**; chốt **9-10/10** |
 | `gen-slash-loop-heavy-blue` | `loop-heavy` | **xoay tại chỗ**, vũ khí lớn | `STYLES["heavy"]` | 16 | "khá đẹp"; +40% dày (v1.8): **ổn**; chốt **9-10/10** |
 | `gen-slash-front-heavy-blue` | `front-heavy` | **một nhát trước mặt**, chữ C hở, vũ khí lớn | `STYLES["front-heavy"]` | 16 | **ổn**; chốt **9-10/10** |
-| `gen-slash-combo-blue` | `combo` | **combo 2 nhát**: quét ngang hơi xéo, rồi bổ từ sau lưng xuống đất có toé | `gen_slash_combo.py` | 22 | chưa chấm |
+| `gen-slash-combo-blue` | `combo` (`--dummy`) | **combo 2 nhát**: quét ngang sát thân, rồi bổ từ sau lưng xuống đất xa phía trước, có toé | `gen_slash_combo.py` | 22 | bản 1 "cũng được, chưa đúng tỷ lệ"; bản 2 chưa chấm |
 
 Ý tưởng (chỉ lấy ý, không đồ): `ref/vfx/axe-swing-idea/reference.png` (người cầm rìu vung ngang, nhát chém vòng elip phối cảnh).
 Bảng màu và glow (cả 4 bản): đo trên slash-trio xanh: sâu [52,104,168], xanh [106,190,255], băng [227,251,253]; glow nhoè 2 tầng σ 8,6 / 51,4.
@@ -40,6 +40,21 @@ Trang: Spear Combo Slash https://claude.ai/artifact/6XeNBdLFJbwNAS9BwEuqYp.
 - **Màu theo ảnh ý tưởng**: thêm lớp tím dưới cùng. Dải chính đi vào lớp tím cả dải; một dải băng mới bắt đầu từ 42% chiều dài, thon dần vào trên
   nó, nên đầu nét băng / xanh, mép và đuôi tím (bước màu phẳng, không gradient).
 - Chưa tốt: tím mới ở mép và đuôi mảnh (ảnh ý tưởng tím cả nửa sau nét); gai toé hơi đều nhau, chưa có giọt nhỏ; vệt loang bị phản chiếu che.
+
+**Bản 2 (user: "chưa đúng tỷ lệ, quẹt ngang thì gần thân, đập thì xa thân hơn"):**
+- **Mọi vị trí tính từ thân nhân vật**: `H` (chiều cao thân, 170 px), `FEET` (điểm chân = điểm neo lib-fx / `fx_layers.py`), quay về +x.
+  Luật tỉ lệ cho combo cận chiến:
+
+| | Tâm | Tầm với | Ghi chú |
+|---|---|---|---|
+| Quét ngang | ngực: chân + (0,25 H, −0,62 H) | bán kính 1,05 H, dẹt 0,30, nghiêng −0,12 | ôm thân: phía xa đi sau vai, móc ra trước ở ~1,3 H |
+| Bổ xuống | vai: chân + (0,05 H, −0,80 H) | chạm đất ở **1,75 H** trước chân; cung cao (dẹt 0,85), bắt đầu −125° (sau, trên) | xa thân hơn hẳn nhát quét; bán kính tự tính từ vai tới điểm chạm |
+| Độ rộng lưỡi | | quét 0,22 H, bổ 0,32 H | nhát bổ nặng hơn |
+
+- **Hình nộm xem thử** (`dummy.py`, cờ `--dummy`): người que phẳng cầm thương **dài cố định 1,35 H**; mũi thương bám theo đầu nhát chém đang
+  chạy; tay trượt dọc cán (gần thì cầm giữa cán, xa thì vươn tay tới 0,6 H); giữa hai nhát mũi thương vòng qua đầu ra sau (nội suy góc quanh
+  vai). Vẽ **dưới** hiệu ứng, ra thư mục riêng `lib-fx/_study/<name>/dummy/` và `showcase/.../preview_dummy*.gif`; hiệu ứng sạch không đổi.
+  Dùng được cho mọi bộ sinh: `render_sequence(..., backdrop=lambda f: ảnh RGB)`.
 
 ## 2. Hai cách dùng của dạng loop (user, 2026-11-09)
 

@@ -1,5 +1,12 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.10 (2026-11-09): tỉ lệ theo thân, hình nộm xem thử
+
+- `gen_slash_combo`: mọi vị trí tính từ thân (`H`, `FEET`, `SWEEP`, `SHOULDER`, `IMPACT`): quét ngang sát thân ở ngực, bổ xuống chạm đất xa
+  1,75 H.
+- `dummy.py` + cờ `vectorfx.py gen-slash ... --dummy`: hình nộm cầm thương dài cố định, mũi bám đầu nhát chém, chỉ để xem thử.
+  `render_sequence(backdrop=...)`, `compose.composite(base=...)`: vẽ một ảnh nền dưới hiệu ứng.
+
 ## 1.9 (2026-11-09): combo nhiều nhát
 
 - `gen_render.render_sequence` nhận **nhiều khung toạ độ** (nét chọn khung bằng `"frame": i`; vết cắt chỉ cắt nét cùng khung).

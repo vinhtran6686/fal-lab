@@ -14,8 +14,9 @@ from .frames import ReflectFrame
 
 
 def render_sequence(name, drawings, frame, size, layers, halo, gain, background=(18, 17, 24),
-                    smooth=dict(sigma=3.0, corner_deg=145, merge_tol=0.8, min_area=4, close_px=0.8), out_root=None, meta=None, reflection=None):
+                    smooth=dict(sigma=3.0, corner_deg=145, merge_tol=0.8, min_area=4, close_px=0.8), out_root=None, meta=None, reflection=None, backdrop=None):
     """drawings: list of dict(strokes={layer: [stroke, ...]}, frames=[frame indices shown], label=str)
+    backdrop: optional function frame index -> RGB uint8 image (H, W, 3) drawn UNDER the effect (preview only, e.g. a dummy fighter)
     frame: one coordinate frame, or a list of them (several slashes / parts in one effect: stroke["frame"] = index, default 0)
     layers: {layer: rgb} bottom -> top. Returns (out dir, per-drawing stats).
     reflection: dict(floor=y, squash=0.27, dim=0.72, sat=0.75, halo=0.4, opacity=0.9, tint=rgb|None, tint_mix=0.3): the same strokes drawn again in a
@@ -71,10 +72,10 @@ def render_sequence(name, drawings, frame, size, layers, halo, gain, background=
                 paths[l], covers[l] = pl, raster_evenodd(pl, (H, W))
         for f in d["frames"]:
             if covers:
-                img, flat, _ = compose.composite(covers, list(layers), prof, "fx", f)
+                img, flat, _ = compose.composite(covers, list(layers), prof, "fx", f, None if backdrop is None else backdrop(f))
                 (out / "svg" / f"{f:02d}.svg").write_text(compose.svg(paths, list(layers), prof, "fx", (H, W)))
             else:
-                img = np.zeros((H, W, 3), np.uint8) + np.array(background, np.uint8)
+                img = np.zeros((H, W, 3), np.uint8) + np.array(background, np.uint8) if backdrop is None else backdrop(f)
                 flat = np.zeros((H, W, 3), np.uint8) + 20
             Image.fromarray(img).save(out / "frames" / f"{f:02d}.png")
             Image.fromarray(flat).save(out / "flat" / f"{f:02d}.png")
@@ -84,7 +85,8 @@ def render_sequence(name, drawings, frame, size, layers, halo, gain, background=
             if l not in rl:
                 sil |= c >= 0.5
         stats.append(dict(drawing=k, label=d.get("label", ""), frames=d["frames"], area=int(sil.sum()), pieces=int(ndi.label(sil)[1])))
-    Image.fromarray(np.zeros((H, W, 3), np.uint8) + np.array(background, np.uint8)).save(out / "frames" / f"{last + 1:02d}.png")
+    Image.fromarray(np.zeros((H, W, 3), np.uint8) + np.array(background, np.uint8) if backdrop is None else backdrop(last + 1)).save(
+        out / "frames" / f"{last + 1:02d}.png")
     seq = [Image.open(out / "frames" / f"{f:02d}.png") for f in range(last + 2)]
     seq[0].save(out / "preview.gif", save_all=True, append_images=seq[1:], duration=40, loop=0)
     seq[0].save(out / "preview_slow.gif", save_all=True, append_images=seq[1:], duration=125, loop=0)

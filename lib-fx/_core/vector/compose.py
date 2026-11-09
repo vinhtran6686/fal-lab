@@ -73,11 +73,11 @@ def layer_opacity(cfg, frame):
     return float(op[str(k)])
 
 
-def composite(covers, order, prof, v, frame=None):
-    """-> (final RGB with gradient + halo, flat RGB, visible masks)."""
+def composite(covers, order, prof, v, frame=None, base=None):
+    """-> (final RGB with gradient + halo, flat RGB, visible masks). base: optional RGB image under the effect (a preview backdrop)."""
     var = prof.var(v)
     shape = next(iter(covers.values())).shape
-    img = np.zeros(shape + (3,)) + np.array(prof.get("background"), float)
+    img = np.array(base, float) if base is not None else np.zeros(shape + (3,)) + np.array(prof.get("background"), float)
     if var.get("halo"):
         w = {l: c["halo_w"] for l, c in prof.layers(v).items() if "halo_w" in c}
         img = img + halo(covers, var["halo"], var.get("near_halo", True), frame, w or None)

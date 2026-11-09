@@ -20,9 +20,21 @@ PALETTE = {"violet": [150, 112, 232], "deep": [52, 104, 168], "blue": [80, 200, 
 HALO = {"model": "blur", "sigma": [8.57, 51.43], "c": [[41.7, 114.3, 142.7], [89.2, 148.9, 249.4]]}
 REFLECTION = dict(L.REFLECTION, tint=PALETTE["blue"])
 
-SIZE = (1100, 540)
-FLOOR = 432                    # ground line (feet); the smash lands on it, the reflection mirrors about it
-IMPACT = (585.0, float(FLOOR))  # where the smash hits the ground
+# Everything is placed from the fighter's body (user 2026-11-09: "the sweep stays close to the body, the smash lands farther away"):
+# H = body height, FEET = feet pivot (lib-fx / fx_layers.py anchor), facing +x.
+H = 170.0
+FEET = (340.0, 480.0)
+SIZE = (1000, 600)
+FLOOR = int(FEET[1])                              # ground line; the smash lands on it, the reflection mirrors about it
+SWEEP = dict(centre=(FEET[0] + 0.25 * H, FEET[1] - 0.62 * H), radius=1.05 * H, k=0.30, tilt=-0.12, width=0.22 * H)  # chest height,
+#   wraps the body: the far side passes behind the shoulders, the hook ends in front at arm + weapon reach (~1.3 H)
+SHOULDER = (FEET[0] + 0.05 * H, FEET[1] - 0.80 * H)
+IMPACT = (FEET[0] + 1.75 * H, float(FLOOR))      # the smash lands FAR in front: arm + full weapon length
+_K2 = 0.85
+_U2 = float(np.arctan2((IMPACT[1] - SHOULDER[1]) / _K2, IMPACT[0] - SHOULDER[0]))   # angle where the arc meets the ground
+SMASH = dict(centre=SHOULDER, radius=float(np.hypot(IMPACT[0] - SHOULDER[0], (IMPACT[1] - SHOULDER[1]) / _K2)), k=_K2, tilt=0.0,
+             width=0.32 * H, u_start=-125.0)
+_SPAN2 = _U2 - np.radians(SMASH["u_start"])      # radians from behind-above to the ground
 
 # one row per drawing of each slash, frames are GLOBAL frame indices of the combo (25 fps)
 T_SWEEP = [
@@ -53,10 +65,12 @@ SPLASH = {11: (0.05, 0.55, 1.0), 12: (0.05, 1.00, 1.0), 13: (0.30, 1.10, 0.80), 
 GAIN = {f: g for f, g in zip(range(21), [1.1, 1.0, 1.0, 1.0, 1.05, 1.15, 1.2, 1.2, 1.1, 1.0, 1.0, 1.0, 1.0, 1.05, 1.15, 1.25, 1.25,
                                          1.2, 1.2, 1.15, 1.15])}
 
-L.STYLES["combo-sweep"] = dict(L.STYLES["light"], timeline=T_SWEEP, width=40.0, back=0.45, front=1.9, centre=(560, 235), radius=330,
-                               k=0.26, tilt=-0.10, u_start=-175, floor=FLOOR, size=SIZE)
-L.STYLES["combo-smash"] = dict(L.STYLES["heavy"], timeline=T_SMASH, width=58.0, back=1.0, front=1.0, centre=(470, 282), radius=200,
-                               k=0.90, tilt=0.0, u_start=-160, floor=FLOOR, size=SIZE, min_w=2.5, lines=[22, -26])
+for _T in T_SMASH:                               # the smash table is written for a 3.75 rad arc: fit it to the real arc
+    _T["head"], _T["tail"] = _T["head"] * _SPAN2 / 3.75, _T["tail"] * _SPAN2 / 3.75
+L.STYLES["combo-sweep"] = dict(L.STYLES["light"], timeline=T_SWEEP, back=0.45, front=1.9, u_start=-175, floor=FLOOR, size=SIZE,
+                               lines=[18, 32, -22], **SWEEP)
+L.STYLES["combo-smash"] = dict(L.STYLES["heavy"], timeline=T_SMASH, back=1.0, front=1.0, floor=FLOOR, size=SIZE, min_w=2.5,
+                               lines=[22, -26], **SMASH)
 
 
 def _violet_tail(out, D, T):
@@ -101,8 +115,33 @@ def _splash(seed, f):
     return out
 
 
-def build(name="gen-slash-combo-blue", seed=11, reflection=True):
-    S1, S2 = L.STYLES["combo-sweep"], L.STYLES["combo-smash"]
+def _tips(D1, D2, frames):
+    """Weapon tip per global frame for the dummy: on the sweep head, then lifted behind the head (wind-up), then on the smash head."""
+    head = lambda D, fr, T: np.array(fr.to_xy(D["u_start"] + T["head"], D["R"]), float)
+    tips = {}
+    for T in T_SWEEP[:5]:
+        for f in T["frames"]:
+            tips[f] = head(D1, frames[0], T)
+    for T in T_SMASH:
+        for f in T["frames"]:
+            tips[f] = head(D2, frames[1], T)
+    a, b = max(f for f in tips if f < 8), 8                  # wind-up: the tip swings from the end of the sweep up over the head
+    c = np.array(SHOULDER)                                   # to the start of the smash (polar ease around the shoulder)
+    pa, pb = tips[a] - c, tips[b] - c
+    aa, ab = np.arctan2(pa[1], pa[0]), np.arctan2(pb[1], pb[0])
+    if ab > aa:
+        ab -= 2 * np.pi                                      # go round through the top (decreasing angle on screen)
+    for f in range(a + 1, b):
+        t = (f - a) / (b - a); t = t * t * (3 - 2 * t)
+        ang, rad = aa + (ab - aa) * t, np.linalg.norm(pa) * (1 - t) + np.linalg.norm(pb) * t
+        tips[f] = c + rad * np.array([np.cos(ang), np.sin(ang)])
+    last = max(tips)
+    return lambda f: tips.get(f, tips[min(max(f, 0), last)] if f in tips else tips[last if f > last else 0])
+
+
+def build(name="gen-slash-combo-blue", seed=11, reflection=True, dummy=False):
+    """Renders the clean effect into lib-fx/_study/<name>/; with dummy=True also a preview with a training dummy whose weapon tip
+    follows the slash heads into lib-fx/_study/<name>/dummy/ (preview only, never part of the effect)."""
     D1, D2 = L.design(seed, "combo-sweep"), L.design(seed + 1, "combo-smash")
     frames = [EllipseFrame(D1["centre"], D1["k"], D1["tilt"]), EllipseFrame(D2["centre"], D2["k"], D2["tilt"]),
               EllipseFrame(IMPACT, 1.0, 0.0), EllipseFrame(IMPACT, 0.12, 0.0)]
@@ -119,6 +158,8 @@ def build(name="gen-slash-combo-blue", seed=11, reflection=True):
         if drawings and key == prev:
             drawings[-1]["frames"].append(f)
             continue
+        if key == (None, None, None):
+            continue
         strokes = {l: [] for l in PALETTE}
         labels = []
         for si, (Tl, D) in enumerate(((T_SWEEP, D1), (T_SMASH, D2))):
@@ -131,13 +172,17 @@ def build(name="gen-slash-combo-blue", seed=11, reflection=True):
                     p["frame"] = si
                 strokes.setdefault(l, []).extend(st)
             labels.append(Tl[k]["label"])
-        if key == (None, None, None):
-            continue
         for l, st in _splash(seed + 7, f).items():
             strokes[l].extend(st)
         drawings.append(dict(strokes=strokes, frames=[f], label=" + ".join(labels) or "trống"))
         prev = key
-    return render_sequence(name, drawings, frames, SIZE, PALETTE, HALO, GAIN,
-                           reflection=dict(REFLECTION, floor=FLOOR) if reflection else None,
-                           meta=dict(design=[D1, D2], timeline=dict(sweep=T_SWEEP, smash=T_SMASH, splash=SPLASH), gain=GAIN,
-                                     style="combo-sweep-smash", idea="ref/vfx/spear-combo-idea/"))
+    meta = dict(design=[D1, D2], timeline=dict(sweep=T_SWEEP, smash=T_SMASH, splash=SPLASH), gain=GAIN, style="combo-sweep-smash",
+                body=dict(H=H, feet=FEET, shoulder=SHOULDER, impact=IMPACT), idea="ref/vfx/spear-combo-idea/")
+    refl = dict(REFLECTION, floor=FLOOR) if reflection else None
+    res = render_sequence(name, drawings, frames, SIZE, PALETTE, HALO, GAIN, reflection=refl, meta=meta)
+    if dummy:
+        from .dummy import Dummy
+        dm, tip = Dummy(FEET, H, SIZE), _tips(D1, D2, frames)
+        render_sequence(name, drawings, frames, SIZE, PALETTE, HALO, GAIN, reflection=refl, meta=meta,
+                        out_root=res[0] / "dummy", backdrop=lambda f: dm.frame(tip(f)))
+    return res
