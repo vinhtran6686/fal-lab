@@ -45,6 +45,12 @@ A generic one-line action gets a generic, often wrong motion. Describe the move 
 part by body part. Placeholders in braces; the content comes from the user's words or from `--creative`/`--example`, never from a
 fixed hero.
 
+0. **Character's way of moving** (before the beats; idea taken from FalSprite's CHARACTER + CHOREOGRAPHY rewrite, 2026-11-10): one or two
+   sentences from the character's `brief.md` (class, role, weapon weight, temperament) saying HOW this body moves, so the same action
+   differs per character: a heavy bruiser plants each foot and swings the shoulders, a caster glides and keeps the hands close, a
+   scout stays low and quick. It colours every beat below (weight, tempo, arm use); it never adds a beat, an effect or a design change.
+   Loops (idle, walk, run, fly): the last beat must lead back into the first; for walk and run name which leg is forward in each beat
+   and alternate left and right, so no two beats repeat a leg position.
 1. **Facing lock**: "facing {RIGHT} the entire time and never turning around: hips, shoulders and face stay turned that way in every
    frame". Always when there is a step, a back foot or a pulled object.
 2. **Start**: "starts in the calm idle stance of the first still", with what the feet, the held item and the hands are doing; one
