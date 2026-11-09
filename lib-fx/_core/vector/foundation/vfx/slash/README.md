@@ -24,6 +24,7 @@ Mọi thứ đã biết về nhát chém vẽ tay flat-colour: đọc bản gố
 | `gen-slash-loop-blue` | xoay tại chỗ, vòng quanh thân, bản thường | 9-10/10 |
 | `gen-slash-loop-heavy-blue` | xoay tại chỗ, vũ khí lớn (trọng kiếm, đại đao, katana) | 9-10/10 |
 | `gen-slash-front-heavy-blue` | một nhát trước mặt, chữ C hở, vũ khí lớn | 9-10/10 |
+| `gen-slash-combo-blue` | combo 2 nhát: quét ngang + bổ xuống đất có toé | chưa chấm |
 
 User (2026-11-09): sáng tạo slash đơn bằng tool đã khá ổn. Câu hỏi mở: slash theo quỹ đạo vẽ trước cho một nhân vật: [../../../STATUS.md](../../../STATUS.md) §3.1.
 

@@ -16,14 +16,16 @@ from .frames import ReflectFrame
 def render_sequence(name, drawings, frame, size, layers, halo, gain, background=(18, 17, 24),
                     smooth=dict(sigma=3.0, corner_deg=145, merge_tol=0.8, min_area=4, close_px=0.8), out_root=None, meta=None, reflection=None):
     """drawings: list of dict(strokes={layer: [stroke, ...]}, frames=[frame indices shown], label=str)
+    frame: one coordinate frame, or a list of them (several slashes / parts in one effect: stroke["frame"] = index, default 0)
     layers: {layer: rgb} bottom -> top. Returns (out dir, per-drawing stats).
     reflection: dict(floor=y, squash=0.27, dim=0.72, sat=0.75, halo=0.4, opacity=0.9, tint=rgb|None, tint_mix=0.3): the same strokes drawn again in a
     ReflectFrame under everything, palette darker and less saturated (slash-trio: luma ~0.7-0.85), weaker glow."""
     layers = dict(layers)
-    rframe, rl = None, {}
+    frames_ = list(frame) if isinstance(frame, (list, tuple)) else [frame]   # several frames: a stroke picks one with "frame": i
+    rframes, rl = None, {}
     if reflection:
         rf = dict(dict(squash=0.27, dim=0.72, sat=0.75, halo=0.4, opacity=0.9), **reflection)
-        rframe = ReflectFrame(frame, rf["floor"], rf["squash"])
+        rframes = [ReflectFrame(fr, rf["floor"], rf["squash"]) for fr in frames_]
         for l, c in layers.items():
             c = np.array(c, float); g = c.mean()
             c = g + (c - g) * rf["sat"]
@@ -50,7 +52,13 @@ def render_sequence(name, drawings, frame, size, layers, halo, gain, background=
             st = d["strokes"].get(l[2:] if l in rl else l, [])
             if not any(p["op"] == "add" for p in st):
                 continue
-            cov = strokes_cover_2x(st, rframe if l in rl else frame, (H, W))
+            cov = 0.0
+            groups = {}
+            for p in st:                   # cuts only bite the strokes of their own frame (one slash never cuts another)
+                groups.setdefault(p.get("frame", 0), []).append(p)
+            for gi, ps in groups.items():
+                if any(p["op"] == "add" for p in ps):
+                    cov = np.maximum(cov, strokes_cover_2x(ps, (rframes if l in rl else frames_)[gi], (H, W)))
             if l in rl:   # the squashed far-side hair line (< ~2 px) would break into dots in the reflection: open it away,
                 op = ndi.binary_opening(cov > 0.5, iterations=2)   # then drop pieces < ~60 px
                 cov = np.where(op, cov, 0.0)

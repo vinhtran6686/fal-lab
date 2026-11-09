@@ -1,6 +1,6 @@
 # Trạng thái bộ tool vector (đọc file này đầu tiên khi mở session mới)
 
-Cập nhật: 2026-11-09, bộ tool **v1.8**. File này là điểm nối giữa các session: đã làm gì, đang ở đâu, câu hỏi còn mở, việc tiếp theo.
+Cập nhật: 2026-11-09, bộ tool **v1.9**. File này là điểm nối giữa các session: đã làm gì, đang ở đâu, câu hỏi còn mở, việc tiếp theo.
 Khi xong một bước, cập nhật file này (và `CHANGELOG.md`). Tư duy tổng thể của lib-fx (Bước 0 → Phase 1-3): [../../MINDSET.md](../../MINDSET.md).
 
 ## 1. Đã làm được (user đã duyệt)
@@ -25,9 +25,10 @@ Lệnh hay dùng: `python lib-fx/_tools/vectorfx.py gen-slash NAME --style cresc
 
 ## 3. Câu hỏi mở (concern cho các session sau)
 
-### 3.0 Việc user định thử tiếp (2026-11-09)
+### 3.0 Combo nhiều nhát (2026-11-09): bản đầu đã làm, chờ user chấm
 
-Một hiệu ứng **chém liên tiếp 2-3 nhát, mỗi nhát một kiểu** (combo). Cần: nhiều đường chém trong một hiệu ứng (mỗi nhát một khung / kiểu
+Bản đầu: `gen-slash-combo-blue` (`--style combo`, quét ngang + bổ xuống có toé), trang https://claude.ai/artifact/6XeNBdLFJbwNAS9BwEuqYp,
+chi tiết `foundation/vfx/slash/generators.md` §1b. Ý ban đầu: một hiệu ứng **chém liên tiếp 2-3 nhát, mỗi nhát một kiểu** (combo). Cần: nhiều đường chém trong một hiệu ứng (mỗi nhát một khung / kiểu
 từ `STYLES`, lệch thời gian), nhát sau sinh khi nhát trước đang tàn; dùng chung với §3.1 (khung theo đường cong, quỹ đạo nhiều đoạn).
 Trước đó user hỏi về cấu trúc thư mục `lib-fx/` (tách rõ tái tạo / sáng tạo): xem §3.2.
 

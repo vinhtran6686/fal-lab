@@ -152,6 +152,7 @@ Hai cách làm (dùng cho cả tái tạo lẫn sáng tạo):
 | lửa phun, Arcane, Toxic | tái tạo | vector | `ref/vfx/element-trio/` | `_core/vector/showcase/element-trio/` | 10/10 |
 | `gen-slash-blue` (lưỡi liềm) | sáng tạo | vector (bộ sinh) | luật slash | `_core/vector/showcase/generated/` | 7/10 |
 | `gen-slash-loop-blue`, `-loop-heavy-blue`, `-front-heavy-blue` | sáng tạo | vector (bộ sinh) | luật slash + ý `ref/vfx/axe-swing-idea/` | `_core/vector/showcase/generated/` | 9-10/10 |
+| `gen-slash-combo-blue` (quét ngang + bổ xuống) | sáng tạo | vector (bộ sinh, 2 khung) | luật slash + ý `ref/vfx/spear-combo-idea/` | `_core/vector/showcase/generated/` | chưa chấm |
 | `force/shock/*` (inferno ...) | sáng tạo | fxcore | — | thư viện | inferno approved, còn lại draft |
 | `impact/hit|dash|ground/*` | sáng tạo | fxcore (organic) | — | thư viện | draft |
 | `magic/spirit/soulstrike` | sáng tạo | fxcore | — | thư viện | rework (linh hồn nhỏ đạt) |
@@ -259,7 +260,7 @@ Nhìn tên là biết: thư mục thường = **dùng được**; `_rebuild/` = 
 | Loại | Bước 0 tái tạo | Bước 0 / Phase 1 sáng tạo | Phase 2 biên độ | Phase 3 nhân vật |
 |---|---|---|---|---|
 | slash | ✅ 5 mẫu | ✅ 4 kiểu (9-10/10 cho 3 kiểu loop / front) | ⏳ dữ liệu có (`TIMELINE`, `lifecycle`), chưa có file biên độ chung | ❌ (khả thi, STATUS §3.1) |
-| slash combo (2-3 nhát) | ❌ | ⏳ user sắp thử | ❌ | ❌ |
+| slash combo (2-3 nhát) | ❌ | ⏳ bản đầu 2 nhát (quét + bổ), chờ chấm | ❌ | ❌ |
 | explosion (nổ / phun) | ✅ 3 mẫu | ❌ chưa có bộ sinh | ⏳ `lifecycle`, `track` có | ❌ |
 | impact | ❌ chưa tái tạo mẫu nào | ✅ 10 bản fxcore (draft) | ❌ | ❌ |
 | force / shock | ❌ | ✅ 6 bản fxcore (inferno approved) | ❌ | ❌ |

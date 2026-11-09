@@ -1,5 +1,12 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.9 (2026-11-09): combo nhiều nhát
+
+- `gen_render.render_sequence` nhận **nhiều khung toạ độ** (nét chọn khung bằng `"frame": i`; vết cắt chỉ cắt nét cùng khung).
+- `gen_slash_combo.py` (`gen-slash NAME --style combo`): quét ngang hơi xéo + bổ từ sau lưng xuống đất, toé gai lúc chạm, màu băng → tím theo
+  ý tưởng `ref/vfx/spear-combo-idea/`. `gen_slash_loop`: nét tóc tối thiểu (`min_w`) đặt theo kiểu (cung đứng không cần 9).
+- `MINDSET.md` (gốc `lib-fx/`): tư duy xây thư viện. Kết quả 4 slash cũ không đổi (kiểm tra từng điểm ảnh).
+
 ## 1.8.1 (2026-11-09): docs
 
 - `STATUS.md`: điểm nối giữa các session (đã làm, việc để dành, câu hỏi mở: slash theo quỹ đạo user vẽ cho một nhân vật, đánh giá khả thi).

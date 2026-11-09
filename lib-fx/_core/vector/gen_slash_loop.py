@@ -115,7 +115,7 @@ def design(seed=11, style="light"):
     return dict(seed=seed, style=style, size=size, centre=centre, R=radius, k=k, tilt=tilt, width=S["width"], u_start=float(u_start),
                 back=S["back"], front=S["front"], finger_b=S["finger_b"], inner_w=S["inner_w"], deep_w=S["deep_w"],
                 fingers=fingers, teeth=teeth, teeth_size=teeth_size, lines=lines, breaks=breaks, break_len=break_len,
-                flecks=flecks, debris=debris, floor=S["floor"])
+                flecks=flecks, debris=debris, floor=S["floor"], min_w=S.get("min_w", 9.0))
 
 
 def _persp(u0, u1, back=0.30, front=2.4, n=13):
@@ -127,7 +127,7 @@ def _persp(u0, u1, back=0.30, front=2.4, n=13):
     return [[float(t), float(v)] for t, v in zip(ts, m)]
 
 
-PERSP = dict(back=0.30, front=2.4, w=1.0)
+PERSP = dict(back=0.30, front=2.4, w=1.0, min_w=9.0)
 
 
 def _stroke(u0, u1, r, W, a, b, persp=True, op="add", r1=None):
@@ -135,7 +135,7 @@ def _stroke(u0, u1, r, W, a, b, persp=True, op="add", r1=None):
     p = dict(axis="u", pos0=float(u0), pos1=float(u1), spine=[r, (2 * r + r1) / 3, (r + 2 * r1) / 3, r1], a=a, b=b, e0=0.0, e1=0.0,
              W=peak_scale(W, a, b), op=op)
     if op == "add" and persp:  # the far side stays a visible hair line (>= ~2 px), never vanishes
-        p["min_w"] = 9.0 * PERSP["w"]   # loop units: the far side is squashed by k (~0.24), so ~2 px on screen; fades with the stroke
+        p["min_w"] = PERSP["min_w"] * PERSP["w"]   # loop units: the far side is squashed by k (~0.24), so ~2 px on screen; fades with the stroke
     if persp:
         p["wknots"] = _persp(u0, u1, PERSP["back"], PERSP["front"])
     return p
@@ -143,7 +143,7 @@ def _stroke(u0, u1, r, W, a, b, persp=True, op="add", r1=None):
 
 def drawing(D, k, timeline=TIMELINE):
     T = timeline[k]
-    PERSP.update(back=D["back"], front=D["front"], w=T["w"])
+    PERSP.update(back=D["back"], front=D["front"], w=T["w"], min_w=D.get("min_w", 9.0))
     us = D["u_start"]
     R, Wb = D["R"], D["width"]
     h, t = us + T["head"], us + T["tail"]

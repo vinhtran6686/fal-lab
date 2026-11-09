@@ -17,9 +17,29 @@ https://claude.ai/artifact/2zSWrndFyafkCGZ6a328CM (3 bản dưới đây).
 | `gen-slash-loop-blue` | `loop` | **xoay tại chỗ**, vòng quanh thân, bản thường | `gen_slash_loop.py` (`STYLES["light"]`) | 14 | 8-9/10 (trước khi thêm phản chiếu); "khá đẹp" sau phản chiếu + khép vòng; dày hơn (v1.8): **ổn**; chốt **9-10/10** |
 | `gen-slash-loop-heavy-blue` | `loop-heavy` | **xoay tại chỗ**, vũ khí lớn | `STYLES["heavy"]` | 16 | "khá đẹp"; +40% dày (v1.8): **ổn**; chốt **9-10/10** |
 | `gen-slash-front-heavy-blue` | `front-heavy` | **một nhát trước mặt**, chữ C hở, vũ khí lớn | `STYLES["front-heavy"]` | 16 | **ổn**; chốt **9-10/10** |
+| `gen-slash-combo-blue` | `combo` | **combo 2 nhát**: quét ngang hơi xéo, rồi bổ từ sau lưng xuống đất có toé | `gen_slash_combo.py` | 22 | chưa chấm |
 
 Ý tưởng (chỉ lấy ý, không đồ): `ref/vfx/axe-swing-idea/reference.png` (người cầm rìu vung ngang, nhát chém vòng elip phối cảnh).
 Bảng màu và glow (cả 4 bản): đo trên slash-trio xanh: sâu [52,104,168], xanh [106,190,255], băng [227,251,253]; glow nhoè 2 tầng σ 8,6 / 51,4.
+
+## 1b. Combo nhiều nhát (`gen_slash_combo.py`, 2026-11-09)
+
+Ý tưởng: `ref/vfx/spear-combo-idea/spear-moves.png` dòng 1 (thương; kiếm, đao như nhau) và `sword-motion-sketch.png` dòng 1-2 (chuyển động).
+Trang: Spear Combo Slash https://claude.ai/artifact/6XeNBdLFJbwNAS9BwEuqYp.
+
+- **Mỗi nhát một khung toạ độ riêng** (`render_sequence` nhận danh sách khung; mỗi nét có `"frame": i`; vết cắt chỉ cắt nét cùng khung, nhát này
+  không cắt nhát kia). Mỗi nhát dùng lại nguyên ngôn ngữ sợi của `gen_slash_loop.drawing` với một dòng `STYLES` riêng (`combo-sweep`,
+  `combo-smash`) và một bảng thời gian riêng có **frame chung** của combo (`T_SWEEP`, `T_SMASH`).
+- **Nhát 1, quét ngang**: elip dẹt (k 0,26) nghiêng −0,10 (lên về bên phải), đi qua phía xa: nét dài mảnh, dày và móc xuống ở bên phải.
+- **Nhát 2, bổ xuống**: cung trong mặt phẳng đứng (k 0,90, không phối cảnh: `back = front = 1`, nét tóc tối thiểu `min_w` 2,5), từ sau lưng
+  trên cao qua đầu xuống đất trước mặt; **đầu nét dừng ở mặt đất** (`head` giữ nguyên sau va chạm, đuôi đuổi theo); va chạm giữ 2 frame.
+- **Toé lúc chạm đất** (`SPLASH`): 10 gai cong theo hướng bổ (nhiều về phía trước, vài cái thấp ra sau), nét toả từ điểm chạm trong khung tròn
+  riêng; gai to có lõi băng; vệt loang dẹt dưới đất; sau va chạm gai **rời đất bay ra** (bán kính trong tăng) và mỏng dần.
+- **Nhịp combo**: nhát 1 đỉnh ở frame 3, tàn 4-11; nhân vật lấy đà 4-7; nhát 2 sinh ở frame 8 **khi nhát 1 còn đang tàn** (gối lên nhau, không
+  có khoảng trống), chạm đất 11-12, tàn tới 20.
+- **Màu theo ảnh ý tưởng**: thêm lớp tím dưới cùng. Dải chính đi vào lớp tím cả dải; một dải băng mới bắt đầu từ 42% chiều dài, thon dần vào trên
+  nó, nên đầu nét băng / xanh, mép và đuôi tím (bước màu phẳng, không gradient).
+- Chưa tốt: tím mới ở mép và đuôi mảnh (ảnh ý tưởng tím cả nửa sau nét); gai toé hơi đều nhau, chưa có giọt nhỏ; vệt loang bị phản chiếu che.
 
 ## 2. Hai cách dùng của dạng loop (user, 2026-11-09)
 
