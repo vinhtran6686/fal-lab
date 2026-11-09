@@ -11,7 +11,7 @@ Khi xong một bước, cập nhật file này (và `CHANGELOG.md`).
 | Nền tảng thiết kế (luật + số đo) | 5 yếu tố của user đã kiểm chứng; vòng đời, mảnh, màu, ánh sáng | [foundation/](foundation/README.md) |
 | Docs theo loại VFX | slash, explosion | [foundation/vfx/](foundation/vfx/README.md) |
 | Tự động hoá đọc bản gốc | tự cắt vùng, gợi ý lớp màu, kiểm tra mask | `auto.py`, lệnh `init`, `check` |
-| **Sinh nhát chém đơn mới từ luật** | lưỡi liềm 7/10 → xoay tại chỗ (thường, nặng) và chém trước mặt chữ C: **user: "ổn", sáng tạo slash đơn bằng tool đã khá ổn** | [foundation/vfx/slash/generators.md](foundation/vfx/slash/generators.md), trang https://claude.ai/artifact/2zSWrndFyafkCGZ6a328CM |
+| **Sinh nhát chém đơn mới từ luật** | lưỡi liềm 7/10 → xoay tại chỗ (thường, nặng) và chém trước mặt chữ C: **user: 9-10/10, sáng tạo slash đơn bằng tool đã khá ổn** | [foundation/vfx/slash/generators.md](foundation/vfx/slash/generators.md), trang https://claude.ai/artifact/2zSWrndFyafkCGZ6a328CM |
 
 Lệnh hay dùng: `python lib-fx/_tools/vectorfx.py gen-slash NAME --style crescent|loop|loop-heavy|front-heavy`;
 `vectorfx.py all PROFILE` (dựng lại); `vectorfx.py init GIF NAME` (profile mới). Đầy đủ: [README.md](README.md) §3.
@@ -24,6 +24,12 @@ Lệnh hay dùng: `python lib-fx/_tools/vectorfx.py gen-slash NAME --style cresc
 - Xuất thẳng sang chuẩn lib-fx (`sheet.png`, `meta.json`, @2x, nền trong suốt): chưa có; bản sinh hiện có nền tối + glow cộng màu.
 
 ## 3. Câu hỏi mở (concern cho các session sau)
+
+### 3.0 Việc user định thử tiếp (2026-11-09)
+
+Một hiệu ứng **chém liên tiếp 2-3 nhát, mỗi nhát một kiểu** (combo). Cần: nhiều đường chém trong một hiệu ứng (mỗi nhát một khung / kiểu
+từ `STYLES`, lệch thời gian), nhát sau sinh khi nhát trước đang tàn; dùng chung với §3.1 (khung theo đường cong, quỹ đạo nhiều đoạn).
+Trước đó user hỏi về cấu trúc thư mục `lib-fx/` (tách rõ tái tạo / sáng tạo): xem §3.2.
 
 ### 3.1 Nhát chém theo quỹ đạo user vẽ trước, khớp pose / kiểu attack của một nhân vật cụ thể (2026-11-09)
 
@@ -55,6 +61,14 @@ nối nhau. Phong cách (sợi, đầu nét, màu) giữ theo `STYLES` hiện c�
 
 **Đề xuất khi làm:** thử trên một nhân vật có clip attack sẵn trong `out/`: (1) `PathFrame` + đọc SVG path; (2) chạy kiểu `heavy` trên quỹ đạo
 đó, đặt chồng lên frame nhân vật để user chấm; (3) nếu ổn, thêm cách (c) lấy nhịp từ clip và xuất chuẩn lib-fx.
+
+### 3.2 Cấu trúc `lib-fx/`: tách tái tạo và sáng tạo (2026-11-09, đề xuất, chờ user quyết)
+
+Hiện trạng: thư viện chuẩn là `<nhóm>/<họ>/<id>/` (hiệu ứng vẽ bằng `fxcore`, có `sheet.png` + `meta.json`); còn mọi việc của bộ vector
+(bản tái tạo từ GIF bên ngoài và bản sáng tạo) nằm trong `_core/vector/showcase/` (thư mục code), tài liệu nằm rải ở gốc `lib-fx/`
+(`RECIPE-*`, `RESEARCH-*`, `DESIGN.md` ...) và trong `_core/vector/foundation/`. Đề xuất: thư viện chỉ chứa hiệu ứng **có thể dùng
+trong game** (procedural + sáng tạo, `meta.json` thêm `origin` / `method`); bản **tái tạo** (học từ art của người khác, không ship) tách
+sang một khu riêng; code chỉ ở `_core/`; tài liệu gom về một chỗ. Chi tiết trong câu trả lời cho user cùng ngày; chưa di chuyển gì.
 
 ## 4. Ghi chú môi trường
 

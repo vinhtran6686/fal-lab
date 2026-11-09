@@ -14,9 +14,9 @@ https://claude.ai/artifact/2zSWrndFyafkCGZ6a328CM (3 bản dưới đây).
 | Tên (thư mục showcase) | `--style` | Kiểu | Mã | Frame (gồm frame trống cuối) | User chấm |
 |---|---|---|---|---|---|
 | `gen-slash-blue` | `crescent` | lưỡi liềm một nét, 2 lớp | `gen_slash.py` | 13 | 7/10 ("nét quá đơn giản, hình đơn điệu"; màu và chuyển động ổn) |
-| `gen-slash-loop-blue` | `loop` | **xoay tại chỗ**, vòng quanh thân, bản thường | `gen_slash_loop.py` (`STYLES["light"]`) | 14 | 8-9/10 (trước khi thêm phản chiếu); "khá đẹp" sau phản chiếu + khép vòng; dày hơn (v1.8): **ổn** |
-| `gen-slash-loop-heavy-blue` | `loop-heavy` | **xoay tại chỗ**, vũ khí lớn | `STYLES["heavy"]` | 16 | "khá đẹp"; +40% dày (v1.8): **ổn** |
-| `gen-slash-front-heavy-blue` | `front-heavy` | **một nhát trước mặt**, chữ C hở, vũ khí lớn | `STYLES["front-heavy"]` | 16 | **ổn** |
+| `gen-slash-loop-blue` | `loop` | **xoay tại chỗ**, vòng quanh thân, bản thường | `gen_slash_loop.py` (`STYLES["light"]`) | 14 | 8-9/10 (trước khi thêm phản chiếu); "khá đẹp" sau phản chiếu + khép vòng; dày hơn (v1.8): **ổn**; chốt **9-10/10** |
+| `gen-slash-loop-heavy-blue` | `loop-heavy` | **xoay tại chỗ**, vũ khí lớn | `STYLES["heavy"]` | 16 | "khá đẹp"; +40% dày (v1.8): **ổn**; chốt **9-10/10** |
+| `gen-slash-front-heavy-blue` | `front-heavy` | **một nhát trước mặt**, chữ C hở, vũ khí lớn | `STYLES["front-heavy"]` | 16 | **ổn**; chốt **9-10/10** |
 
 Ý tưởng (chỉ lấy ý, không đồ): `ref/vfx/axe-swing-idea/reference.png` (người cầm rìu vung ngang, nhát chém vòng elip phối cảnh).
 Bảng màu và glow (cả 4 bản): đo trên slash-trio xanh: sâu [52,104,168], xanh [106,190,255], băng [227,251,253]; glow nhoè 2 tầng σ 8,6 / 51,4.
@@ -63,7 +63,7 @@ Bảng thời gian (`TIMELINE`, `TIMELINE_HEAVY`, `TIMELINE_FRONT`): mỗi dòng
 8. **Vũ khí lớn** = cùng ngôn ngữ, khác ở: lưỡi rộng ~2-2,7 lần, phía sau dày hơn, ít sợi nhưng đậm, đầu nét cùn, răng và vụn to, **nhịp chậm**
    (lấy đà và va chạm giữ 2 frame).
 
-Kết luận của user (2026-11-09): **sáng tạo một nhát chém đơn bằng tool hiện tại đã khá ổn.** Câu hỏi mở tiếp theo (nhát chém theo quỹ đạo
+Kết luận của user (2026-11-09): **sáng tạo một nhát chém đơn bằng tool hiện tại đã khá ổn**; các bản sinh mới được chấm **9-10/10**. Câu hỏi mở tiếp theo (nhát chém theo quỹ đạo
 user vẽ trước cho một nhân vật cụ thể): [../../../STATUS.md](../../../STATUS.md) §3.1.
 
 ## 5. Còn thiếu để đạt 9-10/10 (chưa làm: chỉ làm khi cần đẹp hoàn hảo)
