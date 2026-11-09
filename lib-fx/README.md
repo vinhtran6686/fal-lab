@@ -3,6 +3,7 @@
 Nơi lưu trữ chuẩn cho mọi hiệu ứng (fx) của dự án, dùng chung cho toàn bộ nhân vật. Mỗi hiệu ứng được vẽ bằng code
 (0 USD, không gọi model) và lưu **riêng lẻ, không kèm nhân vật**. Nhân vật nào cần thì lấy từ đây ra dùng.
 
+**Tư duy xây lib-fx (mục tiêu, các bước tái tạo → mô tả → biên độ → gắn nhân vật, tái tạo và sáng tạo, thư mục anh em): [MINDSET.md](MINDSET.md).**
 **Bản đồ thư mục (mỗi nhóm, mỗi họ chứa gì): [GUIDE.md](GUIDE.md).**
 
 ## Lệnh

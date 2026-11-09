@@ -25,12 +25,15 @@ BG = (34, 38, 36)
 STATUS_COL = {"approved": (125, 220, 140), "rework": (255, 110, 150), "draft": (170, 180, 172)}
 
 
+NOT_LIBRARY = {"research"}   # top-level folders that hold research code, not library families
+
+
 def families():
     """{family path: module} for every module inside the library (folders starting with _ are not families)."""
     out = {}
     for py in sorted(HERE.rglob("*.py")):
         rel = py.relative_to(HERE)
-        if len(rel.parts) < 2 or any(p.startswith(("_", ".")) for p in rel.parts): continue
+        if len(rel.parts) < 2 or any(p.startswith(("_", ".")) for p in rel.parts) or rel.parts[0] in NOT_LIBRARY: continue
         fam = rel.parent.as_posix()
         spec = importlib.util.spec_from_file_location("fx_" + fam.replace("/", "_"), py)
         mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)

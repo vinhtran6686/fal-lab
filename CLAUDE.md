@@ -31,7 +31,8 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   feet, the reference game's method; no video model. Character clips are body only (`video-sprite` SKILL.md).
 - **lib-fx/** is THE fx library for every character (since 2026-11-06): effects drawn in code (0 USD), each stored ON ITS OWN
   (no character), frames @2x. Folders = group -> family (`melee/blade`, `force/shock`, `element/fire/<cast|projectile|impact|aoe|aura|status>`
-  ...), map in `lib-fx/GUIDE.md` (Vietnamese), rules and commands in `lib-fx/README.md`. Code sits in its family (`force/shock/shock.py`),
+  ...), map in `lib-fx/GUIDE.md` (Vietnamese), rules and commands in `lib-fx/README.md`, the why and the workflow (rebuild vs original,
+  describe -> motion envelope -> apply to a character, sibling folders) in `lib-fx/MINDSET.md`. Code sits in its family (`force/shock/shock.py`),
   shared kit in `lib-fx/_core/` (`fxcore.py`, `palettes.py`). `python lib-fx/build.py [group[/family[/id]]]` renders each effect
   (`sheet.png`, `frames/`, `preview.gif`, `meta.json` with status draft|approved|rework) plus `lib-fx/_gallery/<group>-<family>.png|gif`
   and `lib-fx/catalog.json`. New effects go into the library first; characters use them from there. Show fx alone for review.

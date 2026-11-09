@@ -1,7 +1,7 @@
 # Trạng thái bộ tool vector (đọc file này đầu tiên khi mở session mới)
 
 Cập nhật: 2026-11-09, bộ tool **v1.8**. File này là điểm nối giữa các session: đã làm gì, đang ở đâu, câu hỏi còn mở, việc tiếp theo.
-Khi xong một bước, cập nhật file này (và `CHANGELOG.md`).
+Khi xong một bước, cập nhật file này (và `CHANGELOG.md`). Tư duy tổng thể của lib-fx (Bước 0 → Phase 1-3): [../../MINDSET.md](../../MINDSET.md).
 
 ## 1. Đã làm được (user đã duyệt)
 
@@ -68,7 +68,7 @@ Hiện trạng: thư viện chuẩn là `<nhóm>/<họ>/<id>/` (hiệu ứng v�
 (bản tái tạo từ GIF bên ngoài và bản sáng tạo) nằm trong `_core/vector/showcase/` (thư mục code), tài liệu nằm rải ở gốc `lib-fx/`
 (`RECIPE-*`, `RESEARCH-*`, `DESIGN.md` ...) và trong `_core/vector/foundation/`. Đề xuất: thư viện chỉ chứa hiệu ứng **có thể dùng
 trong game** (procedural + sáng tạo, `meta.json` thêm `origin` / `method`); bản **tái tạo** (học từ art của người khác, không ship) tách
-sang một khu riêng; code chỉ ở `_core/`; tài liệu gom về một chỗ. Chi tiết trong câu trả lời cho user cùng ngày; chưa di chuyển gì.
+sang một khu riêng; code chỉ ở `_core/`; tài liệu gom về một chỗ. Cấu trúc đích ghi trong [../../MINDSET.md](../../MINDSET.md) §6.3; chưa di chuyển gì. `life/dash/tiger` đã xoá theo yêu cầu user.
 
 ## 4. Ghi chú môi trường
 

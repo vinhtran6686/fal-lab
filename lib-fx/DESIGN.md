@@ -88,7 +88,7 @@ rồi vỡ thành móc và mảnh (ăn mòn có nhiễu). Ở mọi frame vòng 
 User duyệt (approved). Công thức đầy đủ (lớp, dòng thời gian, tham số, kỹ thuật, nhật ký lặp): [RECIPE-inferno.md](RECIPE-inferno.md).
 
 Bộ thứ hai theo cùng cách, thêm lớp xám (khói, gió, bụi) và một hình nhân vật dựng tay (đầu hổ): `life/dash/tiger`,
-[RECIPE-tiger-dash.md](RECIPE-tiger-dash.md). User đánh giá **chưa đạt** (rework): lặp lại, khô cứng. Lý do và luật sửa ở §10.
+User đánh giá **chưa đạt** (rework): lặp lại, khô cứng; **đã xoá 2026-11-09** (code, khung hình, công thức). Lý do và luật sửa ở §10.
 
 ## 10. Tránh lặp lại và khô cứng (bắt buộc cho mọi hiệu ứng nhiều phần tử)
 
