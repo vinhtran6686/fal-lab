@@ -1,0 +1,327 @@
+{
+ "style": "x-double-slash",
+ "seed": 5,
+ "scale": 1.0,
+ "rotation": 0.0,
+ "duration_ms": 550.0,
+ "fps": 30,
+ "frames": 16,
+ "anchor": [
+  384.0,
+  320.0
+ ],
+ "blend": "additive",
+ "directions": {
+  "slash1": "top-right -> bottom-left, bulges lower-right",
+  "slash2": "top-left -> bottom-right, bulges upper-right"
+ },
+ "reference": "ref/vfx/x-slash-gold/reference.webp",
+ "timeline": [
+  {
+   "frame": 0,
+   "ms": 33.3,
+   "base_ms": 33.3,
+   "h1": 0.511,
+   "h2": null,
+   "widen": 1.0,
+   "op1": 0.531,
+   "op2": 0.0
+  },
+  {
+   "frame": 1,
+   "ms": 66.7,
+   "base_ms": 66.7,
+   "h1": 0.832,
+   "h2": null,
+   "widen": 1.0,
+   "op1": 0.711,
+   "op2": 0.0
+  },
+  {
+   "frame": 2,
+   "ms": 100.0,
+   "base_ms": 100.0,
+   "h1": 0.981,
+   "h2": null,
+   "widen": 1.0,
+   "op1": 0.892,
+   "op2": 0.0
+  },
+  {
+   "frame": 3,
+   "ms": 133.3,
+   "base_ms": 133.3,
+   "h1": 1.0,
+   "h2": null,
+   "widen": 1.0,
+   "op1": 0.933,
+   "op2": 0.0
+  },
+  {
+   "frame": 4,
+   "ms": 166.7,
+   "base_ms": 166.7,
+   "h1": 1.0,
+   "h2": null,
+   "widen": 1.0,
+   "op1": 0.767,
+   "op2": 0.0
+  },
+  {
+   "frame": 5,
+   "ms": 200.0,
+   "base_ms": 200.0,
+   "h1": 1.0,
+   "h2": 0.0,
+   "widen": 1.0,
+   "op1": 0.6,
+   "op2": 0.4
+  },
+  {
+   "frame": 6,
+   "ms": 233.3,
+   "base_ms": 233.3,
+   "h1": 1.0,
+   "h2": 0.45,
+   "widen": 1.0,
+   "op1": 0.433,
+   "op2": 0.543
+  },
+  {
+   "frame": 7,
+   "ms": 266.7,
+   "base_ms": 266.7,
+   "h1": 1.0,
+   "h2": 0.759,
+   "widen": 1.0,
+   "op1": 0.4,
+   "op2": 0.686
+  },
+  {
+   "frame": 8,
+   "ms": 300.0,
+   "base_ms": 300.0,
+   "h1": 1.0,
+   "h2": 0.936,
+   "widen": 1.0,
+   "op1": 0.4,
+   "op2": 0.829
+  },
+  {
+   "frame": 9,
+   "ms": 333.3,
+   "base_ms": 333.3,
+   "h1": 1.0,
+   "h2": 0.999,
+   "widen": 1.0,
+   "op1": 0.4,
+   "op2": 0.971
+  },
+  {
+   "frame": 10,
+   "ms": 366.7,
+   "base_ms": 366.7,
+   "h1": 1.0,
+   "h2": 1.0,
+   "widen": 1.147,
+   "op1": 0.4,
+   "op2": 1.0
+  },
+  {
+   "frame": 11,
+   "ms": 400.0,
+   "base_ms": 400.0,
+   "h1": 1.0,
+   "h2": 1.0,
+   "widen": 1.053,
+   "op1": 0.375,
+   "op2": 0.938
+  },
+  {
+   "frame": 12,
+   "ms": 433.3,
+   "base_ms": 433.3,
+   "h1": 1.0,
+   "h2": 1.0,
+   "widen": 0.897,
+   "op1": 0.292,
+   "op2": 0.729
+  },
+  {
+   "frame": 13,
+   "ms": 466.7,
+   "base_ms": 466.7,
+   "h1": 1.0,
+   "h2": 1.0,
+   "widen": 0.741,
+   "op1": 0.208,
+   "op2": 0.521
+  },
+  {
+   "frame": 14,
+   "ms": 500.0,
+   "base_ms": 500.0,
+   "h1": 1.0,
+   "h2": 1.0,
+   "widen": 0.584,
+   "op1": 0.125,
+   "op2": 0.312
+  },
+  {
+   "frame": 15,
+   "ms": 533.3,
+   "base_ms": 533.3,
+   "h1": 1.0,
+   "h2": 1.0,
+   "widen": 0.428,
+   "op1": 0.042,
+   "op2": 0.104
+  }
+ ],
+ "stats": [
+  {
+   "drawing": 0,
+   "label": "33 ms",
+   "frames": [
+    0
+   ],
+   "area": 5987,
+   "pieces": 4
+  },
+  {
+   "drawing": 1,
+   "label": "67 ms",
+   "frames": [
+    1
+   ],
+   "area": 12078,
+   "pieces": 8
+  },
+  {
+   "drawing": 2,
+   "label": "100 ms",
+   "frames": [
+    2
+   ],
+   "area": 15058,
+   "pieces": 11
+  },
+  {
+   "drawing": 3,
+   "label": "133 ms",
+   "frames": [
+    3
+   ],
+   "area": 15041,
+   "pieces": 8
+  },
+  {
+   "drawing": 4,
+   "label": "167 ms",
+   "frames": [
+    4
+   ],
+   "area": 14924,
+   "pieces": 11
+  },
+  {
+   "drawing": 5,
+   "label": "200 ms",
+   "frames": [
+    5
+   ],
+   "area": 14839,
+   "pieces": 4
+  },
+  {
+   "drawing": 6,
+   "label": "233 ms",
+   "frames": [
+    6
+   ],
+   "area": 22246,
+   "pieces": 8
+  },
+  {
+   "drawing": 7,
+   "label": "267 ms",
+   "frames": [
+    7
+   ],
+   "area": 26050,
+   "pieces": 6
+  },
+  {
+   "drawing": 8,
+   "label": "300 ms",
+   "frames": [
+    8
+   ],
+   "area": 28647,
+   "pieces": 4
+  },
+  {
+   "drawing": 9,
+   "label": "333 ms",
+   "frames": [
+    9
+   ],
+   "area": 29021,
+   "pieces": 7
+  },
+  {
+   "drawing": 10,
+   "label": "367 ms",
+   "frames": [
+    10
+   ],
+   "area": 32332,
+   "pieces": 8
+  },
+  {
+   "drawing": 11,
+   "label": "400 ms",
+   "frames": [
+    11
+   ],
+   "area": 29001,
+   "pieces": 6
+  },
+  {
+   "drawing": 12,
+   "label": "433 ms",
+   "frames": [
+    12
+   ],
+   "area": 22984,
+   "pieces": 4
+  },
+  {
+   "drawing": 13,
+   "label": "467 ms",
+   "frames": [
+    13
+   ],
+   "area": 17675,
+   "pieces": 4
+  },
+  {
+   "drawing": 14,
+   "label": "500 ms",
+   "frames": [
+    14
+   ],
+   "area": 12913,
+   "pieces": 5
+  },
+  {
+   "drawing": 15,
+   "label": "533 ms",
+   "frames": [
+    15
+   ],
+   "area": 8793,
+   "pieces": 9
+  }
+ ]
+}

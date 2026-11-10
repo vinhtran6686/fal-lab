@@ -14,8 +14,12 @@ from .frames import ReflectFrame
 
 
 def render_sequence(name, drawings, frame, size, layers, halo, gain, background=(18, 17, 24),
-                    smooth=dict(sigma=3.0, corner_deg=145, merge_tol=0.8, min_area=4, close_px=0.8), out_root=None, meta=None, reflection=None, backdrop=None):
+                    smooth=dict(sigma=3.0, corner_deg=145, merge_tol=0.8, min_area=4, close_px=0.8), out_root=None, meta=None, reflection=None, backdrop=None,
+                    fps=25, layer_opacity=None, halo_weight=None):
     """drawings: list of dict(strokes={layer: [stroke, ...]}, frames=[frame indices shown], label=str)
+    fps: playback speed of the GIFs (preview_slow = 1/3 speed)
+    layer_opacity: {layer: {frame: opacity}} (a layer fades on its own; unknown frames take the nearest given one)
+    halo_weight: {layer: w} share of the glow a layer casts (a faded layer should glow less)
     backdrop: optional function frame index -> RGB uint8 image (H, W, 3) drawn UNDER the effect (preview only, e.g. a dummy fighter)
     frame: one coordinate frame, or a list of them (several slashes / parts in one effect: stroke["frame"] = index, default 0)
     layers: {layer: rgb} bottom -> top. Returns (out dir, per-drawing stats).
@@ -43,6 +47,12 @@ def render_sequence(name, drawings, frame, size, layers, halo, gain, background=
           "variants": {"fx": {"order": list(layers), "halo_model": "blur", "near_halo": False, "halo": h,
                               "layers": {l: dict({"colours": [c]}, **({"halo_w": rf["halo"], "opacity": {"0": rf["opacity"]}} if l in rl else {}))
                                          for l, c in layers.items()}}}}
+    if layer_opacity:
+        pd["variants"]["fx"]["halo_follows_opacity"] = True
+    for l, op in (layer_opacity or {}).items():
+        pd["variants"]["fx"]["layers"][l]["opacity"] = {str(f): float(v) for f, v in op.items()}
+    for l, w in (halo_weight or {}).items():
+        pd["variants"]["fx"]["layers"][l]["halo_w"] = float(w)
     pp = out / "profile.json"
     pp.write_text(json.dumps(pd, indent=1))
     prof = Profile(pp)
@@ -88,7 +98,7 @@ def render_sequence(name, drawings, frame, size, layers, halo, gain, background=
     Image.fromarray(np.zeros((H, W, 3), np.uint8) + np.array(background, np.uint8) if backdrop is None else backdrop(last + 1)).save(
         out / "frames" / f"{last + 1:02d}.png")
     seq = [Image.open(out / "frames" / f"{f:02d}.png") for f in range(last + 2)]
-    seq[0].save(out / "preview.gif", save_all=True, append_images=seq[1:], duration=40, loop=0)
-    seq[0].save(out / "preview_slow.gif", save_all=True, append_images=seq[1:], duration=125, loop=0)
+    seq[0].save(out / "preview.gif", save_all=True, append_images=seq[1:], duration=round(1000 / fps), loop=0)
+    seq[0].save(out / "preview_slow.gif", save_all=True, append_images=seq[1:], duration=round(3000 / fps), loop=0)
     (out / "design.json").write_text(json.dumps(dict(meta or {}, stats=stats), indent=1, default=float))
     return out, stats

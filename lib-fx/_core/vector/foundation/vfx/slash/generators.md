@@ -20,6 +20,7 @@ https://claude.ai/artifact/2zSWrndFyafkCGZ6a328CM (3 bản dưới đây).
 | `gen-slash-loop-heavy-blue` | `loop-heavy` | **xoay tại chỗ**, vũ khí lớn | `STYLES["heavy"]` | 16 | "khá đẹp"; +40% dày (v1.8): **ổn**; chốt **9-10/10** |
 | `gen-slash-front-heavy-blue` | `front-heavy` | **một nhát trước mặt**, chữ C hở, vũ khí lớn | `STYLES["front-heavy"]` | 16 | **ổn**; chốt **9-10/10** |
 | `gen-slash-combo-blue` | `combo` (`--dummy`) | **combo 2 nhát**: quét ngang sát thân, rồi bổ từ sau lưng xuống đất xa phía trước, có toé | `gen_slash_combo.py` | 22 | bản 1 "cũng được, chưa đúng tỷ lệ"; bản 2 chưa chấm |
+| `gen-slash-x-gold` | `x` (`--scale --rotation --duration-ms --fps`) | **chém đôi chữ X tuần tự**, vàng, 550 ms, khung trên nền đen (additive) + `sheet.png`, `fx_meta.json` | `gen_slash_x.py` | 16 (+1 trống) | bản 1 sai (thiếu ảnh tham chiếu); bản 2 chưa chấm |
 
 Ý tưởng (chỉ lấy ý, không đồ): `ref/vfx/axe-swing-idea/reference.png` (người cầm rìu vung ngang, nhát chém vòng elip phối cảnh).
 Bảng màu và glow (cả 4 bản): đo trên slash-trio xanh: sâu [52,104,168], xanh [106,190,255], băng [227,251,253]; glow nhoè 2 tầng σ 8,6 / 51,4.
@@ -57,6 +58,29 @@ Trang: Spear Combo Slash https://claude.ai/artifact/6XeNBdLFJbwNAS9BwEuqYp.
   chạy; tay trượt dọc cán (gần thì cầm giữa cán, xa thì vươn tay tới 0,6 H); giữa hai nhát mũi thương vòng qua đầu ra sau (nội suy góc quanh
   vai). Vẽ **dưới** hiệu ứng, ra thư mục riêng `lib-fx/_study/<name>/dummy/` và `showcase/.../preview_dummy*.gif`; hiệu ứng sạch không đổi.
   Dùng được cho mọi bộ sinh: `render_sequence(..., backdrop=lambda f: ảnh RGB)`.
+
+## 1c. Chém đôi chữ X tuần tự (`gen_slash_x.py`, 2026-11-10)
+
+Đề bài: bản mô tả của một AI khác (task "Sequential Double Slash X-shaped VFX": hướng, thứ tự, timeline 550 ms, 3 lớp, hạt, tiêu chí nghiệm thu)
++ ảnh tham chiếu `ref/vfx/x-slash-gold/reference.webp` (10 frame). Trang: X Double Slash https://claude.ai/artifact/JrmYvD4FCabP17GaeLUyVP.
+
+- **Bài học (bản 1 bị user dừng):** làm chỉ theo lời tả thì sai hình: hai nét gần thẳng, cùng phình xuống, mảnh. **Luôn hỏi / chờ ảnh tham chiếu
+  khi đề bài nhắc tới nó**, rồi đọc hình từ ảnh (chiều phình, độ cong, chỗ dày nhất) trước khi viết code. Bản mô tả còn tự mâu thuẫn (ghi phương
+  "\\" cho nhát trên phải → dưới trái): theo điểm đầu / cuối và ảnh, không theo ký hiệu.
+- **Hình (đọc từ ảnh):** mỗi nhát là lưỡi liềm ~1/4 vòng (116°), elip dẹt k 0,62 (rộng hơn cao). Nhát 1: tâm vòng ở trên trái điểm giao, chạy
+  từ trên phải (gần dựng đứng) xuống dưới trái, phình về dưới phải. Nhát 2: tâm vòng ở dưới trái, chạy từ trên trái (gần nằm ngang) cắm xuống
+  dưới phải, phình về trên phải. **Bán kính thay đổi dọc đường đi** r(s) = R·(0,70 + 0,60 s) cho nhát 1 (cuộn gắt ở đầu, duỗi dài về sau),
+  R·(1,30 − 0,60 s) cho nhát 2; r(0,5) = R nên điểm giao đứng yên. Nét dày nhất ở 1/3 đầu, kim dài về phía đầu nét đang chạy. Spine của mỗi nét
+  lấy theo r(s) tại chính đoạn nét phủ (`_sp`), nên đường cong không xê dịch khi nét dài ra.
+- **Lớp:** viền cam, thân vàng, lõi trắng vàng nằm lệch vào phía trong lưỡi liềm; 2 cung phụ mảnh (một ngoài gần chỗ bắt đầu, một trong lùi sau
+  đầu nét); viền đứt 2 chỗ ở nửa đuôi; tia lửa hình thoi (glint) để lại cạnh đường đi, trôi theo hướng chém, sống ~170 ms.
+- **Thời gian theo ms** (hàm `state(ms)`), lấy mẫu theo fps; đổi `--duration-ms` là co giãn cả timeline. Nhát 1: 0-120 ms dài ra, 120-240 mờ còn
+  40 %, giữ 40 %. Nhát 2: 200-340 ms; đầu nét qua giữa (~238 ms) thì nổ impact (tâm hình thoi + 4 tia dọc hai hướng chém + 2 tia ngắn + hạt).
+  340-390: chữ X, nét rộng thêm 16 %. 390-550: tan (hạt, viền cam, thân vàng, lõi cuối cùng).
+- **Độ đục từng lớp, glow theo độ đục** (`render_sequence(layer_opacity=..., halo_weight=...)`): lớp đã mờ cũng phát sáng ít đi (chỉ bật cho
+  bộ sinh, profile dựng lại giữ luật cũ).
+- **Xuất cho game:** khung trên nền đen (additive: nền đen không cộng gì), `sheet.png` (1 hàng) + `fx_meta.json` (fps, số frame, cỡ, điểm neo =
+  điểm giao, blend). Repo chưa có runtime game: scale / rotation / opacity áp dụng lúc vẽ, hoặc sinh lại với `--scale`, `--rotation`.
 
 ## 2. Hai cách dùng của dạng loop (user, 2026-11-09)
 

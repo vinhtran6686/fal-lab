@@ -1,5 +1,12 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## 1.11 (2026-11-10): chém đôi chữ X
+
+- `gen_slash_x.py` (`gen-slash NAME --style x [--scale --rotation --duration-ms --fps]`): hai lưỡi liềm tuần tự thành chữ X, timeline theo ms,
+  bán kính thay đổi dọc đường đi, impact ở điểm giao, tia lửa hình thoi; xuất `sheet.png` + `fx_meta.json` (additive trên nền đen).
+- `render_sequence`: `fps`, `layer_opacity`, `halo_weight`; `compose`: glow theo độ đục lớp khi profile bật `halo_follows_opacity`.
+- Kết quả các slash cũ không đổi (kiểm tra từng điểm ảnh).
+
 ## 1.10 (2026-11-09): tỉ lệ theo thân, hình nộm xem thử
 
 - `gen_slash_combo`: mọi vị trí tính từ thân (`H`, `FEET`, `SWEEP`, `SHOULDER`, `IMPACT`): quét ngang sát thân ở ngực, bổ xuống chạm đất xa

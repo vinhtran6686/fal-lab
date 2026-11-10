@@ -155,6 +155,7 @@ Hai cách làm (dùng cho cả tái tạo lẫn sáng tạo):
 | `gen-slash-blue` (lưỡi liềm) | sáng tạo | vector (bộ sinh) | luật slash | `_core/vector/showcase/generated/` | 7/10 |
 | `gen-slash-loop-blue`, `-loop-heavy-blue`, `-front-heavy-blue` | sáng tạo | vector (bộ sinh) | luật slash + ý `ref/vfx/axe-swing-idea/` | `_core/vector/showcase/generated/` | 9-10/10 |
 | `gen-slash-combo-blue` (quét ngang + bổ xuống) | sáng tạo | vector (bộ sinh, 2 khung) | luật slash + ý `ref/vfx/spear-combo-idea/` | `_core/vector/showcase/generated/` | chưa chấm |
+| `gen-slash-x-gold` (chém đôi chữ X) | sáng tạo | vector (bộ sinh) | ảnh tham chiếu `ref/vfx/x-slash-gold/` + bản mô tả | `_core/vector/showcase/generated/` | chưa chấm |
 | `force/shock/*` (inferno ...) | sáng tạo | fxcore | — | thư viện | inferno approved, còn lại draft |
 | `impact/hit|dash|ground/*` | sáng tạo | fxcore (organic) | — | thư viện | draft |
 | `magic/spirit/soulstrike` | sáng tạo | fxcore | — | thư viện | rework (linh hồn nhỏ đạt) |

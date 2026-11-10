@@ -1,0 +1,22 @@
+{
+ "id": "gen-slash-x-gold",
+ "frames": 16,
+ "fps": 30,
+ "duration_ms": 550.0,
+ "frame_size": [
+  640,
+  640
+ ],
+ "anchor": [
+  384.0,
+  320.0
+ ],
+ "blend": "additive",
+ "background": "black (adds nothing with additive blending)",
+ "loop": false,
+ "spawn": "draw the sheet centred on the anchor at the target position; scale / rotate / opacity at draw time",
+ "directions": {
+  "slash1": "top-right -> bottom-left, bulges lower-right",
+  "slash2": "top-left -> bottom-right, bulges upper-right"
+ }
+}

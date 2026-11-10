@@ -1,6 +1,6 @@
 # Trạng thái bộ tool vector (đọc file này đầu tiên khi mở session mới)
 
-Cập nhật: 2026-11-09, bộ tool **v1.10**. File này là điểm nối giữa các session: đã làm gì, đang ở đâu, câu hỏi còn mở, việc tiếp theo.
+Cập nhật: 2026-11-09, bộ tool **v1.11**. File này là điểm nối giữa các session: đã làm gì, đang ở đâu, câu hỏi còn mở, việc tiếp theo.
 Khi xong một bước, cập nhật file này (và `CHANGELOG.md`). Tư duy tổng thể của lib-fx (Bước 0 → Phase 1-3): [../../MINDSET.md](../../MINDSET.md).
 
 ## 1. Đã làm được (user đã duyệt)
@@ -62,6 +62,11 @@ nối nhau. Phong cách (sợi, đầu nét, màu) giữ theo `STYLES` hiện c�
 
 **Đề xuất khi làm:** thử trên một nhân vật có clip attack sẵn trong `out/`: (1) `PathFrame` + đọc SVG path; (2) chạy kiểu `heavy` trên quỹ đạo
 đó, đặt chồng lên frame nhân vật để user chấm; (3) nếu ổn, thêm cách (c) lấy nhịp từ clip và xuất chuẩn lib-fx.
+
+### 3.0b Chém đôi chữ X (2026-11-10): bản 2 theo ảnh tham chiếu, chờ user chấm
+
+`gen-slash-x-gold` (`--style x`), trang https://claude.ai/artifact/JrmYvD4FCabP17GaeLUyVP, chi tiết `foundation/vfx/slash/generators.md` §1c.
+Bản 1 làm khi chưa có ảnh tham chiếu nên sai hình; bài học ghi ở §1c.
 
 ### 3.1b FX đi theo vũ khí (2026-11-10, đã thống nhất hướng, chưa làm)
 
