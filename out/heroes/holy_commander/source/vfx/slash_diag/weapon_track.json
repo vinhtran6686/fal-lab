@@ -1,0 +1,486 @@
+{
+ "state": "attack_diag_side",
+ "take": "source/video/attack_diag_side_downcut_t01.mp4",
+ "recipe": "frames/export_recipe.json#diag",
+ "cell": [
+  176,
+  140
+ ],
+ "pivot": [
+  0.5,
+  0.88
+ ],
+ "fps": 15,
+ "frames": 16,
+ "frame_ms": 67,
+ "units": "H, origin = feet pivot, x forward (right), y up; time ms from frame 1",
+ "tier_H_px": 60,
+ "body_height_px": 55.5,
+ "coordinate_H_px": 55.5,
+ "px_to_H_2x": {
+  "x": "(px - 176) / 111",
+  "y": "(246.4 - py) / 111"
+ },
+ "hit_frame": 13,
+ "marked_by": "user, Blade Track Marker page",
+ "samples": [
+  {
+   "frame": 1,
+   "ms": 0,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.203,
+    0.84
+   ],
+   "tip": [
+    -0.459,
+    1.187
+   ],
+   "root_px2x": [
+    153.5,
+    153.1
+   ],
+   "tip_px2x": [
+    125,
+    114.6
+   ],
+   "note": "",
+   "tip_speed": 0.0
+  },
+  {
+   "frame": 2,
+   "ms": 67,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.203,
+    0.836
+   ],
+   "tip": [
+    -0.464,
+    1.178
+   ],
+   "root_px2x": [
+    153.5,
+    153.6
+   ],
+   "tip_px2x": [
+    124.5,
+    115.6
+   ],
+   "note": "",
+   "tip_speed": 0.0103
+  },
+  {
+   "frame": 3,
+   "ms": 134,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.189,
+    0.84
+   ],
+   "tip": [
+    -0.446,
+    1.183
+   ],
+   "root_px2x": [
+    155,
+    153.1
+   ],
+   "tip_px2x": [
+    126.5,
+    115.1
+   ],
+   "note": "",
+   "tip_speed": 0.0187
+  },
+  {
+   "frame": 4,
+   "ms": 201,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.234,
+    0.845
+   ],
+   "tip": [
+    -0.477,
+    1.205
+   ],
+   "root_px2x": [
+    150,
+    152.6
+   ],
+   "tip_px2x": [
+    123,
+    112.6
+   ],
+   "note": "",
+   "tip_speed": 0.038
+  },
+  {
+   "frame": 5,
+   "ms": 268,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.347,
+    0.831
+   ],
+   "tip": [
+    -0.73,
+    1.048
+   ],
+   "root_px2x": [
+    137.5,
+    154.1
+   ],
+   "tip_px2x": [
+    95,
+    130.1
+   ],
+   "note": "",
+   "tip_speed": 0.2978
+  },
+  {
+   "frame": 6,
+   "ms": 335,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.369,
+    0.831
+   ],
+   "tip": [
+    -0.784,
+    0.966
+   ],
+   "root_px2x": [
+    135,
+    154.1
+   ],
+   "tip_px2x": [
+    89,
+    139.1
+   ],
+   "note": "",
+   "tip_speed": 0.0982
+  },
+  {
+   "frame": 7,
+   "ms": 402,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.342,
+    0.818
+   ],
+   "tip": [
+    -0.788,
+    0.804
+   ],
+   "root_px2x": [
+    138,
+    155.6
+   ],
+   "tip_px2x": [
+    88.5,
+    157.1
+   ],
+   "note": "",
+   "tip_speed": 0.162
+  },
+  {
+   "frame": 8,
+   "ms": 469,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.279,
+    0.854
+   ],
+   "tip": [
+    -0.73,
+    0.732
+   ],
+   "root_px2x": [
+    145,
+    151.6
+   ],
+   "tip_px2x": [
+    95,
+    165.1
+   ],
+   "note": "",
+   "tip_speed": 0.0925,
+   "arc_angle_deg": 167.77
+  },
+  {
+   "frame": 9,
+   "ms": 536,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.059,
+    1.002
+   ],
+   "tip": [
+    -0.455,
+    1.12
+   ],
+   "root_px2x": [
+    182.5,
+    135.1
+   ],
+   "tip_px2x": [
+    125.5,
+    122.1
+   ],
+   "note": "",
+   "tip_speed": 0.4756,
+   "arc_angle_deg": 135.13
+  },
+  {
+   "frame": 10,
+   "ms": 603,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.414,
+    0.818
+   ],
+   "tip": [
+    0.27,
+    1.475
+   ],
+   "root_px2x": [
+    222,
+    155.6
+   ],
+   "tip_px2x": [
+    206,
+    82.6
+   ],
+   "note": "",
+   "tip_speed": 0.8072,
+   "arc_angle_deg": 80.8
+  },
+  {
+   "frame": 11,
+   "ms": 670,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.45,
+    0.444
+   ],
+   "tip": [
+    0.847,
+    0.885
+   ],
+   "root_px2x": [
+    226,
+    197.1
+   ],
+   "tip_px2x": [
+    270,
+    148.1
+   ],
+   "note": "",
+   "tip_speed": 0.8252,
+   "arc_angle_deg": 24.88
+  },
+  {
+   "frame": 12,
+   "ms": 737,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.288,
+    0.196
+   ],
+   "tip": [
+    0.865,
+    0.115
+   ],
+   "root_px2x": [
+    208,
+    224.6
+   ],
+   "tip_px2x": [
+    272,
+    233.6
+   ],
+   "note": "",
+   "tip_speed": 0.7702,
+   "arc_angle_deg": -30.15
+  },
+  {
+   "frame": 13,
+   "ms": 804,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.23,
+    0.165
+   ],
+   "tip": [
+    0.649,
+    -0.16
+   ],
+   "root_px2x": [
+    201.5,
+    228.1
+   ],
+   "tip_px2x": [
+    248,
+    264.1
+   ],
+   "note": "",
+   "tip_speed": 0.3497,
+   "arc_angle_deg": -53.21
+  },
+  {
+   "frame": 14,
+   "ms": 871,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.221,
+    0.183
+   ],
+   "tip": [
+    0.649,
+    -0.169
+   ],
+   "root_px2x": [
+    200.5,
+    226.1
+   ],
+   "tip_px2x": [
+    248,
+    265.1
+   ],
+   "note": "",
+   "tip_speed": 0.009
+  },
+  {
+   "frame": 15,
+   "ms": 938,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.243,
+    0.21
+   ],
+   "tip": [
+    0.644,
+    -0.146
+   ],
+   "root_px2x": [
+    203,
+    223.1
+   ],
+   "tip_px2x": [
+    247.5,
+    262.6
+   ],
+   "note": "",
+   "tip_speed": 0.0235
+  },
+  {
+   "frame": 16,
+   "ms": 1005,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.248,
+    0.219
+   ],
+   "tip": [
+    0.667,
+    -0.142
+   ],
+   "root_px2x": [
+    203.5,
+    222.1
+   ],
+   "tip_px2x": [
+    250,
+    262.1
+   ],
+   "note": "",
+   "tip_speed": 0.0233
+  }
+ ],
+ "speed": {
+  "peak_frame": 11,
+  "peak_H_per_frame": 0.8252,
+  "threshold_H_per_frame": 0.165,
+  "rule": "max(20% of peak, 0.1 H/frame); start = first frame of the contiguous fast run that contains the peak",
+  "vfx_start_frame": 9,
+  "vfx_start_ms": 536,
+  "fast_until_frame": 13
+ },
+ "fit": {
+  "model": "circle (EllipseFrame k=1)",
+  "n": 6,
+  "dof": 3,
+  "frames": [
+   8,
+   9,
+   10,
+   11,
+   12,
+   13
+  ],
+  "centre_H": [
+   0.1197,
+   0.5478
+  ],
+  "radius_H": 0.8612,
+  "residual_mean_H": 0.0366,
+  "residual_max_H": 0.0781,
+  "loo_interior_mean_H": 0.0912,
+  "loo_interior_max_H": 0.1588,
+  "threshold": {
+   "mean_H": 0.08,
+   "max_H": 0.15
+  },
+  "pass": true
+ }
+}
