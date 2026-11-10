@@ -175,3 +175,6 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-10 11:17:45,out/heroes/holy_commander/.work/m01_clip/t03/clip.mp4,h3-max-turbo,video,480P 3s,False,3.1,0.0450,True
 2026-11-10 11:22:43,out/heroes/holy_commander/.work/m01_clip/t04/clip.mp4,h3-max-turbo,video,480P 3s,False,7.8,0.0450,True
 2026-11-10 11:33:39,out/heroes/holy_commander/.work/m01_sketch_test/t01/clip.mp4,h3-max-turbo,video,480P 4s,False,2.8,0.0600,True
+2026-11-10 11:39:16,out/heroes/holy_commander/.work/m01_sketch_test/sketch_front_s1-20261110-113915-0.png,gpt-image-2,low,1024x1024,False,12.7,0.0110,True
+2026-11-10 11:39:20,out/heroes/holy_commander/.work/m01_sketch_test/sketch_front_s3-20261110-113919-0.png,gpt-image-2,low,1024x1024,False,16.5,0.0111,True
+2026-11-10 11:40:01,out/heroes/holy_commander/.work/m01_sketch_test/t02/clip.mp4,h3-max-turbo,video,480P 4s,False,4.0,0.0600,True
