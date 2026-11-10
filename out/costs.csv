@@ -182,3 +182,10 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-10 11:43:47,out/heroes/holy_commander/.work/m01_sketch_test/sketch_mirror_s3-20261110-114346-0.png,gpt-image-2,low,1024x1024,False,21.7,0.0114,True
 2026-11-10 11:44:51,out/heroes/holy_commander/.work/m01_sketch_test/t03a/clip.mp4,h3-max-turbo,video,480P 3s,False,3.0,0.0450,True
 2026-11-10 11:44:52,out/heroes/holy_commander/.work/m01_sketch_test/t03b/clip.mp4,h3-max-turbo,video,480P 3s,False,4.2,0.0450,True
+2026-11-10 11:51:36,out/heroes/holy_commander/.work/m01_sketch_test/sketch_clean_s3-20261110-115136-0.png,gpt-image-2,low,1024x1024,False,20.3,0.0114,True
+2026-11-10 11:51:37,out/heroes/holy_commander/.work/m01_sketch_test/sketch_clean_s2-20261110-115136-0.png,gpt-image-2,low,1024x1024,False,21.0,0.0114,True
+2026-11-10 11:52:52,out/heroes/holy_commander/.work/m01_sketch_test/sketch_anchor_s2-20261110-115251-0.png,gpt-image-2,low,1024x1024,False,19.3,0.0117,True
+2026-11-10 11:52:53,out/heroes/holy_commander/.work/m01_sketch_test/sketch_anchor_s3-20261110-115252-0.png,gpt-image-2,low,1024x1024,False,20.4,0.0116,True
+2026-11-10 11:53:36,out/heroes/holy_commander/.work/m01_sketch_test/sketch_anchor_s3-20261110-115335-0.png,gpt-image-2,low,1024x1024,False,20.7,0.0120,True
+2026-11-10 11:54:27,out/heroes/holy_commander/.work/m01_sketch_test/t04a/clip.mp4,h3-max-turbo,video,480P 3s,False,2.8,0.0450,True
+2026-11-10 11:54:27,out/heroes/holy_commander/.work/m01_sketch_test/t04b/clip.mp4,h3-max-turbo,video,480P 3s,False,2.8,0.0450,True
