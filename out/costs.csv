@@ -174,3 +174,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-10 11:16:51,out/heroes/holy_commander/.work/m01_poses/pose_slash_x_cut1end-20261110-111650-0.png,gpt-image-2,low,1024x1024,False,21.8,0.0146,True
 2026-11-10 11:17:45,out/heroes/holy_commander/.work/m01_clip/t03/clip.mp4,h3-max-turbo,video,480P 3s,False,3.1,0.0450,True
 2026-11-10 11:22:43,out/heroes/holy_commander/.work/m01_clip/t04/clip.mp4,h3-max-turbo,video,480P 3s,False,7.8,0.0450,True
+2026-11-10 11:33:39,out/heroes/holy_commander/.work/m01_sketch_test/t01/clip.mp4,h3-max-turbo,video,480P 4s,False,2.8,0.0600,True
