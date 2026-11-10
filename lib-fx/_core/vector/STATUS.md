@@ -63,6 +63,13 @@ nối nhau. Phong cách (sợi, đầu nét, màu) giữ theo `STYLES` hiện c�
 **Đề xuất khi làm:** thử trên một nhân vật có clip attack sẵn trong `out/`: (1) `PathFrame` + đọc SVG path; (2) chạy kiểu `heavy` trên quỹ đạo
 đó, đặt chồng lên frame nhân vật để user chấm; (3) nếu ổn, thêm cách (c) lấy nhịp từ clip và xuất chuẩn lib-fx.
 
+### 3.1b FX đi theo vũ khí (2026-11-10, đã thống nhất hướng, chưa làm)
+
+User: hình nộm đã khớp vũ khí với nhát chém; hỏi có build FX slash combo theo đúng đường vũ khí di chuyển (đổi vị trí / biên độ vũ khí) không.
+**Có**: đảo chiều phụ thuộc (hiện FX → vũ khí; mới: đường đi mũi vũ khí → chia nhát → khớp cung / `PathFrame` → nhịp → vẽ). Định dạng dữ
+liệu, luật chia nhát, khớp hình, file sẽ sửa, cách kiểm thử: [foundation/vfx/slash/ARCHITECTURE.md](foundation/vfx/slash/ARCHITECTURE.md) §2.
+Đây cũng là đường làm §3.1 (quỹ đạo user vẽ trước cho nhân vật).
+
 ### 3.2 Cấu trúc `lib-fx/`: tách tái tạo và sáng tạo (2026-11-09, đề xuất, chờ user quyết)
 
 Hiện trạng: thư viện chuẩn là `<nhóm>/<họ>/<id>/` (hiệu ứng vẽ bằng `fxcore`, có `sheet.png` + `meta.json`); còn mọi việc của bộ vector

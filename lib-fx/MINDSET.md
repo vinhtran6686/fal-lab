@@ -98,6 +98,8 @@ sau bằng số liệu chuyển động, cuối cùng gắn vào nhân vật.
 - **Còn thiếu**: (1) một **định dạng chung** cho biên độ (một file JSON đọc được, chỉnh được bằng tay hoặc bằng một trang kéo thả);
   (2) **bộ sinh đọc ngược** từ file biên độ (hiện mỗi bộ sinh giữ biên độ trong code: `TIMELINE`, `STYLES`); (3) chuyển một bản **tái tạo**
   (khớp từng frame độc lập) sang dạng tham số để chỉnh được như bản sinh; (4) khung theo đường cong bất kỳ (`PathFrame`, xem STATUS §3.1).
+- **Với slash**: biên độ chính là **đường đi của mũi vũ khí**; đổi vị trí / biên độ vũ khí thì tool dựng lại các nhát chém theo
+  (hướng "FX đi theo vũ khí", đã thống nhất 2026-11-10, chưa làm): `_core/vector/foundation/vfx/slash/ARCHITECTURE.md`.
 - **Xong khi**: user đổi một số trong file biên độ, chạy lại, được hiệu ứng mới đúng ý mà không cần mô tả lại bằng lời.
 
 ### Phase 3: gắn vào một nhân vật cụ thể

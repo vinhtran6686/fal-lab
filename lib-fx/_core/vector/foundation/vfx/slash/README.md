@@ -5,6 +5,7 @@ Mọi thứ đã biết về nhát chém vẽ tay flat-colour: đọc bản gố
 | File | Nội dung |
 |---|---|
 | [references.md](references.md) | 5 mẫu tham khảo đã dựng lại (xoáy lửa, xoáy băng, slash-trio xanh / hồng / vàng): lớp, màu, vòng đời, bố cục, phản chiếu |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | kiến trúc bộ sinh (thân → khung toạ độ → nét → thời gian → dựng) và hướng **FX đi theo vũ khí** (đường đi mũi vũ khí → các nhát chém; chưa làm) |
 | [generators.md](generators.md) | 4 bộ sinh (lưỡi liềm, xoay tại chỗ thường / nặng, chém trước mặt chữ C): tham số, luật rút ra, điểm user chấm, **việc còn thiếu để đạt 9-10/10** |
 
 ## Tóm tắt

@@ -1,5 +1,7 @@
 # Slash: các bộ sinh (hiệu ứng mới, không có bản gốc)
 
+Kiến trúc chung của các bộ sinh và hướng "FX đi theo vũ khí": [ARCHITECTURE.md](ARCHITECTURE.md).
+
 Mọi bản sinh ra đi qua cùng đường dựng như các bản dựng lại: nét thon (`strokes.py`) → `smooth_simplify` → tô chồng lớp + glow (`compose`)
 → PNG / SVG / GIF (`gen_render.render_sequence`). Các khung chính được viết dưới dạng **tham số nét theo từng hình vẽ** (đầu / đuôi nét, độ
 dày, độ giãn sợi, độ đứt), nên các frame ở giữa liền mạch theo cấu tạo.
