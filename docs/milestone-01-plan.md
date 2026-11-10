@@ -1,6 +1,7 @@
 # Milestone 01: kế hoạch chính thức (Character-Synchronized Diagonal Slash)
 
-> **Trạng thái: ĐÃ CHỐT KẾ HOẠCH, chờ user duyệt chi phí.** Viết 2026-11-10 từ bản nháp v0, theo trả lời của chuyên gia
+> **Trạng thái: HOÀN THÀNH 2026-11-10 (6/6 tiêu chí). Kết quả: `docs/milestone-01-result-for-advisor.md`.** Kế hoạch gốc bên dưới giữ để tham chiếu.
+> (Trước đó: ĐÃ CHỐT KẾ HOẠCH, chờ user duyệt chi phí.) Viết 2026-11-10 từ bản nháp v0, theo trả lời của chuyên gia
 > ([milestone-01-advisor-review.md](milestone-01-advisor-review.md), nguồn quyết định, nguyên văn ở
 > [milestone-01-advisor-review-original.md](milestone-01-advisor-review-original.md); lệch nhau thì các file đó đúng). Hướng đi:
 > [milestone-01-character-synced-slash.md](milestone-01-character-synced-slash.md). Gate 0 đã xong (0 USD). **Chưa gọi API, chưa bắt đầu Gate 1.**
@@ -158,7 +159,7 @@ Mỗi lệnh tốn tiền vẫn hỏi user trước theo `CLAUDE.md` (duyệt đ
       `attack_diag_side`; `motion_check.py`; ghi `history.md`, `meta.json`, manifest; **user duyệt**
 - [x] **Gate 3** (trang đánh dấu: https://claude.ai/artifact/9VMQnnSRUkdCytrrXyTa8m, code `scripts/experiments/milestone_01/annotate/`, dữ liệu ở db collection `track`): trang đánh dấu; `weapon_track.json`; contact sheet Root / Tip; biểu đồ Tip; vận tốc + peak; fit (k = 1 trước; residual = gate; LOO điểm giữa tham khảo); **user duyệt**
 - [x] **Gate 4** (bản nhiều tầng phủ gốc-mũi, user chọn bản gốc): bộ sinh thử nghiệm; `slash_params.json`; VFX RGBA @2x / @1x; 3 biến thể; preview @1x + 3×; kiểm tra slash cũ không đổi; **user duyệt**
-- [x] **Gate 5** (xuất `frames/fx/slash_diag/`, `criteria.json`; tiêu chí 5 chờ user xem @1x): lớp front (/ back); `frames/fx/slash_diag/` + `fx.json`; GIF @1x, 3×; một lệnh dựng lại; chấm 6 tiêu chí; cập nhật docs; dọn; commit, push
+- [x] **Gate 5** (xuất `frames/fx/slash_diag/`, `criteria.json`; 6/6 tiêu chí đạt, tiêu chí 5 user chấm): lớp front (/ back); `frames/fx/slash_diag/` + `fx.json`; GIF @1x, 3×; một lệnh dựng lại; chấm 6 tiêu chí; cập nhật docs; dọn; commit, push
 
 ## 11. Những điểm Claude thêm ngoài quyết định của chuyên gia (cần user / chuyên gia xác nhận)
 

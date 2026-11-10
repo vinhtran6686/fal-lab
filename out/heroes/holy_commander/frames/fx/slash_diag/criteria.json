@@ -60,14 +60,15 @@
   "note": "the width variant reads weaker than the others because the inner strands still reach the root side"
  },
  "5_readability_1x": {
-  "result": "pending user eye check",
+  "result": "pass",
   "evidence": "H = 55.5 px @1x; thickest point of the fx @1x 24-28 px (main stroke well above 1.5 px); preview_with_body.gif at @1x",
   "widths_1x": [
    24.0,
    27.8,
    26.0,
    27.9
-  ]
+  ],
+  "by": "user (2026-11-10: \"tiêu chí 5 đạt\")"
  },
  "6_reproducibility": {
   "result": "pass",
