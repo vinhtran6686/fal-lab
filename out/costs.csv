@@ -165,3 +165,7 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-10-29 01:19:11,out/heroes/wind_drake_rider/.work/pose_test2/pt09-20261029-011908-0.png,gpt-image-2,low,1024x1024,False,36.5,0.0140,True
 2026-10-29 03:10:00,out/heroes/wind_drake_rider/.work/ref_video/out_t01.mp4,minimax/h3-max/reference-to-video,video,480P 5s,False,0.0,0.2500,True
 2026-10-29 03:40:00,out/heroes/surya/source/video/skill_rising_uppercut_side_t01.mp4,minimax/h3-max/reference-to-video,video,480P 5s,False,0.0,0.2500,True
+2026-11-10 09:28:02,out/heroes/holy_commander/.work/m01_poses/pose_slash_x_p1-20261110-092800-0.png,gpt-image-2,low,1024x1024,False,22.8,0.0138,True
+2026-11-10 09:28:51,out/heroes/holy_commander/.work/m01_poses/pose_slash_x_end-20261110-092851-0.png,gpt-image-2,low,1024x1024,False,19.2,0.0137,True
+2026-11-10 09:29:52,out/heroes/holy_commander/.work/m01_poses/pose_slash_x_p1-20261110-092951-0.png,gpt-image-2,low,1024x1024,False,38.5,0.0141,True
+2026-11-10 09:29:53,out/heroes/holy_commander/.work/m01_poses/pose_slash_x_end-20261110-092952-0.png,gpt-image-2,low,1024x1024,False,39.3,0.0143,True
