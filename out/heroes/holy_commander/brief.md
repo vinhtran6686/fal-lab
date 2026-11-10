@@ -47,9 +47,9 @@
 | skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 34 hình theo công thức user (2,27 s); vòng lửa lớn là lỗi đã biết |
 | fx_holy_banner | fal-image vfx | hiệu ứng | ✅ v01 | cờ hiệu, asset riêng |
 | fx_radiant_slash | fal-image vfx | hiệu ứng | ✅ v01 | vệt chém vàng, asset riêng |
-| pose_slash_x_p1 | fal-image | ảnh tĩnh | ⏳ | Milestone 01: kiếm thấp sau lưng (ảnh đầu của `attack_diag_side`) |
-| pose_slash_x_end | fal-image | ảnh tĩnh | ⏳ | Milestone 01: kiếm cao sau vai (ảnh cuối) |
-| attack_diag_side | video-sprite | one-shot | ⏳ chuyển động đã chốt | chém đôi vuốt lên thành chữ X; xem mục Milestone 01 cuối file |
+| pose_downcut_p1 | fal-image | ảnh tĩnh | ✅ v01 | Milestone 01: thế chuẩn bị, kiếm giơ cao sau đầu (ảnh đầu của `attack_diag_side`) |
+| pose_downcut_p2 | fal-image | ảnh tĩnh | ✅ v01 | Milestone 01: kết thúc nhát chém, kiếm chĩa xuống phải-dưới (ảnh cuối) |
+| attack_diag_side | video-sprite | one-shot | ⏳ t01 duyệt, chưa xuất | chém xéo từ trên xuống, `source/video/attack_diag_side_downcut_t01`; xem mục Milestone 01 cuối file |
 
 Estimated cost: 5 stills + 2 vfx x ~USD 0.014 (~USD 0.10) + 8 clips x ~USD 0.08 (~USD 0.64) + retakes.
 
@@ -218,26 +218,9 @@ Kiểm: `python tools/frame_tuner/build_export_manifest.py` (746 file frame, đ�
 ### Xem lớp fx (2026-10-21)
 `preview.gif` của state levelup và slash chỉ có thân; fx là lớp riêng trong `frames/fx/levelup/` và `frames/fx/radiant_slash/`. Đã thêm bản xem: `fx/<tên>/preview_fx_only.gif`, `preview_with_body.gif`, `sheet.png` và `<state>/preview_with_fx.gif` (script `tools/frame_tuner/preview_fx.py`, gọi tự động cuối `export_fx.py`).
 
-## Milestone 01: `attack_diag_side`, chém đôi hướng lên thành chữ X (chuyển động chốt 2026-11-10)
+## Milestone 01: `attack_diag_side`, chém xéo từ trên xuống (duyệt 2026-11-10)
 
-User đổi đòn của Milestone 01 (thay nhát chém xéo từ trên xuống): **hai nhát vuốt lên** tạo chữ X. Nhát 1 phía gần camera (kiếm thấy rõ),
-nhát 2 phía xa (kiếm khuất sau thân). Kế hoạch: `docs/milestone-01-plan.md` §2b. Hai ảnh tĩnh mới (chưa tạo): P1 kiếm thấp sau lưng, P_end
-kiếm cao sau vai. Không dùng lại `pose_skill_radiant_slash_v01` (user, 2026-11-10).
-
-Đường đi trên màn hình (nhìn phải): nhát 1 ↗ sau-dưới → trước-cao; nhát 2 ↖ trước-dưới → sau-cao; cắt nhau ở trước ngực.
-
-| Thời gian (clip 4 s) | Beat | Cơ thể và kiếm |
-|---|---|---|
-| 0-0,4 s | đứng | tư thế P1, thở nhẹ |
-| 0,4-0,9 s | lấy đà | gối khuỵu, hông hạ, tay kéo chuôi sát hông sau |
-| 0,9-1,5 s | nhát 1 | chân trước bước tới, hông rồi vai xoay; kiếm vuốt chéo lên từ sau-dưới lên cao phía trước, khựng ở đỉnh |
-| 1,5-2,3 s | thu kiếm | khuỷu gập, tay kéo chuôi xuống sát người về hông bên kia, cổ tay xoay theo; lưỡi rơi xuống trước theo trọng lượng |
-| 2,3-2,9 s | nhát 2 | hông rồi vai xoay ngược; tay từ hông bên kia lên qua vai bên kia; kiếm vuốt lên phía xa thân, khuất sau ngực |
-| 2,9-4,0 s | giữ | kiếm cao sau vai, mũi lên-ra sau, trong khung |
-
-Bài học khi duyệt (user): đừng tả "chỉ xoay cổ tay" ở beat chuyển; model giữ tay ở trên cao rồi vặn cổ tay, video lỗi. Tả chuỗi lực vật lý:
-khuỷu gập, tay kéo chuôi xuống, cổ tay xoay theo, lưỡi rơi theo trọng lượng.
-
-**Motion (gửi model, nguyên văn; ghép thêm khối `{design}` ở trên và câu khoá camera):**
-
-> A heavy armoured knight who plants each foot and swings the very long two-handed sword from the hips and shoulders: every swing starts in the legs and hips, the arms follow, and the heavy blade carries its own weight. Facing RIGHT the entire time and never turning around: his hips, shoulders and face stay turned to the right in every frame. He starts in the pose of the first still: feet wide apart on one ground line, both hands on the long grip at his rear hip, the long blade held low BEHIND him with the point near the ground behind his back foot; still for a short beat with only a slow breath. Beat 1, load: both knees bend and the hips sink, the front shoulder tightens, both hands pull the grip in close to the rear hip, the blade staying low behind him. Beat 2, first rising cut: in one fast powerful motion the front foot steps forward along the ground line, the back leg pushes, the hips and then the shoulders rotate forward, and both arms extend and sweep the sword diagonally UPWARD from low behind him, across the front of his chest, to high in front of him, the point ending above his head in front; at the top the swing runs out of momentum and the sword stops for an instant; the cape is thrown up behind him. Beat 3, recover: both elbows bend and both hands pull the grip DOWN close to his body, past the front of his chest, to the hip on his far side; the wrists turn naturally as the hands come down, and the heavy blade falls forward under its own weight until it hangs low in front of him with the point near the ground ahead of his front foot; his weight settles onto the front foot, both knees bend, the torso keeps leaning FORWARD, the cape falls back down. Beat 4, second rising cut: the back leg pushes, the hips and then the shoulders rotate back the other way, and both hands rise from the far hip up past his far shoulder, sweeping the sword diagonally UPWARD on the far side of his body, from low in front of him to high behind his shoulder; during this cut the blade passes behind his chest and is partly hidden by his body. Beat 5, hold: he HOLDS the finished pose completely still for the rest of the clip: front foot forward, knees slightly bent, both hands at shoulder height, the long blade raised high behind his shoulder pointing up and back, the point inside the frame, the cape settling. The order is always: stand, load, first rising cut forward, pull the hands down to the far hip, second rising cut back over the shoulder, hold. The sword cuts exactly twice, both cuts rising from low to high; he does not jump, spin, turn around, step backward or lean backward. Body motion only: no light, glow, sparks, trails, arcs or effects of any kind; the game draws every effect as a separate layer.
+Một nhát chém xéo hai tay: thế chuẩn bị `pose_downcut_p1_v01` (kiếm giơ cao sau đầu, chĩa lên trái-trên) → `pose_downcut_p2_v01`
+(thân đổ về trước, kiếm chĩa xuống phải-dưới). Hai bàn chân cắm nguyên chỗ, luôn nhìn phải. Clip duyệt: `source/video/attack_diag_side_downcut_t01.mp4`
+(prompt nguyên văn: `.prompt.txt` cùng tên; mô tả từng bộ phận theo beat, tay nào nối vai nào). Model vẽ vệt cung ở frame 24-38:
+xoá bằng `scripts/experiments/milestone_01/dearc.py`. Nhánh chém đôi chữ X đã bỏ: `docs/milestone-01-research-rising-cuts.md`.

@@ -34,15 +34,13 @@ Bằng chứng: [milestone-01/gate0_reuse.png](milestone-01/gate0_reuse.png).
 | **P1 (chuẩn bị)** | **Phải tạo mới (1 ảnh fal-image)**; frame `attack_side` chỉ làm tham khảo tư thế | clip thô `attack_side_attack_t04.mp4` (832×480, 24 fps) frame 8-10 có tư thế kiếm sau đầu, chưa có vệt cung; nhưng: ảnh mờ nén 480p (nhân vật cao ~270 px kể cả kiếm), lưỡi nhòe chuyển động ở f9-f10, **mặt / mũ bị tay che** (master thấy mặt), kiếm nằm ngang sau đầu chứ không "cao sau vai, mũi lên". Frame đã export của `attack_side` (frame 3-4 @1x) còn dính vệt cung. Không đủ làm frame đầu sạch cho video |
 | P2 | không tạo | chỉ khi video cho thấy model không nội suy được nhát chém |
 
-## 2b. Thay đổi đòn (user, 2026-11-10): chém đôi vuốt lên thành chữ X
+## 2b. Đòn chốt (user, 2026-11-10): một nhát chém xéo từ trên xuống
 
-User đổi đòn: **hai nhát vuốt lên** tạo chữ X thay cho một nhát chém xéo từ trên xuống. Nhát 1 đi phía gần camera, kiếm thấy rõ. Nhát 2 đi phía xa,
-kiếm khuất sau thân, nên đây cũng là bài test lớp back. **Không dùng lại** `pose_skill_radiant_slash_v01`; tạo 2 ảnh mới: P1 kiếm thấp sau lưng,
-P_end kiếm cao sau vai. Chuyển động đã duyệt (beat, mốc thời gian, nguyên văn gửi model) ở `out/heroes/holy_commander/brief.md`, mục
-"Milestone 01". Phần §2 (P3 tái dùng) và các câu về "một nhát chém xuống" bên dưới **được thay** bằng mục này; mọi quy ước, gate và tiêu chí khác giữ
-nguyên. Phạm vi lớn hơn bản chuyên gia duyệt (2 nhát): đã soạn thư báo (`docs/milestone-01-advisor-update-01.md`), chờ chuyên gia xác nhận.
-User quyết (2026-11-10): **VFX làm từng nhát**, Milestone 01 làm hết 6 tiêu chí cho nhát 1 trước; ảnh tạo trước để chốt pose; clip tạo từng cái một.
-Thời lượng animation cuối dự kiến ~1,2-1,8 s (hai nhát) thay vì 0,8-1,2 s.
+Sau khi thử chém đôi vuốt lên chữ X không đạt (ghi ở `docs/milestone-01-research-rising-cuts.md`), user quay lại đúng đòn chuyên gia duyệt: **một nhát
+chém xéo từ trên xuống**. Không tái dùng `pose_skill_radiant_slash_v01`; tạo mới `pose_downcut_p1_v01` (chuẩn bị) và `pose_downcut_p2_v01` (kết thúc),
+cùng chỗ đặt bàn chân. Clip duyệt: `source/video/attack_diag_side_downcut_t01.mp4` (3 s). **Gate 1 và lượt quay clip của Gate 2 đã xong**; còn chọn
+frame, xuất `attack_diag_side`. Vệt cung do model vẽ được xoá ở bước xử lý (`scripts/experiments/milestone_01/dearc.py`) chứ không quay lại. §2-§4 bên dưới
+là kế hoạch gốc, giữ để tham chiếu; quy ước, gate 3-5 và tiêu chí không đổi.
 
 ## 3. Gate 1: P1 (fal-image, TỐN TIỀN)
 
@@ -153,8 +151,8 @@ Mỗi lệnh tốn tiền vẫn hỏi user trước theo `CLAUDE.md` (duyệt đ
 
 - [x] Chuyên gia trả lời Q1-Q12; ghi vào `docs/milestone-01-advisor-review.md`; kế hoạch chốt (file này)
 - [x] **Gate 0**: P3 = `pose_skill_radiant_slash_v01`; P1 thiếu; t04 f8-f10 chỉ tham khảo (`docs/milestone-01/gate0_reuse.png`)
-- [ ] User duyệt kế hoạch + chi phí (Gate 1, Gate 2)
-- [ ] **Gate 1**: tạo P1 (≤ 3 ảnh); contact sheet chồng P1 / P3; ghi `history.md`, manifest `brief.md`; **user duyệt**
+- [x] User duyệt kế hoạch + chi phí (Gate 1, Gate 2)
+- [x] **Gate 1** (xong: `pose_downcut_p1_v01`, `pose_downcut_p2_v01`): tạo P1 (≤ 3 ảnh); contact sheet chồng P1 / P3; ghi `history.md`, manifest `brief.md`; **user duyệt**
 - [ ] **Gate 2**: clip take 1 → review (thân sạch, không vệt, cỡ thân, nhát chém) → user duyệt / retry theo §4; thêm `slash_diag` vào
       `sources.json`, dựng lại tuner; user chọn đoạn + hit; xuất
       `attack_diag_side`; `motion_check.py`; ghi `history.md`, `meta.json`, manifest; **user duyệt**
