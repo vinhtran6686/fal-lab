@@ -105,6 +105,12 @@ tiếp cận; **không xây tiếp các tầng phía trên**. Trước khi giao 
 
 ## 7. Trạng thái
 
+- 2026-11-10: **Milestone 01 xuất xong** (chờ user chấm tiêu chí 5 bằng mắt). Body `attack_diag_side` (16 hình, hit 13) + fx `frames/fx/slash_diag/`
+  (lớp front, RGBA @2x/@1x, `fx.json`, previews). Một lệnh dựng lại: `python scripts/experiments/milestone_01/build_slash_diag.py`. Kết quả 6 tiêu chí:
+  `frames/fx/slash_diag/criteria.json`. Thay đổi so với kế hoạch: user đổi sang vệt dày phủ gốc-mũi, nhiều tầng như showcase, nên vệt bám đường đi thật
+  của gốc/mũi (Catmull-Rom qua điểm đánh dấu) thay vì cung tròn; hướng tiếp tuyến vì thế đạt theo cách dựng (đã ghi). Nhánh chém đôi chữ X không đạt:
+  `docs/milestone-01-research-rising-cuts.md`.
+
 - 2026-11-10: chuyên gia trả lời 12 câu ([milestone-01-advisor-review.md](milestone-01-advisor-review.md)); **kế hoạch chốt**:
   [milestone-01-plan.md](milestone-01-plan.md) (6 gate, tiêu chí, chi phí dự kiến ~0,07-0,13 USD, trần ~0,28). Gate 0 xong: P3 tái dùng
   `pose_skill_radiant_slash_v01`, P1 phải tạo mới. **Chờ user duyệt chi phí**; chưa gọi API.

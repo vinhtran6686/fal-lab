@@ -47,6 +47,7 @@
 | skill_charge_side | video-sprite | one-shot | ✅ exported (v4) | 34 hình theo công thức user (2,27 s); vòng lửa lớn là lỗi đã biết |
 | fx_holy_banner | fal-image vfx | hiệu ứng | ✅ v01 | cờ hiệu, asset riêng |
 | fx_radiant_slash | fal-image vfx | hiệu ứng | ✅ v01 | vệt chém vàng, asset riêng |
+| fx_slash_diag | Vector Kit (code, $0) | hiệu ứng | ✅ v01 | Milestone 01: vệt chém nhiều tầng sinh từ quỹ đạo kiếm của `attack_diag_side`; `frames/fx/slash_diag/`; dựng lại: `scripts/experiments/milestone_01/build_slash_diag.py` |
 | pose_downcut_p1 | fal-image | ảnh tĩnh | ✅ v01 | Milestone 01: thế chuẩn bị, kiếm giơ cao sau đầu (ảnh đầu của `attack_diag_side`) |
 | pose_downcut_p2 | fal-image | ảnh tĩnh | ✅ v01 | Milestone 01: kết thúc nhát chém, kiếm chĩa xuống phải-dưới (ảnh cuối) |
 | attack_diag_side | video-sprite | one-shot | ✅ t01 exported | 16 hình, 1,07 s, hit 13; cell 176x140; | chém xéo từ trên xuống, `source/video/attack_diag_side_downcut_t01`; xem mục Milestone 01 cuối file |

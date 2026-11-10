@@ -1,5 +1,10 @@
 # CHANGELOG: lib-fx/_core/vector
 
+## (thử nghiệm, ngoài core) 2026-11-10: Milestone 01, slash từ quỹ đạo kiếm thật
+
+- `scripts/experiments/milestone_01/`: `slash_from_track.py` (vệt từ `weapon_track.json`: kiểu `band` trên cung tròn, kiểu `layered` = `gen_slash_loop` heavy trong `SweepFrame` gốc->mũi), `build_slash_diag.py` (một lệnh xuất fx của holy_commander), `annotate/` (trang đánh dấu), `track_report.py`, `dearc.py`, `destrand.py`. Core không đổi.
+- Ghi nhận: `gen_slash_loop.drawing` dùng `hash(l)` cho vị trí vệt đứt, không tái lập được giữa các lần chạy nếu không cố định `PYTHONHASHSEED`.
+
 ## 1.11 (2026-11-10): chém đôi chữ X
 
 - `gen_slash_x.py` (`gen-slash NAME --style x [--scale --rotation --duration-ms --fps]`): hai lưỡi liềm tuần tự thành chữ X, timeline theo ms,

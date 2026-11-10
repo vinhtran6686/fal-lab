@@ -230,7 +230,8 @@
   },
   "fx": {
     "levelup": "frames/fx/levelup/fx.json",
-    "radiant_slash": "frames/fx/radiant_slash/fx.json"
+    "radiant_slash": "frames/fx/radiant_slash/fx.json",
+    "slash_diag": "frames/fx/slash_diag/fx.json"
   },
   "sources": {
     "design": [

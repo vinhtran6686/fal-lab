@@ -1,0 +1,81 @@
+{
+ "1_choreography": {
+  "result": "pass",
+  "by": "user",
+  "evidence": "clip attack_diag_side_downcut_t01 approved ('ok duyệt đẹp rồi'); one diagonal downward cut, faces right, feet planted; 16 frames chosen by the user in the Frame Editor"
+ },
+ "2_vfx_separation": {
+  "result": "pass",
+  "evidence": "fx is its own RGBA layer (frames/fx/slash_diag/front), toggled independently of the body; the model-drawn arc was removed from the body frames (dearc.py on the clip, destrand.py on the export)",
+  "note": "a very thin leftover strand next to the blade on body frame 11 is visible only zoomed in"
+ },
+ "3_weapon_sync": {
+  "result": "pass (with a caveat)",
+  "rows": [
+   {
+    "frame": 9,
+    "head_to_tip_H": 0.0002,
+    "head_to_tip_measured_H": 0.062,
+    "tangent_error_deg": 0.6,
+    "chord_error_deg": 17.5
+   },
+   {
+    "frame": 10,
+    "head_to_tip_H": 0.0007,
+    "head_to_tip_measured_H": 0.0594,
+    "tangent_error_deg": 1.7,
+    "chord_error_deg": 34.6
+   },
+   {
+    "frame": 11,
+    "head_to_tip_H": 0.0006,
+    "head_to_tip_measured_H": 0.0377,
+    "tangent_error_deg": 0.5,
+    "chord_error_deg": 20.3
+   },
+   {
+    "frame": 12,
+    "head_to_tip_H": 0.0003,
+    "head_to_tip_measured_H": 0.0374,
+    "tangent_error_deg": 0.1,
+    "chord_error_deg": 11.9
+   },
+   {
+    "frame": 13,
+    "head_to_tip_H": 0.0006,
+    "head_to_tip_measured_H": 0.0285,
+    "tangent_error_deg": 0.8,
+    "chord_error_deg": 0.8
+   }
+  ],
+  "thresholds": {
+   "head_H": 0.1,
+   "tangent_deg": 15
+  },
+  "caveat": "the band's tip edge is a Catmull-Rom curve through the marked tips (root-to-tip sweep asked by the user), so its direction at each mark equals the central-difference estimate by construction; the independent test was the circle version (frame 12: 18 deg vs 15)"
+ },
+ "4_parameter_independence": {
+  "result": "pass",
+  "evidence": "3 variants with --set, one parameter each: layered.width_scale 1.0->0.6, layered.lag_frames 2.6->1.4, layered.curvature 0->0.25 (review/gate4b/variants_sheet.png)",
+  "note": "the width variant reads weaker than the others because the inner strands still reach the root side"
+ },
+ "5_readability_1x": {
+  "result": "pending user eye check",
+  "evidence": "H = 55.5 px @1x; thickest point of the fx @1x 24-28 px (main stroke well above 1.5 px); preview_with_body.gif at @1x",
+  "widths_1x": [
+   24.0,
+   27.8,
+   26.0,
+   27.9
+  ]
+ },
+ "6_reproducibility": {
+  "result": "pass",
+  "evidence": "python scripts/experiments/milestone_01/build_slash_diag.py rebuilds every exported fx file from weapon_track.json + slash_params.json; two runs give identical PNGs (sha256 6b41c4d6a0d6ce76) once PYTHONHASHSEED is fixed in the build"
+ },
+ "fit_gate": {
+  "result": "pass",
+  "circle_residual_mean_H": 0.0366,
+  "circle_residual_max_H": 0.0781
+ }
+}
