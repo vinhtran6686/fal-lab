@@ -3,6 +3,13 @@
 Cập nhật: 2026-11-09, bộ tool **v1.11**. File này là điểm nối giữa các session: đã làm gì, đang ở đâu, câu hỏi còn mở, việc tiếp theo.
 Khi xong một bước, cập nhật file này (và `CHANGELOG.md`). Tư duy tổng thể của lib-fx (Bước 0 → Phase 1-3): [../../MINDSET.md](../../MINDSET.md).
 
+## 0. Hướng đi hiện tại (2026-11-10, chuyên gia chọn): Milestone 01, Character-Synchronized Slash
+
+Một nhát chém xéo của `holy_commander` (animation thật từ video-sprite), quỹ đạo kiếm đánh dấu tay (root, tip, timestamp), slash sinh bằng Vector Kit
+khớp theo quỹ đạo, ghép tách lớp với thân, review ở **H = 60 px @1x, 15 fps**. Quy ước của thử nghiệm: đơn vị **H** và **ms**. Chi tiết, 6 tiêu chí đạt,
+điều chưa làm: [docs/milestone-01-character-synced-slash.md](../../../docs/milestone-01-character-synced-slash.md). Ưu tiên hơn mọi việc trong §2-3.
+**Luật mới cho mọi VFX: review ở cỡ game (H = 60 px @1x), không chỉ ở khung phóng lớn.**
+
 ## 1. Đã làm được (user đã duyệt)
 
 | Việc | Kết quả | Ở đâu |
