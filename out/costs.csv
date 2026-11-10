@@ -189,3 +189,10 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-10 11:53:36,out/heroes/holy_commander/.work/m01_sketch_test/sketch_anchor_s3-20261110-115335-0.png,gpt-image-2,low,1024x1024,False,20.7,0.0120,True
 2026-11-10 11:54:27,out/heroes/holy_commander/.work/m01_sketch_test/t04a/clip.mp4,h3-max-turbo,video,480P 3s,False,2.8,0.0450,True
 2026-11-10 11:54:27,out/heroes/holy_commander/.work/m01_sketch_test/t04b/clip.mp4,h3-max-turbo,video,480P 3s,False,2.8,0.0450,True
+2026-11-10 13:01:13,out/heroes/holy_commander/.work/m01_hc_cut2/hc_cut2_k1-20261110-130112-0.png,gpt-image-2,low,1024x1024,False,20.1,0.0140,True
+2026-11-10 13:01:54,out/heroes/holy_commander/.work/m01_hc_cut2/hc_cut2_k3-20261110-130153-0.png,gpt-image-2,low,1024x1024,False,20.2,0.0143,True
+2026-11-10 13:01:54,out/heroes/holy_commander/.work/m01_hc_cut2/hc_cut2_k2-20261110-130153-0.png,gpt-image-2,low,1024x1024,False,19.9,0.0144,True
+2026-11-10 13:02:35,out/heroes/holy_commander/.work/m01_hc_cut2/hc_cut2_k2-20261110-130234-0.png,gpt-image-2,low,1024x1024,False,23.8,0.0147,True
+2026-11-10 13:03:27,out/heroes/holy_commander/.work/m01_hc_cut2/hc_cut2_k2-20261110-130326-0.png,gpt-image-2,low,1024x1024,False,18.9,0.0150,True
+2026-11-10 13:04:29,out/heroes/holy_commander/.work/m01_hc_cut2/t01a/clip.mp4,h3-max-turbo,video,480P 3s,False,2.9,0.0450,True
+2026-11-10 13:04:31,out/heroes/holy_commander/.work/m01_hc_cut2/t01b/clip.mp4,h3-max-turbo,video,480P 3s,False,4.9,0.0450,True
