@@ -200,3 +200,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-10 14:50:51,out/heroes/holy_commander/.work/m01_hc_cut2/hc_cut2_k2back-20261110-145049-0.png,gpt-image-2,low,1024x1024,False,31.7,0.0149,True
 2026-11-10 14:55:31,out/heroes/holy_commander/.work/m01_hc_cut2/t02b/clip.mp4,h3-max-turbo,video,480P 3s,False,226.1,0.0450,True
 2026-11-10 14:55:43,out/heroes/holy_commander/.work/m01_hc_cut2/t02a/clip.mp4,h3-max-turbo,video,480P 3s,False,237.6,0.0450,True
+2026-11-10 15:08:08,out/heroes/holy_commander/.work/m01_thrust/t01/clip.mp4,h3-max-turbo,video,480P 4s,False,190.9,0.0600,True
