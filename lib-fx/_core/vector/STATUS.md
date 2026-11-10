@@ -83,6 +83,13 @@ Hiện trạng: thư viện chuẩn là `<nhóm>/<họ>/<id>/` (hiệu ứng v�
 trong game** (procedural + sáng tạo, `meta.json` thêm `origin` / `method`); bản **tái tạo** (học từ art của người khác, không ship) tách
 sang một khu riêng; code chỉ ở `_core/`; tài liệu gom về một chỗ. Cấu trúc đích ghi trong [../../MINDSET.md](../../MINDSET.md) §6.3; chưa di chuyển gì. `life/dash/tiger` đã xoá theo yêu cầu user.
 
+### 3.3 Tài liệu cho chuyên gia (2026-11-10)
+
+User thấy lộ trình "tái tạo → công thức → sáng tạo → phức tạp hơn" chỉ nhìn một yếu tố (vệt chém) của bức tranh hiệu ứng, sẽ nhờ chuyên gia VFX
+định hướng. Tài liệu: `foundation/expert-brief/index.html` (trang https://claude.ai/artifact/ACk9yzfELA3akB37rVPh9y): bối cảnh, quy ước nhân vật
+(góc nhìn side 3/4, tỉ lệ, cỡ H, khung, điểm neo, nhịp), hai cách vẽ hiệu ứng, kỹ thuật tái tạo và sinh, tư duy, phần còn thiếu (báo trước,
+va chạm trên mục tiêu, game feel, đọc được ở cỡ 60 px, thứ bậc hiệu ứng ...), 8 câu hỏi. **Chờ ý kiến chuyên gia trước khi mở hướng mới.**
+
 ## 4. Ghi chú môi trường
 
 - Code chạy trên Linux (session cloud) và Windows (máy user, xem `CLAUDE.md` mục Python).

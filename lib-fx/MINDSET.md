@@ -7,6 +7,7 @@ File gốc về **tại sao và theo thứ tự nào** lib-fx được xây. Cá
 | **MINDSET.md** (file này) | lib-fx để làm gì, một hiệu ứng đi qua những bước nào, tái tạo và sáng tạo khác nhau ra sao, nó nối với việc thiết kế nhân vật thế nào |
 | [GUIDE.md](GUIDE.md) | bản đồ thư mục thư viện (nhóm → họ → hiệu ứng) |
 | [README.md](README.md) | luật nhìn, lệnh dựng, cách thêm một hiệu ứng |
+| [_core/vector/foundation/expert-brief/index.html](_core/vector/foundation/expert-brief/index.html) | tài liệu gửi chuyên gia: dự án VFX đang làm gì, quy ước nhân vật, phần còn thiếu, câu hỏi định hướng (2026-11-10) |
 | [_core/vector/STATUS.md](_core/vector/STATUS.md) | trạng thái hiện tại của bộ tool vector, việc để dành, câu hỏi mở (đọc đầu tiên khi mở session mới) |
 
 Viết 2026-11-09 theo lời user. Khi tư duy thay đổi, sửa file này trước rồi mới sửa các file khác.
