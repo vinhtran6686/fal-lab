@@ -1,7 +1,8 @@
 # Milestone 01: kế hoạch chính thức (Character-Synchronized Diagonal Slash)
 
 > **Trạng thái: ĐÃ CHỐT KẾ HOẠCH, chờ user duyệt chi phí.** Viết 2026-11-10 từ bản nháp v0, theo trả lời của chuyên gia
-> ([milestone-01-advisor-review.md](milestone-01-advisor-review.md), nguồn quyết định; lệch nhau thì file đó đúng). Hướng đi:
+> ([milestone-01-advisor-review.md](milestone-01-advisor-review.md), nguồn quyết định, nguyên văn ở
+> [milestone-01-advisor-review-original.md](milestone-01-advisor-review-original.md); lệch nhau thì các file đó đúng). Hướng đi:
 > [milestone-01-character-synced-slash.md](milestone-01-character-synced-slash.md). Gate 0 đã xong (0 USD). **Chưa gọi API, chưa bắt đầu Gate 1.**
 
 ## 0. Mục tiêu và phạm vi
@@ -62,9 +63,15 @@ Bằng chứng: [milestone-01/gate0_reuse.png](milestone-01/gate0_reuse.png).
   - không ra nhát chém rõ / vung sai hướng: thêm vị trí kiếm giữa đường bằng lời ("ngang vai phải"); nếu vẫn hỏng thì đó là căn cứ để xin tạo P2;
   - zoom / đổi cỡ: kiểm tra lại P1 vs P3 (tỷ lệ, vị trí chân) trước khi quay lại.
 - Một clip mỗi lần, user duyệt mỗi take. **Hai take liên tiếp không đạt: dừng**, review choreography với user / chuyên gia. Trần cứng 4 clip.
-- Chọn frame: clip thô → **frame tuner** (`tools/frame_tuner/`) chọn đoạn chuẩn bị → vung → kết thúc, nhịp đều 67 ms, mục tiêu **0,8-1,2 s**
-  (12-18 frame), user chọn **frame chạm** (`hit`) bằng mắt → `frames/export_recipe.json` mục mới → `apply_recipe.py` xuất `attack_diag_side`
-  (176×140, cùng cỡ thân). `attack_side` không đổi. Chạy `motion_check.py`.
+- Chọn frame bằng **frame tuner** (`tools/frame_tuner/`). Đã kiểm tra: tuner chỉ biết các state khai báo trong `tools/frame_tuner/sources.json`
+  (id ngắn `attack`, `slash` ... → `sheet` `attack_side` ...), `apply_recipe.py` đọc recipe theo id đó. Nên cần một bước nhỏ:
+  1. thêm một mục vào `sources.json`: `id: "slash_diag"`, `sheet: "attack_diag_side"`, `clip` = take được duyệt, `loop: false`, `hasHit: true`,
+     `bodyPx: 268` (như các clip khác của hero);
+  2. dựng lại dữ liệu tuner (`build_states.py`) và trang tuner (`build_artifact.py`, artifact Frame Editor) để user chọn đoạn chuẩn bị → vung → kết thúc,
+     nhịp đều 67 ms, mục tiêu **0,8-1,2 s** (12-18 frame), và chọn **frame chạm** (`hit`) bằng mắt;
+  3. xuất **chỉ state này**: `python tools/frame_tuner/apply_recipe.py slash_diag --write` (luôn ghi rõ id: chạy không có id sẽ xuất lại mọi state
+     đã lưu, tức ghi đè các state đã duyệt). Thử trước không `--write` hoặc với `--asset <thư mục tạm>`.
+  Kết quả: `attack_diag_side` 176×140, cùng cỡ thân; `attack_side` không đổi. Chạy `motion_check.py`.
 
 ## 5. Gate 3: quỹ đạo kiếm (0 USD)
 
@@ -77,10 +84,13 @@ Bằng chứng: [milestone-01/gate0_reuse.png](milestone-01/gate0_reuse.png).
   visible, side, note}]`.
 - Vận tốc mũi: sai phân trên **các sample quan sát liên tiếp**, `v_i = |tip_i − tip_{i−1}|` (H / frame). Ghi `peak_speed_frame` cạnh `hit_frame` do
   user chọn; lệch > 1 frame thì ghi chú và hỏi user.
-- **Fit elip** (helper riêng trong `scripts/experiments/milestone_01/`, `EllipseFrame` chỉ dùng để vẽ): elip có 5 bậc tự do (tâm 2, bán kính, k, nghiêng)
-  mà chỉ có 5-8 điểm, nên fit tự do gần như luôn "đạt". Vì vậy: nếu số điểm < 8, cố định k theo cung chém hiện có hoặc giữ tâm trong vùng vai / tay
-  cầm, và **báo sai số leave-one-out** (bỏ từng điểm, fit lại, đo điểm bị bỏ). Báo cáo ghi: số điểm, số bậc tự do, mean / max (fit) và mean / max (LOO).
-  Gate: **mean ≤ 0,08 H, max ≤ 0,15 H** trên sai số LOO. Không đạt → cubic Bézier / đường cong tự do, chỉ trong thư mục thử nghiệm.
+- **Fit elip** (helper riêng trong `scripts/experiments/milestone_01/`; `EllipseFrame` chỉ dùng để vẽ, nó chưa có hàm fit). Elip tự do có 5 bậc tự do
+  (tâm 2, bán kính, k, nghiêng) mà đoạn vung chỉ có 5-8 điểm, nên fit tự do gần như luôn khớp. Ràng buộc để còn **n − DoF ≥ 2**:
+  1. fit trước **k = 1** (đường tròn trong mặt phẳng màn hình, 3 bậc: tâm, bán kính; vẫn là `EllipseFrame(centre, k=1.0)`);
+  2. chỉ thả k và nghiêng (5 bậc) khi có ≥ 7 điểm quan sát.
+  Gate đúng như chuyên gia: **sai số fit (residual) trên các điểm Tip quan sát: mean ≤ 0,08 H, max ≤ 0,15 H**. Không đạt → cubic Bézier / đường cong
+  tự do, chỉ trong thư mục thử nghiệm. Báo cáo luôn ghi: số điểm n, số bậc tự do, mean / max residual; kèm sai số leave-one-out trên **điểm giữa**
+  (bỏ điểm đầu / cuối vì thành ngoại suy) **chỉ để tham khảo**, không dùng làm gate. Cách ràng buộc này là đề xuất của Claude, cần chuyên gia xác nhận (§11).
 - Xuất cho user duyệt: contact sheet frame + Root / Tip / đoạn kiếm / frame index / ms; biểu đồ quỹ đạo Tip (H); báo cáo fit. **User duyệt trước Gate 4.**
 
 ## 6. Gate 4: VFX riêng (0 USD)
@@ -115,7 +125,7 @@ Bằng chứng: [milestone-01/gate0_reuse.png](milestone-01/gate0_reuse.png).
 | 4 | Tham số độc lập | 3 biến thể width / length / curvature | mỗi biến thể đổi đúng một tham số, phần còn lại giữ nguyên |
 | 5 | Đọc ở cỡ thật | GIF @1x, H = 55,5 px (bậc M 60 px) | nét chính ≥ 1,5 px @1x; user nhận ra hướng và hình chém không phóng |
 | 6 | Tái tạo | một lệnh từ `weapon_track.json` + `slash_params.json` | ra đúng frame, không sửa tay |
-| gate fit | chọn elip hay đường tự do | sai số LOO | mean ≤ 0,08 H, max ≤ 0,15 H (không thay tiêu chí 3) |
+| gate fit | chọn elip hay đường tự do | residual của fit trên điểm Tip quan sát | mean ≤ 0,08 H, max ≤ 0,15 H (không thay tiêu chí 3) |
 
 ## 9. Chi phí (giá từ `out/costs.csv`: ảnh 0,014 USD; clip `h3-max-turbo` 480P 0,015 USD/s → 4 s = 0,06 USD)
 
@@ -135,8 +145,22 @@ Mỗi lệnh tốn tiền vẫn hỏi user trước theo `CLAUDE.md` (duyệt đ
 - [x] **Gate 0**: P3 = `pose_skill_radiant_slash_v01`; P1 thiếu; t04 f8-f10 chỉ tham khảo (`docs/milestone-01/gate0_reuse.png`)
 - [ ] User duyệt kế hoạch + chi phí (Gate 1, Gate 2)
 - [ ] **Gate 1**: tạo P1 (≤ 3 ảnh); contact sheet chồng P1 / P3; ghi `history.md`, manifest `brief.md`; **user duyệt**
-- [ ] **Gate 2**: clip take 1 → review (thân sạch, không vệt, cỡ thân, nhát chém) → user duyệt / retry theo §4; frame tuner chọn đoạn + hit; xuất
+- [ ] **Gate 2**: clip take 1 → review (thân sạch, không vệt, cỡ thân, nhát chém) → user duyệt / retry theo §4; thêm `slash_diag` vào
+      `sources.json`, dựng lại tuner; user chọn đoạn + hit; xuất
       `attack_diag_side`; `motion_check.py`; ghi `history.md`, `meta.json`, manifest; **user duyệt**
-- [ ] **Gate 3**: trang đánh dấu; `weapon_track.json`; contact sheet Root / Tip; biểu đồ Tip; vận tốc + peak; fit elip (LOO); **user duyệt**
+- [ ] **Gate 3**: trang đánh dấu; `weapon_track.json`; contact sheet Root / Tip; biểu đồ Tip; vận tốc + peak; fit (k = 1 trước; residual = gate; LOO điểm giữa tham khảo); **user duyệt**
 - [ ] **Gate 4**: bộ sinh thử nghiệm; `slash_params.json`; VFX RGBA @2x / @1x; 3 biến thể; preview @1x + 3×; kiểm tra slash cũ không đổi; **user duyệt**
 - [ ] **Gate 5**: lớp front (/ back); `frames/fx/slash_diag/` + `fx.json`; GIF @1x, 3×; một lệnh dựng lại; chấm 6 tiêu chí; cập nhật docs; dọn; commit, push
+
+## 11. Những điểm Claude thêm ngoài quyết định của chuyên gia (cần user / chuyên gia xác nhận)
+
+| # | Điểm thêm | Lý do |
+|---|---|---|
+| 1 | clip **4 s** (chuyên gia cho 3-4 s) | mặc định của skill; hai clip thân sạch gần nhất đều 4 s |
+| 2 | nhịp đều **67 ms / frame** cho state này | ms = frame × 1000 / 15, không phụ thuộc `durationsMs` từng frame |
+| 3 | **vệt cung do model vẽ = không đạt** ở `attack_diag_side` | khác `attack_side` (user đã chấp nhận vệt ở đó); VFX phải sinh từ quỹ đạo |
+| 4 | **không nới canvas 176×140**; không vừa thì dừng hỏi | nới canvas là sửa lại mọi state đã duyệt |
+| 5 | trường `side` (front / back) ở mỗi sample | căn cứ chia lớp theo che khuất thật ở Gate 5 |
+| 6 | hướng chỉnh take 2 quyết trước (§4) | để lần thử lại không phải đoán prompt |
+| 7 | ràng buộc fit: k = 1 trước, thả k khi ≥ 7 điểm; LOO điểm giữa chỉ tham khảo (§5) | elip 5 bậc tự do với 5-8 điểm thì gate luôn đạt; **hỏi chuyên gia** |
+| 8 | tùy chọn: frame t04 f8 làm `--ref` tư thế cho P1 | **user quyết** khi duyệt chi phí |

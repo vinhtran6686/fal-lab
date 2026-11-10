@@ -1,6 +1,6 @@
 # Milestone 01: trả lời của chuyên gia (Technical Advisor) cho 12 câu hỏi
 
-Ghi ngày 2026-11-10, nguyên ý phản hồi chuyên gia gửi user (bản gốc trong chat của session này), trả lời
+Ghi ngày 2026-11-10, tóm tắt có cấu trúc phản hồi chuyên gia; **nguyên văn**: [milestone-01-advisor-review-original.md](milestone-01-advisor-review-original.md). Trả lời
 `docs/milestone-01-advisor-questions.md`. Đây là **nguồn quyết định** của kế hoạch chính thức `docs/milestone-01-plan.md`; chỗ nào hai file lệch nhau thì
 file này đúng.
 
