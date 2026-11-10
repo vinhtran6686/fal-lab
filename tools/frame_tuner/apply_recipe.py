@@ -62,6 +62,9 @@ def apply(st, saved, use_default, write, asset_out):
     if not write: return
     ref = ims[keep[-1]] if st.get('restFrame') == 'last' else ims[0]     # respawn rises to the master pose: size and feet come from its last frame
     b = ref.getchannel('A').point(lambda v: 255 if v > 24 else 0).getbbox(); fx, fy = (b[0] + b[2]) / 2, b[3]
+    if st.get('anchor') == 'feet':       # a raised or low weapon widens the bbox: centre on the feet (bottom 8% of the silhouette) instead
+        al = ref.getchannel('A').point(lambda v: 255 if v > 24 else 0); fb = al.crop((0, round(b[3] - 0.08 * (b[3] - b[1])), al.width, b[3] + 1)).getbbox()
+        if fb: fx = (fb[0] + fb[2]) / 2
     S = TARGET_H / (st.get('bodyPx') or (b[3] - b[1]))      # the approved clips of this hero used the master's 268 px in the clip
     work = pathlib.Path(tempfile.mkdtemp(prefix='ar_set_')); act = 'skill' if st['sheet'].startswith('skill_') else st['id']
     d = work / 'fin' / act; d.mkdir(parents=True)

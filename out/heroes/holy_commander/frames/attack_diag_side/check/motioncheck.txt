@@ -1,0 +1,25 @@
+out/heroes/holy_commander/frames/attack_diag_side  frames=16  cyclic
+  F  height  ground  torso_x  change_in
+  1     144     259    -10.2        3.3
+  2     144     259    -10.3        0.1
+  3     146     259    -10.7        0.3
+  4     149     259    -15.3        1.7
+  5     131     259    -22.4        2.6
+  6     123     259    -22.8        1.2
+  7     123     259    -20.8        2.5
+  8     123     259    -16.0        2.6
+  9     142     259     -0.4        4.0
+ 10     162     259     15.9        3.6
+ 11     162     259     16.4        3.7
+ 12     157     259     -4.2        3.1
+ 13     123     265     -9.4        2.2
+ 14     126     265     -9.3        1.4
+ 15     131     265      4.4        2.8
+ 16     128     262      7.5        1.2
+bob (height range): 39px = 24.1% of the body; lowest F6, highest F10
+loop 8->1 style check: 16->1 change 3.3 vs median 2.5
+flags:
+FROZEN  1->2: almost no change (0.1); a held pose reads as a stutter
+FROZEN  2->3: almost no change (0.3); a held pose reads as a stutter
+DRIFT   torso x moves 39px across the cycle; pack with --align torso or check for whole-sprite sliding
+GROUND  lowest pixel varies 6px; fine for jumps/deaths, not for planted feet

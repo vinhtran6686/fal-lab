@@ -116,8 +116,9 @@
       "approved": {
         "stride": 1
       },
-      "note": "Milestone 01: chọn đoạn chuẩn bị -> chém -> theo đà, mục tiêu 0,8-1,2 s, nhịp đều 67 ms; đánh dấu H = frame chạm",
-      "bodyPx": null
+      "note": "Milestone 01: chọn đoạn chuẩn bị -> chém -> theo đà, mục tiêu 0,8-1,2 s, nhịp đều 67 ms; đánh dấu H = frame chạm; bodyPx 301 = chiều cao mũ-chân của P1 trong clip (0,85 x 0,457 x 775 px)",
+      "bodyPx": 301,
+      "anchor": "feet"
     }
   ],
   "altFps": 24

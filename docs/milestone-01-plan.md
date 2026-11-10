@@ -38,8 +38,8 @@ Bằng chứng: [milestone-01/gate0_reuse.png](milestone-01/gate0_reuse.png).
 
 Sau khi thử chém đôi vuốt lên chữ X không đạt (ghi ở `docs/milestone-01-research-rising-cuts.md`), user quay lại đúng đòn chuyên gia duyệt: **một nhát
 chém xéo từ trên xuống**. Không tái dùng `pose_skill_radiant_slash_v01`; tạo mới `pose_downcut_p1_v01` (chuẩn bị) và `pose_downcut_p2_v01` (kết thúc),
-cùng chỗ đặt bàn chân. Clip duyệt: `source/video/attack_diag_side_downcut_t01.mp4` (3 s). **Gate 1 và lượt quay clip của Gate 2 đã xong**; còn chọn
-frame, xuất `attack_diag_side`. Vệt cung do model vẽ được xoá ở bước xử lý (`scripts/experiments/milestone_01/dearc.py`) chứ không quay lại. §2-§4 bên dưới
+cùng chỗ đặt bàn chân. Clip duyệt: `source/video/attack_diag_side_downcut_t01.mp4` (3 s). **Gate 1 và Gate 2 đã xong**: `attack_diag_side` xuất 16 hình, 1,07 s, hit 13
+(công thức user chọn trong Frame Editor). Vệt cung do model vẽ được xoá ở bước xử lý (`scripts/experiments/milestone_01/dearc.py`) chứ không quay lại. §2-§4 bên dưới
 là kế hoạch gốc, giữ để tham chiếu; quy ước, gate 3-5 và tiêu chí không đổi.
 
 ## 3. Gate 1: P1 (fal-image, TỐN TIỀN)

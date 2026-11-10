@@ -49,7 +49,7 @@
 | fx_radiant_slash | fal-image vfx | hiệu ứng | ✅ v01 | vệt chém vàng, asset riêng |
 | pose_downcut_p1 | fal-image | ảnh tĩnh | ✅ v01 | Milestone 01: thế chuẩn bị, kiếm giơ cao sau đầu (ảnh đầu của `attack_diag_side`) |
 | pose_downcut_p2 | fal-image | ảnh tĩnh | ✅ v01 | Milestone 01: kết thúc nhát chém, kiếm chĩa xuống phải-dưới (ảnh cuối) |
-| attack_diag_side | video-sprite | one-shot | ⏳ t01 duyệt, chưa xuất | chém xéo từ trên xuống, `source/video/attack_diag_side_downcut_t01`; xem mục Milestone 01 cuối file |
+| attack_diag_side | video-sprite | one-shot | ✅ t01 exported | 16 hình, 1,07 s, hit 13; cell 176x140; | chém xéo từ trên xuống, `source/video/attack_diag_side_downcut_t01`; xem mục Milestone 01 cuối file |
 
 Estimated cost: 5 stills + 2 vfx x ~USD 0.014 (~USD 0.10) + 8 clips x ~USD 0.08 (~USD 0.64) + retakes.
 

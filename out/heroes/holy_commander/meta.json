@@ -195,6 +195,25 @@
         0.5,
         0.5
       ]
+    },
+    "attack_diag_side": {
+      "version": "t01",
+      "dir": "frames/attack_diag_side",
+      "source": "source/video/attack_diag_side_downcut_t01_dearc.mp4",
+      "frames": 16,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/attack_diag_side/frames/@1x/hero_holy_commander_attack_diag_side_NN.png",
+      "sheet": "frames/attack_diag_side/sheet.png",
+      "split": "video",
+      "video": {
+        "set": "/tmp/ar_set_4vx5ihsi",
+        "action": "diag",
+        "take": 1,
+        "route": "supplied"
+      },
+      "hit_frame": 13,
+      "body_rescale": 0.8748
     }
   },
   "body_area_2x": 6083,
