@@ -10,7 +10,7 @@ khớp theo quỹ đạo, ghép tách lớp với thân, review ở **H = 60 px 
 điều chưa làm: [docs/milestone-01-character-synced-slash.md](../../../docs/milestone-01-character-synced-slash.md). Ưu tiên hơn mọi việc trong §2-3.
 **Luật mới cho mọi VFX: review ở cỡ game (H = 60 px @1x), không chỉ ở khung phóng lớn.**
 Bước hiện tại: kế hoạch **đã chốt** với chuyên gia: [docs/milestone-01-plan.md](../../../docs/milestone-01-plan.md) (quyết định:
-[docs/milestone-01-advisor-review.md](../../../docs/milestone-01-advisor-review.md)). Gate 0 xong (P3 tái dùng, P1 thiếu). **Milestone 01 ĐẠT 6/6 tiêu chí (2026-11-10).** Quy trình ổn cho skill đơn; skill phức tạp (nhiều động tác, xoay thân) chưa đạt (`docs/milestone-01-research-rising-cuts.md`). Chờ chuyên gia trả lời `docs/milestone-01-result-for-advisor.md`. Gate 0-5 xong 2026-11-10: `frames/fx/slash_diag/` của holy_commander,
+[docs/milestone-01-advisor-review.md](../../../docs/milestone-01-advisor-review.md)). Gate 0 xong (P3 tái dùng, P1 thiếu). **Milestone 01 ĐẠT 6/6 tiêu chí (2026-11-10).** Quy trình ổn cho skill đơn; skill phức tạp (nhiều động tác, xoay thân) chưa đạt (`docs/milestone-01-research-rising-cuts.md`). Chuyên gia nghiệm thu là Proof of Concept (`docs/milestone-01-advisor-closeout.md`); quyết định: `docs/decision-log.md`, trạng thái: `docs/roadmap.md`. **Tiếp theo: M02 Single Rising Diagonal Slash** (`docs/milestone-02-plan-DRAFT.md`, chờ user duyệt chi phí). Gate 0-5 xong 2026-11-10: `frames/fx/slash_diag/` của holy_commander,
 `scripts/experiments/milestone_01/` (không sửa core). Phát hiện: `gen_slash_loop.drawing` đặt vệt đứt bằng `hash(l)` nên mỗi lần chạy khác nhau
 (PYTHONHASHSEED); build của milestone cố định seed, core chưa sửa. Chưa quyết promote `SweepFrame` vào core.
 

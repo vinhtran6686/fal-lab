@@ -105,6 +105,8 @@ tiếp cận; **không xây tiếp các tầng phía trên**. Trước khi giao 
 
 ## 7. Trạng thái
 
+- 2026-11-10: chuyên gia nghiệm thu **Successful Proof of Concept**, không làm lại (`milestone-01-advisor-closeout.md`). Caveat và quyết định: `decision-log.md`.
+
 - 2026-11-10: **Milestone 01 ĐẠT cả 6 tiêu chí** (tiêu chí 5 user chấm đạt). Thư báo chuyên gia: `docs/milestone-01-result-for-advisor.md`.
   **Kết luận quy trình (user):** quy trình hiện tại ổn **cho skill đơn (một động tác)**: ảnh đầu + ảnh cuối căn chân → 1 clip prompt từng bộ phận →
   xoá vệt model → user chọn frame → đánh dấu tay Root/Tip → khớp cung → VFX từ quỹ đạo → lớp riêng, một lệnh dựng lại. **Skill phức tạp** (nhiều động

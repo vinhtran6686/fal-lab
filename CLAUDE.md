@@ -44,7 +44,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   Design foundation (layers, smooth lines, colour hierarchy, lifecycle and per-piece decay, reading references, generator spec): `lib-fx/_core/vector/foundation/`;
   per VFX type (slash, explosion: references, rules, generators, open work): `lib-fx/_core/vector/foundation/vfx/`.
   **Continuing vector-kit work in a new session: read `lib-fx/_core/vector/STATUS.md` first** (current state, parked work, open questions).
-  Current direction chosen by the VFX advisor (2026-11-10): `docs/milestone-01-character-synced-slash.md`; review every VFX at game size (H = 60 px @1x).
+  Current direction chosen by the VFX advisor (2026-11-10): `docs/milestone-01-character-synced-slash.md` (M01 done; decisions `docs/decision-log.md`, status `docs/roadmap.md`, next `docs/milestone-02-plan-DRAFT.md`); review every VFX at game size (H = 60 px @1x).
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.
