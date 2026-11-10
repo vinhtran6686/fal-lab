@@ -1,0 +1,210 @@
+{
+ "params": {
+  "note": "Milestone 01 slash parameters. Rebuild: python scripts/experiments/milestone_01/slash_from_track.py. Units: px are @2x of the 176x140 cell (H = 111 px @2x); angles in radians along the fitted arc.",
+  "representation": "C: a band whose leading point is the blade tip of each frame; width independent of the blade length",
+  "tip_offset_ratio": 0.0,
+  "width_px2x": 12.0,
+  "length_rad": 1.2,
+  "curvature": 0.0,
+  "taper": {
+   "tail": 1.6,
+   "head": 0.38
+  },
+  "layers": [
+   {
+    "id": "outer",
+    "color": [
+     244,
+     150,
+     52
+    ],
+    "width": 1.45,
+    "alpha": 0.85
+   },
+   {
+    "id": "main",
+    "color": [
+     255,
+     208,
+     74
+    ],
+    "width": 1.0,
+    "alpha": 1.0
+   },
+   {
+    "id": "core",
+    "color": [
+     255,
+     251,
+     232
+    ],
+    "width": 0.42,
+    "alpha": 1.0,
+    "inset": 0.12
+   }
+  ],
+  "glow": {
+   "sigma_px2x": 4.0,
+   "alpha": 0.32,
+   "color": [
+    255,
+    196,
+    90
+   ]
+  },
+  "timeline": {
+   "grow": [
+    0.6,
+    0.85,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "after_hit": [
+    {
+     "frames": 1,
+     "tail_keep": 0.75,
+     "w": 0.9,
+     "alpha": 1.0,
+     "drift": 0.04
+    },
+    {
+     "frames": 1,
+     "tail_keep": 0.45,
+     "w": 0.55,
+     "alpha": 0.7,
+     "drift": 0.08
+    },
+    {
+     "frames": 1,
+     "tail_keep": 0.2,
+     "w": 0.28,
+     "alpha": 0.4,
+     "drift": 0.11
+    }
+   ]
+  },
+  "blend": "screen",
+  "layer_split": "front only: every marked sample is in front of the body (side = front)"
+ },
+ "plan": {
+  "9": {
+   "u_tail": -2.9281134761102208,
+   "u_head": -2.358374275736372,
+   "r_tail": 95.5932,
+   "r_head": 90.01907903622431,
+   "w": 0.6,
+   "alpha": 1.0,
+   "attached": true
+  },
+  "10": {
+   "u_tail": -2.6100932313652807,
+   "u_head": -1.4100932313652808,
+   "r_tail": 95.5932,
+   "r_head": 104.26262143035731,
+   "w": 0.85,
+   "alpha": 1.0,
+   "attached": true
+  },
+  "11": {
+   "u_tail": -1.6341327980359595,
+   "u_head": -0.43413279803595956,
+   "r_tail": 95.5932,
+   "r_head": 88.98497823076656,
+   "w": 1.0,
+   "alpha": 1.0,
+   "attached": true
+  },
+  "12": {
+   "u_tail": -0.6738882657873891,
+   "u_head": 0.5261117342126108,
+   "r_tail": 95.5932,
+   "r_head": 95.66551147372807,
+   "w": 1.0,
+   "alpha": 1.0,
+   "attached": true
+  },
+  "13": {
+   "u_tail": -0.27130178230796276,
+   "u_head": 0.9286982176920372,
+   "r_tail": 95.5932,
+   "r_head": 98.10411655445455,
+   "w": 1.0,
+   "alpha": 1.0,
+   "attached": true
+  },
+  "14": {
+   "u_tail": 0.06869821769203732,
+   "u_head": 0.9686982176920372,
+   "r_tail": 95.5932,
+   "r_head": 98.10411655445455,
+   "w": 0.9,
+   "alpha": 1.0,
+   "attached": false
+  },
+  "15": {
+   "u_tail": 0.4686982176920371,
+   "u_head": 1.0086982176920372,
+   "r_tail": 95.5932,
+   "r_head": 98.10411655445455,
+   "w": 0.55,
+   "alpha": 0.7,
+   "attached": false
+  },
+  "16": {
+   "u_tail": 0.7986982176920372,
+   "u_head": 1.0386982176920372,
+   "r_tail": 95.5932,
+   "r_head": 98.10411655445455,
+   "w": 0.28,
+   "alpha": 0.4,
+   "attached": false
+  }
+ },
+ "criterion3": {
+  "rows": [
+   {
+    "frame": 9,
+    "head_to_tip_H": 0.0,
+    "head_to_tip_measured_H": 0.0045,
+    "tangent_error_deg": 2.6,
+    "chord_error_deg": 15.4
+   },
+   {
+    "frame": 10,
+    "head_to_tip_H": 0.0,
+    "head_to_tip_measured_H": 0.0092,
+    "tangent_error_deg": 5.7,
+    "chord_error_deg": 30.6
+   },
+   {
+    "frame": 11,
+    "head_to_tip_H": 0.0,
+    "head_to_tip_measured_H": 0.0093,
+    "tangent_error_deg": 1.6,
+    "chord_error_deg": 22.3
+   },
+   {
+    "frame": 12,
+    "head_to_tip_H": 0.0,
+    "head_to_tip_measured_H": 0.0057,
+    "tangent_error_deg": 18.7,
+    "chord_error_deg": 30.8
+   },
+   {
+    "frame": 13,
+    "head_to_tip_H": 0.0,
+    "head_to_tip_measured_H": 0.0015,
+    "tangent_error_deg": 13.2,
+    "chord_error_deg": 13.2
+   }
+  ],
+  "head_ok": true,
+  "tangent_ok": false,
+  "thresholds": {
+   "head_H": 0.1,
+   "tangent_deg": 15
+  },
+  "tangent_method": "central difference of marked tips (chosen after the chord numbers came back large; both reported)"
+ }
+}
