@@ -153,10 +153,10 @@ Mỗi lệnh tốn tiền vẫn hỏi user trước theo `CLAUDE.md` (duyệt đ
 - [x] **Gate 0**: P3 = `pose_skill_radiant_slash_v01`; P1 thiếu; t04 f8-f10 chỉ tham khảo (`docs/milestone-01/gate0_reuse.png`)
 - [x] User duyệt kế hoạch + chi phí (Gate 1, Gate 2)
 - [x] **Gate 1** (xong: `pose_downcut_p1_v01`, `pose_downcut_p2_v01`): tạo P1 (≤ 3 ảnh); contact sheet chồng P1 / P3; ghi `history.md`, manifest `brief.md`; **user duyệt**
-- [ ] **Gate 2**: clip take 1 → review (thân sạch, không vệt, cỡ thân, nhát chém) → user duyệt / retry theo §4; thêm `slash_diag` vào
+- [x] **Gate 2** (xong: `attack_diag_side` 16 hình, hit 13): clip take 1 → review (thân sạch, không vệt, cỡ thân, nhát chém) → user duyệt / retry theo §4; thêm `slash_diag` vào
       `sources.json`, dựng lại tuner; user chọn đoạn + hit; xuất
       `attack_diag_side`; `motion_check.py`; ghi `history.md`, `meta.json`, manifest; **user duyệt**
-- [ ] **Gate 3**: trang đánh dấu; `weapon_track.json`; contact sheet Root / Tip; biểu đồ Tip; vận tốc + peak; fit (k = 1 trước; residual = gate; LOO điểm giữa tham khảo); **user duyệt**
+- [ ] **Gate 3** (trang đánh dấu: https://claude.ai/artifact/9VMQnnSRUkdCytrrXyTa8m, code `scripts/experiments/milestone_01/annotate/`, dữ liệu ở db collection `track`): trang đánh dấu; `weapon_track.json`; contact sheet Root / Tip; biểu đồ Tip; vận tốc + peak; fit (k = 1 trước; residual = gate; LOO điểm giữa tham khảo); **user duyệt**
 - [ ] **Gate 4**: bộ sinh thử nghiệm; `slash_params.json`; VFX RGBA @2x / @1x; 3 biến thể; preview @1x + 3×; kiểm tra slash cũ không đổi; **user duyệt**
 - [ ] **Gate 5**: lớp front (/ back); `frames/fx/slash_diag/` + `fx.json`; GIF @1x, 3×; một lệnh dựng lại; chấm 6 tiêu chí; cập nhật docs; dọn; commit, push
 
