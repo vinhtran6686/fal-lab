@@ -105,7 +105,10 @@ tiếp cận; **không xây tiếp các tầng phía trên**. Trước khi giao 
 
 ## 7. Trạng thái
 
-- 2026-11-10: user yêu cầu **thống nhất kế hoạch + checklist với chuyên gia trước khi test**. Kế hoạch nháp: `docs/milestone-01-plan-DRAFT.md`;
+- 2026-11-10: chuyên gia trả lời 12 câu ([milestone-01-advisor-review.md](milestone-01-advisor-review.md)); **kế hoạch chốt**:
+  [milestone-01-plan.md](milestone-01-plan.md) (6 gate, tiêu chí, chi phí dự kiến ~0,07-0,13 USD, trần ~0,28). Gate 0 xong: P3 tái dùng
+  `pose_skill_radiant_slash_v01`, P1 phải tạo mới. **Chờ user duyệt chi phí**; chưa gọi API.
+- 2026-11-10: user yêu cầu **thống nhất kế hoạch + checklist với chuyên gia trước khi test**. Kế hoạch nháp (nay là `docs/milestone-01-plan.md`);
   12 câu hỏi gửi chuyên gia: `docs/milestone-01-advisor-questions.md`. Chờ trả lời.
 - 2026-11-10: ghi quyết định. **Chưa bắt đầu**: bước 1 tốn tiền (ảnh ~0,0135 USD/ảnh; clip h3-max-turbo ~0,062 USD/clip theo `out/costs.csv`), cần
   user đồng ý trước khi chạy clip (quy tắc chi phí trong `CLAUDE.md`).

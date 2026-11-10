@@ -1,5 +1,8 @@
 # Prompt gửi chuyên gia: thống nhất kế hoạch Milestone 01 trước khi test
 
+> Đã trả lời 2026-11-10: [milestone-01-advisor-review.md](milestone-01-advisor-review.md); kế hoạch chốt: [milestone-01-plan.md](milestone-01-plan.md).
+> Tên `milestone-01-plan-DRAFT.md` bên dưới là tên cũ.
+
 (Copy toàn bộ phần dưới đường kẻ gửi cho chuyên gia, kèm `milestone-01-modules.zip`.)
 
 ---
