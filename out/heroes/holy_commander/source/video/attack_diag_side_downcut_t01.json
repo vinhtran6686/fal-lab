@@ -1,0 +1,27 @@
+{
+  "prompt": "The same top-heavy holy knight commander about 2.5 heads tall (huge rounded silver shoulder plates, small head, short legs), wearing sleek silver plate armour with a gold cross emblem on the chest and a simple engraved gold swirl pattern (a few big flat swooping lines) on each shoulder plate and the hip armour, and a tall silver helmet with an angular T-shaped visor and one tall swept-back red plume crest; a big broad heavy VERY LONG longsword (blade as tall as from the ground to his chest) with a wide silver blade, a gold crossguard, a long grip and a gold EAGLE-HEAD pommel, held in both mitten-shaped hands; no shield; a long plain red cape behind him; saturated silver main colour, bright gold accent, red cape. 2D side-view game sprite: facing RIGHT the entire time and never turning around: his hips, shoulders and face stay turned to the right in every frame, the red cape always behind him on the LEFT of the screen. A heavy armoured knight who cuts with his whole body: the force starts in the legs, goes through the hips and torso to the shoulders and arms, and the heavy blade comes LAST, lagging behind the hands. BOTH FEET STAY PLANTED on the same two spots on the ground line the whole time: he never steps, never lifts or slides a foot; only the knees, hips, torso, arms and sword move. His RIGHT arm always comes from the near shoulder plate (left of the screen) and his LEFT arm from the far shoulder plate (right of the screen); both hands stay together on the long grip in every frame, the right hand under the crossguard, the left hand above the eagle pommel. Start (0-0.4 s), the pose of the first still: feet wide apart, front foot forward, knees slightly bent, the torso leaning back a little over the rear leg; both hands raised beside his near shoulder at head height, the right elbow bent and pointing out to the left, the left arm crossing in front of his chest under the chin; the long blade raised high behind his head, pointing to the UPPER LEFT. He holds it, tense, for a short moment; the cape hangs still. Beat 1, the cut (0.4-0.9 s, the fastest and most important beat): LEGS: the rear leg (left) pushes hard against the ground and straightens, the front knee (right) bends forward over the front foot, the weight moves onto the front leg. HIPS AND TORSO: the hips drive forward to the right first, then the torso swings from leaning back to leaning forward, the chest turning down toward the ground in front of him; the head follows the torso and looks down and forward. ARMS AND HANDS: the shoulders pull, both elbows straighten, and both hands travel together DOWN in a diagonal line from beside his near shoulder, across the front of his chest, to low in front of his front hip. SWORD: the blade follows behind the hands in ONE big fast curve: its point goes from high at the UPPER LEFT, over and in front of his helmet, down through the front of his body, to the LOWER RIGHT in front of his front foot; the blade stays one straight rigid piece of the same length, always fully visible in front of him. CAPE: the cape is thrown up and back behind him on the left. Beat 2, follow-through (0.9-1.1 s): the heavy blade swings a little past its end point from its own weight and comes back to settle; the front knee gives slightly and the torso dips once, then steadies; the cape flies back. Beat 3, hold (1.1-3 s): he HOLDS the pose of the last still completely still: torso leaning forward, front knee bent, rear leg straighter, both arms extended low in front, both hands together in front of his front hip, the blade pointing DOWN and FORWARD to the LOWER RIGHT with the point near the ground, inside the frame; only the cape settles slowly behind him. The order is always: hold the raised sword, one diagonal downward cut from the upper left to the lower right, follow-through, hold. One cut only; no jump, no step, no spin, no turning around, no second swing, the sword never goes back up. Body motion only: no light, glow, sparks, trails, arcs, streaks, smears, dust or effects of any kind; the blade stays one solid straight sword in every frame. The camera never moves or zooms: locked tripod, exactly the same framing and the same character size from the first frame to the last. Solid flat pure magenta background only for the whole shot; keep the exact flat vector 2D cartoon game art: thick uniform near-black outlines, flat colour fills with 2-3 tone hard-edged cel shading, chunky readable shapes, high top-down camera, light from the top-left look, palette, proportions and costume of the stills.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 3,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0ab1edbb/PQn0Tq_sKfrOBk_ZLRfib_p1_canvas.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0ab1edbb/637itxoiOlQiuZP3bs4NQ_p2_canvas.png"
+  },
+  "seconds": 3,
+  "resolution": "480P",
+  "size": [
+    1820,
+    1024
+  ],
+  "estimateUsd": 0.045,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/heroes/holy_commander/.work/m01_downcut/p1_canvas.png",
+  "lastFrame": "/home/user/fal-lab/out/heroes/holy_commander/.work/m01_downcut/p2_canvas.png",
+  "requestId": "01a1c656-6f6a-7c92-aedc-d63dabeac659",
+  "seconds_elapsed": 5.3,
+  "source_url": "https://v3b.fal.media/files/b/0ab1edbb/B1Zx9WEX_rys5ugj6gLXe_minimax-h3.mp4",
+  "cost_is_estimate": true
+}
