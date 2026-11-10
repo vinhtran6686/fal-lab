@@ -105,6 +105,19 @@
       },
       "note": "clip rise: quỳ xám -> đứng; cỡ thân đo theo hình cuối (đứng)",
       "restFrame": "last"
+    },
+    {
+      "id": "diag",
+      "label": "Milestone 01: chém xéo (downcut t01, đã xoá vệt)",
+      "sheet": "attack_diag_side",
+      "clip": "source/video/attack_diag_side_downcut_t01_dearc.mp4",
+      "loop": false,
+      "hasHit": true,
+      "approved": {
+        "stride": 1
+      },
+      "note": "Milestone 01: chọn đoạn chuẩn bị -> chém -> theo đà, mục tiêu 0,8-1,2 s, nhịp đều 67 ms; đánh dấu H = frame chạm",
+      "bodyPx": null
     }
   ],
   "altFps": 24
