@@ -40,7 +40,8 @@ User đổi đòn: **hai nhát vuốt lên** tạo chữ X thay cho một nhát 
 kiếm khuất sau thân, nên đây cũng là bài test lớp back. **Không dùng lại** `pose_skill_radiant_slash_v01`; tạo 2 ảnh mới: P1 kiếm thấp sau lưng,
 P_end kiếm cao sau vai. Chuyển động đã duyệt (beat, mốc thời gian, nguyên văn gửi model) ở `out/heroes/holy_commander/brief.md`, mục
 "Milestone 01". Phần §2 (P3 tái dùng) và các câu về "một nhát chém xuống" bên dưới **được thay** bằng mục này; mọi quy ước, gate và tiêu chí khác giữ
-nguyên. Phạm vi lớn hơn bản chuyên gia duyệt (2 nhát): **chưa báo chuyên gia**; cách chia VFX (nhát 1 trước hay cả hai) chờ user quyết.
+nguyên. Phạm vi lớn hơn bản chuyên gia duyệt (2 nhát): đã soạn thư báo (`docs/milestone-01-advisor-update-01.md`), chờ chuyên gia xác nhận.
+User quyết (2026-11-10): **VFX làm từng nhát**, Milestone 01 làm hết 6 tiêu chí cho nhát 1 trước; ảnh tạo trước để chốt pose; clip tạo từng cái một.
 Thời lượng animation cuối dự kiến ~1,2-1,8 s (hai nhát) thay vì 0,8-1,2 s.
 
 ## 3. Gate 1: P1 (fal-image, TỐN TIỀN)
