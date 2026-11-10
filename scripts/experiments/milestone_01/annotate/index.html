@@ -96,11 +96,11 @@ tr.cur td { background: color-mix(in srgb, var(--accent) 14%, transparent) }
 <div class="tablebox">
   <table><thead><tr><th>Hình</th><th>ms</th><th>dùng</th><th>thấy</th><th>Root x (H)</th><th>Root y (H)</th><th>Tip x (H)</th><th>Tip y (H)</th><th>dài lưỡi (H)</th><th>phía</th><th>ghi chú</th></tr></thead><tbody id="tb"></tbody></table>
 </div>
-<p class="hint">Gốc toạ độ = điểm neo chân (x 176, y 246,4 trên hình @2x), x về trước (phải), y lên trên, đơn vị H = 111 px @2x. ms = (hình − 1) × 67. Hình 13 là hình chạm (hit). Mọi thay đổi tự lưu; Claude đọc lại từ nơi lưu của trang.</p>
+<p class="hint">Gốc toạ độ = điểm neo chân (x 176, y 246,4 trên hình @2x), x về trước (phải), y lên trên, đơn vị H = 111 px @2x. ms = (hình − 1) × 67. Hình 13 là hình chạm (hit); hình 9 là hình VFX bắt đầu (hình đầu của đoạn mũi kiếm đi nhanh, tính từ dữ liệu đã đánh dấu). Mọi thay đổi tự lưu; Claude đọc lại từ nơi lưu của trang.</p>
 
 <script>
 'use strict';
-const N = 16, W2 = 352, H2 = 280, PX = 176, PY = 246.4, HPX = 111, MS = 67, HIT = 13;
+const N = 16, W2 = 352, H2 = 280, PX = 176, PY = 246.4, HPX = 111, MS = 67, HIT = 13, VFX0 = 9;   // VFX0: first frame of the fast run (weapon_track.json speed.vfx_start_frame)
 const $ = (s) => document.querySelector(s);
 const imgs = [], rec = {};
 let cur = 1, mode = 'root', zoom = 4, db = null, drag = null;
@@ -150,7 +150,7 @@ function draw() {
 }
 function render() {
   const r = rec[cur];
-  $('#ftitle').textContent = 'Hình ' + cur + ' / ' + N; $('#fms').textContent = r.ms + ' ms'; $('#fhit').textContent = cur === HIT ? '· hình chạm' : '';
+  $('#ftitle').textContent = 'Hình ' + cur + ' / ' + N; $('#fms').textContent = r.ms + ' ms'; $('#fhit').textContent = cur === HIT ? '· hình chạm' : cur === VFX0 ? '· VFX bắt đầu' : '';
   $('#mRoot').classList.toggle('sel', mode === 'root'); $('#mTip').classList.toggle('sel', mode === 'tip');
   $('#inc').checked = r.include; $('#visY').checked = r.visible; $('#visN').checked = !r.visible; $('#sideSel').value = r.side; $('#note').value = r.note;
   const rh = toH(r.root), th = toH(r.tip);
@@ -208,7 +208,7 @@ for (let f = 1; f <= N; f++) {
   const im = new Image(); im.src = 'data/' + key(f) + '.png'; im.onload = () => { if (f === cur) draw(); }; imgs[f] = im;
   const b = document.createElement('button'); b.type = 'button'; b.className = 'th'; b.dataset.f = f;
   const t = document.createElement('img'); t.src = im.src; t.alt = 'Hình ' + f;
-  const cap = document.createElement('span'); cap.innerHTML = '<b></b><i class="st"></i>'; cap.firstChild.textContent = f + (f === HIT ? ' hit' : '');
+  const cap = document.createElement('span'); cap.innerHTML = '<b></b><i class="st"></i>'; cap.firstChild.textContent = f + (f === HIT ? ' hit' : f === VFX0 ? ' vfx' : '');
   b.append(t, cap); b.onclick = () => go(f); strip.append(b);
 }
 sizeCanvas(); render();
