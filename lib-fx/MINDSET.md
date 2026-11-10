@@ -104,6 +104,10 @@ sau bằng số liệu chuyển động, cuối cùng gắn vào nhân vật.
   (hướng "FX đi theo vũ khí", đã thống nhất 2026-11-10, chưa làm): `_core/vector/foundation/vfx/slash/ARCHITECTURE.md`.
 - **Xong khi**: user đổi một số trong file biên độ, chạy lại, được hiệu ứng mới đúng ý mà không cần mô tả lại bằng lời.
 
+> **2026-11-10, chuyên gia:** với slash, Phase 2 và 3 được thử trước theo hướng **Character-first** (lấy chuyển động kiếm từ clip thật rồi dựng VFX
+> khớp theo) bằng Milestone 01 (`docs/milestone-01-character-synced-slash.md`). VFX-first vẫn dùng cho hiệu ứng độc lập (phép, vòng năng lượng,
+> slash phi vật lý).
+
 ### Phase 3: gắn vào một nhân vật cụ thể
 
 - **Mục tiêu**: hiệu ứng có biên độ user muốn được **khớp với nhân vật**: đúng pose, đúng quỹ đạo vũ khí, đúng nhịp clip attack, đúng
@@ -240,6 +244,9 @@ nổ có ở `explosion/blast`, `element/fire/impact`, `ranged/siege`). Vì vậ
 
 ### 6.3 Cấu trúc đích (đề xuất 2026-11-09, **chờ user duyệt, chưa di chuyển gì**)
 
+> **Chuyên gia (2026-11-10):** ba nhánh VFX (Vector Kit, Procedural, Character FX) giữ đúng vai trò, **không gộp code, không tạo nhánh thứ tư**;
+> chỉ thiết kế cách trao đổi dữ liệu khi cần. Sắp lại thư mục không phải ưu tiên.
+
 ```
 lib-fx/
   MINDSET.md, README.md, GUIDE.md      tư duy, luật + lệnh, bản đồ
@@ -280,4 +287,12 @@ Nhìn tên là biết: thư mục thường = **dùng được**; `_rebuild/` = 
 3. Bản **tái tạo** luôn ghi nguồn (file GIF, tác giả nếu biết) và không đưa vào thư viện dùng được.
 4. Bản **sáng tạo** từ ảnh ý tưởng: chỉ lấy ý (vị trí, phong cách), không đồ lại.
 5. Một hiệu ứng = một thư mục, không kèm nhân vật; màu là bảng màu, không nhân bản hiệu ứng để đổi màu.
+6. **Review mọi VFX ở cỡ game (H = 60 px @1x)**, không chỉ ở khung phóng lớn (chuyên gia, 2026-11-10).
+7. Thử nghiệm phối hợp nhiều công cụ dùng **một quy ước riêng cho thử nghiệm đó**: đơn vị chiều cao thân **H**, thời gian **ms**; đổi sang px / frame khi dựng.
+
+## 9. North Star (chuyên gia, 2026-11-10; là năng lực cần phát triển, không phải danh sách task)
+
+1 Reference Reconstruction (đã có nền tảng) · 2 Parametric Shape Generator (đã có nền tảng) · 3 Motion-driven VFX (chưa hoàn thiện) ·
+4 Lifecycle & Impact (cần mở rộng) · 5 VFX Composition (prototype) · 6 Character Integration (tích hợp riêng lẻ) · 7 Reusable Skill Assets (dài hạn).
+Một milestone có thể cải thiện nhiều năng lực cùng lúc. Bước hiện tại: `docs/milestone-01-character-synced-slash.md`.
 6. Không đổi cấu trúc thư mục khi user chưa duyệt (§6.3).

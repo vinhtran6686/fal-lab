@@ -20,6 +20,18 @@ hiện tại**; trạng thái thực hiện ghi ở cuối file và trong `lib-f
 - **Tiền lệ đáng giá**: `holy_commander` skill `radiant_slash` (thân từ video-sprite, fx tách 2 lớp back / front, khớp frame, có pivot và meta). Khoảng
   trống: fx đó viết bằng Python riêng, **chưa nối Vector Kit với quy trình ghép nhân vật đã chạy**.
 
+### 1b. Đánh giá phối hợp (bảng của chuyên gia)
+
+| Tích hợp | Hiện trạng |
+|---|---|
+| fal-image → video-sprite | đã kiểm chứng |
+| video-sprite → quỹ đạo vũ khí | chưa có dữ liệu |
+| quỹ đạo vũ khí → VFX | chưa hỗ trợ |
+| VFX → xem cùng nhân vật | mới có prototype (hình nộm) / FX riêng |
+| nhân vật + VFX → skill | đã làm thủ công (radiant_slash) |
+
+Thư viện procedural: 19 hiệu ứng, 1 duyệt, 16 nháp, 2 cần làm lại; là thư viện bổ trợ, không phải nhánh tập trung.
+
 ## 2. Bốn điểm nghẽn (không giải quyết cùng lúc)
 
 1. **Chưa có cầu nối chuyển động nhân vật → chuyển động VFX.** Hiện `dummy.py` suy vị trí vũ khí **từ** nhát chém (VFX điều khiển hình nộm). Mục
@@ -34,6 +46,14 @@ hiện tại**; trạng thái thực hiện ghi ở cuối file và trong `lib-f
 
 - **Character-first** được chọn cho thử nghiệm tích hợp quỹ đạo vũ khí đầu tiên: thấy chuyển động thật trước rồi chỉnh VFX khớp theo; video-sprite
   không nhận được quỹ đạo VFX nên VFX-first phải "hy vọng" model làm đúng.
+| Tiêu chí | VFX-first | Character-first |
+|---|---|---|
+| Kiểm soát hình VFX | tốt | tốt |
+| Kiểm soát vũ đạo | thấp | phụ thuộc model video |
+| Biết trước đường đi vũ khí | có, từ thiết kế VFX | phải lấy từ animation |
+| Đồng bộ chính xác | chưa chứng minh | chỉnh được sau khi có clip |
+| Tạo lại biến thể | tốt | tốt khi đã có dữ liệu chuyển động |
+
 - **VFX-first** vẫn dùng cho hiệu ứng độc lập (ma thuật, vòng năng lượng, slash phi vật lý, visual mới). Hai workflow cùng tồn tại.
 
 ## 4. Milestone 01: một nhát chém xéo có VFX riêng, đồng bộ với kiếm của nhân vật thật
@@ -73,7 +93,17 @@ tiếp cận; **không xây tiếp các tầng phía trên**. Trước khi giao 
 | 6 | Character Integration | đã có tích hợp riêng lẻ |
 | 7 | Reusable Skill Assets | mục tiêu dài hạn |
 
-## 6. Trạng thái
+## 6. Các tài liệu đã cập nhật theo quyết định này
+
+| File | Cập nhật |
+|---|---|
+| `lib-fx/_core/vector/STATUS.md` | §0 hướng đi hiện tại; §3.1, §3.1b gộp vào Milestone 01; §3.2 không refactor, không gộp code, không nhánh thứ tư |
+| `lib-fx/_core/vector/foundation/vfx/slash/ARCHITECTURE.md` | §2: cách làm trước bằng Milestone 01 (đánh dấu tay root + tip + timestamp, cung elip trước, đơn vị H + ms); dữ liệu vào thêm Blade Root |
+| `lib-fx/MINDSET.md` | Phase 2-3 theo hướng Character-first; North Star 7 năng lực; §6.3 không gộp code; quy ước review ở H = 60 px |
+| `lib-fx/_core/vector/foundation/vfx/slash/README.md` | luật review ở cỡ game |
+| `CLAUDE.md` | trỏ tới file này và luật H = 60 px |
+
+## 7. Trạng thái
 
 - 2026-11-10: ghi quyết định. **Chưa bắt đầu**: bước 1 tốn tiền (ảnh ~0,0135 USD/ảnh; clip h3-max-turbo ~0,062 USD/clip theo `out/costs.csv`), cần
   user đồng ý trước khi chạy clip (quy tắc chi phí trong `CLAUDE.md`).

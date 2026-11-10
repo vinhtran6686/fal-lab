@@ -41,6 +41,9 @@ Trước đó user hỏi về cấu trúc thư mục `lib-fx/` (tách rõ tái t
 
 ### 3.1 Nhát chém theo quỹ đạo user vẽ trước, khớp pose / kiểu attack của một nhân vật cụ thể (2026-11-09)
 
+> **2026-11-10: gộp vào Milestone 01** (§0). Chuyên gia chọn làm trước theo hướng Character-first: lấy quỹ đạo từ clip thật bằng đánh dấu tay,
+> chưa dò tự động. Phần dưới giữ làm lịch sử.
+
 User thiết kế nhân vật theo thứ tự: **pose dáng + kiểu attack trước**, rồi mới tới hiệu ứng. Câu hỏi: với những gì đã có, có tạo được một nhát
 chém đi **đúng quỹ đạo user vẽ sẵn** không? Tool chưa có tính năng này.
 
@@ -77,12 +80,19 @@ Bản 1 làm khi chưa có ảnh tham chiếu nên sai hình; bài học ghi ở
 
 ### 3.1b FX đi theo vũ khí (2026-11-10, đã thống nhất hướng, chưa làm)
 
+> **Gộp vào Milestone 01** (§0): bản đầu chỉ một nhát chém xéo, quỹ đạo đánh dấu tay (Blade Root, Blade Tip, timestamp), thử cung elip có sẵn
+> trước, chỉ thêm đường cong tự do (`PathFrame`) khi cung elip không đủ. Không xây bộ sinh tổng quát trước khi milestone đạt.
+
 User: hình nộm đã khớp vũ khí với nhát chém; hỏi có build FX slash combo theo đúng đường vũ khí di chuyển (đổi vị trí / biên độ vũ khí) không.
 **Có**: đảo chiều phụ thuộc (hiện FX → vũ khí; mới: đường đi mũi vũ khí → chia nhát → khớp cung / `PathFrame` → nhịp → vẽ). Định dạng dữ
 liệu, luật chia nhát, khớp hình, file sẽ sửa, cách kiểm thử: [foundation/vfx/slash/ARCHITECTURE.md](foundation/vfx/slash/ARCHITECTURE.md) §2.
 Đây cũng là đường làm §3.1 (quỹ đạo user vẽ trước cho nhân vật).
 
 ### 3.2 Cấu trúc `lib-fx/`: tách tái tạo và sáng tạo (2026-11-09, đề xuất, chờ user quyết)
+
+> **Chuyên gia (2026-11-10):** giữ ba nhánh VFX đúng vai trò (A Vector Kit: tái tạo + sáng tạo slash; B Procedural: hiệu ứng hình học và loại khác;
+> C Character FX: ghép vào nhân vật); **không gộp code, không refactor ngay, không tạo nhánh thứ tư**; sau này có thể dùng chung một định dạng mô tả
+> asset / composition khi có nhu cầu thật. Việc sắp lại thư mục bên dưới không phải ưu tiên.
 
 Hiện trạng: thư viện chuẩn là `<nhóm>/<họ>/<id>/` (hiệu ứng vẽ bằng `fxcore`, có `sheet.png` + `meta.json`); còn mọi việc của bộ vector
 (bản tái tạo từ GIF bên ngoài và bản sáng tạo) nằm trong `_core/vector/showcase/` (thư mục code), tài liệu nằm rải ở gốc `lib-fx/`

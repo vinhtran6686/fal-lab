@@ -31,6 +31,11 @@ Viết 2026-11-10 theo yêu cầu user: ghi lại kiến trúc của bộ sinh s
 
 ## 2. Hướng tiếp theo: vũ khí → FX (đảo chiều)
 
+> **Cập nhật 2026-11-10 theo chuyên gia:** làm thử trước bằng **Milestone 01** (`docs/milestone-01-character-synced-slash.md`): một nhát chém xéo
+> của `holy_commander`, quỹ đạo **đánh dấu tay** trên vài frame (Blade Root, Blade Tip, timestamp; chưa dò tự động, chưa chia nhát tự động),
+> **thử khớp cung elip có sẵn trước**, `PathFrame` chỉ khi cần; đơn vị **H** và **ms**, đổi sang px / frame khi dựng; ghép tách lớp với thân,
+> xem ở **H = 60 px @1x, 15 fps**. Các mục 2.1-2.6 dưới đây là thiết kế đầy đủ về sau; chỉ làm phần milestone cần.
+
 User hỏi (2026-11-10): đổi vị trí / biên độ chuyển động của vũ khí thì có build được FX slash combo theo đúng đường vũ khí đi không?
 **Có.** Đầu vào là **đường đi của mũi vũ khí theo frame**, đầu ra là các nhát chém. Toàn bộ ngôn ngữ nét và bộ dựng dùng lại nguyên;
 chỉ thêm tầng "đọc vũ khí" ở đầu.
@@ -53,7 +58,7 @@ Một file JSON, sửa được bằng tay hoặc bằng một trang kéo thả 
   "weapon": {"length_H": 1.35, "kind": "spear"},
   "fps": 25,
   "keys": [                                   // vị trí MŨI vũ khí, đơn vị H, gốc = điểm chân, x về phía trước, y lên trên
-    {"f": 0,  "tip": [-0.9, 0.75]},
+    {"f": 0,  "tip": [-0.9, 0.75]},           // Milestone 01 thêm "root": [x, y] (gốc lưỡi / chuôi) và "ms" (thời điểm)
     {"f": 3,  "tip": [ 1.2, 0.55], "ease": "out"},
     {"f": 7,  "tip": [-0.6, 1.9]},            // lấy đà: giơ ra sau, trên đầu
     {"f": 11, "tip": [ 1.75, 0.0], "impact": true}

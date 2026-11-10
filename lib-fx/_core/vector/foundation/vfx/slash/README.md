@@ -38,4 +38,8 @@ User (2026-11-09): sáng tạo slash đơn bằng tool đã khá ổn. Câu hỏ
 - **Phản chiếu dưới sàn** = cùng nét, lật, dẹt ~1/4, tối và nhạt hơn, cùng nhịp.
 - Vũ khí lớn: lưỡi rộng hơn ~2-2,7 lần, ít sợi đậm, đầu cùn, vụn to, giữ 2 frame lúc lấy đà và lúc va chạm.
 
+- **Review ở cỡ game**: mọi slash phải được xem ở H = 60 px @1x (nhân vật game), không chỉ ở khung 600-1100 px (chuyên gia, 2026-11-10).
+
+Hướng đi hiện tại: Milestone 01, nhát chém xéo đồng bộ kiếm nhân vật thật ([docs/milestone-01-character-synced-slash.md](../../../../../../docs/milestone-01-character-synced-slash.md)).
+
 Luật chung cho mọi loại VFX (lớp, nét mịn, cấp bậc màu, vòng đời, ánh sáng): [../../README.md](../../README.md) và 01-05.
