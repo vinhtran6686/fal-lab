@@ -34,6 +34,15 @@ Bằng chứng: [milestone-01/gate0_reuse.png](milestone-01/gate0_reuse.png).
 | **P1 (chuẩn bị)** | **Phải tạo mới (1 ảnh fal-image)**; frame `attack_side` chỉ làm tham khảo tư thế | clip thô `attack_side_attack_t04.mp4` (832×480, 24 fps) frame 8-10 có tư thế kiếm sau đầu, chưa có vệt cung; nhưng: ảnh mờ nén 480p (nhân vật cao ~270 px kể cả kiếm), lưỡi nhòe chuyển động ở f9-f10, **mặt / mũ bị tay che** (master thấy mặt), kiếm nằm ngang sau đầu chứ không "cao sau vai, mũi lên". Frame đã export của `attack_side` (frame 3-4 @1x) còn dính vệt cung. Không đủ làm frame đầu sạch cho video |
 | P2 | không tạo | chỉ khi video cho thấy model không nội suy được nhát chém |
 
+## 2b. Thay đổi đòn (user, 2026-11-10): chém đôi vuốt lên thành chữ X
+
+User đổi đòn: **hai nhát vuốt lên** tạo chữ X thay cho một nhát chém xéo từ trên xuống. Nhát 1 đi phía gần camera, kiếm thấy rõ. Nhát 2 đi phía xa,
+kiếm khuất sau thân, nên đây cũng là bài test lớp back. **Không dùng lại** `pose_skill_radiant_slash_v01`; tạo 2 ảnh mới: P1 kiếm thấp sau lưng,
+P_end kiếm cao sau vai. Chuyển động đã duyệt (beat, mốc thời gian, nguyên văn gửi model) ở `out/heroes/holy_commander/brief.md`, mục
+"Milestone 01". Phần §2 (P3 tái dùng) và các câu về "một nhát chém xuống" bên dưới **được thay** bằng mục này; mọi quy ước, gate và tiêu chí khác giữ
+nguyên. Phạm vi lớn hơn bản chuyên gia duyệt (2 nhát): **chưa báo chuyên gia**; cách chia VFX (nhát 1 trước hay cả hai) chờ user quyết.
+Thời lượng animation cuối dự kiến ~1,2-1,8 s (hai nhát) thay vì 0,8-1,2 s.
+
 ## 3. Gate 1: P1 (fal-image, TỐN TIỀN)
 
 - `scripts/gen_image.py`, `gpt-image-2` edit, `--quality low`, 1024×1024, `--ref master_v07`, **1 ảnh mỗi lần**.
