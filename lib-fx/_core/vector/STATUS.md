@@ -9,6 +9,8 @@ Một nhát chém xéo của `holy_commander` (animation thật từ video-sprit
 khớp theo quỹ đạo, ghép tách lớp với thân, review ở **H = 60 px @1x, 15 fps**. Quy ước của thử nghiệm: đơn vị **H** và **ms**. Chi tiết, 6 tiêu chí đạt,
 điều chưa làm: [docs/milestone-01-character-synced-slash.md](../../../docs/milestone-01-character-synced-slash.md). Ưu tiên hơn mọi việc trong §2-3.
 **Luật mới cho mọi VFX: review ở cỡ game (H = 60 px @1x), không chỉ ở khung phóng lớn.**
+Bước hiện tại: **chờ chuyên gia trả lời 12 câu** (`docs/milestone-01-advisor-questions.md`) để chốt `docs/milestone-01-plan-DRAFT.md`; user yêu cầu chưa
+test / chưa gọi API cho tới khi kế hoạch + checklist được chốt trong repo.
 
 ## 1. Đã làm được (user đã duyệt)
 
