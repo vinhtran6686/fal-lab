@@ -137,3 +137,17 @@ Mỗi mốc: hỏi advisor trước khi chốt kế hoạch và trước khi bá
 1. Profile chỉ là tài nguyên trung gian cho rig và xoay thân, hay game sẽ hiển thị cả góc ngang? (ảnh hưởng `format.md` §3)
 2. Run: thay hẳn bản 4 pose bằng run rig profile, hay giữ 3/4 và chỉ sửa tay?
 3. Rig Tuner v2 trước (P04) hay rig v2 do AI đặt trước (P03)?
+
+## 8. Phân việc và tiến độ (từ 2026-11-11)
+
+User đã báo bắt đầu. Việc đặc tả đóng giao cho model khác qua `docs/tasks/` (bảng ở `docs/tasks/README.md`); việc cần nhìn ảnh và sửa lõi engine do Fable làm trong session chính.
+
+| Mã | Việc | Trạng thái | Ghi chú |
+|---|---|---|---|
+| F1 | P02: gói tài nguyên lion (plate chân, tờ part, lớp khuất) | đang làm | |
+| F2 | P03: engine rig v2 + rig v2 cho lion | chưa làm | xong thì mở khoá T5 |
+| F3 | P05: profile + run/walk bằng rig | chưa làm | |
+| F4 | P06: xoay thân | chưa làm | |
+
+Ba câu hỏi ở §7 chưa có trả lời; mặc định tạm dùng: (1) profile chỉ là tài nguyên trung gian, không đổi `format.md`; (2) run sẽ thay bằng bản rig khi F3 xong, bản 4 pose giữ tới lúc đó; (3) rig v2 do AI đặt trước, Rig Tuner v2 (T3) làm song song.
+

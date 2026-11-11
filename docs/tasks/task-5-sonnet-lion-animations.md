@@ -1,0 +1,41 @@
+# T5 (Sonnet): viết hurt, death, roar cho lion theo công thức
+
+Trạng thái: BLOCKED (chờ F2: rig v2 của lion)
+
+**Điều kiện bắt đầu**: `out/heroes/lion_brawler/source/rig/rig.json` có xương tên `hips` và `near_shin`. Kiểm: `grep -c '"hips"' out/heroes/lion_brawler/source/rig/rig.json` > 0.
+Chưa có thì dừng, không làm.
+
+## Mục tiêu
+Ba animation mới cho Lion Brawler, viết **bằng cách chép bảng** trong `docs/puppet-kit-motion-recipes.md`, không tự nghĩ lại cơ học.
+
+## Đọc trước
+- `docs/tasks/README.md` mục "Quy tắc chung".
+- `docs/puppet-kit-motion-recipes.md` toàn bộ (quy ước dấu ở §1 là bắt buộc).
+- `out/heroes/lion_brawler/source/rig/rig.json` (tên xương thật) và một animation mẫu do Fable viết cho rig v2 trong `source/rig/anims/` (Fable sẽ ghi tên file mẫu vào mục "Ghi chú của Fable" dưới đây khi mở khoá task).
+
+## Được sửa
+- Tạo mới trong `out/heroes/lion_brawler/source/rig/anims/`: `hurt.json`, `death.json`, `skill_roar.json`
+- Sinh bằng lệnh: `out/heroes/lion_brawler/frames/hurt_side/`, `death_side/`, `skill_roar_side/`, và `meta.json`
+- `out/heroes/lion_brawler/brief.md` (dòng manifest của ba state), `history.md` (một dòng mỗi state)
+- `scripts/puppet_kit/golden.json` qua `python scripts/puppet_test.py --update` (nếu T1 đã xong)
+- File task này và dòng T5 trong `docs/tasks/README.md`
+
+## Việc cần làm
+| State | Công thức | Frame | Ghi chú |
+|---|---|---|---|
+| `hurt_side` | recipes §7 "Hit / hurt" | 6 | chỉ rig; thân giật ra sau rồi về; đầu và tay trễ 1 frame |
+| `death_side` | recipes §7 "Death" | 12 | chỉ rig: `hips.ty` hạ (gối tự gập nhờ IK chân), thân đổ trước, tay buông; frame cuối nằm yên. Nếu thân đổ quá 60° lộ khe giữa lớp thì dừng ở góc không lộ và ghi lại |
+| `skill_roar_side` | recipes §7 "Level up / gầm" | 22 | rig khuỵu 3 frame → pose `source/rig/poses/levelup.json` giữ 14 frame (ngực phập phồng) → rig 5 frame; `hit_frame` 4 |
+
+Với mỗi state: viết JSON → `python scripts/puppet.py render out/heroes/lion_brawler <anim> --sheet <state> --no-export` → mở `.work/puppet/<state>/contact.png` → đi hết checklist recipes §9 → sửa → `render` thật.
+
+## Nghiệm thu
+- Ba lệnh `render` thật chạy không lỗi; `python scripts/motion_check.py out/heroes/lion_brawler/frames/<state> --once` không có cờ "frozen" ngoài frame giữ cố ý.
+- Checklist recipes §9 đạt cho từng state; ghi kết quả từng mục vào Kết quả.
+- Mọi dòng manifest mới ở trạng thái ⏳ (chờ user duyệt), không tự đánh ✅.
+
+## Ghi chú của Fable
+(Fable điền khi mở khoá: file animation mẫu, tên xương cần dùng, giới hạn góc an toàn của từng khớp)
+
+## Kết quả
+(model điền)
