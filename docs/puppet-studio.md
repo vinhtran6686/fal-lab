@@ -60,6 +60,8 @@ Công thức trong core (`Rig._pulls` và `Rig.render`): độ dịch `d` = ph�
 ### 3.4 `rig_studio_v01.json`
 `rig.json` + hai bone đích IK `near_foot_target`, `far_foot_target` (con của `root`, tâm ở đích IK, `ik[].target.bone` trỏ tới chúng) để pose dời được từng bàn chân bằng `tx/ty`. Khi ở dáng gốc và mọi pose cũ, hình giống hệt `rig.json` (đã kiểm). Thêm `limit` cho 16 bone và hai link `near_chest`, `far_chest` (điểm bám ngực mặc định ở (500,430) và (650,430), bán kính 140). Lưu rig luôn tạo bản sao lưu ở `source/rig/backup/`. Giới hạn tay đặt rộng có chủ đích: đã đo (quét 24 đích quanh vai tay sau) thì khuỷu tối đa 20° và cánh tay tối đa 80° làm tay không với được ra sau/xuống dưới (trượt tới 191 px), còn 80°/140° thì trượt tối đa 22 px. Muốn chặt hơn thì chỉnh ở tab 2.
 
+**Cẳng chân gần dãn theo bàn chân (2026-11-12)**: `ik[near_thigh]` có `"stretch": "lower"` và `"max_bend": 55`; layer `near_leg` có `skin.stretch: true`. Đùi giữ nguyên chiều dài, cẳng chân (`near_shin`) dài ra khi đích xa quá tầm và *co lại* (tối thiểu `min_scale` = 0,5) thay vì gập gối quá `max_bend` độ, nên bàn chân luôn đứng đúng đích và ảnh cẳng chân nối liền tới cổ chân. `skin.stretch` làm lớp da kéo dãn ảnh dọc xương theo hệ số dãn của bone bên dưới khớp (core `_skin_inverse`); không bật thì skin chỉ xoay như trước, nên rig và animation cũ không đổi (đã kiểm F11). Chân xa chưa bật; muốn bật thì thêm hai khóa tương tự cho `far_thigh` / `far_leg`. Còn lại: khi nhấc chân rất cao, mép cắt của cẳng chân xoay theo gối nên có thể lộ một khấc nhỏ ở cổ chân.
+
 ## 4. Quy tắc cho AI khi nối bone hoặc sửa rig (đọc trước khi đụng `rig.json`)
 
 1. **Đừng đoán khớp cha, giới hạn hay điểm bám.** Mở Studio, cấu hình ở tab 2 và 3 rồi Lưu rig; dùng file đã lưu làm nguồn. Mọi chỉnh sửa tay vào JSON phải qua `validate_spec` (`server.py`): cha tồn tại và không vòng lặp, `limit.rot` có min < max, link có `arm` tồn tại, `mode` ∈ {stretch, carry}, anchor có `part` tồn tại, `pt` hai số, `radius` > 0, `gain` ∈ [0,3].
@@ -70,7 +72,18 @@ Công thức trong core (`Rig._pulls` và `Rig.render`): độ dịch `d` = ph�
 
 ## 5. Kiểm thử và giới hạn
 
-- `python scripts/studio/test_studio.py`: 47 test (A–E: nạp rig, tương tác, sửa rig, thư viện pose, bend; F: giới hạn, link, hướng kéo, ngoài bán kính không đổi, `carry` không méo, ảnh layer, **hồi quy**: mọi frame của `anims/*.json` trên `rig.json` giống hệt core trước thay đổi `links` (git `3276f20`)). `python scripts/puppet_test.py`: 18/18.
+- `python scripts/studio/test_studio.py`: 52 test (A–E: nạp rig, tương tác, sửa rig, thư viện pose, bend; F: giới hạn, link, hướng kéo, ngoài bán kính không đổi, `carry` không méo, ảnh layer, G: cẳng chân dãn theo bàn chân; **hồi quy**: mọi frame của `anims/*.json` trên `rig.json` giống hệt core trước thay đổi `links` (git `3276f20`)). `python scripts/puppet_test.py`: 18/18.
 - Giới hạn: polygon, vùng uốn và điểm bám trên màn hình vẽ theo biến đổi cứng của bone (đúng ở dáng gốc, xấp xỉ chỗ da đang uốn). Giới hạn khớp chỉ do Studio áp dụng. `stretch` kéo vai qua `tx/ty`, nên layer cánh tay (dính vào bone vai) cũng trượt theo; chỗ nối vai–ngực đã đo ở kéo 30/60/90 px cả hai vai (test F12) và xem bằng mắt, nhưng vai trượt 87 px thì layer cánh tay hở khỏi thân rõ, đặt `max_pull` nhỏ hơn nếu thấy xấu. Điểm bám thêm sát tâm vai làm khe lớn hơn, nên mặc định chỉ đặt ở ngực. Phần dãn xương tay bằng `sy` (khi không có link) làm cả cẳng tay và bàn tay dãn theo.
 - Hiệu năng: kéo dùng bản nháp 0,3× với ít vòng giải skin hơn (~110 ms); bản chuẩn 0,5× ~0,5 s chạy 0,45 s sau khi thả chuột.
 - Chưa có: giới hạn cho `tx/ty/sx/sy`, nhiều layer bị dãn cho một link (hiện `part` đặt tay hoặc mặc định `torso`), IK cho tay, nối lại layer vào bone khác, timeline.
+
+## 6. Xoay và giới hạn xoay (2026-11-12)
+
+- **Xoay bằng chuột**: chọn khớp, bấm `T` (hoặc `Ctrl+T`), di chuột để xoay quanh khớp, bấm trái hoặc `Enter` để giữ, `Esc` hoặc chuột phải để hủy, `Shift` = tròn số. Trình duyệt thường giữ `Ctrl+T` để mở tab mới (trang không chặn được), nên `T` đơn luôn dùng được.
+- **Chế độ Xoay (E)**: kéo chuột ở bất kỳ đâu xoay khớp đang chọn, không cần bấm trúng khớp.
+- **Panel phải**: hàng "Xoay" có ô nhập góc và nút -15/-5/-1/+1/+5/+15, khỏi kéo thanh trượt.
+- **Giới hạn xoay**: hai chấm cam ở đầu cung cam kéo được (làm tròn 1°, `Shift` 5°); ghi vào `bone.limit.rot` của rig, cần Lưu rig. Vẫn có ô số ở tab 2.
+- Vùng vẽ của Studio rộng hơn (`RENDER_REGION` trong app.js) để cánh tay vung xa không bị cắt ở mép ảnh.
+- Bàn chân gần: vùng cắt phủ chồng lên chỗ khuyết ở cổ chân nên cẳng chân gập không còn lộ vết nứt.
+- Chế độ "nhóm đang chọn" (`focusSet` trong app.js): chọn khớp thì chỉ hiện và chỉ bấm được khớp cha, chính nó và con của nó.
+- Mối nối tròn `parts[].discs` (core `_load_parts`, UI tab 4): xem `docs/puppet-studio-ai-guide.md` §2.6.
