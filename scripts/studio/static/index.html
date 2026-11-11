@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lion Rig &amp; Pose Studio</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <div id="toolbar">
+    <b class="brand">Lion Rig &amp; Pose Studio</b>
+    <div class="grp" id="tools">
+      <button data-tool="chain" title="Grab a limb and pull it: the arm and the body follow (C)">Grab <kbd>C</kbd></button>
+      <button data-tool="select" title="Only select bones (Q)">Select <kbd>Q</kbd></button>
+      <button data-tool="rotate" title="Turn the selected bone around its joint (E)">Rotate <kbd>E</kbd></button>
+      <button data-tool="move" title="Slide the selected bone (W)">Move <kbd>W</kbd></button>
+      <button data-tool="pivot" title="Drag pivots, IK targets and sockets: edits the RIG (P)">Pivot <kbd>P</kbd></button>
+    </div>
+    <div class="grp">
+      <button id="btnUndo" title="Undo (Ctrl+Z)">Undo</button>
+      <button id="btnRedo" title="Redo (Ctrl+Shift+Z)">Redo</button>
+    </div>
+    <div class="grp">
+      <button id="btnSave" title="Save rig over the open file, with a backup (Ctrl+S)">Save rig</button>
+      <button id="btnSaveNew" title="Write the rig as rig_studio_vNN.json, leaving the original untouched">Save as new version</button>
+      <button id="btnReload" title="Reload the rig from disk, dropping unsaved rig edits">Reload rig</button>
+      <select id="rigFile" title="Open another rig file"></select>
+    </div>
+    <div class="grp">
+      <label title="Show the rest pose instead of the working pose"><input type="checkbox" id="optRest"> Rest pose</label>
+      <label title="Resolution of the final render. Drags always use a faster draft."> Quality
+        <select id="optQuality"><option value="0.4">Fast 0.4×</option><option value="0.5" selected>Normal 0.5×</option><option value="0.8">Sharp 0.8×</option><option value="1">Full 1×</option></select></label>
+    </div>
+    <div class="grp">
+      <button id="btnZoomOut" title="Zoom out">−</button><button id="btnZoomIn" title="Zoom in">+</button>
+      <button id="btnFit" title="Fit character (F)">Fit <kbd>F</kbd></button>
+      <button id="btnReset" title="Reset view">Reset view</button>
+      <button id="btnActual1" title="Show the character at game size: H = 60 px @1x">Actual 1×</button>
+      <button id="btnActual2" title="Game size @2x: H = 120 px">Actual 2×</button>
+    </div>
+    <div class="grp">
+      <select id="optBg" title="Background"><option value="dark">BG dark</option><option value="light">BG light</option><option value="check">BG checker</option><option value="green">BG green</option></select>
+      <label><input type="checkbox" id="optGrid" checked> Grid</label>
+      <label><input type="checkbox" id="optChar" checked> Character</label>
+    </div>
+    <div class="grp"><button id="btnHelp" title="How to use (H)">? Guide <kbd>H</kbd></button></div>
+    <div id="statusbar"><span id="dirtyRig"></span><span id="dirtyPose"></span><span id="loading"></span><span id="renderInfo"></span></div>
+  </div>
+
+  <div id="main">
+    <div id="left" class="panel">
+      <section><h3>Hierarchy <small>17 bones</small></h3><div id="tree" class="list"></div></section>
+      <section><h3>Layers <small>click name = edit polygon</small></h3><div id="layers" class="list"></div></section>
+      <section><h3>IK</h3><div id="iklist"></div></section>
+      <section><h3>Sockets</h3><div id="sockets" class="list"></div></section>
+    </div>
+    <div class="split v" id="splitL"></div>
+    <div id="center">
+      <div id="vpbar">
+        <b>Debug</b>
+        <label><input type="checkbox" data-vis="skeleton" checked>Skeleton</label>
+        <label><input type="checkbox" data-vis="labels" checked>Labels</label>
+        <label><input type="checkbox" data-vis="pivots" checked>Pivots</label>
+        <label><input type="checkbox" data-vis="bounds">Layer bounds</label>
+        <label><input type="checkbox" data-vis="polys">Polygons</label>
+        <label><input type="checkbox" data-vis="skin">Skin regions</label>
+        <label><input type="checkbox" data-vis="rigid">Rigid layers</label>
+        <label><input type="checkbox" data-vis="sockets" checked>Sockets</label>
+        <label><input type="checkbox" data-vis="ik" checked>IK targets</label>
+        <label><input type="checkbox" data-vis="influence" checked>Selected influence</label>
+        <span class="sp"></span>
+        <label title="Ghost: the saved rig (before your edits) under the current render"><input type="checkbox" id="optGhostRig">Saved rig ghost</label>
+      </div>
+      <div id="stage"><canvas id="vp"></canvas>
+        <div id="gamebox"><div class="cap"><span id="gameCap">Game size</span></div><canvas id="game"></canvas></div>
+        <div id="hint"></div><div id="toast"></div>
+      </div>
+    </div>
+    <div class="split v" id="splitR"></div>
+    <div id="right" class="panel">
+      <section id="secQuick"><h3>Tạo dáng nhanh</h3><div id="quickBody"></div></section>
+      <section id="secBone"><h3>Bone <small id="boneName">none</small></h3><div id="boneBody"></div></section>
+      <section id="secRig"><h3>Rig <small>stored / derived</small></h3><div id="rigBody"></div></section>
+      <section id="secJoint"><h3>Joint deformation <small>skin blend</small></h3><div id="jointBody"></div></section>
+      <section id="secPoly"><h3>Polygon <small id="polyName">no layer</small></h3><div id="polyBody"></div></section>
+      <section id="secChain"><h3>Chain drag <small>body follow / stretch</small></h3><div id="chainBody"></div></section>
+      <section id="secBend"><h3>Joint bend tester</h3><div id="bendBody"></div></section>
+    </div>
+  </div>
+
+  <div class="split h" id="splitB"></div>
+  <div id="library">
+    <div id="libbar">
+      <b>Pose Library</b>
+      <button id="pNew" title="Save the working pose as a new pose">+ Save</button>
+      <button id="pLoad">Load</button>
+      <button id="pUpdate" title="Overwrite the selected pose with the working pose">Update</button>
+      <button id="pDup">Duplicate</button>
+      <button id="pRename">Rename</button>
+      <button id="pDelete" title="Delete (Del)">Delete</button>
+      <button id="pExport">Export JSON</button>
+      <button id="pImport">Import JSON</button>
+      <button id="pResetAll" title="Reset the whole working pose">Reset pose</button>
+      <input type="file" id="pFile" accept=".json" hidden>
+      <span class="sp"></span>
+      <b>Compare</b>
+      <select id="cmpA"></select><button id="cmpFlip" title="Flip the view between A and B (view only)">A ⇄ B</button><select id="cmpB"></select>
+      <label><input type="checkbox" id="cmpOnion">Onion</label>
+      <button id="cmpOff">Exit compare</button>
+    </div>
+    <div id="cards"></div>
+  </div>
+</div>
+<div id="menu" hidden></div>
+<div id="modal" hidden><div class="box"><h3 id="mTitle"></h3><div id="mBody"></div><div class="row"><button id="mOk" class="primary">OK</button><button id="mCancel">Cancel</button></div></div></div>
+<script src="app.js"></script>
+</body>
+</html>
