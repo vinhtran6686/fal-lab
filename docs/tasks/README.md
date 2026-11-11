@@ -18,11 +18,11 @@ tự kiểm theo mục "Nghiệm thu", rồi **sửa dòng `Trạng thái` trong
 
 | Mã | File | Model | Việc | Phụ thuộc | Trạng thái |
 |---|---|---|---|---|---|
-| T1 | `task-1-haiku-regression-test.md` | Haiku | test hồi quy bằng hash frame | không | TODO |
-| T2 | `task-2-haiku-lion-slash-params.md` | Haiku | bộ tham số vệt vuốt riêng cho lion + file requirements | không | TODO |
-| T3 | `task-3-sonnet-rig-tuner-v2.md` | Sonnet | Rig Tuner v2: tạo/xoá xương, xem thử xoay khớp | không | TODO |
-| T4 | `task-4-sonnet-prep-align.md` | Sonnet | lệnh `prep` và `align` cho bước chuẩn bị tài nguyên | không | TODO |
-| T5 | `task-5-sonnet-lion-animations.md` | Sonnet | viết hurt, death, roar cho lion theo công thức | F2 (đã xong) | TODO |
+| T1 | `task-1-haiku-regression-test.md` | Haiku | test hồi quy bằng hash frame | không | DONE 2026-11-11 |
+| T2 | `task-2-haiku-lion-slash-params.md` | Haiku | bộ tham số vệt vuốt riêng cho lion + file requirements | không | DONE 2026-11-11 |
+| T3 | `task-3-sonnet-rig-tuner-v2.md` | Sonnet | Rig Tuner v2: tạo/xoá xương, xem thử xoay khớp | không | DONE 2026-11-11 (chờ duyệt) |
+| T4 | `task-4-sonnet-prep-align.md` | Sonnet | lệnh `prep` và `align` cho bước chuẩn bị tài nguyên | không | DONE 2026-11-11 (lệnh 3 nghiệm thu FAIL scale 0,918, xem Kết quả) |
+| T5 | `task-5-sonnet-lion-animations.md` | Sonnet | viết hurt, death, roar cho lion theo công thức | F2 (đã xong) | DONE 2026-11-11 (chờ user duyệt) |
 | F1 | (Fable, trong session chính) | Fable | P02: gói tài nguyên lion (lớp thân, chân, tay, đuôi) | không | DONE 2026-11-11 (chờ user duyệt) |
 | F2 | (Fable) | Fable | P03: engine rig v2 (IK chân ghim đất, khớp háng, thứ tự vẽ theo frame) + rig v2 cho lion | F1 | DONE 2026-11-11 (chờ user duyệt) |
 | F3 | (Fable) | Fable | P05: bộ profile + run/walk bằng rig | F2 | chưa làm |

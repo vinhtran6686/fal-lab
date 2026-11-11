@@ -148,3 +148,10 @@ phần khuất là hình vẽ thật, không còn vá màu (trừ dưới đầu
 Engine thêm: IK có `hint` (hướng gập của khớp) và `end_bone` (bàn chân nằm trên đích, giữ góc riêng), xương con cập nhật sau IK, kênh `<part>.z` đổi thứ tự vẽ theo frame.
 Hạ `hips.ty` thì gối tự gập, chân không trượt. `v2_test_side` (30 hình) là bài thử khớp: ngồi xổm, xoay eo, gập khuỷu, đấm.
 Các state `idle`, `levelup`, `attack`, `skill_slam` của lion đã chuyển phần rig sang v2 (`"version": "p02"`). Tồn đọng: `docs/puppet-kit-next.md` §8.
+
+## Chuẩn bị tài nguyên (`scripts/puppet_prep.py`)
+
+- `python scripts/puppet_prep.py list <asset> [--write-prompts] [--layers far_arm,far_leg,tail]`: bảng tài nguyên của `puppet-kit-next.md` 2.1 (có/thiếu, bản `_vNN` mới nhất).
+  `--write-prompts` ghi prompt đã điền đủ (`{design}`, STYLE, BG đọc từ `format.md`) cho mỗi mục thiếu vào `source/design/prompts/<tên>_p01.txt`, không ghi đè, và in lệnh `gen_image.py` (không chạy).
+- `python scripts/puppet_prep.py align <asset> <ảnh> [--colour r,g,b] [--kind plate|pose|profile] [--overlay out.png]`: so ảnh mới với master (lệch bbox, hàng chân, tỉ lệ cỡ theo màu), in `PASS`/`FAIL`, mã thoát 0/1.
+  `plate`: hàng chân ≤ 8 px, cạnh trên ≤ 12 px, scale 0,97-1,03; `pose`/`profile`: chỉ scale 0,95-1,05. Plate đo trên master có thể lệch scale vì bờm trên plate bị vẽ lại (xem `--ref-source plate` ở mục Lion Brawler).

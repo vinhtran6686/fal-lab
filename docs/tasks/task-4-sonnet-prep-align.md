@@ -1,6 +1,6 @@
 # T4 (Sonnet): lệnh `prep` và `align` cho bước chuẩn bị tài nguyên
 
-Trạng thái: TODO
+Trạng thái: DONE (2026-11-11, Sonnet; chưa commit)
 
 ## Mục tiêu
 Hai lệnh hỗ trợ bước chuẩn bị tài nguyên của một nhân vật (`docs/puppet-kit-next.md` §2): biết còn thiếu ảnh gì kèm prompt điền sẵn, và kiểm một ảnh mới có khớp master không.
@@ -52,4 +52,8 @@ python scripts/puppet_prep.py align out/heroes/lion_brawler out/heroes/lion_braw
 - Không gọi mạng, không sửa file Python khác.
 
 ## Kết quả
-(model điền)
+- Tạo `scripts/puppet_prep.py` (`list`, `align`), thêm mục "Chuẩn bị tài nguyên" vào `docs/puppet-kit.md`. Không gọi mạng, không sửa Python khác.
+- Lệnh 1, 2: đúng thực tế (master, plate, layer_far_arm, layer_tail "có"; còn lại "thiếu"); prompt sinh ra không còn `{`/`[`, có `{design}` nguyên văn; đã xoá các file prompt vừa sinh.
+- Lệnh 4: FAIL đúng dự kiến, scale 0,800.
+- **Lệnh 3 FAIL, không PASS như đặc tả**: scale 0,918 (diện tích vùng bờm 62242 trên plate so với 73807 trên master), hàng chân +1, cạnh trên +1. Hàng chân và cạnh trên đạt; chỉ scale ngoài 0,97-1,03.
+  Plate thật sự có bờm nhỏ hơn master (khớp ghi chú ở `puppet-kit.md`), nên không nới ngưỡng. Cần Fable quyết: nới ngưỡng plate, hoặc đo scale plate trên vùng khác.
