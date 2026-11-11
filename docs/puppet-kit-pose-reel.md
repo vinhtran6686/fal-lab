@@ -46,6 +46,7 @@ Pose reel = vài clip ngắn, mỗi clip **một bài vận động chuẩn**, q
 | R4 | walk: đi tại chỗ (tuỳ chọn, cho class có walk) | 4 s | master → (không ghim) | vòng đi | 0,06 |
 
 Bắt buộc cho hero: R1a-R3b, **16 s ≈ 0,24 USD**, cộng 1 ảnh `view_front` (~0,014 USD) nếu nhân vật chưa có (enemy và boss đã có sẵn).
+**Đây là thay đổi định dạng**: `format.md` §3 và `classes/hero.md` §4 nói hero không có góc chính diện; pose reel cần một `view_front` làm ảnh ghim (chỉ là tài nguyên, game không hiển thị). Nếu mẫu được duyệt thì sửa hai file đó.
 
 ## 4. Prompt
 
@@ -100,7 +101,7 @@ Chọn frame cho vòng chạy: tìm chu kỳ bằng độ nét (frame nét nhấ
 | Cỡ thân ổn định | `reel.json` metrics `body_h` ở các frame đứng thẳng | lệch ≤ 8% so với frame đầu |
 | Chân ghim (clip chân ghim) | `feet_y` | lệch ≤ 2% cạnh frame |
 | Không chạm mép | `edge` | không frame nào `true` |
-| Độ nét | Laplacian trung bình trong thân, so với frame đầu | ≥ 0,75 mới dùng làm pose giữ; 0,6-0,75 chỉ dùng làm hình trung gian |
+| Độ nét | Laplacian trung bình trong thân, so với frame đầu | ≥ 0,75 mới dùng làm pose **giữ** (một frame hiện lâu hơn một hình); 0,6-0,75 chỉ dùng làm hình trung gian. Vòng chạy/đi: mọi hình đều là hình trung gian (mỗi hình hiện 67 ms, nhoè đọc như chuyển động), nên ngưỡng là ≥ 0,6 |
 | Không hiệu ứng, vệt, bóng | xem contact | có → bỏ frame |
 | Khớp ảnh ghim | frame cuối chồng lên ảnh ghim | cùng tư thế, lệch dưới vài px |
 
@@ -116,7 +117,7 @@ Chọn frame cho vòng chạy: tìm chu kỳ bằng độ nét (frame nét nhấ
 | squat | **đạt**: ngồi xổm sâu, nắm tay lên vai; đoạn hạ và đứng lên chỉ có 2-3 frame, nhoè | chân không lệch; nét 0,68-0,70 ở frame 12-13 và 34, còn lại ≥ 0,9 |
 | press | **đạt**: hai tay duỗi thẳng qua đầu, không bị cắt | thân cao nhất 389 px, không chạm mép; nét 0,60-0,68 ở frame 9, 15-16, 34 |
 
-Animation ghép từ reel (0 USD): `run_side` (8 hình, thay bản 4 ảnh tĩnh có tay "tật"; `motion_check --loop` không cờ, nhún 12 px),
+Animation ghép từ reel (0 USD): `run_side` (8 hình, độ nét 0,67-1,03, đạt ngưỡng vòng chạy ≥ 0,6; thay bản 4 ảnh tĩnh có tay "tật"; `motion_check --loop` không cờ, nhún 12 px),
 `turn_left_side` (25 hình: rig → chính diện → quay trái), `reel_test_side` (37 hình: squat rồi press). Frame reel đặt cạnh frame rig trùng cỡ và vị trí chân mà không phải căn tay.
 
 Trả lời các câu hỏi của v1:
