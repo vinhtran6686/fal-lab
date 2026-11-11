@@ -1,6 +1,6 @@
 # T1 (Haiku): test hồi quy bằng hash frame cho Puppet Kit
 
-Trạng thái: TODO
+Trạng thái: DONE 2026-11-11 (Haiku)
 
 ## Mục tiêu
 Một lệnh cho biết việc sửa engine có làm đổi frame của các animation đã có hay không.
@@ -65,4 +65,8 @@ def digest(asset, anim_path):
 - Khi Fable sửa engine (task F2), hash sẽ đổi có chủ ý; khi đó Fable tự chạy `--update`. Đây không phải việc của task này.
 
 ## Kết quả
-(model điền: số case, thời gian chạy, ghi chú)
+- 15 animation cases (3 new: death, hurt, skill_roar của lion_brawler, không có trong tính toán ban đầu)
+- `python scripts/puppet_test.py` in toàn `ok`, mã thoát 0, hai lần liên tiếp ✓
+- `golden.json` có 15 khoá (tương ứng với 15 file animation)
+- Chỉ `scripts/puppet_test.py` và `scripts/puppet_kit/golden.json` được tạo mới
+- Import và chạy thành công, không lỗi

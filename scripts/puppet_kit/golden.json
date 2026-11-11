@@ -1,0 +1,62 @@
+{
+ "out/heroes/frost_oracle/source/rig/anims/idle.json": {
+  "sha256": "f74dbfa094fbfe180d775da93ada40ecc4d929a9b1f88ad421b3e75b2138203d",
+  "frames": 24
+ },
+ "out/heroes/frost_oracle/source/rig/anims/levelup.json": {
+  "sha256": "1ca41d9208cc7390d12be9d3d0a8097762a3527e3fb0f7fc998c6a3891634f48",
+  "frames": 24
+ },
+ "out/heroes/frost_oracle/source/rig/anims/shoot.json": {
+  "sha256": "ef597c113913b70c088ac5ff1a9de5068b2b112e585ef3fa6682741402a55974",
+  "frames": 16
+ },
+ "out/heroes/holy_commander/source/rig/anims/attack_diag_puppet.json": {
+  "sha256": "45b8431b5bb5e466fbbf401d603e18d63a2093006d27eab964e08cc8784edaf5",
+  "frames": 16
+ },
+ "out/heroes/holy_commander/source/rig/anims/idle.json": {
+  "sha256": "248da184e391ea114326623ee10f39d32d006d702873f9ed6d19dc876fc1d83c",
+  "frames": 24
+ },
+ "out/heroes/holy_commander/source/rig/anims/levelup.json": {
+  "sha256": "9153867ed4222864269883c2627ceb17e946c9a45a7a6857fbb85aac778e4455",
+  "frames": 26
+ },
+ "out/heroes/lion_brawler/source/rig/anims/attack.json": {
+  "sha256": "ae878aa88de360c32220f3b70542586f2597df739755d1d0fbb5b5d9bd4d3cc4",
+  "frames": 16
+ },
+ "out/heroes/lion_brawler/source/rig/anims/death.json": {
+  "sha256": "a661deeaa9a55863d79efb9e0349ef2bde3d12ff2301bd557a92e23108ad272e",
+  "frames": 12
+ },
+ "out/heroes/lion_brawler/source/rig/anims/hurt.json": {
+  "sha256": "c2cf604b90262baaeef51c4781b0b150640b3635763f9a49ec38ee8f423a200b",
+  "frames": 6
+ },
+ "out/heroes/lion_brawler/source/rig/anims/idle.json": {
+  "sha256": "cf77795563d74bad4d5c984df926beb0ef342d1060663884bf8e52862ab187b5",
+  "frames": 24
+ },
+ "out/heroes/lion_brawler/source/rig/anims/levelup.json": {
+  "sha256": "ae6309b9c09e72b039e5136897813bda6fb76ef5282f56a74a1ae00c78429bee",
+  "frames": 21
+ },
+ "out/heroes/lion_brawler/source/rig/anims/run.json": {
+  "sha256": "3ce612521ce044bf668ff787697bf112ac34008f19a220792c1dec6b641ad925",
+  "frames": 8
+ },
+ "out/heroes/lion_brawler/source/rig/anims/skill_roar.json": {
+  "sha256": "9c00e99dec2bd77eead9eea7612df89412c7c0a3e554dfcf0d5a195540cdf95a",
+  "frames": 22
+ },
+ "out/heroes/lion_brawler/source/rig/anims/skill_slam.json": {
+  "sha256": "ed189d7d4e0362f1f6d970fb848b6391cd8ea909130ff1566a8406d8e900e4f3",
+  "frames": 20
+ },
+ "out/heroes/lion_brawler/source/rig/anims/v2_test.json": {
+  "sha256": "4d41540df33820b197248667863d79457fbbd793c64b74fd3c79caf3b7a49056",
+  "frames": 30
+ }
+}
