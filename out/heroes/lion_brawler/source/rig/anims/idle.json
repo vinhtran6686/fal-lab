@@ -1,0 +1,79 @@
+{
+ "note": "Idle loop (rig): breathing, both arms sway from the shoulder, the forearms lag, the head bobs, the tail swishes.",
+ "version": "p01",
+ "fps": 15,
+ "loop": true,
+ "rig": "source/rig/rig.json",
+ "frames": 24,
+ "tracks": {
+  "body.sy": {
+   "base": 1.0,
+   "osc": {
+    "amp": -0.016,
+    "period": 24
+   }
+  },
+  "body.sx": {
+   "base": 1.0,
+   "osc": {
+    "amp": 0.008,
+    "period": 24
+   }
+  },
+  "head.rot": {
+   "osc": {
+    "amp": 1.5,
+    "period": 24,
+    "phase": -0.12
+   }
+  },
+  "head.ty": {
+   "osc": {
+    "amp": 3.5,
+    "period": 24,
+    "phase": -0.08
+   }
+  },
+  "near_upper.rot": {
+   "osc": {
+    "amp": 2.2,
+    "period": 24,
+    "phase": -0.1
+   }
+  },
+  "near_fore.rot": {
+   "osc": {
+    "amp": 2.5,
+    "period": 24,
+    "phase": -0.25
+   }
+  },
+  "far_upper.rot": {
+   "osc": {
+    "amp": -2.0,
+    "period": 24,
+    "phase": -0.1
+   }
+  },
+  "far_fore.rot": {
+   "osc": {
+    "amp": -2.2,
+    "period": 24,
+    "phase": -0.25
+   }
+  },
+  "tail.rot": {
+   "osc": [
+    {
+     "amp": 6,
+     "period": 24,
+     "phase": 0.2
+    },
+    {
+     "amp": 2,
+     "period": 12
+    }
+   ]
+  }
+ }
+}

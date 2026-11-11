@@ -211,3 +211,11 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-11 01:37:50,out/heroes/frost_oracle/source/design/icon_v01.png,gpt-image-2,low,1024x1024,False,19.5,0.0131,True
 2026-11-11 01:37:57,out/heroes/frost_oracle/source/rig/plate_v01.png,gpt-image-2,low,1024x1024,False,26.4,0.0114,True
 2026-11-11 01:40:19,out/heroes/frost_oracle/source/design/icon_v02.png,gpt-image-2,low,1024x1024,False,17.6,0.0123,True
+2026-11-11 01:46:42,out/heroes/lion_brawler/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,19.7,0.0142,True
+2026-11-11 01:47:28,out/heroes/lion_brawler/source/design/pose_skill_slam_p2_v01.png,gpt-image-2,low,1024x1024,False,14.2,0.0147,True
+2026-11-11 01:47:29,out/heroes/lion_brawler/source/design/pose_skill_slam_p1_v01.png,gpt-image-2,low,1024x1024,False,16.0,0.0146,True
+2026-11-11 01:47:29,out/heroes/lion_brawler/source/rig/plate_v01.png,gpt-image-2,low,1024x1024,False,16.0,0.0114,True
+2026-11-11 01:47:31,out/heroes/lion_brawler/source/design/pose_claw_p2_v01.png,gpt-image-2,low,1024x1024,False,17.0,0.0149,True
+2026-11-11 01:47:31,out/heroes/lion_brawler/source/design/pose_claw_p1_v01.png,gpt-image-2,low,1024x1024,False,17.6,0.0148,True
+2026-11-11 01:47:32,out/heroes/lion_brawler/source/design/pose_levelup_v01.png,gpt-image-2,low,1024x1024,False,18.6,0.0146,True
+2026-11-11 01:51:33,out/heroes/lion_brawler/source/design/icon_v01.png,gpt-image-2,low,1024x1024,False,18.5,0.0123,True

@@ -1,0 +1,322 @@
+{
+ "note": "Ground slam skill (tier 2): rig crouch -> pose slam_p1 (stretch up, fists overhead) -> cut -> pose slam_p2 (impact, hit, shake) -> rig recover.",
+ "version": "p01",
+ "fps": 15,
+ "loop": false,
+ "hit_frame": 9,
+ "transitions": [
+  {
+   "after_shot": 1,
+   "dir": "cw",
+   "ease": "linear"
+  }
+ ],
+ "shots": [
+  {
+   "name": "ready",
+   "rig": "source/rig/rig.json",
+   "frames": 3,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      1.0
+     ],
+     [
+      2,
+      0.9,
+      "out"
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      1.0
+     ],
+     [
+      2,
+      1.05,
+      "out"
+     ]
+    ],
+    "head.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      8,
+      "out"
+     ]
+    ],
+    "near_upper.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      12
+     ]
+    ],
+    "far_upper.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -10
+     ]
+    ],
+    "tail.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -14
+     ]
+    ]
+   }
+  },
+  {
+   "name": "p1",
+   "rig": "source/rig/poses/slam_p1.json",
+   "frames": 5,
+   "tracks": {
+    "root.sy": [
+     [
+      0,
+      0.92
+     ],
+     [
+      2,
+      1.07,
+      "out3"
+     ],
+     [
+      3,
+      1.08
+     ],
+     [
+      4,
+      1.03,
+      "in"
+     ]
+    ],
+    "root.sx": [
+     [
+      0,
+      1.05
+     ],
+     [
+      2,
+      0.96,
+      "out3"
+     ],
+     [
+      4,
+      0.99,
+      "in"
+     ]
+    ],
+    "root.ty": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -26,
+      "out3"
+     ],
+     [
+      3,
+      -28
+     ],
+     [
+      4,
+      -10,
+      "in"
+     ]
+    ],
+    "root.shx": [
+     [
+      0,
+      0
+     ],
+     [
+      3,
+      -0.04,
+      "out"
+     ],
+     [
+      4,
+      0.05,
+      "in"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "p2",
+   "rig": "source/rig/poses/slam_p2.json",
+   "frames": 8,
+   "tracks": {
+    "root.sy": [
+     [
+      0,
+      0.86
+     ],
+     [
+      2,
+      1.04,
+      "out"
+     ],
+     [
+      4,
+      1.0,
+      "inout"
+     ]
+    ],
+    "root.sx": [
+     [
+      0,
+      1.1
+     ],
+     [
+      2,
+      0.98,
+      "out"
+     ],
+     [
+      4,
+      1.0,
+      "inout"
+     ]
+    ],
+    "root.tx": {
+     "keys": [
+      [
+       0,
+       0
+      ]
+     ],
+     "osc": {
+      "amp": 0,
+      "period": 2
+     }
+    },
+    "root.ty": [
+     [
+      0,
+      6
+     ],
+     [
+      1,
+      -3
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      -1
+     ],
+     [
+      4,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "recover",
+   "rig": "source/rig/rig.json",
+   "frames": 4,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      0.94
+     ],
+     [
+      3,
+      1.0,
+      "out"
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      1.03
+     ],
+     [
+      3,
+      1.0,
+      "out"
+     ]
+    ],
+    "head.rot": [
+     [
+      0,
+      6
+     ],
+     [
+      3,
+      0,
+      "out"
+     ]
+    ],
+    "near_upper.rot": [
+     [
+      0,
+      -16
+     ],
+     [
+      3,
+      0,
+      "out"
+     ]
+    ],
+    "near_fore.rot": [
+     [
+      0,
+      -20
+     ],
+     [
+      3,
+      0,
+      "out"
+     ]
+    ],
+    "far_upper.rot": [
+     [
+      0,
+      12
+     ],
+     [
+      3,
+      0,
+      "out"
+     ]
+    ],
+    "tail.rot": [
+     [
+      0,
+      14
+     ],
+     [
+      3,
+      0,
+      "out"
+     ]
+    ]
+   }
+  }
+ ]
+}

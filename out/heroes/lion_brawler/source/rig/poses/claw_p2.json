@@ -1,0 +1,48 @@
+{
+ "id": "lion_brawler",
+ "note": "Pose rig: the whole still pose_claw_p2_v01.png as one part on one bone. unit = master unit x 0.98 (geometric mean of the silhouette-area and mane-area ratios to the master); ground = midpoint of the feet, read on the still; sockets = near elbow and claw tips, read on the still.",
+ "sources": {
+  "pose": "../../design/pose_claw_p2_v01.png"
+ },
+ "ground": [
+  390,
+  842
+ ],
+ "unit": 907,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    390,
+    842
+   ]
+  }
+ ],
+ "sockets": {
+  "weapon_root": {
+   "bone": "root",
+   "pt": [
+    640,
+    560
+   ]
+  },
+  "weapon_tip": {
+   "bone": "root",
+   "pt": [
+    910,
+    876
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "pose",
+   "source": "pose",
+   "bone": "root",
+   "select": {
+    "rest": true
+   }
+  }
+ ]
+}

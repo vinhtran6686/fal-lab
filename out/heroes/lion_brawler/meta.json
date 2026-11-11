@@ -1,0 +1,188 @@
+{
+  "id": "lion_brawler",
+  "kind": "hero",
+  "cell": [
+    176,
+    140
+  ],
+  "scale_2x": 2,
+  "pivot": [
+    0.5,
+    0.88
+  ],
+  "body_height_2x": 120,
+  "shadow": {
+    "w_2x": 72,
+    "h_2x": 22,
+    "color": "#000000",
+    "alpha": 0.35
+  },
+  "states": {
+    "idle_side": {
+      "version": "p01",
+      "dir": "frames/idle_side",
+      "source": "source/rig/anims/idle.json",
+      "frames": 24,
+      "fps": 15,
+      "loop": true,
+      "files": "frames/idle_side/frames/@1x/hero_lion_brawler_idle_side_NN.png",
+      "sheet": "frames/idle_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rig",
+            24
+          ]
+        ]
+      }
+    },
+    "levelup_side": {
+      "version": "p01",
+      "dir": "frames/levelup_side",
+      "source": "source/rig/anims/levelup.json",
+      "frames": 21,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/levelup_side/frames/@1x/hero_lion_brawler_levelup_side_NN.png",
+      "sheet": "frames/levelup_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/poses/levelup.json",
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "ready",
+            3
+          ],
+          [
+            "roar",
+            14
+          ],
+          [
+            "recover",
+            4
+          ]
+        ]
+      },
+      "hit_frame": 4
+    },
+    "attack_side": {
+      "version": "p01",
+      "dir": "frames/attack_side",
+      "source": "source/rig/anims/attack.json",
+      "frames": 16,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/attack_side/frames/@1x/hero_lion_brawler_attack_side_NN.png",
+      "sheet": "frames/attack_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/poses/claw_p1.json",
+          "source/rig/poses/claw_p2.json",
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "ready",
+            2
+          ],
+          [
+            "p1",
+            5
+          ],
+          [
+            "p2",
+            6
+          ],
+          [
+            "recover",
+            3
+          ]
+        ]
+      },
+      "hit_frame": 8
+    },
+    "skill_slam_side": {
+      "version": "p01",
+      "dir": "frames/skill_slam_side",
+      "source": "source/rig/anims/skill_slam.json",
+      "frames": 20,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/skill_slam_side/frames/@1x/hero_lion_brawler_skill_slam_side_NN.png",
+      "sheet": "frames/skill_slam_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/poses/slam_p1.json",
+          "source/rig/poses/slam_p2.json",
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "ready",
+            3
+          ],
+          [
+            "p1",
+            5
+          ],
+          [
+            "p2",
+            8
+          ],
+          [
+            "recover",
+            4
+          ]
+        ]
+      },
+      "hit_frame": 9
+    },
+    "icon": {
+      "version": "v01",
+      "source": "source/design/icon_v01.png",
+      "frames": 1,
+      "fps": 12,
+      "loop": true,
+      "dir": "frames/icon",
+      "files": "frames/icon/frames/@1x/hero_lion_brawler_icon_NN.png",
+      "sheet": "frames/icon/sheet.png",
+      "split": "gaps",
+      "cell": [
+        128,
+        128
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "sources": {
+    "design": [
+      "icon_v01.png",
+      "master_v01.png",
+      "pose_claw_p1_v01.png",
+      "pose_claw_p2_v01.png",
+      "pose_levelup_v01.png",
+      "pose_skill_slam_p1_v01.png",
+      "pose_skill_slam_p2_v01.png"
+    ],
+    "vfx": [
+      "claw_swipe",
+      "slam"
+    ]
+  },
+  "fx": {
+    "claw_swipe": "frames/fx/claw_swipe/fx.json",
+    "slam": "frames/fx/slam/fx.json"
+  }
+}

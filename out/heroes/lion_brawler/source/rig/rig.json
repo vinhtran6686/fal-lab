@@ -1,0 +1,465 @@
+{
+ "id": "lion_brawler",
+ "note": "Cut-out rig of master_v01. Torso, legs and head+mane come from plate_v01 (the master redrawn without arms and tail); both arms (upper arm, forearm+gauntlet) and the tail come from the master. Pixels of the 1024x1024 stills. unit = standing silhouette = 2 x {H} at @2x.",
+ "sources": {
+  "master": "../design/master_v01.png",
+  "plate": "plate_v01.png"
+ },
+ "ground": [
+  560,
+  945
+ ],
+ "unit": 926,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    560,
+    945
+   ]
+  },
+  {
+   "name": "body",
+   "parent": "root",
+   "pivot": [
+    560,
+    945
+   ]
+  },
+  {
+   "name": "head",
+   "parent": "body",
+   "pivot": [
+    560,
+    340
+   ]
+  },
+  {
+   "name": "near_upper",
+   "parent": "body",
+   "pivot": [
+    365,
+    400
+   ]
+  },
+  {
+   "name": "near_fore",
+   "parent": "near_upper",
+   "pivot": [
+    330,
+    548
+   ]
+  },
+  {
+   "name": "far_upper",
+   "parent": "body",
+   "pivot": [
+    730,
+    400
+   ]
+  },
+  {
+   "name": "far_fore",
+   "parent": "far_upper",
+   "pivot": [
+    745,
+    560
+   ]
+  },
+  {
+   "name": "tail",
+   "parent": "body",
+   "pivot": [
+    420,
+    700
+   ]
+  }
+ ],
+ "sockets": {
+  "weapon_root": {
+   "bone": "near_fore",
+   "pt": [
+    330,
+    548
+   ]
+  },
+  "weapon_tip": {
+   "bone": "near_fore",
+   "pt": [
+    350,
+    788
+   ]
+  },
+  "far_claw": {
+   "bone": "far_fore",
+   "pt": [
+    800,
+    788
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "tail",
+   "source": "master",
+   "bone": "tail",
+   "select": {
+    "poly": [
+     [
+      125,
+      540
+     ],
+     [
+      168,
+      432
+     ],
+     [
+      210,
+      500
+     ],
+     [
+      205,
+      580
+     ],
+     [
+      180,
+      600
+     ],
+     [
+      172,
+      660
+     ],
+     [
+      190,
+      715
+     ],
+     [
+      235,
+      745
+     ],
+     [
+      268,
+      748
+     ],
+     [
+      268,
+      772
+     ],
+     [
+      225,
+      770
+     ],
+     [
+      170,
+      740
+     ],
+     [
+      145,
+      680
+     ],
+     [
+      148,
+      600
+     ]
+    ]
+   }
+  },
+  {
+   "name": "far_upper",
+   "source": "master",
+   "bone": "far_upper",
+   "select": {
+    "poly": [
+     [
+      700,
+      345
+     ],
+     [
+      735,
+      385
+     ],
+     [
+      770,
+      450
+     ],
+     [
+      795,
+      520
+     ],
+     [
+      800,
+      556
+     ],
+     [
+      692,
+      572
+     ],
+     [
+      690,
+      480
+     ],
+     [
+      708,
+      430
+     ],
+     [
+      700,
+      380
+     ]
+    ]
+   }
+  },
+  {
+   "name": "far_fore",
+   "source": "master",
+   "bone": "far_fore",
+   "select": {
+    "poly": [
+     [
+      688,
+      566
+     ],
+     [
+      800,
+      552
+     ],
+     [
+      825,
+      600
+     ],
+     [
+      848,
+      690
+     ],
+     [
+      840,
+      790
+     ],
+     [
+      752,
+      790
+     ],
+     [
+      735,
+      725
+     ],
+     [
+      700,
+      715
+     ],
+     [
+      695,
+      640
+     ]
+    ]
+   }
+  },
+  {
+   "name": "body",
+   "source": "plate",
+   "bone": "body",
+   "select": {
+    "rest": true
+   },
+   "fill_under": [
+    {
+     "part": "head",
+     "erode": 16,
+     "reach": 40
+    }
+   ]
+  },
+  {
+   "name": "near_upper",
+   "source": "master",
+   "bone": "near_upper",
+   "select": {
+    "poly": [
+     [
+      283,
+      352
+     ],
+     [
+      330,
+      345
+     ],
+     [
+      400,
+      340
+     ],
+     [
+      452,
+      372
+     ],
+     [
+      452,
+      395
+     ],
+     [
+      425,
+      445
+     ],
+     [
+      402,
+      500
+     ],
+     [
+      408,
+      548
+     ],
+     [
+      250,
+      548
+     ],
+     [
+      258,
+      480
+     ],
+     [
+      275,
+      400
+     ]
+    ]
+   }
+  },
+  {
+   "name": "near_fore",
+   "source": "master",
+   "bone": "near_fore",
+   "select": {
+    "poly": [
+     [
+      245,
+      548
+     ],
+     [
+      410,
+      545
+     ],
+     [
+      418,
+      600
+     ],
+     [
+      432,
+      625
+     ],
+     [
+      435,
+      700
+     ],
+     [
+      425,
+      722
+     ],
+     [
+      400,
+      735
+     ],
+     [
+      396,
+      790
+     ],
+     [
+      300,
+      792
+     ],
+     [
+      268,
+      735
+     ],
+     [
+      250,
+      680
+     ],
+     [
+      243,
+      600
+     ]
+    ]
+   }
+  },
+  {
+   "name": "head",
+   "source": "plate",
+   "bone": "head",
+   "select": {
+    "poly": [
+     [
+      283,
+      245
+     ],
+     [
+      300,
+      180
+     ],
+     [
+      330,
+      110
+     ],
+     [
+      420,
+      55
+     ],
+     [
+      520,
+      30
+     ],
+     [
+      600,
+      60
+     ],
+     [
+      690,
+      150
+     ],
+     [
+      735,
+      245
+     ],
+     [
+      738,
+      330
+     ],
+     [
+      700,
+      410
+     ],
+     [
+      652,
+      442
+     ],
+     [
+      600,
+      400
+     ],
+     [
+      540,
+      380
+     ],
+     [
+      480,
+      345
+     ],
+     [
+      440,
+      330
+     ],
+     [
+      380,
+      345
+     ],
+     [
+      300,
+      350
+     ],
+     [
+      280,
+      300
+     ]
+    ]
+   }
+  }
+ ]
+}
