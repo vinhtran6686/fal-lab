@@ -100,9 +100,41 @@ def validate_spec(spec) -> list[str]:
     names = [b["name"] for b in spec["bones"]]
     if len(set(names)) != len(names):
         errs.append("duplicate bone names")
+    by_name = {b["name"]: b for b in spec["bones"]}
+    cycle_reported = False
     for b in spec["bones"]:
         if not all(isinstance(v, (int, float)) and math.isfinite(v) for v in b["pivot"]):
             errs.append(f"bone {b['name']}: pivot is not a finite number")
+        if b.get("parent") is not None and b["parent"] not in by_name:
+            errs.append(f"bone {b['name']}: unknown parent {b['parent']}")
+        seen, cur = set(), b["name"]
+        while cur is not None and cur in by_name and cur not in seen:       # a parent chain that loops back is a cycle
+            seen.add(cur)
+            cur = by_name[cur].get("parent")
+        if cur is not None and cur in seen and not cycle_reported:
+            errs.append(f"bone {b['name']}: parent chain forms a cycle")
+            cycle_reported = True
+        lim = (b.get("limit") or {}).get("rot")
+        if lim is not None and not (len(lim) == 2 and all(isinstance(v, (int, float)) and math.isfinite(v) for v in lim) and lim[0] < lim[1]):
+            errs.append(f"bone {b['name']}: limit.rot must be [min, max] with min < max")
+    part_names = {p["name"] for p in spec["parts"]}
+    for lk in spec.get("links", []):
+        nm = lk.get("name", "?")
+        if lk.get("arm") not in by_name:
+            errs.append(f"link {nm}: arm bone {lk.get('arm')} does not exist")
+        if lk.get("mode", "stretch") not in ("stretch", "carry"):
+            errs.append(f"link {nm}: mode must be stretch or carry")
+        if not (isinstance(lk.get("max_pull", 80), (int, float)) and lk.get("max_pull", 80) >= 0):
+            errs.append(f"link {nm}: max_pull must be >= 0")
+        for a in lk.get("anchors", []):
+            if a.get("part") not in part_names:
+                errs.append(f"link {nm}: anchor part {a.get('part')} does not exist")
+            if not (len(a.get("pt", [])) == 2 and all(isinstance(v, (int, float)) and math.isfinite(v) for v in a["pt"])):
+                errs.append(f"link {nm}: anchor pt must be [x, y]")
+            if not (isinstance(a.get("radius"), (int, float)) and a["radius"] > 0):
+                errs.append(f"link {nm}: anchor radius must be > 0")
+            if not (isinstance(a.get("gain", 1.0), (int, float)) and 0 <= a.get("gain", 1.0) <= 3):
+                errs.append(f"link {nm}: anchor gain must be in 0..3")
     for p in spec["parts"]:
         poly = p.get("select", {}).get("poly")
         if poly is not None:
@@ -441,6 +473,16 @@ class Handler(BaseHTTPRequestHandler):
                 spec = st.open_rig(name)
                 return self._json({"rig": spec, "rig_file": name, "topology": topology_hash(spec),
                                    "parts": parts_meta(st.saved)})
+            if path.startswith("/api/part/"):
+                name = path[len("/api/part/"):].removesuffix(".png")
+                part = next((q for q in st.saved.parts if q["name"] == name), None)
+                if part is None:
+                    return self._send(404, b"not found", "text/plain")
+                im = Image.fromarray(part["img"].clip(0, 255).astype(np.uint8), "RGBA")
+                im.thumbnail((96, 96))
+                buf = io.BytesIO()
+                im.save(buf, "PNG")
+                return self._send(200, buf.getvalue(), "image/png", {"Cache-Control": "max-age=60"})
             if path.startswith("/poses/"):
                 f = (st.pose_dir / path[len("/poses/"):]).resolve()
                 if f.parent == st.pose_dir.resolve() and f.exists():

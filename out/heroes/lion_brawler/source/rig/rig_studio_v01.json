@@ -1,6 +1,6 @@
 {
  "id": "lion_brawler",
- "note": "Rig v2 with smooth joints (2026-11-11): standard biped skeleton (docs/puppet-kit-next.md section 3). Each limb and the torso is ONE picture bent around its joints (\"skin\": the pixels near a joint turn by a fraction of the joint angle), so a bent elbow, knee or waist is a curve, not a cut. The cut version is rig_v2_cut.json, the first rig rig_v1.json. Layers come from stills erased from the master with the head kept as an anchor. Legs: two-bone IK to a planted foot. Pixels of the 1024x1024 stills; unit = standing silhouette = 2 x {H} at @2x. Studio v01 (2026-11-11): added near_foot_target / far_foot_target (children of root, at each IK target) so the pose can move each foot with tx/ty; at rest the result is identical to rig.json.",
+ "note": "Rig v2 with smooth joints (2026-11-11): standard biped skeleton (docs/puppet-kit-next.md section 3). Each limb and the torso is ONE picture bent around its joints (\"skin\": the pixels near a joint turn by a fraction of the joint angle), so a bent elbow, knee or waist is a curve, not a cut. The cut version is rig_v2_cut.json, the first rig rig_v1.json. Layers come from stills erased from the master with the head kept as an anchor. Legs: two-bone IK to a planted foot. Pixels of the 1024x1024 stills; unit = standing silhouette = 2 x {H} at @2x. Studio v01 (2026-11-11): added near_foot_target / far_foot_target (children of root, at each IK target) so the pose can move each foot with tx/ty; at rest the result is identical to rig.json. Limits and links added by the Studio (docs/puppet-studio.md): bone.limit.rot = allowed rot range, links = muscle links (the shoulder slides out and the chest near each anchor follows).",
  "sources": {
   "torso": "../design/layer_torso_v01.png",
   "legs": "../design/layer_legs_v02.png",
@@ -29,7 +29,13 @@
    "pivot": [
     560,
     650
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -15,
+     15
+    ]
+   }
   },
   {
    "name": "spine",
@@ -37,7 +43,13 @@
    "pivot": [
     560,
     565
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -20,
+     35
+    ]
+   }
   },
   {
    "name": "head",
@@ -45,7 +57,13 @@
    "pivot": [
     560,
     340
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -40,
+     40
+    ]
+   }
   },
   {
    "name": "near_upper_arm",
@@ -53,7 +71,13 @@
    "pivot": [
     390,
     365
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -170,
+     80
+    ]
+   }
   },
   {
    "name": "near_forearm",
@@ -61,7 +85,13 @@
    "pivot": [
     325,
     525
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -160,
+     20
+    ]
+   }
   },
   {
    "name": "near_hand",
@@ -69,7 +99,13 @@
    "pivot": [
     335,
     622
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -70,
+     70
+    ]
+   }
   },
   {
    "name": "far_upper_arm",
@@ -77,7 +113,13 @@
    "pivot": [
     715,
     385
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -170,
+     80
+    ]
+   }
   },
   {
    "name": "far_forearm",
@@ -85,7 +127,13 @@
    "pivot": [
     750,
     532
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -160,
+     20
+    ]
+   }
   },
   {
    "name": "far_hand",
@@ -93,7 +141,13 @@
    "pivot": [
     775,
     622
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -70,
+     70
+    ]
+   }
   },
   {
    "name": "near_thigh",
@@ -101,7 +155,13 @@
    "pivot": [
     500,
     645
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -90,
+     60
+    ]
+   }
   },
   {
    "name": "near_shin",
@@ -109,7 +169,13 @@
    "pivot": [
     458,
     790
-   ]
+   ],
+   "limit": {
+    "rot": [
+     0,
+     150
+    ]
+   }
   },
   {
    "name": "near_foot",
@@ -117,7 +183,13 @@
    "pivot": [
     440,
     868
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -30,
+     30
+    ]
+   }
   },
   {
    "name": "far_thigh",
@@ -125,7 +197,13 @@
    "pivot": [
     640,
     650
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -90,
+     60
+    ]
+   }
   },
   {
    "name": "far_shin",
@@ -133,7 +211,13 @@
    "pivot": [
     648,
     800
-   ]
+   ],
+   "limit": {
+    "rot": [
+     0,
+     150
+    ]
+   }
   },
   {
    "name": "far_foot",
@@ -141,7 +225,13 @@
    "pivot": [
     650,
     862
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -30,
+     30
+    ]
+   }
   },
   {
    "name": "tail",
@@ -149,7 +239,13 @@
    "pivot": [
     440,
     630
-   ]
+   ],
+   "limit": {
+    "rot": [
+     -70,
+     70
+    ]
+   }
   },
   {
    "name": "near_foot_target",
@@ -827,6 +923,42 @@
      ]
     ]
    }
+  }
+ ],
+ "links": [
+  {
+   "name": "near_chest",
+   "arm": "near_upper_arm",
+   "mode": "stretch",
+   "max_pull": 90,
+   "anchors": [
+    {
+     "part": "torso",
+     "pt": [
+      500,
+      430
+     ],
+     "radius": 140,
+     "gain": 1.0
+    }
+   ]
+  },
+  {
+   "name": "far_chest",
+   "arm": "far_upper_arm",
+   "mode": "stretch",
+   "max_pull": 90,
+   "anchors": [
+    {
+     "part": "torso",
+     "pt": [
+      650,
+      430
+     ],
+     "radius": 140,
+     "gain": 1.0
+    }
+   ]
   }
  ]
 }

@@ -169,6 +169,73 @@ def main():
                 m = img(im)[..., 3] > 128
                 holes.append(int(ndi.binary_fill_holes(m).sum() - m.sum()))
             print(f"     enclosed gaps (px) at 0/45/90 {joint}: {holes}")
+
+        # F: joint limits, muscle links, regression against the core before the links change
+        shutil.copy2(REAL / "source" / "rig" / "rig_studio_v01.json", tmp / "source" / "rig" / "rig_studio_v01.json")
+        op = get("/api/open?file=rig_studio_v01.json")
+        sr = op["rig"]
+        check("F1 studio rig has foot targets, limits and links", len(sr["bones"]) == 19 and sum(1 for b in sr["bones"] if "limit" in b) >= 14 and len(sr.get("links", [])) == 2)
+        check("F2 studio rig validates", "error" not in post("/api/rig/set", {"rig": sr}))
+        bad = json.loads(json.dumps(sr)); bad["bones"][3]["limit"] = {"rot": [30, -30]}
+        e1 = post("/api/rig/set", {"rig": bad}).get("error", "")
+        check("F3 inverted limit refused", "min < max" in e1, e1)
+        bad = json.loads(json.dumps(sr)); bad["links"][0]["anchors"][0]["radius"] = 0; bad["links"][1]["arm"] = "nope"; bad["links"][1]["mode"] = "wobble"
+        e2 = post("/api/rig/set", {"rig": bad}).get("error", "")
+        check("F4 bad link (radius, arm, mode) refused", "radius" in e2 and "nope" in e2 and "mode" in e2, e2)
+        bad = json.loads(json.dumps(sr)); [b for b in bad["bones"] if b["name"] == "hips"][0]["parent"] = "spine"
+        e3 = post("/api/rig/set", {"rig": bad}).get("error", "")
+        check("F5 parent cycle refused", "cycle" in e3, e3)
+        check("F6 rig still renders after refused edits", "error" not in post("/api/rig/set", {"rig": sr}) and "png" in render({}))
+
+        others = [p_["name"] for p_ in sr["parts"] if p_["name"] != "torso"]
+
+        def torso(pose):
+            r = post("/api/render", {"scale": 1.0, "region": [0, 0, 1024, 1024], "layers": [{"src": "working", "pose": pose, "hide": others, "primary": True}]})
+            return img(r)
+        yy, xx = np.mgrid[0:1024, 0:1024]
+        base_t = torso({})
+        pulled = torso({"bones": {"near_upper_arm": {"tx": -60}}})
+        near = ((xx - 500) ** 2 + (yy - 430) ** 2) < 110 ** 2
+        far_out = ((xx - 500) ** 2 + (yy - 430) ** 2) > 170 ** 2
+
+        def cx(a):
+            w_ = a[..., 3] * near
+            return float((w_ * xx).sum() / w_.sum())
+        check("F7 stretch link: chest near the anchor follows the shoulder (-x)", cx(pulled) < cx(base_t) - 0.3, f"{cx(base_t):.2f} -> {cx(pulled):.2f}")
+        check("F8 stretch link: pixels outside the radius are unchanged", int((np.abs(base_t[..., 3] - pulled[..., 3]) * far_out).max()) == 0)
+        carry = json.loads(json.dumps(sr))
+        for lk in carry["links"]:
+            lk["mode"] = "carry"
+        post("/api/rig/set", {"rig": carry})
+        check("F9 carry mode: the torso picture is not warped", int(np.abs(torso({"bones": {"near_upper_arm": {"tx": -60}}})[..., 3] - base_t[..., 3]).max()) == 0)
+        post("/api/rig/set", {"rig": sr})
+        thumb = urllib.request.urlopen(f"http://127.0.0.1:{PORT}/api/part/torso.png")
+        check("F10 layer thumbnail endpoint", thumb.status == 200 and thumb.read(8)[1:4] == b"PNG")
+
+        import subprocess
+        import types
+        try:
+            old_src = subprocess.check_output(["git", "show", "3276f20:scripts/puppet_kit/core.py"], cwd=REAL, stderr=subprocess.DEVNULL).decode()
+        except Exception:
+            old_src = None
+        if old_src:
+            old = types.ModuleType("old_core")
+            exec(compile(old_src, "old_core", "exec"), old.__dict__)
+            import puppet_kit.core as new_core
+            ro, rn = old.Rig(REAL / "source/rig/rig.json"), new_core.Rig(REAL / "source/rig/rig.json")
+            worst, nfr = 0.0, 0
+            for f in sorted((REAL / "source/rig/anims").glob("*.json")):
+                a = json.loads(f.read_text(encoding="utf-8"))
+                for sh in (a.get("shots") or [a]):
+                    if "reel" in sh or "tracks" not in sh or "frames" not in sh:
+                        continue
+                    for fr in range(0, int(sh["frames"]), max(1, int(sh["frames"]) // 3)):
+                        o, _ = ro.render(sh["tracks"], fr, old.S(.4, .4) @ old.T(60, 60), (450, 450))
+                        w2, _ = rn.render(sh["tracks"], fr, new_core.S(.4, .4) @ new_core.T(60, 60), (450, 450))
+                        worst = max(worst, float(np.abs(o - w2).max())); nfr += 1
+            check("F11 core regression: every anim frame identical to the pre-links core", worst == 0.0 and nfr > 20, f"{nfr} frames, max diff {worst}")
+        else:
+            print("SKIP F11 (git history of the pre-links core not available)")
         srv.shutdown()
         real_after = {"rig": hashlib.sha1((REAL / "source/rig/rig.json").read_bytes()).hexdigest(), "anims": hash_tree(REAL / "source/rig/anims")}
         check("REAL rig.json and anims/*.json untouched by the tests", real_before == real_after)

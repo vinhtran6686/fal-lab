@@ -180,3 +180,7 @@ nên `root.ty` được **giải từng frame**: render thử, lấy hàng pixel
 Mã sinh lại: `python scripts/puppet_kit/examples_death_back.py` (chép rồi đổi số cho nhân vật khác).
 Animation thêm `"shadow": "follow"`: bóng chân trượt và dài ra theo phần thân chạm đất (dùng cho mọi động tác thân rời khỏi chỗ đứng: ngã, lăn, quỳ).
 Đây là động tác hợp với rig: khớp chỉ gập vừa, phần xoay lớn là cả thân (cứng), nên không lộ chỗ gãy.
+
+## Lion Rig & Pose Studio và `links` (2026-11-11)
+
+Công cụ cục bộ xem/sửa rig, tạo dáng và lưu pose: `docs/puppet-studio.md`. Core có thêm một khóa rig tùy chọn `links` (cơ dãn theo khi vai trượt ra bằng `tx/ty` của bone vai; `Rig._pulls`, `Rig.render`) và các khóa mà core bỏ qua nhưng Studio dùng (`bone.limit.rot`). Không có `links` thì kết quả y hệt trước (đã kiểm trên mọi frame của `anims/*.json`).

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,111 +9,107 @@
 <body>
 <div id="app">
   <div id="toolbar">
-    <b class="brand">Lion Rig &amp; Pose Studio</b>
+    <b class="brand">Lion Studio</b>
     <div class="grp" id="tools">
-      <button data-tool="chain" title="Grab a limb and pull it: the arm and the body follow (C)">Grab <kbd>C</kbd></button>
-      <button data-tool="select" title="Only select bones (Q)">Select <kbd>Q</kbd></button>
-      <button data-tool="rotate" title="Turn the selected bone around its joint (E)">Rotate <kbd>E</kbd></button>
-      <button data-tool="move" title="Slide the selected bone (W)">Move <kbd>W</kbd></button>
-      <button data-tool="pivot" title="Drag pivots, IK targets and sockets: edits the RIG (P)">Pivot <kbd>P</kbd></button>
+      <button data-tool="pose" title="Bấm = chọn. Giữ và kéo = di chuyển. Bấm ra ngoài = bỏ chọn (V)">Tạo dáng <kbd>V</kbd></button>
+      <button data-tool="rotate" title="Xoay khớp đang chọn quanh tâm của nó, có hiện cung giới hạn (E)">Xoay <kbd>E</kbd></button>
+      <button data-tool="move" title="Trượt khớp đang chọn (W)">Trượt <kbd>W</kbd></button>
+      <button data-tool="pivot" class="rigmode" title="SỬA RIG: kéo tâm khớp, đích IK, socket (P)">Sửa rig <kbd>P</kbd></button>
+      <button data-tool="anchor" class="rigmode" title="SỬA RIG: bấm lên thân để đặt điểm bám cho cơ (A)">Điểm bám <kbd>A</kbd></button>
     </div>
     <div class="grp">
-      <button id="btnUndo" title="Undo (Ctrl+Z)">Undo</button>
-      <button id="btnRedo" title="Redo (Ctrl+Shift+Z)">Redo</button>
+      <button id="btnUndo" title="Hoàn tác (Ctrl+Z)">Hoàn tác</button>
+      <button id="btnRedo" title="Làm lại (Ctrl+Shift+Z)">Làm lại</button>
     </div>
     <div class="grp">
-      <button id="btnSave" title="Save rig over the open file, with a backup (Ctrl+S)">Save rig</button>
-      <button id="btnSaveNew" title="Write the rig as rig_studio_vNN.json, leaving the original untouched">Save as new version</button>
-      <button id="btnReload" title="Reload the rig from disk, dropping unsaved rig edits">Reload rig</button>
-      <select id="rigFile" title="Open another rig file"></select>
+      <select id="rigFile" title="File rig đang mở"></select>
+      <button id="btnSave" title="Lưu rig vào file đang mở, có backup (Ctrl+S)">Lưu rig</button>
+      <button id="btnSaveNew" title="Ghi thành rig_studio_vNN.json, file cũ giữ nguyên">Lưu bản mới</button>
+      <button id="btnReload" title="Nạp lại rig từ đĩa, bỏ thay đổi chưa lưu">Nạp lại</button>
     </div>
     <div class="grp">
-      <label title="Show the rest pose instead of the working pose"><input type="checkbox" id="optRest"> Rest pose</label>
-      <label title="Resolution of the final render. Drags always use a faster draft."> Quality
-        <select id="optQuality"><option value="0.4">Fast 0.4×</option><option value="0.5" selected>Normal 0.5×</option><option value="0.8">Sharp 0.8×</option><option value="1">Full 1×</option></select></label>
+      <label title="Xem dáng gốc thay vì dáng đang làm"><input type="checkbox" id="optRest"> Dáng gốc</label>
+      <label>Chất lượng <select id="optQuality"><option value="0.4">Nhanh 0.4×</option><option value="0.5" selected>Vừa 0.5×</option><option value="0.8">Nét 0.8×</option><option value="1">Đầy đủ 1×</option></select></label>
     </div>
     <div class="grp">
-      <button id="btnZoomOut" title="Zoom out">−</button><button id="btnZoomIn" title="Zoom in">+</button>
-      <button id="btnFit" title="Fit character (F)">Fit <kbd>F</kbd></button>
-      <button id="btnReset" title="Reset view">Reset view</button>
-      <button id="btnActual1" title="Show the character at game size: H = 60 px @1x">Actual 1×</button>
-      <button id="btnActual2" title="Game size @2x: H = 120 px">Actual 2×</button>
+      <button id="btnZoomOut" title="Thu nhỏ">−</button><button id="btnZoomIn" title="Phóng to">+</button>
+      <button id="btnFit" title="Vừa khung (F)">Vừa khung</button>
+      <button id="btnActual1" title="Cỡ thật trong game: H = 60 px @1x">Cỡ game 1×</button>
+      <button id="btnActual2" title="Cỡ thật @2x: H = 120 px">2×</button>
     </div>
     <div class="grp">
-      <select id="optBg" title="Background"><option value="dark">BG dark</option><option value="light">BG light</option><option value="check">BG checker</option><option value="green">BG green</option></select>
-      <label><input type="checkbox" id="optGrid" checked> Grid</label>
-      <label><input type="checkbox" id="optChar" checked> Character</label>
+      <select id="optBg" title="Nền"><option value="dark">Nền tối</option><option value="light">Nền sáng</option><option value="check">Nền caro</option><option value="green">Nền xanh</option></select>
+      <label><input type="checkbox" id="optGrid" checked> Lưới</label>
+      <label><input type="checkbox" id="optChar" checked> Nhân vật</label>
+      <button id="btnHelp" title="Hướng dẫn (H)">? Hướng dẫn</button>
     </div>
-    <div class="grp"><button id="btnHelp" title="How to use (H)">? Guide <kbd>H</kbd></button></div>
     <div id="statusbar"><span id="dirtyRig"></span><span id="dirtyPose"></span><span id="loading"></span><span id="renderInfo"></span></div>
   </div>
 
   <div id="main">
     <div id="left" class="panel">
-      <section><h3>Hierarchy <small>17 bones</small></h3><div id="tree" class="list"></div></section>
-      <section><h3>Layers <small>click name = edit polygon</small></h3><div id="layers" class="list"></div></section>
-      <section><h3>IK</h3><div id="iklist"></div></section>
-      <section><h3>Sockets</h3><div id="sockets" class="list"></div></section>
+      <div class="tabs" id="leftTabs"><button data-tab="layers">Layer (hình)</button><button data-tab="bones">Bone (khớp)</button></div>
+      <div id="leftBody"></div>
     </div>
     <div class="split v" id="splitL"></div>
     <div id="center">
       <div id="vpbar">
-        <b>Debug</b>
-        <label><input type="checkbox" data-vis="skeleton" checked>Skeleton</label>
-        <label><input type="checkbox" data-vis="labels" checked>Labels</label>
-        <label><input type="checkbox" data-vis="pivots" checked>Pivots</label>
-        <label><input type="checkbox" data-vis="bounds">Layer bounds</label>
-        <label><input type="checkbox" data-vis="polys">Polygons</label>
-        <label><input type="checkbox" data-vis="skin">Skin regions</label>
-        <label><input type="checkbox" data-vis="rigid">Rigid layers</label>
-        <label><input type="checkbox" data-vis="sockets" checked>Sockets</label>
-        <label><input type="checkbox" data-vis="ik" checked>IK targets</label>
-        <label><input type="checkbox" data-vis="influence" checked>Selected influence</label>
+        <b>Hiện</b>
+        <label><input type="checkbox" data-vis="skeleton" checked>Bộ xương</label>
+        <label><input type="checkbox" data-vis="labels" checked>Tên khớp</label>
+        <label><input type="checkbox" data-vis="pivots" checked>Tâm khớp</label>
+        <label><input type="checkbox" data-vis="bounds">Khung layer</label>
+        <label><input type="checkbox" data-vis="polys">Vùng cắt</label>
+        <label><input type="checkbox" data-vis="skin">Vùng uốn</label>
+        <label><input type="checkbox" data-vis="rigid">Layer cứng</label>
+        <label><input type="checkbox" data-vis="sockets" checked>Socket</label>
+        <label><input type="checkbox" data-vis="ik" checked>Đích IK</label>
+        <label><input type="checkbox" data-vis="links" checked>Cơ/điểm bám</label>
+        <label><input type="checkbox" data-vis="limits" checked>Cung giới hạn</label>
+        <label><input type="checkbox" data-vis="influence" checked>Vùng ảnh hưởng</label>
         <span class="sp"></span>
-        <label title="Ghost: the saved rig (before your edits) under the current render"><input type="checkbox" id="optGhostRig">Saved rig ghost</label>
+        <label title="Bóng mờ của rig đã lưu (trước khi sửa)"><input type="checkbox" id="optGhostRig">Bóng rig cũ</label>
       </div>
       <div id="stage"><canvas id="vp"></canvas>
-        <div id="gamebox"><div class="cap"><span id="gameCap">Game size</span></div><canvas id="game"></canvas></div>
+        <div id="banner"></div>
+        <div id="gamebox"><div class="cap"><span id="gameCap">Cỡ game</span></div><canvas id="game"></canvas></div>
         <div id="hint"></div><div id="toast"></div>
       </div>
     </div>
     <div class="split v" id="splitR"></div>
     <div id="right" class="panel">
-      <section id="secQuick"><h3>Tạo dáng nhanh</h3><div id="quickBody"></div></section>
-      <section id="secBone"><h3>Bone <small id="boneName">none</small></h3><div id="boneBody"></div></section>
-      <section id="secRig"><h3>Rig <small>stored / derived</small></h3><div id="rigBody"></div></section>
-      <section id="secJoint"><h3>Joint deformation <small>skin blend</small></h3><div id="jointBody"></div></section>
-      <section id="secPoly"><h3>Polygon <small id="polyName">no layer</small></h3><div id="polyBody"></div></section>
-      <section id="secChain"><h3>Chain drag <small>body follow / stretch</small></h3><div id="chainBody"></div></section>
-      <section id="secBend"><h3>Joint bend tester</h3><div id="bendBody"></div></section>
+      <div class="tabs" id="rightTabs">
+        <button data-tab="pose">1 Tạo dáng</button><button data-tab="joints">2 Khớp &amp; giới hạn</button><button data-tab="links">3 Cơ &amp; dây chằng</button><button data-tab="rig">4 Sửa rig</button><button data-tab="test">5 Kiểm tra</button>
+      </div>
+      <div id="rightBody"></div>
     </div>
   </div>
 
   <div class="split h" id="splitB"></div>
   <div id="library">
     <div id="libbar">
-      <b>Pose Library</b>
-      <button id="pNew" title="Save the working pose as a new pose">+ Save</button>
-      <button id="pLoad">Load</button>
-      <button id="pUpdate" title="Overwrite the selected pose with the working pose">Update</button>
-      <button id="pDup">Duplicate</button>
-      <button id="pRename">Rename</button>
-      <button id="pDelete" title="Delete (Del)">Delete</button>
-      <button id="pExport">Export JSON</button>
-      <button id="pImport">Import JSON</button>
-      <button id="pResetAll" title="Reset the whole working pose">Reset pose</button>
+      <b>Thư viện pose</b>
+      <button id="pNew" title="Lưu dáng đang làm thành pose mới">+ Lưu pose</button>
+      <button id="pLoad">Mở</button>
+      <button id="pUpdate" title="Ghi đè pose đang chọn bằng dáng đang làm">Cập nhật</button>
+      <button id="pDup">Nhân đôi</button>
+      <button id="pRename">Đổi tên</button>
+      <button id="pDelete" title="Xóa (Del)">Xóa</button>
+      <button id="pExport">Xuất JSON</button>
+      <button id="pImport">Nhập JSON</button>
+      <button id="pResetAll" title="Đưa cả dáng về gốc">Về dáng gốc</button>
       <input type="file" id="pFile" accept=".json" hidden>
       <span class="sp"></span>
-      <b>Compare</b>
-      <select id="cmpA"></select><button id="cmpFlip" title="Flip the view between A and B (view only)">A ⇄ B</button><select id="cmpB"></select>
-      <label><input type="checkbox" id="cmpOnion">Onion</label>
-      <button id="cmpOff">Exit compare</button>
+      <b>So sánh</b>
+      <select id="cmpA"></select><button id="cmpFlip" title="Đổi qua lại giữa A và B (chỉ xem)">A ⇄ B</button><select id="cmpB"></select>
+      <label><input type="checkbox" id="cmpOnion">Bóng mờ</label>
+      <button id="cmpOff">Thoát so sánh</button>
     </div>
     <div id="cards"></div>
   </div>
 </div>
 <div id="menu" hidden></div>
-<div id="modal" hidden><div class="box"><h3 id="mTitle"></h3><div id="mBody"></div><div class="row"><button id="mOk" class="primary">OK</button><button id="mCancel">Cancel</button></div></div></div>
+<div id="modal" hidden><div class="box"><h3 id="mTitle"></h3><div id="mBody"></div><div class="row"><button id="mOk" class="primary">OK</button><button id="mCancel">Hủy</button></div></div></div>
 <script src="app.js"></script>
 </body>
 </html>

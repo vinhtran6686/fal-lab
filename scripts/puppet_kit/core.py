@@ -382,6 +382,31 @@ class Rig:
     def sockets(self, world):
         return {n: apply(world[s["bone"]], s["pt"]).tolist() for n, s in self.spec.get("sockets", {}).items()}
 
+    # --- muscle links ---------------------------------------------------------------------
+    @property
+    def links(self):
+        return self.spec.get("links", [])
+
+    def _pulls(self, part, world, vals):
+        """Muscle links (rig["links"], mode "stretch") that pull this part's pixels: [(rest-space shift, anchor)].
+        The handle is the arm's root bone (the shoulder). Its own tx/ty slide it away from the torso; the shift is that
+        offset expressed in the part's rest space, so the picture near each anchor follows the shoulder, fading to 0 at the radius."""
+        out = []
+        for lk in self.links:
+            if lk.get("mode", "stretch") != "stretch" or lk["arm"] not in self.bones:
+                continue
+            anchors = [a for a in lk.get("anchors", []) if a["part"] == part["name"]]
+            if not anchors:
+                continue
+            v = vals.get(lk["arm"], {})
+            t = np.array([v.get("tx", 0.0), v.get("ty", 0.0)])
+            if not t.any():
+                continue
+            par = self.bones[lk["arm"]].get("parent")
+            Lm = np.linalg.inv(world[part["bone"]])[:2, :2] @ (world[par][:2, :2] if par else np.eye(2))
+            out += [(Lm @ t, a) for a in anchors]
+        return out
+
     # --- rendering ------------------------------------------------------------------------
     def render(self, tracks, f, view, size, phase=None):
         """Render frame f through `view` (3x3: rig pixels -> canvas pixels) on an RGBA float canvas (h, w)."""
@@ -402,8 +427,10 @@ class Rig:
             x0, y0 = part["off"]
             d = part["spec"].get("deform")
             pad = part.get("wpad", 0) if d else 0
-            corners = np.array([[x0 - pad, y0 - pad], [x0 + w + pad, y0 - pad], [x0 + w + pad, y0 + h + pad],
-                                [x0 - pad, y0 + h + pad]], float)
+            pulls = self._pulls(part, world, vals)
+            cpad = pad + (int(max(np.hypot(*sh) * a.get("gain", 1.0) for sh, a in pulls)) + 3 if pulls else 0)   # pulled pixels can leave the picture box
+            corners = np.array([[x0 - cpad, y0 - cpad], [x0 + w + cpad, y0 - cpad], [x0 + w + cpad, y0 + h + cpad],
+                                [x0 - cpad, y0 + h + cpad]], float)
             skin = part["spec"].get("skin")
             mats = [M] + ([view @ world[b] for b in skin["bones"][1:]] if skin else [])
             cc = np.array([apply(m_, c) for m_ in mats for c in corners])
@@ -418,6 +445,10 @@ class Rig:
             sy = Mi[1, 0] * xx + Mi[1, 1] * yy + Mi[1, 2]
             if skin:
                 sx, sy = self._skin_inverse(skin, world, sx, sy)
+            for sh, a in pulls:
+                wgt_p = a.get("gain", 1.0) * smoothstep(1.0 - np.hypot(sx - a["pt"][0], sy - a["pt"][1]) / float(a["radius"]))
+                sx = sx - wgt_p * sh[0]
+                sy = sy - wgt_p * sh[1]
             if d:
                 amp = pv.get("sway", 1.0)
                 wgt = ndi.map_coordinates(part["weight"], [sy - y0 + pad, sx - x0 + pad], order=1, mode="nearest")
