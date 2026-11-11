@@ -139,6 +139,21 @@ def shadow_cell(meta, c2):
     return big.resize(c2, Image.LANCZOS)
 
 
+def follow_shadow(meta, c2, body):
+    """Foot shadow centred under the opaque pixels near the ground line, as wide as they spread (at least the standing width)."""
+    sh = meta.get("shadow")
+    if not sh:
+        return Image.new("RGBA", c2, (0, 0, 0, 0))
+    a = np.asarray(body)[..., 3]
+    py = c2[1] * meta["pivot"][1]
+    band = a[max(0, int(py - 0.12 * meta["body_height_2x"])):int(py) + 4] > 128
+    xs = np.where(band.any(0))[0]
+    cx = c2[0] * meta["pivot"][0] if len(xs) == 0 else (xs.min() + xs.max()) / 2
+    w = sh["w_2x"] if len(xs) == 0 else max(sh["w_2x"], 0.95 * (xs.max() - xs.min()))
+    m = dict(meta, shadow=dict(sh, w_2x=w), pivot=[cx / c2[0], meta["pivot"][1]])
+    return shadow_cell(m, c2)
+
+
 def render_frames(asset, anim, meta, body_only=False):
     c2 = (meta["cell"][0] * meta["scale_2x"], meta["cell"][1] * meta["scale_2x"])
     body2x = meta["body_height_2x"]
@@ -150,7 +165,12 @@ def render_frames(asset, anim, meta, body_only=False):
         view = S(SS, SS) @ anim.view(rig, c2, meta["pivot"], body2x)
         img, world = rig.render(shot["tracks"], f, view, (c2[1] * SS, c2[0] * SS))
         body = to_img(img).resize(c2, Image.LANCZOS)
-        cell = Image.new("RGBA", c2, (0, 0, 0, 0)) if body_only else shadow.copy()
+        if body_only:
+            cell = Image.new("RGBA", c2, (0, 0, 0, 0))
+        elif anim.spec.get("shadow") == "follow":         # the shadow slides and stretches under what touches the ground (a body lying down)
+            cell = follow_shadow(meta, c2, body)
+        else:
+            cell = shadow.copy()
         cell.alpha_composite(body)
         cells.append(cell)
         v2 = anim.view(rig, c2, meta["pivot"], body2x)

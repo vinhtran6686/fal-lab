@@ -172,3 +172,11 @@ Feedback của user: cắt rời ở khuỷu, gối, eo làm hình **gãy khúc*
 - Lion: `rig.json` dùng `skin` cho hai tay (3 xương), hai chân (đùi + ống chân; bàn chân vẫn là lớp cứng ghim đất) và thân (hông + eo). Bản cắt rời giữ ở `rig_v2_cut.json` để so.
   Ảnh so sánh: chạy đoạn mã trong `docs/puppet-kit-next.md` §9 hoặc xem trang review.
 - Chưa có: trọng số tự vẽ (weight painting), uốn theo lưới tam giác; `blend` là một số cho mỗi khớp.
+
+## Ngã ngửa và bóng đi theo thân (2026-11-11)
+
+`death_back_side` của lion: chỉ rig v2, không video. Cả thân xoay quanh bàn chân (`root.rot` tới −90); vì thân xoay quanh gót nên phần lưng sẽ lún dưới đất,
+nên `root.ty` được **giải từng frame**: render thử, lấy hàng pixel thấp nhất của thân (ẩn đuôi bằng `tail.alpha` 0 khi đo) và nhấc lên cho bằng tư thế đứng.
+Mã sinh lại: `python scripts/puppet_kit/examples_death_back.py` (chép rồi đổi số cho nhân vật khác).
+Animation thêm `"shadow": "follow"`: bóng chân trượt và dài ra theo phần thân chạm đất (dùng cho mọi động tác thân rời khỏi chỗ đứng: ngã, lăn, quỳ).
+Đây là động tác hợp với rig: khớp chỉ gập vừa, phần xoay lớn là cả thân (cứng), nên không lộ chỗ gãy.

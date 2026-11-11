@@ -136,6 +136,7 @@ Kiểm: `python scripts/motion_check.py <asset>/frames/run_side --loop` không c
 | Động tác | Frame | Khoá | Ghi chú |
 |---|---|---|---|
 | Hit / hurt | 6 | f0 `shx` −0,12, `sy` 0,94, `tx` −0,03 H → f2 `back` → f5 nghỉ | chớp trắng là fx |
+| Death ngã ngửa (đã chạy: lion `death_back`, 24 hình) | 24 | `root.rot` 0 → −7 (f3, `out`) → −90 (f10, `in`: rơi có gia tốc) → −82 (f12, nảy) → −90 (f14) → −88 → −90 (f18); `hips.ty` 30 khi trúng, 55 khi rơi (gối khuỵu), 22 khi nằm; tay hất lên rồi buông; đầu trễ một nhịp rồi lăn; `root.ty` **tính từng frame** để điểm thấp nhất của thân (bỏ đuôi) không lún đất | animation đặt `"shadow": "follow"`; mã sinh: `scripts/puppet_kit/examples_death_back.py` |
 | Death (sụp tại chỗ) | 9-14 | f0-2 giật ra sau; f3-8 `hips.ty` +0,35 H `in`, `spine.rot` +60; f9+ nằm yên | rig hiện tại: dùng 1-2 pose still |
 | Respawn | 18-30 | từ pose quỳ; `grey` 1 → 0 trong 10 frame; đứng lên `out3` | kênh `grey` đã có |
 | Level up / gầm | 20-26 | nén 3 frame → pose đỉnh ở f3-4 (hit) → giữ 10-14 frame với `osc` `sy` ±0,012 period 4 → về | |

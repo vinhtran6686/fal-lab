@@ -657,6 +657,29 @@
         ]
       },
       "hit_frame": 21
+    },
+    "death_back_side": {
+      "version": "p01",
+      "dir": "frames/death_back_side",
+      "source": "source/rig/anims/death_back.json",
+      "frames": 24,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/death_back_side/frames/@1x/hero_lion_brawler_death_back_side_NN.png",
+      "sheet": "frames/death_back_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rig",
+            24
+          ]
+        ]
+      },
+      "hit_frame": 1
     }
   },
   "sources": {

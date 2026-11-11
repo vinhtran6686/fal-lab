@@ -66,6 +66,7 @@ Lý do chọn A: hai tay tự do cho nhiều tư thế nhất (gầm, vung vuố
 | view_front | fal-image | ảnh tĩnh | ⏳ v01 | chính diện; dùng làm ảnh ghim của pose reel |
 | reel turn_a / turn_b / run / squat / press | video (pose reel) | clip | ⏳ t01 | 5 clip 480p, mỗi clip một take, 16 s ~0,24 USD; `docs/puppet-kit-pose-reel.md` |
 | pose_run_1..4 | fal-image | ảnh tĩnh | ⏭ thay bằng reel run | user từ chối (tay trái gập sai) |
+| death_back_side | Puppet Kit (rig v2, $0) | one-shot | ⏳ p01 | 24 hình: trúng đòn, ngã ngửa ra sau, nảy một lần, nằm yên; không video |
 | run_side | Puppet Kit (reel, $0) | loop | ⏳ p03 | 8 hình từ clip reel_run |
 | turn_left_side | Puppet Kit (reel, $0) | one-shot | ⏳ p03 | 25 hình: quay phải → chính diện → quay trái |
 | reel_test_side | Puppet Kit (reel, $0) | one-shot | ⏳ p03 | 37 hình: squat rồi đẩy tay qua đầu (bài thử khớp bằng reel) |

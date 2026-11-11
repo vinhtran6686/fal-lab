@@ -31,6 +31,10 @@
   "sha256": "7b84e81b4028bec9b942b5fb6958f6b4eede7a1de0dfb51e9a9d22f1c3754108",
   "frames": 12
  },
+ "out/heroes/lion_brawler/source/rig/anims/death_back.json": {
+  "sha256": "76626fe1e41f613201b9051ab42eb9724b93af4b73162f7cadce0029ca8d54ba",
+  "frames": 24
+ },
  "out/heroes/lion_brawler/source/rig/anims/hurt.json": {
   "sha256": "c046aef48a6168cd570a4a64de841f91f205cb82410ef01cc03e67b28b51f765",
   "frames": 6

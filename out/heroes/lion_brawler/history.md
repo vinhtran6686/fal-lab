@@ -29,3 +29,4 @@
 | 2026-11-11 | reel squat | t01 | h3-max-turbo 480p 3s | 8 | awaiting user | đoạn hạ/đứng chỉ 2-3 frame, nhoè | clip 5 s, động tác chậm | user |
 | 2026-11-11 | reel press | t01 | h3-max-turbo 480p 3s | 8 | awaiting user | đoạn đẩy/hạ nhoè | clip 5 s | user |
 | 2026-11-11 | run_side / turn_left_side / reel_test_side | p03 | Puppet Kit (reel) | - | awaiting user | - | - | user |
+| 2026-11-11 | death_back_side | p01 | Puppet Kit (rig v2) | - | awaiting user | đuôi chạm hơi lún đất ở lần nảy; chân gập giơ lên khi nằm | - | user: "chết ngã nhào về sau, không video" |
