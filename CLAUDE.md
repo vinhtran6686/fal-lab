@@ -62,7 +62,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - **Lion Rig & Pose Studio** (since 2026-11-11): local editor around the Puppet Kit, `python scripts/studio/server.py` (http://127.0.0.1:8765/), guide `docs/puppet-studio.md` (Vietnamese), short README in `scripts/studio/`.
   Click = select, press + drag = move, click outside = deselect; pose library in `<asset>/poses/` (independent of `anims/*.json`); edits the rig too (pivots, cut polygons, joint blend, parent, joint limits).
   Studio rig `out/heroes/lion_brawler/source/rig/rig_studio_v01.json` = `rig.json` + movable foot IK targets + `bone.limit.rot` + `links` (muscle links: when the hand overreaches, the shoulder slides out and the chest near the anchors follows; `carry` = whole body follows; schema and rules for connecting bones in the doc).
-  `limit` / `links` only live in the Studio rig, never in `rig.json` (anims may move the shoulders). Core change: `Rig.render` honours `links` (`Rig._pulls`); regression test compares every anim frame with the pre-change core. Tests: `python scripts/studio/test_studio.py` (46).
+  `limit` / `links` only live in the Studio rig, never in `rig.json` (anims may move the shoulders). Core change: `Rig.render` honours `links` (`Rig._pulls`); regression test compares every anim frame with the pre-change core. Tests: `python scripts/studio/test_studio.py` (47).
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.

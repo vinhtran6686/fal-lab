@@ -8,7 +8,7 @@ Full guide (Vietnamese, schema for `limit` and `links`, rules for AI): [docs/pup
 ```
 python scripts/studio/server.py              # http://127.0.0.1:8765/  (opens rig_studio_v01.json when present)
 python scripts/studio/server.py --rig rig.json --port 8765 --no-browser
-python scripts/studio/test_studio.py         # 46 tests on a temp copy of the asset
+python scripts/studio/test_studio.py         # 47 tests on a temp copy of the asset
 ```
 Needs numpy, Pillow, scipy (already required by the Puppet Kit). Stdlib server on 127.0.0.1; POSTs need an `X-Studio` header.
 

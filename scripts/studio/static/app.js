@@ -21,7 +21,7 @@ const DRAFT = 0.3;
 const DRAG_PX = 4;
 const SEG = { upper_arm: "cánh tay", forearm: "cẳng tay", hand: "bàn tay", thigh: "đùi", shin: "cẳng chân", foot: "bàn chân", foot_target: "đích bàn chân", head: "đầu", spine: "thân trên", hips: "hông", tail: "đuôi", root: "gốc" };
 const viName = (n) => { const m = n.match(/^(near|far)_(.+)$/); return (SEG[m ? m[2] : n] || (m ? m[2] : n)) + (m ? (m[1] === "near" ? " gần" : " xa") : ""); };
-const DEFAULT_LIMITS = { upper_arm: [-170, 80], forearm: [-160, 20], hand: [-70, 70], thigh: [-90, 60], shin: [0, 150], foot: [-30, 30], head: [-40, 40], spine: [-20, 35], hips: [-15, 15], tail: [-70, 70] };
+const DEFAULT_LIMITS = { upper_arm: [-170, 140], forearm: [-160, 80], hand: [-70, 70], thigh: [-90, 60], shin: [0, 150], foot: [-30, 30], head: [-40, 40], spine: [-20, 35], hips: [-15, 15], tail: [-70, 70] };
 
 const S = {
   rig: null, saved: null, parts: [], rigFile: "rig.json", rigFiles: [], topology: "",

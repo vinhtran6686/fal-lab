@@ -198,10 +198,14 @@ def main():
         near = ((xx - 500) ** 2 + (yy - 430) ** 2) < 110 ** 2
         far_out = ((xx - 500) ** 2 + (yy - 430) ** 2) > 170 ** 2
 
-        def cx(a):
-            w_ = a[..., 3] * near
-            return float((w_ * xx).sum() / w_.sum())
-        check("F7 stretch link: chest near the anchor follows the shoulder (-x)", cx(pulled) < cx(base_t) - 0.3, f"{cx(base_t):.2f} -> {cx(pulled):.2f}")
+        def best_shift(a, b):
+            lum = lambda z: (z[..., :3] * (z[..., 3:4] / 255.0)).mean(axis=2)
+            core = ((xx - 500) ** 2 + (yy - 430) ** 2) < 50 ** 2
+            la, lb = lum(a), lum(b)
+            errs = {dx: float(np.abs(np.roll(la, dx, axis=1) - lb)[core].sum()) for dx in range(-80, 81, 2)}
+            return min(errs, key=errs.get)
+        shift = best_shift(base_t, pulled)
+        check("F7 stretch link: picture near the anchor follows the shoulder (-x)", shift <= -10, f"content shifted {shift} px (shoulder moved -58 px)")
         check("F8 stretch link: pixels outside the radius are unchanged", int((np.abs(base_t[..., 3] - pulled[..., 3]) * far_out).max()) == 0)
         carry = json.loads(json.dumps(sr))
         for lk in carry["links"]:
@@ -211,6 +215,29 @@ def main():
         post("/api/rig/set", {"rig": sr})
         thumb = urllib.request.urlopen(f"http://127.0.0.1:{PORT}/api/part/torso.png")
         check("F10 layer thumbnail endpoint", thumb.status == 200 and thumb.read(8)[1:4] == b"PNG")
+
+        from scipy import ndimage as ndi2
+
+        def shoulder_gap(rig_spec, bone_, sign, mag):
+            post("/api/rig/set", {"rig": rig_spec})
+            keep = {"torso", ("near_arm" if bone_.startswith("near") else "far_arm"), "head"}
+            hide = [p_["name"] for p_ in rig_spec["parts"] if p_["name"] not in keep]
+            pose_ = {"bones": {bone_: {"tx": sign * mag * 0.97, "ty": -mag * 0.16}}}
+            r = post("/api/render", {"scale": 1.0, "region": [200, 200, 700, 500], "layers": [{"src": "working", "pose": pose_, "hide": hide, "primary": True}]})
+            a_ = img(r)[..., 3] > 128
+            gap = ndi2.binary_fill_holes(a_) & ~a_
+            piv = next(b for b in rig_spec["bones"] if b["name"] == bone_)["pivot"]
+            x0, y0 = piv[0] - 200 - 120, piv[1] - 200 - 120
+            return int(gap[y0:y0 + 240, x0:x0 + 240].sum())
+        carry_spec = json.loads(json.dumps(sr))
+        for lk in carry_spec["links"]:
+            lk["mode"] = "carry"
+        worst_extra = 0
+        for bone_, sign in (("near_upper_arm", -1), ("far_upper_arm", 1)):
+            for mag in (30, 60, 90):
+                worst_extra = max(worst_extra, shoulder_gap(sr, bone_, sign, mag) - shoulder_gap(carry_spec, bone_, sign, mag))
+        post("/api/rig/set", {"rig": sr})
+        check("F12 stretch links open no tear at the shoulder beyond the arm layer's own gap", worst_extra <= 25, f"worst extra enclosed gap {worst_extra} px")
 
         import subprocess
         import types

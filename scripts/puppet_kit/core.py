@@ -388,9 +388,8 @@ class Rig:
         return self.spec.get("links", [])
 
     def _pulls(self, part, world, vals):
-        """Muscle links (rig["links"], mode "stretch") that pull this part's pixels: [(rest-space shift, anchor)].
-        The handle is the arm's root bone (the shoulder). Its own tx/ty slide it away from the torso; the shift is that
-        offset expressed in the part's rest space, so the picture near each anchor follows the shoulder, fading to 0 at the radius."""
+        """Muscle links (rig["links"], mode "stretch") pulling this part: [(shift in the part's rest space, anchor)].
+        The shift is the shoulder bone's own tx/ty seen from the part, so the picture near each anchor follows the shoulder."""
         out = []
         for lk in self.links:
             if lk.get("mode", "stretch") != "stretch" or lk["arm"] not in self.bones:
@@ -445,6 +444,7 @@ class Rig:
             sy = Mi[1, 0] * xx + Mi[1, 1] * yy + Mi[1, 2]
             if skin:
                 sx, sy = self._skin_inverse(skin, world, sx, sy)
+            sx0, sy0 = sx, sy
             for sh, a in pulls:
                 wgt_p = a.get("gain", 1.0) * smoothstep(1.0 - np.hypot(sx - a["pt"][0], sy - a["pt"][1]) / float(a["radius"]))
                 sx = sx - wgt_p * sh[0]
@@ -460,6 +460,10 @@ class Rig:
                 sy = sy - amp * ay * wgt * np.sin(ph - 0.5)
             samp = np.dstack([ndi.map_coordinates(img[..., c], [sy - y0, sx - x0], order=1, mode="constant", cval=0.0)
                               for c in range(4)]).astype(np.float32)
+            if pulls and not d:             # skin stretches but never tears: keep the unpulled pixel wherever the pulled one is more transparent
+                orig = np.dstack([ndi.map_coordinates(img[..., c], [sy0 - y0, sx0 - x0], order=1, mode="constant", cval=0.0)
+                                  for c in range(4)]).astype(np.float32)
+                samp = np.where(orig[..., 3:4] > samp[..., 3:4], orig, samp)
             grey = pv.get("grey", 0.0)
             if grey > 0:
                 lum = (0.3 * samp[..., 0] + 0.59 * samp[..., 1] + 0.11 * samp[..., 2])[..., None]
