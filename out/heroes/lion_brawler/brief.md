@@ -43,10 +43,17 @@ Lý do chọn A: hai tay tự do cho nhiều tư thế nhất (gầm, vung vuố
 | 4 travel | giữ, ngực phập phồng | sóng lan |
 | 5 hold | về tư thế nghỉ | tan |
 
+## Master v05: thiết kế dễ làm động tác (2026-11-12)
+User: "từ ảnh master của chúng ta -> nhân vật không chuẩn (2 chân không đều nhau)… 2 tay cũng không đều nhau (tay to tay nhỏ) -> điều này làm cho các đòn đấm bị xấu"; tham khảo `ref/alien`. User chọn **v05** (2026-11-12).
+- `{design}` (prompt `source/design/prompts/master_p03.txt`, không `--ref`): A compact chibi lion beastman brawler about 2 heads tall, built for animation, the head with its mane about as big as the whole body below it: a big spiky dark red-brown mane, a round barrel chest, TWO ARMS OF EXACTLY THE SAME SIZE AND LENGTH, TWO LEGS OF EXACTLY THE SAME SIZE AND LENGTH, short thick limbs, golden-tan fur with a cream muzzle and chest patch, short snout, fierce brow, small eye slits, two small round ears; blue waist sash with one hanging end and short blue trousers, bare paw feet; an identical bright-gold claw gauntlet on EACH fist; long thin tail with a dark tuft; no other weapon.
+- **Góc nhìn lệch quy ước có chủ đích** (`format.md` §3 nói 3/4 xoay 30-45°): gần như nhìn thẳng, chỉ xoay ~20° sang phải, hai nửa thân gần đối xứng, để hai tay và hai chân cùng cỡ như `ref/alien`.
+- Điểm yếu đã biết: nhân vật chiếm ~90% chiều cao khung (mục tiêu ~70%, căn lại khi dựng rig); đuôi chạm và nằm sau găng tay trái.
+- Mọi still cũ (`pose_*`, `layer_*`, icon, view_front) và rig v2 vẽ từ master v01: không còn khớp, sẽ làm lại từ v05. Hướng mới: vài tư thế khóa vẽ bằng AI (sheet nhiều tư thế một lần gọi) + giữ khung on twos + vệt chém `lib-fx`, duyệt ở cỡ game.
+
 ## Asset manifest
 | Asset | Từ | Loại | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| master (= idle) | fal-image | ảnh tĩnh | ⏳ v01 | 9/10, Claude tự duyệt theo uỷ quyền; chờ user xác nhận |
+| master (= idle) | fal-image | ảnh tĩnh | ✅ v05 | user chọn 2026-11-12: chibi, hai tay/hai chân cân nhau (v01 cũ: 3/4, tay lệch) |
 | icon | fal-image | ảnh tĩnh | ⏳ v01 | 9/10; đã pack `frames/icon` |
 | pose_levelup | fal-image | ảnh tĩnh | ⏳ v01 | gầm, 9/10 |
 | pose_claw_p1 | fal-image | ảnh tĩnh | ⏳ v01 | lấy đà vung vuốt, 9/10 |

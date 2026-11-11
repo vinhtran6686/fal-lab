@@ -30,3 +30,7 @@
 | 2026-11-11 | reel press | t01 | h3-max-turbo 480p 3s | 8 | awaiting user | đoạn đẩy/hạ nhoè | clip 5 s | user |
 | 2026-11-11 | run_side / turn_left_side / reel_test_side | p03 | Puppet Kit (reel) | - | awaiting user | - | - | user |
 | 2026-11-11 | death_back_side | p01 | Puppet Kit (rig v2) | - | awaiting user | đuôi chạm hơi lún đất ở lần nảy; chân gập giơ lên khi nằm | - | user: "chết ngã nhào về sau, không video" |
+| 2026-11-12 | master | v02-v03 | gpt-image-2 low, --ref v01 | 6 | rejected | bám sát v01: vẫn 3/4, găng gần to hơn, chưa chibi | bỏ --ref, gần nhìn thẳng ~20° | user: tay/chân không đều |
+| 2026-11-12 | master | v04 | gpt-image-2 low | 8.5 | rejected | cơ bụng nhiều nét, bờm cam đỏ | - | user |
+| 2026-11-12 | master | v05 | gpt-image-2 low | 8 | **approved by user** | đuôi chạm găng trái; chiếm 90% khung | - | user: "dùng v05" |
+| 2026-11-12 | attack_claw2 (đòn cào đôi) | t01 | h3-max-turbo 480p 4s, start=end=master v05 | 8 | awaiting user | vệt hồng tự vẽ ở f19-20, f44-45; f8 và f33/f43/f54-56 nhoè; giữ sau nhát 1 dài (f21-32) | chọn khung khi cắt; vệt chém thay bằng fx riêng | user: "chốt" |
