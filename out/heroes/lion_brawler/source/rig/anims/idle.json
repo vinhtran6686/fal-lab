@@ -1,23 +1,30 @@
 {
- "note": "Idle loop (rig): breathing, both arms sway from the shoulder, the forearms lag, the head bobs, the tail swishes.",
- "version": "p01",
+ "note": "Idle loop (rig v2): the hips sink a little so the knees flex (leg IK, feet planted), the chest breathes, arms sway with the forearm and hand lagging, head bobs, tail swishes.",
+ "version": "p02",
  "fps": 15,
  "loop": true,
  "rig": "source/rig/rig.json",
  "frames": 24,
  "tracks": {
-  "body.sy": {
-   "base": 1.0,
+  "hips.ty": {
    "osc": {
-    "amp": -0.016,
+    "amp": 6,
     "period": 24
    }
   },
-  "body.sx": {
+  "spine.sy": {
    "base": 1.0,
    "osc": {
-    "amp": 0.008,
-    "period": 24
+    "amp": -0.012,
+    "period": 24,
+    "phase": -0.04
+   }
+  },
+  "spine.rot": {
+   "osc": {
+    "amp": 0.8,
+    "period": 24,
+    "phase": -0.05
    }
   },
   "head.rot": {
@@ -29,37 +36,45 @@
   },
   "head.ty": {
    "osc": {
-    "amp": 3.5,
+    "amp": 3,
     "period": 24,
     "phase": -0.08
    }
   },
-  "near_upper.rot": {
+  "near_upper_arm.rot": {
    "osc": {
     "amp": 2.2,
     "period": 24,
     "phase": -0.1
    }
   },
-  "near_fore.rot": {
+  "near_forearm.rot": {
+   "base": -3,
+   "osc": {
+    "amp": 3,
+    "period": 24,
+    "phase": -0.22
+   }
+  },
+  "near_hand.rot": {
    "osc": {
     "amp": 2.5,
     "period": 24,
-    "phase": -0.25
+    "phase": -0.32
    }
   },
-  "far_upper.rot": {
+  "far_upper_arm.rot": {
    "osc": {
     "amp": -2.0,
     "period": 24,
     "phase": -0.1
    }
   },
-  "far_fore.rot": {
+  "far_forearm.rot": {
    "osc": {
-    "amp": -2.2,
+    "amp": -2.5,
     "period": 24,
-    "phase": -0.25
+    "phase": -0.22
    }
   },
   "tail.rot": {

@@ -223,3 +223,12 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-11 02:29:46,out/heroes/lion_brawler/source/design/pose_run_1_v01.png,gpt-image-2,low,1024x1024,False,15.5,0.0151,True
 2026-11-11 02:29:48,out/heroes/lion_brawler/source/design/pose_run_3_v01.png,gpt-image-2,low,1024x1024,False,17.3,0.0151,True
 2026-11-11 02:29:50,out/heroes/lion_brawler/source/design/pose_run_2_v01.png,gpt-image-2,low,1024x1024,False,20.0,0.0151,True
+2026-11-11 06:13:37,out/heroes/lion_brawler/source/design/layer_near_arm_v01.png,gpt-image-2,low,1024x1024,False,11.9,0.0114,True
+2026-11-11 06:13:39,out/heroes/lion_brawler/source/design/layer_far_arm_v01.png,gpt-image-2,low,1024x1024,False,13.4,0.0113,True
+2026-11-11 06:13:39,out/heroes/lion_brawler/source/design/layer_legs_v01.png,gpt-image-2,low,1024x1024,False,13.4,0.0115,True
+2026-11-11 06:13:43,out/heroes/lion_brawler/source/design/layer_tail_v01.png,gpt-image-2,low,1024x1024,False,17.5,0.0113,True
+2026-11-11 06:13:44,out/heroes/lion_brawler/source/design/layer_torso_v01.png,gpt-image-2,low,1024x1024,False,17.6,0.0115,True
+2026-11-11 06:14:54,out/heroes/lion_brawler/source/design/layer_far_arm_v02.png,gpt-image-2,low,1024x1024,False,24.7,0.0113,True
+2026-11-11 06:14:54,out/heroes/lion_brawler/source/design/layer_tail_v02.png,gpt-image-2,low,1024x1024,False,25.2,0.0113,True
+2026-11-11 06:14:55,out/heroes/lion_brawler/source/design/layer_near_arm_v02.png,gpt-image-2,low,1024x1024,False,26.0,0.0113,True
+2026-11-11 06:15:00,out/heroes/lion_brawler/source/design/layer_legs_v02.png,gpt-image-2,low,1024x1024,False,30.3,0.0114,True

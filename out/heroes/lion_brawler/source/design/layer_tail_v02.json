@@ -1,0 +1,14 @@
+{
+  "prompt": "Edit the reference image by ERASING parts of it. Do not redraw, move, resize or re-center anything: every pixel that stays must stay exactly where it is in the reference. The head with its mane stays untouched in its place as a fixed anchor. Besides the head, KEEP the tail exactly where it is on the LEFT side of the picture: the thin golden-tan tail and its dark tuft. ERASE the torso, the sash, both arms, the gauntlets, the claws and both legs. Continue the hidden end of the tail in one smooth curve to the right, up to about the middle of the picture at hip height, and close it with a rounded end. The result: the head at the top and the complete tail, same size and same place as in the reference. The erased areas become flat background. Background: one flat solid pure magenta color (#FF00FF) everywhere, no gradient, no ground, no shadow, no scenery, no text, no border. Do not use magenta or pink anywhere on the subject. Stylized 2D vector cartoon game art, flat solid fills only, no gradients, thick clean dark outlines.",
+  "model": "openai/gpt-image-2/edit",
+  "quality": "low",
+  "size": "1024x1024",
+  "refs": [
+    "/home/user/fal-lab/out/heroes/lion_brawler/source/design/master_v01.png"
+  ],
+  "transparent": false,
+  "seconds": 25.2,
+  "cost_usd": 0.0113,
+  "cost_is_estimate": true,
+  "source_url": "https://v3b.fal.media/files/b/0ab200c8/x6TXfEVGlKYeAxx4WvCCi_af9I4Mfc.png"
+}

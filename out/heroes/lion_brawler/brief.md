@@ -53,8 +53,11 @@ Lý do chọn A: hai tay tự do cho nhiều tư thế nhất (gầm, vung vuố
 | pose_claw_p2 | fal-image | ảnh tĩnh | ⏳ v01 | kết thúc vung vuốt, 8/10 |
 | pose_skill_slam_p1 | fal-image | ảnh tĩnh | ⏳ v01 | hai nắm vuốt trên đầu, 9/10; model vẽ người nhỏ hơn, đã căn lại cỡ |
 | pose_skill_slam_p2 | fal-image | ảnh tĩnh | ⏳ v01 | dộng đất, 8,5/10 |
-| rig (plate_v01 + rig.json) | Puppet Kit | rig | ⏳ v01 | `source/rig/`: 7 lớp, 8 xương; hai tay mỗi tay hai xương, đuôi riêng; 5 pose rig |
-| idle_side | Puppet Kit (rig, $0) | loop | ⏳ p01 | 24 hình, 1,60 s |
+| rig v1 (plate_v01 + rig_v1.json) | Puppet Kit | rig | ⏭ thay bằng rig v2 | `source/rig/`: 7 lớp, 8 xương; hai tay mỗi tay hai xương, đuôi riêng; 5 pose rig |
+| layer_torso / legs / near_arm / far_arm / tail | fal-image | ảnh tĩnh (lớp rời) | ⏳ torso v01, còn lại v02 | xoá từ master, giữ đầu làm mỏ neo; v01 của 4 lớp sau lệch vị trí nên bỏ |
+| rig v2 (rig.json) | Puppet Kit | rig | ⏳ v02 | 17 xương, 16 lớp, IK chân ghim đất, khớp háng và eo, tay 3 đoạn |
+| v2_test_side | Puppet Kit (rig v2, $0) | one-shot | ⏳ p02 | 30 hình: bài thử khớp (ngồi xổm, xoay eo, gập khuỷu, đấm) |
+| idle_side | Puppet Kit (rig v2, $0) | loop | ⏳ p02 | 24 hình, 1,60 s; gối nhún theo nhịp thở |
 | levelup_side | Puppet Kit (pose-to-pose, $0) | one-shot | ⏳ p01 | 21 hình, hit 4 |
 | attack_side | Puppet Kit (pose-to-pose, $0) | one-shot | ⏳ p01 | 16 hình, hit 8 |
 | fx_claw_swipe | Puppet Kit + bộ sinh M01 ($0) | hiệu ứng | ⏳ p01 | vệt vuốt từ socket; tham số màu mượn của holy_commander |

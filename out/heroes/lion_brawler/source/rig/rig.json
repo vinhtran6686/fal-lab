@@ -1,9 +1,13 @@
 {
  "id": "lion_brawler",
- "note": "Cut-out rig of master_v01. Torso, legs and head+mane come from plate_v01 (the master redrawn without arms and tail); both arms (upper arm, forearm+gauntlet) and the tail come from the master. Pixels of the 1024x1024 stills. unit = standing silhouette = 2 x {H} at @2x.",
+ "note": "Rig v2 (2026-11-11): standard biped skeleton (docs/puppet-kit-next.md section 3). Every part is cut from a layer still that the image model produced by ERASING the rest of the master while the head stayed as a fixed anchor (layer_*_v02; layer_torso_v01), so hidden areas are real drawings, not fills. Legs: two-bone IK to a foot planted on the ground, so lowering the hips bends the knees. Pixels of the 1024x1024 stills; unit = standing silhouette = 2 x {H} at @2x. The first rig (plate + master cuts, no legs) is rig_v1.json.",
  "sources": {
-  "master": "../design/master_v01.png",
-  "plate": "plate_v01.png"
+  "torso": "../design/layer_torso_v01.png",
+  "legs": "../design/layer_legs_v02.png",
+  "near_arm": "../design/layer_near_arm_v02.png",
+  "far_arm": "../design/layer_far_arm_v02.png",
+  "tail": "../design/layer_tail_v02.png",
+  "master": "../design/master_v01.png"
  },
  "ground": [
   560,
@@ -20,247 +24,677 @@
    ]
   },
   {
-   "name": "body",
+   "name": "hips",
    "parent": "root",
    "pivot": [
     560,
-    945
+    650
+   ]
+  },
+  {
+   "name": "spine",
+   "parent": "hips",
+   "pivot": [
+    560,
+    565
    ]
   },
   {
    "name": "head",
-   "parent": "body",
+   "parent": "spine",
    "pivot": [
     560,
     340
    ]
   },
   {
-   "name": "near_upper",
-   "parent": "body",
+   "name": "near_upper_arm",
+   "parent": "spine",
    "pivot": [
-    365,
-    400
+    390,
+    365
    ]
   },
   {
-   "name": "near_fore",
-   "parent": "near_upper",
+   "name": "near_forearm",
+   "parent": "near_upper_arm",
    "pivot": [
-    330,
-    548
+    325,
+    525
    ]
   },
   {
-   "name": "far_upper",
-   "parent": "body",
+   "name": "near_hand",
+   "parent": "near_forearm",
    "pivot": [
-    730,
-    400
+    335,
+    622
    ]
   },
   {
-   "name": "far_fore",
-   "parent": "far_upper",
+   "name": "far_upper_arm",
+   "parent": "spine",
    "pivot": [
-    745,
-    560
+    715,
+    385
+   ]
+  },
+  {
+   "name": "far_forearm",
+   "parent": "far_upper_arm",
+   "pivot": [
+    750,
+    532
+   ]
+  },
+  {
+   "name": "far_hand",
+   "parent": "far_forearm",
+   "pivot": [
+    775,
+    622
+   ]
+  },
+  {
+   "name": "near_thigh",
+   "parent": "hips",
+   "pivot": [
+    500,
+    645
+   ]
+  },
+  {
+   "name": "near_shin",
+   "parent": "near_thigh",
+   "pivot": [
+    458,
+    790
+   ]
+  },
+  {
+   "name": "near_foot",
+   "parent": "near_shin",
+   "pivot": [
+    440,
+    868
+   ]
+  },
+  {
+   "name": "far_thigh",
+   "parent": "hips",
+   "pivot": [
+    640,
+    650
+   ]
+  },
+  {
+   "name": "far_shin",
+   "parent": "far_thigh",
+   "pivot": [
+    648,
+    800
+   ]
+  },
+  {
+   "name": "far_foot",
+   "parent": "far_shin",
+   "pivot": [
+    650,
+    862
    ]
   },
   {
    "name": "tail",
-   "parent": "body",
+   "parent": "hips",
    "pivot": [
-    420,
-    700
+    440,
+    630
    ]
+  }
+ ],
+ "ik": [
+  {
+   "upper": "near_thigh",
+   "lower": "near_shin",
+   "end": [
+    440,
+    868
+   ],
+   "end_bone": "near_foot",
+   "hint": [
+    1,
+    0
+   ],
+   "target": {
+    "bone": "root",
+    "pt": [
+     440,
+     868
+    ]
+   }
+  },
+  {
+   "upper": "far_thigh",
+   "lower": "far_shin",
+   "end": [
+    650,
+    862
+   ],
+   "end_bone": "far_foot",
+   "hint": [
+    1,
+    0
+   ],
+   "target": {
+    "bone": "root",
+    "pt": [
+     650,
+     862
+    ]
+   }
   }
  ],
  "sockets": {
   "weapon_root": {
-   "bone": "near_fore",
+   "bone": "near_forearm",
    "pt": [
-    330,
-    548
+    325,
+    525
    ]
   },
   "weapon_tip": {
-   "bone": "near_fore",
+   "bone": "near_hand",
    "pt": [
-    350,
-    788
+    330,
+    790
    ]
   },
   "far_claw": {
-   "bone": "far_fore",
+   "bone": "far_hand",
    "pt": [
-    800,
-    788
+    810,
+    745
    ]
   }
  },
  "parts": [
   {
    "name": "tail",
-   "source": "master",
+   "source": "tail",
    "bone": "tail",
    "select": {
     "poly": [
      [
-      125,
-      540
+      110,
+      420
      ],
      [
-      168,
-      432
+      232,
+      420
      ],
      [
-      210,
-      500
+      232,
+      452
      ],
      [
-      205,
-      580
+      480,
+      452
      ],
      [
-      180,
-      600
+      480,
+      805
      ],
      [
-      172,
-      660
-     ],
-     [
-      190,
-      715
-     ],
-     [
-      235,
-      745
-     ],
-     [
-      268,
-      748
-     ],
-     [
-      268,
-      772
-     ],
-     [
-      225,
-      770
-     ],
-     [
-      170,
-      740
-     ],
-     [
-      145,
-      680
-     ],
-     [
-      148,
-      600
+      110,
+      805
      ]
     ]
    }
   },
   {
-   "name": "far_upper",
-   "source": "master",
-   "bone": "far_upper",
+   "name": "far_upper_arm",
+   "source": "far_arm",
+   "bone": "far_upper_arm",
    "select": {
     "poly": [
      [
-      700,
-      345
+      655,
+      325
      ],
      [
-      735,
-      385
-     ],
-     [
-      770,
-      450
+      750,
+      325
      ],
      [
       795,
-      520
+      420
      ],
      [
-      800,
-      556
+      805,
+      500
      ],
      [
-      692,
-      572
-     ],
-     [
-      690,
-      480
-     ],
-     [
-      708,
-      430
+      795,
+      562
      ],
      [
       700,
-      380
+      578
+     ],
+     [
+      680,
+      480
+     ],
+     [
+      660,
+      400
      ]
     ]
    }
   },
   {
-   "name": "far_fore",
-   "source": "master",
-   "bone": "far_fore",
+   "name": "far_forearm",
+   "source": "far_arm",
+   "bone": "far_forearm",
    "select": {
     "poly": [
      [
       688,
-      566
+      505
      ],
      [
-      800,
-      552
+      808,
+      488
      ],
      [
-      825,
-      600
+      828,
+      560
      ],
      [
-      848,
-      690
+      842,
+      642
      ],
      [
-      840,
-      790
-     ],
-     [
-      752,
-      790
-     ],
-     [
-      735,
-      725
+      722,
+      652
      ],
      [
       700,
-      715
+      600
+     ]
+    ]
+   }
+  },
+  {
+   "name": "far_hand",
+   "source": "far_arm",
+   "bone": "far_hand",
+   "select": {
+    "poly": [
+     [
+      712,
+      590
      ],
      [
-      695,
+      832,
+      574
+     ],
+     [
+      854,
+      650
+     ],
+     [
+      852,
+      755
+     ],
+     [
+      758,
+      755
+     ],
+     [
+      728,
+      690
+     ]
+    ]
+   }
+  },
+  {
+   "name": "far_shin",
+   "source": "legs",
+   "bone": "far_shin",
+   "select": {
+    "poly": [
+     [
+      588,
+      806
+     ],
+     [
+      660,
+      814
+     ],
+     [
+      714,
+      800
+     ],
+     [
+      706,
+      850
+     ],
+     [
+      690,
+      872
+     ],
+     [
+      600,
+      872
+     ],
+     [
+      594,
+      840
+     ]
+    ]
+   }
+  },
+  {
+   "name": "far_foot",
+   "source": "legs",
+   "bone": "far_foot",
+   "select": {
+    "poly": [
+     [
+      596,
+      848
+     ],
+     [
+      690,
+      848
+     ],
+     [
+      730,
+      868
+     ],
+     [
+      782,
+      905
+     ],
+     [
+      784,
+      948
+     ],
+     [
+      598,
+      950
+     ],
+     [
+      590,
+      900
+     ]
+    ]
+   }
+  },
+  {
+   "name": "far_thigh",
+   "source": "legs",
+   "bone": "far_thigh",
+   "select": {
+    "poly": [
+     [
+      570,
+      598
+     ],
+     [
+      682,
+      596
+     ],
+     [
+      702,
+      650
+     ],
+     [
+      720,
+      797
+     ],
+     [
+      660,
+      815
+     ],
+     [
+      585,
+      812
+     ],
+     [
+      578,
+      760
+     ],
+     [
+      574,
+      686
+     ],
+     [
+      580,
+      680
+     ]
+    ]
+   }
+  },
+  {
+   "name": "near_shin",
+   "source": "legs",
+   "bone": "near_shin",
+   "select": {
+    "poly": [
+     [
+      390,
+      788
+     ],
+     [
+      430,
+      808
+     ],
+     [
+      500,
+      814
+     ],
+     [
+      524,
+      808
+     ],
+     [
+      497,
+      845
+     ],
+     [
+      490,
+      882
+     ],
+     [
+      400,
+      882
+     ],
+     [
+      376,
+      850
+     ],
+     [
+      383,
+      810
+     ]
+    ]
+   }
+  },
+  {
+   "name": "near_foot",
+   "source": "legs",
+   "bone": "near_foot",
+   "select": {
+    "poly": [
+     [
+      376,
+      848
+     ],
+     [
+      400,
+      874
+     ],
+     [
+      490,
+      874
+     ],
+     [
+      502,
+      895
+     ],
+     [
+      510,
+      957
+     ],
+     [
+      348,
+      960
+     ],
+     [
+      343,
+      900
+     ]
+    ]
+   }
+  },
+  {
+   "name": "near_thigh",
+   "source": "legs",
+   "bone": "near_thigh",
+   "select": {
+    "poly": [
+     [
+      453,
+      594
+     ],
+     [
+      572,
+      598
+     ],
+     [
+      582,
+      680
+     ],
+     [
+      576,
+      686
+     ],
+     [
+      546,
+      740
+     ],
+     [
+      526,
+      812
+     ],
+     [
+      460,
+      817
+     ],
+     [
+      388,
+      777
+     ],
+     [
+      393,
+      745
+     ],
+     [
+      428,
+      680
+     ]
+    ]
+   }
+  },
+  {
+   "name": "pelvis",
+   "source": "torso",
+   "bone": "hips",
+   "select": {
+    "poly": [
+     [
+      432,
+      560
+     ],
+     [
+      688,
+      560
+     ],
+     [
+      702,
+      640
+     ],
+     [
+      708,
+      742
+     ],
+     [
+      682,
+      776
+     ],
+     [
+      560,
+      782
+     ],
+     [
+      428,
+      774
+     ],
+     [
+      405,
+      742
+     ],
+     [
+      418,
       640
      ]
     ]
    }
   },
   {
-   "name": "body",
-   "source": "plate",
-   "bone": "body",
+   "name": "chest",
+   "source": "torso",
+   "bone": "spine",
+   "subtract": [
+    "head"
+   ],
    "select": {
-    "rest": true
+    "poly": [
+     [
+      285,
+      280
+     ],
+     [
+      765,
+      280
+     ],
+     [
+      775,
+      470
+     ],
+     [
+      708,
+      540
+     ],
+     [
+      694,
+      590
+     ],
+     [
+      430,
+      590
+     ],
+     [
+      426,
+      540
+     ],
+     [
+      295,
+      470
+     ]
+    ]
    },
    "fill_under": [
     {
@@ -271,37 +705,37 @@
    ]
   },
   {
-   "name": "near_upper",
-   "source": "master",
-   "bone": "near_upper",
+   "name": "near_upper_arm",
+   "source": "near_arm",
+   "bone": "near_upper_arm",
    "select": {
     "poly": [
      [
-      283,
-      352
+      295,
+      330
      ],
      [
-      330,
-      345
+      350,
+      296
      ],
      [
-      400,
+      432,
+      296
+     ],
+     [
+      478,
       340
      ],
      [
-      452,
-      372
+      481,
+      400
      ],
      [
       452,
-      395
+      450
      ],
      [
-      425,
-      445
-     ],
-     [
-      402,
+      422,
       500
      ],
      [
@@ -309,80 +743,105 @@
       548
      ],
      [
-      250,
-      548
+      298,
+      550
      ],
      [
-      258,
-      480
+      252,
+      500
      ],
      [
-      275,
-      400
+      272,
+      420
      ]
     ]
    }
   },
   {
-   "name": "near_fore",
-   "source": "master",
-   "bone": "near_fore",
+   "name": "near_forearm",
+   "source": "near_arm",
+   "bone": "near_forearm",
    "select": {
     "poly": [
      [
-      245,
-      548
+      248,
+      490
      ],
      [
-      410,
+      412,
+      490
+     ],
+     [
+      417,
       545
      ],
      [
-      418,
-      600
+      410,
+      560
      ],
      [
-      432,
-      625
-     ],
-     [
-      435,
-      700
-     ],
-     [
-      425,
-      722
-     ],
-     [
-      400,
-      735
-     ],
-     [
-      396,
-      790
-     ],
-     [
-      300,
-      792
-     ],
-     [
-      268,
-      735
-     ],
-     [
-      250,
-      680
+      414,
+      642
      ],
      [
       243,
-      600
+      642
+     ],
+     [
+      236,
+      580
+     ],
+     [
+      260,
+      548
+     ]
+    ]
+   }
+  },
+  {
+   "name": "near_hand",
+   "source": "near_arm",
+   "bone": "near_hand",
+   "select": {
+    "poly": [
+     [
+      236,
+      585
+     ],
+     [
+      412,
+      585
+     ],
+     [
+      434,
+      625
+     ],
+     [
+      437,
+      700
+     ],
+     [
+      407,
+      735
+     ],
+     [
+      398,
+      797
+     ],
+     [
+      248,
+      797
+     ],
+     [
+      238,
+      700
      ]
     ]
    }
   },
   {
    "name": "head",
-   "source": "plate",
+   "source": "torso",
    "bone": "head",
    "select": {
     "poly": [

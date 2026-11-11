@@ -1,0 +1,14 @@
+{
+  "prompt": "Edit the reference image by ERASING parts of it. Do not redraw, move, resize or re-center anything: every pixel that stays must stay exactly where it is in the reference. The head with its mane stays untouched in its place as a fixed anchor. Besides the head, KEEP the two legs exactly where they are: both blue trouser legs, both furry lower legs and both paw feet. ERASE the torso, the sash, both arms with their gauntlets and claws, and the tail. Where the gauntlets and claws used to overlap the legs, complete the trouser legs behind them. Close the top of each trouser leg with a smooth rounded cap and a dark outline at hip height. The result: the head floating at the top, a gap, and the two complete legs standing at the bottom, same size and same place as in the reference. The erased areas become flat background. Background: one flat solid pure magenta color (#FF00FF) everywhere, no gradient, no ground, no shadow, no scenery, no text, no border. Do not use magenta or pink anywhere on the subject. Stylized 2D vector cartoon game art, flat solid fills only, no gradients, thick clean dark outlines.",
+  "model": "openai/gpt-image-2/edit",
+  "quality": "low",
+  "size": "1024x1024",
+  "refs": [
+    "/home/user/fal-lab/out/heroes/lion_brawler/source/design/master_v01.png"
+  ],
+  "transparent": false,
+  "seconds": 30.3,
+  "cost_usd": 0.0114,
+  "cost_is_estimate": true,
+  "source_url": "https://v3b.fal.media/files/b/0ab200c8/Ft09OIEUwHZ0zUY0_XZ5P_5oVpRnMo.png"
+}

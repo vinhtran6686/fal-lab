@@ -144,10 +144,29 @@ User đã báo bắt đầu. Việc đặc tả đóng giao cho model khác qua 
 
 | Mã | Việc | Trạng thái | Ghi chú |
 |---|---|---|---|
-| F1 | P02: gói tài nguyên lion (plate chân, tờ part, lớp khuất) | đang làm | |
-| F2 | P03: engine rig v2 + rig v2 cho lion | chưa làm | xong thì mở khoá T5 |
+| F1 | P02: gói tài nguyên lion (lớp thân, hai chân, tay gần, tay xa, đuôi) | ✅ 2026-11-11, chờ user duyệt | 9 ảnh, ~0,10 USD (5 ảnh đầu hỏng 4: xem "Quy tắc mỏ neo") |
+| F2 | P03: engine rig v2 + rig v2 cho lion | ✅ 2026-11-11, chờ user duyệt | 17 xương, 16 lớp; IK chân ghim đất; `v2_test_side` là bài thử khớp; T5 đã mở khoá |
 | F3 | P05: profile + run/walk bằng rig | chưa làm | |
 | F4 | P06: xoay thân | chưa làm | |
 
 Ba câu hỏi ở §7 chưa có trả lời; mặc định tạm dùng: (1) profile chỉ là tài nguyên trung gian, không đổi `format.md`; (2) run sẽ thay bằng bản rig khi F3 xong, bản 4 pose giữ tới lúc đó; (3) rig v2 do AI đặt trước, Rig Tuner v2 (T3) làm song song.
 
+### Quy tắc mỏ neo khi xin lớp rời (rút ra ở F1, bắt buộc)
+
+- Xin "CHỈ giữ bộ phận X, xoá hết phần còn lại" thì model **phóng to và dời X ra giữa ảnh**: 4/5 lớp đầu (hai chân, tay gần, tay xa, đuôi) lệch hẳn vị trí, không dùng được.
+  Lớp thân không lệch vì phần lớn nhân vật còn lại trong ảnh.
+- Cách chạy được ngay lần sau (4/4 lớp khớp vị trí): viết prompt là **"ERASE"**, không "redraw", và **giữ nguyên cái đầu làm mỏ neo**:
+  "Edit the reference image by ERASING parts of it. Do not redraw, move, resize or re-center anything ... The head with its mane stays untouched in its place as a fixed anchor.
+  Besides the head, KEEP <bộ phận> exactly where it is ... ERASE <phần còn lại> ... complete <phần bị che>". Prompt đầy đủ: `out/heroes/lion_brawler/source/design/prompts/layer_*_p02.txt`.
+- Mỏ neo phải **không đè lên bộ phận cần lấy**. Ở lion, bờm đè lên đỉnh vai gần nên đỉnh vai vẫn thiếu; lần sau dùng mỏ neo khác cho lớp tay (ví dụ giữ hai bàn chân).
+- Vì vậy mục 2.1 đổi: không cần "tờ part A-pose" cho rig 3/4; lớp rời lấy bằng cách xoá từ chính master cho khớp từng pixel. Tờ part chỉ còn cần cho góc profile.
+
+### Tồn đọng của rig v2 lion (sau F2)
+
+| Mục | Thấy ở đâu | Hướng |
+|---|---|---|
+| Đỉnh vai gần bị cắt theo mép bờm | `v2_test_side` hình 13-17, khi tay vung quá ~60° | xin lại `layer_near_arm` với mỏ neo là bàn chân |
+| Khe trắng nhỏ ở gấu quần/ống chân khi gối gập sâu | `v2_test_side` hình 6-11 | nới đa giác ống chân lên dưới gấu quần; Rig Tuner v2 (T3) |
+| Đấm thẳng ra trước ở góc 3/4 khó đọc: tay vàng trên ngực vàng, không co ngắn theo phối cảnh | hình 14 | cần pose still hoặc rig profile (F3) |
+| `pose_run`, `claw`, `slam`: vẫn là pose still; rig v2 mới thay phần lấy đà và hồi | - | F3 (run bằng rig) |
+| Hash của test hồi quy (T1) sẽ khác nếu T1 chạy trước commit này | - | chạy `puppet_test.py --update` một lần |

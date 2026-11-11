@@ -1,6 +1,6 @@
 # T5 (Sonnet): viết hurt, death, roar cho lion theo công thức
 
-Trạng thái: BLOCKED (chờ F2: rig v2 của lion)
+Trạng thái: TODO
 
 **Điều kiện bắt đầu**: `out/heroes/lion_brawler/source/rig/rig.json` có xương tên `hips` và `near_shin`. Kiểm: `grep -c '"hips"' out/heroes/lion_brawler/source/rig/rig.json` > 0.
 Chưa có thì dừng, không làm.
@@ -35,7 +35,13 @@ Với mỗi state: viết JSON → `python scripts/puppet.py render out/heroes/l
 - Mọi dòng manifest mới ở trạng thái ⏳ (chờ user duyệt), không tự đánh ✅.
 
 ## Ghi chú của Fable
-(Fable điền khi mở khoá: file animation mẫu, tên xương cần dùng, giới hạn góc an toàn của từng khớp)
+Mở khoá 2026-11-11. Rig v2 đã có (`rig.json`; bản cũ là `rig_v1.json`, không dùng).
+- **File mẫu**: `source/rig/anims/v2_test.json` (ngồi xổm, xoay eo, gập khuỷu, đấm) và `idle.json` (vòng lặp bằng `osc`). Mẫu shot rig trong animation pose-to-pose: shot `ready` và `recover` của `attack.json`.
+- **Xương**: `root`, `hips`, `spine`, `head`, `near_upper_arm` → `near_forearm` → `near_hand`, `far_upper_arm` → `far_forearm` → `far_hand`, `near_thigh` → `near_shin` → `near_foot`, `far_thigh` → `far_shin` → `far_foot`, `tail`.
+- **Chân chạy bằng IK**: không đặt `rot` cho `*_thigh`, `*_shin`. Muốn gập gối: tăng `hips.ty` (0 = đứng thẳng, 100 = ngồi xổm sâu nhất; quá 110 chân bị kéo giãn). `hips.tx` dời trọng tâm (±25). Bàn chân ghim đất; `*_foot.rot` xoay bàn chân tại chỗ.
+- **Giới hạn an toàn** (quá thì lộ mép cắt): `spine.rot` −8..+16; `head.rot` −10..+10; `near_upper_arm.rot` −60..+45 (vung ra trước quá 60° lộ đỉnh vai bị cắt); `near_forearm.rot` −110..+5; `near_hand.rot` −30..+15; `far_upper_arm.rot` −35..+35; `far_forearm.rot` −90..0; `tail.rot` −20..+20.
+- Death: rig không cho thân nằm ngang được (quá `spine.rot` +16). Làm "khuỵu gối tại chỗ": `hips.ty` → 100, `spine.rot` → +16, đầu gục +10, hai tay buông (`*_forearm.rot` → 0, `*_upper_arm.rot` → +10), giữ hình cuối; ghi rõ trong Kết quả là chưa có đoạn đổ người.
+- Quy ước dấu ở recipes §1: chi buông xuống, `rot` âm = ra trước; khuỷu gập tự nhiên là `forearm.rot` âm.
 
 ## Kết quả
 (model điền)

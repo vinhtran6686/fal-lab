@@ -22,9 +22,9 @@ tự kiểm theo mục "Nghiệm thu", rồi **sửa dòng `Trạng thái` trong
 | T2 | `task-2-haiku-lion-slash-params.md` | Haiku | bộ tham số vệt vuốt riêng cho lion + file requirements | không | TODO |
 | T3 | `task-3-sonnet-rig-tuner-v2.md` | Sonnet | Rig Tuner v2: tạo/xoá xương, xem thử xoay khớp | không | TODO |
 | T4 | `task-4-sonnet-prep-align.md` | Sonnet | lệnh `prep` và `align` cho bước chuẩn bị tài nguyên | không | TODO |
-| T5 | `task-5-sonnet-lion-animations.md` | Sonnet | viết hurt, death, roar cho lion theo công thức | **F2 xong** | BLOCKED (chờ F2) |
-| F1 | (Fable, trong session chính) | Fable | P02: gói tài nguyên lion (lớp khuất, tờ part, plate chân) | không | xem `docs/puppet-kit-next.md` §8 |
-| F2 | (Fable) | Fable | P03: engine rig v2 (IK chân ghim đất, khớp háng, thứ tự vẽ theo frame) + rig v2 cho lion | F1 | xem §8 |
+| T5 | `task-5-sonnet-lion-animations.md` | Sonnet | viết hurt, death, roar cho lion theo công thức | F2 (đã xong) | TODO |
+| F1 | (Fable, trong session chính) | Fable | P02: gói tài nguyên lion (lớp thân, chân, tay, đuôi) | không | DONE 2026-11-11 (chờ user duyệt) |
+| F2 | (Fable) | Fable | P03: engine rig v2 (IK chân ghim đất, khớp háng, thứ tự vẽ theo frame) + rig v2 cho lion | F1 | DONE 2026-11-11 (chờ user duyệt) |
 | F3 | (Fable) | Fable | P05: bộ profile + run/walk bằng rig | F2 | chưa làm |
 | F4 | (Fable) | Fable | P06: xoay thân (cào từ trước mặt sang trái) | F3 | chưa làm |
 

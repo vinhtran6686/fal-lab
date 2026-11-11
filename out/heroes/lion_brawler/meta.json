@@ -19,7 +19,7 @@
   },
   "states": {
     "idle_side": {
-      "version": "p01",
+      "version": "p02",
       "dir": "frames/idle_side",
       "source": "source/rig/anims/idle.json",
       "frames": 24,
@@ -41,7 +41,7 @@
       }
     },
     "levelup_side": {
-      "version": "p01",
+      "version": "p02",
       "dir": "frames/levelup_side",
       "source": "source/rig/anims/levelup.json",
       "frames": 21,
@@ -73,7 +73,7 @@
       "hit_frame": 4
     },
     "attack_side": {
-      "version": "p01",
+      "version": "p02",
       "dir": "frames/attack_side",
       "source": "source/rig/anims/attack.json",
       "frames": 16,
@@ -110,7 +110,7 @@
       "hit_frame": 8
     },
     "skill_slam_side": {
-      "version": "p01",
+      "version": "p02",
       "dir": "frames/skill_slam_side",
       "source": "source/rig/anims/skill_slam.json",
       "frames": 20,
@@ -201,11 +201,39 @@
           ]
         ]
       }
+    },
+    "v2_test_side": {
+      "version": "p02",
+      "dir": "frames/v2_test_side",
+      "source": "source/rig/anims/v2_test.json",
+      "frames": 30,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/v2_test_side/frames/@1x/hero_lion_brawler_v2_test_side_NN.png",
+      "sheet": "frames/v2_test_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rig",
+            30
+          ]
+        ]
+      },
+      "hit_frame": 14
     }
   },
   "sources": {
     "design": [
       "icon_v01.png",
+      "layer_far_arm_v02.png",
+      "layer_legs_v02.png",
+      "layer_near_arm_v02.png",
+      "layer_tail_v02.png",
+      "layer_torso_v01.png",
       "master_v01.png",
       "pose_claw_p1_v01.png",
       "pose_claw_p2_v01.png",

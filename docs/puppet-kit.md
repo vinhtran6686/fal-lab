@@ -139,3 +139,12 @@ User đánh giá tốt: nhịp thở và các nhịp phụ (nhún vai) sống đ
 | 10 | Không có test tự động; `stretch`, `band`, `init`, `pose` chưa qua advisor; Rig Tuner chưa mở thử trong trình duyệt | Claude | test hồi quy (hash frame), rà advisor |
 | 11 | Chưa có MCP (ý tưởng ban đầu của user); mọi thứ là CLI | Claude | bọc `check/render/pose/track` thành MCP khi format rig ổn định |
 | 12 | Run của lion: tay trái ở `pose_run_1` và `pose_run_3` bị gập, nhìn như tật | user | bước chuẩn bị tài nguyên: ghi góc khuỷu bằng số, bộ pose profile (`puppet-kit-next.md` §2) |
+
+## Rig v2 (2026-11-11): lion_brawler
+
+Bộ xương chuẩn 17 xương (`docs/puppet-kit-next.md` §3), 16 lớp cắt từ 5 ảnh lớp rời (`layer_torso_v01`, `layer_legs_v02`, `layer_near_arm_v02`, `layer_far_arm_v02`, `layer_tail_v02`):
+phần khuất là hình vẽ thật, không còn vá màu (trừ dưới đầu). Rig cũ giữ ở `rig_v1.json`.
+
+Engine thêm: IK có `hint` (hướng gập của khớp) và `end_bone` (bàn chân nằm trên đích, giữ góc riêng), xương con cập nhật sau IK, kênh `<part>.z` đổi thứ tự vẽ theo frame.
+Hạ `hips.ty` thì gối tự gập, chân không trượt. `v2_test_side` (30 hình) là bài thử khớp: ngồi xổm, xoay eo, gập khuỷu, đấm.
+Các state `idle`, `levelup`, `attack`, `skill_slam` của lion đã chuyển phần rig sang v2 (`"version": "p02"`). Tồn đọng: `docs/puppet-kit-next.md` §8.

@@ -89,7 +89,7 @@ EASE = {
     "back": lambda u: 1 + 2.2 * (u - 1) ** 3 + 1.2 * (u - 1) ** 2,  # overshoots, then settles
 }
 
-DEFAULTS = {"rot": 0.0, "tx": 0.0, "ty": 0.0, "sx": 1.0, "sy": 1.0, "shx": 0.0, "sway": 1.0, "alpha": 1.0, "grey": 0.0, "fk": 0.0}
+DEFAULTS = {"rot": 0.0, "tx": 0.0, "ty": 0.0, "sx": 1.0, "sy": 1.0, "shx": 0.0, "sway": 1.0, "alpha": 1.0, "grey": 0.0, "fk": 0.0, "z": 0.0}
 
 
 def track_value(track, f: float, default: float) -> float:
@@ -263,13 +263,14 @@ class Rig:
     def pose(self, tracks, f):
         """World matrix of every bone at frame f (float), IK chains solved."""
         vals = self.channels(tracks, f)
-        world = {}
+        world, locals_ = {}, {}
         for n in self.order:
             b = self.bones[n]
             v = vals.get(n, {})
             px, py = b["pivot"]
             local = (T(px + v.get("tx", 0), py + v.get("ty", 0)) @ R(v.get("rot", 0)) @ SH(v.get("shx", 0))
                      @ S(v.get("sx", 1), v.get("sy", 1)) @ T(-px, -py))
+            locals_[n] = local
             world[n] = local if b.get("parent") is None else world[b["parent"]] @ local
         for ik in self.spec.get("ik", []):
             if vals.get(ik["upper"], {}).get("fk"):
@@ -285,7 +286,11 @@ class Rig:
             dd = min(max(d, abs(L1 - L2) + 1e-6), L1 + L2 - 1e-6)
             base = math.atan2(t1[1] - s1[1], t1[0] - s1[0])
             bend = math.acos(max(-1, min(1, (L1 * L1 + dd * dd - L2 * L2) / (2 * L1 * dd))))
-            c0 = (w0 - s0)[0] * (e0 - s0)[1] - (w0 - s0)[1] * (e0 - s0)[0]
+            if ik.get("hint"):                       # which way the joint bends, as a screen direction (a knee: forward)
+                hx, hy = ik["hint"]
+                c0 = (t1 - s1)[0] * hy - (t1 - s1)[1] * hx
+            else:                                    # the side it is on in the rest pose
+                c0 = (w0 - s0)[0] * (e0 - s0)[1] - (w0 - s0)[1] * (e0 - s0)[0]
             side0 = 1.0 if c0 >= 0 else -1.0
             a1 = base + side0 * bend
             e1 = s1 + L1 * np.array([math.cos(a1), math.sin(a1)])
@@ -294,6 +299,16 @@ class Rig:
             a2 = math.atan2(t1[1] - e1[1], t1[0] - e1[0])
             world[ik["upper"]] = T(*s1) @ R(math.degrees(a1)) @ S(stretch, 1) @ R(-math.degrees(a1r)) @ T(-s0[0], -s0[1])
             world[ik["lower"]] = T(*e1) @ R(math.degrees(a2)) @ S(stretch, 1) @ R(-math.degrees(a2r)) @ T(-e0[0], -e0[1])
+            fixed = {ik["upper"], ik["lower"]}
+            if ik.get("end_bone"):                   # a planted foot: it sits on the target and keeps its own angle
+                eb = self.bones[ik["end_bone"]]
+                ev = vals.get(ik["end_bone"], {})
+                world[ik["end_bone"]] = T(*t1) @ R(ev.get("rot", 0)) @ T(-eb["pivot"][0], -eb["pivot"][1])
+                fixed.add(ik["end_bone"])
+            for n in self.order:                     # bones below the chain follow it
+                par = self.bones[n].get("parent")
+                if n not in fixed and par is not None and self._under(n, ik["upper"]):
+                    world[n] = world[par] @ locals_[n]
         for st in self.spec.get("stretch", []):      # one bone aimed at a target and stretched to reach it (a sleeve)
             b = self.bones[st["bone"]]
             s0, e0 = np.array(b["pivot"], float), np.array(st["end"], float)
@@ -304,6 +319,14 @@ class Rig:
             k = np.linalg.norm(t1 - s1) / max(1e-6, np.linalg.norm(e0 - s0))
             world[st["bone"]] = T(*s1) @ R(math.degrees(a1)) @ S(k, 1) @ R(-math.degrees(a0)) @ T(-s0[0], -s0[1])
         return world, vals
+
+    def _under(self, name, ancestor):
+        par = self.bones[name].get("parent")
+        while par is not None:
+            if par == ancestor:
+                return True
+            par = self.bones[par].get("parent")
+        return False
 
     def sockets(self, world):
         return {n: apply(world[s["bone"]], s["pt"]).tolist() for n, s in self.spec.get("sockets", {}).items()}
@@ -316,7 +339,8 @@ class Rig:
         out = np.zeros((H, W, 4), np.float32)
         period = tracks.get("_sway_period", 24)
         t = 2 * math.pi * (f / period if phase is None else phase)
-        for part in self.parts:
+        order = sorted(range(len(self.parts)), key=lambda i: i + 100 * vals.get(self.parts[i]["name"], {}).get("z", 0.0))
+        for part in (self.parts[i] for i in order):      # channel "<part>.z": +1 moves it in front of everything, -1 behind
             pv = vals.get(part["name"], {})
             alpha_mul = pv.get("alpha", 1.0)
             if alpha_mul <= 0.003:

@@ -1,6 +1,6 @@
 {
  "note": "Level up (tier 2): crouch on the rig, cut to the ROAR pose (hit), hold it with a pulsing chest, cut back and settle.",
- "version": "p01",
+ "version": "p02",
  "fps": 15,
  "loop": false,
  "hit_frame": 4,
@@ -10,29 +10,18 @@
    "rig": "source/rig/rig.json",
    "frames": 3,
    "tracks": {
-    "body.sy": [
+    "hips.ty": [
      [
       0,
-      1.0
+      0
      ],
      [
       2,
-      0.92,
+      60,
       "out"
      ]
     ],
-    "body.sx": [
-     [
-      0,
-      1.0
-     ],
-     [
-      2,
-      1.04,
-      "out"
-     ]
-    ],
-    "head.rot": [
+    "spine.rot": [
      [
       0,
       0
@@ -43,24 +32,58 @@
       "out"
      ]
     ],
-    "near_upper.rot": [
+    "head.rot": [
      [
       0,
       0
      ],
      [
       2,
-      10
+      -5
      ]
     ],
-    "far_upper.rot": [
+    "near_upper_arm.rot": [
      [
       0,
       0
      ],
      [
       2,
-      -8
+      16,
+      "out"
+     ]
+    ],
+    "near_forearm.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -40,
+      "out"
+     ]
+    ],
+    "far_upper_arm.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -12,
+      "out"
+     ]
+    ],
+    "far_forearm.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -30,
+      "out"
      ]
     ],
     "tail.rot": [
@@ -151,32 +174,32 @@
    "rig": "source/rig/rig.json",
    "frames": 4,
    "tracks": {
-    "body.sy": [
+    "hips.ty": [
      [
       0,
-      0.94
+      60
      ],
      [
       3,
-      1.0,
+      0,
       "out"
      ]
     ],
-    "body.sx": [
+    "spine.rot": [
      [
       0,
-      1.03
+      10
      ],
      [
       3,
-      1.0,
+      0,
       "out"
      ]
     ],
     "head.rot": [
      [
       0,
-      6
+      5
      ],
      [
       3,
@@ -184,10 +207,10 @@
       "out"
      ]
     ],
-    "near_upper.rot": [
+    "near_upper_arm.rot": [
      [
       0,
-      -16
+      -18
      ],
      [
       3,
@@ -195,10 +218,10 @@
       "out"
      ]
     ],
-    "near_fore.rot": [
+    "near_forearm.rot": [
      [
       0,
-      -20
+      -45
      ],
      [
       3,
@@ -206,10 +229,21 @@
       "out"
      ]
     ],
-    "far_upper.rot": [
+    "far_upper_arm.rot": [
      [
       0,
       12
+     ],
+     [
+      3,
+      0,
+      "out"
+     ]
+    ],
+    "far_forearm.rot": [
+     [
+      0,
+      -30
      ],
      [
       3,

@@ -3,7 +3,7 @@
 Cập nhật 2026-11-11. Mục đích: để **mọi model, kể cả model nhỏ, viết được `anims/*.json` đúng mà không phải tự nghĩ lại cơ học**. Chép bảng, thay số theo nhân vật, chạy `render --no-export`, xem `contact.png`.
 Nguồn: 12 nguyên tắc hoạt hình cổ điển (squash & stretch, anticipation, follow-through, slow in/out, arcs, timing), vòng chạy/đi 4 pose khoá (contact, down, passing, up),
 và các số đã chạy thật trong repo (Holy Commander, Frost Oracle, Lion Brawler). Số trong bảng là điểm bắt đầu; mục 9 nói cách chỉnh.
-Mục đánh dấu **(cần rig v2)** dùng bộ xương ở `docs/puppet-kit-next.md` §3 và chưa chạy được với rig hiện tại.
+Mục đánh dấu **(cần rig v2)** dùng bộ xương ở `docs/puppet-kit-next.md` §3. Từ 2026-11-11 lion_brawler đã có rig v2 góc 3/4 (chân IK: gập gối bằng `hips.ty`, không đặt `rot` cho đùi và ống chân; mẫu: `out/heroes/lion_brawler/source/rig/anims/v2_test.json`); bảng góc chân của run/walk ở §6.2 vẫn cần rig profile (chưa có).
 
 ## 1. Quy ước (đọc một lần, không suy lại)
 

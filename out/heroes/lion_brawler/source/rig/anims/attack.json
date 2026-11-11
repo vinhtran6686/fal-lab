@@ -1,6 +1,6 @@
 {
  "note": "Claw swipe (tier 2): rig anticipation -> pose claw_p1 (wind-up) -> cut -> pose claw_p2 (impact, hit) -> rig recover. The slash fx is drawn on the cut from the claw sockets.",
- "version": "p01",
+ "version": "p02",
  "fps": 15,
  "loop": false,
  "hit_frame": 8,
@@ -17,25 +17,25 @@
    "rig": "source/rig/rig.json",
    "frames": 2,
    "tracks": {
-    "body.sy": [
+    "hips.ty": [
      [
       0,
-      1.0
+      0
      ],
      [
       1,
-      0.95,
+      40,
       "out"
      ]
     ],
-    "body.sx": [
+    "spine.rot": [
      [
       0,
-      1.0
+      0
      ],
      [
       1,
-      1.025,
+      8,
       "out"
      ]
     ],
@@ -46,39 +46,50 @@
      ],
      [
       1,
-      5
+      -5
      ]
     ],
-    "near_upper.rot": [
+    "near_upper_arm.rot": [
      [
       0,
       0
      ],
      [
       1,
-      14,
+      16,
       "out"
      ]
     ],
-    "near_fore.rot": [
+    "near_forearm.rot": [
      [
       0,
       0
      ],
      [
       1,
-      -18,
+      -40,
       "out"
      ]
     ],
-    "far_upper.rot": [
+    "far_upper_arm.rot": [
      [
       0,
       0
      ],
      [
       1,
-      -10,
+      -12,
+      "out"
+     ]
+    ],
+    "far_forearm.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      -30,
       "out"
      ]
     ],
@@ -89,7 +100,7 @@
      ],
      [
       1,
-      -10
+      -12
      ]
     ]
    }
@@ -218,32 +229,32 @@
    "rig": "source/rig/rig.json",
    "frames": 3,
    "tracks": {
-    "body.sy": [
+    "hips.ty": [
      [
       0,
-      0.94
+      60
      ],
      [
       2,
-      1.0,
+      0,
       "out"
      ]
     ],
-    "body.sx": [
+    "spine.rot": [
      [
       0,
-      1.03
+      10
      ],
      [
       2,
-      1.0,
+      0,
       "out"
      ]
     ],
     "head.rot": [
      [
       0,
-      6
+      5
      ],
      [
       2,
@@ -251,10 +262,10 @@
       "out"
      ]
     ],
-    "near_upper.rot": [
+    "near_upper_arm.rot": [
      [
       0,
-      -16
+      -18
      ],
      [
       2,
@@ -262,10 +273,10 @@
       "out"
      ]
     ],
-    "near_fore.rot": [
+    "near_forearm.rot": [
      [
       0,
-      -20
+      -45
      ],
      [
       2,
@@ -273,10 +284,21 @@
       "out"
      ]
     ],
-    "far_upper.rot": [
+    "far_upper_arm.rot": [
      [
       0,
       12
+     ],
+     [
+      2,
+      0,
+      "out"
+     ]
+    ],
+    "far_forearm.rot": [
+     [
+      0,
+      -30
      ],
      [
       2,
