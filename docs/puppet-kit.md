@@ -90,3 +90,18 @@ Hero đánh xa cỡ M, tạo bằng `fal-image` (master, icon, projectile) rồi
 
 Rig đúng tư thế master ngay lần `check` đầu; 5 ảnh, ~0,063 USD. Thêm vào engine cho nhân vật này: `puppet.py init` (tạo `meta.json` cho asset chưa có sheet),
 ràng buộc `stretch` (một xương kéo giãn tới điểm đích) và `deform.band` (dao động trong một dải cao độ, hai đầu đứng yên).
+
+## Lion Brawler (Sư Vương): thử nhiều pose (2026-11-11)
+
+Hero cận chiến cỡ M. Một master, một plate (bỏ hai tay và đuôi), 5 pose still, tất cả đạt ngay lần đầu; 8 ảnh, ~0,112 USD.
+
+| State | Tầng | Frame | Ghi chú |
+|---|---|---|---|
+| `idle_side` | 1 | 24, lặp | hai tay mỗi tay hai xương (FK), đuôi quẫy, đầu nhún |
+| `levelup_side` | 2 | 21, hit 4 | rig khuỵu → pose gầm (ngực phập phồng bằng `osc`) → rig |
+| `attack_side` + fx `claw_swipe` | 2 | 16, hit 8 | rig → `pose_claw_p1` → `pose_claw_p2` → rig |
+| `skill_slam_side` + fx `slam` | 2 | 20, hit 9 | rig → `pose_skill_slam_p1` → `pose_skill_slam_p2` → rig |
+
+Bài học: model vẽ mỗi pose ở một cỡ khác nhau (0,74-1,02 lần master). `unit` của pose rig lấy bằng trung bình nhân của tỉ lệ diện tích hình bóng và diện tích
+màu bờm so với master, rồi chỉnh bằng mắt trên bảng contact (pose vươn người bị đánh giá nhỏ quá). `ground` là trung điểm hai bàn chân đọc trên ảnh, không phải
+điểm thấp nhất (vuốt có thể thấp hơn chân). Việc này nên thành một lệnh căn pose tự động.
