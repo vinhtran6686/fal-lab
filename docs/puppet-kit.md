@@ -121,6 +121,8 @@ Cách đo này sai khi đầu bị che (`slam_p1`: hai tay che bờm) nên pose 
 
 ## Tồn đọng (đánh giá 2026-11-11, gồm feedback của user)
 
+Kế hoạch xử lý và tech debt đầy đủ: `docs/puppet-kit-next.md`. Công thức chuyển động cho model viết animation: `docs/puppet-kit-motion-recipes.md`.
+
 User đánh giá tốt: nhịp thở và các nhịp phụ (nhún vai) sống động; pose đơn không xoay; áp fx.
 
 | # | Vấn đề | Ai nêu | Hướng xử lý |
@@ -136,4 +138,4 @@ User đánh giá tốt: nhịp thở và các nhịp phụ (nhún vai) sống đ
 | 9 | Vệt vuốt của lion mượn tham số màu của Holy Commander; dộng đất chưa có vòng sốc | Claude | bộ tham số riêng trong `source/vfx/` |
 | 10 | Không có test tự động; `stretch`, `band`, `init`, `pose` chưa qua advisor; Rig Tuner chưa mở thử trong trình duyệt | Claude | test hồi quy (hash frame), rà advisor |
 | 11 | Chưa có MCP (ý tưởng ban đầu của user); mọi thứ là CLI | Claude | bọc `check/render/pose/track` thành MCP khi format rig ổn định |
-
+| 12 | Run của lion: tay trái ở `pose_run_1` và `pose_run_3` bị gập, nhìn như tật | user | bước chuẩn bị tài nguyên: ghi góc khuỷu bằng số, bộ pose profile (`puppet-kit-next.md` §2) |

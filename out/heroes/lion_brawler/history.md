@@ -13,3 +13,4 @@
 | 2026-11-11 | idle / levelup / attack / skill_slam + fx | p01 | Puppet Kit | - | awaiting user | cỡ và điểm chân của pose căn bằng mắt + tỉ lệ diện tích, sai số vài px | thêm lệnh căn pose tự động | pipeline (Puppet Kit) |
 | 2026-11-11 | pose_run_1..4 | v01 | gpt-image-2 low | 8 | awaiting user | pose 4 đứng thẳng hơn 3 pose kia; chân gần/xa ở pose 1 và 3 khó phân biệt | - | user: "implement running pose" |
 | 2026-11-11 | run_side | p01 | Puppet Kit | - | awaiting user | 4 hình vẽ cho 8 frame: giật hơn vòng chạy video; đầu nhún 22 px @2x | thêm pose trung gian hoặc rig chân | user |
+| 2026-11-11 | pose_run_1, pose_run_3 | v01 | gpt-image-2 low | 5 | rejected by user (kept until the profile rig replaces them) | tay trái gập sát, nhìn như tật | ghi góc khuỷu bằng số; chuyển sang run rig profile (puppet-kit-next.md P05) | user: "tay trái bị tật" |

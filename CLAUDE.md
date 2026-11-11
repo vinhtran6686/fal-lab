@@ -51,6 +51,9 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   without weapon and forearms, `poses/*.json` one-part rigs of `pose_*` stills, `anims/*.json`). Use it first for idle, level-up, buffs and
   pose-to-pose attacks; keep `video-sprite` for turns, runs and anything a 2D rig cannot do. `track` writes the weapon root/tip from rig sockets
   in the milestone-01 `weapon_track.json` format; `slash` draws the M01 layered slash on the cut of a pose-to-pose attack.
+  **Before writing any animation JSON read `docs/puppet-kit-motion-recipes.md`** (sign conventions, timing tables, run cycle, checklist: copy the
+  tables, do not re-derive the mechanics). Next work and tech debt (asset preparation pack incl. profile poses, rig v2 with legs / hips / true
+  elbows, Rig Tuner v2, torso turns): `docs/puppet-kit-next.md`; nothing there is started until the user says so. `pose` registers a pose still to the rig.
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.
