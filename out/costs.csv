@@ -206,3 +206,8 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-10 16:38:19,out/heroes/holy_commander/.work/m01_downcut/pose_downcut_p2-20261110-163818-0.png,gpt-image-2,low,1024x1024,False,20.0,0.0149,True
 2026-11-10 16:42:01,out/heroes/holy_commander/.work/m01_downcut/t01/clip.mp4,h3-max-turbo,video,480P 3s,False,5.3,0.0450,True
 2026-11-10 18:36:11,out/heroes/holy_commander/.work/puppet/plate-20261110-183611-0.png,gpt-image-2,low,1024x1024,False,18.1,0.0123,True
+2026-11-11 01:37:00,out/heroes/frost_oracle/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,12.1,0.0142,True
+2026-11-11 01:37:42,out/heroes/frost_oracle/source/design/projectile_v01.png,gpt-image-2,low,1024x1024,False,11.2,0.0121,True
+2026-11-11 01:37:50,out/heroes/frost_oracle/source/design/icon_v01.png,gpt-image-2,low,1024x1024,False,19.5,0.0131,True
+2026-11-11 01:37:57,out/heroes/frost_oracle/source/rig/plate_v01.png,gpt-image-2,low,1024x1024,False,26.4,0.0114,True
+2026-11-11 01:40:19,out/heroes/frost_oracle/source/design/icon_v02.png,gpt-image-2,low,1024x1024,False,17.6,0.0123,True

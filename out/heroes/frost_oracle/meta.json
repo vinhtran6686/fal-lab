@@ -1,0 +1,116 @@
+{
+  "id": "frost_oracle",
+  "kind": "hero",
+  "cell": [
+    176,
+    140
+  ],
+  "scale_2x": 2,
+  "pivot": [
+    0.5,
+    0.88
+  ],
+  "body_height_2x": 120,
+  "shadow": {
+    "w_2x": 62,
+    "h_2x": 19,
+    "color": "#000000",
+    "alpha": 0.35
+  },
+  "states": {
+    "idle_side": {
+      "version": "p01",
+      "dir": "frames/idle_side",
+      "source": "source/rig/anims/idle.json",
+      "frames": 24,
+      "fps": 15,
+      "loop": true,
+      "files": "frames/idle_side/frames/@1x/hero_frost_oracle_idle_side_NN.png",
+      "sheet": "frames/idle_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rig",
+            24
+          ]
+        ]
+      }
+    },
+    "shoot_side": {
+      "version": "p01",
+      "dir": "frames/shoot_side",
+      "source": "source/rig/anims/shoot.json",
+      "frames": 16,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/shoot_side/frames/@1x/hero_frost_oracle_shoot_side_NN.png",
+      "sheet": "frames/shoot_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rig",
+            16
+          ]
+        ]
+      },
+      "hit_frame": 8
+    },
+    "levelup_side": {
+      "version": "p01",
+      "dir": "frames/levelup_side",
+      "source": "source/rig/anims/levelup.json",
+      "frames": 24,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/levelup_side/frames/@1x/hero_frost_oracle_levelup_side_NN.png",
+      "sheet": "frames/levelup_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rig",
+            24
+          ]
+        ]
+      },
+      "hit_frame": 10
+    },
+    "icon": {
+      "version": "v02",
+      "source": "source/design/icon_v02.png",
+      "frames": 1,
+      "fps": 12,
+      "loop": true,
+      "dir": "frames/icon",
+      "files": "frames/icon/frames/@1x/hero_frost_oracle_icon_NN.png",
+      "sheet": "frames/icon/sheet.png",
+      "split": "gaps",
+      "cell": [
+        128,
+        128
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "sources": {
+    "design": [
+      "icon_v02.png",
+      "master_v01.png",
+      "projectile_v01.png"
+    ]
+  }
+}

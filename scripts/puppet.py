@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Puppet Kit CLI: animate a character from its approved stills with a cut-out rig. No API call, deterministic.
 
+  python scripts/puppet.py init   <asset> [--cell 176x140 --height 120]  # meta.json of a new asset (no exported sheet yet)
   python scripts/puppet.py check  <asset>/source/rig/rig.json            # parts, bones, rest pose -> <asset>/.work/puppet/
   python scripts/puppet.py render <asset> <asset>/source/rig/anims/idle.json --sheet idle_side [--no-export]
   python scripts/puppet.py track  <asset> <anim.json> --name <vfx name>   # weapon root/tip -> source/vfx/<name>/weapon_track.json
@@ -55,6 +56,22 @@ def cmd_check(a):
     bg.alpha_composite(to_img(rest))
     bg.convert("RGB").save(out / "rig_rest.png")
     print(f"parts: {[p['name'] for p in rig.parts]}\nwrote {out}/rig_overlay.png, rig_parts.png, rig_rest.png")
+
+
+def cmd_init(a):
+    """meta.json for a new asset that has no exported sheet yet (cell, pivot, body height, foot shadow)."""
+    asset = pathlib.Path(a.asset)
+    path = asset / "meta.json"
+    if path.exists():
+        sys.exit(f"{path} exists: nothing to do")
+    w, h = (int(v) for v in a.cell.lower().split("x"))
+    sw = round(min(a.body_width * 0.8, a.height * 0.75))
+    meta = {"id": a.id or asset.name, "kind": a.kind, "cell": [w, h], "scale_2x": 2, "pivot": [0.5, 0.88],
+            "body_height_2x": a.height,
+            "shadow": {"w_2x": sw, "h_2x": max(4, round(sw * 0.3)), "color": "#000000", "alpha": 0.35},
+            "states": {}, "sources": {}}
+    path.write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"wrote {path}")
 
 
 def shadow_cell(meta, c2):
@@ -346,6 +363,11 @@ def cmd_slash(a):
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = p.add_subparsers(dest="cmd", required=True)
+    i = sp.add_parser("init"); i.add_argument("asset"); i.add_argument("--id"); i.add_argument("--kind", default="hero")
+    i.add_argument("--cell", default="176x140", help="canvas @1x from the class file (hero M: 176x140)")
+    i.add_argument("--height", type=int, default=120, help="body height @2x = 2 x {H} of the tier")
+    i.add_argument("--body-width", type=float, default=80, help="standing body width @2x, for the foot shadow")
+    i.set_defaults(fn=cmd_init)
     c = sp.add_parser("check"); c.add_argument("rig"); c.add_argument("--out"); c.set_defaults(fn=cmd_check)
     r = sp.add_parser("render"); r.add_argument("asset"); r.add_argument("anim"); r.add_argument("--sheet")
     r.add_argument("--no-export", action="store_true", help="preview into .work/puppet/<sheet>/ only"); r.set_defaults(fn=cmd_render)

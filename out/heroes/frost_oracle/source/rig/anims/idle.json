@@ -1,0 +1,14 @@
+{
+  "note": "Idle loop: breathing (the robe squashes about the feet), the staff stays planted, the far sleeve follows the staff hand, the near arm swings a little, the hem sways.",
+  "version": "p01", "fps": 15, "loop": true,
+  "rig": "source/rig/rig.json", "frames": 24,
+  "tracks": {
+    "_sway_period": 24,
+    "body.sy": {"base": 1.0, "osc": {"amp": -0.014, "period": 24}},
+    "body.sx": {"base": 1.0, "osc": {"amp": 0.007, "period": 24}},
+    "head.rot": {"osc": {"amp": 1.4, "period": 24, "phase": -0.12}},
+    "head.ty": {"osc": {"amp": 3.0, "period": 24, "phase": -0.08}},
+    "near_arm.rot": {"osc": {"amp": 2.6, "period": 24, "phase": -0.2}},
+    "staff.rot": {"osc": {"amp": 0.5, "period": 24, "phase": -0.3}}
+  }
+}

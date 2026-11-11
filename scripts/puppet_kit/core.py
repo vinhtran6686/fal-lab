@@ -236,10 +236,15 @@ class Rig:
             full[y0:y0 + h, x0:x0 + w] = part["img"]
             hard = (full[..., 3] > 128) & ~reddish(full)
             core |= ndi.binary_opening(hard, iterations=d.get("core_open", 8))
-        if not core.any():
+        if d.get("band"):                            # rigid above y0 and at y1, free in between (a robe hem above planted feet)
+            y0b, y1b = d["band"]
+            yy = np.arange(shape[0], dtype=np.float32)[:, None] * np.ones((1, shape[1]), np.float32)
+            wgt = smoothstep((yy - y0b) / d.get("range", 60)) * smoothstep((y1b - yy) / d.get("range_end", 40))
+        elif not core.any():
             return np.ones((h, w), np.float32)
-        dist = ndi.distance_transform_edt(~core)
-        wgt = smoothstep((dist - d.get("start", 6)) / d.get("range", 60))
+        else:
+            dist = ndi.distance_transform_edt(~core)
+            wgt = smoothstep((dist - d.get("start", 6)) / d.get("range", 60))
         pad = int(d.get("pad", 40))
         part["wpad"] = pad
         wfull = np.pad(wgt, pad, mode="edge")
@@ -289,6 +294,15 @@ class Rig:
             a2 = math.atan2(t1[1] - e1[1], t1[0] - e1[0])
             world[ik["upper"]] = T(*s1) @ R(math.degrees(a1)) @ S(stretch, 1) @ R(-math.degrees(a1r)) @ T(-s0[0], -s0[1])
             world[ik["lower"]] = T(*e1) @ R(math.degrees(a2)) @ S(stretch, 1) @ R(-math.degrees(a2r)) @ T(-e0[0], -e0[1])
+        for st in self.spec.get("stretch", []):      # one bone aimed at a target and stretched to reach it (a sleeve)
+            b = self.bones[st["bone"]]
+            s0, e0 = np.array(b["pivot"], float), np.array(st["end"], float)
+            s1 = apply(world[b["parent"]], s0)
+            t1 = apply(world[st["target"]["bone"]], st["target"]["pt"])
+            a0 = math.atan2(e0[1] - s0[1], e0[0] - s0[0])
+            a1 = math.atan2(t1[1] - s1[1], t1[0] - s1[0])
+            k = np.linalg.norm(t1 - s1) / max(1e-6, np.linalg.norm(e0 - s0))
+            world[st["bone"]] = T(*s1) @ R(math.degrees(a1)) @ S(k, 1) @ R(-math.degrees(a0)) @ T(-s0[0], -s0[1])
         return world, vals
 
     def sockets(self, world):

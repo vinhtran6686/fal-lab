@@ -31,6 +31,7 @@ Video chỉ còn dùng cho động tác rig 2D không làm được (xoay ngư�
 ## Lệnh
 
 ```bash
+python scripts/puppet.py init   out/heroes/<id> --cell 176x140 --height 120   # asset mới, chưa có meta.json
 python scripts/puppet.py check  out/heroes/holy_commander/source/rig/rig.json
 python scripts/puppet.py render out/heroes/holy_commander out/heroes/holy_commander/source/rig/anims/idle.json --sheet idle_side
 python scripts/puppet.py render out/heroes/holy_commander out/heroes/holy_commander/source/rig/anims/levelup.json --sheet levelup_puppet_side
@@ -75,4 +76,17 @@ python scripts/puppet.py slash  out/heroes/holy_commander out/heroes/holy_comman
 | `attack_diag_puppet_side` | 2 | 16, hit 8 | master → `pose_downcut_p1` → `pose_downcut_p2` → master; để so với `attack_diag_side` (video) |
 | fx `slash_diag_puppet` | - | 16 | vệt chém từ socket của rig, không đánh dấu tay |
 
-Chi phí API của cả nhánh: 1 ảnh plate, ~0,012 USD.
+Chi phí API: 1 ảnh plate, ~0,012 USD.
+
+## Frost Oracle (Băng Sư): nhân vật mới làm thẳng bằng kit (2026-11-11)
+
+Hero đánh xa cỡ M, tạo bằng `fal-image` (master, icon, projectile) rồi dựng rig ngay, không có state video nào.
+
+| State | Frame | Ghi chú |
+|---|---|---|
+| `idle_side` | 24, lặp | áo nén quanh chân, trượng cắm yên, tay áo xa co giãn theo tay cầm trượng (`stretch`), vạt áo dao động (`deform.band`) |
+| `shoot_side` | 16, hit 8 | ngả ra sau, nhấc trượng, đẩy tinh thể ra trước; đạn rời socket `cast` |
+| `levelup_side` | 24, hit 10 | khuỵu, giơ trượng và tay tự do lên cao, giữ, hạ |
+
+Rig đúng tư thế master ngay lần `check` đầu; 5 ảnh, ~0,063 USD. Thêm vào engine cho nhân vật này: `puppet.py init` (tạo `meta.json` cho asset chưa có sheet),
+ràng buộc `stretch` (một xương kéo giãn tới điểm đích) và `deform.band` (dao động trong một dải cao độ, hai đầu đứng yên).
