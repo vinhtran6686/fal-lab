@@ -173,6 +173,11 @@ class Rig:
                 m = None
             else:
                 raise ValueError(f"part {p['name']}: unknown select {sel}")
+            if m is not None and p.get("discs"):         # round joints: [{"at": [x, y], "r": px}] add a disc of the source to the cut, so the part turns about its pivot with a round end
+                dm = Image.new("L", (m.shape[1], m.shape[0]), 0)
+                for d_ in p["discs"]:
+                    ImageDraw.Draw(dm).ellipse([d_["at"][0] - d_["r"], d_["at"][1] - d_["r"], d_["at"][0] + d_["r"], d_["at"][1] + d_["r"]], fill=255)
+                m = m | ((np.asarray(dm) > 0) & (src[..., 3] > 8))
             masks[p["name"]] = m
         for p in specs:
             m = masks[p["name"]]
@@ -283,6 +288,18 @@ class Rig:
             d = np.linalg.norm(t1 - s1)
             stretch = max(1.0, d / (l1 + l2 - 1e-6))
             L1, L2 = l1 * stretch, l2 * stretch
+            st_lo = stretch
+            if ik.get("stretch") == "lower":         # the thigh keeps its length; the lower bone (shin) follows the foot: it grows past the reach
+                stretch = 1.0                        # and shrinks instead of folding the knee beyond "max_bend" degrees
+                L1, L2 = l1, l2
+                if d >= l1 + l2:
+                    L2 = d - l1 + 1e-6
+                else:
+                    mb = math.radians(ik.get("max_bend", 55))
+                    bend0 = math.pi - math.acos(max(-1, min(1, (l1 * l1 + l2 * l2 - d * d) / (2 * l1 * l2))))
+                    if bend0 > mb and d > l1 * math.sin(mb):
+                        L2 = max(l2 * ik.get("min_scale", 0.5), min(l2, -l1 * math.cos(mb) + math.sqrt(d * d - (l1 * math.sin(mb)) ** 2)))
+                st_lo = L2 / l2
             dd = min(max(d, abs(L1 - L2) + 1e-6), L1 + L2 - 1e-6)
             base = math.atan2(t1[1] - s1[1], t1[0] - s1[0])
             bend = math.acos(max(-1, min(1, (L1 * L1 + dd * dd - L2 * L2) / (2 * L1 * dd))))
@@ -298,7 +315,7 @@ class Rig:
             a2r = math.atan2(w0[1] - e0[1], w0[0] - e0[0])
             a2 = math.atan2(t1[1] - e1[1], t1[0] - e1[0])
             world[ik["upper"]] = T(*s1) @ R(math.degrees(a1)) @ S(stretch, 1) @ R(-math.degrees(a1r)) @ T(-s0[0], -s0[1])
-            world[ik["lower"]] = T(*e1) @ R(math.degrees(a2)) @ S(stretch, 1) @ R(-math.degrees(a2r)) @ T(-e0[0], -e0[1])
+            world[ik["lower"]] = T(*e1) @ R(math.degrees(a2)) @ S(st_lo, 1) @ R(-math.degrees(a2r)) @ T(-e0[0], -e0[1])
             fixed = {ik["upper"], ik["lower"]}
             if ik.get("end_bone"):                   # a planted foot: it sits on the target and keeps its own angle
                 eb = self.bones[ik["end_bone"]]
@@ -334,18 +351,31 @@ class Rig:
             nxt = np.array(self.bones[names[i + 1]]["pivot"] if i + 1 < len(names) else skin["tip"], float)
             axis = (nxt - piv) / max(1e-6, np.linalg.norm(nxt - piv))
             rel = np.linalg.inv(world[names[i - 1]]) @ world[names[i]]
-            ang = math.atan2(rel[1, 0], rel[0, 0])
+            ang, k = math.atan2(rel[1, 0], rel[0, 0]), 1.0
+            if skin.get("stretch"):                       # the bone below the joint was lengthened along its axis: the picture grows with it
+                v = rel[:2, :2] @ axis
+                ang, k = math.atan2(v[1], v[0]) - math.atan2(axis[1], axis[0]), float(np.hypot(*v))
             blend = skin.get("blend", 40)
             blend = blend[i - 1] if isinstance(blend, list) else blend
-            joints.append((piv, axis, ang, float(blend)))
+            joints.append((piv, axis, ang, float(blend), k))
         def weights(qx, qy):
-            return [smoothstep(((qx - piv[0]) * axis[0] + (qy - piv[1]) * axis[1] + blend) / (2 * blend)) for piv, axis, _, blend in joints]
+            return [smoothstep(((qx - piv[0]) * axis[0] + (qy - piv[1]) * axis[1] + blend) / (2 * blend)) for piv, axis, _, blend, _ in joints]
 
         def turn(rx, ry, ws, sign):                       # sign +1: rest -> bent (outer joints first); -1: bent -> rest
             seq = list(zip(joints, ws))
-            for (piv, _, ang, _), w in (reversed(seq) if sign > 0 else seq):
+            for (piv, axis, ang, _, k), w in (reversed(seq) if sign > 0 else seq):
                 c, sn = np.cos(sign * w * ang), np.sin(sign * w * ang)
                 dx, dy = rx - piv[0], ry - piv[1]
+                if k != 1.0 and sign < 0:                 # bent -> rest: turn back first, then undo the growth along the bone
+                    dx, dy = c * dx - sn * dy, sn * dx + c * dy
+                    par = dx * axis[0] + dy * axis[1]
+                    g = par / (1 + (k - 1) * w) - par
+                    rx, ry = piv[0] + dx + g * axis[0], piv[1] + dy + g * axis[1]
+                    continue
+                if k != 1.0:                              # rest -> bent: grow along the bone, then turn
+                    par = dx * axis[0] + dy * axis[1]
+                    g = par * (k - 1) * w
+                    dx, dy = dx + g * axis[0], dy + g * axis[1]
                 rx, ry = piv[0] + c * dx - sn * dy, piv[1] + sn * dx + c * dy
             return rx, ry
 

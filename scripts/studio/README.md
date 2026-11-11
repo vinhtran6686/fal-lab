@@ -3,12 +3,13 @@
 Local editor around the Puppet Kit: pose the Lion, configure joints, joint limits and muscle links, edit pivots / cut polygons / joint blend, keep poses in an independent library.
 Every picture is rendered by `scripts/puppet_kit/core.py` (`Rig.render`); the browser only draws overlays and edits data. 0 USD, no image/video API.
 
+AI recipes: [docs/puppet-studio-ai-guide.md](../../docs/puppet-studio-ai-guide.md). Concepts for the user: [docs/puppet-studio-concepts.md](../../docs/puppet-studio-concepts.md).
 Full guide (Vietnamese, schema for `limit` and `links`, rules for AI): [docs/puppet-studio.md](../../docs/puppet-studio.md).
 
 ```
 python scripts/studio/server.py              # http://127.0.0.1:8765/  (opens rig_studio_v01.json when present)
 python scripts/studio/server.py --rig rig.json --port 8765 --no-browser
-python scripts/studio/test_studio.py         # 47 tests on a temp copy of the asset
+python scripts/studio/test_studio.py         # 52 tests on a temp copy of the asset
 ```
 Needs numpy, Pillow, scipy (already required by the Puppet Kit). Stdlib server on 127.0.0.1; POSTs need an `X-Studio` header.
 

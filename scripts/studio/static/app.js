@@ -26,7 +26,7 @@ const DEFAULT_LIMITS = { upper_arm: [-170, 140], forearm: [-160, 80], hand: [-70
 const S = {
   rig: null, saved: null, parts: [], rigFile: "rig.json", rigFiles: [], topology: "",
   pose: { bones: {}, ik: {} }, poseBase: '{"bones":{},"ik":{}}', poseId: null,
-  tool: "pose", sel: null, selPart: null, editPart: null, selVert: null, libSel: null, libFocus: false,
+  focusOn: true, tool: "pose", sel: null, selPart: null, editPart: null, selVert: null, libSel: null, libFocus: false,
   leftTab: "layers", rightTab: "pose", selLink: 0, hover: null, mouse: null, hitLimit: null,
   vis: { skeleton: true, labels: true, pivots: true, bounds: false, polys: false, skin: false, rigid: false, sockets: true, ik: true, links: true, limits: true, influence: true },
   hide: new Set(), rest: false, bg: "dark", grid: true, showChar: true, ghostRig: false,
@@ -77,6 +77,15 @@ const mapPt = (m, x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[
 const inv2 = (m) => { const d = m[0] * m[3] - m[1] * m[2] || 1e-9; return [m[3] / d, -m[1] / d, -m[2] / d, m[0] / d, 0, 0]; };
 function invPt(m, x, y) { const i = inv2(m), dx = x - m[4], dy = y - m[5]; return [i[0] * dx + i[2] * dy, i[1] * dx + i[3] * dy]; }
 const posedPivot = (n) => { const b = bone(n); return mapPt(world(n), b.pivot[0], b.pivot[1]); };
+/** Focus group: with a bone selected, only that bone, its parents up to the root and everything below it are drawn and clickable.
+ *  Click empty space / Esc (selection cleared) shows every node again. Off in the rig-edit tools and in compare. */
+function focusSet() {
+  if (!S.focusOn || !S.sel || S.tool === "pivot" || S.tool === "anchor" || S.cmp.on || !bone(S.sel)) return null;
+  const set = new Set([S.sel, ...desc(S.sel)]);
+  for (let b = bone(S.sel); b && b.parent; b = bone(b.parent)) set.add(b.parent);
+  return set;
+}
+const inFocus = (n, f = focusSet()) => !f || f.has(n);
 const isLeaf = (n) => !children(n).length;
 function boneEndRest(n) {
   const c = children(n)[0];
@@ -177,6 +186,8 @@ function layersFor(pose) {
   return L;
 }
 const loadImg = (b64) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = "data:image/png;base64," + b64; });
+// wide on purpose: a limb swung far out of the 1024 picture must not be cut at the edge (w*h*scale^2 stays under the server's 4M px cap at 1x)
+const RENDER_REGION = [-440, -340, 1904, 1704];
 async function renderNow(q) {
   if (S.rigSync) {
     const snapRig = S.rig;
@@ -184,7 +195,7 @@ async function renderNow(q) {
     if (snapRig === S.rig) S.rigSync = false;
   }
   const pose = displayPose(), final = q === "final", scale = final ? parseFloat($("#optQuality").value) : DRAFT, gs = S.gameH / S.rig.unit;
-  const body = { scale, draft: !final, region: [-60, -60, 1144, 1144], layers: layersFor(pose) };
+  const body = { scale, draft: !final, region: RENDER_REGION, layers: layersFor(pose) };
   if (final) body.game = { scale: gs, region: [S.rig.ground[0] - 360, S.rig.ground[1] - S.rig.unit * 1.12, 720, S.rig.unit * 1.2] };
   const res = await api("/api/render", body), img = await loadImg(res.png);
   S.render = res; S.img = img; S.renderQ = q;
@@ -283,6 +294,18 @@ function boneShape(a, b, col, sel) {
 }
 function desc(n) { const out = []; const walk = (x) => children(x).forEach((c) => { out.push(c.name); walk(c.name); }); walk(n); return out; }
 
+/** The real cut of a layer with round joints = polygon + discs. Draws the filled union and ONE outline around it (edges inside the other shape are hidden). */
+function drawCutUnion(p, col, fill) {
+  const d = window.devicePixelRatio || 1, mk = () => { const c = document.createElement("canvas"); c.width = cv.width; c.height = cv.height; const x = c.getContext("2d"); x.setTransform(d, 0, 0, d, 0, 0); return x; };
+  const discs = p.discs.map((q) => { const [x, y] = toScreen(...mapPt(world(p.bone), q.at[0], q.at[1])); return [x, y, q.r * S.view.zoom]; });
+  const path = (x) => { x.beginPath(); posedPoly(p).forEach((q, i) => { const [a, b] = toScreen(q[0], q[1]); i ? x.lineTo(a, b) : x.moveTo(a, b); }); x.closePath(); };
+  ctx.fillStyle = fill; for (const [x, y, r] of discs) { ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); }
+  const w = S.editPart === p.name ? 3 : 1.5, A = mk(); path(A); A.strokeStyle = col; A.lineWidth = w; A.stroke(); A.globalCompositeOperation = "destination-out";
+  for (const [x, y, r] of discs) { A.beginPath(); A.arc(x, y, r, 0, 7); A.fill(); }
+  const B = mk(); for (const [x, y, r] of discs) { B.beginPath(); B.arc(x, y, r, 0, 7); B.strokeStyle = col; B.lineWidth = w; B.stroke(); }
+  B.globalCompositeOperation = "destination-out"; path(B); B.fill();
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(A.canvas, 0, 0); ctx.drawImage(B.canvas, 0, 0); ctx.restore();
+}
 function drawOverlay() {
   if (!S.render) return;
   const V = S.vis, selB = S.sel, sel = selB ? new Set([selB, ...desc(selB)]) : new Set();
@@ -292,23 +315,28 @@ function drawOverlay() {
     if (V.bounds) { const m = S.parts.find((q) => q.name === p.name); if (m) { poly(rect(m.off, m.size).map((q) => mapPt(world(p.bone), q[0], q[1]))); ctx.strokeStyle = "#ffffff90"; ctx.setLineDash([4, 3]); ctx.lineWidth = 1; ctx.stroke(); ctx.setLineDash([]); } }
     if (!p.select.poly || !(show || infl)) continue;
     poly(posedPoly(p)); ctx.fillStyle = infl ? "#ffc83d40" : isSkin ? "#b57bff22" : "#3fd1c522"; ctx.fill();
-    ctx.strokeStyle = S.editPart === p.name ? "#ff8ae6" : infl ? "#ffc83d" : isSkin ? "#c58bff" : "#4fd1c5"; ctx.lineWidth = S.editPart === p.name ? 3 : 1.2; ctx.stroke();
+    ctx.strokeStyle = S.editPart === p.name ? "#ff8ae6" : infl ? "#ffc83d" : isSkin ? "#c58bff" : "#4fd1c5"; ctx.lineWidth = S.editPart === p.name ? 3 : 1.2; if (!(p.discs && p.discs.length)) ctx.stroke();
+    if (p.discs && p.discs.length) drawCutUnion(p, S.editPart === p.name ? "#ff8ae6" : "#4fd1c5", ctx.fillStyle);
   }
   if (V.skin) for (const p of S.rig.parts) if (p.skin) drawSkinBands(p);
   if (V.influence && selB) for (const n of sel) if (n !== selB) { const e = boneEnd(n); if (e) line(posedPivot(n), e.pt, "#ffc83d66", 5); }
   if (V.links) drawLinks();
+  const F = focusSet();
   if (V.skeleton) for (const b of S.rig.bones) {
+    if (!inFocus(b.name, F)) continue;
     const P = posedPivot(b.name), isSel = b.name === selB;
     if (b.parent) { const pe = boneEnd(b.parent); if (!pe || Math.hypot(pe.pt[0] - P[0], pe.pt[1] - P[1]) > 1) line(posedPivot(b.parent), P, "#ffffff55", 1.5, [3, 3]); }
     const e = boneEnd(b.name); if (e) boneShape(P, e.pt, isSel ? "#ffd84a" : sideColor(b.name), isSel);
   }
   if (V.pivots || V.skeleton) for (const b of S.rig.bones) {
+    if (!inFocus(b.name, F)) continue;
     const [x, y] = toScreen(...posedPivot(b.name)), isSel = b.name === selB;
     ctx.beginPath(); ctx.arc(x, y, isSel ? 7 : 4.5, 0, 7); ctx.fillStyle = isSel ? "#ffd84a" : "#101319"; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = isSel ? "#fff" : sideColor(b.name); ctx.stroke();
   }
-  if (V.labels) { ctx.font = "11px system-ui"; ctx.textBaseline = "middle"; for (const b of S.rig.bones) { const [x, y] = toScreen(...posedPivot(b.name)), t = viName(b.name), w = ctx.measureText(t).width; ctx.fillStyle = "#000b"; ctx.fillRect(x + 8, y - 8, w + 6, 15); ctx.fillStyle = b.name === selB ? "#ffd84a" : "#fff"; ctx.fillText(t, x + 11, y); } }
+  if (V.labels) { ctx.font = "11px system-ui"; ctx.textBaseline = "middle"; for (const b of S.rig.bones) { if (!inFocus(b.name, F)) continue; const [x, y] = toScreen(...posedPivot(b.name)), t = viName(b.name), w = ctx.measureText(t).width; ctx.fillStyle = "#000b"; ctx.fillRect(x + 8, y - 8, w + 6, 15); ctx.fillStyle = b.name === selB ? "#ffd84a" : "#fff"; ctx.fillText(t, x + 11, y); } }
   if (V.sockets) for (const [n, s] of Object.entries(S.rig.sockets || {})) { const [x, y] = toScreen(...mapPt(world(s.bone), s.pt[0], s.pt[1])); ctx.strokeStyle = "#7dff7d"; ctx.lineWidth = 2; ctx.strokeRect(x - 5, y - 5, 10, 10); ctx.fillStyle = "#7dff7d"; ctx.font = "10px system-ui"; ctx.fillText(n, x + 8, y + 12); }
   if (V.ik) for (const ik of S.rig.ik || []) {
+    if (!inFocus(ik.upper, F)) continue;
     const [x, y] = toScreen(...ikTargetWorld(ik)), on = ikOn(ik);
     ctx.beginPath(); ctx.moveTo(x, y - 8); ctx.lineTo(x + 8, y); ctx.lineTo(x, y + 8); ctx.lineTo(x - 8, y); ctx.closePath(); ctx.strokeStyle = on ? "#ff5edb" : "#888"; ctx.lineWidth = 2; ctx.stroke();
     ctx.fillStyle = ctx.strokeStyle; ctx.font = "10px system-ui"; ctx.fillText(`IK chân ${ik.upper.startsWith("near") ? "gần" : "xa"}${on ? "" : " (FK)"}`, x + 10, y - 10);
@@ -344,14 +372,15 @@ function drawGizmos() {
   if (S.cmp.on) return;
   const pulse = 0.5 + 0.5 * Math.sin(performance.now() / 300);
   if (S.tool === "pose") {
+    const F = focusSet();
     for (const b of S.rig.bones) {
-      if (!isLeaf(b.name)) continue;
+      if (!isLeaf(b.name) || !inFocus(b.name, F)) continue;
       const e = boneEnd(b.name); if (!e) continue;
       const [x, y] = toScreen(...e.pt), on = b.name === S.sel || (S.hover && S.hover.id === b.name);
       ring(x, y, on ? 14 : 11 + pulse * 2, on ? "#ffd84a" : "#ffffffcc", on ? 3 : 2);
     }
     for (const ik of S.rig.ik || []) {
-      if (!footTarget(ik)) continue;
+      if (!footTarget(ik) || !inFocus(ik.upper, F)) continue;
       const [x, y] = toScreen(...ikTargetWorld(ik)), on = ik.end_bone === S.sel || (S.hover && S.hover.id === ik.end_bone);
       ring(x, y, on ? 15 : 12 + pulse * 2, on ? "#ffd84a" : "#ff8ae6", on ? 3 : 2);
     }
@@ -364,15 +393,32 @@ function drawGizmos() {
     ctx.font = "12px system-ui"; const t = viName(S.hover.id), w = ctx.measureText(t).width; ctx.fillStyle = "#000d"; ctx.fillRect(x + 20, y - 26, w + 12, 20); ctx.fillStyle = "#fff"; ctx.fillText(t, x + 26, y - 12);
   }
 }
-function drawLimitArc(n) {
-  const L = limitOf(n); if (!L) return;
+function limitArc(n) {
+  const L = limitOf(n); if (!L) return null;
   const b = bone(n), e = boneEndRest(n), par = b.parent ? world(b.parent) : [1, 0, 0, 1, 0, 0];
   const v = e ? [e.rest[0] - b.pivot[0], e.rest[1] - b.pivot[1]] : [0, -1], a0 = Math.atan2(par[1] * v[0] + par[3] * v[1], par[0] * v[0] + par[2] * v[1]);
-  const [x, y] = toScreen(...posedPivot(n)), R = 62, rad = (d) => a0 + (d * Math.PI) / 180;
+  const [x, y] = toScreen(...posedPivot(n));
+  return { L, x, y, R: 62, a0, rad: (d) => a0 + (d * Math.PI) / 180 };
+}
+const limitArcShown = () => S.sel && S.vis.limits && (S.tool === "rotate" || S.tool === "pose") && !S.cmp.on && !S.rest;
+/** The two ends of the orange arc are handles: drag one to set the bone's min / max angle (writes bone.limit.rot of the rig). */
+function pickLimitHandle(sx, sy) {
+  if (!limitArcShown()) return null;
+  const g = limitArc(S.sel); if (!g) return null;
+  for (let i = 0; i < 2; i++) if (Math.hypot(g.x + Math.cos(g.rad(g.L[i])) * g.R - sx, g.y + Math.sin(g.rad(g.L[i])) * g.R - sy) < 12) return i;
+  return null;
+}
+function drawLimitArc(n) {
+  const g = limitArc(n); if (!g) return;
+  const { L, x, y, R, rad } = g;
   ctx.beginPath(); ctx.arc(x, y, R, rad(L[0]), rad(L[1])); ctx.strokeStyle = "#ffb86b"; ctx.lineWidth = 6; ctx.globalAlpha = 0.5; ctx.stroke(); ctx.globalAlpha = 1;
-  for (const d of L) { ctx.beginPath(); ctx.moveTo(x + Math.cos(rad(d)) * (R - 10), y + Math.sin(rad(d)) * (R - 10)); ctx.lineTo(x + Math.cos(rad(d)) * (R + 10), y + Math.sin(rad(d)) * (R + 10)); ctx.strokeStyle = "#ffb86b"; ctx.lineWidth = 3; ctx.stroke(); }
+  for (let i = 0; i < 2; i++) {
+    const d = L[i], hot = (drag && drag.type === "limit" && drag.i === i) || S.hoverLimit === i, px = x + Math.cos(rad(d)) * R, py = y + Math.sin(rad(d)) * R;
+    ctx.beginPath(); ctx.moveTo(x + Math.cos(rad(d)) * (R - 10), y + Math.sin(rad(d)) * (R - 10)); ctx.lineTo(x + Math.cos(rad(d)) * (R + 10), y + Math.sin(rad(d)) * (R + 10)); ctx.strokeStyle = "#ffb86b"; ctx.lineWidth = 3; ctx.stroke();
+    ctx.beginPath(); ctx.arc(px, py, hot ? 8 : 6, 0, 7); ctx.fillStyle = hot ? "#ffd84a" : "#ffb86b"; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = "#101319"; ctx.stroke();
+  }
   const cur = chVal(n, "rot"); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(rad(cur)) * R, y + Math.sin(rad(cur)) * R); ctx.strokeStyle = "#ffd84a"; ctx.lineWidth = 2; ctx.stroke();
-  ctx.fillStyle = "#ffb86b"; ctx.font = "11px system-ui"; ctx.fillText(`giới hạn ${L[0]}°…${L[1]}°`, x - 40, y + R + 18);
+  ctx.fillStyle = "#ffb86b"; ctx.font = "11px system-ui"; ctx.fillText(`giới hạn ${fmt(L[0])}°…${fmt(L[1])}° (kéo hai chấm cam để đổi)`, x - 70, y + R + 18);
 }
 function drawPointer() {
   if (!S.mouse) return;
@@ -403,16 +449,19 @@ function pickEdge(sx, sy) {
 }
 function pickEndHandle(sx, sy) {
   let best = null, bd = 20;
-  for (const ik of S.rig.ik || []) { if (!footTarget(ik) || !ik.end_bone) continue; const [x, y] = toScreen(...ikTargetWorld(ik)), d = Math.hypot(x - sx, y - sy); if (d < bd) { bd = d; best = ik.end_bone; } }
-  for (const b of S.rig.bones) { if (!isLeaf(b.name)) continue; const e = boneEnd(b.name); if (!e) continue; const [x, y] = toScreen(...e.pt), d = Math.hypot(x - sx, y - sy); if (d < bd) { bd = d; best = b.name; } }
+  const F = focusSet();
+  for (const ik of S.rig.ik || []) { if (!footTarget(ik) || !ik.end_bone || !inFocus(ik.end_bone, F)) continue; const [x, y] = toScreen(...ikTargetWorld(ik)), d = Math.hypot(x - sx, y - sy); if (d < bd) { bd = d; best = ik.end_bone; } }
+  for (const b of S.rig.bones) { if (!isLeaf(b.name) || !inFocus(b.name, F)) continue; const e = boneEnd(b.name); if (!e) continue; const [x, y] = toScreen(...e.pt), d = Math.hypot(x - sx, y - sy); if (d < bd) { bd = d; best = b.name; } }
   return best;
 }
 function pickBone(sx, sy) {
   let best = null, bd = 16;
-  for (const b of S.rig.bones) { const [x, y] = toScreen(...posedPivot(b.name)), d = Math.hypot(x - sx, y - sy); if (d < bd) { bd = d; best = b.name; } }
+  const F = focusSet();
+  for (const b of S.rig.bones) { if (!inFocus(b.name, F)) continue; const [x, y] = toScreen(...posedPivot(b.name)), d = Math.hypot(x - sx, y - sy); if (d < bd) { bd = d; best = b.name; } }
   if (best) return best;
   bd = 11;
   for (const b of S.rig.bones) {
+    if (!inFocus(b.name, F)) continue;
     const e = boneEnd(b.name); if (!e) continue;
     const a = toScreen(...posedPivot(b.name)), c = toScreen(...e.pt), dx = c[0] - a[0], dy = c[1] - a[1], L2 = dx * dx + dy * dy || 1;
     const t = Math.max(0, Math.min(1, ((sx - a[0]) * dx + (sy - a[1]) * dy) / L2)), d = Math.hypot(a[0] + t * dx - sx, a[1] + t * dy - sy);
@@ -425,6 +474,7 @@ function pickPartBone(sx, sy) {
   const [rx, ry] = toRig(sx, sy);
   for (let i = S.rig.parts.length - 1; i >= 0; i--) {
     const p = S.rig.parts[i]; if (S.hide.has(p.name) || !p.select.poly || !pointInPoly(rx, ry, posedPoly(p))) continue;
+    if (focusSet() && !(p.skin ? p.skin.bones : [p.bone]).some((n) => inFocus(n))) continue;
     if (!p.skin) return p.bone;
     const q = invPt(world(p.bone), rx, ry), names = p.skin.bones;
     let best = names[0], bd = 1e9;
@@ -519,6 +569,31 @@ function applyFoot(m) {
   setCh(d.tb, "tx", Math.round((d.tx0 + i[0] * dx + i[2] * dy) * 10) / 10); setCh(d.tb, "ty", Math.round((d.ty0 + i[1] * dx + i[3] * dy) * 10) / 10);
   d.target = T; d.residual = 0; render("draft"); refreshValues(); draw();
 }
+function dragLimit(m, e) {
+  const b = bone(drag.bone), g = limitArc(drag.bone); if (!g) return;
+  const P = posedPivot(drag.bone), a = Math.atan2(m[1] - P[1], m[0] - P[0]);
+  let d = (((a - g.a0) * 180) / Math.PI + 540) % 360 - 180;                      // degrees from the rest direction, -180..180
+  d = Math.round(d / (e.shiftKey ? 5 : 1)) * (e.shiftKey ? 5 : 1);
+  const L = [...g.L], i = drag.i;
+  L[i] = i === 0 ? Math.min(d, L[1] - 1) : Math.max(d, L[0] + 1);
+  b.limit = { ...(b.limit || {}), rot: L }; S.rigSync = true; draw(); refreshValues();
+}
+/** T (or Ctrl+T where the browser lets the page have it): turn the selected bone with the mouse, no button held. Click / Enter = keep, Esc / right click = cancel. */
+function startRotModal() {
+  const n = S.sel;
+  if (!n) return toast("Chọn một khớp trước, rồi bấm T để xoay");
+  if (locked()) return blockedMsg();
+  if (ikDriven(n)) return toast(`${viName(n)} do IK điều khiển: chuyển chân sang FK ở tab Khớp & giới hạn`);
+  if (drag) return;
+  const m = S.mouse ? toRig(...S.mouse) : posedPivot(n).map((v, i) => v + (i ? 0 : 80));
+  beginEdit(); drag = { ...mkRotate(n, m), modal: true }; toast(`Xoay ${viName(n)}: di chuột · bấm trái/Enter = giữ · Esc/chuột phải = hủy · Shift = tròn số`);
+}
+function endRotModal(keep) {
+  if (!drag || !drag.modal) return;
+  const d = drag; drag = null;
+  if (!keep) setCh(d.bone, "rot", d.rot0);
+  commitEdit(); draw();
+}
 function applyRotate(m, e) {
   beginEdit();
   const d = drag, a = Math.atan2(m[1] - d.P[1], m[0] - d.P[0]);
@@ -558,12 +633,15 @@ cv.addEventListener("pointerleave", () => { S.mouse = null; S.hover = null; draw
 cv.addEventListener("pointerdown", (e) => {
   cv.setPointerCapture(e.pointerId); hideMenu();
   const [sx, sy] = canvasXY(e); S.mouse = [sx, sy];
+  if (drag && drag.modal) { e.button === 0 ? endRotModal(true) : endRotModal(false); return; }
   if (e.button === 1 || spaceDown || e.altKey) { drag = { type: "pan", sx, sy, px: S.view.px, py: S.view.py }; return; }
   if (e.button !== 0) return;
   S.libFocus = false;
   const m = toRig(sx, sy);
   if (S.cmp.on) { S.sel = pickTarget(sx, sy); refreshPanels(); draw(); return; }
   if (S.tool === "anchor") { placeAnchor(m); return; }
+  const lh = pickLimitHandle(sx, sy);
+  if (lh !== null) { beginEdit(); drag = { type: "limit", i: lh, bone: S.sel }; draw(); return; }
   const v = pickVertex(sx, sy);
   if (v !== null) { S.selVert = v; beginEdit(); drag = { type: "vertex", i: v }; refreshPanels(); draw(); return; }
   if (S.tool === "pivot") {
@@ -573,7 +651,8 @@ cv.addEventListener("pointerdown", (e) => {
     refreshPanels(); draw(); return;
   }
   let hit = pickTarget(sx, sy);
-  if (!hit && S.sel && (S.tool === "rotate" || S.tool === "move")) { const P = toScreen(...posedPivot(S.sel)); if (Math.hypot(P[0] - sx, P[1] - sy) < 64) hit = S.sel; }
+  if (!hit && S.sel && S.tool === "rotate") hit = S.sel;          // rotate tool: press anywhere and drag to turn the selected bone
+  if (!hit && S.sel && S.tool === "move") { const P = toScreen(...posedPivot(S.sel)); if (Math.hypot(P[0] - sx, P[1] - sy) < 64) hit = S.sel; }
   press = { sx, sy, m, hit, moved: false };
   if (hit && hit !== S.sel) { S.sel = hit; S.selPart = null; refreshPanels(); draw(); }
 });
@@ -589,6 +668,7 @@ cv.addEventListener("pointermove", (e) => {
   }
   if (!drag) {
     if (!press) {
+      const lh = pickLimitHandle(sx, sy); if (lh !== S.hoverLimit) S.hoverLimit = lh;
       const v = pickVertex(sx, sy), eh = v === null && S.tool === "pose" ? pickEndHandle(sx, sy) : null;
       S.hover = v !== null ? { kind: "vertex", id: v } : eh ? { kind: "bone", id: eh } : (() => { const b = pickBone(sx, sy); return b ? { kind: "bone", id: b } : null; })();
       updateHint();
@@ -600,6 +680,7 @@ cv.addEventListener("pointermove", (e) => {
   const snap = (v) => (e.shiftKey ? Math.round(v) : r1(v));
   if (drag.type === "vertex") { const p = partOf(S.editPart), q = invPt(world(p.bone), m[0], m[1]); p.select.poly[drag.i] = [snap(q[0]), snap(q[1])]; S.rigSync = true; render("draft"); refreshValues(); }
   else if (drag.type === "pivot") { const b = bone(drag.id), Wp = b.parent ? drag.w0[b.parent] : [1, 0, 0, 1, 0, 0], q = invPt(Wp, m[0], m[1]); b.pivot = [snap(q[0] - chVal(b.name, "tx")), snap(q[1] - chVal(b.name, "ty"))]; S.rigSync = true; render("draft"); refreshValues(); }
+  else if (drag.type === "limit") dragLimit(m, e);
   else if (drag.type === "ik") { const ik = S.rig.ik[drag.id], q = invPt(drag.w0[ik.target.bone], m[0], m[1]); ik.target.pt = [snap(q[0]), snap(q[1])]; S.rigSync = true; render("draft"); refreshValues(); }
   else if (drag.type === "socket") { const s = S.rig.sockets[drag.id], q = invPt(drag.w0[s.bone], m[0], m[1]); s.pt = [snap(q[0]), snap(q[1])]; S.rigSync = true; render("draft"); refreshValues(); }
   else applyDrag(m, e);
@@ -610,7 +691,7 @@ cv.addEventListener("pointerup", async () => {
   if (!drag) { if (wasPress && !wasPress.hit && !wasPress.moved) { S.sel = null; S.selPart = null; refreshPanels(); draw(); } return; }
   const t = drag.type; drag = null;
   if (t === "pan") return;
-  if (["vertex", "pivot", "ik", "socket"].includes(t)) {
+  if (["vertex", "pivot", "ik", "socket", "limit"].includes(t)) {
     try { await api("/api/rig/set", { rig: S.rig }); S.rigSync = false; if (t === "vertex") S.cutRev++; }
     catch (err) { toast(`Bị từ chối: ${err.message}. Đã hoàn tác.`, true, 6000); const s = editSnap; editSnap = null; if (s) restore(s); return; }
   }
@@ -640,7 +721,7 @@ document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#menu")
 // ---------------------------------------------------------------- hints, banner, guide
 const TOOL_HELP = {
   pose: "<b>Bấm</b> vào khớp hoặc hình để chọn · <b>giữ và kéo</b> để di chuyển (tay duỗi theo, chân dời bàn chân, hông trượt cả thân) · <b>bấm ra ngoài</b> để bỏ chọn.",
-  rotate: "<b>Xoay</b>: bấm chọn khớp rồi kéo quanh khớp. Cung cam là giới hạn cho phép. Phím ←/→ xoay 1° (Shift = 5°).",
+  rotate: "<b>Xoay</b>: chọn khớp rồi <b>kéo chuột ở bất kỳ đâu</b> để xoay quanh khớp · <b>T</b> (hoặc Ctrl+T) = xoay bằng cách di chuột, bấm để giữ, Esc để hủy · <b>kéo hai chấm cam</b> trên cung để đặt giới hạn · ←/→ = 1° (Shift = 5°).",
   move: "<b>Trượt</b>: bấm chọn khớp rồi giữ và kéo. Phím mũi tên = 1 px (Shift = 5 px).",
   pivot: "<b>SỬA RIG</b>: kéo tâm khớp, đích IK (hình thoi) hoặc socket (ô vuông). Bấm ra ngoài = bỏ chọn. Esc = thoát.",
   anchor: "<b>ĐIỂM BÁM</b>: bấm lên thân để đặt điểm bám cho cơ của liên kết đang chọn. Esc = thoát.",
@@ -659,7 +740,8 @@ function showGuide() {
       el("li", {}, el("b", {}, "Giới hạn khớp:"), " tab ", el("b", {}, "2 Khớp & giới hạn"), " cho đặt góc xoay tối thiểu/tối đa từng khớp (bàn chân không xoay được 360°). Cung cam trên màn hình là vùng cho phép."),
       el("li", {}, el("b", {}, "Cơ & dây chằng:"), " tab ", el("b", {}, "3"), ": chọn một cánh tay, bấm các điểm bám lên ngực. Khi tay vươn quá tầm, vai trượt ra và cơ quanh điểm bám dãn theo. Chọn 'cả thân đi theo' cho nhân vật không có cơ."),
       el("li", {}, el("b", {}, "Lưu:"), " dáng ưng ý → ", el("b", {}, "+ Lưu pose"), " (dưới cùng). Sửa rig (tab 4) cần ", el("b", {}, "Lưu rig"), " (có backup)."),
-      el("li", {}, el("b", {}, "Phím:"), " V tạo dáng, E xoay, W trượt, P sửa rig, A điểm bám, Esc thoát chế độ/bỏ chọn, Tab khớp kế, mũi tên chỉnh nhẹ, F vừa khung.")),
+      el("li", {}, el("b", {}, "Xoay:"), " chọn khớp, bấm T (hoặc Ctrl+T) rồi di chuột để xoay, bấm trái hoặc Enter để giữ, Esc hoặc chuột phải để hủy. Ở chế độ Xoay (E) kéo chuột ở bất kỳ đâu cũng xoay khớp đang chọn. Hai chấm cam ở đầu cung giới hạn kéo được; nhớ Lưu rig."),
+      el("li", {}, el("b", {}, "Phím:"), " V tạo dáng, E xoay, T xoay bằng chuột, W trượt, P sửa rig, A điểm bám, Esc thoát chế độ/bỏ chọn, Tab khớp kế, mũi tên chỉnh nhẹ, F vừa khung.")),
     el("p", { class: "mut" }, "Khung nhỏ góc phải dưới là cỡ thật trong game (H=60px)."));
   return modal({ title: "Hướng dẫn nhanh", node: n, ok: "Đã hiểu", noCancel: true });
 }
@@ -771,7 +853,9 @@ function tabPose() {
   if (!n) sec.append(el("div", { class: "mut" }, "Chưa chọn khớp nào. Bấm vào một khớp (chấm tròn) hoặc vào hình cánh tay, thân, đầu… trên màn hình."));
   else {
     sec.append(el("div", { class: "row" }, el("b", {}, viName(n)), el("small", {}, n), el("span", { class: "sp", style: "flex:1" }), el("button", { onclick: () => { S.sel = null; refreshPanels(); draw(); } }, "Bỏ chọn")));
-    if (ikDriven(n)) sec.append(el("div", { class: "err" }, "Khớp này do IK điều khiển: các kênh bên dưới bị bỏ qua. Kéo bàn chân để dời, hoặc tắt IK ở tab 2."));
+    if (ikDriven(n)) sec.append(el("div", { class: "err" }, "Đùi và cẳng chân đang do IK tính: bạn chỉ cần đặt vị trí bàn chân, máy tự gập gối cho vừa, nên số xoay của khớp này bị bỏ qua. Muốn đặt góc đùi/gối bằng tay: tab 2 > tắt IK của chân này (chuyển sang FK). Muốn dời chân: kéo ô tròn hồng ở bàn chân."));
+    sec.append(el("div", { class: "row" }, el("b", {}, "Xoay"), numField(() => chVal(n, "rot"), (v) => { if (!locked()) setCh(n, "rot", v); }, 0.5, 64), el("small", {}, "°"),
+      [-15, -5, -1, 1, 5, 15].map((d) => el("button", { onclick: () => nudge(n, "rot", d) }, (d > 0 ? "+" : "") + d)), el("button", { title: "Xoay bằng chuột (T)", onclick: () => startRotModal() }, "T")));
     const L = limitOf(n);
     const lim = { rot: L || [-180, 180], tx: [-300, 300], ty: [-300, 300], sx: [0.3, 2], sy: [0.3, 2], shx: [-0.6, 0.6] }, stp = { rot: 0.5, tx: 1, ty: 1, sx: 0.01, sy: 0.01, shx: 0.01 };
     for (const ch of CH) sec.append(slider({ label: el("span", {}, CH_VN[ch], " ", el("small", {}, ch), ch === "rot" && L ? el("small", {}, ` (${L[0]}…${L[1]}°)`) : null), min: lim[ch][0], max: lim[ch][1], step: stp[ch], get: () => chVal(n, ch), set: (v) => { if (!locked()) setCh(n, ch, v); }, reset: () => setCh(n, ch, DEF[ch]) }));
@@ -786,6 +870,7 @@ function tabPose() {
     slider({ label: el("span", {}, "Thân đi theo ", el("small", {}, "0–1")), min: 0, max: 1, step: 0.05, tip: "0 = thân đứng yên, 1 = thân nghiêng và dịch hết cỡ", get: () => chainOpt.follow, set: (v) => { chainOpt.follow = v; }, reset: () => { chainOpt.follow = 0.6; } }),
     el("div", { class: "row" }, el("label", {}, (() => { const c = el("input", { type: "checkbox", onchange: (e) => { chainOpt.stretch = e.target.checked; } }); c.checked = chainOpt.stretch; return c; })(), " Cho dãn xương tay khi không có liên kết cơ"))));
   const q = el("details", {}, el("summary", {}, "Chỉnh nhanh cả cơ thể bằng thanh trượt"));
+  q.open = !!S.quickOpen; q.addEventListener("toggle", () => { S.quickOpen = q.open; });   // the panel is rebuilt after every edit: keep it as the user left it
   const sl = (label, nm, ch, min, max, sign = 1, tip) => slider({ label, min, max, step: 1, tip, get: () => sign * chVal(nm, ch), set: (v) => { if (!locked()) setCh(nm, ch, sign * v); }, reset: () => setCh(nm, ch, DEF[ch]) });
   q.append(sl("Ngồi xuống", "hips", "ty", 0, 100, 1, "hạ hông (px), gối tự gập"), sl("Nghiêng tới trước", "spine", "rot", -20, 35), sl("Cúi/ngẩng đầu", "head", "rot", -40, 40, -1, "dương = ngẩng lên"));
   for (const [side, nm] of [["near", "Tay gần"], ["far", "Tay xa"]]) q.append(sl(`${nm}: giơ ra trước`, `${side}_upper_arm`, "rot", -30, 140, -1, "0 = buông thõng, 90 = ngang vai"), sl(`${nm}: gập khuỷu`, `${side}_forearm`, "rot", -20, 150, -1), sl(`${nm}: cổ tay`, `${side}_hand`, "rot", -60, 60, -1));
@@ -903,6 +988,17 @@ function tabRig() {
     ps.append(list, el("div", { class: "row" }, el("button", { onclick: () => addVertexAt(S.selVert ?? p.select.poly.length - 1, 0.5) }, "Thêm đỉnh"), el("button", { onclick: () => S.selVert !== null && deleteVertex(S.selVert), disabled: S.selVert === null ? "" : null }, "Xóa đỉnh"), el("button", { onclick: () => { beginEdit(); p.select.poly = clone(sv.select.poly); S.rigSync = true; applyRigEdit("Đã đưa vùng cắt về bản đã lưu"); } }, "Về bản đã lưu")));
   }
   b.append(ps);
+  if (p) {
+    const ds = section("Mối nối tròn (bo tròn chỗ cắt)", el("div", { class: "mut" }, "Thêm một hình tròn của ảnh gốc vào vùng cắt của layer này. Layer xoay quanh tâm hình tròn nên mép cắt thẳng ở khớp biến mất. Đặt tâm ở khớp (cổ chân, khuỷu…), bán kính 40–80 px là đủ. Đường viền hồng trên màn hình là vùng cắt MỚI (đa giác gộp với hình tròn). Ở dáng gốc ảnh nhìn y hệt vì hình tròn lấy cùng ảnh nguồn; hiệu quả chỉ thấy khi khớp xoay (thử xoay/kéo khớp, hoặc 'Chỉ xem lớp này' để thấy mảnh đã nở tròn)."));
+    (p.discs || []).forEach((d, i) => ds.append(el("div", { class: "kv" }, el("span", {}, `#${i + 1}`), el("span", {},
+      numField(() => d.at[0], (v) => { d.at[0] = v; S.rigSync = true; }, 1, 52), " ", numField(() => d.at[1], (v) => { d.at[1] = v; S.rigSync = true; }, 1, 52), " r ", numField(() => d.r, (v) => { d.r = Math.max(1, v); S.rigSync = true; }, 1, 48), " ",
+      el("button", { onclick: () => { beginEdit(); p.discs.splice(i, 1); if (!p.discs.length) delete p.discs; S.rigSync = true; S.cutRev++; commitEdit(); } }, "Xóa")))));
+    ds.append(el("div", { class: "row" }, el("button", { onclick: () => {
+      const piv = S.sel ? bone(S.sel).pivot : p.select.poly ? p.select.poly[0] : [0, 0];
+      beginEdit(); (p.discs = p.discs || []).push({ at: [Math.round(piv[0]), Math.round(piv[1])], r: 60 }); S.rigSync = true; S.cutRev++; commitEdit();
+    } }, "Thêm mối tròn tại khớp đang chọn")));
+    b.append(ds);
+  }
   const js = section("Độ mềm khớp uốn (blend)", el("div", { class: "mut" }, "Dải điểm ảnh quanh khớp được uốn cong liền (2 × blend px). Càng lớn càng cong mượt, nhưng dễ méo. Không phải trọng số skin."));
   for (const q of S.rig.parts.filter((x) => x.skin).sort((a, c) => (c.skin.bones.includes(S.sel) ? 1 : 0) - (a.skin.bones.includes(S.sel) ? 1 : 0))) {
     const sv = S.saved.parts.find((x) => x.name === q.name);
@@ -1090,6 +1186,7 @@ $("#btnHelp").onclick = showGuide;
 $("#optBg").onchange = (e) => { S.bg = e.target.value; draw(); };
 $("#optGrid").onchange = (e) => { S.grid = e.target.checked; draw(); };
 $("#optChar").onchange = (e) => { S.showChar = e.target.checked; draw(); };
+$("#optFocus").onchange = (e) => { S.focusOn = e.target.checked; S.hover = null; draw(); };
 $("#optGhostRig").onchange = (e) => { S.ghostRig = e.target.checked; render("final"); };
 $$("[data-vis]").forEach((c) => (c.onchange = () => { S.vis[c.dataset.vis] = c.checked; draw(); }));
 
@@ -1098,7 +1195,10 @@ document.addEventListener("keydown", (e) => {
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
   if (e.code === "Space" && !typing) { spaceDown = true; e.preventDefault(); }
   if (!$("#modal").hidden) return;
+  if (drag && drag.modal) { if (e.key === "Escape") endRotModal(false); else if (e.key === "Enter") endRotModal(true); e.preventDefault(); return; }
+  if (k === "t" && !typing && !e.altKey) { e.preventDefault(); startRotModal(); return; }   // Ctrl+T is reserved by some browsers; plain T always works
   if (mod && k === "s") { e.preventDefault(); saveRig("overwrite"); return; }
+  if (mod && (k === "z" || k === "y") && typing && document.activeElement.type === "number") { e.preventDefault(); document.activeElement.blur(); k === "y" || e.shiftKey ? redo() : undo(); return; }   // a number box has nothing worth undoing natively
   if (typing) return;
   if (mod && k === "z") { e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
   if (mod && k === "y") { e.preventDefault(); redo(); return; }

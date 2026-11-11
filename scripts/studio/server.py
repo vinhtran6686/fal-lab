@@ -144,6 +144,9 @@ def validate_spec(spec) -> list[str]:
                 errs.append(f"part {p['name']}: polygon has a non-numeric vertex")
             elif not poly_is_simple(poly):
                 errs.append(f"part {p['name']}: polygon edges cross each other")
+        for d_ in p.get("discs", []):
+            if not (len(d_.get("at", [])) == 2 and all(isinstance(v, (int, float)) and math.isfinite(v) for v in d_["at"]) and isinstance(d_.get("r"), (int, float)) and 1 <= d_["r"] <= 400):
+                errs.append(f"part {p['name']}: disc needs at=[x, y] and 1 <= r <= 400")
         sk = p.get("skin")
         if sk:
             bl = sk.get("blend", 40)

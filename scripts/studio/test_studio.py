@@ -263,6 +263,40 @@ def main():
             check("F11 core regression: every anim frame identical to the pre-links core", worst == 0.0 and nfr > 20, f"{nfr} frames, max diff {worst}")
         else:
             print("SKIP F11 (git history of the pre-links core not available)")
+
+        # H: round joints (part.discs) widen the cut with a disc of the source; the bad ones are refused
+        sp = json.loads(json.dumps(sr))
+        ft = [q for q in sp["parts"] if q["name"] == "near_foot"][0]
+        a_before = int((img(render({}, src="working"))[..., 3] > 128).sum())
+        ft["discs"] = [{"at": [440, 868], "r": 50}]
+        check("H1 disc accepted and rebuilds the cut", post("/api/rig/set", {"rig": sp}).get("rebuilt") is True)
+        a_after = int((img(render({}, src="working"))[..., 3] > 128).sum())
+        check("H2 rest silhouette unchanged by a disc (same source pixels)", abs(a_after - a_before) < 40, f"{a_before} -> {a_after}")
+        ft["discs"] = [{"at": [440], "r": 0}]
+        check("H3 bad disc refused", "disc" in post("/api/rig/set", {"rig": sp}).get("error", ""))
+        post("/api/rig/set", {"rig": sr})
+
+        # G: the near shin follows the near foot (ik.stretch = "lower" + skin.stretch): the leg picture reaches the planted foot
+        from puppet_kit.core import Rig as _Rig, S as _S, T as _T, apply as _apply
+        rg = _Rig(tmp / "source" / "rig" / "rig_studio_v01.json")
+        rg_plain = json.loads(json.dumps(rg.spec))
+        for ik_ in rg_plain["ik"]:
+            ik_.pop("stretch", None)
+        leg_only = [p_["name"] for p_ in rg.spec["parts"] if p_["name"] != "near_leg"]
+        gaps = []
+        for name_, tr in (("far reach", {"near_foot_target.tx": [[0, -130]]}), ("lifted", {"near_foot_target.ty": [[0, -60]]}), ("wide", {"near_foot_target.tx": [[0, 90]]})):
+            tr = dict(tr, **{f"{n_}.alpha": [[0, 0]] for n_ in leg_only})
+            w_, _ = rg.pose(tr, 0)
+            ankle = _apply(w_["near_foot"], [440, 868])
+            im_, _ = rg.render(tr, 0, _S(1, 1), (1100, 1100))
+            win = im_[int(ankle[1]) - 70:int(ankle[1]) - 25, int(ankle[0]) - 25:int(ankle[0]) + 25, 3]    # the leg picture just above the ankle
+            gaps.append((name_, round(float((win < 128).mean()), 2)))
+        check("G1 near leg picture meets the foot when the foot moves (<= 35% empty just above the ankle)", all(g <= 0.35 for _, g in gaps), str(gaps))
+        r_rest = rg.render({}, 0, _S(1, 1), (1100, 1100))[0]
+        import tempfile as _tf
+        pj = pathlib.Path(tmp) / "source" / "rig" / "plain.json"
+        pj.write_text(json.dumps(rg_plain), encoding="utf-8")
+        check("G2 rest pose unchanged by the shin stretch", float(np.abs(r_rest - _Rig(pj).render({}, 0, _S(1, 1), (1100, 1100))[0]).max()) < 1.0)
         srv.shutdown()
         real_after = {"rig": hashlib.sha1((REAL / "source/rig/rig.json").read_bytes()).hexdigest(), "anims": hash_tree(REAL / "source/rig/anims")}
         check("REAL rig.json and anims/*.json untouched by the tests", real_before == real_after)
