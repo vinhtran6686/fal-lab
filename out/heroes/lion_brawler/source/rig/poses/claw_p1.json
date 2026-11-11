@@ -1,6 +1,6 @@
 {
  "id": "lion_brawler",
- "note": "Pose rig: the whole still pose_claw_p1_v01.png as one part on one bone. unit = master unit x 0.935 (geometric mean of the silhouette-area and mane-area ratios to the master); ground = midpoint of the feet, read on the still; sockets = near elbow and claw tips, read on the still.",
+ "note": "Pose rig: the whole still pose_claw_p1_v01.png as one part on one bone. unit = master unit x 0.935 (geometric mean of the silhouette-area and mane-area ratios to the master); ground = midpoint of the feet, read on the still; sockets = near elbow and claw tips, read on the still. Unit corrected x1.03 after measuring the head size in the exported frames against the rig's own frames.",
  "sources": {
   "pose": "../../design/pose_claw_p1_v01.png"
  },
@@ -8,7 +8,7 @@
   472,
   926
  ],
- "unit": 866,
+ "unit": 892,
  "bones": [
   {
    "name": "root",

@@ -164,6 +164,43 @@
         0.5,
         0.5
       ]
+    },
+    "run_side": {
+      "version": "p01",
+      "dir": "frames/run_side",
+      "source": "source/rig/anims/run.json",
+      "frames": 8,
+      "fps": 15,
+      "loop": true,
+      "files": "frames/run_side/frames/@1x/hero_lion_brawler_run_side_NN.png",
+      "sheet": "frames/run_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/poses/run_1.json",
+          "source/rig/poses/run_2.json",
+          "source/rig/poses/run_3.json",
+          "source/rig/poses/run_4.json"
+        ],
+        "shots": [
+          [
+            "contact_a",
+            2
+          ],
+          [
+            "pass_a",
+            2
+          ],
+          [
+            "contact_b",
+            2
+          ],
+          [
+            "pass_b",
+            2
+          ]
+        ]
+      }
     }
   },
   "sources": {
@@ -173,6 +210,10 @@
       "pose_claw_p1_v01.png",
       "pose_claw_p2_v01.png",
       "pose_levelup_v01.png",
+      "pose_run_1_v01.png",
+      "pose_run_2_v01.png",
+      "pose_run_3_v01.png",
+      "pose_run_4_v01.png",
       "pose_skill_slam_p1_v01.png",
       "pose_skill_slam_p2_v01.png"
     ],

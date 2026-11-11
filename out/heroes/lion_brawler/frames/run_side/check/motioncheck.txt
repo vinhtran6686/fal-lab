@@ -1,0 +1,14 @@
+out/heroes/lion_brawler/frames/run_side  frames=8  cyclic
+  F  height  ground  torso_x  change_in
+  1     117     258     -9.7        3.3
+  2     113     258    -10.0        0.9
+  3     112     258    -14.4        1.9
+  4     121     258    -13.9        1.9
+  5     109     258    -10.8        3.3
+  6     106     258    -10.9        0.8
+  7     119     258    -12.4        3.5
+  8     128     258    -12.5        2.3
+bob (height range): 22px = 17.2% of the body; lowest F6, highest F8
+loop 8->1 style check: 8->1 change 3.3 vs median 2.1
+flags:
+  none (static checks only: timing and foot slide are unverified until seen moving)

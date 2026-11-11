@@ -105,3 +105,35 @@ Hero cận chiến cỡ M. Một master, một plate (bỏ hai tay và đuôi), 
 Bài học: model vẽ mỗi pose ở một cỡ khác nhau (0,74-1,02 lần master). `unit` của pose rig lấy bằng trung bình nhân của tỉ lệ diện tích hình bóng và diện tích
 màu bờm so với master, rồi chỉnh bằng mắt trên bảng contact (pose vươn người bị đánh giá nhỏ quá). `ground` là trung điểm hai bàn chân đọc trên ảnh, không phải
 điểm thấp nhất (vuốt có thể thấp hơn chân). Việc này nên thành một lệnh căn pose tự động.
+
+### Vòng chạy bằng pose-to-pose (2026-11-11)
+
+`run_side` của Lion Brawler: 4 pose khoá (`pose_run_1..4`), mỗi pose giữ 2 hình với nhún và nén khác nhau, 8 hình lặp. `scripts/motion_check.py --loop` không gắn cờ nào
+(nhún 22 px = 17% thân, chuyển 8→1 ngang các chuyển khác). Cỡ pose lấy tự động bằng lệnh mới:
+
+```bash
+python scripts/puppet.py pose out/heroes/lion_brawler source/design/pose_run_1_v01.png --name run_1 --colour 118,49,21 --ref-source plate
+```
+
+`--colour` là màu của một bộ phận giữ nguyên cỡ ở mọi pose (bờm). Đo trên `--ref-source plate` vì đầu của rig lấy từ plate; đo trên master cho pose to hơn rig ~10%.
+Số đo cỡ đầu trong frame đã xuất (căn bậc hai diện tích bờm, px @2x): rig 31-32, mọi pose sau khi căn 31-33; trước khi căn `claw_p2` +12%, `slam_p2` +16%, các pose chạy +10%.
+Cách đo này sai khi đầu bị che (`slam_p1`: hai tay che bờm) nên pose đó vẫn căn bằng mắt.
+
+## Tồn đọng (đánh giá 2026-11-11, gồm feedback của user)
+
+User đánh giá tốt: nhịp thở và các nhịp phụ (nhún vai) sống động; pose đơn không xoay; áp fx.
+
+| # | Vấn đề | Ai nêu | Hướng xử lý |
+|---|---|---|---|
+| 1 | **Chưa có rig chân**: chân nằm trong lớp thân, chỉ nén/giãn cả khối, không gập gối | user | plate thứ hai bỏ cả chân; lớp đùi, ống chân, bàn chân; IK chân với bàn chân ghim đất |
+| 2 | **Chưa có khớp háng**: thân trên không xoay/nghiêng độc lập với hông | user | tách thân trên và hông thành hai lớp, vá phần eo |
+| 3 | **Khớp khuỷu của lion đặt sai**: xương cẳng tay bắt đầu ở mép găng nên găng chính là "khuỷu"; đúng phải là vai → cánh tay → cẳng tay → bàn tay | user | tách lại đa giác; công cụ để user tự đặt khớp (Rig Tuner hiện chỉ kéo điểm, chưa tạo/xoá xương hay xem thử chuyển động) |
+| 4 | **Tách lớp còn mất hình**: áo choàng Holy Commander và các phần khuất bị vá bằng màu lân cận, lộ góc khi cử động | user | bước chuẩn bị tài nguyên: xin model vẽ riêng từng lớp khuất (áo choàng đầy đủ, thân sau tay) thay cho vá tự động |
+| 5 | **Chưa có động tác xoay thân** (cào từ trước mặt sang bên trái cần xoay hông): rig 2D một góc nhìn không làm được, pose-to-pose chưa thử | user | nhiều pose khoá hơn cho đoạn xoay, hoặc lớp thân theo từng góc; đây là bài khó nhất, có thể vẫn cần video |
+| 6 | Pose-to-pose không có hình trung gian: nhát cắt giữa hai pose, run chỉ 4 hình vẽ | Claude | thêm pose giữa; hoặc rig chân/tay đủ để nội suy |
+| 7 | Căn cỡ pose phụ thuộc một màu không bị che; `ground` lấy điểm thấp nhất (sai khi vuốt thấp hơn chân) | Claude | đo bằng nhiều mốc; cho phép chỉ điểm chân trong Rig Tuner |
+| 8 | Bóng chân cố định ở pivot, không đi theo khi thân rời đất hoặc lệch | Claude | bóng theo `ground` của shot, co lại khi nhảy |
+| 9 | Vệt vuốt của lion mượn tham số màu của Holy Commander; dộng đất chưa có vòng sốc | Claude | bộ tham số riêng trong `source/vfx/` |
+| 10 | Không có test tự động; `stretch`, `band`, `init`, `pose` chưa qua advisor; Rig Tuner chưa mở thử trong trình duyệt | Claude | test hồi quy (hash frame), rà advisor |
+| 11 | Chưa có MCP (ý tưởng ban đầu của user); mọi thứ là CLI | Claude | bọc `check/render/pose/track` thành MCP khi format rig ổn định |
+

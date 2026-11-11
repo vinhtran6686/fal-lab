@@ -2,6 +2,7 @@
 """Puppet Kit CLI: animate a character from its approved stills with a cut-out rig. No API call, deterministic.
 
   python scripts/puppet.py init   <asset> [--cell 176x140 --height 120]  # meta.json of a new asset (no exported sheet yet)
+  python scripts/puppet.py pose   <asset> source/design/pose_x_v01.png --name x --colour 118,49,21   # pose rig, auto scale + position
   python scripts/puppet.py check  <asset>/source/rig/rig.json            # parts, bones, rest pose -> <asset>/.work/puppet/
   python scripts/puppet.py render <asset> <asset>/source/rig/anims/idle.json --sheet idle_side [--no-export]
   python scripts/puppet.py track  <asset> <anim.json> --name <vfx name>   # weapon root/tip -> source/vfx/<name>/weapon_track.json
@@ -72,6 +73,57 @@ def cmd_init(a):
             "states": {}, "sources": {}}
     path.write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"wrote {path}")
+
+
+def colour_mask(rgba, colour, tol=0.10):
+    """The biggest blob of pixels whose g/r and b/r ratios are near `colour` (blue weighs less: flat cartoon
+    browns drift in blue from still to still) and whose brightness is 0.45-1.7 times its own."""
+    from scipy import ndimage as ndi
+    c = [float(v) for v in colour]
+    r = rgba[..., 0] + 1e-6
+    n = np.linalg.norm(rgba[..., :3], axis=-1)
+    cn = float(np.linalg.norm(c))
+    m = ((rgba[..., 3] > 128) & (np.hypot(rgba[..., 1] / r - c[1] / c[0], 0.3 * (rgba[..., 2] / r - c[2] / c[0])) < tol)
+         & (n > 0.45 * cn) & (n < 1.7 * cn))
+    lab, k = ndi.label(ndi.binary_opening(m, iterations=2))
+    if k == 0:
+        return m
+    return lab == 1 + int(np.argmax(ndi.sum(m, lab, range(1, k + 1))))
+
+
+def cmd_pose(a):
+    """Pose rig for one pose still, registered to the main rig without hand measuring: the scale comes from the area
+    of one colour that keeps its size in every pose (a mane, a helmet, a hood), the x position from that colour's
+    centroid, the ground line from the lowest pixel of the still (or --ground-y)."""
+    from puppet_kit.core import key_magenta
+    asset = pathlib.Path(a.asset)
+    ref = Rig(asset / a.rig)
+    colour = [float(v) for v in a.colour.split(",")]
+    src_name = a.ref_source or next(iter(ref.spec["sources"]))
+    master = key_magenta(Image.open(ref.dir / ref.spec["sources"][src_name]))
+    still = asset / a.still
+    pose = key_magenta(Image.open(still))
+    mm, pm = colour_mask(master, colour, a.tol), colour_mask(pose, colour, a.tol)
+    if mm.sum() < 500 or pm.sum() < 500:
+        sys.exit(f"colour {colour} covers too few pixels (master {int(mm.sum())}, pose {int(pm.sum())}): pick another --colour")
+    k = float(np.sqrt(pm.sum() / mm.sum())) * a.scale
+    mcx, pcx = float(np.where(mm)[1].mean()), float(np.where(pm)[1].mean())
+    ys = np.where(pose[..., 3] > 128)[0]
+    gy = a.ground_y if a.ground_y is not None else float(ys.max()) - a.foot_margin * k
+    gx = pcx + (ref.ground[0] - mcx) * k
+    out = asset / "source" / "rig" / "poses" / f"{a.name}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    rel = pathlib.Path("../..") / still.resolve().relative_to((asset / "source").resolve())
+    doc = {"id": ref.spec.get("id"), "note": f"Pose rig of {still.name}, registered by `puppet.py pose`: unit = main rig unit x {k:.3f} "
+           f"(area of colour {a.colour} against {src_name}), ground x from that colour's centroid, ground y from the lowest pixel.",
+           "sources": {"pose": rel.as_posix()}, "ground": [round(gx, 1), round(gy, 1)], "unit": round(ref.unit * k, 1),
+           "bones": [{"name": "root", "parent": None, "pivot": [round(gx, 1), round(gy, 1)]}],
+           "parts": [{"name": "pose", "source": "pose", "bone": "root", "select": {"rest": True}}]}
+    if a.root and a.tip:
+        doc["sockets"] = {"weapon_root": {"bone": "root", "pt": [float(v) for v in a.root.split(",")]},
+                          "weapon_tip": {"bone": "root", "pt": [float(v) for v in a.tip.split(",")]}}
+    out.write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
+    print(f"wrote {out}: scale {k:.3f}, ground {doc['ground']}, unit {doc['unit']}")
 
 
 def shadow_cell(meta, c2):
@@ -368,6 +420,13 @@ def main():
     i.add_argument("--height", type=int, default=120, help="body height @2x = 2 x {H} of the tier")
     i.add_argument("--body-width", type=float, default=80, help="standing body width @2x, for the foot shadow")
     i.set_defaults(fn=cmd_init)
+    q = sp.add_parser("pose"); q.add_argument("asset"); q.add_argument("still", help="path under the asset: source/design/pose_x_v01.png")
+    q.add_argument("--name", required=True); q.add_argument("--rig", default="source/rig/rig.json")
+    q.add_argument("--colour", required=True, help="r,g,b of a part that keeps its size in every pose (mane, helmet, hood)")
+    q.add_argument("--tol", type=float, default=0.10); q.add_argument("--scale", type=float, default=1.0, help="manual correction factor")
+    q.add_argument("--ref-source", help="source of the main rig to measure the colour on (default: its first source)")
+    q.add_argument("--ground-y", type=float); q.add_argument("--foot-margin", type=float, default=12, help="main-rig pixels between the lowest pixel and the ground line")
+    q.add_argument("--root"); q.add_argument("--tip"); q.set_defaults(fn=cmd_pose)
     c = sp.add_parser("check"); c.add_argument("rig"); c.add_argument("--out"); c.set_defaults(fn=cmd_check)
     r = sp.add_parser("render"); r.add_argument("asset"); r.add_argument("anim"); r.add_argument("--sheet")
     r.add_argument("--no-export", action="store_true", help="preview into .work/puppet/<sheet>/ only"); r.set_defaults(fn=cmd_render)

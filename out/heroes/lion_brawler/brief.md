@@ -60,7 +60,8 @@ Lý do chọn A: hai tay tự do cho nhiều tư thế nhất (gầm, vung vuố
 | fx_claw_swipe | Puppet Kit + bộ sinh M01 ($0) | hiệu ứng | ⏳ p01 | vệt vuốt từ socket; tham số màu mượn của holy_commander |
 | skill_slam_side | Puppet Kit (pose-to-pose, $0) | one-shot | ⏳ p01 | 20 hình, hit 9 |
 | fx_slam | Puppet Kit + bộ sinh M01 ($0) | hiệu ứng | ⏳ p01 | vệt theo đường nắm vuốt; chưa có vòng sốc |
-| run_side | video-sprite | loop | ❌ | rig 2D không làm được bước chạy: cần video |
+| pose_run_1..4 | fal-image | ảnh tĩnh | ⏳ v01 | 4 pose khoá của vòng chạy: chạm đất, qua chân, chạm đất đổi chân, qua chân |
+| run_side | Puppet Kit (pose-to-pose, $0) | loop | ⏳ p01 | 8 hình, 0,53 s: 4 pose, mỗi pose giữ 2 hình có nhún; cỡ pose căn tự động theo màu bờm (`puppet.py pose`) |
 | death_side | video-sprite | one-shot | ❌ | có thể thử pose-to-pose với 1-2 pose |
 | pose_respawn | fal-image | ảnh tĩnh | ❌ | |
 | respawn_side | video-sprite | one-shot | ❌ | |
@@ -70,7 +71,7 @@ Lý do chọn A: hai tay tự do cho nhiều tư thế nhất (gầm, vung vuố
 | fx_roar | fx-layers | hiệu ứng | ❌ | |
 | package | export | gói | ⏭ | khi asset rời repo |
 
-Estimated cost so far: 8 ảnh gpt-image-2 low (master, plate, 5 pose, icon) ~USD 0.112. Bốn state và hai fx: 0 USD.
+Estimated cost so far: 12 ảnh gpt-image-2 low (master, plate, 5 pose, icon, 4 pose chạy) ~USD 0.172. Năm state và hai fx: 0 USD.
 
 ## Chờ user duyệt
 - Thiết kế (master_v01), icon, 5 pose.
