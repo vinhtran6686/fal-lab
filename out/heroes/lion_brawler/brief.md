@@ -60,17 +60,18 @@ Lý do chọn A: hai tay tự do cho nhiều tư thế nhất (gầm, vung vuố
 | idle_side | Puppet Kit (rig v2, $0) | loop | ⏳ p02 | 24 hình, 1,60 s; gối nhún theo nhịp thở |
 | levelup_side | Puppet Kit (pose-to-pose, $0) | one-shot | ⏳ p01 | 21 hình, hit 4 |
 | attack_side | Puppet Kit (pose-to-pose, $0) | one-shot | ⏳ p01 | 16 hình, hit 8 |
-| fx_claw_swipe | Puppet Kit + bộ sinh M01 ($0) | hiệu ứng | ⏳ p01 | vệt vuốt từ socket; tham số màu mượn của holy_commander |
+| fx_claw_swipe | Puppet Kit + bộ sinh M01 ($0) | hiệu ứng | ⏳ p01 | vệt vuốt từ socket; tham số riêng: `source/vfx/claw_swipe/slash_params.json` |
 | skill_slam_side | Puppet Kit (pose-to-pose, $0) | one-shot | ⏳ p01 | 20 hình, hit 9 |
-| fx_slam | Puppet Kit + bộ sinh M01 ($0) | hiệu ứng | ⏳ p01 | vệt theo đường nắm vuốt; chưa có vòng sốc |
+| fx_slam | Puppet Kit + bộ sinh M01 ($0) | hiệu ứng | ⏳ p01 | vệt theo đường nắm vuốt; chưa có vòng sốc; tham số riêng: `source/vfx/claw_swipe/slash_params.json` |
 | pose_run_1..4 | fal-image | ảnh tĩnh | ⏳ v01 | 4 pose khoá của vòng chạy: chạm đất, qua chân, chạm đất đổi chân, qua chân |
 | run_side | Puppet Kit (pose-to-pose, $0) | loop | ⏳ p01 | 8 hình, 0,53 s: 4 pose, mỗi pose giữ 2 hình có nhún; cỡ pose căn tự động theo màu bờm (`puppet.py pose`) |
-| death_side | video-sprite | one-shot | ❌ | có thể thử pose-to-pose với 1-2 pose |
+| death_side | Puppet Kit (rig v2, $0) | one-shot | ⏳ p01 | 12 hình: giật ra sau, khuỵu gối tại chỗ, giữ hình cuối; chưa có đoạn đổ người (rig không nằm ngang được) |
+| hurt_side | Puppet Kit (rig v2, $0) | one-shot | ⏳ p01 | 6 hình, hit 1: thân giật ra sau, đầu và tay trễ 1 hình |
 | pose_respawn | fal-image | ảnh tĩnh | ❌ | |
 | respawn_side | video-sprite | one-shot | ❌ | |
 | fx_respawn | fx-layers | hiệu ứng | ❌ | |
 | fx_levelup | fx-layers | hiệu ứng | ❌ | |
-| skill_roar_side | Puppet Kit | one-shot | ❌ | dùng lại pose_levelup |
+| skill_roar_side | Puppet Kit (pose-to-pose, $0) | one-shot | ⏳ p01 | 22 hình, hit 4: khuỵu 3 hình, pose_levelup giữ 14 hình, về 5 hình |
 | fx_roar | fx-layers | hiệu ứng | ❌ | |
 | package | export | gói | ⏭ | khi asset rời repo |
 

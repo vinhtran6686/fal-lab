@@ -18,3 +18,6 @@
 | 2026-11-11 | layer_torso | v01 | gpt-image-2 low | 9 | awaiting user | - | - | pipeline (F1) |
 | 2026-11-11 | layer_legs, layer_near_arm, layer_far_arm, layer_tail | v02 | gpt-image-2 low | 8.5 | awaiting user | bờm (mỏ neo) đè lên đỉnh vai gần | mỏ neo khác cho lớp tay | pipeline (F1) |
 | 2026-11-11 | rig v2; idle / v2_test / levelup / attack / skill_slam | p02 | Puppet Kit | - | awaiting user | đỉnh vai gần cắt theo mép bờm; khe nhỏ ở gấu quần khi gối gập sâu | xem puppet-kit-next.md §8 | user: rig chân, háng, khuỷu |
+| 2026-11-11 | hurt_side | p01 | Puppet Kit | - | awaiting user | giật nhẹ, chưa có chớp trắng (fx) | - | T5 |
+| 2026-11-11 | death_side | p01 | Puppet Kit | - | awaiting user | chưa có đoạn đổ người; 3 hình cuối gần như đứng yên (giữ cố ý) | pose still nằm nếu cần | T5 |
+| 2026-11-11 | skill_roar_side | p01 | Puppet Kit | - | awaiting user | 6 hình giữ gầm chỉ nhún 0,5 px (giữ cố ý) | fx_roar riêng | T5 |

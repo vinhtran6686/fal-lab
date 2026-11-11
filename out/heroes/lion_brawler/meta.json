@@ -224,6 +224,84 @@
         ]
       },
       "hit_frame": 14
+    },
+    "hurt_side": {
+      "version": "p01",
+      "dir": "frames/hurt_side",
+      "source": "source/rig/anims/hurt.json",
+      "frames": 6,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/hurt_side/frames/@1x/hero_lion_brawler_hurt_side_NN.png",
+      "sheet": "frames/hurt_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rig",
+            6
+          ]
+        ]
+      },
+      "hit_frame": 1
+    },
+    "death_side": {
+      "version": "p01",
+      "dir": "frames/death_side",
+      "source": "source/rig/anims/death.json",
+      "frames": 12,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/death_side/frames/@1x/hero_lion_brawler_death_side_NN.png",
+      "sheet": "frames/death_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rig",
+            12
+          ]
+        ]
+      },
+      "hit_frame": 1
+    },
+    "skill_roar_side": {
+      "version": "p01",
+      "dir": "frames/skill_roar_side",
+      "source": "source/rig/anims/skill_roar.json",
+      "frames": 22,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/skill_roar_side/frames/@1x/hero_lion_brawler_skill_roar_side_NN.png",
+      "sheet": "frames/skill_roar_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/poses/levelup.json",
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "ready",
+            3
+          ],
+          [
+            "roar",
+            14
+          ],
+          [
+            "recover",
+            5
+          ]
+        ]
+      },
+      "hit_frame": 4
     }
   },
   "sources": {

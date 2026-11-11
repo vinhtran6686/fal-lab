@@ -1,0 +1,179 @@
+{
+ "note": "Hit reaction: torso and hips recoil backward, head and arms lag one frame, then settle. White flash is a separate fx.",
+ "version": "p01",
+ "fps": 15,
+ "loop": false,
+ "hit_frame": 1,
+ "rig": "source/rig/rig.json",
+ "frames": 6,
+ "tracks": {
+  "hips.tx": [
+   [
+    0,
+    -14
+   ],
+   [
+    1,
+    -22,
+    "out"
+   ],
+   [
+    2,
+    -18
+   ],
+   [
+    5,
+    0,
+    "inout"
+   ]
+  ],
+  "hips.ty": [
+   [
+    0,
+    20
+   ],
+   [
+    1,
+    32,
+    "out"
+   ],
+   [
+    3,
+    14
+   ],
+   [
+    5,
+    0,
+    "inout"
+   ]
+  ],
+  "spine.rot": [
+   [
+    0,
+    -5
+   ],
+   [
+    1,
+    -8,
+    "out"
+   ],
+   [
+    3,
+    -4
+   ],
+   [
+    5,
+    0,
+    "inout"
+   ]
+  ],
+  "head.rot": [
+   [
+    0,
+    0
+   ],
+   [
+    2,
+    -10,
+    "out"
+   ],
+   [
+    4,
+    -3
+   ],
+   [
+    5,
+    0,
+    "inout"
+   ]
+  ],
+  "near_upper_arm.rot": [
+   [
+    0,
+    0
+   ],
+   [
+    2,
+    22,
+    "out"
+   ],
+   [
+    4,
+    8
+   ],
+   [
+    5,
+    0,
+    "inout"
+   ]
+  ],
+  "near_forearm.rot": [
+   [
+    0,
+    0
+   ],
+   [
+    2,
+    -25,
+    "out"
+   ],
+   [
+    5,
+    0,
+    "inout"
+   ]
+  ],
+  "far_upper_arm.rot": [
+   [
+    0,
+    0
+   ],
+   [
+    2,
+    -18,
+    "out"
+   ],
+   [
+    5,
+    0,
+    "inout"
+   ]
+  ],
+  "far_forearm.rot": [
+   [
+    0,
+    0
+   ],
+   [
+    2,
+    -25,
+    "out"
+   ],
+   [
+    5,
+    0,
+    "inout"
+   ]
+  ],
+  "tail.rot": [
+   [
+    0,
+    0
+   ],
+   [
+    2,
+    -12,
+    "out"
+   ],
+   [
+    3,
+    16
+   ],
+   [
+    5,
+    0,
+    "inout"
+   ]
+  ]
+ }
+}

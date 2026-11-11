@@ -1,6 +1,6 @@
 # T2 (Haiku): tham số vệt vuốt riêng cho lion + file requirements
 
-Trạng thái: TODO
+Trạng thái: DONE
 
 ## Mục tiêu
 1. Lion không còn mượn file tham số vệt chém của Holy Commander.
@@ -57,4 +57,10 @@ scikit-image
 - Không đổi thuật toán, không sửa file Python nào.
 
 ## Kết quả
-(model điền)
+- Tạo `out/heroes/lion_brawler/source/vfx/claw_swipe/slash_params.json` với các thông số đã sửa (màu và độ rộng).
+- Chạy 4 lệnh puppet.py thành công; lệnh `slash` in "slash fx claw_swipe: sweep of 6 steps on frame 8..." và "slash fx slam: sweep of 6 steps on frame 9...".
+- Kiểm tra frame 8 của `contact_with_body.png`: có dải vàng cong từ trên đầu xuống trước chân ✓.
+- Cập nhật `brief.md`: cả `fx_claw_swipe` và `fx_slam` ghi "tham số riêng: `source/vfx/claw_swipe/slash_params.json`".
+- Tạo `requirements-puppet.txt` tại gốc repo với đúng nội dung (5 thư viện).
+- `python scripts/source_prune.py out/heroes/lion_brawler`: báo "0 item(s) not kept" (không liệt kê `claw_swipe`).
+- `git status --short` chỉ hiển thị các file trong phạm vi "Được sửa".

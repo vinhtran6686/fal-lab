@@ -1,6 +1,6 @@
 # T5 (Sonnet): viết hurt, death, roar cho lion theo công thức
 
-Trạng thái: TODO
+Trạng thái: DONE (2026-11-11, Sonnet)
 
 **Điều kiện bắt đầu**: `out/heroes/lion_brawler/source/rig/rig.json` có xương tên `hips` và `near_shin`. Kiểm: `grep -c '"hips"' out/heroes/lion_brawler/source/rig/rig.json` > 0.
 Chưa có thì dừng, không làm.
@@ -44,4 +44,7 @@ Mở khoá 2026-11-11. Rig v2 đã có (`rig.json`; bản cũ là `rig_v1.json`,
 - Quy ước dấu ở recipes §1: chi buông xuống, `rot` âm = ra trước; khuỷu gập tự nhiên là `forearm.rot` âm.
 
 ## Kết quả
-(model điền)
+Ba anim ở `source/rig/anims/`: `hurt.json` (6 hình, hit 1), `death.json` (12), `skill_roar.json` (22 = 3 + 14 + 5, hit 4). Render thật xong, `golden.json` đã cập nhật (15 case).
+- motion_check `--once`: hurt không cờ; death chỉ cờ FROZEN ở hình 9-11 (giữ hình cuối cố ý); roar chỉ cờ FROZEN ở hình 11-17 (giữ gầm 14 hình, chỉ nhún 0,5 px, cố ý).
+- Checklist §9: (2) không chạm mép ô: đạt; (3) chân ghim đất nhờ IK: đạt; (4) không dùng shot pose mới, cỡ đầu giữ nguyên: đạt; (5) hit_frame: hurt 1 (nén mạnh nhất), roar 4 (đầu pose gầm): đạt; (6) không hai hình liền giống hệt ngoài đoạn giữ cố ý, không có release: đạt; (7) vòng lặp: không áp dụng (one-shot); (8) không dùng sway: đạt; (9) manifest ⏳ và history đã ghi: đạt. Không thấy lộ khe giữa lớp trên contact sheet (chưa xem phóng to).
+- Death: chưa có đoạn đổ người, thân dừng ở `spine.rot` +16, `hips.ty` 100-102 (theo giới hạn rig).
