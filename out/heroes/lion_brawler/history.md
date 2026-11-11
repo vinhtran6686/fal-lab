@@ -21,3 +21,4 @@
 | 2026-11-11 | hurt_side | p01 | Puppet Kit | - | awaiting user | giật nhẹ, chưa có chớp trắng (fx) | - | T5 |
 | 2026-11-11 | death_side | p01 | Puppet Kit | - | awaiting user | chưa có đoạn đổ người; 3 hình cuối gần như đứng yên (giữ cố ý) | pose still nằm nếu cần | T5 |
 | 2026-11-11 | skill_roar_side | p01 | Puppet Kit | - | awaiting user | 6 hình giữ gầm chỉ nhún 0,5 px (giữ cố ý) | fx_roar riêng | T5 |
+| 2026-11-11 | rig v2 smooth joints; mọi state rig | p03 | Puppet Kit | - | awaiting user | gối gập sâu còn răng cưa nhỏ ở nếp gập | pose still/video cho góc gắt | user: "cắt rig làm chuyển động gãy khúc" |

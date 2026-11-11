@@ -320,6 +320,57 @@ class Rig:
             world[st["bone"]] = T(*s1) @ R(math.degrees(a1)) @ S(k, 1) @ R(-math.degrees(a0)) @ T(-s0[0], -s0[1])
         return world, vals
 
+    def _skin_inverse(self, skin, world, px, py):
+        """Smooth joints instead of cuts ("skin": {"bones": [b0, b1, ...], "blend": px, "tip": [x, y]}).
+        The part is ONE picture bound to b0. Each further bone bi turns about its own pivot by an angle a_i relative to
+        its parent; a pixel is turned by w_i * a_i, where w_i rises smoothly from 0 to 1 across a band of 2 * blend
+        pixels centred on the joint, measured along the limb. So the picture bends like a hose around the joint and
+        nothing is cut. Here: the inverse (canvas -> rest pixel), solved by a few fixed-point rounds."""
+        names = skin["bones"]
+        joints = []
+        for i in range(1, len(names)):
+            b = self.bones[names[i]]
+            piv = np.array(b["pivot"], float)
+            nxt = np.array(self.bones[names[i + 1]]["pivot"] if i + 1 < len(names) else skin["tip"], float)
+            axis = (nxt - piv) / max(1e-6, np.linalg.norm(nxt - piv))
+            rel = np.linalg.inv(world[names[i - 1]]) @ world[names[i]]
+            ang = math.atan2(rel[1, 0], rel[0, 0])
+            blend = skin.get("blend", 40)
+            blend = blend[i - 1] if isinstance(blend, list) else blend
+            joints.append((piv, axis, ang, float(blend)))
+        def weights(qx, qy):
+            return [smoothstep(((qx - piv[0]) * axis[0] + (qy - piv[1]) * axis[1] + blend) / (2 * blend)) for piv, axis, _, blend in joints]
+
+        def turn(rx, ry, ws, sign):                       # sign +1: rest -> bent (outer joints first); -1: bent -> rest
+            seq = list(zip(joints, ws))
+            for (piv, _, ang, _), w in (reversed(seq) if sign > 0 else seq):
+                c, sn = np.cos(sign * w * ang), np.sin(sign * w * ang)
+                dx, dy = rx - piv[0], ry - piv[1]
+                rx, ry = piv[0] + c * dx - sn * dy, piv[1] + sn * dx + c * dy
+            return rx, ry
+
+        def residual(qx, qy):
+            fx, fy = turn(qx, qy, weights(qx, qy), +1)
+            return np.hypot(fx - px, fy - py)
+
+        # start from the best rigid guess: the pixel taken as belonging wholly to bone 0, 1, 2 ...
+        best_x, best_y, best_r = px.copy(), py.copy(), residual(px, py)
+        for j in range(1, len(names)):
+            ws = [np.ones_like(px) if i < j else np.zeros_like(px) for i in range(len(joints))]
+            cx, cy = turn(px, py, ws, -1)
+            r = residual(cx, cy)
+            take = r < best_r
+            best_x, best_y, best_r = np.where(take, cx, best_x), np.where(take, cy, best_y), np.where(take, r, best_r)
+        qx, qy = best_x, best_y
+        for _ in range(skin.get("iterations", 12)):       # refine near the joints (damped fixed point)
+            rx, ry = turn(px, py, weights(qx, qy), -1)
+            qx, qy = 0.5 * qx + 0.5 * rx, 0.5 * qy + 0.5 * ry
+            r = residual(qx, qy)
+            take = r < best_r
+            best_x, best_y, best_r = np.where(take, qx, best_x), np.where(take, qy, best_y), np.where(take, r, best_r)
+        bad = best_r > skin.get("tolerance", 2.5)          # no rest pixel lands here (the inside of a sharp fold): leave it empty
+        return np.where(bad, -1e6, best_x), np.where(bad, -1e6, best_y)
+
     def _under(self, name, ancestor):
         par = self.bones[name].get("parent")
         while par is not None:
@@ -353,7 +404,9 @@ class Rig:
             pad = part.get("wpad", 0) if d else 0
             corners = np.array([[x0 - pad, y0 - pad], [x0 + w + pad, y0 - pad], [x0 + w + pad, y0 + h + pad],
                                 [x0 - pad, y0 + h + pad]], float)
-            cc = np.array([apply(M, c) for c in corners])
+            skin = part["spec"].get("skin")
+            mats = [M] + ([view @ world[b] for b in skin["bones"][1:]] if skin else [])
+            cc = np.array([apply(m_, c) for m_ in mats for c in corners])
             bx0, by0 = np.floor(cc.min(0)).astype(int) - 2
             bx1, by1 = np.ceil(cc.max(0)).astype(int) + 2
             bx0, by0, bx1, by1 = max(bx0, 0), max(by0, 0), min(bx1, W), min(by1, H)
@@ -363,6 +416,8 @@ class Rig:
             Mi = np.linalg.inv(M)
             sx = Mi[0, 0] * xx + Mi[0, 1] * yy + Mi[0, 2]
             sy = Mi[1, 0] * xx + Mi[1, 1] * yy + Mi[1, 2]
+            if skin:
+                sx, sy = self._skin_inverse(skin, world, sx, sy)
             if d:
                 amp = pv.get("sway", 1.0)
                 wgt = ndi.map_coordinates(part["weight"], [sy - y0 + pad, sx - x0 + pad], order=1, mode="nearest")

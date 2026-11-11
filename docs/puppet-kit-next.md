@@ -170,3 +170,27 @@ Ba câu hỏi ở §7 chưa có trả lời; mặc định tạm dùng: (1) prof
 | Đấm thẳng ra trước ở góc 3/4 khó đọc: tay vàng trên ngực vàng, không co ngắn theo phối cảnh | hình 14 | cần pose still hoặc rig profile (F3) |
 | `pose_run`, `claw`, `slam`: vẫn là pose still; rig v2 mới thay phần lấy đà và hồi | - | F3 (run bằng rig) |
 | Hash của test hồi quy (T1) sẽ khác nếu T1 chạy trước commit này | - | chạy `puppet_test.py --update` một lần |
+
+## 9. Feedback 2026-11-11 (lần 2): gãy khúc ở khớp, và ý tưởng video pose
+
+**Gãy khúc ở chỗ cắt** (user): đã xử lý bằng `skin` (khớp uốn liền), xem `docs/puppet-kit.md` mục cùng tên. Kết quả trên lion: khuỷu, eo đẹp hơn hẳn bản cắt; gối gập sâu còn răng cưa nhỏ ở nếp gập.
+Còn lại: `blend` chọn bằng tay; Rig Tuner v2 (T3) chưa biết `skin` (cần thêm ô chọn "liền/cắt" và thanh `blend`).
+
+**Ý tưởng của user: một video các pose cơ bản của nhân vật, cắt frame làm tài nguyên.** Đánh giá:
+
+| | Video pose | Lớp rời + rig (đang làm) |
+|---|---|---|
+| Cho ra gì | ảnh **cả người** ở nhiều tư thế, kèm hình trung gian | từng bộ phận rời, phần khuất vẽ đủ |
+| Khớp gập | đúng (model tự vẽ) | uốn hình có sẵn (`skin`): tốt ở góc vừa, kém ở góc gắt |
+| Cỡ, vị trí giữa các frame | đều trong cùng một clip | khớp từng pixel với master |
+| Tách lớp, đổi nhịp, tái dùng cho động tác khác | **không** (ảnh phẳng, mỗi frame dính cả người) | có |
+| Rủi ro | lỗi quen của video: tự thêm vệt, đổi thiết kế, phải retry | lỗi cắt lớp, mỏ neo |
+| Giá | ~0,045 USD / clip 3 s (≈45 frame) | ~0,011 USD / lớp |
+
+Kết luận: video **không thay** rig (không tách được lớp), nhưng là nguồn tốt cho **tầng pose** ở đúng những chỗ rig yếu:
+1. **Xoay thân / đổi góc nhìn** (F4): một clip "xoay người tại chỗ 3/4 → nghiêng → 3/4" cho đủ pose chuyển góc, cùng cỡ, có hình trung gian. Đây là việc ảnh tĩnh làm kém nhất.
+2. **Vòng chạy, đi** (F3): một clip chạy tại chỗ cho 6-8 pose đều nhau, thay 4 pose tĩnh đang có tay "tật".
+3. **Thư viện pose gập gắt** (ngồi xổm sâu, tay gập sát): lấy frame làm pose still thay cho `skin` ở góc quá lớn.
+
+Đề xuất: mỗi nhân vật một **"pose reel"**: 2-3 clip ngắn (xoay tại chỗ; chạy tại chỗ; khởi động: ngồi xổm, giơ tay, gập tay), tổng ~0,10-0,15 USD, cắt bằng `video-sprite`,
+rồi đăng ký từng frame thành pose rig bằng `puppet.py pose`. Rig vẫn lo idle, nhịp thở, lấy đà/hồi và mọi thứ cần chỉnh nhịp. **Chưa làm: video là khoản trả tiền, cần user đồng ý số clip và giá trước** (quy tắc cost guard).

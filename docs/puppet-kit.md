@@ -155,3 +155,20 @@ Các state `idle`, `levelup`, `attack`, `skill_slam` của lion đã chuyển ph
   `--write-prompts` ghi prompt đã điền đủ (`{design}`, STYLE, BG đọc từ `format.md`) cho mỗi mục thiếu vào `source/design/prompts/<tên>_p01.txt`, không ghi đè, và in lệnh `gen_image.py` (không chạy).
 - `python scripts/puppet_prep.py align <asset> <ảnh> [--colour r,g,b] [--kind plate|pose|profile] [--overlay out.png]`: so ảnh mới với master (lệch bbox, hàng chân, tỉ lệ cỡ theo màu), in `PASS`/`FAIL`, mã thoát 0/1.
   `plate`: hàng chân ≤ 8 px, cạnh trên ≤ 12 px, scale 0,97-1,03; `pose`/`profile`: chỉ scale 0,95-1,05. Plate đo trên master có thể lệch scale vì bờm trên plate bị vẽ lại (xem `--ref-source plate` ở mục Lion Brawler).
+
+## Khớp uốn liền (`skin`, 2026-11-11)
+
+Feedback của user: cắt rời ở khuỷu, gối, eo làm hình **gãy khúc** khi khớp gập. Cách sửa (giống mesh + weights của Spine): mỗi chi và thân là **một hình liền**, vùng quanh khớp uốn theo.
+
+```json
+{"name": "near_arm", "source": "near_arm", "bone": "near_upper_arm",
+ "skin": {"bones": ["near_upper_arm", "near_forearm", "near_hand"], "tip": [330, 790], "blend": [45, 28]},
+ "select": {"poly": [...cả cánh tay...]}}
+```
+
+- `bones`: chuỗi xương từ gốc ra ngọn; hình gắn vào xương đầu. `tip`: điểm cuối chi (để biết trục của đoạn cuối). `blend`: nửa bề rộng (px) của vùng uốn quanh từng khớp.
+- Mỗi pixel xoay quanh khớp một góc bằng `w × góc khớp`, `w` tăng mượt từ 0 tới 1 dọc theo chi qua vùng `blend`. Không còn mép cắt.
+- Trong nếp gập gắt (mặt trong gối khi ngồi xổm) có vài pixel không có nguồn: engine để trống, không kéo vệt.
+- Lion: `rig.json` dùng `skin` cho hai tay (3 xương), hai chân (đùi + ống chân; bàn chân vẫn là lớp cứng ghim đất) và thân (hông + eo). Bản cắt rời giữ ở `rig_v2_cut.json` để so.
+  Ảnh so sánh: chạy đoạn mã trong `docs/puppet-kit-next.md` §9 hoặc xem trang review.
+- Chưa có: trọng số tự vẽ (weight painting), uốn theo lưới tam giác; `blend` là một số cho mỗi khớp.

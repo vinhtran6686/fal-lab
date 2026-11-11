@@ -29,3 +29,5 @@ tự kiểm theo mục "Nghiệm thu", rồi **sửa dòng `Trạng thái` trong
 | F4 | (Fable) | Fable | P06: xoay thân (cào từ trước mặt sang trái) | F3 | chưa làm |
 
 Vì sao chia như vậy: F1-F4 cần nhìn ảnh, phán đoán hình và sửa lõi engine; T1-T5 có đặc tả đóng, kiểm được bằng lệnh.
+
+2026-11-11: T1-T5 đã DONE và đã gộp. Sau đó Fable thêm khớp uốn liền (`skin`) và xuất lại mọi state rig của lion; `golden.json` đã cập nhật (15 case).

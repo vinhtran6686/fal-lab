@@ -54,6 +54,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   **Before writing any animation JSON read `docs/puppet-kit-motion-recipes.md`** (sign conventions, timing tables, run cycle, checklist: copy the
   tables, do not re-derive the mechanics). Next work and tech debt (asset preparation pack incl. profile poses, rig v2 with legs / hips / true
   elbows, Rig Tuner v2, torso turns): `docs/puppet-kit-next.md` (started 2026-11-11, progress in its §8). `pose` registers a pose still to the rig.
+  Limbs and torso should be ONE picture with `"skin"` (smooth joints: the picture bends around elbow, knee, waist) rather than cut at the joint; see `docs/puppet-kit.md` "Khớp uốn liền".
   Work split by model: `docs/tasks/README.md`; a task file `docs/tasks/task-N-<model>-*.md` is self-contained: do exactly that file, touch only the files it
   lists, then set its `Trạng thái` line to DONE and fill in `Kết quả`.
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
