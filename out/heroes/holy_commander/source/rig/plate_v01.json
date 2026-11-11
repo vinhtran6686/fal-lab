@@ -1,0 +1,14 @@
+{
+  "prompt": "Edit the reference image. Keep EXACTLY the same character, the same drawing, the same pose of the head, torso, hips, legs, feet, cape and plume, the same size and the same position in the frame, the same colours and outlines. Change only this: REMOVE the sword completely (no sword, no weapon, nothing stuck in the ground) and REMOVE both forearms and both hands: both arms are hidden behind his back under the cape and are not visible at all. The two big silver shoulder plates stay exactly where they are. Where the sword, the forearm and the fists used to cover him, draw what was hidden behind them: the full silver chest plate with the complete gold cross emblem, the gold belt with its round buckle, the silver tabard panel hanging between the legs, both complete legs with knee guards and both boots, and the red cape between and behind the legs. Single game hero sprite: A top-heavy holy knight commander about 2.5 heads tall (huge rounded silver shoulder plates, small head, short legs), wearing sleek silver plate armour with a gold cross emblem on the chest and a simple engraved gold swirl pattern on each shoulder plate and the hip armour, and a tall silver helmet with an angular T-shaped visor and one tall swept-back red plume crest; a long plain red cape behind him; saturated silver main colour, bright gold accent, red cape. Standing UPRIGHT facing right, feet planted wide apart on one horizontal ground line. Full body, same framing as the reference. Background: one flat solid pure magenta color (#FF00FF) everywhere, no gradient, no ground, no shadow, no scenery, no text, no border. Do not use magenta or pink anywhere on the subject. Stylized 2D vector cartoon game art, flat solid fills only, no gradients, 2-3 hard-edged tones per colour, thick clean dark outlines, light from the top-left.",
+  "model": "openai/gpt-image-2/edit",
+  "quality": "low",
+  "size": "1024x1024",
+  "refs": [
+    "/home/user/fal-lab/out/heroes/holy_commander/source/design/master_v07.png"
+  ],
+  "transparent": false,
+  "seconds": 18.1,
+  "cost_usd": 0.0123,
+  "cost_is_estimate": true,
+  "source_url": "https://v3b.fal.media/files/b/0ab1f067/5Cw6HVeBcOB94SbqRlp-Q_Pja3WJGm.png"
+}

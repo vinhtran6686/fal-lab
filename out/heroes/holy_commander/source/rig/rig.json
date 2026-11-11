@@ -1,0 +1,40 @@
+{
+  "id": "holy_commander",
+  "note": "Cut-out rig of master_v07. Body, head, shoulder plate and cape come from plate_v01 (the master redrawn without sword and arms); the arm and the sword+fist come from the master. Coordinates are pixels of the 1024x1024 stills.",
+  "sources": {"master": "../design/master_v07.png", "plate": "plate_v01.png"},
+  "ground": [465, 962],
+  "unit": 785,
+  "bones": [
+    {"name": "root", "parent": null, "pivot": [465, 962]},
+    {"name": "body", "parent": "root", "pivot": [465, 962]},
+    {"name": "head", "parent": "body", "pivot": [480, 305]},
+    {"name": "shoulder", "parent": "body", "pivot": [390, 400]},
+    {"name": "cape", "parent": "body", "pivot": [400, 440]},
+    {"name": "sword", "parent": "root", "pivot": [625, 440]},
+    {"name": "upper_arm", "parent": "body", "pivot": [380, 425]},
+    {"name": "forearm", "parent": "upper_arm", "pivot": [445, 482]}
+  ],
+  "ik": [{"upper": "upper_arm", "lower": "forearm", "end": [570, 452], "target": {"bone": "sword", "pt": [570, 452]}}],
+  "sockets": {
+    "weapon_root": {"bone": "sword", "pt": [620, 530]},
+    "weapon_tip": {"bone": "sword", "pt": [620, 972]},
+    "grip": {"bone": "sword", "pt": [625, 440]}
+  },
+  "parts": [
+    {"name": "cape", "source": "plate", "bone": "cape", "select": {"colour": "red", "ymin": 380}, "grow": 40,
+     "deform": {"core_parts": ["body"], "amp": [14, 5], "wavelength": 130, "range": 60, "start": 6, "phase": -0.9}},
+    {"name": "body", "source": "plate", "bone": "body", "select": {"rest": true},
+     "fill_under": [{"part": "head", "erode": 14}, {"part": "shoulder", "erode": 6, "reach": 80}]},
+    {"name": "head", "source": "plate", "bone": "head", "subtract": ["shoulder"],
+     "select": {"poly": [[392,268],[404,290],[440,308],[490,322],[545,330],[580,305],[592,255],[585,205],[560,165],[550,120],[520,70],[470,30],[400,25],[320,40],[270,120],[275,235],[300,262],[345,272],[372,262]]},
+     "deform": {"core_self_hard": true, "amp": [10, 3], "wavelength": 60, "range": 55, "start": 4, "dir": -1, "phase": -0.5}},
+    {"name": "upper_arm", "source": "master", "bone": "upper_arm",
+     "select": {"poly": [[318,446],[360,448],[400,442],[442,424],[455,440],[455,535],[428,536],[398,522],[368,500],[340,470]]}},
+    {"name": "forearm", "source": "master", "bone": "forearm",
+     "select": {"poly": [[442,424],[470,420],[500,424],[540,420],[545,410],[568,412],[574,440],[574,488],[532,488],[522,510],[500,526],[480,533],[455,540],[432,532],[424,500],[424,460],[430,438]]}},
+    {"name": "sword_hand", "source": "master", "bone": "sword",
+     "select": {"poly": [[576,350],[580,314],[598,296],[630,288],[664,298],[678,322],[672,346],[660,354],[676,372],[678,398],[694,418],[699,455],[690,482],[678,490],[706,486],[722,498],[722,524],[708,536],[667,534],[667,915],[620,980],[571,915],[571,534],[534,534],[526,512],[534,492],[572,488],[568,470],[568,412],[580,396],[596,392],[596,368],[580,362]]}},
+    {"name": "shoulder", "source": "plate", "bone": "shoulder",
+     "select": {"poly": [[236,400],[246,360],[266,318],[300,278],[336,254],[372,248],[396,262],[418,296],[440,340],[456,380],[464,404],[456,424],[420,440],[370,452],[310,456],[262,446],[240,428]]}}
+  ]
+}

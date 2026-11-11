@@ -30,22 +30,26 @@
       "despill": true
     },
     "idle_side": {
-      "version": "t01-w0-124",
+      "version": "p01",
       "dir": "frames/idle_side",
-      "source": "source/video/run_side_t01.mp4",
-      "frames": 1,
-      "fps": 1,
+      "source": "source/rig/anims/idle.json",
+      "frames": 24,
+      "fps": 15,
       "loop": true,
       "files": "frames/idle_side/frames/@1x/hero_holy_commander_idle_side_NN.png",
       "sheet": "frames/idle_side/sheet.png",
-      "split": "video",
-      "video": {
-        "set": ".work/side",
-        "action": "run",
-        "take": 1,
-        "route": "supplied"
-      },
-      "body_rescale": 1.0919
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rig",
+            24
+          ]
+        ]
+      }
     },
     "attack_side": {
       "version": "t01",
@@ -214,6 +218,66 @@
       },
       "hit_frame": 13,
       "body_rescale": 0.8748
+    },
+    "levelup_puppet_side": {
+      "version": "p01",
+      "dir": "frames/levelup_puppet_side",
+      "source": "source/rig/anims/levelup.json",
+      "frames": 26,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/levelup_puppet_side/frames/@1x/hero_holy_commander_levelup_puppet_side_NN.png",
+      "sheet": "frames/levelup_puppet_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rig",
+            26
+          ]
+        ]
+      },
+      "hit_frame": 15
+    },
+    "attack_diag_puppet_side": {
+      "version": "p01",
+      "dir": "frames/attack_diag_puppet_side",
+      "source": "source/rig/anims/attack_diag_puppet.json",
+      "frames": 16,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/attack_diag_puppet_side/frames/@1x/hero_holy_commander_attack_diag_puppet_side_NN.png",
+      "sheet": "frames/attack_diag_puppet_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/poses/downcut_p1.json",
+          "source/rig/poses/downcut_p2.json",
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "ready",
+            2
+          ],
+          [
+            "p1",
+            5
+          ],
+          [
+            "p2",
+            6
+          ],
+          [
+            "recover",
+            3
+          ]
+        ]
+      },
+      "hit_frame": 8
     }
   },
   "body_area_2x": 6083,
@@ -231,7 +295,8 @@
   "fx": {
     "levelup": "frames/fx/levelup/fx.json",
     "radiant_slash": "frames/fx/radiant_slash/fx.json",
-    "slash_diag": "frames/fx/slash_diag/fx.json"
+    "slash_diag": "frames/fx/slash_diag/fx.json",
+    "slash_diag_puppet": "frames/fx/slash_diag_puppet/fx.json"
   },
   "sources": {
     "design": [

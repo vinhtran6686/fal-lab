@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rig Tuner</title>
+<style>
+:root{--bg:#1d2128;--fg:#e8eaee;--mut:#9aa3b2;--line:#3a4250;--acc:#ffd24a}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,sans-serif}
+header{padding:10px 16px;border-bottom:1px solid var(--line);display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+header b{font-size:15px}label{color:var(--mut)}button,select{background:#2a303a;color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:5px 10px}
+main{display:flex;gap:12px;padding:12px 16px;flex-wrap:wrap}
+#wrap{overflow:auto;max-width:100%;border:1px solid var(--line);background:#444d5a}
+canvas{display:block;cursor:crosshair}
+aside{min-width:260px;flex:1}
+#list div{padding:3px 6px;border-radius:4px;cursor:pointer}#list div.on{background:#39424f;color:var(--acc)}
+pre{white-space:pre-wrap;color:var(--mut);font-size:12px}
+</style></head><body>
+<header><b>Rig Tuner</b>
+<label>Ảnh nguồn <input type="file" id="fimg" accept="image/*"></label>
+<label>rig.json <input type="file" id="frig" accept=".json"></label>
+<label>Zoom <select id="zoom"><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
+<button id="save">Tải rig.json</button></header>
+<main><div id="wrap"><canvas id="cv" width="1024" height="1024"></canvas></div>
+<aside><p>Chọn một mục rồi kéo các điểm trên ảnh. Khớp xương (đỏ), socket (xanh lá), đa giác cắt lớp (vàng), điểm chân <i>ground</i> (trắng).
+Kéo đa giác: nhấp đúp lên cạnh để thêm điểm, nhấp phải lên điểm để xoá.</p>
+<div id="list"></div><pre id="info"></pre>
+<p>Sau khi tải file về: chép đè <code>source/rig/rig.json</code> rồi chạy<br><code>python scripts/puppet.py check &lt;asset&gt;/source/rig/rig.json</code></p></aside></main>
+<script>
+const cv=document.getElementById('cv'),cx=cv.getContext('2d');let img=null,rig=null,sel=null,drag=null,z=1;
+const $=id=>document.getElementById(id);
+$('fimg').onchange=e=>{const i=new Image();i.onload=()=>{img=i;cv.width=i.width;cv.height=i.height;fit();draw()};i.src=URL.createObjectURL(e.target.files[0])};
+$('frig').onchange=async e=>{rig=JSON.parse(await e.target.files[0].text());list();draw()};
+$('zoom').onchange=e=>{z=+e.target.value;fit()};
+function fit(){cv.style.width=cv.width*z+'px';cv.style.height=cv.height*z+'px'}
+function items(){if(!rig)return[];const a=[{k:'ground',label:'ground',pts:()=>[rig.ground]}];
+ rig.bones.forEach((b,i)=>a.push({k:'bone'+i,label:'khớp: '+b.name,pts:()=>[b.pivot]}));
+ Object.entries(rig.sockets||{}).forEach(([n,s])=>a.push({k:'sock'+n,label:'socket: '+n+' ('+s.bone+')',pts:()=>[s.pt]}));
+ (rig.ik||[]).forEach((c,i)=>a.push({k:'ik'+i,label:'IK end/target: '+c.lower,pts:()=>[c.end,c.target.pt]}));
+ rig.parts.forEach((p,i)=>{if(p.select.poly)a.push({k:'part'+i,label:'lớp: '+p.name+' ['+p.source+']',pts:()=>p.select.poly,poly:true})});return a}
+function list(){const L=$('list');L.innerHTML='';items().forEach(it=>{const d=document.createElement('div');d.textContent=it.label;d.className=sel===it.k?'on':'';d.onclick=()=>{sel=it.k;list();draw()};L.appendChild(d)})}
+function draw(){cx.clearRect(0,0,cv.width,cv.height);if(img)cx.drawImage(img,0,0);if(!rig)return;
+ for(const it of items()){const on=it.k===sel,P=it.pts();cx.lineWidth=on?2.5:1.2;
+  if(it.poly){cx.strokeStyle=on?'#ffd24a':'rgba(255,210,74,.45)';cx.beginPath();P.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.closePath();cx.stroke();
+   if(on)P.forEach(p=>{cx.fillStyle='#ffd24a';cx.fillRect(p[0]-4,p[1]-4,8,8)})}
+  else P.forEach(p=>{cx.fillStyle=it.k==='ground'?'#fff':it.k.startsWith('sock')?'#3f6':it.k.startsWith('ik')?'#6cf':'#f44';cx.beginPath();cx.arc(p[0],p[1],on?8:5,0,7);cx.fill();cx.strokeStyle='#000';cx.stroke()})}
+ rig.bones.forEach(b=>{if(b.parent){const q=rig.bones.find(x=>x.name===b.parent);cx.strokeStyle='rgba(255,255,255,.5)';cx.lineWidth=1;cx.beginPath();cx.moveTo(q.pivot[0],q.pivot[1]);cx.lineTo(b.pivot[0],b.pivot[1]);cx.stroke()}});
+ const it=items().find(i=>i.k===sel);$('info').textContent=it?it.label+'\n'+JSON.stringify(it.pts()):''}
+function pos(e){const r=cv.getBoundingClientRect();return[Math.round((e.clientX-r.left)/z),Math.round((e.clientY-r.top)/z)]}
+function near(P,m,d=12/z+6){let b=-1,bd=d;P.forEach((p,i)=>{const q=Math.hypot(p[0]-m[0],p[1]-m[1]);if(q<bd){bd=q;b=i}});return b}
+cv.onmousedown=e=>{const it=items().find(i=>i.k===sel);if(!it)return;const i=near(it.pts(),pos(e));if(i>=0)drag={P:it.pts(),i}};
+cv.onmousemove=e=>{if(!drag)return;const m=pos(e);drag.P[drag.i][0]=m[0];drag.P[drag.i][1]=m[1];if(sel==='ground'){}draw()};
+window.onmouseup=()=>drag=null;
+cv.ondblclick=e=>{const it=items().find(i=>i.k===sel);if(!it||!it.poly)return;const P=it.pts(),m=pos(e);let b=0,bd=1e9;
+ P.forEach((p,i)=>{const q=P[(i+1)%P.length],d=Math.hypot((p[0]+q[0])/2-m[0],(p[1]+q[1])/2-m[1]);if(d<bd){bd=d;b=i}});P.splice(b+1,0,m);draw()};
+cv.oncontextmenu=e=>{e.preventDefault();const it=items().find(i=>i.k===sel);if(!it||!it.poly)return;const P=it.pts(),i=near(P,pos(e));if(i>=0&&P.length>3){P.splice(i,1);draw()}};
+$('save').onclick=()=>{if(!rig)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(rig,null,1)],{type:'application/json'}));a.download='rig.json';a.click()};
+</script></body></html>

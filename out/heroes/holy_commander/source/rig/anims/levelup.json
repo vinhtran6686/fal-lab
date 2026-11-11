@@ -1,0 +1,19 @@
+{
+  "note": "Rig-only action: crouch, heave the planted sword up, slam it back into the ground (hit), rebound and settle. No pose still, no video.",
+  "version": "p01", "fps": 15, "loop": false, "hit_frame": 15,
+  "rig": "source/rig/rig.json", "frames": 26,
+  "tracks": {
+    "_sway_period": 12,
+    "body.sy": [[0, 1.0], [3, 0.955, "out"], [9, 1.04, "out3"], [12, 1.045, "linear"], [14, 0.925, "in3"], [18, 1.025, "out"], [22, 1.0, "inout"]],
+    "body.sx": [[0, 1.0], [3, 1.02, "out"], [9, 0.985, "out3"], [12, 0.985, "linear"], [14, 1.045, "in3"], [18, 0.99, "out"], [22, 1.0, "inout"]],
+    "sword.ty": [[0, 0], [3, 4, "out"], [9, -112, "out3"], [12, -120, "out"], [14, 8, "in3"], [17, 0, "out"]],
+    "sword.tx": [[0, 0], [3, 0], [9, -14, "out3"], [12, -16, "out"], [14, 0, "in3"]],
+    "sword.rot": [[0, 0], [3, 1], [9, -7, "out3"], [12, -9, "out"], [14, 0, "in3"]],
+    "head.rot": [[0, 0], [3, 4, "out"], [9, -8, "out3"], [12, -9], [14, 6, "in3"], [19, 0, "out"]],
+    "head.ty": [[0, 0], [3, 3], [9, -4, "out3"], [12, -4], [14, 6, "in3"], [19, 0, "out"]],
+    "shoulder.ty": [[0, 0], [3, 3], [9, -9, "out3"], [12, -10], [14, 7, "in3"], [19, 0, "out"]],
+    "shoulder.rot": [[0, 0], [9, -5, "out3"], [12, -5], [14, 3, "in3"], [19, 0, "out"]],
+    "cape.sway": [[0, 1], [9, 1.6], [13, 1.2], [15, 2.2, "out"], [25, 1.0, "out"]],
+    "head.sway": [[0, 1], [12, 1.5], [15, 3.0, "out"], [25, 1.0, "out"]]
+  }
+}

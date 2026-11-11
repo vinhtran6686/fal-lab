@@ -45,6 +45,12 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   per VFX type (slash, explosion: references, rules, generators, open work): `lib-fx/_core/vector/foundation/vfx/`.
   **Continuing vector-kit work in a new session: read `lib-fx/_core/vector/STATUS.md` first** (current state, parked work, open questions).
   Current direction chosen by the VFX advisor (2026-11-10): `docs/milestone-01-character-synced-slash.md` (M01 done; decisions `docs/decision-log.md`, status `docs/roadmap.md`, next `docs/milestone-02-plan-DRAFT.md`); review every VFX at game size (H = 60 px @1x).
+- **Puppet Kit** (since 2026-11-11): character motion from the approved stills with a cut-out rig, no video model, deterministic, 0 USD per
+  animation: `scripts/puppet.py check|render|track|slash`, engine `scripts/puppet_kit/core.py`, rig tuner page `scripts/puppet_kit/rig_tuner.html`,
+  guide `docs/puppet-kit.md` (Vietnamese). A character's rig lives in `<asset>/source/rig/` (`rig.json`, `plate_vNN.png` = the master redrawn
+  without weapon and forearms, `poses/*.json` one-part rigs of `pose_*` stills, `anims/*.json`). Use it first for idle, level-up, buffs and
+  pose-to-pose attacks; keep `video-sprite` for turns, runs and anything a 2D rig cannot do. `track` writes the weapon root/tip from rig sockets
+  in the milestone-01 `weapon_track.json` format; `slash` draws the M01 layered slash on the cut of a pose-to-pose attack.
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.

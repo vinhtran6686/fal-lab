@@ -30,3 +30,13 @@ Một mục cho mỗi thử nghiệm: mục tiêu, cách làm, kết quả, chi 
 ## M01-c Đâm kiếm do AI tự sáng tạo (2026-11-10): chỉ xem thử
 
 - Một clip 4 s, khung đầu là master, không ghim khung cuối. Không đánh giá tiếp; file làm việc đã xoá.
+
+## P01 Puppet Kit: chuyển động bằng rig cắt lớp, Holy Commander (2026-11-11): chạy được, chờ user duyệt chất lượng
+
+- **Mục tiêu:** tạo chuyển động từ master và các pose đã có mà không gọi video; lấy gốc/mũi kiếm trực tiếp từ rig.
+- **Cách làm:** `docs/puppet-kit.md`. Một ảnh plate (thân sạch) + đa giác cắt lớp do AI đặt trên ảnh có lưới; engine numpy/scipy; IK hai xương cho tay.
+- **Kết quả:** idle 24 hình, levelup rig 26 hình, attack pose-to-pose 16 hình + vệt chém từ socket. Render 24 hình mất ~4 s. Cỡ và vị trí trùng state cũ.
+- **Chi phí API:** ~0,012 USD (1 ảnh).
+- **Hạn chế thấy được:** attack pose-to-pose cứng hơn bản video (không có frame trung gian, áo choàng không tung); tay xa không có trong rig.
+- **Bài học:** (1) xin model vẽ lại master "bỏ kiếm, bỏ cẳng tay" giữ nguyên vị trí là đủ để có lớp thân kín; (2) `unit`/`ground` phải căn theo frame đã xuất,
+  không theo bbox ảnh; (3) socket trên xương thay hẳn bước đánh dấu tay, quỹ đạo qua nhát cắt cần khai báo chiều quay (`cw`/`ccw`).
