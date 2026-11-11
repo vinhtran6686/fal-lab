@@ -99,6 +99,25 @@ def gif(cells, path, fps, scale=1, bg=(200, 200, 190, 255)):
     fr[0].save(path, save_all=True, append_images=fr[1:], duration=round(1000 / fps), loop=0)
 
 
+def keep_sources(asset, meta, paths):
+    """Record inputs under <asset>/source/{design,video,fx,vfx}/ in meta.json "sources", so source_prune.py keeps them.
+    (source/rig/ itself is not a prune kind: it is never pruned.)"""
+    root = (pathlib.Path(asset) / "source").resolve()
+    for p in paths:
+        p = pathlib.Path(p).resolve()
+        if p.is_relative_to(root):
+            kind, name = p.relative_to(root).parts[:2]
+            if kind in ("design", "video", "fx", "vfx"):
+                lst = meta.setdefault("sources", {}).setdefault(kind, [])
+                if name not in lst:
+                    lst.append(name)
+                    lst.sort()
+
+
+def rig_stills(anim):
+    return [rig.dir / src for rig in anim.rigs.values() for src in rig.spec["sources"].values()]
+
+
 def cmd_render(a):
     asset = pathlib.Path(a.asset)
     meta = json.loads((asset / "meta.json").read_text(encoding="utf-8"))
@@ -139,6 +158,7 @@ def cmd_render(a):
     if anim.spec.get("hit_frame"):
         entry["hit_frame"] = anim.spec["hit_frame"]
     meta["states"][sheet] = entry
+    keep_sources(asset, meta, rig_stills(anim))
     (asset / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"exported {sheet}: {len(cells)} frames @ {anim.fps} fps -> {folder}")
 
@@ -158,7 +178,7 @@ def weapon_sampler(asset, anim, meta, root="weapon_root", tip="weapon_tip"):
     points. Across a cut between two shots listed in the animation's "transitions" the blade is swung from the last
     frame of one shot to the first frame of the next: the root moves on a line, the blade angle turns in the given
     direction ("cw" / "ccw" on screen), the length is interpolated."""
-    c2 = (meta["cell"][0] * 2, meta["cell"][1] * 2)
+    c2 = (meta["cell"][0] * meta["scale_2x"], meta["cell"][1] * meta["scale_2x"])
     body2x = meta["body_height_2x"]
     starts, acc = [], 0
     for s in anim.shots:
@@ -231,6 +251,8 @@ def cmd_track(a):
            "marked_by": "puppet rig sockets (exact at whole frames; 'estimated' samples are the swing across a cut)",
            "samples": samples}
     (out / "weapon_track.json").write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
+    keep_sources(asset, meta, [out])
+    (asset / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"wrote {out / 'weapon_track.json'}: {len(samples)} samples")
 
 
@@ -238,8 +260,9 @@ def cmd_slash(a):
     """Slash fx for a pose-to-pose attack: the blade sweep of the cut (anim "transitions") is drawn with the
     milestone-01 layered generator (imported, not modified) and laid on the hit frame, then fades."""
     import os
+    import subprocess
     if os.environ.get("PYTHONHASHSEED") != "0":      # gen_slash_loop places breaks with hash(): fixed seed = same frames
-        os.execve(sys.executable, [sys.executable] + sys.argv, dict(os.environ, PYTHONHASHSEED="0"))
+        sys.exit(subprocess.run([sys.executable] + sys.argv, env=dict(os.environ, PYTHONHASHSEED="0")).returncode)
     asset = pathlib.Path(a.asset)
     meta = json.loads((asset / "meta.json").read_text(encoding="utf-8"))
     anim = Animation(a.anim, asset)
@@ -250,7 +273,10 @@ def cmd_slash(a):
     i = tr[0]["after_shot"]
     g0 = starts[i] + anim.shots[i]["frames"] - 1     # last frame before the cut (0-based); the hit is g0 + 1
     n = a.steps
-    P = json.loads(pathlib.Path(a.params).read_text(encoding="utf-8"))
+    params = pathlib.Path(a.params) if a.params else asset / "source" / "vfx" / "slash_diag" / "slash_params.json"
+    if not params.exists():
+        sys.exit(f"no slash parameters at {params}: pass --params (e.g. another hero's source/vfx/slash_diag/slash_params.json)")
+    P = json.loads(params.read_text(encoding="utf-8"))
     L = P["layered"]
     fades = sorted(L["after"], key=int)              # the generator's fade steps, re-keyed after our virtual hit
     L["after"] = {str(n + 1 + k): L["after"][f] for k, f in enumerate(fades)}
@@ -312,6 +338,7 @@ def cmd_slash(a):
            "rebuild": f"python scripts/puppet.py slash <asset> {rel} --name {a.name} --sheet {sheet}"}
     (out / "fx.json").write_text(json.dumps(fxj, indent=1) + "\n", encoding="utf-8")
     meta.setdefault("fx", {})[a.name] = f"frames/fx/{a.name}/fx.json"
+    keep_sources(asset, meta, [params.parent] + rig_stills(anim))
     (asset / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"slash fx {a.name}: sweep of {n} steps on frame {hit + 1}, fades {len(fades)} frames -> {out}")
 
@@ -328,7 +355,7 @@ def main():
     x = sp.add_parser("slash"); x.add_argument("asset"); x.add_argument("anim"); x.add_argument("--name", required=True)
     x.add_argument("--sheet"); x.add_argument("--steps", type=int, default=6, help="samples of the sweep across the cut")
     x.add_argument("--lag", type=float, default=4.2, help="ribbon length in sweep steps (steps - 1 = the whole swing)")
-    x.add_argument("--params", default="out/heroes/holy_commander/source/vfx/slash_diag/slash_params.json")
+    x.add_argument("--params", help="slash_params.json (default: <asset>/source/vfx/slash_diag/slash_params.json)")
     x.add_argument("--set", action="append", default=[], help="override a parameter: layered.width_scale=0.8")
     x.set_defaults(fn=cmd_slash)
     a = p.parse_args()

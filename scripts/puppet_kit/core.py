@@ -89,7 +89,7 @@ EASE = {
     "back": lambda u: 1 + 2.2 * (u - 1) ** 3 + 1.2 * (u - 1) ** 2,  # overshoots, then settles
 }
 
-DEFAULTS = {"rot": 0.0, "tx": 0.0, "ty": 0.0, "sx": 1.0, "sy": 1.0, "shx": 0.0, "sway": 1.0, "alpha": 1.0, "grey": 0.0}
+DEFAULTS = {"rot": 0.0, "tx": 0.0, "ty": 0.0, "sx": 1.0, "sy": 1.0, "shx": 0.0, "sway": 1.0, "alpha": 1.0, "grey": 0.0, "fk": 0.0}
 
 
 def track_value(track, f: float, default: float) -> float:
@@ -137,11 +137,17 @@ class Rig:
     # --- building parts from the sources -------------------------------------------------
     def _bone_order(self):
         out, done = [], set()
+        for n, b in self.bones.items():
+            if b.get("parent") is not None and b["parent"] not in self.bones:
+                raise ValueError(f"bone {n}: unknown parent {b['parent']}")
         while len(out) < len(self.bones):
+            before = len(out)
             for n, b in self.bones.items():
                 if n not in done and (b.get("parent") is None or b["parent"] in done):
                     out.append(n)
                     done.add(n)
+            if len(out) == before:
+                raise ValueError("bones form a cycle")
         return out
 
     def _src(self, name, cache):

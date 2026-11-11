@@ -63,6 +63,8 @@ python scripts/puppet.py slash  out/heroes/holy_commander out/heroes/holy_comman
 - `fill_under` vá bằng màu lân cận: chỉ đủ cho chuyển động nhỏ của part nằm trên. Part cần lộ nhiều thì xin thêm một plate.
 - Toạ độ khớp do AI đặt chỉ gần đúng (±10 px ảnh nguồn): luôn chạy `check` và chỉnh bằng Rig Tuner.
 - Tay xa (bị che trong master) không có trong rig Holy Commander.
+- IK chỉ đặt lại hai xương của chuỗi; xương con gắn vào cẳng tay (chưa có) sẽ không đi theo.
+- `source/rig/` không thuộc các loại mà `source_prune.py` dọn nên không bao giờ bị xoá. Ảnh pose và thư mục vfx mà rig dùng được `render`/`track`/`slash` tự ghi vào `meta.json` "sources" để không bị dọn.
 
 ## Holy Commander: đã làm (2026-11-11)
 

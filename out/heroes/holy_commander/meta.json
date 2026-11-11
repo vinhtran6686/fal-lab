@@ -304,6 +304,8 @@
       "icon_v01.png",
       "master_v07.json",
       "master_v07.png",
+      "pose_downcut_p1_v01.png",
+      "pose_downcut_p2_v01.png",
       "pose_levelup_v02.json",
       "pose_levelup_v02.png",
       "pose_respawn_v02.json",
@@ -343,7 +345,9 @@
     ],
     "vfx": [
       "holy_banner",
-      "radiant_slash"
+      "radiant_slash",
+      "slash_diag",
+      "slash_diag_puppet"
     ]
   }
 }
