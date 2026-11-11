@@ -51,6 +51,11 @@
 | pose_downcut_p1 | fal-image | ảnh tĩnh | ✅ v01 | Milestone 01: thế chuẩn bị, kiếm giơ cao sau đầu (ảnh đầu của `attack_diag_side`) |
 | pose_downcut_p2 | fal-image | ảnh tĩnh | ✅ v01 | Milestone 01: kết thúc nhát chém, kiếm chĩa xuống phải-dưới (ảnh cuối) |
 | attack_diag_side | video-sprite | one-shot | ✅ t01 exported | 16 hình, 1,07 s, hit 13; cell 176x140; | chém xéo từ trên xuống, `source/video/attack_diag_side_downcut_t01`; xem mục Milestone 01 cuối file |
+| rig (plate_v01 + rig.json) | Puppet Kit | rig | ✅ v01 | `source/rig/`: master cắt lớp (thân, đầu, giáp vai, áo choàng từ plate; tay + kiếm từ master), IK tay, socket gốc/mũi kiếm; `docs/puppet-kit.md` |
+| idle_side | Puppet Kit (rig, $0) | loop | ⏳ p01 chờ user duyệt (bản 1 hình cũ còn trong git) | 24 hình, 1,60 s; thay bản 1 hình; `source/rig/anims/idle.json` |
+| levelup_puppet_side | Puppet Kit (rig, $0) | one-shot | ⏳ p01 chờ user so với `levelup_side` | 26 hình, hit 15; nhấc kiếm rồi cắm xuống |
+| attack_diag_puppet_side | Puppet Kit (pose-to-pose, $0) | one-shot | ⏳ p01 chờ user so với `attack_diag_side` | 16 hình, hit 8; dùng lại `pose_downcut_p1/p2` |
+| fx_slash_diag_puppet | Puppet Kit + bộ sinh M01 ($0) | hiệu ứng | ⏳ p01 | vệt chém từ socket của rig, không đánh dấu tay; `frames/fx/slash_diag_puppet/` |
 
 Estimated cost: 5 stills + 2 vfx x ~USD 0.014 (~USD 0.10) + 8 clips x ~USD 0.08 (~USD 0.64) + retakes.
 

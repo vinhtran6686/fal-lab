@@ -1,0 +1,976 @@
+{
+ "id": "lion_brawler",
+ "note": "Rig v2 with smooth joints (2026-11-11): standard biped skeleton (docs/puppet-kit-next.md section 3). Each limb and the torso is ONE picture bent around its joints (\"skin\": the pixels near a joint turn by a fraction of the joint angle), so a bent elbow, knee or waist is a curve, not a cut. The cut version is rig_v2_cut.json, the first rig rig_v1.json. Layers come from stills erased from the master with the head kept as an anchor. Legs: two-bone IK to a planted foot. Pixels of the 1024x1024 stills; unit = standing silhouette = 2 x {H} at @2x. Studio v01 (2026-11-11): added near_foot_target / far_foot_target (children of root, at each IK target) so the pose can move each foot with tx/ty; at rest the result is identical to rig.json. Limits and links added by the Studio (docs/puppet-studio.md): bone.limit.rot = allowed rot range, links = muscle links (the shoulder slides out and the chest near each anchor follows).",
+ "sources": {
+  "torso": "../design/layer_torso_v01.png",
+  "legs": "../design/layer_legs_v02.png",
+  "near_arm": "../design/layer_near_arm_v02.png",
+  "far_arm": "../design/layer_far_arm_v02.png",
+  "tail": "../design/layer_tail_v02.png",
+  "master": "../design/master_v01.png"
+ },
+ "ground": [
+  560,
+  945
+ ],
+ "unit": 926,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    560,
+    945
+   ]
+  },
+  {
+   "name": "hips",
+   "parent": "root",
+   "pivot": [
+    560,
+    650
+   ],
+   "limit": {
+    "rot": [
+     -15,
+     15
+    ]
+   }
+  },
+  {
+   "name": "spine",
+   "parent": "hips",
+   "pivot": [
+    560,
+    565
+   ],
+   "limit": {
+    "rot": [
+     -20,
+     35
+    ]
+   }
+  },
+  {
+   "name": "head",
+   "parent": "spine",
+   "pivot": [
+    560,
+    340
+   ],
+   "limit": {
+    "rot": [
+     -40,
+     40
+    ]
+   }
+  },
+  {
+   "name": "near_upper_arm",
+   "parent": "spine",
+   "pivot": [
+    390,
+    365
+   ],
+   "limit": {
+    "rot": [
+     -170,
+     140
+    ]
+   }
+  },
+  {
+   "name": "near_forearm",
+   "parent": "near_upper_arm",
+   "pivot": [
+    325,
+    525
+   ],
+   "limit": {
+    "rot": [
+     -160,
+     80
+    ]
+   }
+  },
+  {
+   "name": "near_hand",
+   "parent": "near_forearm",
+   "pivot": [
+    335,
+    622
+   ],
+   "limit": {
+    "rot": [
+     -70,
+     70
+    ]
+   }
+  },
+  {
+   "name": "far_upper_arm",
+   "parent": "spine",
+   "pivot": [
+    715,
+    385
+   ],
+   "limit": {
+    "rot": [
+     -170,
+     140
+    ]
+   }
+  },
+  {
+   "name": "far_forearm",
+   "parent": "far_upper_arm",
+   "pivot": [
+    750,
+    532
+   ],
+   "limit": {
+    "rot": [
+     -160,
+     80
+    ]
+   }
+  },
+  {
+   "name": "far_hand",
+   "parent": "far_forearm",
+   "pivot": [
+    775,
+    622
+   ],
+   "limit": {
+    "rot": [
+     -70,
+     70
+    ]
+   }
+  },
+  {
+   "name": "near_thigh",
+   "parent": "hips",
+   "pivot": [
+    500,
+    645
+   ],
+   "limit": {
+    "rot": [
+     -90,
+     60
+    ]
+   }
+  },
+  {
+   "name": "near_shin",
+   "parent": "near_thigh",
+   "pivot": [
+    458,
+    790
+   ],
+   "limit": {
+    "rot": [
+     0,
+     150
+    ]
+   }
+  },
+  {
+   "name": "near_foot",
+   "parent": "near_shin",
+   "pivot": [
+    440,
+    868
+   ],
+   "limit": {
+    "rot": [
+     -30,
+     30
+    ]
+   }
+  },
+  {
+   "name": "far_thigh",
+   "parent": "hips",
+   "pivot": [
+    640,
+    650
+   ],
+   "limit": {
+    "rot": [
+     -90,
+     60
+    ]
+   }
+  },
+  {
+   "name": "far_shin",
+   "parent": "far_thigh",
+   "pivot": [
+    648,
+    800
+   ],
+   "limit": {
+    "rot": [
+     0,
+     150
+    ]
+   }
+  },
+  {
+   "name": "far_foot",
+   "parent": "far_shin",
+   "pivot": [
+    650,
+    862
+   ],
+   "limit": {
+    "rot": [
+     -30,
+     30
+    ]
+   }
+  },
+  {
+   "name": "tail",
+   "parent": "hips",
+   "pivot": [
+    440,
+    630
+   ],
+   "limit": {
+    "rot": [
+     -70,
+     70
+    ]
+   }
+  },
+  {
+   "name": "near_foot_target",
+   "parent": "root",
+   "pivot": [
+    440,
+    868
+   ]
+  },
+  {
+   "name": "far_foot_target",
+   "parent": "root",
+   "pivot": [
+    650,
+    862
+   ]
+  }
+ ],
+ "ik": [
+  {
+   "upper": "near_thigh",
+   "lower": "near_shin",
+   "end": [
+    440,
+    868
+   ],
+   "end_bone": "near_foot",
+   "hint": [
+    1,
+    0
+   ],
+   "target": {
+    "bone": "near_foot_target",
+    "pt": [
+     440,
+     868
+    ]
+   },
+   "stretch": "lower",
+   "max_bend": 55
+  },
+  {
+   "upper": "far_thigh",
+   "lower": "far_shin",
+   "end": [
+    650,
+    862
+   ],
+   "end_bone": "far_foot",
+   "hint": [
+    1,
+    0
+   ],
+   "target": {
+    "bone": "far_foot_target",
+    "pt": [
+     650,
+     862
+    ]
+   }
+  }
+ ],
+ "sockets": {
+  "weapon_root": {
+   "bone": "near_forearm",
+   "pt": [
+    325,
+    525
+   ]
+  },
+  "weapon_tip": {
+   "bone": "near_hand",
+   "pt": [
+    330,
+    790
+   ]
+  },
+  "far_claw": {
+   "bone": "far_hand",
+   "pt": [
+    810,
+    745
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "tail",
+   "source": "tail",
+   "bone": "tail",
+   "select": {
+    "poly": [
+     [
+      110,
+      420
+     ],
+     [
+      232,
+      420
+     ],
+     [
+      232,
+      452
+     ],
+     [
+      480,
+      452
+     ],
+     [
+      480,
+      805
+     ],
+     [
+      110,
+      805
+     ]
+    ]
+   }
+  },
+  {
+   "name": "far_arm",
+   "source": "far_arm",
+   "bone": "far_upper_arm",
+   "skin": {
+    "bones": [
+     "far_upper_arm",
+     "far_forearm",
+     "far_hand"
+    ],
+    "tip": [
+     810,
+     745
+    ],
+    "blend": [
+     40,
+     26
+    ]
+   },
+   "select": {
+    "poly": [
+     [
+      655,
+      325
+     ],
+     [
+      750,
+      325
+     ],
+     [
+      795,
+      420
+     ],
+     [
+      808,
+      488
+     ],
+     [
+      832,
+      574
+     ],
+     [
+      854,
+      650
+     ],
+     [
+      852,
+      755
+     ],
+     [
+      758,
+      755
+     ],
+     [
+      728,
+      690
+     ],
+     [
+      712,
+      600
+     ],
+     [
+      690,
+      560
+     ],
+     [
+      680,
+      480
+     ],
+     [
+      660,
+      400
+     ]
+    ]
+   }
+  },
+  {
+   "name": "far_leg",
+   "source": "legs",
+   "bone": "far_thigh",
+   "skin": {
+    "bones": [
+     "far_thigh",
+     "far_shin"
+    ],
+    "tip": [
+     650,
+     862
+    ],
+    "blend": 30
+   },
+   "select": {
+    "poly": [
+     [
+      570,
+      598
+     ],
+     [
+      682,
+      596
+     ],
+     [
+      702,
+      650
+     ],
+     [
+      720,
+      797
+     ],
+     [
+      714,
+      800
+     ],
+     [
+      706,
+      850
+     ],
+     [
+      690,
+      872
+     ],
+     [
+      600,
+      872
+     ],
+     [
+      594,
+      840
+     ],
+     [
+      585,
+      812
+     ],
+     [
+      578,
+      760
+     ],
+     [
+      574,
+      686
+     ],
+     [
+      580,
+      680
+     ]
+    ]
+   }
+  },
+  {
+   "name": "far_foot",
+   "source": "legs",
+   "bone": "far_foot",
+   "select": {
+    "poly": [
+     [
+      596,
+      848
+     ],
+     [
+      690,
+      848
+     ],
+     [
+      730,
+      868
+     ],
+     [
+      782,
+      905
+     ],
+     [
+      784,
+      948
+     ],
+     [
+      598,
+      950
+     ],
+     [
+      590,
+      900
+     ]
+    ]
+   }
+  },
+  {
+   "name": "near_leg",
+   "source": "legs",
+   "bone": "near_thigh",
+   "skin": {
+    "bones": [
+     "near_thigh",
+     "near_shin"
+    ],
+    "tip": [
+     440,
+     868
+    ],
+    "blend": 30,
+    "stretch": true
+   },
+   "select": {
+    "poly": [
+     [
+      453,
+      594
+     ],
+     [
+      572,
+      598
+     ],
+     [
+      582,
+      680
+     ],
+     [
+      576,
+      686
+     ],
+     [
+      546,
+      740
+     ],
+     [
+      526,
+      808
+     ],
+     [
+      497,
+      845
+     ],
+     [
+      490,
+      882
+     ],
+     [
+      400,
+      882
+     ],
+     [
+      376,
+      850
+     ],
+     [
+      383,
+      810
+     ],
+     [
+      388,
+      777
+     ],
+     [
+      393,
+      745
+     ],
+     [
+      428,
+      680
+     ]
+    ]
+   }
+  },
+  {
+   "name": "near_foot",
+   "source": "legs",
+   "bone": "near_foot",
+   "select": {
+    "poly": [
+     [
+      376,
+      848
+     ],
+     [
+      400,
+      874
+     ],
+     [
+      490,
+      874
+     ],
+     [
+      502,
+      895
+     ],
+     [
+      510,
+      957
+     ],
+     [
+      348,
+      960
+     ],
+     [
+      343,
+      900
+     ]
+    ]
+   },
+   "discs": [
+    {
+     "at": [
+      440,
+      868
+     ],
+     "r": 62
+    }
+   ]
+  },
+  {
+   "name": "torso",
+   "source": "torso",
+   "bone": "hips",
+   "subtract": [
+    "head"
+   ],
+   "skin": {
+    "bones": [
+     "hips",
+     "spine"
+    ],
+    "tip": [
+     560,
+     340
+    ],
+    "blend": 40
+   },
+   "select": {
+    "poly": [
+     [
+      285,
+      280
+     ],
+     [
+      765,
+      280
+     ],
+     [
+      775,
+      470
+     ],
+     [
+      708,
+      540
+     ],
+     [
+      694,
+      575
+     ],
+     [
+      702,
+      640
+     ],
+     [
+      708,
+      742
+     ],
+     [
+      682,
+      776
+     ],
+     [
+      560,
+      782
+     ],
+     [
+      428,
+      774
+     ],
+     [
+      405,
+      742
+     ],
+     [
+      418,
+      640
+     ],
+     [
+      430,
+      575
+     ],
+     [
+      426,
+      540
+     ],
+     [
+      295,
+      470
+     ]
+    ]
+   },
+   "fill_under": [
+    {
+     "part": "head",
+     "erode": 16,
+     "reach": 40
+    }
+   ]
+  },
+  {
+   "name": "near_arm",
+   "source": "near_arm",
+   "bone": "near_upper_arm",
+   "skin": {
+    "bones": [
+     "near_upper_arm",
+     "near_forearm",
+     "near_hand"
+    ],
+    "tip": [
+     330,
+     790
+    ],
+    "blend": [
+     45,
+     28
+    ]
+   },
+   "select": {
+    "poly": [
+     [
+      295,
+      330
+     ],
+     [
+      350,
+      296
+     ],
+     [
+      432,
+      296
+     ],
+     [
+      478,
+      340
+     ],
+     [
+      481,
+      400
+     ],
+     [
+      452,
+      450
+     ],
+     [
+      422,
+      500
+     ],
+     [
+      414,
+      545
+     ],
+     [
+      434,
+      625
+     ],
+     [
+      437,
+      700
+     ],
+     [
+      407,
+      735
+     ],
+     [
+      398,
+      797
+     ],
+     [
+      248,
+      797
+     ],
+     [
+      236,
+      700
+     ],
+     [
+      236,
+      580
+     ],
+     [
+      252,
+      500
+     ],
+     [
+      272,
+      420
+     ]
+    ]
+   }
+  },
+  {
+   "name": "head",
+   "source": "torso",
+   "bone": "head",
+   "select": {
+    "poly": [
+     [
+      283,
+      245
+     ],
+     [
+      300,
+      180
+     ],
+     [
+      330,
+      110
+     ],
+     [
+      420,
+      55
+     ],
+     [
+      520,
+      30
+     ],
+     [
+      600,
+      60
+     ],
+     [
+      690,
+      150
+     ],
+     [
+      735,
+      245
+     ],
+     [
+      738,
+      330
+     ],
+     [
+      700,
+      410
+     ],
+     [
+      652,
+      442
+     ],
+     [
+      600,
+      400
+     ],
+     [
+      540,
+      380
+     ],
+     [
+      480,
+      345
+     ],
+     [
+      440,
+      330
+     ],
+     [
+      380,
+      345
+     ],
+     [
+      300,
+      350
+     ],
+     [
+      280,
+      300
+     ]
+    ]
+   }
+  }
+ ],
+ "links": [
+  {
+   "name": "near_chest",
+   "arm": "near_upper_arm",
+   "mode": "stretch",
+   "max_pull": 90,
+   "anchors": [
+    {
+     "part": "torso",
+     "pt": [
+      500,
+      430
+     ],
+     "radius": 140,
+     "gain": 1.0
+    }
+   ]
+  },
+  {
+   "name": "far_chest",
+   "arm": "far_upper_arm",
+   "mode": "stretch",
+   "max_pull": 90,
+   "anchors": [
+    {
+     "part": "torso",
+     "pt": [
+      650,
+      430
+     ],
+     "radius": 140,
+     "gain": 1.0
+    }
+   ]
+  }
+ ]
+}

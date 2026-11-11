@@ -1,0 +1,37 @@
+{
+ "state": "attack_side",
+ "fx": "claw_swipe",
+ "frames": 16,
+ "fps": 15,
+ "loop": false,
+ "source": "milestone-01 layered slash generator in the blade sweep of the puppet rig's weapon sockets (no hand marking)",
+ "blend": "screen",
+ "size_2x": [
+  352,
+  280
+ ],
+ "size_1x": [
+  176,
+  140
+ ],
+ "pivot_2x": [
+  176.0,
+  246.4
+ ],
+ "layers": [
+  {
+   "id": "front",
+   "z": "in front of the body",
+   "files": "frames/fx/claw_swipe/front/frames/@2x/hero_lion_brawler_fx_claw_swipe_front_NN.png (also @1x)"
+  }
+ ],
+ "timing": {
+  "hit_frame": 8,
+  "fade_frames": [
+   9,
+   10,
+   11
+  ]
+ },
+ "rebuild": "python scripts/puppet.py slash <asset> source/rig/anims/attack.json --name claw_swipe --sheet attack_side"
+}

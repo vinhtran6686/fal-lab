@@ -1,0 +1,59 @@
+{
+ "id": "holy_commander",
+ "note": "Pose rig: the whole still pose_downcut_p1_v01.png as one part on one bone (lean, squash, sway). ground/unit registered against the exported attack_diag_side frames.",
+ "sources": {
+  "pose": "../../design/pose_downcut_p1_v01.png"
+ },
+ "ground": [
+  529,
+  973
+ ],
+ "unit": 816,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    529,
+    973
+   ]
+  }
+ ],
+ "sockets": {
+  "weapon_root": {
+   "bone": "root",
+   "pt": [
+    392,
+    298
+   ]
+  },
+  "weapon_tip": {
+   "bone": "root",
+   "pt": [
+    148,
+    26
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "pose",
+   "source": "pose",
+   "bone": "root",
+   "select": {
+    "rest": true
+   },
+   "deform": {
+    "core_self_hard": true,
+    "amp": [
+     12,
+     4
+    ],
+    "wavelength": 130,
+    "range": 60,
+    "start": 6,
+    "phase": -0.9
+   }
+  }
+ ]
+}

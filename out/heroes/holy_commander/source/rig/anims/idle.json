@@ -1,0 +1,14 @@
+{
+  "note": "Idle loop: breathing (the body squashes about the feet), the sword stays planted, the arm follows by IK, cape and plume sway.",
+  "version": "p01", "fps": 15, "loop": true,
+  "rig": "source/rig/rig.json", "frames": 24,
+  "tracks": {
+    "_sway_period": 24,
+    "body.sy": {"base": 1.0, "osc": {"amp": -0.014, "period": 24}},
+    "body.sx": {"base": 1.0, "osc": {"amp": 0.006, "period": 24}},
+    "head.rot": {"osc": {"amp": 1.2, "period": 24, "phase": -0.12}},
+    "head.ty": {"osc": {"amp": 2.5, "period": 24, "phase": -0.1}},
+    "shoulder.ty": {"osc": {"amp": 3.0, "period": 24, "phase": -0.06}},
+    "shoulder.rot": {"osc": {"amp": 0.8, "period": 24, "phase": -0.06}}
+  }
+}

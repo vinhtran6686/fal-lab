@@ -1,0 +1,293 @@
+<title>Rig Tuner</title>
+<style>
+:root{--bg:#f3f4f7;--panel:#ffffff;--fg:#1c2230;--mut:#5d6778;--line:#c9cfda;--acc:#b8740a;--field:#ffffff;--btn:#e6e9f0;--btnfg:#1c2230;--stage:#9aa3b2;--on:#fff1cf;--err:#b3261e;--focus:#1a5fd0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171b22;--panel:#1f242d;--fg:#e8eaee;--mut:#9aa3b2;--line:#3a4250;--acc:#ffd24a;--field:#151920;--btn:#2a303a;--btnfg:#e8eaee;--stage:#3b4452;--on:#39424f;--err:#ff8a80;--focus:#7fb0ff}}
+:root[data-theme="dark"]{--bg:#171b22;--panel:#1f242d;--fg:#e8eaee;--mut:#9aa3b2;--line:#3a4250;--acc:#ffd24a;--field:#151920;--btn:#2a303a;--btnfg:#e8eaee;--stage:#3b4452;--on:#39424f;--err:#ff8a80;--focus:#7fb0ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,sans-serif}
+.pad{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{padding-top:10px;padding-bottom:10px;border-bottom:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+header h1{font-size:16px;margin:0 8px 0 0}
+button,select,input,textarea{font:inherit;color:var(--btnfg)}
+button,select{background:var(--btn);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+button.on{outline:2px solid var(--acc)}
+input[type=text],input[type=number],textarea,select{background:var(--field);color:var(--fg)}
+input[type=text],input[type=number]{border:1px solid var(--line);border-radius:6px;padding:4px 6px;width:100%;min-width:0}
+input[type=number]{width:80px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+main{display:flex;gap:12px;padding-top:12px;padding-bottom:24px;flex-wrap:wrap;align-items:flex-start}
+#stage{flex:2 1 420px;min-width:0}
+#wrap{overflow:auto;max-width:100%;max-height:78vh;border:1px solid var(--line);background:var(--stage)}
+canvas{display:block;cursor:crosshair;touch-action:pan-x pan-y}
+aside{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:10px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+section>h2{font-size:13px;margin:0 0 6px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0}
+.row label{color:var(--mut);display:flex;gap:4px;align-items:center}
+.list{max-height:170px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+.list div{padding:3px 8px;cursor:pointer;display:flex;justify-content:space-between;gap:8px}
+.list div.on{background:var(--on);color:var(--acc)}
+.list small,.hint{color:var(--mut)}
+.hint{font-size:12px;margin:4px 0}
+.sl{display:grid;grid-template-columns:minmax(80px,1fr) 2fr 52px;gap:6px;align-items:center;margin:2px 0}
+.sl input[type=range]{width:100%;min-width:0}
+.sl span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+textarea{width:100%;height:150px;font:12px/1.35 ui-monospace,Consolas,monospace;border:1px solid var(--line);border-radius:6px}
+#status{color:var(--mut);min-height:1.4em}#status.err{color:var(--err)}
+.file{display:flex;gap:6px;align-items:center;margin:3px 0}.file span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file input[type=text]{width:110px}
+</style>
+<header class="pad">
+<h1>Rig Tuner</h1>
+<label>Ảnh nguồn <input type="file" id="fimg" accept="image/*" multiple></label>
+<label>rig.json <input type="file" id="frig" accept=".json,application/json"></label>
+<label>Xem ảnh <select id="view"></select></label>
+<label>Zoom <select id="zoom"><option value="0.5">50%</option><option value="0.75">75%</option><option value="1" selected>100%</option><option value="1.5">150%</option><option value="2">200%</option></select></label>
+<label><input type="checkbox" id="key" checked> Khử nền magenta</label>
+<button id="mode" aria-pressed="false">Thử khớp: tắt</button>
+<button id="undo">Hoàn tác</button>
+</header>
+<main class="pad">
+<div id="stage"><div id="wrap"><canvas id="cv" width="1024" height="1024"></canvas></div>
+<p class="hint" id="help">Chọn một mục ở bên phải rồi kéo điểm trên ảnh. Đa giác: nhấp đúp lên cạnh để chèn điểm, nhấp phải lên điểm để xoá. Ctrl+Z hoàn tác.</p>
+<div id="status" role="status"></div></div>
+<aside>
+<section><h2>Nguồn ảnh</h2><div id="files"></div><datalist id="keys"></datalist><p class="hint">Mỗi ảnh gán một khoá trong <code>sources</code> (ví dụ master, plate). Ảnh trùng tên file với <code>sources</code> của rig được gán tự động.</p></section>
+<section><h2>Rig</h2><div class="row"><label>id <input type="text" id="rid" style="width:140px"></label><label>unit <input type="number" id="runit"></label><button id="biped">Biped chuẩn</button></div></section>
+<section><h2>Xương</h2><div class="list" id="bones"></div><div class="row"><button id="badd">Thêm xương</button></div></section>
+<section><h2>Lớp (thứ tự vẽ: trên xuống dưới)</h2><div class="list" id="parts"></div><div class="row"><button id="padd">Thêm lớp đa giác</button></div></section>
+<section><h2>Socket, ground</h2><div class="list" id="socks"></div><div class="row"><button id="sadd">Thêm socket</button></div></section>
+<section><h2>Chi tiết</h2><div id="detail"></div></section>
+<section id="testbox" hidden><h2>Thử khớp (rot, độ)</h2><div class="row"><button id="zero">Về 0</button></div><div id="sliders"></div><p class="hint" id="testnote"></p></section>
+<section><h2>Xuất</h2><div class="row"><button id="save">Tải rig.json</button><button id="copy">Chép</button><button id="loadtxt">Nạp từ ô văn bản</button></div><textarea id="out" spellcheck="false" aria-label="JSON của rig"></textarea>
+<p class="hint">Sau khi lưu đè <code>source/rig/rig.json</code>: <code>python scripts/puppet.py check &lt;asset&gt;/source/rig/rig.json</code></p></section>
+</aside>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),cx=cv.getContext('2d');
+const ID=[1,0,0,1,0,0];
+let rig,files=[],viewKey=null,sel=null,mode='edit',rots={},z=1,drawing=false,drag=null,undoS=[],redoS=[];
+const restCache=new Map();
+
+function blankRig(){return{id:'rig',sources:{},ground:[512,900],unit:900,bones:[],sockets:{},parts:[]}}
+function normalize(r){r.sources=r.sources||{};r.bones=r.bones||[];r.sockets=r.sockets||{};r.parts=r.parts||[];r.ground=r.ground||[512,900];r.unit=r.unit||900;return r}
+rig=blankRig();
+
+function say(t,err){const s=$('status');s.textContent=t||'';s.className=err?'err':''}
+const clone=o=>JSON.parse(JSON.stringify(o));
+
+/* undo: every edit snapshots the rig first */
+function snap(){undoS.push(JSON.stringify(rig));if(undoS.length>100)undoS.shift();redoS=[]}
+function edit(fn){snap();fn();render()}
+function undo(){if(!undoS.length)return;redoS.push(JSON.stringify(rig));rig=JSON.parse(undoS.pop());fixSel();render()}
+function redo(){if(!redoS.length)return;undoS.push(JSON.stringify(rig));rig=JSON.parse(redoS.pop());fixSel();render()}
+function fixSel(){if(!sel)return;const ok=sel.t==='bone'?rig.bones.some(b=>b.name===sel.k):sel.t==='part'?rig.parts[sel.k]:sel.t==='sock'?rig.sockets[sel.k]:sel.t==='ground';if(!ok){sel=null;drawing=false}}
+
+/* sources */
+const base=p=>String(p).split(/[\\/]/).pop();
+const stem=n=>base(n).replace(/\.[^.]+$/,'').replace(/_v\d+$/,'');
+function guessKey(name){for(const[k,p]of Object.entries(rig.sources))if(base(p)===name)return k;return stem(name)}
+function keyImg(img){const c=document.createElement('canvas');c.width=img.width;c.height=img.height;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0);
+ const d=x.getImageData(0,0,c.width,c.height),p=d.data;
+ for(let i=0;i<p.length;i+=4){const q=Math.hypot(255-p[i],p[i+1],255-p[i+2]);if(q<60)p[i+3]=0;else if(q<110)p[i+3]=Math.min(p[i+3],(q-60)*255/50)}
+ x.putImageData(d,0,0);return c}
+function src(key){const f=files.find(f=>f.key===key);return f?($('key').checked?f.keyed:f.img):null}
+function allKeys(){return[...new Set([...Object.keys(rig.sources),...files.map(f=>f.key)])]}
+function loadImages(list){return Promise.all([...list].map(file=>new Promise(res=>{const img=new Image();img.onload=()=>{files=files.filter(f=>f.name!==file.name);files.push({name:file.name,key:guessKey(file.name),img,keyed:keyImg(img)});res()};img.onerror=()=>{say('Không đọc được ảnh '+file.name,1);res()};img.src=URL.createObjectURL(file)})))}
+$('fimg').onchange=async e=>{await loadImages(e.target.files);restCache.clear();if(!files.some(f=>f.key===viewKey))viewKey=files.length?files[0].key:null;render();say('Đã nạp '+files.length+' ảnh.')};
+$('frig').onchange=async e=>{const f=e.target.files[0];if(f)loadRigText(await f.text())};
+function loadRigText(t){let r;try{r=JSON.parse(t)}catch(x){say('rig.json không hợp lệ: '+x.message,1);return}
+ if(!r||!Array.isArray(r.bones)){say('rig.json thiếu mảng bones.',1);return}
+ snap();rig=normalize(r);sel=null;drawing=false;rots={};files.forEach(f=>f.key=guessKey(f.name));
+ if(!files.some(f=>f.key===viewKey))viewKey=files.length?files[0].key:null;render();say('Đã nạp rig: '+rig.bones.length+' xương, '+rig.parts.length+' lớp.')}
+
+/* geometry helpers */
+function mul(m,n){return[m[0]*n[0]+m[2]*n[1],m[1]*n[0]+m[3]*n[1],m[0]*n[2]+m[2]*n[3],m[1]*n[2]+m[3]*n[3],m[0]*n[4]+m[2]*n[5]+m[4],m[1]*n[4]+m[3]*n[5]+m[5]]}
+const ap=(m,p)=>[m[0]*p[0]+m[2]*p[1]+m[4],m[1]*p[0]+m[3]*p[1]+m[5]];
+// world = parent world * local, local = T(pivot) R(rot) T(-pivot); rot > 0 is clockwise on screen (y down), as Rig.pose in core.py
+function worlds(){const w={},byN={};rig.bones.forEach(b=>byN[b.name]=b);
+ const get=(n,seen)=>{if(w[n])return w[n];const b=byN[n];if(!b||seen.has(n))return ID;seen.add(n);
+  const[px,py]=b.pivot,a=(rots[n]||0)*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
+  const loc=[c,s,-s,c,px-(c*px-s*py),py-(s*px+c*py)];
+  return w[n]=b.parent&&byN[b.parent]?mul(get(b.parent,seen),loc):loc};
+ rig.bones.forEach(b=>get(b.name,new Set()));return w}
+function descendants(name){const out=new Set([name]);let grew=true;while(grew){grew=false;for(const b of rig.bones)if(b.parent&&out.has(b.parent)&&!out.has(b.name)){out.add(b.name);grew=true}}return out}
+const isPoly=p=>p.select&&Array.isArray(p.select.poly);
+
+/* editing operations */
+function uniq(base,taken){let n=base,i=2;while(taken.includes(n))n=base+'_'+i++;return n}
+function addBone(name,parent,pivot){rig.bones.push({name,parent,pivot:pivot.map(Math.round)})}
+function renameBone(old,nw){nw=nw.trim();if(!nw||nw===old)return false;if(rig.bones.some(b=>b.name===nw)){say('Tên xương đã có: '+nw,1);return false}
+ rig.bones.forEach(b=>{if(b.name===old)b.name=nw;if(b.parent===old)b.parent=nw});
+ rig.parts.forEach(p=>{if(p.bone===old)p.bone=nw});Object.values(rig.sockets).forEach(s=>{if(s.bone===old)s.bone=nw});
+ (rig.ik||[]).forEach(c=>{['upper','lower','end_bone'].forEach(k=>{if(c[k]===old)c[k]=nw});if(c.target&&c.target.bone===old)c.target.bone=nw});
+ (rig.stretch||[]).forEach(c=>{if(c.bone===old)c.bone=nw;if(c.target&&c.target.bone===old)c.target.bone=nw});
+ if(rots[old]!==undefined){rots[nw]=rots[old];delete rots[old]}
+ if(sel&&sel.t==='bone'&&sel.k===old)sel.k=nw;return true}
+function deleteBone(name){const b=rig.bones.find(x=>x.name===name);if(!b)return;const par=b.parent||null;
+ rig.bones=rig.bones.filter(x=>x!==b);rig.bones.forEach(x=>{if(x.parent===name)x.parent=par});
+ const fb=par||(rig.bones[0]&&rig.bones[0].name)||'';
+ rig.parts.forEach(p=>{if(p.bone===name)p.bone=fb});Object.values(rig.sockets).forEach(s=>{if(s.bone===name)s.bone=fb});
+ const uses=c=>JSON.stringify(c).includes('"'+name+'"');
+ if(rig.ik)rig.ik=rig.ik.filter(c=>!uses(c));if(rig.stretch)rig.stretch=rig.stretch.filter(c=>!uses(c));
+ delete rots[name];sel=null;drawing=false}
+// silhouette box of the viewed image, used to place the standard skeleton
+function silBox(){const s=src(viewKey)||(files[0]&&(($('key').checked?files[0].keyed:files[0].img)));
+ if(!s)return{x0:262,x1:762,y0:100,y1:900};
+ const c=document.createElement('canvas');c.width=s.width;c.height=s.height;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(s,0,0);
+ const d=x.getImageData(0,0,c.width,c.height).data;let x0=1e9,x1=-1,y0=1e9,y1=-1;
+ for(let y=0;y<c.height;y++)for(let xx=0;xx<c.width;xx++)if(d[(y*c.width+xx)*4+3]>8){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y;if(y>y1)y1=y}
+ return x1<0?{x0:0,x1:c.width,y0:0,y1:c.height}:{x0,x1,y0,y1}}
+function addBiped(){const b=silBox(),H=b.y1-b.y0,cx0=(b.x0+b.x1)/2,g=b.y1,P=(dx,up)=>[cx0+dx*H,g-up*H];
+ const def=[['root',null,[0,0]],['hips','root',[0,.47]],['spine','hips',[0,.58]],['head','spine',[0,.8]],
+ ['near_upper_arm','spine',[-.17,.75]],['near_forearm','near_upper_arm',[-.19,.55]],['near_hand','near_forearm',[-.18,.4]],
+ ['far_upper_arm','spine',[.17,.75]],['far_forearm','far_upper_arm',[.19,.55]],['far_hand','far_forearm',[.18,.4]],
+ ['near_thigh','hips',[-.07,.48]],['near_shin','near_thigh',[-.08,.27]],['near_foot','near_shin',[-.08,.08]],
+ ['far_thigh','hips',[.07,.48]],['far_shin','far_thigh',[.08,.27]],['far_foot','far_shin',[.08,.08]],['tail','hips',[-.18,.5]]];
+ let n=0;def.forEach(([name,par,[dx,up]])=>{if(!rig.bones.some(x=>x.name===name)){addBone(name,par,P(dx,up));n++}});
+ if(!rig.parts.length&&!Object.keys(rig.sockets).length){rig.ground=[Math.round(cx0),Math.round(g)];rig.unit=Math.round(H)}
+ say('Đã thêm '+n+' xương theo khung bóng ('+Math.round(H)+' px cao). Kéo từng khớp vào đúng chỗ.')}
+
+/* selection helpers */
+const selBone=()=>sel&&sel.t==='bone'?rig.bones.find(b=>b.name===sel.k):null;
+const selPart=()=>sel&&sel.t==='part'?rig.parts[sel.k]:null;
+function selPts(){if(!sel)return[];if(sel.t==='bone'){const b=selBone();return b?[b.pivot]:[]}
+ if(sel.t==='sock'){const s=rig.sockets[sel.k];return s?[s.pt]:[]}if(sel.t==='ground')return[rig.ground];
+ const p=selPart();return p&&isPoly(p)?p.select.poly:[]}
+
+/* panels */
+function mk(tag,props,kids){const e=document.createElement(tag);Object.assign(e,props||{});(kids||[]).forEach(k=>e.append(k));return e}
+function listItem(parent,label,small,on,click){const d=mk('div',{className:on?'on':'',tabIndex:0});d.append(mk('span',{textContent:label}),mk('small',{textContent:small||''}));
+ d.onclick=click;d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();click()}};parent.append(d)}
+function renderLists(){
+ const B=$('bones'),Pp=$('parts'),S=$('socks');B.innerHTML=Pp.innerHTML=S.innerHTML='';
+ rig.bones.forEach(b=>listItem(B,b.name,b.parent||'—',sel&&sel.t==='bone'&&sel.k===b.name,()=>{sel={t:'bone',k:b.name};drawing=false;render()}));
+ rig.parts.forEach((p,i)=>listItem(Pp,p.name,(isPoly(p)?'poly '+p.select.poly.length:p.select&&p.select.rest?'rest':'colour')+' · '+p.source+' → '+p.bone,sel&&sel.t==='part'&&sel.k===i,()=>{sel={t:'part',k:i};drawing=false;if(src(p.source)||files.length)viewKey=files.some(f=>f.key===p.source)?p.source:viewKey;render()}));
+ Object.entries(rig.sockets).forEach(([n,s])=>listItem(S,n,s.bone,sel&&sel.t==='sock'&&sel.k===n,()=>{sel={t:'sock',k:n};drawing=false;render()}));
+ listItem(S,'ground','',sel&&sel.t==='ground',()=>{sel={t:'ground'};drawing=false;render()})}
+function numField(label,id,val,fn){const i=mk('input',{type:'number',id,value:val,step:1});i.onchange=()=>{const v=Math.round(+i.value);if(isNaN(v))return;edit(()=>fn(v))};return mk('label',{},[label+' ',i])}
+function textField(label,id,val,fn){const i=mk('input',{type:'text',id,value:val});i.onchange=()=>fn(i.value);return mk('label',{style:'flex:1 1 140px'},[label+' ',i])}
+function selectField(label,id,opts,val,fn){const s=mk('select',{id});opts.forEach(([v,t])=>{const o=mk('option',{value:v,textContent:t});if(v===val)o.selected=true;s.append(o)});s.onchange=()=>fn(s.value);return mk('label',{},[label+' ',s])}
+function btn(text,id,fn){const b=mk('button',{textContent:text,id});b.onclick=fn;return b}
+function renderDetail(){const D=$('detail');D.innerHTML='';
+ if(!sel){D.append(mk('p',{className:'hint',textContent:'Chưa chọn mục nào.'}));return}
+ const row=()=>mk('div',{className:'row'});
+ if(sel.t==='bone'){const b=selBone();if(!b)return;const r1=row(),r2=row(),bad=descendants(b.name);
+  r1.append(textField('Tên','f-name',b.name,v=>edit(()=>renameBone(b.name,v))),
+   selectField('Cha','f-parent',[['','(không)'],...rig.bones.filter(x=>!bad.has(x.name)).map(x=>[x.name,x.name])],b.parent||'',v=>edit(()=>{b.parent=v||null})));
+  r2.append(numField('x','f-x',b.pivot[0],v=>{b.pivot[0]=v}),numField('y','f-y',b.pivot[1],v=>{b.pivot[1]=v}),btn('Xoá xương','f-del',()=>edit(()=>deleteBone(b.name))));
+  D.append(r1,r2);return}
+ if(sel.t==='part'){const p=selPart();if(!p)return;const r1=row(),r2=row(),r3=row(),i=sel.k,keys=allKeys();if(!keys.includes(p.source))keys.push(p.source);
+  r1.append(textField('Tên','f-name',p.name,v=>edit(()=>{p.name=v.trim()||p.name})),
+   selectField('Nguồn','f-source',keys.map(k=>[k,k]),p.source,v=>edit(()=>{p.source=v;restCache.clear()})),
+   selectField('Xương','f-bone',rig.bones.map(b=>[b.name,b.name]).concat(rig.bones.some(b=>b.name===p.bone)?[]:[[p.bone,p.bone+' (thiếu)']]),p.bone,v=>edit(()=>{p.bone=v})));
+  r2.append(btn('Lên','f-up',()=>{if(i>0)edit(()=>{[rig.parts[i-1],rig.parts[i]]=[rig.parts[i],rig.parts[i-1]];sel.k=i-1})}),
+   btn('Xuống','f-down',()=>{if(i<rig.parts.length-1)edit(()=>{[rig.parts[i+1],rig.parts[i]]=[rig.parts[i],rig.parts[i+1]];sel.k=i+1})}),
+   btn('Xoá lớp','f-del',()=>edit(()=>{rig.parts.splice(i,1);sel=null;drawing=false;restCache.clear()})));
+  D.append(r1,r2);
+  if(isPoly(p)){const t=btn(drawing?'Xong vẽ':'Vẽ thêm điểm','f-draw',()=>{drawing=!drawing;if(!drawing&&p.select.poly.length<3){edit(()=>{rig.parts.splice(i,1);sel=null});say('Đa giác dưới 3 điểm: đã bỏ lớp.',1);return}render()});if(drawing)t.className='on';
+   r3.append(t,mk('span',{className:'hint',textContent:p.select.poly.length+' điểm'}));D.append(r3)}
+  else D.append(mk('p',{className:'hint',textContent:'Lớp kiểu '+(p.select&&p.select.rest?'rest':'colour')+': giữ nguyên, chỉ hiển thị; sửa hình thì sửa tay trong JSON.'}));
+  return}
+ if(sel.t==='sock'){const s=rig.sockets[sel.k];if(!s)return;const r1=row(),r2=row();
+  r1.append(textField('Tên','f-name',sel.k,v=>{v=v.trim();if(!v||v===sel.k)return;if(rig.sockets[v]){say('Socket đã có: '+v,1);return}edit(()=>{rig.sockets[v]=rig.sockets[sel.k];delete rig.sockets[sel.k];sel.k=v})}),
+   selectField('Xương','f-bone',rig.bones.map(b=>[b.name,b.name]),s.bone,v=>edit(()=>{s.bone=v})));
+  r2.append(numField('x','f-x',s.pt[0],v=>{s.pt[0]=v}),numField('y','f-y',s.pt[1],v=>{s.pt[1]=v}),btn('Xoá socket','f-del',()=>edit(()=>{delete rig.sockets[sel.k];sel=null})));
+  D.append(r1,r2);return}
+ const r=row();r.append(numField('x','f-x',rig.ground[0],v=>{rig.ground[0]=v}),numField('y','f-y',rig.ground[1],v=>{rig.ground[1]=v}),mk('span',{className:'hint',textContent:'Điểm chân (ground)'}));D.append(r)}
+function renderSliders(){$('testbox').hidden=mode!=='test';const S=$('sliders');S.innerHTML='';if(mode!=='test')return;
+ rig.bones.forEach(b=>{const v=rots[b.name]||0,num=mk('span',{textContent:v});const r=mk('input',{type:'range',min:-180,max:180,step:1,value:v,id:'rot-'+b.name,ariaLabel:'rot '+b.name});
+  r.oninput=()=>{rots[b.name]=+r.value;num.textContent=r.value;draw()};
+  S.append(mk('div',{className:'sl'},[mk('span',{textContent:b.name}),r,num]))});
+ $('testnote').textContent=(rig.ik&&rig.ik.length?'Rig có IK: bản xem thử chỉ xoay theo FK, không giải IK. ':'')+'Lớp colour không được vẽ ở chế độ này.'}
+function renderHeader(){
+ const keys=allKeys();$('keys').innerHTML='';keys.forEach(k=>$('keys').append(mk('option',{value:k})));
+ const V=$('view');V.innerHTML='';files.forEach(f=>{if(!V.querySelector('option[value="'+f.key+'"]'))V.append(mk('option',{value:f.key,textContent:f.key,selected:f.key===viewKey}))});
+ const F=$('files');F.innerHTML='';
+ files.forEach(f=>{const k=mk('input',{type:'text',value:f.key,id:'key-'+f.name,ariaLabel:'khoá cho '+f.name});k.setAttribute('list','keys');
+  k.onchange=()=>{const v=k.value.trim();if(!v)return;f.key=v;if(!rig.sources[v]){edit(()=>{rig.sources[v]=f.name})}restCache.clear();if(!viewKey||!files.some(x=>x.key===viewKey))viewKey=v;render()};
+  const x=mk('button',{textContent:'Bỏ'});x.onclick=()=>{files=files.filter(y=>y!==f);if(viewKey===f.key)viewKey=files[0]?files[0].key:null;restCache.clear();render()};
+  F.append(mk('div',{className:'file'},[mk('span',{textContent:f.name+' ('+f.img.width+'×'+f.img.height+')'}),k,x]))});
+ if(!files.length)F.append(mk('p',{className:'hint',textContent:'Chưa có ảnh. Chọn một hoặc nhiều ảnh ở thanh trên.'}));
+ $('rid').value=rig.id||'';$('runit').value=rig.unit;$('mode').textContent='Thử khớp: '+(mode==='test'?'bật':'tắt');$('mode').setAttribute('aria-pressed',mode==='test');$('mode').className=mode==='test'?'on':''}
+function render(){renderHeader();renderLists();renderDetail();renderSliders();sizeCanvas();draw()}
+function sizeCanvas(){const s=src(viewKey);let w=s?s.width:0,h=s?s.height:0;files.forEach(f=>{w=Math.max(w,f.img.width);h=Math.max(h,f.img.height)});if(!w){w=1024;h=1024}
+ if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}cv.style.width=w*z+'px';cv.style.height=h*z+'px'}
+
+/* drawing */
+function poly(c,P){c.beginPath();P.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath()}
+function restLayer(p){const s=src(p.source);if(!s)return null;
+ const holes=rig.parts.filter(q=>q!==p&&q.source===p.source&&isPoly(q)&&q.select.poly.length>2).map(q=>q.select.poly);
+ const key=p.source+'|'+$('key').checked+'|'+JSON.stringify(holes);if(restCache.has(key))return restCache.get(key);
+ const o=document.createElement('canvas');o.width=s.width;o.height=s.height;const c=o.getContext('2d');c.drawImage(s,0,0);c.globalCompositeOperation='destination-out';c.fillStyle='#000';holes.forEach(h=>{poly(c,h);c.fill()});
+ if(restCache.size>12)restCache.clear();restCache.set(key,o);return o}
+function drawPreview(){const w=worlds();
+ for(const p of rig.parts){const s=src(p.source);if(!s||!p.select)continue;const m=w[p.bone]||ID;cx.save();cx.setTransform(...m);
+  if(isPoly(p)&&p.select.poly.length>2){poly(cx,p.select.poly);cx.clip();cx.drawImage(s,0,0)}
+  else if(p.select.rest){const l=restLayer(p);if(l)cx.drawImage(l,0,0)}
+  cx.restore()}
+ return w}
+function dot(p,col,r){cx.fillStyle=col;cx.beginPath();cx.arc(p[0],p[1],r,0,7);cx.fill();cx.lineWidth=1.5;cx.strokeStyle='#000';cx.stroke()}
+function draw(){cx.setTransform(1,0,0,1,0,0);cx.clearRect(0,0,cv.width,cv.height);
+ const test=mode==='test';let w=null;
+ if(test)w=drawPreview();else{const s=src(viewKey);if(s)cx.drawImage(s,0,0)}
+ const P=p=>test?ap(w[(rig.bones.find(b=>b.pivot===p)||{}).name]||ID,p):p;
+ const byN={};rig.bones.forEach(b=>byN[b.name]=b);
+ if(!test)rig.parts.forEach((p,i)=>{if(!isPoly(p)||p.source!==viewKey||!p.select.poly.length)return;const on=sel&&sel.t==='part'&&sel.k===i;
+  cx.lineWidth=on?2.5:1.2;cx.strokeStyle=on?'#ffd24a':'rgba(255,210,74,.5)';
+  if(p.select.poly.length>2)poly(cx,p.select.poly);else{cx.beginPath();p.select.poly.forEach((q,j)=>j?cx.lineTo(q[0],q[1]):cx.moveTo(q[0],q[1]))}cx.stroke();
+  if(on)p.select.poly.forEach(q=>{cx.fillStyle='#ffd24a';cx.fillRect(q[0]-4,q[1]-4,8,8)})});
+ cx.lineWidth=1.5;cx.strokeStyle='rgba(255,255,255,.7)';
+ rig.bones.forEach(b=>{const q=byN[b.parent];if(!q)return;const a=P(q.pivot),c=P(b.pivot);cx.beginPath();cx.moveTo(a[0],a[1]);cx.lineTo(c[0],c[1]);cx.stroke()});
+ rig.bones.forEach(b=>{const on=sel&&sel.t==='bone'&&sel.k===b.name,c=P(b.pivot);dot(c,on?'#ff9d2e':'#f44',on?8:5);
+  cx.font='12px system-ui';cx.lineWidth=3;cx.strokeStyle='#000';cx.strokeText(b.name,c[0]+8,c[1]-6);cx.fillStyle='#fff';cx.fillText(b.name,c[0]+8,c[1]-6)});
+ if(!test){Object.entries(rig.sockets).forEach(([n,s])=>dot(s.pt,sel&&sel.t==='sock'&&sel.k===n?'#9f9':'#3f6',6));
+  const g=rig.ground;cx.strokeStyle=sel&&sel.t==='ground'?'#ffd24a':'#fff';cx.lineWidth=2;cx.beginPath();cx.moveTo(g[0]-12,g[1]);cx.lineTo(g[0]+12,g[1]);cx.moveTo(g[0],g[1]-12);cx.lineTo(g[0],g[1]+12);cx.stroke()}
+ syncOut()}
+function syncOut(){const t=JSON.stringify(rig,null,1);if($('out').value!==t)$('out').value=t}
+
+/* canvas interaction (edit mode) */
+function pos(e){const r=cv.getBoundingClientRect();return[Math.round((e.clientX-r.left)/z),Math.round((e.clientY-r.top)/z)]}
+function nearest(pts,m,d){let b=-1,bd=d;pts.forEach((p,i)=>{const q=Math.hypot(p[0]-m[0],p[1]-m[1]);if(q<bd){bd=q;b=i}});return b}
+function hit(m){const d=12/z+4;
+ const pts=selPts();if(sel&&sel.t==='part'){const i=nearest(pts,m,d);if(i>=0)return{pt:pts[i],sel}}
+ for(const b of rig.bones){if(Math.hypot(b.pivot[0]-m[0],b.pivot[1]-m[1])<d)return{pt:b.pivot,sel:{t:'bone',k:b.name}}}
+ for(const[n,s]of Object.entries(rig.sockets))if(Math.hypot(s.pt[0]-m[0],s.pt[1]-m[1])<d)return{pt:s.pt,sel:{t:'sock',k:n}};
+ if(Math.hypot(rig.ground[0]-m[0],rig.ground[1]-m[1])<d)return{pt:rig.ground,sel:{t:'ground'}};
+ if(sel&&sel.t!=='part'){const i=nearest(pts,m,d);if(i>=0)return{pt:pts[i],sel}}
+ return null}
+cv.addEventListener('pointerdown',e=>{if(mode!=='edit'||e.button!==0)return;const m=pos(e);const h=hit(m);
+ if(h){if(!sel||sel.t!==h.sel.t||sel.k!==h.sel.k){sel=h.sel;renderLists();renderDetail()}drag={pt:h.pt,moved:false,id:e.pointerId};cv.setPointerCapture(e.pointerId);e.preventDefault();return}
+ const p=selPart();if(drawing&&p&&isPoly(p)){edit(()=>{p.select.poly.push(m)});restCache.clear()}});
+cv.addEventListener('pointermove',e=>{if(!drag)return;const m=pos(e);if(!drag.moved){snap();drag.moved=true}
+ drag.pt[0]=m[0];drag.pt[1]=m[1];draw();const fx=$('f-x'),fy=$('f-y');if(fx&&sel&&sel.t!=='part'){fx.value=m[0];fy.value=m[1]}});
+function endDrag(){if(drag){const moved=drag.moved;drag=null;if(moved){restCache.clear();renderLists();renderDetail()}}}
+cv.addEventListener('pointerup',endDrag);cv.addEventListener('pointercancel',endDrag);
+cv.addEventListener('dblclick',e=>{const p=selPart();if(mode!=='edit'||drawing||!p||!isPoly(p)||p.select.poly.length<2)return;const m=pos(e),P=p.select.poly;
+ let bi=-1,bd=24/z+4;P.forEach((a,i)=>{const b=P[(i+1)%P.length],dx=b[0]-a[0],dy=b[1]-a[1],L=dx*dx+dy*dy||1;const t=Math.max(0,Math.min(1,((m[0]-a[0])*dx+(m[1]-a[1])*dy)/L));const q=Math.hypot(a[0]+t*dx-m[0],a[1]+t*dy-m[1]);if(q<bd){bd=q;bi=i}});
+ if(bi>=0)edit(()=>{P.splice(bi+1,0,m)})});
+cv.addEventListener('contextmenu',e=>{e.preventDefault();const p=selPart();if(mode!=='edit'||!p||!isPoly(p))return;const P=p.select.poly,i=nearest(P,pos(e),14/z+4);
+ if(i>=0&&(P.length>3||drawing))edit(()=>{P.splice(i,1)})});
+
+/* controls */
+$('view').onchange=e=>{viewKey=e.target.value;render()};
+$('zoom').onchange=e=>{z=+e.target.value;sizeCanvas()};
+$('key').onchange=()=>{restCache.clear();render()};
+$('mode').onclick=()=>{mode=mode==='edit'?'test':'edit';drawing=false;render();$('help').textContent=mode==='test'?'Kéo thanh trượt rot của từng xương: xương con đi theo xương cha.':'Chọn một mục ở bên phải rồi kéo điểm trên ảnh. Đa giác: nhấp đúp lên cạnh để chèn điểm, nhấp phải lên điểm để xoá. Ctrl+Z hoàn tác.'};
+$('zero').onclick=()=>{rots={};renderSliders();draw()};
+$('undo').onclick=undo;
+$('rid').onchange=e=>edit(()=>{rig.id=e.target.value.trim()||rig.id});
+$('runit').onchange=e=>{const v=Math.round(+e.target.value);if(v>0)edit(()=>{rig.unit=v})};
+$('biped').onclick=()=>edit(addBiped);
+$('badd').onclick=()=>edit(()=>{const name=uniq('bone',rig.bones.map(b=>b.name)),par=selBone();addBone(name,par?par.name:(rig.bones[0]?rig.bones[0].name:null),par?[par.pivot[0],par.pivot[1]+40]:[cv.width/2,cv.height/2]);sel={t:'bone',k:name}});
+$('padd').onclick=()=>{if(!rig.bones.length){say('Hãy thêm xương trước.',1);return}if(!viewKey){say('Hãy nạp ảnh nguồn trước.',1);return}
+ edit(()=>{const b=selBone();rig.parts.push({name:uniq('part',rig.parts.map(p=>p.name)),source:viewKey,bone:b?b.name:rig.bones[0].name,select:{poly:[]}});sel={t:'part',k:rig.parts.length-1};drawing=true});say('Nhấp lên ảnh để thêm điểm, bấm "Xong vẽ" khi đủ ít nhất 3 điểm.')};
+$('sadd').onclick=()=>{if(!rig.bones.length){say('Hãy thêm xương trước.',1);return}edit(()=>{const b=selBone()||rig.bones[0],n=uniq('socket',Object.keys(rig.sockets));rig.sockets[n]={bone:b.name,pt:[b.pivot[0],b.pivot[1]]};sel={t:'sock',k:n}})};
+$('save').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(rig,null,1)],{type:'application/json'}));a.download='rig.json';a.click();say('Đã yêu cầu tải rig.json. Nếu trình xem chặn tải về, dùng ô văn bản bên dưới.')};
+$('copy').onclick=async()=>{const t=$('out');try{await navigator.clipboard.writeText(t.value);say('Đã chép JSON vào clipboard.')}catch(x){t.focus();t.select();let ok=false;try{ok=document.execCommand('copy')}catch(y){}say(ok?'Đã chép JSON vào clipboard.':'Trình duyệt từ chối: văn bản đã được chọn sẵn, nhấn Ctrl+C.',!ok)}};
+$('loadtxt').onclick=()=>loadRigText($('out').value);
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'){e.preventDefault();undo()}
+ else if((e.ctrlKey||e.metaKey)&&(e.key.toLowerCase()==='y'||(e.shiftKey&&e.key.toLowerCase()==='z'))){e.preventDefault();redo()}});
+window.addEventListener('error',e=>say('Lỗi: '+e.message,1));
+render();
+</script>

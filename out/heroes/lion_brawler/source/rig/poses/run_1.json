@@ -1,0 +1,32 @@
+{
+ "id": "lion_brawler",
+ "note": "Pose rig of pose_run_1_v01.png, registered by `puppet.py pose`: unit = main rig unit x 1.018 (area of colour 118,49,21 against plate), ground x from that colour's centroid, ground y from the lowest pixel.",
+ "sources": {
+  "pose": "../../design/pose_run_1_v01.png"
+ },
+ "ground": [
+  641.9,
+  919.8
+ ],
+ "unit": 942.3,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    641.9,
+    919.8
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "name": "pose",
+   "source": "pose",
+   "bone": "root",
+   "select": {
+    "rest": true
+   }
+  }
+ ]
+}

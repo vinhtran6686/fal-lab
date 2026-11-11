@@ -5,6 +5,7 @@ roadmap: `docs/roadmap.md`.
 
 | Ngày | Quyết định | Ai | Chi tiết |
 |---|---|---|---|
+| 2026-11-11 | **Puppet Kit**: chuyển động nhân vật bằng rig cắt lớp + pose-to-pose (không video), làm trên nhánh `claude/puppet-kit`; video chỉ còn cho động tác khó. Đây là một hệ thống mới ngoài phạm vi M02 (dòng "không xây Editor / hệ thống tổng quát" của chuyên gia nói về M02); code M01 chỉ được import, không sửa, không promote. Chất lượng các state puppet **chờ user duyệt** | user (yêu cầu "tách nhánh mới và implement full") | `docs/puppet-kit.md`, `experiment-log.md` P01 |
 | 2026-11-10 | **Milestone 02 = Single Rising Diagonal Slash, Holy Commander**: một nhát chém từ dưới lên, không xoay thân phức tạp, không nhát thứ hai; lấy Root/Tip, dùng lại SweepFrame, VFX custom được và ghép vào nhân vật. Không tiếp tục Cross / Double Slash | chuyên gia | `milestone-01-advisor-closeout.md` §4 |
 | 2026-11-10 | Nghiệm thu bổ sung cho M02: dữ liệu trajectory **độc lập** để đo độ chính xác; biến thể độ dày phải **thấy được ở cỡ thật**; dữ liệu và output reproducible; **không promote core trước khi có hai trajectory khác nhau**; không xây Editor / hệ thống tổng quát | chuyên gia | §5 |
 | 2026-11-10 | Lỗi `hash()` trong `gen_slash_loop.drawing` vào technical debt; **không sửa core ở M02**; trước khi promote generator phải thay bằng cơ chế có seed và chạy regression các slash cũ | chuyên gia | §3; `roadmap.md` mục technical debt |

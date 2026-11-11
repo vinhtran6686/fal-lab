@@ -45,6 +45,24 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   per VFX type (slash, explosion: references, rules, generators, open work): `lib-fx/_core/vector/foundation/vfx/`.
   **Continuing vector-kit work in a new session: read `lib-fx/_core/vector/STATUS.md` first** (current state, parked work, open questions).
   Current direction chosen by the VFX advisor (2026-11-10): `docs/milestone-01-character-synced-slash.md` (M01 done; decisions `docs/decision-log.md`, status `docs/roadmap.md`, next `docs/milestone-02-plan-DRAFT.md`); review every VFX at game size (H = 60 px @1x).
+- **Puppet Kit** (since 2026-11-11): character motion from the approved stills with a cut-out rig, no video model, deterministic, 0 USD per
+  animation: `scripts/puppet.py check|render|track|slash`, engine `scripts/puppet_kit/core.py`, rig tuner page `scripts/puppet_kit/rig_tuner.html`,
+  guide `docs/puppet-kit.md` (Vietnamese). A character's rig lives in `<asset>/source/rig/` (`rig.json`, `plate_vNN.png` = the master redrawn
+  without weapon and forearms, `poses/*.json` one-part rigs of `pose_*` stills, `anims/*.json`). Use it first for idle, level-up, buffs and
+  pose-to-pose attacks; keep `video-sprite` for turns, runs and anything a 2D rig cannot do. `track` writes the weapon root/tip from rig sockets
+  in the milestone-01 `weapon_track.json` format; `slash` draws the M01 layered slash on the cut of a pose-to-pose attack.
+  **Before writing any animation JSON read `docs/puppet-kit-motion-recipes.md`** (sign conventions, timing tables, run cycle, checklist: copy the
+  tables, do not re-derive the mechanics). Next work and tech debt (asset preparation pack incl. profile poses, rig v2 with legs / hips / true
+  elbows, Rig Tuner v2, torso turns): `docs/puppet-kit-next.md` (started 2026-11-11, progress in its §8). `pose` registers a pose still to the rig.
+  Limbs and torso should be ONE picture with `"skin"` (smooth joints: the picture bends around elbow, knee, waist) rather than cut at the joint; see `docs/puppet-kit.md` "Khớp uốn liền".
+  **Pose reel** (2026-11-11, template awaiting user approval): five short pinned clips per character (turn_a, turn_b, run, squat, press) cut into a pose library for what the rig
+  cannot draw (large joint bends, runs, turns): `docs/puppet-kit-pose-reel.md`, tools `scripts/puppet_reel.py input|cut`, animation shots `{"reel": dir, "pick": [...]}`. Paid clips: ask first.
+  Work split by model: `docs/tasks/README.md`; a task file `docs/tasks/task-N-<model>-*.md` is self-contained: do exactly that file, touch only the files it
+  lists, then set its `Trạng thái` line to DONE and fill in `Kết quả`.
+- **Lion Rig & Pose Studio** (since 2026-11-11): local editor around the Puppet Kit, `python scripts/studio/server.py` (http://127.0.0.1:8765/), guide `docs/puppet-studio.md` (Vietnamese), short README in `scripts/studio/`.
+  Click = select, press + drag = move, click outside = deselect; pose library in `<asset>/poses/` (independent of `anims/*.json`); edits the rig too (pivots, cut polygons, joint blend, parent, joint limits).
+  Studio rig `out/heroes/lion_brawler/source/rig/rig_studio_v01.json` = `rig.json` + movable foot IK targets + `bone.limit.rot` + `links` (muscle links: when the hand overreaches, the shoulder slides out and the chest near the anchors follows; `carry` = whole body follows; schema and rules for connecting bones in the doc).
+  `limit` / `links` only live in the Studio rig, never in `rig.json` (anims may move the shoulders). Core change: `Rig.render` honours `links` (`Rig._pulls`); regression test compares every anim frame with the pre-change core. Tests: `python scripts/studio/test_studio.py` (52). **Before adding a joint, muscle link, IK, round joint (`discs`) or limit to a rig, read `docs/puppet-studio-ai-guide.md`** (recipes + code map); the user-facing concepts are in `docs/puppet-studio-concepts.md` (Vietnamese).
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.

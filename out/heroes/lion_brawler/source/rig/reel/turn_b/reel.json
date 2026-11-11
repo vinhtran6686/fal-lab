@@ -1,0 +1,350 @@
+{
+ "clip": "source/video/reel_turn_b.mp4",
+ "fps": 15,
+ "frames": 46,
+ "frame_size": [
+  480,
+  480
+ ],
+ "canvas": {
+  "still": "out/heroes/lion_brawler/source/design/view_front_v01.png",
+  "scale": 0.7154355016538038,
+  "offset": [
+   171,
+   274
+  ],
+  "mirror": false,
+  "body_h": 648.9,
+  "canvas": 1024
+ },
+ "ground": [
+  267.96,
+  445.35
+ ],
+ "unit": 310.54,
+ "note": "ground and unit come from the main rig through the canvas placement (scale, offset): no per-frame registration.",
+ "metrics": [
+  {
+   "frame": 1,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 248.1,
+   "edge": false
+  },
+  {
+   "frame": 2,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 248.2,
+   "edge": false
+  },
+  {
+   "frame": 3,
+   "body_h": 302,
+   "feet_y": 451,
+   "cx": 248.7,
+   "edge": false
+  },
+  {
+   "frame": 4,
+   "body_h": 299,
+   "feet_y": 451,
+   "cx": 249.0,
+   "edge": false
+  },
+  {
+   "frame": 5,
+   "body_h": 296,
+   "feet_y": 451,
+   "cx": 248.9,
+   "edge": false
+  },
+  {
+   "frame": 6,
+   "body_h": 296,
+   "feet_y": 452,
+   "cx": 247.7,
+   "edge": false
+  },
+  {
+   "frame": 7,
+   "body_h": 295,
+   "feet_y": 453,
+   "cx": 245.8,
+   "edge": false
+  },
+  {
+   "frame": 8,
+   "body_h": 296,
+   "feet_y": 452,
+   "cx": 244.6,
+   "edge": false
+  },
+  {
+   "frame": 9,
+   "body_h": 299,
+   "feet_y": 451,
+   "cx": 241.1,
+   "edge": false
+  },
+  {
+   "frame": 10,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 237.9,
+   "edge": false
+  },
+  {
+   "frame": 11,
+   "body_h": 305,
+   "feet_y": 451,
+   "cx": 236.1,
+   "edge": false
+  },
+  {
+   "frame": 12,
+   "body_h": 308,
+   "feet_y": 451,
+   "cx": 232.0,
+   "edge": false
+  },
+  {
+   "frame": 13,
+   "body_h": 309,
+   "feet_y": 451,
+   "cx": 230.3,
+   "edge": false
+  },
+  {
+   "frame": 14,
+   "body_h": 307,
+   "feet_y": 451,
+   "cx": 227.9,
+   "edge": false
+  },
+  {
+   "frame": 15,
+   "body_h": 304,
+   "feet_y": 451,
+   "cx": 226.8,
+   "edge": false
+  },
+  {
+   "frame": 16,
+   "body_h": 302,
+   "feet_y": 451,
+   "cx": 227.4,
+   "edge": false
+  },
+  {
+   "frame": 17,
+   "body_h": 299,
+   "feet_y": 453,
+   "cx": 229.1,
+   "edge": false
+  },
+  {
+   "frame": 18,
+   "body_h": 298,
+   "feet_y": 453,
+   "cx": 229.8,
+   "edge": false
+  },
+  {
+   "frame": 19,
+   "body_h": 299,
+   "feet_y": 453,
+   "cx": 230.0,
+   "edge": false
+  },
+  {
+   "frame": 20,
+   "body_h": 301,
+   "feet_y": 453,
+   "cx": 229.5,
+   "edge": false
+  },
+  {
+   "frame": 21,
+   "body_h": 303,
+   "feet_y": 453,
+   "cx": 229.2,
+   "edge": false
+  },
+  {
+   "frame": 22,
+   "body_h": 305,
+   "feet_y": 452,
+   "cx": 228.3,
+   "edge": false
+  },
+  {
+   "frame": 23,
+   "body_h": 305,
+   "feet_y": 452,
+   "cx": 228.4,
+   "edge": false
+  },
+  {
+   "frame": 24,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.5,
+   "edge": false
+  },
+  {
+   "frame": 25,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.8,
+   "edge": false
+  },
+  {
+   "frame": 26,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 27,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 28,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 29,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 30,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 31,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 32,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 33,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 34,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.8,
+   "edge": false
+  },
+  {
+   "frame": 35,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 36,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.8,
+   "edge": false
+  },
+  {
+   "frame": 37,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 38,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 39,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.8,
+   "edge": false
+  },
+  {
+   "frame": 40,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.8,
+   "edge": false
+  },
+  {
+   "frame": 41,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 42,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.8,
+   "edge": false
+  },
+  {
+   "frame": 43,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.8,
+   "edge": false
+  },
+  {
+   "frame": 44,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  },
+  {
+   "frame": 45,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.8,
+   "edge": false
+  },
+  {
+   "frame": 46,
+   "body_h": 303,
+   "feet_y": 451,
+   "cx": 229.9,
+   "edge": false
+  }
+ ]
+}

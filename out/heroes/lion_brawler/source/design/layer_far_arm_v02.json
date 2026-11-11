@@ -1,0 +1,14 @@
+{
+  "prompt": "Edit the reference image by ERASING parts of it. Do not redraw, move, resize or re-center anything: every pixel that stays must stay exactly where it is in the reference. The head with its mane stays untouched in its place as a fixed anchor. Besides the head, KEEP the far arm exactly where it is: the arm on the RIGHT side of the picture with its upper arm, gold gauntlet, fist and claws. ERASE the torso, the sash, the other arm, both legs and the tail. Complete the inner side of that arm, which the torso used to hide, with a dark outline all around. The result: the head, and below it on the right the complete far arm hanging in the same place and at the same size as in the reference. The erased areas become flat background. Background: one flat solid pure magenta color (#FF00FF) everywhere, no gradient, no ground, no shadow, no scenery, no text, no border. Do not use magenta or pink anywhere on the subject. Stylized 2D vector cartoon game art, flat solid fills only, no gradients, thick clean dark outlines.",
+  "model": "openai/gpt-image-2/edit",
+  "quality": "low",
+  "size": "1024x1024",
+  "refs": [
+    "/home/user/fal-lab/out/heroes/lion_brawler/source/design/master_v01.png"
+  ],
+  "transparent": false,
+  "seconds": 24.7,
+  "cost_usd": 0.0113,
+  "cost_is_estimate": true,
+  "source_url": "https://v3b.fal.media/files/b/0ab200c8/ey-A7FoxEy11T7uIV_8u6_0J6WwHwW.png"
+}

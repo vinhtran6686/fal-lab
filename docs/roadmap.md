@@ -8,6 +8,8 @@ Cập nhật 2026-11-10. Quyết định: `docs/decision-log.md`; thử nghiệm
 |---|---|---|---|
 | M01 | Character-Synchronized Slash (chém xéo xuống, Holy Commander) | ✅ đạt, Proof of Concept | caveat ở decision log; không làm lại |
 | M02 | Single Rising Diagonal Slash (chém vuốt lên, Holy Commander) | 📝 kế hoạch nháp, chờ user duyệt chi phí | `docs/milestone-02-plan-DRAFT.md`; trajectory thứ hai cho SweepFrame |
+| P01 | Puppet Kit: rig cắt lớp + pose-to-pose (Holy Commander) | 🧪 chạy được, chờ user duyệt | `docs/puppet-kit.md`; nhánh `claude/puppet-kit`; gốc/mũi kiếm lấy từ socket của rig |
+| P02-P07 | Puppet Kit v2: chuẩn bị tài nguyên (lớp khuất, tờ part, profile), rig chân/háng/khuỷu, Rig Tuner v2, xoay thân | 📝 kế hoạch, chờ user báo bắt đầu | `docs/puppet-kit-next.md`, `docs/puppet-kit-motion-recipes.md` |
 | — | Cross / Double Slash, skill nhiều động tác | ⏸ dừng | `docs/milestone-01-research-rising-cuts.md` |
 
 ## North Star (năng lực, theo chuyên gia)

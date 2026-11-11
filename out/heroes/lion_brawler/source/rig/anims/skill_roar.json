@@ -1,0 +1,268 @@
+{
+ "note": "Roar skill: crouch on the rig, cut to the ROAR pose (hit), hold with a pulsing chest, cut back and settle. Reuses poses/levelup.json.",
+ "version": "p01",
+ "fps": 15,
+ "loop": false,
+ "hit_frame": 4,
+ "shots": [
+  {
+   "name": "ready",
+   "rig": "source/rig/rig.json",
+   "frames": 3,
+   "tracks": {
+    "hips.ty": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      60,
+      "out"
+     ]
+    ],
+    "spine.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      8,
+      "out"
+     ]
+    ],
+    "head.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -5
+     ]
+    ],
+    "near_upper_arm.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      16,
+      "out"
+     ]
+    ],
+    "near_forearm.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -40,
+      "out"
+     ]
+    ],
+    "far_upper_arm.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -12,
+      "out"
+     ]
+    ],
+    "far_forearm.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -30,
+      "out"
+     ]
+    ],
+    "tail.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      -12
+     ]
+    ]
+   }
+  },
+  {
+   "name": "roar",
+   "rig": "source/rig/poses/levelup.json",
+   "frames": 14,
+   "tracks": {
+    "root.sy": {
+     "keys": [
+      [
+       0,
+       1.1
+      ],
+      [
+       2,
+       0.98,
+       "out"
+      ],
+      [
+       4,
+       1.0,
+       "inout"
+      ],
+      [
+       13,
+       1.0
+      ]
+     ],
+     "osc": {
+      "amp": 0.012,
+      "period": 4
+     }
+    },
+    "root.sx": {
+     "keys": [
+      [
+       0,
+       0.94
+      ],
+      [
+       2,
+       1.01,
+       "out"
+      ],
+      [
+       4,
+       1.0,
+       "inout"
+      ]
+     ],
+     "osc": {
+      "amp": -0.008,
+      "period": 4
+     }
+    },
+    "root.shx": [
+     [
+      0,
+      -0.05
+     ],
+     [
+      2,
+      0.02,
+      "out"
+     ],
+     [
+      4,
+      0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "recover",
+   "rig": "source/rig/rig.json",
+   "frames": 5,
+   "tracks": {
+    "hips.ty": [
+     [
+      0,
+      60
+     ],
+     [
+      4,
+      0,
+      "out"
+     ]
+    ],
+    "spine.rot": [
+     [
+      0,
+      10
+     ],
+     [
+      4,
+      0,
+      "out"
+     ]
+    ],
+    "head.rot": [
+     [
+      0,
+      5
+     ],
+     [
+      4,
+      0,
+      "out"
+     ]
+    ],
+    "near_upper_arm.rot": [
+     [
+      0,
+      -18
+     ],
+     [
+      4,
+      0,
+      "out"
+     ]
+    ],
+    "near_forearm.rot": [
+     [
+      0,
+      -45
+     ],
+     [
+      4,
+      0,
+      "out"
+     ]
+    ],
+    "far_upper_arm.rot": [
+     [
+      0,
+      12
+     ],
+     [
+      4,
+      0,
+      "out"
+     ]
+    ],
+    "far_forearm.rot": [
+     [
+      0,
+      -30
+     ],
+     [
+      4,
+      0,
+      "out"
+     ]
+    ],
+    "tail.rot": [
+     [
+      0,
+      14
+     ],
+     [
+      4,
+      0,
+      "out"
+     ]
+    ]
+   }
+  }
+ ]
+}

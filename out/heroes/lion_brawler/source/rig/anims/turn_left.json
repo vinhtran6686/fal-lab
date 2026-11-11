@@ -1,0 +1,61 @@
+{
+ "note": "Turn in place from facing right to facing left, through the front view, from the pose reel (clips reel_turn_a, reel_turn_b). First frame is the rig rest pose to show the cut from rig to reel.",
+ "version": "p03",
+ "fps": 15,
+ "loop": false,
+ "shots": [
+  {
+   "name": "rest",
+   "rig": "source/rig/rig.json",
+   "frames": 2,
+   "tracks": {}
+  },
+  {
+   "name": "to_front",
+   "reel": "source/rig/reel/turn_a",
+   "pick": [
+    8,
+    11,
+    14,
+    17,
+    20,
+    23,
+    26,
+    29,
+    32
+   ]
+  },
+  {
+   "name": "front",
+   "reel": "source/rig/reel/turn_a",
+   "pick": [
+    40,
+    44
+   ]
+  },
+  {
+   "name": "to_left",
+   "reel": "source/rig/reel/turn_b",
+   "pick": [
+    8,
+    11,
+    14,
+    17,
+    20,
+    23,
+    26,
+    29,
+    32
+   ]
+  },
+  {
+   "name": "left",
+   "reel": "source/rig/reel/turn_b",
+   "pick": [
+    40,
+    44,
+    46
+   ]
+  }
+ ]
+}

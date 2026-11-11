@@ -1,0 +1,6 @@
+# Puppet Kit (scripts/puppet.py). The slash command also needs the last two.
+numpy
+pillow
+scipy
+opencv-python-headless
+scikit-image
