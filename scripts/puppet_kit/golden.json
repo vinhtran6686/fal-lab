@@ -43,8 +43,12 @@
   "sha256": "de0c1283b6692cde92fb0bf7631d6771152e55f7ffdd8d869aaf25d13bd5e995",
   "frames": 21
  },
+ "out/heroes/lion_brawler/source/rig/anims/reel_test.json": {
+  "sha256": "cb30d8ed734053623e04bfb5e6b9a3313b63746d0e972f99a232514013234b7d",
+  "frames": 37
+ },
  "out/heroes/lion_brawler/source/rig/anims/run.json": {
-  "sha256": "3ce612521ce044bf668ff787697bf112ac34008f19a220792c1dec6b641ad925",
+  "sha256": "7f5fef57fa31f783378e56fc53ef66f3eebdd5763bfa899fe8df085302fa2890",
   "frames": 8
  },
  "out/heroes/lion_brawler/source/rig/anims/skill_roar.json": {
@@ -54,6 +58,10 @@
  "out/heroes/lion_brawler/source/rig/anims/skill_slam.json": {
   "sha256": "f40fd16015ecb7972f465e5aa501769221ae9567072fd1cb595c432016e76429",
   "frames": 20
+ },
+ "out/heroes/lion_brawler/source/rig/anims/turn_left.json": {
+  "sha256": "23c7ffaae23e8bef8ef4ea8f557e73428a08e62ff4946a1fefb2a2c437552238",
+  "frames": 25
  },
  "out/heroes/lion_brawler/source/rig/anims/v2_test.json": {
   "sha256": "04ebbfa47c778bdac47c90e5bec8f10492e29284508053e40658282e5018ddac",

@@ -166,7 +166,7 @@
       ]
     },
     "run_side": {
-      "version": "p01",
+      "version": "p03",
       "dir": "frames/run_side",
       "source": "source/rig/anims/run.json",
       "frames": 8,
@@ -177,27 +177,47 @@
       "split": "puppet",
       "puppet": {
         "rigs": [
-          "source/rig/poses/run_1.json",
-          "source/rig/poses/run_2.json",
-          "source/rig/poses/run_3.json",
-          "source/rig/poses/run_4.json"
+          "source/rig/reel/run/022",
+          "source/rig/reel/run/025",
+          "source/rig/reel/run/027",
+          "source/rig/reel/run/030",
+          "source/rig/reel/run/033",
+          "source/rig/reel/run/035",
+          "source/rig/reel/run/038",
+          "source/rig/reel/run/040"
         ],
         "shots": [
           [
-            "contact_a",
-            2
+            "run:22",
+            1
           ],
           [
-            "pass_a",
-            2
+            "run:25",
+            1
           ],
           [
-            "contact_b",
-            2
+            "run:27",
+            1
           ],
           [
-            "pass_b",
-            2
+            "run:30",
+            1
+          ],
+          [
+            "run:33",
+            1
+          ],
+          [
+            "run:35",
+            1
+          ],
+          [
+            "run:38",
+            1
+          ],
+          [
+            "run:40",
+            1
           ]
         ]
       }
@@ -302,6 +322,341 @@
         ]
       },
       "hit_frame": 4
+    },
+    "turn_left_side": {
+      "version": "p03",
+      "dir": "frames/turn_left_side",
+      "source": "source/rig/anims/turn_left.json",
+      "frames": 25,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/turn_left_side/frames/@1x/hero_lion_brawler_turn_left_side_NN.png",
+      "sheet": "frames/turn_left_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/reel/turn_a/008",
+          "source/rig/reel/turn_a/011",
+          "source/rig/reel/turn_a/014",
+          "source/rig/reel/turn_a/017",
+          "source/rig/reel/turn_a/020",
+          "source/rig/reel/turn_a/023",
+          "source/rig/reel/turn_a/026",
+          "source/rig/reel/turn_a/029",
+          "source/rig/reel/turn_a/032",
+          "source/rig/reel/turn_a/040",
+          "source/rig/reel/turn_a/044",
+          "source/rig/reel/turn_b/008",
+          "source/rig/reel/turn_b/011",
+          "source/rig/reel/turn_b/014",
+          "source/rig/reel/turn_b/017",
+          "source/rig/reel/turn_b/020",
+          "source/rig/reel/turn_b/023",
+          "source/rig/reel/turn_b/026",
+          "source/rig/reel/turn_b/029",
+          "source/rig/reel/turn_b/032",
+          "source/rig/reel/turn_b/040",
+          "source/rig/reel/turn_b/044",
+          "source/rig/reel/turn_b/046",
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rest",
+            2
+          ],
+          [
+            "to_front:8",
+            1
+          ],
+          [
+            "to_front:11",
+            1
+          ],
+          [
+            "to_front:14",
+            1
+          ],
+          [
+            "to_front:17",
+            1
+          ],
+          [
+            "to_front:20",
+            1
+          ],
+          [
+            "to_front:23",
+            1
+          ],
+          [
+            "to_front:26",
+            1
+          ],
+          [
+            "to_front:29",
+            1
+          ],
+          [
+            "to_front:32",
+            1
+          ],
+          [
+            "front:40",
+            1
+          ],
+          [
+            "front:44",
+            1
+          ],
+          [
+            "to_left:8",
+            1
+          ],
+          [
+            "to_left:11",
+            1
+          ],
+          [
+            "to_left:14",
+            1
+          ],
+          [
+            "to_left:17",
+            1
+          ],
+          [
+            "to_left:20",
+            1
+          ],
+          [
+            "to_left:23",
+            1
+          ],
+          [
+            "to_left:26",
+            1
+          ],
+          [
+            "to_left:29",
+            1
+          ],
+          [
+            "to_left:32",
+            1
+          ],
+          [
+            "left:40",
+            1
+          ],
+          [
+            "left:44",
+            1
+          ],
+          [
+            "left:46",
+            1
+          ]
+        ]
+      }
+    },
+    "reel_test_side": {
+      "version": "p03",
+      "dir": "frames/reel_test_side",
+      "source": "source/rig/anims/reel_test.json",
+      "frames": 37,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/reel_test_side/frames/@1x/hero_lion_brawler_reel_test_side_NN.png",
+      "sheet": "frames/reel_test_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/reel/press/008",
+          "source/rig/reel/press/009",
+          "source/rig/reel/press/010",
+          "source/rig/reel/press/011",
+          "source/rig/reel/press/012",
+          "source/rig/reel/press/014",
+          "source/rig/reel/press/015",
+          "source/rig/reel/press/016",
+          "source/rig/reel/press/017",
+          "source/rig/reel/press/018",
+          "source/rig/reel/press/020",
+          "source/rig/reel/press/023",
+          "source/rig/reel/press/026",
+          "source/rig/reel/press/030",
+          "source/rig/reel/press/033",
+          "source/rig/reel/press/034",
+          "source/rig/reel/press/035",
+          "source/rig/reel/press/036",
+          "source/rig/reel/press/038",
+          "source/rig/reel/press/042",
+          "source/rig/reel/squat/011",
+          "source/rig/reel/squat/012",
+          "source/rig/reel/squat/013",
+          "source/rig/reel/squat/014",
+          "source/rig/reel/squat/015",
+          "source/rig/reel/squat/017",
+          "source/rig/reel/squat/020",
+          "source/rig/reel/squat/024",
+          "source/rig/reel/squat/028",
+          "source/rig/reel/squat/031",
+          "source/rig/reel/squat/033",
+          "source/rig/reel/squat/034",
+          "source/rig/reel/squat/035",
+          "source/rig/reel/squat/036",
+          "source/rig/reel/squat/038",
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "rest",
+            2
+          ],
+          [
+            "squat:11",
+            1
+          ],
+          [
+            "squat:12",
+            1
+          ],
+          [
+            "squat:13",
+            1
+          ],
+          [
+            "squat:14",
+            1
+          ],
+          [
+            "squat:15",
+            1
+          ],
+          [
+            "squat:17",
+            1
+          ],
+          [
+            "squat:20",
+            1
+          ],
+          [
+            "squat:24",
+            1
+          ],
+          [
+            "squat:28",
+            1
+          ],
+          [
+            "squat:31",
+            1
+          ],
+          [
+            "squat:33",
+            1
+          ],
+          [
+            "squat:34",
+            1
+          ],
+          [
+            "squat:35",
+            1
+          ],
+          [
+            "squat:36",
+            1
+          ],
+          [
+            "squat:38",
+            1
+          ],
+          [
+            "press:8",
+            1
+          ],
+          [
+            "press:9",
+            1
+          ],
+          [
+            "press:10",
+            1
+          ],
+          [
+            "press:11",
+            1
+          ],
+          [
+            "press:12",
+            1
+          ],
+          [
+            "press:14",
+            1
+          ],
+          [
+            "press:15",
+            1
+          ],
+          [
+            "press:16",
+            1
+          ],
+          [
+            "press:17",
+            1
+          ],
+          [
+            "press:18",
+            1
+          ],
+          [
+            "press:20",
+            1
+          ],
+          [
+            "press:23",
+            1
+          ],
+          [
+            "press:26",
+            1
+          ],
+          [
+            "press:30",
+            1
+          ],
+          [
+            "press:33",
+            1
+          ],
+          [
+            "press:34",
+            1
+          ],
+          [
+            "press:35",
+            1
+          ],
+          [
+            "press:36",
+            1
+          ],
+          [
+            "press:38",
+            1
+          ],
+          [
+            "press:42",
+            1
+          ]
+        ]
+      },
+      "hit_frame": 21
     }
   },
   "sources": {
@@ -321,11 +676,24 @@
       "pose_run_3_v01.png",
       "pose_run_4_v01.png",
       "pose_skill_slam_p1_v01.png",
-      "pose_skill_slam_p2_v01.png"
+      "pose_skill_slam_p2_v01.png",
+      "view_front_v01.png"
     ],
     "vfx": [
       "claw_swipe",
       "slam"
+    ],
+    "video": [
+      "reel_press.json",
+      "reel_press.mp4",
+      "reel_run.json",
+      "reel_run.mp4",
+      "reel_squat.json",
+      "reel_squat.mp4",
+      "reel_turn_a.json",
+      "reel_turn_a.mp4",
+      "reel_turn_b.json",
+      "reel_turn_b.mp4"
     ]
   },
   "fx": {

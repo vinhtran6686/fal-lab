@@ -1,180 +1,22 @@
 {
- "note": "Run loop (tier 2, on twos): four key poses of a run cycle (contact, passing, contact, passing), each held two frames with a bob and squash so no frame repeats. No video.",
- "version": "p01",
+ "note": "Run loop from the pose reel (clip reel_run): one full cycle is 22 clip frames (two strides); eight frames evenly spaced over it. Replaces the four-still run (left arm looked crippled).",
+ "version": "p03",
  "fps": 15,
  "loop": true,
  "shots": [
   {
-   "name": "contact_a",
-   "rig": "source/rig/poses/run_1.json",
-   "frames": 2,
-   "tracks": {
-    "root.ty": [
-     [
-      0,
-      0,
-      "step"
-     ],
-     [
-      1,
-      5,
-      "step"
-     ]
-    ],
-    "root.sy": [
-     [
-      0,
-      1.0,
-      "step"
-     ],
-     [
-      1,
-      0.975,
-      "step"
-     ]
-    ],
-    "root.sx": [
-     [
-      0,
-      1.0,
-      "step"
-     ],
-     [
-      1,
-      1.015,
-      "step"
-     ]
-    ]
-   }
-  },
-  {
-   "name": "pass_a",
-   "rig": "source/rig/poses/run_2.json",
-   "frames": 2,
-   "tracks": {
-    "root.ty": [
-     [
-      0,
-      7,
-      "step"
-     ],
-     [
-      1,
-      -9,
-      "step"
-     ]
-    ],
-    "root.sy": [
-     [
-      0,
-      0.965,
-      "step"
-     ],
-     [
-      1,
-      1.03,
-      "step"
-     ]
-    ],
-    "root.sx": [
-     [
-      0,
-      1.02,
-      "step"
-     ],
-     [
-      1,
-      0.985,
-      "step"
-     ]
-    ]
-   }
-  },
-  {
-   "name": "contact_b",
-   "rig": "source/rig/poses/run_3.json",
-   "frames": 2,
-   "tracks": {
-    "root.ty": [
-     [
-      0,
-      0,
-      "step"
-     ],
-     [
-      1,
-      5,
-      "step"
-     ]
-    ],
-    "root.sy": [
-     [
-      0,
-      1.0,
-      "step"
-     ],
-     [
-      1,
-      0.975,
-      "step"
-     ]
-    ],
-    "root.sx": [
-     [
-      0,
-      1.0,
-      "step"
-     ],
-     [
-      1,
-      1.015,
-      "step"
-     ]
-    ]
-   }
-  },
-  {
-   "name": "pass_b",
-   "rig": "source/rig/poses/run_4.json",
-   "frames": 2,
-   "tracks": {
-    "root.ty": [
-     [
-      0,
-      7,
-      "step"
-     ],
-     [
-      1,
-      -9,
-      "step"
-     ]
-    ],
-    "root.sy": [
-     [
-      0,
-      0.965,
-      "step"
-     ],
-     [
-      1,
-      1.03,
-      "step"
-     ]
-    ],
-    "root.sx": [
-     [
-      0,
-      1.02,
-      "step"
-     ],
-     [
-      1,
-      0.985,
-      "step"
-     ]
-    ]
-   }
+   "name": "run",
+   "reel": "source/rig/reel/run",
+   "pick": [
+    22,
+    25,
+    27,
+    30,
+    33,
+    35,
+    38,
+    40
+   ]
   }
  ]
 }

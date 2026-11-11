@@ -22,3 +22,10 @@
 | 2026-11-11 | death_side | p01 | Puppet Kit | - | awaiting user | chưa có đoạn đổ người; 3 hình cuối gần như đứng yên (giữ cố ý) | pose still nằm nếu cần | T5 |
 | 2026-11-11 | skill_roar_side | p01 | Puppet Kit | - | awaiting user | 6 hình giữ gầm chỉ nhún 0,5 px (giữ cố ý) | fx_roar riêng | T5 |
 | 2026-11-11 | rig v2 smooth joints; mọi state rig | p03 | Puppet Kit | - | awaiting user | gối gập sâu còn răng cưa nhỏ ở nếp gập | pose still/video cho góc gắt | user: "cắt rig làm chuyển động gãy khúc" |
+| 2026-11-11 | view_front | v01 | gpt-image-2 low | 9 | awaiting user | - | - | pipeline (pose reel) |
+| 2026-11-11 | reel turn_a | t01 | h3-max-turbo 480p 3s | 9 | awaiting user | - | - | user duyệt video; mẫu docs/puppet-kit-pose-reel.md |
+| 2026-11-11 | reel turn_b | t01 | h3-max-turbo 480p 3s | 9 | awaiting user | - | - | user |
+| 2026-11-11 | reel run | t01 | h3-max-turbo 480p 4s | 7 | awaiting user | chạy chậm (22 frame/chu kỳ); nhiều frame nhoè | 720p hoặc h3-max; prompt chạy nhanh | user |
+| 2026-11-11 | reel squat | t01 | h3-max-turbo 480p 3s | 8 | awaiting user | đoạn hạ/đứng chỉ 2-3 frame, nhoè | clip 5 s, động tác chậm | user |
+| 2026-11-11 | reel press | t01 | h3-max-turbo 480p 3s | 8 | awaiting user | đoạn đẩy/hạ nhoè | clip 5 s | user |
+| 2026-11-11 | run_side / turn_left_side / reel_test_side | p03 | Puppet Kit (reel) | - | awaiting user | - | - | user |

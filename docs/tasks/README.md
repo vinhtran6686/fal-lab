@@ -25,7 +25,7 @@ tự kiểm theo mục "Nghiệm thu", rồi **sửa dòng `Trạng thái` trong
 | T5 | `task-5-sonnet-lion-animations.md` | Sonnet | viết hurt, death, roar cho lion theo công thức | F2 (đã xong) | DONE 2026-11-11 (chờ user duyệt) |
 | F1 | (Fable, trong session chính) | Fable | P02: gói tài nguyên lion (lớp thân, chân, tay, đuôi) | không | DONE 2026-11-11 (chờ user duyệt) |
 | F2 | (Fable) | Fable | P03: engine rig v2 (IK chân ghim đất, khớp háng, thứ tự vẽ theo frame) + rig v2 cho lion | F1 | DONE 2026-11-11 (chờ user duyệt) |
-| F3 | (Fable) | Fable | P05: bộ profile + run/walk bằng rig | F2 | chưa làm |
+| F3 | (Fable) | Fable | run và xoay người: đổi hướng sang pose reel (`docs/puppet-kit-pose-reel.md`) thay cho rig profile | F2 | DONE 2026-11-11 trên lion (chờ user duyệt) |
 | F4 | (Fable) | Fable | P06: xoay thân (cào từ trước mặt sang trái) | F3 | chưa làm |
 
 Vì sao chia như vậy: F1-F4 cần nhìn ảnh, phán đoán hình và sửa lõi engine; T1-T5 có đặc tả đóng, kiểm được bằng lệnh.

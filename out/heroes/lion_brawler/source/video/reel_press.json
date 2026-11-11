@@ -1,0 +1,27 @@
+{
+  "prompt": "Animate this EXACT isolated character, do not redesign it. The same top-heavy lion beastman brawler about 3 heads tall (a huge spiky dark red-brown mane around the head and over the shoulders, a broad bare chest and huge forearms, a narrow waist, short strong legs), golden-tan fur with a cream muzzle and a cream chest patch, a short snout with a dark nose, a fierce brow line and two small eye slits, two small round ears in the mane; he wears only a saturated blue waist sash with one short hanging cloth end and blue trousers to the knee, big bare paw feet; on EACH fist a big bright-gold gauntlet with three short curved claws; a long thin tail with a dark tuft curving up behind him; no other weapon; golden-tan main colour, saturated blue cloth, bright gold claws. His RIGHT arm is the big near arm on the LEFT of the screen and his LEFT arm is the far arm on the RIGHT of the screen; each arm stays attached to its own shoulder in every frame. His hips, shoulders and face stay turned to the RIGHT in every frame; the shoulders never square to the camera; the tail stays behind him on the LEFT of the screen. BOTH FEET STAY PLANTED and the legs stay straight the whole time: he never steps and never squats. Timeline: 0-0.4 s hold the first pose; 0.4-1.0 s both elbows bend fully so both fists come up in front of his shoulders; 1.0-1.7 s he PRESSES both fists straight UP above his head until both arms are fully extended, the fists stay inside the picture; 1.7-2.1 s hold with the arms up; 2.1-2.7 s he lowers both arms back down to his sides; 2.7-3.0 s hold the first pose. Locked camera: fixed framing and scale for the whole clip; no zoom, push-in, pull-out, pan, tilt, shake or cut. The head and the mane keep exactly the same size in every frame. The whole character stays inside the picture with margin on every side in every frame. Body only: no effects, no particles, no energy, no speed lines, no motion arcs, no smears, no dust, no glow. No extra limbs, no new objects; the gold gauntlets and claws never change size or shape; three claws on each fist. 2D flat vector cartoon game sprite, thick dark outlines, flat colours, on one perfectly uniform flat magenta background in every frame: no floor, no ground line, no shadow, no gradient, no scenery, no text.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 3,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "480P",
+    "image_url": "https://v3b.fal.media/files/b/0ab20305/4EUamPE7kQ1jt4wDdzYVs_master_canvas.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0ab20305/JtWKe1zPczlJh_eWKyMzH_master_canvas.png"
+  },
+  "seconds": 3,
+  "resolution": "480P",
+  "size": [
+    1024,
+    1024
+  ],
+  "estimateUsd": 0.045,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/heroes/lion_brawler/.work/reel/master_canvas.png",
+  "lastFrame": "/home/user/fal-lab/out/heroes/lion_brawler/.work/reel/master_canvas.png",
+  "requestId": "01a1c996-1645-7152-9767-df932acd5a3c",
+  "seconds_elapsed": 3.1,
+  "source_url": "https://v3b.fal.media/files/b/0ab20306/ovfrXcRFRj-QdxRckp892_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

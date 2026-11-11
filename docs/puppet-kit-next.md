@@ -194,3 +194,9 @@ Kết luận: video **không thay** rig (không tách được lớp), nhưng l�
 
 Đề xuất: mỗi nhân vật một **"pose reel"**: 2-3 clip ngắn (xoay tại chỗ; chạy tại chỗ; khởi động: ngồi xổm, giơ tay, gập tay), tổng ~0,10-0,15 USD, cắt bằng `video-sprite`,
 rồi đăng ký từng frame thành pose rig bằng `puppet.py pose`. Rig vẫn lo idle, nhịp thở, lấy đà/hồi và mọi thứ cần chỉnh nhịp. **Chưa làm: video là khoản trả tiền, cần user đồng ý số clip và giá trước** (quy tắc cost guard).
+
+## 10. Pose reel đã chạy (2026-11-11)
+
+User duyệt làm video với điều kiện chuẩn bị kỹ để thành mẫu. Mẫu: `docs/puppet-kit-pose-reel.md` (v1.1, đã qua advisor). Chạy trên lion: 5 clip, mỗi clip một take, 0,24 USD,
+cả 5 đạt; run và các đoạn chuyển nhanh còn nhoè. Đã ghép `run_side`, `turn_left_side`, `reel_test_side` từ frame reel. User cũng đánh giá khớp uốn liền (`skin`) **chưa đạt**:
+quy tắc mới là rig chỉ dùng cho biên độ nhỏ, khớp gập lớn lấy từ reel. Việc tiếp: mục 8 của file mẫu (v1.2), rồi skill cào xoay thân (F4) dùng frame turn.

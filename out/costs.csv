@@ -232,3 +232,9 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-11 06:14:54,out/heroes/lion_brawler/source/design/layer_tail_v02.png,gpt-image-2,low,1024x1024,False,25.2,0.0113,True
 2026-11-11 06:14:55,out/heroes/lion_brawler/source/design/layer_near_arm_v02.png,gpt-image-2,low,1024x1024,False,26.0,0.0113,True
 2026-11-11 06:15:00,out/heroes/lion_brawler/source/design/layer_legs_v02.png,gpt-image-2,low,1024x1024,False,30.3,0.0114,True
+2026-11-11 07:49:37,out/heroes/lion_brawler/source/design/view_front_v01.png,gpt-image-2,low,1024x1024,False,21.7,0.0139,True
+2026-11-11 07:50:20,out/heroes/lion_brawler/.work/reel/run/clip.mp4,h3-max-turbo,video,480P 4s,False,1.9,0.0600,True
+2026-11-11 07:50:22,out/heroes/lion_brawler/.work/reel/press/clip.mp4,h3-max-turbo,video,480P 3s,False,3.1,0.0450,True
+2026-11-11 07:50:23,out/heroes/lion_brawler/.work/reel/turn_a/clip.mp4,h3-max-turbo,video,480P 3s,False,3.2,0.0450,True
+2026-11-11 07:50:23,out/heroes/lion_brawler/.work/reel/squat/clip.mp4,h3-max-turbo,video,480P 3s,False,4.5,0.0450,True
+2026-11-11 07:50:23,out/heroes/lion_brawler/.work/reel/turn_b/clip.mp4,h3-max-turbo,video,480P 3s,False,4.8,0.0450,True

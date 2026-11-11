@@ -123,10 +123,10 @@ def track_value(track, f: float, default: float) -> float:
 
 
 class Rig:
-    def __init__(self, path):
+    def __init__(self, path, spec=None):
         self.path = pathlib.Path(path)
         self.dir = self.path.parent
-        self.spec = json.loads(self.path.read_text(encoding="utf-8"))
+        self.spec = spec if spec is not None else json.loads(self.path.read_text(encoding="utf-8"))
         self.ground = np.array(self.spec["ground"], dtype=np.float64)
         self.unit = float(self.spec["unit"])  # source pixels of the body height H (the tier height in the game)
         self.bones = {b["name"]: b for b in self.spec["bones"]}
@@ -485,6 +485,20 @@ class Animation:
         shots = self.spec.get("shots") or [{k: self.spec[k] for k in ("rig", "frames", "tracks") if k in self.spec}]
         self.shots, self.rigs = [], {}
         for s in shots:
+            if "reel" in s:                      # frames of a pose reel (docs/puppet-kit-pose-reel.md): one picture per frame
+                rdir = self.asset / s["reel"]
+                reel = json.loads((rdir / "reel.json").read_text(encoding="utf-8"))
+                for i, n in enumerate(s["pick"]):
+                    key = f"{s['reel']}/{int(n):03d}"
+                    if key not in self.rigs:
+                        spec = {"sources": {"pose": f"{int(n):03d}.png"}, "ground": reel["ground"], "unit": reel["unit"],
+                                "bones": [{"name": "root", "parent": None, "pivot": reel["ground"]}],
+                                "parts": [{"name": "pose", "source": "pose", "bone": "root", "select": {"rest": True}}]}
+                        self.rigs[key] = Rig(rdir / "reel.json", spec)
+                    baked = {k: [[0, track_value(v, i, DEFAULTS[k.rsplit(".", 1)[1]])]] for k, v in s.get("tracks", {}).items()
+                             if not k.startswith("_")}
+                    self.shots.append({"rig": self.rigs[key], "frames": 1, "tracks": baked, "name": f"{s.get('name', 'reel')}:{int(n)}"})
+                continue
             rp = str(s["rig"])
             if rp not in self.rigs:
                 self.rigs[rp] = Rig(self.asset / rp)
