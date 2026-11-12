@@ -1,7 +1,7 @@
 # Skill bằng cặp pose A/B + vfx + rig studio (phương pháp "alien")
 
 Ghi ngày 2026-11-12. Nhân vật thử: `out/heroes/azure_blade` (hero, cỡ M), skill 1 "Trảm Trăng Khuyết". Kết quả: người dùng đánh giá hai pose "đúng ý 100%".
-Phân tích gốc của phương pháp (đo trên `ref/alien`): phụ lục §8 cuối file này. Hướng dẫn công cụ: `docs/scripts/puppet_kit/puppet-kit-guide.md`, `docs/tools/studio/puppet-studio-guide.md`, `lib-fx/README.md`.
+Phân tích gốc của phương pháp (đo trên `ref/alien`): phụ lục §9 cuối file này. Hướng dẫn công cụ: `docs/scripts/puppet_kit/puppet-kit-guide.md`, `docs/tools/studio/puppet-studio-guide.md`, `lib-fx/README.md`.
 
 ## 1. Ý tưởng
 
@@ -185,7 +185,18 @@ Thân ra `frames/skill_crescent_puppet_side/` (cell 352x280 @2x, chân ở pivot
 - Chưa kiểm GIF ở cỡ @1x trên màn hình thật; hiện duyệt qua ảnh tĩnh và GIF phóng 3 lần.
 - Đòn cần xoay người, đổi mặt hoặc chạy vẫn phải dùng video (`video-sprite`) hoặc pose reel.
 
-## 8. Phụ lục: vì sao `ref/alien` làm được (đo trực tiếp trên khung)
+## 8. Tụ lực lưỡi đao (ánh sáng chạy trên lưỡi trước và sau skill)
+
+Hiệu ứng thứ hai của skill, thêm 2026-11-12: năng lượng xanh dâng từ cán lên mũi đao trước đòn, rồi giữ sáng suốt đòn và sau đòn. Thử trên `azure_blade`; người dùng đã duyệt (2026-11-12).
+
+- **Hiệu ứng nằm trong thư viện**: `lib-fx/melee/blade_aura/blade_aura.py` (`charge_blue`, xem một mình bằng `python lib-fx/build.py melee/blade_aura`). Luật vẽ: 4 tầng màu phẳng (xanh sẫm, xanh, băng, trắng; tầng sáng nhất sâu trong lưỡi và dưới đầu sóng), hai dải trong mờ ôm lưỡi, glow hai tầng, vài đốm bay lên vẽ "on twos".
+- **Bám đúng lưỡi**: rig có hai socket `blade_root`, `blade_tip` gắn vào xương `arms` (`source/rig/make_rigs.py`). Ánh sáng vẽ lên **pixel của chính lưỡi** (render riêng phần `blade`, trừ phần `arms` đứng trước) nên không đè lên tay và đi theo cú nhấc đao.
+- **Lớp riêng cho nhân vật**: `source/vfx/blade_charge/build_charge.py` + `aura_params.json` (mốc theo khung: bật nguồn khung 3, đầu sóng tới mũi khung 12, hai nhịp sóng, loé lúc chém khung 23, nhịp sóng định kỳ 10 khung ở pha giữ). Ra `frames/fx/blade_charge/` (một lớp RGBA mỗi khung body).
+- **Ghép**: `PYTHONHASHSEED=0 python out/heroes/azure_blade/source/vfx/crescent/build_crescent.py --charge` đặt lớp tụ lực **dưới** vệt chém, ra `frames/skill_crescent_charge_side/`; bản đã duyệt `skill_crescent_side/` không bị đụng.
+- **Hướng chạy**: từ cán tới mũi đúng nghĩa đen; ở pose A đao chúc xuống nên luồng sáng chạy xuống dưới màn hình. Cảm giác "dâng lên" đến từ độ sáng tăng dần và đốm bay lên.
+- **Không tắt dần**: giữ nguyên tới cuối (hơi giảm sau cú chém, nhấp nháy theo nhịp thở).
+
+## 9. Phụ lục: vì sao `ref/alien` làm được (đo trực tiếp trên khung)
 
 | Đặc điểm | Số đo / quan sát |
 |---|---|

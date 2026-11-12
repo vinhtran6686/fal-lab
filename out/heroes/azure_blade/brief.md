@@ -1,7 +1,7 @@
 # azure_blade (Lam Đao)
 
 ## Request
-User (2026-11-12): hero mới để test quy trình "pose A + pose B + fx" kiểu `ref/alien` (docs/pipeline/pose-pair-fx-method.md §8), tránh lỗi của lion (tay lệch cỡ, chân lệch).
+User (2026-11-12): hero mới để test quy trình "pose A + pose B + fx" kiểu `ref/alien` (docs/pipeline/pose-pair-fx-method.md §9), tránh lỗi của lion (tay lệch cỡ, chân lệch).
 Chạy `/fal-image --creative`. Người dùng tự viết concept: "nhân tộc, thân người, giáp hạng nhẹ ôm sát, không quá phức tạp; cầm 1 thanh đao tầm trung vừa với cơ thể".
 
 ## Concepts offered (2026-11-12)

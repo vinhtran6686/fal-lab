@@ -483,5 +483,32 @@
    190
   ],
   "dir": "melee/blade/swirl_frost"
+ },
+ "melee/blade_aura/charge_blue": {
+  "name": "Tụ lực lưỡi đao (xanh)",
+  "status": "approved",
+  "tags": [
+   "melee",
+   "blade",
+   "aura",
+   "charge",
+   "sustained",
+   "blue",
+   "anchor:hilt",
+   "buff",
+   "energy"
+  ],
+  "desc": "blue energy that gathers in a weapon: a source ignites at the hilt, a front rises along the blade to the tip, then bright pulses keep running hilt to tip; discreet (it is a status); flat tiers (deep, blue, ice, white), two see-through bands and a two-scale glow around the blade, a few rising specks drawn on twos; it does not fade out, so it can run through a skill",
+  "fps": 30,
+  "frames": 61,
+  "frame_size_2x": [
+   150,
+   90
+  ],
+  "anchor_2x": [
+   34,
+   45
+  ],
+  "dir": "melee/blade_aura/charge_blue"
  }
 }

@@ -63,6 +63,22 @@
    ]
   }
  ],
+ "sockets": {
+  "blade_root": {
+   "bone": "arms",
+   "pt": [
+    712,
+    748
+   ]
+  },
+  "blade_tip": {
+   "bone": "arms",
+   "pt": [
+    965,
+    745
+   ]
+  }
+ },
  "parts": [
   {
    "name": "torso",

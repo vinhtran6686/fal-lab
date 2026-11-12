@@ -1,0 +1,76 @@
+{
+ "id": "melee/blade_aura/charge_blue",
+ "name": "Tụ lực lưỡi đao (xanh)",
+ "desc": "blue energy that gathers in a weapon: a source ignites at the hilt, a front rises along the blade to the tip, then bright pulses keep running hilt to tip; discreet (it is a status); flat tiers (deep, blue, ice, white), two see-through bands and a two-scale glow around the blade, a few rising specks drawn on twos; it does not fade out, so it can run through a skill",
+ "status": "approved",
+ "tags": [
+  "melee",
+  "blade",
+  "aura",
+  "charge",
+  "sustained",
+  "blue",
+  "anchor:hilt",
+  "buff",
+  "energy"
+ ],
+ "fps": 30,
+ "frames": 61,
+ "frame_size_2x": [
+  150,
+  90
+ ],
+ "anchor_2x": [
+  34,
+  45
+ ],
+ "direction": "+x (mirror for -x)",
+ "palette": {
+  "rim": [
+   30,
+   90,
+   200
+  ],
+  "body": [
+   70,
+   165,
+   255
+  ],
+  "light": [
+   170,
+   225,
+   255
+  ],
+  "core": [
+   235,
+   248,
+   255
+  ],
+  "white": [
+   255,
+   255,
+   255
+  ],
+  "deep": [
+   30,
+   90,
+   200
+  ],
+  "blue": [
+   70,
+   165,
+   255
+  ],
+  "ice": [
+   170,
+   225,
+   255
+  ]
+ },
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/charge_blue_NN.png",
+  "preview": "preview.gif"
+ },
+ "source": "lib-fx/melee/blade_aura/blade_aura.py: charge_blue"
+}

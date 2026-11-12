@@ -1,6 +1,8 @@
 # Trảm Trăng Khuyết, final GIF: studio-rig body (idle -> pose A -> pose B -> idle) + a bright blue crescent slash from the blade sweep.
 # Run (after `puppet.py render ... --sheet skill_crescent_puppet_side`):
 #   PYTHONHASHSEED=0 python out/heroes/azure_blade/source/vfx/crescent/build_crescent.py   (gen_slash_loop places breaks with hash())
+#   add --charge to put the blade-charge layer (frames/fx/blade_charge, built by ../blade_charge/build_charge.py) under the slash; the result goes to
+#   frames/skill_crescent_charge_side so the approved skill_crescent_side stays as it is
 # Slash = (1) the milestone-01 layered generator on the blade sweep (streaks, teeth, debris; kept faint) under (2) the swept surface of the blade
 # itself: every blade line root->tip is drawn, so the band is exactly as thick as the blade and its leading edge is parallel to it.
 # Colour: tip deep blue and opaque, hilt pale and faint, a white hot leading edge and a white line on the tip's path.
@@ -23,6 +25,8 @@ W2, H2, PX, PY = 352, 280, 176.0, 246.4
 MARKS = json.loads((HERE / "weapon_marks.json").read_text())
 P = json.loads((HERE / "slash_params.json").read_text())
 ANIM = json.loads((RIG / "anims" / "crescent.json").read_text())
+CHARGE = "--charge" in sys.argv
+SHEET = "skill_crescent_charge_side" if CHARGE else "skill_crescent_side"
 BODY = sorted((ASSET / "frames" / "skill_crescent_puppet_side" / "frames" / "@2x").glob("*.png"))
 
 
@@ -149,20 +153,23 @@ place = {hit - 1: 1, hit: 5}                                   # growth step 2 o
 for j in range(len(after)):
     place[hit + 1 + j] = n + j
 frames = []
+CH = sorted((ASSET / "frames" / "fx" / "blade_charge" / "frames" / "@2x").glob("*.png")) if CHARGE else []
 for i, bp in enumerate(BODY, 1):
     im = Image.open(bp).convert("RGBA")
+    if CH:
+        im.alpha_composite(Image.open(CH[i - 1]).convert("RGBA"))      # the blade's own light sits under the slash
     if i in place:
         im.alpha_composite(imgs[place[i]])
     frames.append(im)
 
-out = ASSET / "frames" / "skill_crescent_side"
+out = ASSET / "frames" / SHEET
 if out.exists():
     import shutil; shutil.rmtree(out)
 for sub in ("@2x", "@1x"):
     (out / "frames" / sub).mkdir(parents=True, exist_ok=True)
 for k, im in enumerate(frames, 1):
-    im.save(out / "frames" / "@2x" / f"hero_azure_blade_skill_crescent_side_{k:02d}.png")
-    im.resize((W2 // 2, H2 // 2), Image.LANCZOS).save(out / "frames" / "@1x" / f"hero_azure_blade_skill_crescent_side_{k:02d}.png")
+    im.save(out / "frames" / "@2x" / f"hero_azure_blade_{SHEET}_{k:02d}.png")
+    im.resize((W2 // 2, H2 // 2), Image.LANCZOS).save(out / "frames" / "@1x" / f"hero_azure_blade_{SHEET}_{k:02d}.png")
 
 
 def gif(cells, path, fps, scale, bg=(40, 44, 54, 255)):

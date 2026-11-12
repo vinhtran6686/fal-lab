@@ -42,6 +42,8 @@ B_ARMS = shift([(546, 195), (588, 208), (620, 240), (642, 270), (656, 305), (670
                 (580, 395), (560, 360), (530, 330), (505, 290), (515, 262), (540, 235)], 40, 360)
 B_BLADE = shift([(655, 350), (700, 350), (760, 372), (850, 378), (925, 382), (905, 392), (840, 396), (760, 398), (700, 402), (672, 402), (660, 380)], 40, 360)
 
+# Blade root (hilt end) and tip in source px of each still, measured on the stills (source/vfx/crescent/weapon_marks.json); they ride the arms bone
+SOCKETS = {"A": {"blade_root": [303, 225], "blade_tip": [224, 558]}, "B": {"blade_root": [712, 748], "blade_tip": [965, 745]}}
 SPEC = {
     "A": dict(still="pose_skill_crescent_p1_v01.png", arms=A_ARMS, blade=A_BLADE, shoulder=[390, 335],
               anchors=[{"pt": [410, 335], "radius": 120, "gain": 1.0}, {"pt": [470, 430], "radius": 130, "gain": 0.7}]),
@@ -60,6 +62,7 @@ for key, s in SPEC.items():
                      {"name": "arms", "parent": "body", "pivot": s["shoulder"]}],
            "links": [{"name": "shoulder_chest", "arm": "arms", "mode": "stretch", "max_pull": 60,
                       "anchors": [dict(a, part="torso") for a in s["anchors"]]}],
+           "sockets": {n: {"bone": "arms", "pt": pt} for n, pt in SOCKETS[key].items()},
            "parts": [{"name": "torso", "source": "pose", "bone": "body", "select": {"rest": True},
                       "fill_under": [{"part": "arms", "erode": 10, "reach": 30}], "deform": DEFORM},
                      {"name": "blade", "source": "pose", "bone": "arms", "select": {"poly": s["blade"]}},
