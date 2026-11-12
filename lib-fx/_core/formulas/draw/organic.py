@@ -217,10 +217,12 @@ def shards_at(sh, cx, cy, shards, t, life, sy=1.0, g=0.0):
 
 
 def cloud(canvas, puffs, pal=DUST, a=1.0, light=(-0.55, -0.83), off=5.0, fillet=4.0, erode=0.0, noise=0.0, seed=3,
-          tones=("shadow", "base", "light"), curls=True, holes=()):
+          tones=("shadow", "base", "light"), curls=True, holes=(), gone=0.0):
     """A cartoon dust cloud: the union of wobbly puffs (x, y, r), shaded in flat tones by shifting the silhouette towards the light:
     the side away from the light gets the dark tone, the side facing it the light tone. Curl lines sit on the big puffs' shadow
-    side. holes = [(x, y, rx, ry)] open the middle as it dissipates; erode + noise break it into wisps."""
+    side. holes = [(x, y, rx, ry)] open the middle as it dissipates; erode + noise break it into wisps.
+    gone 0..1 finishes the dissolve: it moves the erosion depth from erode + noise towards the thickest point of the cloud, so at 1
+    nothing is left whatever the size of the puffs (ramp it over the last frames: the wisps thin out and vanish, no pop)."""
     sh = Shape(canvas)
     for x, y, r in puffs:
         sh.poly(blob(x, y, r, wob=0.07, freq=4, phase=x * 0.37 + y * 0.11))
@@ -231,7 +233,10 @@ def cloud(canvas, puffs, pal=DUST, a=1.0, light=(-0.55, -0.83), off=5.0, fillet=
     dist = ndimage.distance_transform_edt(m) / ss
     if erode > 0 or noise > 0:
         thr = erode + noise * noise_field(m.shape, seed, 7 * ss)
+        if gone > 0: thr = thr + min(1.0, gone) * (float(dist.max()) + 1 - thr)
         m = m & (dist > thr)
+    elif gone > 0:
+        m = m & (dist > min(1.0, gone) * (float(dist.max()) + 1))
     if sh.h is not None:
         m = m & ~(np.asarray(sh.h) > 127)
     if not m.any(): return

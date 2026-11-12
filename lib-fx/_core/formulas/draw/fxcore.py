@@ -225,3 +225,18 @@ def arc3d(fc, bc, cx, cy, R, w, pal, a, sq=0.4, th0=0.0, th1=2 * math.pi, d=1, t
                 c.poly(band(i, j, lambda k: R + wl[k] * 0.42, lambda k: R + wl[k] * 0.04), col, al)
                 if nr > 0.7:
                     c.poly(band(i, j, lambda k: R + wl[k] * 0.33, lambda k: R + wl[k] * 0.2), pal["white"], al * (nr - 0.7) / 0.3)
+
+
+# ---------------------------------------------------------------- previews
+def save_gif(frames, path, fps, hold=400):
+    """Write RGB frames as a GIF with ONE palette for the whole animation and no dither: flat colours stay flat and a colour does
+    not shimmer from frame to frame (a palette per frame gives every frame slightly different tones). hold = ms on the last frame."""
+    frames = [f.convert("RGB") for f in frames]
+    pick = sorted({round(i * (len(frames) - 1) / 23) for i in range(24)}) if len(frames) > 24 else range(len(frames))
+    w, h = frames[0].size; k = min(1.0, 320 / max(w, h))
+    tw, th = max(1, round(w * k)), max(1, round(h * k))
+    mosaic = Image.new("RGB", (tw * len(pick), th))
+    for j, i in enumerate(pick): mosaic.paste(frames[i].resize((tw, th), Image.BOX), (j * tw, 0))
+    pal = mosaic.quantize(255, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+    out = [f.quantize(palette=pal, dither=Image.Dither.NONE) for f in frames]
+    out[0].save(path, save_all=True, append_images=out[1:], duration=[round(1000 / fps)] * (len(out) - 1) + [hold], loop=0)

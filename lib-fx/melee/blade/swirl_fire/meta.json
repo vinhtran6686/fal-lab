@@ -75,12 +75,39 @@
    255,
    214,
    112
+  ],
+  "glow1": [
+   96,
+   26,
+   52
+  ],
+  "glow2": [
+   160,
+   36,
+   76
+  ],
+  "glow3": [
+   232,
+   60,
+   112
   ]
  },
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/swirl_fire_NN.png",
-  "preview": "preview.gif"
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [],
+  "frames": 13,
+  "peak_frame": 4,
+  "peak_size_1x": [
+   138,
+   155
+  ],
+  "last_frame_pct": 0.0
  },
  "source": "lib-fx/melee/blade/blade.py: swirl_fire"
 }

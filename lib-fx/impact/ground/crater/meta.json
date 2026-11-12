@@ -32,7 +32,19 @@
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/crater_NN.png",
-  "preview": "preview.gif"
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [],
+  "frames": 25,
+  "peak_frame": 7,
+  "peak_size_1x": [
+   170,
+   79
+  ],
+  "last_frame_pct": 0.0
  },
  "source": "lib-fx/impact/ground/ground.py: ground_crater"
 }

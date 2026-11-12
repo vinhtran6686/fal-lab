@@ -16,7 +16,7 @@ TAGS = ["impact", "ground", "one-shot", "anchor:ground"]
 DUST_BACK = dict(shadow=(96, 100, 90), base=(132, 136, 122), light=(160, 164, 148), curl=(110, 114, 102))
 ROCK = ((92, 80, 66), (138, 122, 100))
 CATALOG = {
-    "slam": dict(name="Nện bụi", status="draft", tags=["heavy", "dust"],
+    "slam": dict(name="Nện bụi", status="draft", tags=["heavy", "dust"], dur=0.9,
                  desc="a fist or weapon slams the floor: light thorns erupt out of a rolling dust bank (a dark back bank and a light front "
                       "bank, both rolling outward), pebbles arc to both sides, the middle clears first"),
     "crater": dict(name="Vòng chấn đất", status="draft", tags=["heavy", "ring"],
@@ -26,6 +26,12 @@ CATALOG = {
                    desc="a fountain of light thorns shoots straight up from the impact over a low dust skirt, then droplets rain back down "
                         "while the skirt rolls outward"),
 }
+
+
+def _gone(ud, start, end):
+    """organic.cloud `gone` at life fraction ud: 0 until `start`, then a straight ramp to 1 at `end` (the last frame): the wisps
+    left by the slow erosion thin out evenly over those frames and nothing is left at the end."""
+    return max(0.0, min(1.0, (ud - start) / (end - start)))
 
 
 def _spark(sh, t, life, pal, s, seed, white=True):
@@ -81,7 +87,7 @@ def ground_slam(t, P, front, back, pal=SPARK, s=1.0, d=1):
         hr = 70 * s * smooth(0.3, 1, ud)
         hole = [(cx, cy - 22 * s, hr, hr * 0.55)]
     # back bank: darker, taller, behind everything
-    cloud(front, _bank(cx, cy, t, 1, 6, s, 10, 34, 150, 28, life=life_d), DUST_BACK, 1.0, off=6, erode=12 * s * smooth(0.55, 1, ud),
+    cloud(front, _bank(cx, cy, t, 1, 6, s, 10, 34, 150, 28, life=life_d), DUST_BACK, 1.0, off=6, erode=12 * s * smooth(0.55, 1, ud), gone=_gone(ud, 0.88, 1.15),
           noise=6 * s * smooth(0.4, 1, ud), seed=81, curls=False, holes=hole)
     # light thorns erupting out of the dust
     sh = Shape(front)
@@ -95,7 +101,7 @@ def ground_slam(t, P, front, back, pal=SPARK, s=1.0, d=1):
     if t < 0.42: _spark(sh, t, 0.42, pal, s, 82)
     _rocks(front, cx, cy - 4 * s, t, 83, 10, s)
     # front bank: light, low, rolling outward over the base of the thorns
-    cloud(front, _bank(cx, cy, t, 2, 5, s, 8, 26, 175, 14, t0=0.02, life=life_d), DUST, 1.0, off=5, erode=12 * s * smooth(0.55, 1, ud),
+    cloud(front, _bank(cx, cy, t, 2, 5, s, 8, 26, 175, 14, t0=0.02, life=life_d), DUST, 1.0, off=5, erode=12 * s * smooth(0.55, 1, ud), gone=_gone(ud, 0.88, 1.15),
           noise=6 * s * smooth(0.4, 1, ud), seed=84, tones=("base", "light", "high"), holes=hole)
 
 
@@ -137,7 +143,7 @@ def ground_crater(t, P, front, back, pal=SPARK, s=1.0, d=1):
                 r = (8 + 6 * (i % 2)) * s * out_cubic(min(1, tt / 0.25))
                 pf.append((x, cy - r * 0.6 - 10 * s * tt, r))
         ud = tt / 0.56
-        cloud(front, pf, DUST, 1.0, off=4, erode=10 * s * smooth(0.45, 1, ud), noise=5 * s * smooth(0.3, 1, ud), seed=94,
+        cloud(front, pf, DUST, 1.0, off=4, erode=10 * s * smooth(0.45, 1, ud), gone=_gone(ud, 0.8, 1.03), noise=5 * s * smooth(0.3, 1, ud), seed=94,
               tones=("base", "light", "high"), curls=False)
 
 
@@ -145,7 +151,7 @@ def ground_geyser(t, P, front, back, pal=SPARK, s=1.0, d=1):
     cx, cy = P
     ud = t / 0.78
     # low dust skirt behind the fountain
-    cloud(front, _bank(cx, cy, t, 5, 4, s, 9, 24, 110, 8, life=0.78), DUST_BACK, 1.0, off=5, erode=10 * s * smooth(0.55, 1, ud),
+    cloud(front, _bank(cx, cy, t, 5, 4, s, 9, 24, 110, 8, life=0.78), DUST_BACK, 1.0, off=5, erode=10 * s * smooth(0.55, 1, ud), gone=_gone(ud, 0.8, 1.02),
           noise=5 * s * smooth(0.4, 1, ud), seed=101, curls=False)
     life = 0.5
     u = t / life
@@ -166,7 +172,7 @@ def ground_geyser(t, P, front, back, pal=SPARK, s=1.0, d=1):
     shards_at(sh, cx, cy - 8 * s, drops, t, 0.62, g=1100 * s)
     _spark(sh, min(t, life * 0.999), life * 1.25, pal, s, 102)
     # front skirt rolling out
-    cloud(front, _bank(cx, cy, t, 6, 4, s, 7, 20, 140, 6, t0=0.03, life=0.78), DUST, 1.0, off=4, erode=10 * s * smooth(0.55, 1, ud),
+    cloud(front, _bank(cx, cy, t, 6, 4, s, 7, 20, 140, 6, t0=0.03, life=0.78), DUST, 1.0, off=4, erode=10 * s * smooth(0.55, 1, ud), gone=_gone(ud, 0.8, 1.02),
           noise=5 * s * smooth(0.4, 1, ud), seed=103, tones=("base", "light", "high"))
 
 
