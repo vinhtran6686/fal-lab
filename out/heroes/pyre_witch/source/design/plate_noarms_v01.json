@@ -1,0 +1,14 @@
+{
+  "prompt": "Edit the reference image by ERASING parts of it. Do NOT redraw, move, resize, re-center, rotate or restyle anything: every pixel that stays must stay exactly where it is, at exactly the same size and in exactly the same colours, with the same thick outline. The canvas stays 1024x1024 and the background stays one flat solid pure magenta (#FF00FF).\nKEEP the head with its face and all its hair untouched as a fixed anchor, and KEEP the whole body: the collar, the dress, the belt, the bare leg and the shoes, and all the long hair, exactly as they are.\nERASE both ARMS completely: the RAISED arm on the RIGHT side of the image with its whole sleeve and its open hand, and the HANGING arm on the LEFT side of the image with its whole sleeve and its hand. Where the arms covered something, complete it in the same style and the same colours as the surroundings: draw the long dark blue-violet-black hair that was hidden behind each arm so the hair is continuous and complete behind where the arms were, and draw the dress shoulders as open armholes with the dress edge. Do not add anything new, and do not change anything that is not under an arm.",
+  "model": "openai/gpt-image-2/edit",
+  "quality": "low",
+  "size": "1024x1024",
+  "refs": [
+    "C:\\Users\\vinhtv13\\Desktop\\frt\\fal-image-lab\\out\\heroes\\pyre_witch\\source\\design\\master_v12.png"
+  ],
+  "transparent": false,
+  "seconds": 19.0,
+  "cost_usd": 0.0114,
+  "cost_is_estimate": true,
+  "source_url": "https://v3b.fal.media/files/b/0ab22b12/kUt01OhauDP2rA0Z27JS7_qMFd42wA.png"
+}

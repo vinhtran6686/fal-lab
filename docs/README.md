@@ -9,7 +9,7 @@ docs/
 ├── repo-structure-rules.md                                quy tắc đặt tool, skill, công thức, fx, doc, asset vào đâu
 ├── pipeline/                                              quy trình xuyên nhiều công cụ, trên một nhân vật
 │   ├── asset-manifest.md                                  bảng checklist asset trong brief.md, lệnh asset_status.py
-│   └── pose-pair-fx-method.md                             skill bằng pose A/B + vệt chém lib-fx + rig Studio (quy trình, checklist, chi phí)
+│   ├── pose-pair-fx-method.md                             skill bằng pose A/B + vệt chém lib-fx + rig Studio (quy trình, checklist, chi phí)
 ├── skills/                                                tài liệu bổ sung cho .claude/skills/<skill>/
 │   ├── fal-image/                                         ảnh tĩnh qua scripts/gen_image.py
 │   │   ├── fal-image-manual-prompt-style-transfer.md      prompt chuyển concept image sang style của dự án (chế độ --manual)

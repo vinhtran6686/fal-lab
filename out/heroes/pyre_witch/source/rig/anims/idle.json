@@ -1,0 +1,80 @@
+{
+ "note": "pyre_witch idle: breath, head, floating raised palm, hanging arm, hair and hem sway",
+ "version": "p01",
+ "fps": 15,
+ "loop": true,
+ "shots": [
+  {
+   "name": "idle",
+   "rig": "source/rig/rig.json",
+   "frames": 24,
+   "tracks": {
+    "_sway_period": 24,
+    "body.sy": {
+     "base": 1.0,
+     "osc": {
+      "amp": -0.014,
+      "period": 24,
+      "phase": 0.0
+     }
+    },
+    "body.sx": {
+     "base": 1.0,
+     "osc": {
+      "amp": 0.007,
+      "period": 24,
+      "phase": 0.0
+     }
+    },
+    "head.ty": {
+     "base": 0.0,
+     "osc": {
+      "amp": 5,
+      "period": 24,
+      "phase": -0.08
+     }
+    },
+    "head.rot": {
+     "base": 0.0,
+     "osc": {
+      "amp": 1.0,
+      "period": 24,
+      "phase": -0.12
+     }
+    },
+    "arm_up.rot": {
+     "base": 0.0,
+     "osc": {
+      "amp": 2.2,
+      "period": 24,
+      "phase": -0.1
+     }
+    },
+    "arm_up.ty": {
+     "base": 0.0,
+     "osc": {
+      "amp": 6,
+      "period": 24,
+      "phase": -0.2
+     }
+    },
+    "arm_down.rot": {
+     "base": 0.0,
+     "osc": {
+      "amp": -1.5,
+      "period": 24,
+      "phase": -0.1
+     }
+    },
+    "torso.sway": {
+     "base": 1.0,
+     "osc": {
+      "amp": 0.25,
+      "period": 24,
+      "phase": -0.3
+     }
+    }
+   }
+  }
+ ]
+}

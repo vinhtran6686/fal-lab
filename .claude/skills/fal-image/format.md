@@ -442,3 +442,11 @@ Rules for the table:
 5. End the table with: clip length (about 0.7-1 s per phase plus a short hold), the risks (the model-habit table of `motion-prompts.md`), the price.
 6. The `pose_skill_<name>` still is the peak of phase 2/3, drawn to show the same intent (a punch: the arm and shoulder reaching forward).
 7. **Phase stills are numbered by phase**: `pose_skill_<name>_p<N>_vNN` (p1 wind-up, p2 release, p3 impact peak, p4 follow-through when drawn), so they read in order; the prompt files are `<still>_p<N>_promptNN.txt`. A skill with one still uses `p3`.
+
+## 12. Editing a master: lessons from a 12-version hero (2026-11-12)
+1. **Read the style anchor (`ref/asra` or the project's) before the first master** and put its traits in the prompt (big head, broad shoulders, short limbs, thick outline, minimal face, mitten hands). A mature, long-dress or sexy design drifts the model to a realistic style; lock the head count in the same prompt.
+2. **One axis per round**: style first, identity second, details (hands, shoes, hair) last. Never fix details on a wrong-style image.
+3. **`--ref` is for edits, not for changing style**: to change style draw anew without a ref, or use a ref plus "do not keep the old details".
+4. **Edit prompt shape**: open "Redraw X EXACTLY as she is" + what to keep, then numbered changes, end "Everything else stays identical" + the fixed limits (limb balance, magenta background, margins). A change that makes the figure longer (dress, legs) needs a height or head-count limit in the same prompt.
+5. Make 2 to 4 candidates per round and score with the hero checklist; the model returns 86 to 95% of the frame height even when told 70%, so fix it at registration, not with another call.
+6. Purple or blue-violet hair drifts pink and gets keyed with the background: check with `ingest_image.py --check`.

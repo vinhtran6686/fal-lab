@@ -1,0 +1,49 @@
+{
+  "id": "pyre_witch",
+  "kind": "hero",
+  "cell": [
+    176,
+    140
+  ],
+  "scale_2x": 2,
+  "pivot": [
+    0.5,
+    0.88
+  ],
+  "body_height_2x": 120,
+  "shadow": {
+    "w_2x": 64,
+    "h_2x": 19,
+    "color": "#000000",
+    "alpha": 0.35
+  },
+  "states": {
+    "idle_side": {
+      "version": "p01",
+      "dir": "frames/idle_side",
+      "source": "source/rig/anims/idle.json",
+      "frames": 24,
+      "fps": 15,
+      "loop": true,
+      "files": "frames/idle_side/frames/@1x/hero_pyre_witch_idle_side_NN.png",
+      "sheet": "frames/idle_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig.json"
+        ],
+        "shots": [
+          [
+            "idle",
+            24
+          ]
+        ]
+      }
+    }
+  },
+  "sources": {
+    "design": [
+      "master_v12.png"
+    ]
+  }
+}

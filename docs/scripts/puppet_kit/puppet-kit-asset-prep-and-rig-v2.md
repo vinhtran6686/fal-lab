@@ -17,8 +17,8 @@ từng đoạn chi (bắp tay, cẳng tay, bàn tay, đùi, ống chân, bàn ch
 | Master | `master_vNN` | 3/4 quay phải, tư thế nghỉ (đã có) | idle, mốc style và cỡ |
 | Plate 3/4 | `plate_vNN` | master bỏ tay, vũ khí, đuôi (đã có) | lớp thân |
 | **Plate chân** | `plate_legs_vNN` | master bỏ tay **và cả hai chân**: thấy trọn hông, đáy áo/quần | khớp háng, rig chân |
-| **Lớp khuất** | `layer_<tên>_vNN` | từng bộ phận bị che vẽ **đầy đủ một mình**: áo choàng trọn, tay xa trọn, chân xa trọn, đuôi trọn | thay cho `fill_under`/`grow` |
-| **Tờ part (A-pose)** | `parts_vNN` | cả nhân vật ở tư thế chữ A, tay chân dang rời thân, mỗi đoạn chi thấy trọn khớp | cắt đùi, ống chân, bàn chân, cánh tay, cẳng tay, bàn tay |
+| **Lớp khuất** (xem §7: ưu tiên plate ERASE) | `layer_<tên>_vNN` | từng bộ phận bị che vẽ **đầy đủ một mình**: áo choàng trọn, tay xa trọn, chân xa trọn, đuôi trọn | thay cho `fill_under`/`grow` |
+| **Tờ part (A-pose)** (xem §7: dễ lệch tỉ lệ, chỉ cho profile) | `parts_vNN` | cả nhân vật ở tư thế chữ A, tay chân dang rời thân, mỗi đoạn chi thấy trọn khớp | cắt đùi, ống chân, bàn chân, cánh tay, cẳng tay, bàn tay |
 | **Profile** | `profile_vNN` | nhìn ngang hẳn (không 3/4), quay phải, đứng nghỉ | rig thứ hai cho run/walk và mốc cho xoay thân |
 | **Plate profile** | `profile_plate_vNN`, `profile_parts_vNN` | như trên cho góc ngang | rig profile |
 | Pose khoá | `pose_<động tác>_<n>_vNN` | chỉ cho những gì rig không làm được (đã có) | tầng 2 |
@@ -113,3 +113,25 @@ Việc phải làm trong engine (`scripts/puppet_kit/core.py`):
   Besides the head, KEEP <bộ phận> exactly where it is ... ERASE <phần còn lại> ... complete <phần bị che>".
 - Mỏ neo phải **không đè lên bộ phận cần lấy**. Với nhân vật có bờm, bờm đè lên đỉnh vai gần nên đỉnh vai vẫn thiếu; lần sau dùng mỏ neo khác cho lớp tay (ví dụ giữ hai bàn chân).
 - Vì vậy mục 2.1 đổi: không cần "tờ part A-pose" cho rig 3/4; lớp rời lấy bằng cách xoá từ chính master cho khớp từng pixel. Tờ part chỉ còn cần cho góc profile.
+
+## 7. Lớp thân (plate) và tách bộ phận: kết luận từ `pyre_witch` (2026-11-12)
+
+Bài toán: tay nằm đè lên tóc và váy; khi tay hoặc đầu cử động, phần bị che lộ ra trống nên hình nhân vật bị "xé". Đã thử năm cách, kết luận như sau.
+
+| Cách | Kết quả | Dùng? |
+|---|---|---|
+| Tờ bộ phận do AI vẽ lại (`parts_sheet`, cả bản A1 một ảnh) rồi ghép về master | Mỗi bộ phận lệch tỉ lệ riêng (1,10 đến 1,28), tóc co lại, mất mái tóc và chân, ghép lại IoU 0,66 | **Không** |
+| Từng lớp rời do AI vẽ (`layer_head/body/arm_*`) | Bộ phận dời ra giữa ảnh, lệch vị trí, model tự quyết số lớp | **Không** |
+| Cắt đa giác từ master + lớp thân (plate) vá bằng code (màu tối gần nhất) | Sạch ở cỡ game, kể cả biên độ gấp 6 lần; vùng tóc bị che chỉ là màu nội suy | Phương án dự phòng, 0 USD |
+| **Plate do AI xoá tay trên cùng canvas (ERASE)** | Cùng vị trí và cỡ (IoU 0,988 ngoài vùng tay, sai màu 3,9/255), tóc sau tay là tóc thật; `align` PASS | **Mặc định** |
+| Pose skill vẽ riêng (cặp pose A/B) + rig từng pose | Hợp cho chuyển động lớn mà rig 2D không làm được | Dùng cho skill (`docs/pipeline/pose-pair-fx-method.md`) |
+
+**Quy trình chuẩn cho một nhân vật có tay đè lên thân** (`out/heroes/pyre_witch/source/rig/make_rig.py` là bản mẫu):
+1. Đầu và hai tay cắt bằng **đa giác từ master** (không xin AI vẽ lại bộ phận). Thứ tự lớp: plate (tóc sau, váy, chân) → tay xa → đầu (mặt cùng mái tóc/vương miện trong một mảnh) → tay gần.
+2. Plate: một ảnh 1 lượt gọi (khoảng 0,011 USD) theo mẫu `source/design/prompts/plate_noarms_p01.txt`: "ERASE", cùng canvas 1024, giữ đầu làm **mỏ neo bất động**, nói rõ tay bên nào ở phía nào của ảnh, yêu cầu vẽ tiếp tóc và lỗ tay áo ở chỗ tay che.
+3. Kiểm: `python scripts/puppet_prep.py align <asset> <ảnh> --kind plate` (lệch bbox và hàng chân tối đa 12 px; cạnh bên phía tay bị xoá lệch là bình thường).
+4. Ghép lai: lấy AI cho thân, **giữ phần nền do code vá ngay sau đầu** (đầu còn cử động nên không để đầu tĩnh nằm sau). Cờ `--code-plate` quay về plate thuần code.
+5. Lỗ tay áo do AI vẽ có thể lộ mảng da khi tay xoay mạnh; kiểm khung xoay mạnh nhất, nếu lộ thì tô lại bằng màu áo.
+6. Khi tay vươn xa hơn idle (skill), không cố nới plate: dùng pose riêng (hàng cuối bảng trên).
+
+Bài học chung về AI: xin ảnh **sửa trên cùng canvas** thì giữ vị trí tốt (IoU 0,92 đến 0,99); xin **sắp lại thành tờ bộ phận** thì trôi tỉ lệ từng bộ phận. Đo bằng IoU và hệ số cỡ, không đánh giá bằng mắt.

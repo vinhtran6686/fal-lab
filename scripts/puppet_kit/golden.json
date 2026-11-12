@@ -14,5 +14,9 @@
  "out/heroes/holy_commander/source/rig/anims/levelup.json": {
   "sha256": "9153867ed4222864269883c2627ceb17e946c9a45a7a6857fbb85aac778e4455",
   "frames": 26
+ },
+ "out/heroes/pyre_witch/source/rig/anims/idle.json": {
+  "sha256": "6b4e956a378eb26922f14ae293c925a9d2e1698a42a5794917ecf21ec67638aa",
+  "frames": 24
  }
 }
