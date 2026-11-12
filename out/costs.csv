@@ -245,3 +245,13 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-12 02:39:51,out/heroes/lion_brawler/source/design/pose_claw2_sheet_v01.png,gpt-image-2,low,1536x1024,False,67.3,0.0155,True
 2026-11-12 02:39:54,out/heroes/lion_brawler/source/design/pose_claw2_sheet_v02.png,gpt-image-2,low,1536x1024,False,67.3,0.0155,True
 2026-11-12 02:49:48,out/heroes/lion_brawler/.work/claw2_video/t01/clip.mp4,h3-max-turbo,video,480P 4s,False,3.5,0.0600,True
+2026-11-12 11:02:46,out/heroes/azure_blade/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,24.6,0.0149,True
+2026-11-12 11:03:02,out/heroes/azure_blade/source/design/master_v02.png,gpt-image-2,low,1024x1024,False,13.7,0.0149,True
+2026-11-12 11:03:37,out/heroes/azure_blade/source/design/master_v03.png,gpt-image-2,low,1024x1024,False,31.6,0.0149,True
+2026-11-12 11:21:12,out/heroes/azure_blade/source/design/master_v04.png,gpt-image-2,low,1024x1024,False,15.8,0.0154,True
+2026-11-12 11:21:38,out/heroes/azure_blade/source/design/master_v05.png,gpt-image-2,low,1024x1024,False,21.8,0.0154,True
+2026-11-12 11:21:55,out/heroes/azure_blade/source/design/master_v06.png,gpt-image-2,low,1024x1024,False,13.3,0.0154,True
+2026-11-12 11:28:52,out/heroes/azure_blade/source/design/pose_skill_crescent_p1_v01.png,gpt-image-2,low,1024x1024,False,25.6,0.0155,True
+2026-11-12 11:29:28,out/heroes/azure_blade/source/design/pose_skill_crescent_p2_v01.png,gpt-image-2,low,1024x1024,False,25.9,0.0155,True
+2026-11-12 11:33:37,out/heroes/azure_blade/source/design/pose_skill_crescent_p2_v02.png,gpt-image-2,low,1024x1024,False,29.4,0.0159,True
+2026-11-12 11:34:05,out/heroes/azure_blade/source/design/pose_skill_crescent_p2_v03.png,gpt-image-2,low,1024x1024,False,25.1,0.0159,True

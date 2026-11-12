@@ -3,7 +3,7 @@
 Each design is  fn(t, P, front, back, pal=..., s=1.0, d=1)  drawing the slash t seconds after it starts; P is the centre of the
 swing; d = -1 mirrors it.
 
-swirl_fire / swirl_frost are rebuilt from a reference GIF; analysis in lib-fx/RECIPE-swirl.md, rules in lib-fx/SHAPE-RULES.md.
+swirl_fire / swirl_frost are rebuilt from a reference GIF; analysis in lib-fx/_core/formulas/draw/recipes/RECIPE-swirl.md, rules in lib-fx/_core/formulas/draw/SHAPE-RULES.md.
 Both live in stroke space (v along the sweep, C across it) on one spiral (_core/fieldfx.spiral_coords):
   - the tiers are flat colours separated by SMOOTH boundaries across the stroke that drift with age and cooling;
   - every lick, feather, streak, hole and gap is placed by hand, each with its own size and shape (never a periodic texture:

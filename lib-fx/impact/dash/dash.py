@@ -1,6 +1,6 @@
 """lib-fx / impact / dash: the impact at the end of a dash or charge (a body or weapon arriving at speed).
 
-Same organic method as impact/hit (DESIGN.md §8), stretched along the travel: the dash comes from -x (d=1) and hits at the anchor;
+Same organic method as impact/hit (lib-fx/_core/formulas/draw/DESIGN.md §8), stretched along the travel: the dash comes from -x (d=1) and hits at the anchor;
 the brightest edge leads, thorns and slivers trail back along the path, droplets fly on ahead.
 Each design is  fn(t, P, front, back, pal=SPARK, s=1.0, d=1).
 """

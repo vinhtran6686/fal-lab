@@ -10,7 +10,7 @@
 
 render writes the ONE final version of the sheet into <asset>/frames/<sheet>/ (frames/@2x and @1x, sheet.png,
 preview.gif, check/) in the asset's cell, pivot and body size (meta.json), with the foot shadow, and records the
-state in meta.json ("split": "puppet"). Guide: docs/puppet-kit.md
+state in meta.json ("split": "puppet"). Guide: docs/scripts/puppet_kit/puppet-kit-guide.md
 """
 import argparse
 import json
@@ -384,7 +384,7 @@ def cmd_slash(a):
     track = {"frames": n + len(fades), "hit_frame": n, "samples": smp, "fit": {"frames": list(range(1, n + 1))},
              "speed": {"vfx_start_frame": 2}}
     root = pathlib.Path(__file__).resolve().parents[1]
-    sys.path.insert(0, str(root / "scripts" / "experiments" / "milestone_01"))
+    sys.path.insert(0, str(root / "scripts" / "slash_fx"))
     import slash_from_track as SFT
     _, _, _, frames2, _ = SFT.render_layered(track, P)
     fx = [SFT.to_img(f) for f in frames2[n - 1:]]    # the full sweep, then its fades

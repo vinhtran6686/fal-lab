@@ -1,0 +1,61 @@
+{
+  "id": "azure_blade",
+  "kind": "hero",
+  "cell": [
+    176,
+    140
+  ],
+  "scale_2x": 2,
+  "pivot": [
+    0.5,
+    0.88
+  ],
+  "body_height_2x": 120,
+  "shadow": {
+    "w_2x": 64,
+    "h_2x": 19,
+    "color": "#000000",
+    "alpha": 0.35
+  },
+  "states": {
+    "skill_crescent_puppet_side": {
+      "version": "p02",
+      "dir": "frames/skill_crescent_puppet_side",
+      "source": "source/rig/anims/crescent.json",
+      "frames": 44,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/skill_crescent_puppet_side/frames/@1x/hero_azure_blade_skill_crescent_puppet_side_NN.png",
+      "sheet": "frames/skill_crescent_puppet_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig_a.json",
+          "source/rig/rig_b.json"
+        ],
+        "shots": [
+          [
+            "lift_and_return",
+            22
+          ],
+          [
+            "impact",
+            12
+          ],
+          [
+            "settle",
+            10
+          ]
+        ]
+      },
+      "hit_frame": 23
+    }
+  },
+  "sources": {
+    "design": [
+      "master_v06.png",
+      "pose_skill_crescent_p1_v01.png",
+      "pose_skill_crescent_p2_v03.png"
+    ]
+  }
+}

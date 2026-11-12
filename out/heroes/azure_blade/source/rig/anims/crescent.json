@@ -1,0 +1,266 @@
+{
+ "note": "azure_blade Tr\u1ea3m Tr\u0103ng Khuy\u1ebft: pose A lift/return -> cut (slash) -> pose B impact + settle. Only the two approved poses, split into torso/arms/blade with a shoulder-chest muscle link.",
+ "version": "p02",
+ "fps": 15,
+ "loop": false,
+ "hit_frame": 23,
+ "shots": [
+  {
+   "name": "lift_and_return",
+   "rig": "source/rig/rig_a.json",
+   "frames": 22,
+   "tracks": {
+    "_sway_period": 14,
+    "arms.ty": [
+     [
+      0,
+      0
+     ],
+     [
+      6,
+      -28,
+      "inout"
+     ],
+     [
+      9,
+      -28
+     ],
+     [
+      16,
+      0,
+      "inout"
+     ]
+    ],
+    "arms.rot": [
+     [
+      0,
+      0
+     ],
+     [
+      6,
+      -2.5,
+      "inout"
+     ],
+     [
+      9,
+      -2.5
+     ],
+     [
+      16,
+      0,
+      "inout"
+     ]
+    ],
+    "body.sy": [
+     [
+      0,
+      1.0
+     ],
+     [
+      6,
+      1.022,
+      "inout"
+     ],
+     [
+      9,
+      1.022
+     ],
+     [
+      16,
+      0.992,
+      "inout"
+     ],
+     [
+      21,
+      1.0,
+      "inout"
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      1.0
+     ],
+     [
+      6,
+      0.992,
+      "inout"
+     ],
+     [
+      9,
+      0.992
+     ],
+     [
+      16,
+      1.004,
+      "inout"
+     ],
+     [
+      21,
+      1.0,
+      "inout"
+     ]
+    ],
+    "torso.sway": [
+     [
+      0,
+      1.0
+     ],
+     [
+      21,
+      1.4,
+      "in"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "impact",
+   "rig": "source/rig/rig_b.json",
+   "frames": 12,
+   "tracks": {
+    "_sway_period": 14,
+    "body.sy": [
+     [
+      0,
+      0.93
+     ],
+     [
+      2,
+      1.015,
+      "out"
+     ],
+     [
+      4,
+      0.985,
+      "inout"
+     ],
+     [
+      6,
+      1.004,
+      "inout"
+     ],
+     [
+      11,
+      1.0,
+      "inout"
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      1.04
+     ],
+     [
+      2,
+      0.992,
+      "out"
+     ],
+     [
+      4,
+      1.006,
+      "inout"
+     ],
+     [
+      11,
+      1.0,
+      "inout"
+     ]
+    ],
+    "arms.ty": [
+     [
+      0,
+      20
+     ],
+     [
+      1,
+      -9,
+      "out"
+     ],
+     [
+      3,
+      6,
+      "inout"
+     ],
+     [
+      5,
+      -2,
+      "inout"
+     ],
+     [
+      7,
+      0,
+      "inout"
+     ]
+    ],
+    "arms.rot": [
+     [
+      0,
+      -2.0
+     ],
+     [
+      2,
+      1.6,
+      "out"
+     ],
+     [
+      4,
+      -0.9,
+      "inout"
+     ],
+     [
+      6,
+      0.3,
+      "inout"
+     ],
+     [
+      8,
+      0,
+      "inout"
+     ]
+    ],
+    "torso.sway": [
+     [
+      0,
+      2.4
+     ],
+     [
+      11,
+      1.0,
+      "out"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "settle",
+   "rig": "source/rig/rig_b.json",
+   "frames": 10,
+   "tracks": {
+    "_sway_period": 10,
+    "body.sy": {
+     "base": 1.0,
+     "osc": {
+      "amp": -0.007,
+      "period": 10
+     }
+    },
+    "arms.ty": {
+     "base": 0,
+     "osc": {
+      "amp": 1.5,
+      "period": 10,
+      "phase": -0.1
+     }
+    },
+    "torso.sway": {
+     "base": 1.0,
+     "osc": {
+      "amp": 0.15,
+      "period": 10
+     }
+    }
+   }
+  }
+ ]
+}

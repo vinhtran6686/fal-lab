@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pose reel tools (docs/puppet-kit-pose-reel.md): the padded input canvas of a clip, and cutting a paid clip into frames.
+"""Pose reel tools (docs/scripts/puppet_kit/puppet-kit-pose-reel.md): the padded input canvas of a clip, and cutting a paid clip into frames.
 
   python scripts/puppet_reel.py input <asset> <still.png> --name master [--mirror] [--match <other canvas name>]
       -> <asset>/.work/reel/<name>_canvas.png : the still at scale S on a flat-key canvas with headroom (one fixed placement

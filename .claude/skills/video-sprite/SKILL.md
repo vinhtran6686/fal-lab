@@ -66,7 +66,7 @@ Everything a character does is two separate things, as in the reference game:
    tune the numbers, run again (free). Before the body clip exists, `"body_still"` previews over the pose.
    Example recipes: in git history (tag `pre-out-restructure`: `out/heroes/holy_commander/fx/radiant_slash.json`); the approved fx of that hero are Python (`source/fx/`).
 
-   **Soft light around a body (level-up, buff, beam, ripple): Python first** (`docs/python-fx-recipe.md`, examples in
+   **Soft light around a body (level-up, buff, beam, ripple): Python first** (`lib-fx/_core/formulas/draw/recipes/RECIPE-python-fx.md`, examples in
    `out/heroes/holy_commander/source/fx/*.py`; numpy + Pillow, no model, $0). Flat vector layers (`fx_layers.py`) read as coarse when laid over a
    body (rejected once); use them for small shaped objects (sprite, projectile). The soft recipe: a wide soft layer that wraps the
    silhouette (blur-and-lift of the body mask, not a max-filter: that gives square halos), additive "screen" light, a `back` and a
@@ -100,7 +100,7 @@ plus a `pillar` + `ring` recipe or a Python fx.
 When the user brings a motion + effect reference (a sprite sheet of another character, `ref/sprite/<move>/`) and wants OUR character to do
 the same move: skip the pose stills, build `ref_<move>.mp4` with `scripts/make_ref_video.py`, send it with the approved master to
 `minimax/h3-max/reference-to-video` (0.05 USD/s). The effect may stay baked in the clip when the user asks for it (an exception to "body only").
-Method, prompt template, review, limits, bookkeeping: `docs/reference-video-motion.md`. It bypasses `sprite_set.py` (no gates): log the cost in
+Method, prompt template, review, limits, bookkeeping: `docs/skills/video-sprite/video-sprite-reference-video-route.md`. It bypasses `sprite_set.py` (no gates): log the cost in
 `costs.csv`, store the clip as `A/source/video/<sheet>_tNN.*`, keep the body at one size (known weak point: it shrinks when crouching).
 
 ## One canvas and one body size for every action (fixed)

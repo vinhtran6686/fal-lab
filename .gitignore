@@ -8,3 +8,6 @@ out/playtest/
 
 # lib-fx reference studies (third-party clips, frames): never committed
 lib-fx/_study/
+
+# lib-fx galleries are rebuilt by lib-fx/build.py
+lib-fx/_gallery/

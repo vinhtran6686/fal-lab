@@ -5,7 +5,7 @@ Each design is  fn(t, P, front, back, pal=SOUL, s=1.0, d=1)  drawing the skill t
          GROUND px below the chest; the target is a generic dummy about 110 px tall
   front  / back  layers over / behind the characters
   s      size (1.0 = sized for heroes 120 px tall @2x)
-Designed against DESIGN.md §10: every spirit has its own size class, path, pace, tail and fate; every layer differs from the
+Designed against lib-fx/_core/formulas/draw/DESIGN.md §10: every spirit has its own size class, path, pace, tail and fate; every layer differs from the
 others in size, shape, speed, edge and opacity.
 """
 import math, random

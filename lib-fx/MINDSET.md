@@ -7,9 +7,7 @@ File gốc về **tại sao và theo thứ tự nào** lib-fx được xây. Cá
 | **MINDSET.md** (file này) | lib-fx để làm gì, một hiệu ứng đi qua những bước nào, tái tạo và sáng tạo khác nhau ra sao, nó nối với việc thiết kế nhân vật thế nào |
 | [GUIDE.md](GUIDE.md) | bản đồ thư mục thư viện (nhóm → họ → hiệu ứng) |
 | [README.md](README.md) | luật nhìn, lệnh dựng, cách thêm một hiệu ứng |
-| [_core/vector/foundation/expert-brief/index.html](_core/vector/foundation/expert-brief/index.html) | tài liệu gửi chuyên gia: dự án VFX đang làm gì, quy ước nhân vật, phần còn thiếu, câu hỏi định hướng (2026-11-10) |
-| [../docs/milestone-01-character-synced-slash.md](../docs/milestone-01-character-synced-slash.md) | **hướng đi hiện tại** do chuyên gia chọn (2026-11-10): Character-first, nhát chém xéo đồng bộ kiếm nhân vật thật |
-| [_core/vector/STATUS.md](_core/vector/STATUS.md) | trạng thái hiện tại của bộ tool vector, việc để dành, câu hỏi mở (đọc đầu tiên khi mở session mới) |
+| [../docs/pipeline/pose-pair-fx-method.md](../docs/pipeline/pose-pair-fx-method.md) | **hướng đi hiện tại**: vệt chém sinh từ quỹ đạo lưỡi đao giữa hai pose đã duyệt, ghép vào chuyển động rig (Character-first) |
 
 Viết 2026-11-09 theo lời user. Khi tư duy thay đổi, sửa file này trước rồi mới sửa các file khác.
 
@@ -42,7 +40,7 @@ Mỗi hiệu ứng trong lib phải trả lời được ba câu:
 
 ```
                      ┌──────────────────────────── KIẾN THỨC ─────────────────────────────┐
-                     │  luật chung (foundation 01-05, DESIGN.md)                          │
+                     │  luật chung (foundation 01-05, lib-fx/_core/formulas/draw/DESIGN.md)                          │
                      │  luật theo loại (foundation/vfx/<loại>/)   công thức (RECIPE-*.md) │
                      └──────▲──────────────────────────────▲──────────────────────────────┘
                             │ ghi lại                      │ đọc
@@ -63,7 +61,7 @@ sau bằng số liệu chuyển động, cuối cùng gắn vào nhân vật.
   `foundation/vfx/<loại>/`.
 - **Công cụ đã có**:
   - bộ vector `_core/vector/`: `vectorfx.py init | check | all | lifecycle | track | study | showcase` (đọc GIF → path Bézier → số đo);
-  - bộ code cũ `_core/fxcore.py`, `fieldfx.py`, `organic.py` + `_tools/study_ref.py` (dựng bằng hình cơ bản, xem `REFERENCE-GIF.md`).
+  - bộ code cũ `_core/fxcore.py`, `fieldfx.py`, `organic.py` + `_tools/study_ref.py` (dựng bằng hình cơ bản, xem `lib-fx/_core/formulas/rules/REFERENCE-GIF.md`).
 - **Xong khi**: user chấm 9-10/10 **và** luật của loại đó được ghi lại có số đo. Một loại cần 2-3 mẫu gốc thì luật mới đủ tin.
 - **Đã làm**: slash (5 mẫu tái tạo + 4 mẫu sáng tạo 9-10/10), nổ / phun (3 mẫu tái tạo 10/10).
 
@@ -105,7 +103,7 @@ sau bằng số liệu chuyển động, cuối cùng gắn vào nhân vật.
 - **Xong khi**: user đổi một số trong file biên độ, chạy lại, được hiệu ứng mới đúng ý mà không cần mô tả lại bằng lời.
 
 > **2026-11-10, chuyên gia:** với slash, Phase 2 và 3 được thử trước theo hướng **Character-first** (lấy chuyển động kiếm từ clip thật rồi dựng VFX
-> khớp theo) bằng Milestone 01 (`docs/milestone-01-character-synced-slash.md`). VFX-first vẫn dùng cho hiệu ứng độc lập (phép, vòng năng lượng,
+> khớp theo) (code `scripts/slash_fx/`, quy trình `docs/pipeline/pose-pair-fx-method.md`). VFX-first vẫn dùng cho hiệu ứng độc lập (phép, vòng năng lượng,
 > slash phi vật lý).
 
 ### Phase 3: gắn vào một nhân vật cụ thể
@@ -126,7 +124,7 @@ sau bằng số liệu chuyển động, cuối cùng gắn vào nhân vật.
 
 | Tầng | Chứa | Ở đâu |
 |---|---|---|
-| Luật chung (mọi loại) | ba nhịp báo trước → bùng → tan; nhiều lớp; nét mịn; cấp bậc màu; vòng đời và từng mảnh; ánh sáng theo thời gian; cách đọc bản gốc | `_core/vector/foundation/01-05`, [DESIGN.md](DESIGN.md), [SHAPE-RULES.md](SHAPE-RULES.md) |
+| Luật chung (mọi loại) | ba nhịp báo trước → bùng → tan; nhiều lớp; nét mịn; cấp bậc màu; vòng đời và từng mảnh; ánh sáng theo thời gian; cách đọc bản gốc | `_core/vector/foundation/01-05`, [lib-fx/_core/formulas/draw/DESIGN.md](_core/formulas/draw/DESIGN.md), [lib-fx/_core/formulas/draw/SHAPE-RULES.md](_core/formulas/draw/SHAPE-RULES.md) |
 | Luật theo loại | slash: sinh từ đầu nét, nhiều sợi, giãn rồi đứt, glow giữ tới cuối, phản chiếu ...; nổ: sinh ở chân, lưỡi xoè, tàn tại chỗ ... | `_core/vector/foundation/vfx/<loại>/` |
 | Công thức từng hiệu ứng | cách làm một hiệu ứng cụ thể, lệnh, tham số | `RECIPE-*.md`, `foundation/vfx/slash/generators.md`, `profiles/*.json` |
 
@@ -186,9 +184,9 @@ nổ có ở `explosion/blast`, `element/fire/impact`, `ranged/siege`). Vì vậ
 
 | Loại | Nhóm dùng nhiều | Kiến thức | Mẫu tái tạo | Mẫu sáng tạo |
 |---|---|---|---|---|
-| slash | `melee/blade`, `melee/polearm`, `melee/beast`, `magic/*` | [foundation/vfx/slash](_core/vector/foundation/vfx/slash/README.md) | 5 | 4 (vector) |
-| explosion | `explosion/*`, `element/*/impact`, `ranged/siege` | [foundation/vfx/explosion](_core/vector/foundation/vfx/explosion/README.md) | 3 | 0 (vector); `force/shock/*` (fxcore) gần với loại này |
-| impact | `impact/*`, mọi đòn đánh trúng | [RESEARCH-organic-impact.md](RESEARCH-organic-impact.md) (chưa có thư mục loại) | 0 | 10 (fxcore) |
+| slash | `melee/blade`, `melee/polearm`, `melee/beast`, `magic/*` | [foundation/vfx/slash](_core/formulas/rules/vfx/slash/README.md) | 5 | 4 (vector) |
+| explosion | `explosion/*`, `element/*/impact`, `ranged/siege` | [foundation/vfx/explosion](_core/formulas/rules/vfx/explosion/README.md) | 3 | 0 (vector); `force/shock/*` (fxcore) gần với loại này |
+| impact | `impact/*`, mọi đòn đánh trúng | [lib-fx/_core/formulas/draw/RESEARCH-organic-impact.md](_core/formulas/draw/RESEARCH-organic-impact.md) (chưa có thư mục loại) | 0 | 10 (fxcore) |
 
 ---
 
@@ -202,14 +200,13 @@ nổ có ở `explosion/blast`, `element/fire/impact`, `ranged/siege`). Vì vậ
 | `_core/fxcore.py`, `fieldfx.py`, `organic.py`, `palettes.py` | bộ vẽ procedural | 0, 1 |
 | `_core/vector/` | bộ vector: đọc GIF → path, đo, bộ sinh, phản chiếu | 0, 1, 2 |
 | `_core/vector/profiles/` | mỗi bản tái tạo một profile JSON | 0 |
-| `_core/vector/showcase/` | kết quả vector trong git (tái tạo + `generated/` sáng tạo) | 0, 1 |
-| `_core/vector/foundation/` | luật chung (01-05) + `vfx/<loại>/` + `data/` số đo | kiến thức |
-| `_core/vector/STATUS.md` | trạng thái, việc để dành, câu hỏi mở | điểm nối các session |
+| `_core/results/vector-showcase/` | kết quả vector trong git (tái tạo + `generated/` sáng tạo) | 0, 1 |
+| `_core/formulas/rules/` | luật chung (01-05) + `vfx/<loại>/` + `data/` số đo | kiến thức |
 | `_tools/vectorfx.py`, `_tools/study_ref.py` | dòng lệnh | 0, 1 |
 | `_gallery/`, `catalog.json`, `build.py` | xem nhanh, danh mục, dựng thư viện fxcore | thư viện |
 | `_study/` | file trung gian (git bỏ qua) | mọi bước |
-| `research/bezier-shapes/` | nghiên cứu path Bézier (đã lưu trữ, sinh ra `_core/vector`) | lịch sử |
-| `DESIGN.md`, `SHAPE-RULES.md`, `REFERENCE-GIF.md`, `RESEARCH-organic-impact.md`, `RECIPE-*.md` | phương pháp, luật, công thức (bộ fxcore) | kiến thức |
+| `_core/results/bezier-research/` | kết quả đo và demo dựng lại bằng path Bézier (FINDINGS + số đo + SVG) | kiến thức |
+| `lib-fx/_core/formulas/draw/DESIGN.md`, `lib-fx/_core/formulas/draw/SHAPE-RULES.md`, `lib-fx/_core/formulas/rules/REFERENCE-GIF.md`, `lib-fx/_core/formulas/draw/RESEARCH-organic-impact.md`, `RECIPE-*.md` | phương pháp, luật, công thức (bộ fxcore) | kiến thức |
 
 ### 6.2 Thư mục anh em trong repo (luồng thiết kế nhân vật)
 
@@ -233,13 +230,13 @@ nổ có ở `explosion/blast`, `element/fire/impact`, `ranged/siege`). Vì vậ
 | Thư mục | Chứa | Liên quan tới lib-fx |
 |---|---|---|
 | `ref/vfx/` | GIF gốc để tái tạo (`swirl-slash`, `slash-trio`, `element-trio`), ảnh ý tưởng (`axe-swing-idea`) | đầu vào Bước 0 |
-| `ref/sprite/` | sprite tham khảo cho dáng và chuyển động (`slash`, `uppercut`) | quỹ đạo vũ khí để học (Phase 3) |
-| `ref/hero/`, `ref/assets/` | asset tham khảo của game mẫu | khung, cỡ nhân vật |
+| `ref/sprite/` | sprite tham khảo cho dáng và chuyển động (`uppercut`) | quỹ đạo vũ khí để học (Phase 3) |
+| `ref/alien/`, `ref/asra/` | khung hero của game mẫu | cỡ nhân vật, phương pháp pose A/B + fx |
 | `.claude/skills/fal-image/` | thiết kế ảnh tĩnh nhân vật | nhân vật mà fx sẽ gắn vào |
 | `.claude/skills/video-sprite/` | animation nhân vật, playtest | nhịp, pose, clip attack cho Phase 3 |
 | `out/heroes/<id>/` | asset từng nhân vật (`brief.md` có bảng Asset manifest: mọi still, clip, vfx cần có) | nơi Phase 3 ghi ra |
 | `scripts/fx_layers.py` | fx nhiều lớp phẳng neo ở chân nhân vật | công cụ Phase 3 hiện có |
-| `docs/` | `python-fx-recipe.md` (fx vẽ bằng Python lên clip), `reference-video-motion.md` (lấy chuyển động từ sprite khác), `asset-manifest.md` | cách làm fx gắn nhân vật trước khi có lib-fx |
+| `docs/` | `lib-fx/_core/formulas/draw/recipes/RECIPE-python-fx.md` (fx vẽ bằng Python lên clip), `docs/skills/video-sprite/video-sprite-reference-video-route.md` (lấy chuyển động từ sprite khác), `docs/pipeline/asset-manifest.md` | cách làm fx gắn nhân vật trước khi có lib-fx |
 | `tools/frame_tuner/` | chỉnh và xuất frame | Phase 3 |
 
 ### 6.3 Cấu trúc đích (đề xuất 2026-11-09, **chờ user duyệt, chưa di chuyển gì**)
@@ -255,7 +252,8 @@ lib-fx/
                                        vd. melee/blade/spin-blue, spin-heavy-blue, front-heavy-blue
   _rebuild/<loại>/<tên>/               TÁI TẠO (học, không đưa vào game): so sánh với gốc, frame, SVG, link profile + ref
                                        vd. _rebuild/slash/swirl-slash, _rebuild/slash/slash-trio, _rebuild/explosion/element-trio
-  _core/                               CHỈ code: fxcore ..., vector/ (cả profiles, bộ sinh)
+  _core/formulas/                      CÔNG THỨC: draw/ (fxcore ...), vector/ (profiles, bộ sinh), rules/ (luật + số đo)
+  _core/results/                       KẾT QUẢ: vector-showcase/ (dựng lại + sáng tạo), bezier-research/
   docs/                                KIẾN THỨC gom một chỗ: foundation/ (chung), vfx/<loại>/, recipes/, research/
   _gallery/  _tools/  _study/          giữ nguyên
 ```
@@ -283,7 +281,7 @@ Nhìn tên là biết: thư mục thường = **dùng được**; `_rebuild/` = 
 
 1. Hiệu ứng **loại mới**: gom 2-3 GIF gốc vào `ref/vfx/<tên>/` → tái tạo bằng vector (`vectorfx.py init` → `all`) tới 9-10/10 →
    `lifecycle`, `track`, `study` → viết `foundation/vfx/<loại>/README.md` → rồi mới viết bộ sinh.
-2. Mỗi lần user chấm: ghi điểm + nhận xét + luật rút ra vào file của loại đó; cập nhật `STATUS.md` và `CHANGELOG.md`.
+2. Mỗi lần user chấm: ghi điểm + nhận xét + luật rút ra vào file của loại đó.
 3. Bản **tái tạo** luôn ghi nguồn (file GIF, tác giả nếu biết) và không đưa vào thư viện dùng được.
 4. Bản **sáng tạo** từ ảnh ý tưởng: chỉ lấy ý (vị trí, phong cách), không đồ lại.
 5. Một hiệu ứng = một thư mục, không kèm nhân vật; màu là bảng màu, không nhân bản hiệu ứng để đổi màu.
@@ -294,5 +292,5 @@ Nhìn tên là biết: thư mục thường = **dùng được**; `_rebuild/` = 
 
 1 Reference Reconstruction (đã có nền tảng) · 2 Parametric Shape Generator (đã có nền tảng) · 3 Motion-driven VFX (chưa hoàn thiện) ·
 4 Lifecycle & Impact (cần mở rộng) · 5 VFX Composition (prototype) · 6 Character Integration (tích hợp riêng lẻ) · 7 Reusable Skill Assets (dài hạn).
-Một milestone có thể cải thiện nhiều năng lực cùng lúc. Bước hiện tại: `docs/milestone-01-character-synced-slash.md`.
+Một milestone có thể cải thiện nhiều năng lực cùng lúc. Bước hiện tại: `docs/pipeline/pose-pair-fx-method.md`.
 6. Không đổi cấu trúc thư mục khi user chưa duyệt (§6.3).

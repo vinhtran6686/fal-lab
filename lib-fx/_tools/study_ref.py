@@ -13,7 +13,7 @@ Writes lib-fx/_study/<name>/ (git-ignored: references are study material, never 
   report.json       timing (durations, fps), per-frame bbox/area/centroid/blobs (sizes sorted: hero/medium/small rhythm),
                     the palette, the beats found, and the scale to lib-fx @2x
   compare.png       (with --compare) reference and our frames side by side, resampled to the same clock
-Method and how to use the numbers: lib-fx/REFERENCE-GIF.md.
+Method and how to use the numbers: lib-fx/_core/formulas/rules/REFERENCE-GIF.md.
 """
 import argparse, json, math, pathlib, subprocess, sys, tempfile
 import numpy as np

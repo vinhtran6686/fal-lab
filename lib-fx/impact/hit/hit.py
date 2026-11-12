@@ -1,6 +1,6 @@
 """lib-fx / impact / hit: melee hit sparks (fist, blade, blunt), the spark shown on the frame that deals damage.
 
-Built with _core/organic.py (DESIGN.md §8): one hand-drawn silhouette (wobbly core + curved thorns, filleted), coloured by distance
+Built with _core/organic.py (lib-fx/_core/formulas/draw/DESIGN.md §8): one hand-drawn silhouette (wobbly core + curved thorns, filleted), coloured by distance
 to its edge (white core -> yellow -> orange -> red tips), a dark see-through backing, then noisy erosion breaks it into droplets.
 Timing (30 fps): drawing 1 is pure white at 70% size, 2-3 drawings at full size (overshoot), then it keeps growing while it cools,
 hollows out and breaks up. Spike rhythm: 1-3 hero thorns, 3-5 medium, a few nubs, uneven spacing, all curling one way.

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rig &amp; Pose Studio</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <div id="toolbar">
+    <b class="brand">Studio</b>
+    <div class="grp" id="tools">
+      <button data-tool="pose" title="Bấm = chọn. Giữ và kéo = di chuyển. Bấm ra ngoài = bỏ chọn (V)">Tạo dáng <kbd>V</kbd></button>
+      <button data-tool="rotate" title="Xoay khớp đang chọn quanh tâm của nó, có hiện cung giới hạn (E)">Xoay <kbd>E</kbd></button>
+      <button data-tool="move" title="Trượt khớp đang chọn (W)">Trượt <kbd>W</kbd></button>
+      <button data-tool="pivot" class="rigmode" title="SỬA RIG: kéo tâm khớp, đích IK, socket (P)">Sửa rig <kbd>P</kbd></button>
+      <button data-tool="anchor" class="rigmode" title="SỬA RIG: bấm lên thân để đặt điểm bám cho cơ (A)">Điểm bám <kbd>A</kbd></button>
+    </div>
+    <div class="grp">
+      <button id="btnUndo" title="Hoàn tác (Ctrl+Z)">Hoàn tác</button>
+      <button id="btnRedo" title="Làm lại (Ctrl+Shift+Z)">Làm lại</button>
+    </div>
+    <div class="grp">
+      <select id="rigFile" title="File rig đang mở"></select>
+      <button id="btnSave" title="Lưu rig vào file đang mở, có backup (Ctrl+S)">Lưu rig</button>
+      <button id="btnSaveNew" title="Ghi thành rig_studio_vNN.json, file cũ giữ nguyên">Lưu bản mới</button>
+      <button id="btnReload" title="Nạp lại rig từ đĩa, bỏ thay đổi chưa lưu">Nạp lại</button>
+    </div>
+    <div class="grp">
+      <label title="Xem dáng gốc thay vì dáng đang làm"><input type="checkbox" id="optRest"> Dáng gốc</label>
+      <label>Chất lượng <select id="optQuality"><option value="0.4">Nhanh 0.4×</option><option value="0.5" selected>Vừa 0.5×</option><option value="0.8">Nét 0.8×</option><option value="1">Đầy đủ 1×</option></select></label>
+    </div>
+    <div class="grp">
+      <button id="btnZoomOut" title="Thu nhỏ">−</button><button id="btnZoomIn" title="Phóng to">+</button>
+      <button id="btnFit" title="Vừa khung (F)">Vừa khung</button>
+      <button id="btnActual1" title="Cỡ thật trong game: H = 60 px @1x">Cỡ game 1×</button>
+      <button id="btnActual2" title="Cỡ thật @2x: H = 120 px">2×</button>
+    </div>
+    <div class="grp">
+      <select id="optBg" title="Nền"><option value="dark">Nền tối</option><option value="light">Nền sáng</option><option value="check">Nền caro</option><option value="green">Nền xanh</option></select>
+      <label><input type="checkbox" id="optGrid" checked> Lưới</label>
+      <label><input type="checkbox" id="optChar" checked> Nhân vật</label>
+      <button id="btnHelp" title="Hướng dẫn (H)">? Hướng dẫn</button>
+    </div>
+    <div id="statusbar"><span id="dirtyRig"></span><span id="dirtyPose"></span><span id="loading"></span><span id="renderInfo"></span></div>
+  </div>
+
+  <div id="main">
+    <div id="left" class="panel">
+      <div class="tabs" id="leftTabs"><button data-tab="layers">Layer (hình)</button><button data-tab="bones">Bone (khớp)</button></div>
+      <div id="leftBody"></div>
+    </div>
+    <div class="split v" id="splitL"></div>
+    <div id="center">
+      <div id="vpbar">
+        <b>Hiện</b>
+        <label><input type="checkbox" data-vis="skeleton" checked>Bộ xương</label>
+        <label><input type="checkbox" data-vis="labels" checked>Tên khớp</label>
+        <label><input type="checkbox" data-vis="pivots" checked>Tâm khớp</label>
+        <label><input type="checkbox" data-vis="bounds">Khung layer</label>
+        <label><input type="checkbox" data-vis="polys">Vùng cắt</label>
+        <label><input type="checkbox" data-vis="skin">Vùng uốn</label>
+        <label><input type="checkbox" data-vis="rigid">Layer cứng</label>
+        <label><input type="checkbox" data-vis="sockets" checked>Socket</label>
+        <label><input type="checkbox" data-vis="ik" checked>Đích IK</label>
+        <label><input type="checkbox" data-vis="links" checked>Cơ/điểm bám</label>
+        <label><input type="checkbox" data-vis="limits" checked>Cung giới hạn</label>
+        <label><input type="checkbox" data-vis="influence" checked>Vùng ảnh hưởng</label>
+        <span class="sp"></span>
+        <label title="Chọn một khớp thì chỉ hiện khớp cùng nhóm (cha và con của nó), tránh bấm nhầm khớp khác. Bỏ chọn (bấm ra ngoài hoặc Esc) để hiện lại tất cả"><input type="checkbox" id="optFocus" checked>Chỉ hiện nhóm đang chọn</label>
+        <label title="Bóng mờ của rig đã lưu (trước khi sửa)"><input type="checkbox" id="optGhostRig">Bóng rig cũ</label>
+      </div>
+      <div id="stage"><canvas id="vp"></canvas>
+        <div id="banner"></div>
+        <div id="gamebox"><div class="cap"><span id="gameCap">Cỡ game</span></div><canvas id="game"></canvas></div>
+        <div id="hint"></div><div id="toast"></div>
+      </div>
+    </div>
+    <div class="split v" id="splitR"></div>
+    <div id="right" class="panel">
+      <div class="tabs" id="rightTabs">
+        <button data-tab="pose">1 Tạo dáng</button><button data-tab="joints">2 Khớp &amp; giới hạn</button><button data-tab="links">3 Cơ &amp; dây chằng</button><button data-tab="rig">4 Sửa rig</button><button data-tab="test">5 Kiểm tra</button>
+      </div>
+      <div id="rightBody"></div>
+    </div>
+  </div>
+
+  <div class="split h" id="splitB"></div>
+  <div id="library">
+    <div id="libbar">
+      <b>Thư viện pose</b>
+      <button id="pNew" title="Lưu dáng đang làm thành pose mới">+ Lưu pose</button>
+      <button id="pLoad">Mở</button>
+      <button id="pUpdate" title="Ghi đè pose đang chọn bằng dáng đang làm">Cập nhật</button>
+      <button id="pDup">Nhân đôi</button>
+      <button id="pRename">Đổi tên</button>
+      <button id="pDelete" title="Xóa (Del)">Xóa</button>
+      <button id="pExport">Xuất JSON</button>
+      <button id="pImport">Nhập JSON</button>
+      <button id="pResetAll" title="Đưa cả dáng về gốc">Về dáng gốc</button>
+      <input type="file" id="pFile" accept=".json" hidden>
+      <span class="sp"></span>
+      <b>So sánh</b>
+      <select id="cmpA"></select><button id="cmpFlip" title="Đổi qua lại giữa A và B (chỉ xem)">A ⇄ B</button><select id="cmpB"></select>
+      <label><input type="checkbox" id="cmpOnion">Bóng mờ</label>
+      <button id="cmpOff">Thoát so sánh</button>
+    </div>
+    <div id="cards"></div>
+  </div>
+</div>
+<div id="menu" hidden></div>
+<div id="modal" hidden><div class="box"><h3 id="mTitle"></h3><div id="mBody"></div><div class="row"><button id="mOk" class="primary">OK</button><button id="mCancel">Hủy</button></div></div></div>
+<script src="app.js"></script>
+</body>
+</html>

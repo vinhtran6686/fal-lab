@@ -1,4 +1,4 @@
-"""Asset preparation helpers for the Puppet Kit (docs/puppet-kit-next.md section 2).
+"""Asset preparation helpers for the Puppet Kit (docs/scripts/puppet_kit/puppet-kit-asset-prep-and-rig-v2.md section 2).
 
   puppet_prep.py list  <asset> [--write-prompts] [--layers a,b]   missing resources + filled prompts
   puppet_prep.py align <asset> <image> [--colour r,g,b] [--kind plate|pose|profile] [--overlay out.png]

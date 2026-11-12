@@ -5,7 +5,7 @@ A rig (rig.json) = sources (stills) + bones (pivot, parent) + parts (a cut of on
 An animation (anim.json) = one or more shots; a shot names a rig and drives bone channels with keyframes
 and oscillators. Everything is in the pixel space of the rig's source still; export.py maps it to the game cell.
 
-Guide: docs/puppet-kit.md
+Guide: docs/scripts/puppet_kit/puppet-kit-guide.md
 """
 from __future__ import annotations
 
@@ -550,7 +550,7 @@ class Animation:
         shots = self.spec.get("shots") or [{k: self.spec[k] for k in ("rig", "frames", "tracks") if k in self.spec}]
         self.shots, self.rigs = [], {}
         for s in shots:
-            if "reel" in s:                      # frames of a pose reel (docs/puppet-kit-pose-reel.md): one picture per frame
+            if "reel" in s:                      # frames of a pose reel (docs/scripts/puppet_kit/puppet-kit-pose-reel.md): one picture per frame
                 rdir = self.asset / s["reel"]
                 reel = json.loads((rdir / "reel.json").read_text(encoding="utf-8"))
                 for i, n in enumerate(s["pick"]):

@@ -101,3 +101,4 @@ Ask only what is missing. A character with no held item skips the first three.
 - Reads as a hero next to the enemies: brighter main colour, one bright accent, a clear role silhouette.
 - Every `pose_*` still is the same character as the master; only the stance changes.
 - No "heroic" extras the style forbids: no rim light, no aura, no ornate trim.
+- Looks like a warrior, not a mascot: 3.5-4.5 heads, broad shoulders, serious face; never chibi or cute (`../format.md` "No chibi, no cute").

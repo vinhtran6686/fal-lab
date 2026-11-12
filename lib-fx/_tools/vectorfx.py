@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CLI for the lib-fx vector kit (lib-fx/_core/vector). 0 USD, no model.
+"""CLI for the lib-fx vector kit (lib-fx/_core/formulas/vector). 0 USD, no model.
 
   python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED] [--style crescent|loop|loop-heavy|front-heavy|combo|x] [--dummy]
       x: [--scale S] [--rotation DEG] [--duration-ms MS] [--fps N]   generate a NEW slash from the foundation rules
@@ -14,12 +14,12 @@
   python lib-fx/_tools/vectorfx.py lifecycle PROFILE                            how the reference was animated (phases, area, pieces, holds)
   python lib-fx/_tools/vectorfx.py track     PROFILE                            follow every piece: growth, splits, shrink, drift, death
   python lib-fx/_tools/vectorfx.py study     PROFILE                            birth, erosion and peak composition (foundation/05)
-  python lib-fx/_tools/vectorfx.py showcase  PROFILE                            export GIFs, frames and SVGs into lib-fx/_core/vector/showcase/ (tracked)
+  python lib-fx/_tools/vectorfx.py showcase  PROFILE                            export GIFs, frames and SVGs into lib-fx/_core/results/vector-showcase/ (tracked)
 
-PROFILE: path, or a name in lib-fx/_core/vector/profiles/ (e.g. swirl-slash). Outputs: lib-fx/_study/<name>/vector/ (not in git)."""
+PROFILE: path, or a name in lib-fx/_core/formulas/vector/profiles/ (e.g. swirl-slash). Outputs: lib-fx/_study/<name>/vector/ (not in git)."""
 import argparse, sys, pathlib
 HERE = pathlib.Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(HERE / "_core"))
+sys.path.insert(0, str(HERE / "_core" / "formulas"))
 from vector import Profile, measure, pipeline, review  # noqa: E402
 
 
@@ -56,7 +56,7 @@ def main():
         else:
             from vector import gen_slash
             out, stats = gen_slash.build(a.profile, a.variant or "blue", a.frame or 7)
-        dst = HERE / "_core/vector/showcase/generated" / a.profile
+        dst = HERE / "_core/results/vector-showcase/generated" / a.profile
         if dst.exists():
             shutil.rmtree(dst)
         dst.mkdir(parents=True)
@@ -78,7 +78,7 @@ def main():
     if a.cmd == "init":
         from vector import auto
         name = a.name or pathlib.Path(a.profile).parent.name
-        out = HERE / "_core/vector/profiles" / f"{name}.json"
+        out = HERE / "_core/formulas/vector/profiles" / f"{name}.json"
         prof = auto.init_profile(a.profile, name, out)
         print("draft profile:", out)
         for v in prof.variants:
@@ -87,7 +87,7 @@ def main():
         return
     p = pathlib.Path(a.profile)
     if not p.exists():
-        p = HERE / "_core/vector/profiles" / f"{a.profile}.json"
+        p = HERE / "_core/formulas/vector/profiles" / f"{a.profile}.json"
     prof = Profile(p)
     fr, vs = rng(a.frames), (a.variants.split(",") if a.variants else None)
     if a.cmd == "check":

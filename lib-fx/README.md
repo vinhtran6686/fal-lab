@@ -53,7 +53,7 @@ Code của cả họ nằm cạnh đó: `force/shock/shock.py`. Hiện chỉ xu�
 
 `_core/vector/` + `_tools/vectorfx.py`: đọc một GIF tham khảo (lớp màu, gradient mép, quầng), khớp mỗi lớp bằng nét thon, làm đều nét
 kiểu Illustrator Simplify, tô chồng, xuất PNG + SVG và trang review. Mỗi hiệu ứng một profile JSON trong `_core/vector/profiles/`.
-Hướng dẫn: [_core/vector/README.md](_core/vector/README.md).
+Hướng dẫn: [_core/formulas/vector/README.md](_core/formulas/vector/README.md).
 
 ## Dùng cho nhân vật
 

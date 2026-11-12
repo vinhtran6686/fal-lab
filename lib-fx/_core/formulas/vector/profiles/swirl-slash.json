@@ -1,0 +1,255 @@
+{
+ "name": "swirl-slash",
+ "about": "Reference: ref/vfx/swirl-slash (two variants side by side). Values measured in lib-fx/_core/results/bezier-research (FINDINGS.md sections 6-7). User score after v3: fire 9/10, frost 9-10/10.",
+ "source": {
+  "gif": "ref/vfx/swirl-slash/reference.gif",
+  "crops": {
+   "fire": [
+    960,
+    120,
+    1660,
+    820
+   ],
+   "frost": [
+    200,
+    120,
+    900,
+    820
+   ]
+  },
+  "frames_dir": "ref/vfx/swirl-slash/frames",
+  "pattern": "{variant}_{frame:02d}.png",
+  "frames": [
+   2,
+   12
+  ],
+  "background_frame": 13
+ },
+ "frame": {
+  "type": "polar"
+ },
+ "fit": {
+  "underlay_px": 10,
+  "passes": 4,
+  "min_area": 6,
+  "min_gain": 0.0008,
+  "axes": [
+   "u",
+   "v"
+  ],
+  "edge_bias": [
+   0.5,
+   1.5
+  ]
+ },
+ "masks": {
+  "min_area": 12
+ },
+ "smooth": {
+  "sigma": 4.5,
+  "corner_deg": 145,
+  "merge_tol": 0.9,
+  "min_area": 8,
+  "close_px": 1.5
+ },
+ "background": [
+  24,
+  25,
+  28
+ ],
+ "variants": {
+  "fire": {
+   "order": [
+    "yellow",
+    "pink",
+    "crimson"
+   ],
+   "layers": {
+    "yellow": {
+     "colours": [
+      [
+       255,
+       214,
+       112
+      ],
+      [
+       252,
+       186,
+       88
+      ],
+      [
+       254,
+       172,
+       76
+      ],
+      [
+       250,
+       150,
+       60
+      ]
+     ],
+     "tol": 26,
+     "gradient": {
+      "edge": [
+       255,
+       163,
+       69
+      ],
+      "s": 8.08
+     }
+    },
+    "pink": {
+     "colours": [
+      [
+       255,
+       98,
+       140
+      ],
+      [
+       252,
+       70,
+       122
+      ]
+     ],
+     "tol": 22,
+     "gradient": {
+      "edge": [
+       254,
+       77,
+       130
+      ],
+      "s": 2.66
+     }
+    },
+    "crimson": {
+     "colours": [
+      [
+       209,
+       47,
+       87
+      ]
+     ],
+     "tol": 12
+    }
+   },
+   "halo": {
+    "s_near": 15.092165231571803,
+    "s_far": 37.96049881911586,
+    "c_near": [
+     -49.999994771486,
+     22.417285668975097,
+     7.272378931705692
+    ],
+    "c_far": [
+     194.76462474615045,
+     -8.047212337902428,
+     42.89419969550956
+    ]
+   },
+   "near_halo": true
+  },
+  "frost": {
+   "order": [
+    "deep",
+    "mid",
+    "cyan",
+    "ice"
+   ],
+   "layers": {
+    "ice": {
+     "colours": [
+      [
+       239,
+       255,
+       255
+      ],
+      [
+       215,
+       255,
+       255
+      ],
+      [
+       168,
+       252,
+       240
+      ]
+     ],
+     "tol": 22,
+     "gradient": {
+      "edge": [
+       178,
+       253,
+       252
+      ],
+      "s": 3.44
+     }
+    },
+    "cyan": {
+     "colours": [
+      [
+       105,
+       231,
+       254
+      ],
+      [
+       84,
+       204,
+       252
+      ]
+     ],
+     "tol": 18,
+     "gradient": {
+      "edge": [
+       88,
+       212,
+       251
+      ],
+      "s": 1.54
+     }
+    },
+    "mid": {
+     "colours": [
+      [
+       59,
+       169,
+       226
+      ]
+     ],
+     "tol": 14
+    },
+    "deep": {
+     "colours": [
+      [
+       30,
+       109,
+       157
+      ]
+     ],
+     "tol": 12
+    }
+   },
+   "halo": {
+    "s_near": 0.5000292675923901,
+    "s_far": 27.228171137289603,
+    "c_near": [
+     171.32750740269168,
+     270.52168417407,
+     288.6932894869581
+    ],
+    "c_far": [
+     0.5702577991379344,
+     57.3401461358326,
+     90.80141788240421
+    ]
+   },
+   "near_halo": false,
+   "smooth": {
+    "sigma": 7.0,
+    "corner_deg": 142,
+    "merge_tol": 1.5,
+    "min_area": 40,
+    "close_px": 2.5
+   }
+  }
+ }
+}

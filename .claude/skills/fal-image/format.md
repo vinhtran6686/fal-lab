@@ -5,7 +5,7 @@ sheet list and its frame size; it must not change the style, the view prompts, t
 This skill makes **stills**: the approved master of a character and its standard views, plus icons and
 other single images. **Animation is never drawn here**: the `video-sprite` skill animates the approved
 stills (image-to-video) and exports the frames into the same asset folder. Style references live in `ref/`
-(`ref/assets/`, `ref/hero/`; read-only; may be sent as `--ref` since 2026-10-29 when the prompt says what to take (pose, motion, layout), never copy their
+(`ref/alien/`, `ref/asra/`, `ref/sprite/`, `ref/vfx/`; read-only; may be sent as `--ref` since 2026-10-29 when the prompt says what to take (pose, motion, layout), never copy their
 designs, never name the game they come from).
 
 ## 1. Style block `{STYLE}` (fixed, append to every prompt)
@@ -17,8 +17,9 @@ armoured knight and a fire elemental can all share it.
 > {H} pixels tall.
 > Simple design: big clear shapes and a strong silhouette; small details are left out or merged into larger
 > shapes; faces, hands, armour and clothing are suggested with a few lines, never rendered in fine detail.
-> Stylized, exaggerated cartoon proportions, not realistic anatomy (about 2.5 to 4 heads tall): the parts
-> that express the character's role are enlarged and the rest is shrunk, so the silhouette reads at {H} pixels.
+> Stylized, exaggerated game-character proportions, not realistic anatomy (about 3.5 to 4.5 heads tall for a
+> humanoid; never chibi, never cute): the parts that express the character's role are enlarged and the rest is
+> shrunk, so the silhouette reads at {H} pixels. Serious, powerful, mature look for players of all ages, not a child's mascot.
 > Colour: flat solid fills only, no gradients, no airbrush, no painterly texture, no noise, no realistic
 > rendering. Volume and shadow come from 2-3 hard-edged tones of the same colour (shadow, base, light), plus a
 > few small highlight shapes.
@@ -28,7 +29,7 @@ armoured knight and a fire elemental can all share it.
 > soft blur or gradient glow.
 > High top-down camera tilted about 60 degrees; light comes from the top-left.
 
-Why each line (from `ref/hero`, a 64 px fire elemental, studied 2026-10-16): the face is a brow line and an
+Why each line (from a 64 px fire elemental of the reference game, studied 2026-10-16): the face is a brow line and an
 eye slit; hands are mitten shapes; muscles are 1-2 lines; the body is 3 tones of one orange with a few light
 specks; the outline is dark brown, not black; the fire around it is flat yellow layers with flame-tongue
 edges; it is about 3.8 heads tall and top-heavy (huge shoulders and arms, small head, short legs), its
@@ -59,7 +60,7 @@ the body or the weapon; the big effects of a skill belong to the animation, not 
 - Enemies: a slightly darker, muted main colour plus one warning accent (red, sickly green, violet ...).
 - Never magenta or pink on any subject (`{BG}` is keyed out).
 
-**Style anchors** (review only): before approving a new master, open it next to `ref/hero/frames/hero_elemental_0014.png`
+**Style anchors** (review only): before approving a new master, open it next to a frame of `ref/asra/`
 (and, once one exists, the first approved master of the project) with the Read tool and check outline weight,
 tone count, shape size and face simplicity match. A style anchor sent as `--ref` leaks its design into the new character: send one only for a stated purpose (a pose or motion sheet, `ref/sprite/`), and say in the prompt what NOT to copy.
 
@@ -86,6 +87,14 @@ it the first masters came back with buckles, pouches, bandages and fabric textur
 > weapon (not hidden in sleeves). No buckles, no pouches, no straps beyond one, no rope, no bandages, no
 > spikes, no stitches, no patches, no fabric texture: clothing is a few big flat shapes. At most three
 > colour families. The weapon and every part of the body stay inside the frame with margin on every side.
+
+**No chibi, no cute (user rule, 2026-11-12, every class unless the user asks for it in words).** Never write "chibi", "cute", "adorable", "kawaii",
+"round", "big round head", "2 heads tall" in a `{design}`. A hero or ally is a **warrior built for its role**: humanoid about 3.5 to 4.5 heads tall (head
+about 1/4 of the height), broad shoulders and chest, strong forearms and thighs, grim or determined face (a hard brow line, a narrow eye slit, a firm
+mouth line), angular armour and weapon shapes, sharp not rounded corners; a "powerful" read comes from a wide stance and big shoulders/hands, never from a big head. Add to every
+`{design}`: "a serious, powerful, battle-hardened warrior, not cute, not childlike, not a mascot". Keep what the earlier rig tests taught for animation: the two
+arms the same size and length, the two legs the same size and length, cloth and cape behind the body and never over an arm, the whole weapon inside the frame.
+Reference for the look: `ref/asra` and the heroes of the reference game (strong silhouette), not `ref/alien`, which is only a model for the pose-A/pose-B + fx method.
 
 Proportions drift taller: ask for half a head less than wanted ("about 3 heads tall" came back near 4), and
 a long upright weapon (glaive, staff, spear) held diagonally so its tip does not reach the top edge.

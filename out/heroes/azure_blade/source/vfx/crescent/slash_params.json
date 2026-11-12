@@ -1,0 +1,130 @@
+{
+ "note": "azure_blade crescent slash: blue palette of gen_slash_loop (deep/blue/ice) + white core; milestone-01 layered generator on the blade sweep A->B",
+ "style": "layered",
+ "fps": 15,
+ "steps": 6,
+ "lag": 4.2,
+ "glow": {
+  "sigma_px2x": 3.0,
+  "alpha": 0.3,
+  "color": [
+   60,
+   150,
+   255
+  ]
+ },
+ "layered": {
+  "seed": 11,
+  "width_scale": 1.0,
+  "min_w": 9.0,
+  "palette": {
+   "deep": [
+    30,
+    90,
+    200
+   ],
+   "blue": [
+    70,
+    165,
+    255
+   ],
+   "ice": [
+    170,
+    225,
+    255
+   ],
+   "core": [
+    255,
+    255,
+    255
+   ]
+  },
+  "after": {
+   "14": {
+    "spread": 0.45,
+    "brk": 0.0,
+    "w": 0.9,
+    "tail_keep": 0.75,
+    "drift": 0.05
+   },
+   "15": {
+    "spread": 0.85,
+    "brk": 0.45,
+    "w": 0.72,
+    "tail_keep": 0.45,
+    "drift": 0.1,
+    "alpha": 0.85
+   },
+   "16": {
+    "spread": 1.2,
+    "brk": 1.0,
+    "w": 0.5,
+    "tail_keep": 0.2,
+    "drift": 0.14,
+    "alpha": 0.6
+   }
+  },
+  "core": {
+   "width": 0.22,
+   "offset": 0.18
+  },
+  "lag_frames": 2.6,
+  "grow": [
+   0.6,
+   0.85,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "curvature": 0.0
+ },
+ "swept": {
+  "u_density": 160,
+  "v_density": 1.6,
+  "reach_px": 1.1,
+  "trail_power": 1.05,
+  "hilt_alpha": 0.28,
+  "tip_power": 1.1,
+  "c_tail": [
+   40,
+   110,
+   235
+  ],
+  "c_mid": [
+   110,
+   190,
+   255
+  ],
+  "c_head": [
+   236,
+   248,
+   255
+  ],
+  "c_tip": [
+   22,
+   96,
+   245
+  ],
+  "tip_mix": 0.5,
+  "tip_color_power": 1.5,
+  "c_hilt": [
+   218,
+   240,
+   255
+  ],
+  "hilt_mix": 0.5,
+  "edge_w": 0.16,
+  "edge_white": 0.95,
+  "tipline_w": 0.07,
+  "tipline_white": 0.9,
+  "glow_sigma": 3.2,
+  "glow_alpha": 0.45,
+  "glow_color": [
+   90,
+   175,
+   255
+  ],
+  "gen_alpha": 0.55,
+  "start_floor": 0.45
+ }
+}

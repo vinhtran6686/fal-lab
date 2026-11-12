@@ -6,7 +6,7 @@ centred on a flat white square canvas, encoded so the API accepts it (>= 24 fps,
 
   python scripts/make_ref_video.py --src "E:/.../Blaze_pibe_{i:04d}.png" --first 162 --last 204 \
       --out ref/sprite/uppercut --name ref_uppercut --seconds 5
-Or from a folder of numbered pngs: --src "ref/sprite/slash/frames/f{i:02d}.png" --first 1 --last 46
+Or from a folder of numbered pngs: --src "ref/sprite/uppercut/frames/f{i:02d}.png" --first 1 --last 46
 """
 import argparse, pathlib, subprocess
 from PIL import Image

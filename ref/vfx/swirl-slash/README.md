@@ -1,7 +1,7 @@
 # Tham khảo: xoáy chém (swirl slash) – dữ liệu cho nghiên cứu path Bézier
 
 GIF tham khảo user gửi (2026-11-06 và gửi lại 2026-11-07). Chỉ dùng để **học hình**: không đồ lại làm asset, không ghi tên game.
-Nhiệm vụ nghiên cứu: [lib-fx/research/bezier-shapes/BRIEF.md](../../../lib-fx/research/bezier-shapes/BRIEF.md).
+Kết quả dựng lại: [lib-fx/_core/results/vector-showcase/swirl-slash](../../../lib-fx/_core/results/vector-showcase/swirl-slash/).
 
 ## File
 

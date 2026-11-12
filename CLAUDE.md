@@ -1,5 +1,7 @@
 # fal-image-lab
 
+**Before creating any file, tool, skill, fx or doc, follow `docs/repo-structure-rules.md` (where things go, naming, docs rules).** Docs map: `docs/README.md` (a tree that mirrors the repo: `pipeline/`, `skills/`, `scripts/`, `tools/`, `lib-fx/`; one doc per tool, the file name says the subject). Docs that live next to their code (`lib-fx/README.md`, `tools/studio/README.md`) are listed there too. Add a new doc under the folder of the object it describes and add it to that tree.
+
 Experiment: Claude Code is the "brain" (plans, writes prompts, reviews output, iterates);
 fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 
@@ -36,39 +38,37 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   shared kit in `lib-fx/_core/` (`fxcore.py`, `palettes.py`). `python lib-fx/build.py [group[/family[/id]]]` renders each effect
   (`sheet.png`, `frames/`, `preview.gif`, `meta.json` with status draft|approved|rework) plus `lib-fx/_gallery/<group>-<family>.png|gif`
   and `lib-fx/catalog.json`. New effects go into the library first; characters use them from there. Show fx alone for review.
-  Design method: `lib-fx/DESIGN.md`; hand-drawn organic shapes (thorns, splats, toon dust via `_core/organic.py`): `lib-fx/RESEARCH-organic-impact.md`.
-- **lib-fx/_core/vector/** (since 2026-11-08): the vector kit: rebuild or draw hand-drawn flat-colour VFX as clean Bezier paths (measure
+  Design method: `lib-fx/_core/formulas/draw/DESIGN.md`; hand-drawn organic shapes (thorns, splats, toon dust via `_core/organic.py`): `lib-fx/_core/formulas/draw/RESEARCH-organic-impact.md`.
+- **lib-fx/_core/formulas/vector/** (since 2026-11-08): the vector kit: rebuild or draw hand-drawn flat-colour VFX as clean Bezier paths (measure
   layer colours + edge gradients + halo, fit tapered strokes, Illustrator-style smooth & simplify, stacked render, review page).
-  One JSON profile per effect in `lib-fx/_core/vector/profiles/`; CLI `python lib-fx/_tools/vectorfx.py palette|ingest|measure|rebuild|review|all PROFILE`;
-  outputs in `lib-fx/_study/<name>/vector/` (git-ignored). Guide `lib-fx/_core/vector/README.md`; history `lib-fx/research/bezier-shapes/RETROSPECTIVE.md`.
-  Design foundation (layers, smooth lines, colour hierarchy, lifecycle and per-piece decay, reading references, generator spec): `lib-fx/_core/vector/foundation/`;
-  per VFX type (slash, explosion: references, rules, generators, open work): `lib-fx/_core/vector/foundation/vfx/`.
-  **Continuing vector-kit work in a new session: read `lib-fx/_core/vector/STATUS.md` first** (current state, parked work, open questions).
-  Current direction chosen by the VFX advisor (2026-11-10): `docs/milestone-01-character-synced-slash.md` (M01 done; decisions `docs/decision-log.md`, status `docs/roadmap.md`, next `docs/milestone-02-plan-DRAFT.md`); review every VFX at game size (H = 60 px @1x).
+  One JSON profile per effect in `lib-fx/_core/formulas/vector/profiles/`; CLI `python lib-fx/_tools/vectorfx.py palette|ingest|measure|rebuild|review|all PROFILE`;
+  outputs in `lib-fx/_study/<name>/vector/` (git-ignored). Guide `lib-fx/_core/formulas/vector/README.md`; measurements `lib-fx/_core/results/bezier-research/FINDINGS.md`.
+  Design foundation (layers, smooth lines, colour hierarchy, lifecycle and per-piece decay, reading references, generator spec): `lib-fx/_core/formulas/rules/`;
+  per VFX type (slash, explosion: references, rules, generators, open work): `lib-fx/_core/formulas/rules/vfx/`.
+  **lib-fx formulas vs results**: `lib-fx/_core/formulas/` (draw/ code kit, vector/ rebuild kit, rules/ design rules with measurements) and `lib-fx/_core/results/` (vector-showcase/, bezier-research/); map in `lib-fx/_core/README.md`.
+  Character-synced slash (M01, code `scripts/slash_fx/`): the current method is `docs/pipeline/pose-pair-fx-method.md`; review every VFX at game size (H = 60 px @1x).
 - **Puppet Kit** (since 2026-11-11): character motion from the approved stills with a cut-out rig, no video model, deterministic, 0 USD per
   animation: `scripts/puppet.py check|render|track|slash`, engine `scripts/puppet_kit/core.py`, rig tuner page `scripts/puppet_kit/rig_tuner.html`,
-  guide `docs/puppet-kit.md` (Vietnamese). A character's rig lives in `<asset>/source/rig/` (`rig.json`, `plate_vNN.png` = the master redrawn
+  guide `docs/scripts/puppet_kit/puppet-kit-guide.md` (Vietnamese). A character's rig lives in `<asset>/source/rig/` (`rig.json`, `plate_vNN.png` = the master redrawn
   without weapon and forearms, `poses/*.json` one-part rigs of `pose_*` stills, `anims/*.json`). Use it first for idle, level-up, buffs and
   pose-to-pose attacks; keep `video-sprite` for turns, runs and anything a 2D rig cannot do. `track` writes the weapon root/tip from rig sockets
   in the milestone-01 `weapon_track.json` format; `slash` draws the M01 layered slash on the cut of a pose-to-pose attack.
-  **Before writing any animation JSON read `docs/puppet-kit-motion-recipes.md`** (sign conventions, timing tables, run cycle, checklist: copy the
-  tables, do not re-derive the mechanics). Next work and tech debt (asset preparation pack incl. profile poses, rig v2 with legs / hips / true
-  elbows, Rig Tuner v2, torso turns): `docs/puppet-kit-next.md` (started 2026-11-11, progress in its §8). `pose` registers a pose still to the rig.
-  Limbs and torso should be ONE picture with `"skin"` (smooth joints: the picture bends around elbow, knee, waist) rather than cut at the joint; see `docs/puppet-kit.md` "Khớp uốn liền".
+  **Before writing any animation JSON read `docs/scripts/puppet_kit/puppet-kit-motion-recipes.md`** (sign conventions, timing tables, run cycle, checklist: copy the
+  tables, do not re-derive the mechanics). Asset preparation pack, rig v2 (legs / hips / elbows), Rig Tuner v2 and the remaining tech debt: `docs/scripts/puppet_kit/puppet-kit-asset-prep-and-rig-v2.md` `pose` registers a pose still to the rig.
+  Limbs and torso should be ONE picture with `"skin"` (smooth joints: the picture bends around elbow, knee, waist) rather than cut at the joint; see `docs/scripts/puppet_kit/puppet-kit-guide.md` "Khớp uốn liền".
   **Pose reel** (2026-11-11, template awaiting user approval): five short pinned clips per character (turn_a, turn_b, run, squat, press) cut into a pose library for what the rig
-  cannot draw (large joint bends, runs, turns): `docs/puppet-kit-pose-reel.md`, tools `scripts/puppet_reel.py input|cut`, animation shots `{"reel": dir, "pick": [...]}`. Paid clips: ask first.
-  Work split by model: `docs/tasks/README.md`; a task file `docs/tasks/task-N-<model>-*.md` is self-contained: do exactly that file, touch only the files it
-  lists, then set its `Trạng thái` line to DONE and fill in `Kết quả`.
-- **Lion Rig & Pose Studio** (since 2026-11-11): local editor around the Puppet Kit, `python scripts/studio/server.py` (http://127.0.0.1:8765/), guide `docs/puppet-studio.md` (Vietnamese), short README in `scripts/studio/`.
+  cannot draw (large joint bends, runs, turns): `docs/scripts/puppet_kit/puppet-kit-pose-reel.md`, tools `scripts/puppet_reel.py input|cut`, animation shots `{"reel": dir, "pick": [...]}`. Paid clips: ask first.
+- **Pose pair + fx method** (2026-11-12, tested on `out/heroes/azure_blade`): a skill = two approved stills (pose A prepare, pose B end, ~0.015 USD each, retry one pose only) + a big blade-swept slash from `lib-fx` + a Studio/Puppet rig with a shoulder-chest muscle link for breath, impact and cape sway; no video, no in-between poses (the `ref/alien` method). Full process, mandatory checklist, costs: `docs/pipeline/pose-pair-fx-method.md`. Heroes are never chibi or cute (`fal-image/format.md`).
+- **Rig & Pose Studio** (since 2026-11-11): local editor around the Puppet Kit, `python tools/studio/server.py` (http://127.0.0.1:8765/), guide `docs/tools/studio/puppet-studio-guide.md` (Vietnamese), short README in `tools/studio/`.
   Click = select, press + drag = move, click outside = deselect; pose library in `<asset>/poses/` (independent of `anims/*.json`); edits the rig too (pivots, cut polygons, joint blend, parent, joint limits).
-  Studio rig `out/heroes/lion_brawler/source/rig/rig_studio_v01.json` = `rig.json` + movable foot IK targets + `bone.limit.rot` + `links` (muscle links: when the hand overreaches, the shoulder slides out and the chest near the anchors follows; `carry` = whole body follows; schema and rules for connecting bones in the doc).
-  `limit` / `links` only live in the Studio rig, never in `rig.json` (anims may move the shoulders). Core change: `Rig.render` honours `links` (`Rig._pulls`); regression test compares every anim frame with the pre-change core. Tests: `python scripts/studio/test_studio.py` (52). **Before adding a joint, muscle link, IK, round joint (`discs`) or limit to a rig, read `docs/puppet-studio-ai-guide.md`** (recipes + code map); the user-facing concepts are in `docs/puppet-studio-concepts.md` (Vietnamese).
+  Studio rig `<asset>/source/rig/rig_studio_v01.json` = `rig.json` + movable foot IK targets + `bone.limit.rot` + `links` (muscle links: when the hand overreaches, the shoulder slides out and the chest near the anchors follows; `carry` = whole body follows; schema and rules for connecting bones in the doc).
+  `limit` / `links` only live in the Studio rig, never in `rig.json` (anims may move the shoulders). Core change: `Rig.render` honours `links` (`Rig._pulls`); regression test compares every anim frame with the pre-change core. Regression: `python scripts/puppet_test.py`. **Before adding a joint, muscle link, IK, round joint (`discs`) or limit to a rig, read `docs/tools/studio/puppet-studio-ai-guide.md`** (recipes + code map); the user-facing concepts are in `docs/tools/studio/puppet-studio-concepts.md` (Vietnamese).
 - Python: in Git Bash `python` may be the Microsoft Store stub; the real interpreter is
   `C:\Users\vinhtv13\AppData\Local\Programs\Python\Python312\python.exe` (on the `Admin` machine plain `python`, 3.13,
   works). Video tools need ffmpeg on PATH.
 - Reference-video route (experimental, tested 2026-10-29): a character performs a move taken from a sprite sheet of another character,
   fx included: `scripts/make_ref_video.py` (frames -> mp4 >= 24 fps) then fal `minimax/h3-max/reference-to-video` (0.05 USD/s, 5 s = 0.25;
-  called directly, log the cost in `costs.csv` by hand). Full method, prompt template, limits: `docs/reference-video-motion.md`.
+  called directly, log the cost in `costs.csv` by hand). Full method, prompt template, limits: `docs/skills/video-sprite/video-sprite-reference-video-route.md`.
 - Playtest (part of the `video-sprite` skill): `python .claude/skills/video-sprite/playtest/build_playtest.py` builds `out/playtest/`;
   publish `index.html` (Sprite Playtest: https://claude.ai/artifact/75DbnF3Fne9dnYVuu9XaSV) and
   `motion.html` (Motion Lab: https://claude.ai/artifact/C4umJEeQjjmx6FAjpcyT1J) with the same files.
@@ -77,7 +77,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
 - Spend summary: `python scripts/cost_report.py [--today]`.
 - Progress: every character's `brief.md` holds an Asset manifest (rows from `fal-image/classes/<class>.md` §6, format in `format.md` §8: class + role +
   skills -> every still, clip and vfx it needs, with ✅/⏳/❌/⏭). `python scripts/asset_status.py [<id>]`
-  answers "trạng thái tới đâu rồi"; guide in `docs/asset-manifest.md`.
+  answers "trạng thái tới đâu rồi"; guide in `docs/pipeline/asset-manifest.md`.
 - Secrets: `FAL_KEY` is in `.env` (git-ignored). Never read it, print it, log it, or commit it.
   Cloud sessions: `FAL_KEY` comes from the environment's settings (Network secrets or an environment
   variable), never pasted into chat. Network policy must allow the fal API hosts and `*.fal.media` (image

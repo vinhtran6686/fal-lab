@@ -63,8 +63,8 @@ nothing in this skill changes. Class, tier, role, skills and the design question
    §10) with `{H}` filled in, no `[ ]` or `{ }` left (an unfilled slot is read by the model as text and it invents the design), ending
    "Output: one image, 1024x1024, one character only". Each message must stand alone (the chat has no memory we rely on): one still per
    message; a new chat per still is safest. Save the same text as `A/source/design/prompts/<still>_pNN.txt` once the asset exists.
-   Patterns already written out: `docs/prompt-style-transfer.md` (from a concept image: A convert only, B optional changes) and
-   `docs/prompt-assets-from-master.md` (front, back, icon, projectile, poses, fx part, ability icon). Use them, adapted, instead of inventing a new shape.
+   Patterns already written out: `docs/skills/fal-image/fal-image-manual-prompt-style-transfer.md` (from a concept image: A convert only, B optional changes) and
+   `docs/skills/fal-image/fal-image-manual-prompt-assets-from-master.md` (front, back, icon, projectile, poses, fx part, ability icon). Use them, adapted, instead of inventing a new shape.
 3. **From a concept image**: the prompt says what to KEEP (count limbs and features), what to CHANGE, and what must NOT be added (a weapon the
    concept does not have). The two failures seen: all extra arms dropped, and a staff added to empty hands.
 4. **Review** what the user sends (a path in the chat, usually `.../images/N.webp`): open it with Read, score it 1-10 with `format.md` §6, and for

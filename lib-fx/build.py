@@ -17,7 +17,7 @@ All effects: catalog.json. Map of the folders: GUIDE.md.
 import importlib.util, json, math, pathlib, sys
 
 HERE = pathlib.Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE / "_core"))
+sys.path.insert(0, str(HERE / "_core" / "formulas" / "draw"))
 from PIL import Image, ImageDraw
 import fxcore
 

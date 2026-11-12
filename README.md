@@ -44,7 +44,7 @@ size, hướng, ảnh tĩnh, dòng manifest, skill, slot, điểm review):
 - `hero.md` · `ally.md` (quân phe ta) · `enemy.md` (quái đi bộ) · `enemy-flying.md` (quái bay) · `boss.md`
 - `.claude/skills/fal-image/format.md`: luật chung (style, cách vẽ góc nhìn, thư mục, tier size, format manifest).
 - `.claude/skills/fal-image/reference.md`: số liệu đo từ game tham chiếu (nguồn của các con số trong class).
-- `docs/asset-manifest.md`: cách đọc manifest và xem tiến độ.
+- `docs/pipeline/asset-manifest.md`: cách đọc manifest và xem tiến độ.
 - `.claude/skills/video-sprite/SKILL.md`: quy trình tạo animation từ ảnh tĩnh.
 - Playtest (thuộc skill video-sprite): `python .claude/skills/video-sprite/playtest/build_playtest.py` rồi nhờ Claude publish `out/playtest/` để xem nhân vật đi trên map.
 - Thư viện hiệu ứng: `lib-fx/` (xem `lib-fx/README.md`), `python lib-fx/build.py` dựng lại toàn bộ và gallery xem trước.
