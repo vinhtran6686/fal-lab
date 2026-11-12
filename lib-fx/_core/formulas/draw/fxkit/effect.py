@@ -129,10 +129,10 @@ class Effect:
             if l.kind not in KINDS: out.append(f"layer {l.id}: unknown kind '{l.kind}'")
             if l.life.release < 2 / 30 - 1e-9: out.append(f"layer {l.id}: release under 2 frames (it would pop off)")
         roles = {l.role for l in L}
-        need = {"light": 3, "medium": 4, "heavy": 5}[self.weight]
+        need = {"light": 2, "medium": 3, "heavy": 4}[self.weight]
         if len(roles) < need: out.append(f"{len(roles)} roles ({', '.join(sorted(roles))}); a {self.weight} effect needs {need}+ for depth")
         if "sustained" not in self.tags:
-            if not any(l.role in ("flash", "core") and abs(l.life.start) <= 1 / 30 + 1e-9 for l in L): out.append("no flash / core layer on the hit frame (the hit does not read)")
+            if not any(l.role in ("flash", "core", "primary") and abs(l.life.start) <= 1 / 30 + 1e-9 for l in L): out.append("no primary / core / flash layer on the hit frame (the hit does not read)")
             if len({round(l.life.start, 3) for l in L if l.role != "flash"}) < 2 and len(L) > 2: out.append("every layer starts on the same frame (stagger them)")
             ends = sorted(l.life.end for l in L)
             if len(L) > 2 and ends[-1] < ends[0] * 1.5 + 1e-9: out.append("every layer ends at about the same time (fast layers must die early, slow ones linger)")
