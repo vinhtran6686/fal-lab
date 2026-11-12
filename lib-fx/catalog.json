@@ -510,5 +510,33 @@
    45
   ],
   "dir": "melee/blade_aura/charge_blue"
+ },
+ "melee/blade_aura/charge_fire": {
+  "name": "Tụ lực lưỡi đao (lửa)",
+  "status": "approved",
+  "tags": [
+   "melee",
+   "blade",
+   "aura",
+   "charge",
+   "sustained",
+   "blue",
+   "anchor:hilt",
+   "buff",
+   "energy",
+   "fire"
+  ],
+  "desc": "fire that catches along a weapon: a source ignites at the hilt, the fire spreads along the blade to the tip with a bright head, flat flame tongues (orange, amber, pale core) of different sizes lick up from the lit blade and flicker on twos, embers rise and shrink; discreet (it is a status) and it does not fade out; same timeline and drawing core as charge_blue",
+  "fps": 30,
+  "frames": 61,
+  "frame_size_2x": [
+   150,
+   90
+  ],
+  "anchor_2x": [
+   34,
+   45
+  ],
+  "dir": "melee/blade_aura/charge_fire"
  }
 }

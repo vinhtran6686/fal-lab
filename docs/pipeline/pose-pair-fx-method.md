@@ -183,6 +183,7 @@ Thân ra `frames/skill_crescent_puppet_side/` (cell 352x280 @2x, chân ở pivot
 - Pose B chỉ tách tay, chưa tách đầu.
 - `build_crescent.py` còn hằng số cho nhân vật này (vị trí đặt vệt theo khung hit, màu xanh lam); khi dùng cho nhân vật khác cần tách ra tham số (tên pose, hit frame, màu).
 - Chưa kiểm GIF ở cỡ @1x trên màn hình thật; hiện duyệt qua ảnh tĩnh và GIF phóng 3 lần.
+- **Nợ kỹ thuật: chi tiết hiệu ứng trạng thái trên lưỡi** (`charge_blue`, `charge_fire`). Hiện đúng trải nghiệm nhưng hình còn đơn giản; cần so lại với `ref/vfx` (lửa: `element-trio/fire`, `swirl-slash`) và cải thiện: hình lưỡi lửa (nhịp bùng, tách mảnh, mòn từ mép), số lớp màu, tàn lửa có quỹ đạo, gradient mép và glow đúng số đo. Làm sau.
 - Đòn cần xoay người, đổi mặt hoặc chạy vẫn phải dùng video (`video-sprite`) hoặc pose reel.
 
 ## 8. Tụ lực lưỡi đao (ánh sáng chạy trên lưỡi trước và sau skill)
@@ -194,6 +195,7 @@ Hiệu ứng thứ hai của skill, thêm 2026-11-12: năng lượng xanh dâng 
 - **Lớp riêng cho nhân vật**: `source/vfx/blade_charge/build_charge.py` + `aura_params.json` (mốc theo khung: bật nguồn khung 3, đầu sóng tới mũi khung 12, hai nhịp sóng, loé lúc chém khung 23, nhịp sóng định kỳ 10 khung ở pha giữ). Ra `frames/fx/blade_charge/` (một lớp RGBA mỗi khung body).
 - **Ghép**: `PYTHONHASHSEED=0 python out/heroes/azure_blade/source/vfx/crescent/build_crescent.py --charge` đặt lớp tụ lực **dưới** vệt chém, ra `frames/skill_crescent_charge_side/`; bản đã duyệt `skill_crescent_side/` không bị đụng.
 - **Hướng chạy**: từ cán tới mũi đúng nghĩa đen; ở pose A đao chúc xuống nên luồng sáng chạy xuống dưới màn hình. Cảm giác "dâng lên" đến từ độ sáng tăng dần và đốm bay lên.
+- **Bản lửa `charge_fire`** (2026-11-12, người dùng đã duyệt: đúng hiệu ứng và trải nghiệm; bản sáng và rực: `strength` 0,85, `glow` 1,7, `tongue_scale` 1,3, 13 lưỡi): cùng lõi vẽ, cùng mốc thời gian và cùng toạ độ đao, khác bảng màu (đỏ sẫm, cam, vàng hổ phách, vàng nhạt, đo từ lửa phun đã tái tạo) và thêm lớp **lưỡi lửa** phẳng (cam, vàng bên trong, lõi nhạt) có kích thước, độ nghiêng và nhịp chập chờn riêng mỗi lưỡi, mọc lên từ đoạn lưỡi đã cháy; tàn lửa bay lên. Dựng: `build_charge.py --fire` rồi `build_crescent.py --charge=fire` (ra `frames/skill_crescent_charge_fire_side/`). Bản xanh không đổi (kiểm bằng hash khung).
 - **Không tắt dần**: giữ nguyên tới cuối (hơi giảm sau cú chém, nhấp nháy theo nhịp thở).
 
 ## 9. Phụ lục: vì sao `ref/alien` làm được (đo trực tiếp trên khung)

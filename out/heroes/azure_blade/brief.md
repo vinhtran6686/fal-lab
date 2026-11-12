@@ -48,6 +48,8 @@ Rủi ro: model nhầm tay, hai tay không cùng nắm cán; đao quá dài ra k
 | skill_crescent_side | ghép khung ($0) | one-shot | ⏳ p01 | 20 khung @15 fps; `frames/skill_crescent_side/`; dựng lại: `PYTHONHASHSEED=0 python out/heroes/azure_blade/source/vfx/crescent/build_crescent.py` |
 | fx_blade_charge (tụ lực) | lib-fx `melee/blade_aura/charge_blue` | hiệu ứng trạng thái | ✅ | ánh sáng xanh chạy cán→mũi trước đòn, giữ sáng sau đòn; `source/vfx/blade_charge/`, `frames/fx/blade_charge/` |
 | skill_crescent_charge_side | ghép khung ($0) | one-shot | ✅ | body + tụ lực + vệt chém, 44 khung @15 fps; `frames/skill_crescent_charge_side/`; dựng lại: `build_charge.py` rồi `build_crescent.py --charge` |
+| fx_blade_charge_fire (tụ lực lửa) | lib-fx `melee/blade_aura/charge_fire` | hiệu ứng trạng thái | ✅ | bản lửa của tụ lực (sáng, rực; người dùng duyệt 2026-11-12), cùng timeline; `build_charge.py --fire`, `frames/fx/blade_charge_fire/` |
+| skill_crescent_charge_fire_side | ghép khung ($0) | one-shot | ✅ | body + tụ lực lửa + vệt chém xanh; `build_crescent.py --charge=fire` |
 | run_side, attack_side, death_side, pose_respawn, respawn_side, levelup_side, package | - | - | ⏭ | ngoài phạm vi bài test |
 
 | rig pose A + pose B (studio) | Puppet Kit ($0) | rig | ⏳ p02 | `source/rig/rig_a.json`, `rig_b.json`: torso / arms (hai tay, nắm đấm, giáp vai) / blade; dây chằng `shoulder_chest` (tay trượt thì vai + ngực theo); dựng lại: `make_rigs.py`, `make_anim.py` |

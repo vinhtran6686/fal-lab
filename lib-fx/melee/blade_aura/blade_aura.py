@@ -30,12 +30,30 @@ PAL = dict(rim=(30, 90, 200), body=(70, 165, 255), light=(170, 225, 255), core=(
            deep=(30, 90, 200), blue=(70, 165, 255), ice=(170, 225, 255))
 PAL_SUN = PAL
 TIERS = np.array([PAL["deep"], PAL["blue"], PAL["ice"], PAL["white"]], float)
+# fire: measured colours of the rebuilt fire effects (element-trio fire: orange (245,140,55), yellow (255,204,95); see rules/01-design-style.md section 3):
+# the hottest tier (pale yellow) deepest in the body and under the heads, red only as the thin rim; the glow carries the orange
+PAL_FIRE = dict(rim=(196, 52, 28), body=(245, 132, 50), light=(255, 204, 95), core=(255, 238, 170), white=(255, 246, 215),
+                deep=(196, 52, 28), orange=(245, 132, 50), amber=(255, 204, 95), pale=(255, 238, 170))
+TIERS_FIRE = np.array([PAL_FIRE["deep"], PAL_FIRE["orange"], PAL_FIRE["amber"], PAL_FIRE["pale"]], float)
+
+
+def _cols(P):
+    """The colours the drawing needs, by role (the blue and the fire palette fill the same roles)."""
+    if P is PAL_FIRE:
+        return dict(tiers=TIERS_FIRE, glow_far=(200, 60, 25), glow_near=P["orange"], ring_far=P["deep"], ring_near=P["orange"],
+                    src=(P["orange"], P["amber"], P["pale"]))
+    return dict(tiers=TIERS, glow_far=P["deep"], glow_near=P["blue"], ring_far=P["deep"], ring_near=P["blue"], src=(P["blue"], P["ice"], P["white"]))
 CATALOG = {
     "charge_blue": dict(name="Tụ lực lưỡi đao (xanh)", status="approved", tags=["charge", "buff", "energy"], halo=(0.0, 8), palette=PAL,
                         desc="blue energy that gathers in a weapon: a source ignites at the hilt, a front rises along the blade to the tip, "
                              "then bright pulses keep running hilt to tip; discreet (it is a status); flat tiers (deep, blue, "
                              "ice, white), two see-through bands and a two-scale glow around the blade, a few rising specks drawn on twos; "
                              "it does not fade out, so it can run through a skill"),
+    "charge_fire": dict(name="Tụ lực lưỡi đao (lửa)", status="approved", tags=["charge", "buff", "energy", "fire"], halo=(0.0, 8), palette=PAL_FIRE,
+                        desc="fire that catches along a weapon: a source ignites at the hilt, the fire spreads along the blade to the tip with a "
+                             "bright head, flat flame tongues (orange, amber, pale core) of different sizes lick up from the lit blade and "
+                             "flicker on twos, embers rise and shrink; discreet (it is a status) and it does not fade out; same timeline "
+                             "and drawing core as charge_blue"),
 }
 BLADE_LEN = 70.0
 BLADE_HW = 4.0
@@ -69,7 +87,7 @@ def params_at(t, tl):
     sh = tl.get("shimmer")
     if sh and t >= sh["frm"]:
         E += sh["amp"] * math.sin(2 * math.pi * (t - sh["frm"]) / sh["period"])
-    return dict(front=front, heads=heads, E=E, tip=clamp((front - 0.985) / 0.015) * clamp(E * 1.15), source=smooth(start - 0.05, start + 0.2, t) * (0.5 + 0.5 * clamp(E)))
+    return dict(t=t, fps=tl.get("fps", FPS), front=front, heads=heads, E=E, tip=clamp((front - 0.985) / 0.015) * clamp(E * 1.15), source=smooth(start - 0.05, start + 0.2, t) * (0.5 + 0.5 * clamp(E)))
 
 
 def make_sparks(tl, seed, t_end):
@@ -77,7 +95,7 @@ def make_sparks(tl, seed, t_end):
     rng = np.random.default_rng(seed)
     out, t = [], tl["start"] + 0.12
     while t < t_end:
-        out.append(dict(t0=t, life=rng.uniform(0.35, 0.75), u=rng.uniform(0.06, 1.0), c=rng.uniform(-1.0, 1.0), sp=rng.uniform(14, 34),
+        out.append(dict(t0=t, life=rng.uniform(0.35, 0.75), u=rng.uniform(0.06, 1.0), c=rng.uniform(-1.0, 1.0), sp=rng.uniform(14, 34) * tl.get("spark_speed", 1.0),
                         r=rng.uniform(0.9, 1.9), side=rng.uniform(-0.6, 0.6)))
         t += rng.uniform(0.5, 1.5) * tl.get("spark_every", 0.13)
     return out
@@ -104,7 +122,8 @@ def sparks_at(sparks, t, tl, pose_at):
         if n[1] > 0:
             n = -n
         up = np.array([0.0, -1.0])
-        dd = n * (0.8 + s["side"]) + up * 0.6
+        wn, wu = tl.get("spark_dir", (0.8, 0.6))
+        dd = n * (wn + s["side"]) + up * wu
         dd /= np.hypot(*dd)
         base = root + d * (s["u"] * L) + n * (s["c"] * hw)
         p = base + dd * s["sp"] * (tq - s["t0"])
@@ -141,11 +160,57 @@ def _star(size, centre, along, across, rx, ry, ss, tw):
     return np.asarray(im, float) / np.array([1, 1, 1, 255.0])
 
 
-def render(mask, arms, root, tip, st, ss, sparks=(), grow=False, strength=0.65, star=False):
+def make_tongues(seed, n=10):
+    """Hand-placed flame tongues along the blade: each has its own place, size, lean, sway and flicker rate (never a periodic row of teeth)."""
+    rng = np.random.default_rng(seed)
+    us = np.sort(rng.uniform(0.14, 0.98, n))
+    return [dict(u=float(u), L=rng.uniform(0.12, 0.28), W=rng.uniform(0.11, 0.18), lean=rng.uniform(-0.35, 0.35), wave=rng.uniform(-0.35, 0.35),
+                 bend=rng.uniform(-0.5, 0.5), f=rng.uniform(1.6, 3.2), ph=rng.uniform(0, 1)) for u in us]
+
+
+def _flame_layer(tongues, size, org, r, d, L, hwp, st, ss, arms, C, scale_k=1.0):
+    """RGBA float (h, w, 4): flat flame tongues (orange, a smaller amber one inside, a pale core) rising from the lit part of the blade.
+    The tongues flicker on twos, grow as the front reaches them, and are cut where the hands are."""
+    from organic import flame
+    h, w = size
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    dr = ImageDraw.Draw(im)
+    n = np.array([-d[1], d[0]])
+    if n[1] > 0:
+        n = -n
+    up = np.array([0.0, -1.0])
+    fps = st.get("fps", FPS)
+    tq = math.floor(st["t"] * fps / 2.0 + 1e-6) * 2.0 / fps
+    dirv = n * 0.55 + up * 0.85
+    base_ang = math.atan2(dirv[1], dirv[0])
+    for tg in tongues:
+        grow = smooth(0.0, 0.18, st["front"] - tg["u"])
+        if grow <= 0.01:
+            continue
+        flick = 0.62 + 0.38 * (0.6 * math.sin(2 * math.pi * (tg["f"] * tq + tg["ph"])) + 0.4 * math.sin(2 * math.pi * (2.3 * tg["f"] * tq + 3 * tg["ph"])))
+        k = grow * flick * (0.55 + 0.6 * clamp(st["E"], 0, 1.2))
+        if k <= 0.05:
+            continue
+        base = r + d * (tg["u"] * L) + n * (hwp * ss * 0.5) - np.array([org[0], org[1]])
+        ang = base_ang + tg["lean"] * (0.6 + 0.4 * flick)
+        Ls = tg["L"] * L * k * scale_k
+        Ws = max(tg["W"] * L * k * scale_k, 1.6 * ss)
+        for scale, col, al in ((1.0, C["tiers"][1], 0.92), (0.64, C["tiers"][2], 0.95), (0.3, C["tiers"][3], 0.95 if st["E"] > 0.5 else 0.0)):
+            if al <= 0:
+                continue
+            pts = flame(base[0], base[1], ang, Ls * scale, Ws * (0.5 + 0.5 * scale), tg["bend"], tg["wave"])
+            dr.polygon(pts, fill=tuple(int(c) for c in col) + (round(255 * al),))
+    lay = np.asarray(im, float) / np.array([1, 1, 1, 255.0])
+    lay[..., 3] *= (1 - arms)
+    return lay
+
+
+def render(mask, arms, root, tip, st, ss, sparks=(), grow=False, strength=0.65, star=False, pal=None, flames=None, glow=1.0, tongue_scale=1.0):
     """RGBA float (H*ss, W*ss) of the effect on one blade. mask: blade coverage 0..1 at ss; arms: coverage of whatever is in front of the blade
-    (hands, forearms: the light is not drawn over it); root/tip: hilt end and tip in cell px; st: params_at(); sparks: sparks_at(); strength: overall opacity of the effect (it is a status, so it stays discreet); star: the four-point twinkle on the tip (off by default); grow: widen the mask by about 1 px (a hand-drawn blade has an edge line outside its part polygon)."""
+    (hands, forearms: the light is not drawn over it); root/tip: hilt end and tip in cell px; st: params_at(); sparks: sparks_at(); strength: overall opacity of the effect (it is a status, so it stays discreet); pal: PAL (blue, default) or PAL_FIRE; flames: tongues from make_tongues() (fire), drawn behind the body (tongue_scale: their size); glow: multiplier of the glow and the see-through bands; star: the four-point twinkle on the tip (off by default); grow: widen the mask by about 1 px (a hand-drawn blade has an edge line outside its part polygon)."""
     Hs, Ws = mask.shape
     out = np.zeros((Hs, Ws, 4))
+    C = _cols(pal or PAL)
     if st["E"] <= 0.01 and not st["heads"] and st["front"] <= 0:
         return out
     r = np.asarray(root, float) * ss; tp = np.asarray(tip, float) * ss
@@ -175,7 +240,7 @@ def render(mask, arms, root, tip, st, ss, sparks=(), grow=False, strength=0.65, 
         dq = pos - v - lead
         val = val + s * np.where(dq < 0, 0.0, np.where(dq < 0.07, 0.55, np.where(dq < 0.20, 0.30, np.where(dq < 0.38, 0.12, 0.0))))
     tier = np.digitize(val, [0.30, 0.60, 0.86])
-    body_col = TIERS[tier]
+    body_col = C["tiers"][tier]
     body_a = vis * lit * 0.93
     pre_a = vis * (v + lead > front + 0.012) * (v + lead <= front + 0.10) * (0.30 if 0.0 < front < 1.0 else 0.0)
 
@@ -183,26 +248,28 @@ def render(mask, arms, root, tip, st, ss, sparks=(), grow=False, strength=0.65, 
     glow_src = vis * lit
     g1 = ndi.gaussian_filter(glow_src, 2.4 * ss) * 0.9
     g2 = ndi.gaussian_filter(glow_src, 7.5 * ss) * 0.6
-    gk = (0.45 + 0.55 * clamp(E, 0, 1.3)) * (1 - 0.55 * a)
+    gk = (0.45 + 0.55 * clamp(E, 0, 1.3)) * (1 - 0.55 * a) * glow
     gate = np.clip((front + 0.05 - v) / 0.12, 0, 1) * (v > -0.03) * (v < 1.07)
-    ring1 = np.clip((1.5 - dout) / 0.7, 0, 1) * ~inside * gate * gE * 0.55 * (1 - a)
-    ring2 = np.clip((3.4 - dout) / 0.7, 0, 1) * ~inside * (1 - np.clip((1.5 - dout) / 0.7, 0, 1)) * gate * gE * 0.30 * (1 - a)
+    ring1 = np.clip((1.5 - dout) / 0.7, 0, 1) * ~inside * gate * gE * 0.55 * glow * (1 - a)
+    ring2 = np.clip((3.4 - dout) / 0.7, 0, 1) * ~inside * (1 - np.clip((1.5 - dout) / 0.7, 0, 1)) * gate * gE * 0.30 * glow * (1 - a)
 
     lay = np.zeros((y1 - y0, x1 - x0, 4))
-    lay = _over(lay, _layer(PAL["deep"], g2 * gk))
-    lay = _over(lay, _layer(PAL["blue"], g1 * gk))
-    lay = _over(lay, _layer(PAL["deep"], ring2))
-    lay = _over(lay, _layer(PAL["blue"], ring1))
-    lay = _over(lay, _layer(PAL["deep"], pre_a))
+    lay = _over(lay, _layer(C["glow_far"], g2 * gk))
+    lay = _over(lay, _layer(C["glow_near"], g1 * gk))
+    lay = _over(lay, _layer(C["ring_far"], ring2))
+    lay = _over(lay, _layer(C["ring_near"], ring1))
+    lay = _over(lay, _layer(C["ring_far"], pre_a))
+    if flames is not None:                                              # tongues behind the body: they grow out of the lit blade
+        lay = _over(lay, _flame_layer(flames, (y1 - y0, x1 - x0), (x0, y0), r, d, L, max(din.max(), 1.0) / ss, st, ss, a, C, tongue_scale))
     lay = _over(lay, np.dstack([body_col, np.clip(body_a, 0, 1)]))
     if st["source"] > 0.02:                                              # the source at the hilt, only on the visible blade
         sc = r + d * (0.035 * L)
         gem = np.hypot(xx + 0.5 - sc[0], yy + 0.5 - sc[1]) / ss
         hwp = max(din.max(), 1.0) / ss
         s = st["source"]
-        lay = _over(lay, _layer(PAL["blue"], np.clip((2.2 * hwp - gem) / 1.0, 0, 1) * 0.5 * s * (1 - a)))
-        lay = _over(lay, _layer(PAL["ice"], np.clip((1.5 * hwp - gem) / 1.0, 0, 1) * 0.85 * s * (1 - a)))
-        lay = _over(lay, _layer(PAL["white"], np.clip((0.7 * hwp - gem) / 0.7, 0, 1) * s * (1 - a)))
+        lay = _over(lay, _layer(C["src"][0], np.clip((2.2 * hwp - gem) / 1.0, 0, 1) * 0.5 * s * (1 - a)))
+        lay = _over(lay, _layer(C["src"][1], np.clip((1.5 * hwp - gem) / 1.0, 0, 1) * 0.85 * s * (1 - a)))
+        lay = _over(lay, _layer(C["src"][2], np.clip((0.7 * hwp - gem) / 0.7, 0, 1) * s * (1 - a)))
     if star and st["tip"] > 0.02:
         tw = st["tip"]
         star = _star((x1 - x0, y1 - y0), (tp[0] - x0, tp[1] - y0), d, n, 0.2 * L * (0.6 + 0.4 * tw), 0.12 * L * (0.6 + 0.4 * tw), ss, tw)
@@ -211,7 +278,7 @@ def render(mask, arms, root, tip, st, ss, sparks=(), grow=False, strength=0.65, 
         im = Image.new("RGBA", (x1 - x0, y1 - y0), (0, 0, 0, 0)); dr = ImageDraw.Draw(im)
         for (sx, sy, rad, al, tr) in sparks:
             cx, cy, rr = sx * ss - x0, sy * ss - y0, rad * ss
-            dr.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], fill=tuple(int(c) for c in TIERS[tr]) + (round(255 * clamp(al)),))
+            dr.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], fill=tuple(int(c) for c in C["tiers"][tr]) + (round(255 * clamp(al)),))
         sp = np.asarray(im, float) / np.array([1, 1, 1, 255.0])
         lay = _over(lay, sp)
     lay[..., 3] *= strength
@@ -259,4 +326,19 @@ def to_cell_ss(rgba):
     return Image.fromarray(np.dstack([np.clip(rgba[..., :3], 0, 255), np.clip(rgba[..., 3], 0, 1) * 255]).round().astype(np.uint8), "RGBA")
 
 
-VARIANTS = {"charge_blue": charge_blue}
+TL_FIRE = dict(DEFAULT_TL, spark_dir=(0.25, 1.0), spark_speed=1.35, spark_every=0.11)
+
+
+def charge_fire(t, P, front, back):
+    tl = dict(TL_FIRE)
+    ss = front.ss
+    root = (P[0], P[1])
+    tip = (P[0] + BLADE_LEN, P[1])
+    mask = _lens_mask(FRAME, ss, root, tip, BLADE_HW)
+    st = params_at(t, tl)
+    sp = sparks_at(make_sparks(tl, 7, DUR), t, tl, lambda t0: (root, tip, BLADE_HW))
+    img = to_cell_ss(render(mask, np.zeros_like(mask), root, tip, st, ss, sp, pal=PAL_FIRE, flames=make_tongues(5)))
+    front.img.alpha_composite(img)
+
+
+VARIANTS = {"charge_blue": charge_blue, "charge_fire": charge_fire}

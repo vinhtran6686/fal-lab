@@ -76,6 +76,20 @@
   "spark_every": 0.13,
   "seed": 11,
   "blade_half_width": 3.5,
-  "strength": 0.65
+  "strength": 0.65,
+  "fire": {
+   "note": "charge_fire: the same timeline and blade, only these differ",
+   "strength": 0.85,
+   "spark_dir": [
+    0.25,
+    1.0
+   ],
+   "spark_speed": 1.35,
+   "spark_every": 0.08,
+   "tongue_seed": 5,
+   "tongues": 13,
+   "glow": 1.7,
+   "tongue_scale": 1.3
+  }
  }
 }

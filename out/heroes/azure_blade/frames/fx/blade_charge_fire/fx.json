@@ -1,0 +1,104 @@
+{
+ "id": "melee/blade_aura/charge_fire",
+ "frames": 44,
+ "fps": 15,
+ "cell_2x": [
+  352,
+  280
+ ],
+ "note": "full-cell RGBA layer per body frame of skill_crescent; compose under the slash",
+ "timeline": {
+  "note": "azure_blade 'tu luc' (blade charge) timeline, in frames of source/rig/anims/crescent.json (1-based, 15 fps). The effect itself: lib-fx/melee/blade_aura/blade_aura.py charge_blue.",
+  "fps": 15,
+  "hit_frame": 23,
+  "ignite_frame": 3,
+  "front_full_frame": 12,
+  "pulses": [
+   [
+    13,
+    6,
+    0.9
+   ],
+   [
+    18,
+    5,
+    1.0
+   ],
+   [
+    28,
+    7,
+    0.7
+   ],
+   [
+    38,
+    7,
+    0.7
+   ]
+  ],
+  "energy": [
+   [
+    3,
+    0.3
+   ],
+   [
+    12,
+    0.62
+   ],
+   [
+    22,
+    1.0
+   ],
+   [
+    23,
+    1.0
+   ],
+   [
+    27,
+    0.7
+   ],
+   [
+    28,
+    0.62
+   ]
+  ],
+  "flares": [
+   [
+    23,
+    0.6,
+    4
+   ]
+  ],
+  "shimmer": {
+   "from": 28,
+   "amp": 0.07,
+   "period": 10
+  },
+  "spark_every": 0.08,
+  "seed": 11,
+  "blade_half_width": 3.5,
+  "strength": 0.85,
+  "fire": {
+   "note": "charge_fire: the same timeline and blade, only these differ",
+   "strength": 0.85,
+   "spark_dir": [
+    0.25,
+    1.0
+   ],
+   "spark_speed": 1.35,
+   "spark_every": 0.08,
+   "tongue_seed": 5,
+   "tongues": 13,
+   "glow": 1.7,
+   "tongue_scale": 1.3
+  },
+  "spark_dir": [
+   0.25,
+   1.0
+  ],
+  "spark_speed": 1.35,
+  "tongue_seed": 5,
+  "tongues": 13,
+  "glow": 1.7,
+  "tongue_scale": 1.3
+ }
+}

@@ -40,7 +40,7 @@ force/shock/
 |---|---|---|---|---|
 | `melee/unarmed/` | Tay không | đấm, đá, chưởng tay (phần vệt và va chạm của đòn thân thể), húc vai, vật | vệt đấm thẳng, vệt đá quét, tia trúng nắm đấm | - |
 | `melee/blade/` | Kiếm, dao | vệt chém, đâm, chém xoay, chuỗi combo của vũ khí có lưỡi | vệt chém lưỡi liềm, chém chữ X, đâm nhanh, chém xoáy | Xoáy chém lửa (draft), Xoáy chém băng (draft) (công thức: lib-fx/_core/formulas/draw/recipes/RECIPE-swirl.md) |
-| `melee/blade_aura/` | Ánh sáng trên lưỡi | năng lượng phủ lên chính lưỡi vũ khí (không phải vệt chém rời lưỡi): tụ lực trước đòn, giữ sáng suốt và sau đòn | tụ lực lưỡi đao (xanh) | Tụ lực lưỡi đao xanh (approved) |
+| `melee/blade_aura/` | Ánh sáng trên lưỡi | năng lượng phủ lên chính lưỡi vũ khí (không phải vệt chém rời lưỡi): tụ lực trước đòn, giữ sáng suốt và sau đòn | tụ lực lưỡi đao (xanh, lửa) | Tụ lực lưỡi đao xanh (approved), Tụ lực lưỡi đao lửa (approved) |
 | `melee/blunt/` | Búa, chùy | đòn nặng: đập, nện xuống đất, vụt ngang | vệt búa nặng, đập đất nứt | - |
 | `melee/polearm/` | Thương, giáo | đâm xuyên dài, quét rộng hình quạt | đâm thương xuyên, quét giáo | - |
 | `melee/beast/` | Quái thú | vuốt, cắn, húc, quật đuôi của quái | ba vệt vuốt, vết cắn | - |
