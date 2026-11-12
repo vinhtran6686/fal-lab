@@ -1,4 +1,32 @@
 {
+ "element/fire/aoe/eruption": {
+  "name": "Lửa phun",
+  "status": "draft",
+  "tags": [
+   "element",
+   "fire",
+   "aoe",
+   "one-shot",
+   "anchor:ground",
+   "space:ground",
+   "weight:light"
+  ],
+  "desc": "flame tongues erupt from the ground, flicker for a moment, then are eaten in place into rising pieces; the hot pool at the foot goes last",
+  "fps": 30.0,
+  "frames": 24,
+  "frame_size_2x": [
+   298,
+   296
+  ],
+  "anchor_2x": [
+   163.0,
+   196.0
+  ],
+  "dir": "element/fire/aoe/eruption",
+  "qa": "fail",
+  "hit_frame": 1,
+  "kit": true
+ },
  "force/shock/bloom": {
   "name": "Hoa nổ",
   "status": "draft",
@@ -151,6 +179,32 @@
    160
   ],
   "dir": "force/shock/vapor"
+ },
+ "impact/burst/probe": {
+  "name": "Probe (tạm)",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "one-shot",
+   "anchor:contact",
+   "space:aim",
+   "weight:light"
+  ],
+  "desc": "temporary effect used to test the build",
+  "fps": 30.0,
+  "frames": 19,
+  "frame_size_2x": [
+   212,
+   88
+  ],
+  "anchor_2x": [
+   45.0,
+   45.0
+  ],
+  "dir": "impact/burst/probe",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
  },
  "impact/dash/comet": {
   "name": "Sao chổi",
@@ -518,7 +572,8 @@
    34,
    45
   ],
-  "dir": "melee/blade_aura/charge_blue"
+  "dir": "melee/blade_aura/charge_blue",
+  "qa": "ok"
  },
  "melee/blade_aura/charge_fire": {
   "name": "Tụ lực lưỡi đao (lửa)",
@@ -546,6 +601,7 @@
    34,
    45
   ],
-  "dir": "melee/blade_aura/charge_fire"
+  "dir": "melee/blade_aura/charge_fire",
+  "qa": "ok"
  }
 }

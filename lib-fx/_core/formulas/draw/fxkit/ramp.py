@@ -33,6 +33,20 @@ class Ramp(dict):
         r.setdefault("accent", _rgb(hb - away * 0.085, max(0.62, lb), min(1.0, sb * 1.1)))   # ~30 degrees towards the light: a few sparks
         return r
 
+    def tone(self, name):
+        """A flat tone of the house style, by what it is for (rules/01 section 3: three or four tones of one hue family, about
+        50-65 apart in lightness, the brightest deepest inside the mass or at the root):
+          shade  the darkest: the cold tail, a far / back shape        deep  the inner darker patches of a mass
+          main   the big readable colour of the effect                 hot   the hottest part: root, core, leading edge
+          white  only for one- or two-frame flashes                    smoke / smoke_dark  see-through masses behind the effect"""
+        if name == "shade": return mix(self["rim"], self["body"], 0.35)
+        if name == "deep": return self["body"]
+        if name == "main": return self["light"]
+        if name == "hot": return self["core"]
+        if name == "smoke": return mix((70, 74, 84), self["rim"], 0.18)
+        if name == "smoke_dark": return mix((22, 24, 30), self["rim"], 0.12)
+        return self[name]
+
     def step(self, heat):
         """One flat colour for a small shape at heat 1 (white-hot) .. 0 (cold): white, core, light, body, rim, tip."""
         keys = ("tip", "rim", "body", "light", "core", "white")
@@ -40,14 +54,15 @@ class Ramp(dict):
 
     def bands(self, s=1.0, heat=1.0, k=1.0):
         """Edge -> centre colour bands for organic.Shape.paint: [(px from the edge, colour), ..., (None, colour)]. k scales the
-        band widths (small shapes: k < 1). As heat falls the white centre closes, then the core: the shape cools from its edges
-        inward and ends as rim / body only."""
-        w = s * k * (0.55 + 0.45 * heat)
-        out = [(1.3 * s * k, self["tip"]), (3.6 * w, self["rim"]), (6.4 * w, self["body"])]
-        if heat > 0.12: out.append((9.5 * w if heat > 0.3 else None, self["light"]))
-        else: out[-1] = (None, self["body"])
-        if heat > 0.3: out.append((13.5 * s * k / max(0.25, heat) if heat > 0.55 else None, self["core"]))
-        if heat > 0.55: out.append((None, self["white"]))
+        band widths (small shapes: k < 1). As heat falls every band grows deeper into the shape, so the white centre closes first,
+        then the core, then the light: the shape cools from its edges inward, step by step, and ends as rim and body with a
+        little light left only in its thickest part. Never a jump from white to one flat colour."""
+        c = 1 - max(0.0, min(1.0, heat))                                  # how far it has cooled
+        u = s * k
+        out = [(1.3 * u, self["tip"]), (3.4 * u * (1 + 0.2 * c), self["rim"]), (6.4 * u * (1 + 2.2 * c), self["body"]),
+               (9.5 * u * (1 + 4.5 * c), self["light"])]
+        if heat > 0.15: out.append((13.5 * u / max(0.15, heat) ** 1.3, self["core"]))
+        out.append((None, self["white"] if heat > 0.15 else self["core"]))
         return out
 
     def smoke(self, tone="light", warm=0.0):

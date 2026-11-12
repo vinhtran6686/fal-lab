@@ -21,6 +21,8 @@ What is measured (weight of a frame = sum of its alpha, so a faint big shape and
   WARN flicker  the weight goes up and down by more than 12 % of the peak three times or more: it flashes.
   WARN tiny     at game size (@1x, body H = 60 px) the peak frame is under 10 px in both directions: unreadable.
   WARN speck    at game size, 30 % or more of the frames are visible but under 3 px of solid area in total: stray specks.
+fxkit effects (families with EFFECTS) also FAIL on lint problems: Effect.lint() messages (missing roles, no flash / core on the hit
+frame, every layer ending together ...) are added by build.py to the "fail" list as `lint: ...` lines.
 Numbers reported: frames, peak frame, size of the peak frame at @1x, weight left on the last frame (% of peak).
 """
 import json, pathlib, sys

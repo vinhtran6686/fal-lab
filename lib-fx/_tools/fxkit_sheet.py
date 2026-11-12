@@ -18,7 +18,7 @@ from PIL import Image, ImageDraw
 import fxcore, fxcheck
 from fxkit import Effect, Layer, Life, render, KINDS
 
-BG = (34, 38, 36)
+BG = (24, 26, 34)
 
 
 def val(v):

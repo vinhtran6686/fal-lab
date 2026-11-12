@@ -14,7 +14,8 @@ flash, accent. Layers are drawn in list order; z = "back" puts a layer behind th
 import math
 from dataclasses import dataclass, field, replace
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
+from scipy import ndimage
 import fxcore
 from .ramp import Ramp
 from .space import Space
@@ -55,13 +56,21 @@ class Ctx:
         self.front, self.back = front, back
         self.cv = back if layer.z == "back" else front
         self.o = sp.at(layer.at)
+        self._glow = None
+
+    def add_glow(self, mask, weight=1.0):
+        """Feed the effect's glow with a silhouette (bool, supersampled) of this layer; weight 0..1 = how strongly it glows now."""
+        if self._glow is None or weight <= 0: return
+        g = self._glow[self.layer.z]
+        np.maximum(g, mask * np.float32(min(1.0, weight)), out=g)
 
     def rng(self, *keys):
         return Rand(self.seed, self.effect.name, self.layer.id, *keys)
 
 
 class Effect:
-    def __init__(self, name, layers, title="", desc="", space="point", reach=140, extent=220, pal="sun", tags=(), status="draft", weight="medium"):
+    def __init__(self, name, layers, title="", desc="", space="point", reach=140, extent=220, pal="sun", tags=(), status="draft", weight="medium",
+                 glow=(9, 0.8, 34, 0.5), glow_key="body"):
         """space: how the effect uses its two points: point (a only), aim (a + the direction to b), span (stretched from a to b),
         travel (moves from a to b, then hits at b), ground (a on the floor line, level). reach: the default distance a -> b in
         px at s = 1 (library build). extent: how far in px the effect may reach around a and b (work canvas; the result is
@@ -70,6 +79,7 @@ class Effect:
         ids = [l.id for l in layers]; assert len(ids) == len(set(ids)), f"{name}: layer ids must be unique: {ids}"
         self.name, self.layers, self.title, self.desc, self.space = name, list(layers), title or name, desc, space
         self.reach, self.extent, self.pal, self.tags, self.status, self.weight = reach, extent, pal, list(tags), status, weight
+        self.glow, self.glow_key = glow, glow_key      # glow = (near blur px, near alpha, far blur px, far alpha) at s = 1; None = no glow
 
     t0 = property(lambda self: min(0.0, min(l.life.start for l in self.layers)))      # s before the hit when the effect starts
     end = property(lambda self: max(l.life.end for l in self.layers))
@@ -79,17 +89,38 @@ class Effect:
         layers = layers or {}
         unknown = set(layers) - {l.id for l in self.layers}; assert not unknown, f"{self.name}: no layer {unknown}"
         ls = [l.but(**layers[l.id]) if isinstance(layers.get(l.id), dict) else l for l in self.layers if layers.get(l.id, True) is not False]
-        e = Effect(name or self.name, ls, self.title, self.desc, self.space, self.reach, self.extent, self.pal, self.tags, self.status, self.weight)
+        e = Effect(name or self.name, ls, self.title, self.desc, self.space, self.reach, self.extent, self.pal, self.tags, self.status, self.weight,
+                   self.glow, self.glow_key)
         for k, v in attrs.items(): setattr(e, k, v)
         return e
 
     def draw(self, t, sp, pal, seed, front, back, fps=30.0, only=None):
         """Draw every live layer at effect time t (seconds from the hit) onto the two canvases."""
+        shape = front.img.size[::-1]
+        glow = {"front": np.zeros(shape, np.float32), "back": np.zeros(shape, np.float32)}
+        done = {"front": False, "back": False}
         for l in self.layers:
             if only is not None and l.id not in only: continue
             ph = l.life.at(t, fps)
             if ph is None: continue
-            KINDS[l.kind](Ctx(self, l, sp, pal, seed, front, back, fps), ph, **l.p)
+            c = Ctx(self, l, sp, pal, seed, front, back, fps); c._glow = glow
+            KINDS[l.kind](c, ph, **l.p)
+        if self.glow:
+            for z, cv in (("back", back), ("front", front)):
+                g = glow[z]
+                if not g.any(): continue
+                self._put_glow(cv, g, pal[self.glow_key], sp.s)
+
+    def _put_glow(self, cv, g, rgb, s):
+        """The glow of one canvas: the silhouettes fed by its layers, blurred at two scales in the main colour, put UNDER what
+        the canvas already holds (rules/01: glow = the shape itself, blurred; not a fixed outline)."""
+        ss = cv.ss; nb, na, fb, fa = self.glow
+        small = np.asarray(Image.fromarray((g * 255).astype(np.uint8), "L").resize((cv.w, cv.h), Image.BOX), np.float32) / 255
+        a = np.clip(ndimage.gaussian_filter(small, nb * s) * na * 1.6, 0, na) + np.clip(ndimage.gaussian_filter(small, fb * s) * fa * 2.2, 0, fa)
+        a = np.clip(a, 0, 0.92)
+        lay = Image.fromarray(np.dstack([np.broadcast_to(np.asarray(rgb, np.uint8), a.shape + (3,)), (a * 255).astype(np.uint8)]), "RGBA")
+        lay = lay.resize(cv.img.size, Image.BILINEAR)
+        lay.alpha_composite(cv.img); cv.img = lay; cv.d = ImageDraw.Draw(cv.img)
 
     def lint(self):
         """Design rules every effect must pass (empty list = fine)."""
