@@ -49,3 +49,29 @@ python lib-fx/_tools/fxkit_test.py
 ```
 
 ## Kết quả (người làm điền)
+
+Làm xong 2026-11-13. Phương án 1 (hình thái + Gauss) đã đạt, không cần `smooth_simplify`.
+
+**Đã làm**
+- `fxkit/ink.py`: `smooth_mask(mask, ss, fillet=2.0, burr=1.0, tip_keep=6.0, sigma=0.8)` (đóng bán kính fillet; mở bán kính burr rồi trả lại mũi dài > tip_keep bám vào hình; Gauss + ngưỡng 0.5, trả lại mũi), làm trên hộp bao. `Ink(c, smooth=True|dict|False)`, `Ink.paint(..., smooth=None)`; mỗi tông làm mịn trước khi tô, tông trong vẫn nằm trong tông đầu. Mặc định fillet 2 px / burr 1 px (đã thử 3 / 1.2: làm mất cựa lửa nhỏ và các lưỡi `hot`, nên hạ), nhân `c.s` kẹp 0.5-2.
+- `THIN` (fillet 1.0, burr 0.5, sigma 0.6) cho `ring`, `streaks`, `scraps`, `embers`, `bolt`; `crystals` dùng `smooth=False` (mặt phẳng cạnh sắc). `flames`, `smoke`, `slash`, `star`: mặc định.
+- `fxkit_test.py`: `test_smooth` (5 phép kiểm tổng hợp: lấp khe hẹp, giữ mũi, giữ nét mảnh dài, gọt gờ 1 px, không đổi khi tắt) và `fairness_report` (in kinks / wobble / curv_var của khung hit+3, không tính fail). `FXKIT.md` mục 1, 2, 4 (6b) đã ghi.
+
+**Trước / sau** (`path_fairness` của alpha > 127, khung hit+3, s = 2, `bezier.trace` tol 1.0; ảnh ở scratchpad, không commit)
+| hiệu ứng | trước kinks / wobble / curv_var | sau |
+|---|---|---|
+| eruption | 0 / 2.10 / 1.35 | 0 / 2.17 / 5.42 |
+| slam | 0 / 1.81 / 11.74 | 0 / 1.82 / 4.92 |
+| crescent | 0 / 1.62 / 5.61 | 0 / 1.74 / 50.91 |
+(bản đo ban đầu fillet 3 / burr 1.2; bản cuối fillet 2 / burr 1 đo ở s = 1 trong `fxkit_test`: eruption 0 / 3.57 / 6.87, slam 0 / 2.43 / 9.03, crescent 0 / 2.72 / 5.68, không có số "trước" cùng điều kiện.)
+
+**Trung thực về tiêu chí số**: hai tiêu chí đo bằng `path_fairness` KHÔNG đạt: `kinks` trước đã bằng 0 (bộ vector hoá của `bezier.trace` tự làm tròn góc, nên không có "hiện > 0" để giảm), và `curv_var` của eruption TĂNG (1.35 -> 5.4) vì phép đo bị mũi nhọn và độ phân giải chi phối, không đo được độ mịn mép. Không dùng số này làm bằng chứng. Bằng chứng là mắt: so ảnh 3x tắt / bật làm mịn (eruption, slam, crescent, `ranged/bolt`, `impact/spark/heavy`):
+- góc lõm ở chân các lưỡi lửa được bo tròn, mép giữa các mũi là đường cong liền; mũi lưỡi vẫn nhọn (chóp lưỡi cao nhất giữ nguyên);
+- `ring`, `streaks`, `scraps`, đuôi `bolt`, đuôi dust còn nguyên; spark, bolt (người dùng đã khen) không xấu đi, chỉ mịn hơn;
+- chưa hết: mảnh `deep` của vệt chém ở pha tàn (`hollow=True`) giờ thành các đốm bo tròn, vẫn là "hoa văn" (việc của T3, đổi cách tàn); mép đáy lửa còn gợn nhẹ (hình gốc của `foot`).
+- Hạn chế: pha đóng làm mất cựa nhỏ nếu thung lũng cạnh nó hẹp hơn 2 x fillet; vì vậy fillet mặc định thấp.
+
+**Kiểm tra đã chạy**
+- `python lib-fx/_tools/fxkit_test.py`: all checks passed (13 phút 45 giây khi máy đang tải chung).
+- `build.py --check` cho `element/fire/aoe`, `impact/spark`, `impact/quake`, `ranged/bolt`, `explosion/blast`, `melee/slash`, `magic/arcane`: không FAIL (chỉ cảnh báo linger cũ). Đầu ra build bị hoàn lại (T6 dựng lại).
+- Thời gian `build.py element/fire/aoe`: user 64.7 s -> 90.3 s (+40 %, dưới 50 %; đo khi máy đang tải nên số dao động).

@@ -2,7 +2,7 @@
 ribbon trail with hair-thin streaks and a darker inner stripe. It arrives at b at t = 0 (the hit); after that the head is gone at once
 and the trail is eaten in place while its far end catches up to b."""
 import math
-from .. import kind, smooth, clamp, Ink, erode, drop_specks, shapes
+from .. import kind, smooth, clamp, Ink, THIN, erode, drop_specks, shapes
 from .flames import decay_share
 
 
@@ -37,7 +37,7 @@ def bolt(c, ph, bend=0.0, r=13.0, tail=120.0, width=1.0):
     far0 = max(0.0, 1.0 - tail * s / sp.len) if d > 0 else max(0.0, f - tail * s / sp.len)
     f_head = 1.0 if d > 0 else f
     f_far = far0 + (1.0 - far0) * d if d > 0 else far0
-    ink = Ink(c)
+    ink = Ink(c, smooth=THIN)
     N = 30
     if f_head - f_far > 1e-4:
         fs = [f_far + (f_head - f_far) * k / N for k in range(N + 1)]

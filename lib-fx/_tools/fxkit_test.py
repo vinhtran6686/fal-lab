@@ -72,6 +72,43 @@ def test_kind(k):
         say(False, f"{k}: renders at s 0.5 ({type(ex).__name__}: {ex})")
 
 
+def test_smooth():
+    """smooth_mask (Ink): a notch between two shapes is filleted, a real tip stays sharp, a thin long line survives, a speck-sized bump goes."""
+    from fxkit.ink import smooth_mask
+    ss = 3
+    m = np.zeros((240, 300), bool)
+    m[100:160, 40:140] = True; m[100:160, 140:240] = True            # two blocks
+    m[60:100, 60:70] = True; m[60:100, 200:230] = True               # a spike-like column and a wide one
+    for i in range(30):                                              # a triangle tip pointing up, 1 px per row narrower
+        m[30 + i, 150 - i // 3: 151 + i // 3] = True
+    m[100:104, 140:240] |= True
+    notch = m.copy(); notch[100:130, 138:142] = False               # a narrow notch between the two blocks
+    m2 = notch.copy(); m2[40:44, 20:200] = True                      # a thin long line (4 px)
+    m2[158:160, 80] = False; m2[98:100, 90] = True                   # a 1 px burr on the top edge
+    out = smooth_mask(m2, ss=1, fillet=2.0, burr=1.0, tip_keep=6.0, sigma=0.8)
+    say(out[110:128, 138:142].mean() > 0.9, "smooth_mask: a narrow notch is filled")
+    say(out[30:34, 148:153].any(), "smooth_mask: a tip stays (top of the triangle)")
+    say(out[40:44, 20:200].mean() > 0.8, "smooth_mask: a thin long line survives")
+    say(not out[96:99, 88:92].any() or out[96:99, 88:92].mean() < 0.5, "smooth_mask: a 1 px burr is shaved")
+    say(np.array_equal(smooth_mask(m2, 1, fillet=0, burr=0, sigma=0), m2), "smooth_mask: all zero = unchanged")
+
+
+def fairness_report():
+    """Printed, never a failure: Bezier fairness of the outline of the peak frame (hit + 3) of three reference effects (vector kit metrics)."""
+    sys.path.insert(0, str(HERE.parent / "_core" / "formulas"))
+    from vector import bezier, metrics
+    import importlib.util
+    for path in ("element/fire/aoe/eruption", "impact/quake/slam", "melee/slash/crescent"):
+        fam, _, name = path.rpartition("/")
+        py = HERE.parent / fam / (fam.rsplit("/", 1)[-1] + ".py")
+        spec = importlib.util.spec_from_file_location("fxf_" + fam.replace("/", "_"), py); mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+        r = fxkit.render(mod.EFFECTS[name], s=1.0)
+        i = min(len(r["frames"]) - 1, r["hit_frame"] - 1 + 3)
+        a = np.asarray(r["frames"][i])[..., 3] > 127
+        f = metrics.path_fairness([t["segs"] for t in bezier.trace(a)])
+        print(f"info {path}: frame {i + 1} fairness kinks={f['kinks']} wobble={f['wobble']} curv_var={f['curv_var']}")
+
+
 def main():
     want = sys.argv[1:]
     kinds = list(fxkit.KINDS)
@@ -79,6 +116,8 @@ def main():
         if w not in fxkit.KINDS: sys.exit(f"no kind '{w}'. Kinds: {', '.join(kinds)}")
     for k in (want or kinds): test_kind(k)
     if want: sys.exit(1 if fails else 0)
+    test_smooth()
+    fairness_report()
     for name in palettes.PALETTES:
         probs = Ramp.of(name).problems()
         say(not probs, f"palette {name}: Ramp problems: {'; '.join(probs) if probs else 'none'}", "ok  " if not probs else "WARNING")

@@ -3,7 +3,7 @@ are small curved slivers (commas), each different, like the last frames of the r
 `embers` (slow glowing motes)."""
 import math
 import fxcore
-from .. import kind, sizes, angles, smooth, clamp, Ink, shapes
+from .. import kind, sizes, angles, smooth, clamp, Ink, THIN, shapes
 
 
 def _first(c, ph, ink, glow, hot_too=True):
@@ -30,7 +30,7 @@ def scraps(c, ph, n=9, arc=(-180, 180), speed=(170, 430), drag=4.5, gravity=260.
     szs = sizes(rng, n, heroes=1, mid=0.6, small=0.32, jitter=0.18)
     big = sorted(range(n), key=lambda i: -szs[i])[:min(3, max(2, n // 4))]
     x0, y0 = c.o; total = c.layer.life.length
-    ink = Ink(c)
+    ink = Ink(c, smooth=THIN)
     for i in range(n):
         r = c.rng("scrap", i)
         ang = ax - math.radians(offs[i]) * hand
@@ -62,7 +62,7 @@ def embers(c, ph, n=7, area=(80, 34), rise=(34, 80), sway=8.0, size=9.0):
     total = c.layer.life.length; x0, y0 = c.o
     szs = sizes(rng, n, heroes=1, mid=0.6, small=0.4, jitter=0.2)
     order = list(range(n)); rng.shuffle(order)
-    ink = Ink(c)
+    ink = Ink(c, smooth=THIN)
     for k, i in enumerate(order):
         r = c.rng("ember", i)
         birth = (k + r.uniform(0.05, 0.95)) / n * 0.6 * total               # one after another, inside the first 60 % of the life

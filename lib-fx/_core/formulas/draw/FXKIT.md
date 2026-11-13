@@ -14,6 +14,7 @@ Phong cách đo từ các mẫu đã duyệt 9-10/10 (`../rules/01-design-style.
 |---|---|---|
 | Hình | ít, lớn, nét cong liền có mũi nhọn thật; không ghép từ hình tròn và tam giác | `fxkit/shapes.py`: `tongue`, `lobed`, `shard`, `scrap`, `ribbon`, `spline` |
 | Màu | 2-3 tông **phẳng xếp chồng** của một họ màu: `main` (màu đọc được), `deep` (mảng tối bên trong), `hot` (nóng nhất: sâu trong khối, ở gốc hoặc mép dẫn); không viền, không dải đồng tâm, không gradient | `Ink.add(tone, polygon)`, `Ink.paint([...])`, `Ramp.tone()` |
+| Nét | viền **nối mịn như Smooth Tool**: góc lõm chỗ hai hình giao được bo, gờ nhỏ sau khi mòn được gọt, mép đều, mũi nhọn thật giữ nguyên; làm tự động trong `Ink.paint` trên từng tông | `smooth_mask(mask, ss, fillet, burr, tip_keep, sigma)`, `Ink(c, smooth=True\|dict\|False)`, `THIN` |
 | Quầng sáng | là **bản nhoè của chính hình**, hai cỡ nhoè, màu chính của hiệu ứng; tắt trước khi hình tan (trừ vệt chém giữ tới cuối) | `Effect.glow`, `ink.paint(glow=...)` |
 | Sinh | hình nhỏ ở gốc, bung trong 1-4 khung, **ngang trước, cao sau** | `ph.grow` + `out_back`, `out_cubic` |
 | Tàn | **mòn và vỡ tại chỗ**: mép và phần mỏng mất trước, lỗ mở ra, mảnh sứt rồi chết khi thành đốm; khung bao giữ gần tới cuối; diện tích giảm theo tỉ lệ cố định mỗi khung; nửa sau vẽ on twos | `erode(mask, keep, ...)`, `decay_share`, `on_twos`, `drop_specks` |
@@ -34,7 +35,7 @@ Năm luật mà hệ thống ép buộc:
 palettes.py           16 bảng màu chuẩn (5 bậc)                         dữ liệu màu
 fxcore.py             canvas siêu mẫu, GIF xem trước                    vẽ pixel
 fxkit/shapes.py       hình cong liền: tongue, lobed, shard, scrap, ribbon hình
-fxkit/ink.py          Ink (tông phẳng xếp chồng), erode, drop_specks     tô và mòn
+fxkit/ink.py          Ink (tông phẳng xếp chồng), erode, drop_specks, smooth_mask   tô, mòn, làm mịn nét
 fxkit/vary.py         Rand, sizes, angles, delays, varied                biến thiên
 fxkit/timing.py       Life, Phase, easing                                thời gian
 fxkit/space.py        Space: a, b, khung trục, đường cong a → b           không gian
@@ -95,6 +96,10 @@ vẽ hình vào `Ink` theo tông → **mòn** theo phần diện tích còn lạ
 5. Hình chỉ lấy từ `fxkit.shapes`. Tô chỉ qua `Ink`. Tông trong luôn cắt theo tông ngoài (`& body`). Khung đầu (`ph.first`) tô quá sáng.
 6. Tàn: `erode` theo `keep = decay_share(on_twos(ph, c), linger)`; `holes` nhỏ = mòn từ mép (lửa, pha lê), lớn = mở lỗ (khói, vòng),
    `hollow=True` = ăn từ trong ra, còn lại sợi dọc mép (vệt chém, màn pha lê); `shift` cho lỗ trôi (mảnh lửa bay lên). `drop_specks` sau cùng.
+6b. **Làm mịn nét**: `Ink.paint` tự làm mịn từng tông (bo góc lõm 2 px, gọt gờ 1 px, làm đều sigma 0.8 px; tất cả nhân `c.s`, kẹp 0.5-2).
+   Kind có hình mảnh (ring, streaks, scraps, embers, bolt) dùng `Ink(c, smooth=THIN)` (nhẹ hơn); kind hình cạnh phẳng (crystals) dùng `smooth=False`.
+   Hình mảnh dài hơn `tip_keep` (6 px) bám vào hình chính được giữ nguyên như mũi nhọn. Tông trong vẫn cắt theo tông đầu sau khi mịn.
+   Đừng tự làm mịn trong kind; chỉ chỉnh `smooth=dict(fillet=..., burr=..., sigma=...)` khi một hình mất nét.
 7. Xem thử một mình: `python lib-fx/_tools/fxkit_sheet.py <kind> key=value ... --life s,a,h,r` (4 hàng: seed, hướng, cỡ, bảng màu khác nhau).
 
 ## 5. Bảng kind

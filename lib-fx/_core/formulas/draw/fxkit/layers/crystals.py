@@ -34,7 +34,7 @@ def crystals(c, ph, n=5, height=170.0, width=120.0, fan=95.0, dir=90.0, veil=Tru
     hero = centre[rng.randrange(min(2, n))]
     rest = [i for i in range(n) if i != hero]; others = szs[1:]; rng.shuffle(others)
     size_of = {hero: szs[0], **dict(zip(rest, others))}
-    ink = Ink(c)
+    ink = Ink(c, smooth=False)
     time = ph.sec
     spikes = []
     if veil:                                                                # the see-through wings, painted first

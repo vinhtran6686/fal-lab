@@ -1,7 +1,7 @@
 """fxkit / layers / burst: the body of a hit. `star` (a few long curved points out of a small centre), `streaks` (speed lines),
 `ring` (a shock ring). Each one is designed at its peak with a seeded rng, grows, then is eaten in place (rules/05)."""
 import math
-from .. import kind, sizes, angles, smooth, out_back, out_quint, clamp, Ink, erode, drop_specks, shapes
+from .. import kind, sizes, angles, smooth, out_back, out_quint, clamp, Ink, THIN, erode, drop_specks, shapes
 from .flames import decay_share, on_twos
 
 
@@ -75,7 +75,7 @@ def streaks(c, ph, n=4, arc=(-180, 180), length=130.0, width=5.0, r0=34.0, speed
     dirs = _dirs(rng, c, n, arc)
     szs = sizes(rng, n, heroes=1, mid=0.7, small=0.4)
     hero = max(range(n), key=lambda i: szs[i]) if n else 0
-    ink = Ink(c)
+    ink = Ink(c, smooth=THIN)
     d = ph.decay
     for i, (a, sz) in enumerate(zip(dirs, szs)):
         r = c.rng("line", i)
@@ -119,7 +119,7 @@ def ring(c, ph, r=(26.0, 120.0), width=13.0, squash=1.0, gaps=3, linger=3.4):
     near = 0.4 * (1 - squash)
 
     def w_of(t): return w * (1 + 0.35 * math.cos(t - th0)) * (1 + near * math.sin(t))
-    ink = Ink(c)
+    ink = Ink(c, smooth=THIN)
     ink.add("main", _band(x0, y0, rr, w_of, squash))
     ink.add("hot", _band(x0, y0, rr, w_of, squash, outer_only=0.25))
     if d > 0:

@@ -10,5 +10,5 @@ from .space import Space
 from .ramp import Ramp, mix, lum
 from .effect import Effect, Layer, Ctx, kind, render, KINDS, ROLES, SPACES
 from . import shapes
-from .ink import Ink, erode, noise, drop_specks
+from .ink import Ink, THIN, erode, noise, drop_specks, smooth_mask
 from . import layers  # noqa: F401  (registers every layer kind)
