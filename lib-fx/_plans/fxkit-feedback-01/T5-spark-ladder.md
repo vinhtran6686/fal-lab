@@ -44,3 +44,12 @@ python lib-fx/build.py impact/spark --check
 ```
 
 ## Kết quả (người làm điền)
+
+Làm xong 2026-11-13.
+- `burst.py`: `star` có tham số mới `even` (mặc định False, không đổi gì cho nơi khác): hướng chia đều, lệch vài độ, mọi mũi cùng cỡ.
+- `spark.py`: `crit` viết lại thành chồng lớp riêng: `ring` + `ring2` (sinh sau 4 khung, nhỏ hơn), `flash` (star trắng lớn, sống 2 khung), `cross` (star `even`, n=4, dài 210, mảnh), `star` 5 mũi ngắn, `streaks` 7 mọi hướng, `scraps` 15 to (size 22). Bảng màu `holy`. `light`: sao giới hạn `arc=(-80, 80)` để lệch về một phía; `heavy` không đổi.
+- Số đo (1x, tổng alpha khung đỉnh): light 1025, heavy 6075 (5.9x), crit 10664 (10.4x). Số khung: 14 / 18 / 21. Thời gian crit ~0.67 s.
+- Xem ảnh xám khung đỉnh: ba hình bóng khác rõ (chớp nhỏ lệch / sao + vòng / chữ thập dài + vòng).
+- `build.py impact/spark --check`: không FAIL, chỉ warn `linger` (cuối đuôi mảnh vụn, cả ba mức; heavy cũ cũng có). `fxkit_test.py`: all checks passed. Lint sạch.
+- Chưa so sánh ảnh trước/sau của `light` theo từng pixel: light đổi hướng sao (một phía) nên khung đỉnh khác chút, diện tích 1066 -> 1025.
+- Lưu ý: commit WIP f03efe7 của điều phối đã gồm cả file dựng lại của `impact/spark`; T6 sẽ dựng lại lại.
