@@ -53,3 +53,20 @@ Mẫu để đối chiếu: `ref/vfx/slash-trio/` (nhát chém mịn), `lib-fx/_
 `ref/vfx/axe-swing-idea/reference.png` (rìu).
 
 ## Kết quả (người làm điền)
+
+Làm xong (kind `slash` viết lại, các file ghi trong task; không dựng lại bản duyệt, việc đó của T6).
+
+- `layers/slash.py`: tham số `weapon` (`sword|axe|saw`), `teeth` mặc định 0, `width`/`span`/`strands`/`streaks` mặc định theo vũ khí (kiếm 46, rìu 80 phủ 70 % cung). Vệt là bó `K` sợi dọc trong toạ độ nét; pha tàn mới: mỗi sợi mỏng về tâm `(1-d)^p_j`, đuôi rút `rut_j`, đầu lùi nhẹ, hai đầu thuôn; bỏ hẳn `erode` / `drop_specks` (không lỗ, không mảnh vụn). `deep` là phần trong của sợi trong cùng, `hot` là phần ngoài của sợi ngoài cùng (tàn sau cùng). Kiếm: 3 sợi 50/30/20 % có jitter, 2 sợi tóc ngoài mép. Rìu: 4-6 dải cách nhau khe 6-10 %, đầu tù `(1-v^3)`. Cưa: kiếm + `teeth=6`.
+- Rìu cần hai chỉnh để khe không bị lấp: Ink làm mịn nhẹ hơn (`fillet 0.6`) và glow 0.5 (glow đầy làm khe sáng như dải).
+- `melee/slash/slash.py`: `crescent` (kiếm, 46), `heavy` (kiếm 70, echo), `thrust` (kiếm), thêm `axe`, `axe_heavy` (có lớp echo để đủ 4 vai trò). Đã cập nhật FXKIT.md, GUIDE.md, rules/vfx/slash/README.md.
+- Cưa (mục 5, tuỳ chọn): có code (`weapon=saw`) nhưng chưa xem ảnh riêng.
+
+Kiểm tra:
+- `build.py melee/slash --check`: không FAIL; còn cảnh báo `warn cut` (khung áp chót còn 6-18 % đỉnh; là cảnh báo, không phải cổng) ở crescent, heavy, axe_heavy và `linger` ở crescent, thrust. Đã thêm đoạn tắt dần cuối để giảm; chưa hết hẳn.
+- `fxkit_test.py`: all checks passed.
+- Đã xem ảnh (`fxkit_sheet`): bend 0, -0.3, reach 80 và 260 cho kiếm; bend -0.3 và reach 80 cho rìu: bụng vệt nằm phía trong cung ở mọi trường hợp.
+- Khung đỉnh rìu: đếm được 5 dải song song; pha tàn rìu: các dải ngắn dần từ đuôi, dải mảnh hết trước. Kiếm khung tàn: 2-3 nét dài mảnh theo cung; còn vài đoạn gạch ngắn (sợi tóc / `deep` bị cắt đầu) ở khung giữa tàn, vẫn song song với cung.
+- Nhận xét "người không biết trước": do tôi tự xem, không có người thứ ba: kiếm là một cung liền mịn, rìu là một chùm dải song song có khe; hai loại phân biệt ngay cả ở khung tàn. Chưa kiểm ở cỡ game bằng `preview_game.gif` của `axe` và `crescent` đặt cạnh nhau, và chưa kiểm riêng 4 seed (chỉ thấy 4 hàng seed trong sheet kind: khác nhau, cùng tính chất).
+- Hiệu ứng được khen (spark, quake, bolt, nện bụi): không đụng file nào của chúng.
+- Hạn chế: `slash.py` cho T4 sẽ cần giữ `lat(f, cc)` / `strand(...)` khi đổi quỹ đạo (mọi hình đi qua `at(f)`).
+
