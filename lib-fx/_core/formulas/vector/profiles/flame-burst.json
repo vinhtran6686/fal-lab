@@ -1,0 +1,250 @@
+{
+ "name": "flame-burst",
+ "about": "Reference: ref/vfx/flame-burst/dmitry-sarkisov-flame-burst.gif (800x550, 81 frames, 25 fps, author Dmitry Sarkisov; study only). A short kindle at the muzzle of a dark box, then an S-shaped stream of fire thrown to the right with curly dark smoke over its far half; the stream splits, burns down to the root, the smoke outlives it. The box (x 140-202) is cut out of the crop.",
+ "source": {
+  "gif": "ref/vfx/flame-burst/dmitry-sarkisov-flame-burst.gif",
+  "crops": {
+   "fire": [
+    204,
+    200,
+    776,
+    470
+   ]
+  },
+  "scale": 1,
+  "frames_dir": "lib-fx/_study/flame-burst/vector_src",
+  "pattern": "{variant}_{frame:02d}.png",
+  "frames": [
+   1,
+   75
+  ],
+  "background_frame": 80
+ },
+ "frame": {
+  "type": "linear",
+  "angle": 0
+ },
+ "fit": {
+  "underlay_px": 10,
+  "passes": 4,
+  "min_area": 6,
+  "min_gain": 0.0008,
+  "axes": [
+   "u",
+   "v"
+  ],
+  "edge_bias": [
+   0,
+   0
+  ]
+ },
+ "masks": {
+  "min_area": 20
+ },
+ "smooth": {
+  "sigma": 4.5,
+  "corner_deg": 145,
+  "merge_tol": 0.9,
+  "min_area": 12,
+  "close_px": 1.5
+ },
+ "background": [
+  49,
+  52,
+  56
+ ],
+ "variants": {
+  "fire": {
+   "order": [
+    "smoke",
+    "ember",
+    "orange",
+    "gold"
+   ],
+   "layers": {
+    "smoke": {
+     "colours": [
+      [
+       30,
+       20,
+       24
+      ],
+      [
+       22,
+       18,
+       22
+      ],
+      [
+       40,
+       26,
+       28
+      ]
+     ],
+     "tol": 16,
+     "darker_than_bg": 18
+    },
+    "ember": {
+     "colours": [
+      [
+       66,
+       30,
+       26
+      ],
+      [
+       80,
+       34,
+       26
+      ],
+      [
+       56,
+       26,
+       26
+      ]
+     ],
+     "tol": 12
+    },
+    "orange": {
+     "colours": [
+      [
+       252,
+       168,
+       66
+      ],
+      [
+       252,
+       180,
+       72
+      ],
+      [
+       252,
+       192,
+       84
+      ],
+      [
+       240,
+       140,
+       50
+      ],
+      [
+       200,
+       110,
+       44
+      ],
+      [
+       168,
+       96,
+       36
+      ]
+     ],
+     "tol": 24,
+     "gradient": {
+      "edge": [
+       209,
+       122,
+       47
+      ],
+      "s": 1.88
+     }
+    },
+    "gold": {
+     "colours": [
+      [
+       252,
+       240,
+       108
+      ],
+      [
+       255,
+       248,
+       150
+      ]
+     ],
+     "tol": 26
+    }
+   },
+   "halo_model": "blur",
+   "near_halo": false,
+   "halo": {
+    "model": "blur",
+    "sigma": [
+     6.38,
+     31.04
+    ],
+    "c": [
+     [
+      51.5,
+      5.5,
+      -17.7
+     ],
+     [
+      6.3,
+      -5.9,
+      -10.2
+     ]
+    ],
+    "gain": {
+     "2": 2.0,
+     "3": 1.753,
+     "4": 0.804,
+     "5": 0.959,
+     "6": 0.766,
+     "7": 0.553,
+     "8": 2.0,
+     "9": 1.955,
+     "10": 2.0,
+     "11": 2.0,
+     "12": 2.0,
+     "13": 2.0,
+     "24": 2.0,
+     "25": 2.0,
+     "26": 1.709,
+     "27": 1.886,
+     "28": 1.893,
+     "29": 1.744,
+     "30": 1.547,
+     "31": 1.413,
+     "32": 1.416,
+     "33": 1.33,
+     "34": 1.114,
+     "35": 0.859,
+     "36": 0.715,
+     "37": 0.714,
+     "38": 0.602,
+     "39": 0.553,
+     "40": 0.341,
+     "41": 0.389,
+     "42": 0.328,
+     "43": 0.239,
+     "44": 0.21,
+     "45": 0.185,
+     "46": 0.16,
+     "47": 0.099,
+     "48": 0.124,
+     "49": 0.089,
+     "50": 0.048,
+     "51": 0.036,
+     "52": 0.038,
+     "53": 0.048,
+     "54": 0.022,
+     "55": 0.048,
+     "56": 0.015,
+     "57": 0.053,
+     "58": 0.016,
+     "59": 0.004,
+     "60": 0.0,
+     "61": 0.0,
+     "62": 0.0,
+     "63": 0.0,
+     "64": 0.001,
+     "65": 0.0,
+     "66": 0.0,
+     "67": 0.0,
+     "68": 0.0,
+     "69": 0.0,
+     "70": 0.0,
+     "71": 0.0
+    }
+   }
+  }
+ }
+}
