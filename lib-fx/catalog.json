@@ -116,6 +116,35 @@
   "hit_frame": 1,
   "kit": true
  },
+ "explosion/blast/ground": {
+  "name": "Nổ trên đất",
+  "status": "draft",
+  "tags": [
+   "explosion",
+   "one-shot",
+   "anchor:centre",
+   "heavy",
+   "fire",
+   "ground",
+   "space:point",
+   "weight:heavy"
+  ],
+  "desc": "the blast on the floor: the ring lies flat on the ground and the splash is a flat ellipse under the flames",
+  "fps": 30.0,
+  "frames": 34,
+  "frame_size_2x": [
+   470,
+   340
+  ],
+  "anchor_2x": [
+   250.0,
+   208.0
+  ],
+  "dir": "explosion/blast/ground",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
  "explosion/blast/small": {
   "name": "Nổ nhỏ",
   "status": "draft",
@@ -140,7 +169,7 @@
    180.0
   ],
   "dir": "explosion/blast/small",
-  "qa": "ok",
+  "qa": "warn",
   "hit_frame": 1,
   "kit": true
  },
@@ -302,32 +331,6 @@
   ],
   "dir": "force/shock/vapor",
   "qa": "ok"
- },
- "impact/burst/probe": {
-  "name": "Probe (tạm)",
-  "status": "draft",
-  "tags": [
-   "impact",
-   "one-shot",
-   "anchor:contact",
-   "space:aim",
-   "weight:light"
-  ],
-  "desc": "temporary effect used to test the build",
-  "fps": 30.0,
-  "frames": 19,
-  "frame_size_2x": [
-   212,
-   88
-  ],
-  "anchor_2x": [
-   45.0,
-   45.0
-  ],
-  "dir": "impact/burst/probe",
-  "qa": "warn",
-  "hit_frame": 1,
-  "kit": true
  },
  "impact/dash/comet": {
   "name": "Sao chổi",
@@ -607,11 +610,11 @@
   "frames": 20,
   "frame_size_2x": [
    530,
-   320
+   322
   ],
   "anchor_2x": [
    276.0,
-   184.0
+   186.0
   ],
   "dir": "impact/quake/shockwave",
   "qa": "warn",
@@ -631,16 +634,16 @@
    "space:ground",
    "weight:heavy"
   ],
-  "desc": "a weapon or a fist slams the floor: a pointed flash stands up from the impact, a flat shock ring races out on the ground, a dark dust bank behind and a light one in front roll out to both sides with unequal lobes and pointed tails, scraps are thrown up and fall back; the dust opens from the middle and is eaten in place last",
+  "desc": "a weapon or a fist slams the floor: a flat splash of flash points lies on the floor and a narrow pointed column stands up from the impact, a flat shock ring races out on the ground, a dark dust bank behind and a light one in front roll out to both sides with unequal lobes and pointed tails, scraps are thrown up and fall back; the dust opens from the middle and is eaten in place last",
   "fps": 30.0,
   "frames": 27,
   "frame_size_2x": [
    484,
-   294
+   286
   ],
   "anchor_2x": [
    248.0,
-   160.0
+   152.0
   ],
   "dir": "impact/quake/slam",
   "qa": "ok",
@@ -664,12 +667,12 @@
   "fps": 30.0,
   "frames": 23,
   "frame_size_2x": [
-   242,
-   212
+   250,
+   202
   ],
   "anchor_2x": [
-   102.0,
-   114.0
+   114.0,
+   100.0
   ],
   "dir": "impact/quake/stomp",
   "qa": "ok",

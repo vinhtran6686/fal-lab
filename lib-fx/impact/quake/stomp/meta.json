@@ -16,16 +16,16 @@
  "fps": 30.0,
  "frames": 23,
  "frame_size_2x": [
-  242,
-  212
+  250,
+  202
  ],
  "anchor_2x": [
-  102.0,
-  114.0
+  114.0,
+  100.0
  ],
  "target_2x": [
-  242.0,
-  114.0
+  254.0,
+  100.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -33,7 +33,7 @@
  "seed": 0,
  "layers": [
   {
-   "id": "star",
+   "id": "splash",
    "kind": "star",
    "role": "primary",
    "z": "front",
@@ -71,7 +71,7 @@
   "peak_frame": 4,
   "peak_size_1x": [
    104,
-   27
+   28
   ],
   "last_frame_pct": 0.0
  },

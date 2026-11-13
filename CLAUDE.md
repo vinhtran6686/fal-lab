@@ -43,7 +43,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   2-3 flat stacked tones, glow = the shape blurred, eaten in place). Families declare `EFFECTS` (e.g. `impact/quake/quake.py`); kinds live in
   `lib-fx/_core/formulas/draw/fxkit/layers/`. **Read `lib-fx/_core/formulas/draw/FXKIT.md` before writing an effect or a layer kind.**
   For a character: `python lib-fx/build.py <effect> --from X,Y --to X,Y --pal NAME --seed N --fps 15 --split --out <asset>/frames/fx/<name>`.
-  Quality gate: `build.py` stores `qa` per effect (`lib-fx/_tools/fxcheck.py`); a FAIL blocks `approved`. Review a kind alone with
+  Quality gate: Slash that follows a real weapon swing: add `--track "root_a=X,Y;root_b=X,Y;up=35;turn=cw;ease=1.3"` (FXKIT.md §6); `--set slash.weapon=axe` for parallel axe bands. `build.py` stores `qa` per effect (`lib-fx/_tools/fxcheck.py`); a FAIL blocks `approved`. Review a kind alone with
   `lib-fx/_tools/fxkit_sheet.py`, regression `lib-fx/_tools/fxkit_test.py`. Review `preview_game.gif` (game size), not only @2x.
   Design method: `lib-fx/_core/formulas/draw/DESIGN.md`; hand-drawn organic shapes (thorns, splats, toon dust via `_core/organic.py`): `lib-fx/_core/formulas/draw/RESEARCH-organic-impact.md`.
 - **lib-fx/_core/formulas/vector/** (since 2026-11-08): the vector kit: rebuild or draw hand-drawn flat-colour VFX as clean Bezier paths (measure

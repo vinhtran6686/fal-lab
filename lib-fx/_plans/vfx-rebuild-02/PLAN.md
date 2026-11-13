@@ -3,7 +3,7 @@
 Nguồn: yêu cầu của người dùng 2026-11-13. Mẫu: `ref/vfx/flame-burst/dmitry-sarkisov-flame-burst.gif` (800x550, 81 khung, 25 fps),
 `ref/vfx/lightning/dmitry-sarkisov-lqafinal.gif` (400x400, 127 khung, 25 fps).
 Vai trò: người lập kế hoạch chỉ viết task và **chấm kết quả**; người thi công làm đúng từng bước, không tự đổi phương pháp; người dùng duyệt cuối; docs chỉ viết sau khi duyệt.
-Thư mục này xoá khi xong (như `fxkit-feedback-01`). Kế hoạch `fxkit-feedback-01` độc lập, không chờ nhau.
+Thư mục này xoá khi xong (như kế hoạch `fxkit-feedback-01` trước đó, đã xoá).
 
 **Mục tiêu thật**: hiểu **cách làm** một hiệu ứng tốt (quy trình và các quyết định), để sáng tạo độc lập, không phải học thuộc lửa hay sét.
 Phương pháp tổng quát (bản nháp, có nguồn): [METHOD.md](METHOD.md). Hai mẫu dưới đây là bài kiểm tra cho phương pháp đó.

@@ -18,15 +18,15 @@
  "frames": 20,
  "frame_size_2x": [
   530,
-  320
+  322
  ],
  "anchor_2x": [
   276.0,
-  184.0
+  186.0
  ],
  "target_2x": [
   416.0,
-  184.0
+  186.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -50,12 +50,20 @@
    "end": 0.5
   },
   {
-   "id": "star",
+   "id": "splash",
    "kind": "star",
    "role": "primary",
    "z": "front",
    "start": 0.0,
    "end": 0.399
+  },
+  {
+   "id": "column",
+   "kind": "star",
+   "role": "core",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.333
   },
   {
    "id": "scraps",
@@ -79,10 +87,10 @@
    "linger: the last 7 of 20 frames carry under 2 % of the peak"
   ],
   "frames": 20,
-  "peak_frame": 5,
+  "peak_frame": 4,
   "peak_size_1x": [
-   173,
-   67
+   150,
+   94
   ],
   "last_frame_pct": 0.0
  },

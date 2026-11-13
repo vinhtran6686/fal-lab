@@ -58,3 +58,9 @@ mảnh, cùng hướng. Không lỗ, không mảnh vụn, không hoa văn.
 
 Hiệu ứng: `crescent`, `heavy`, `thrust` là kiếm; `axe`, `axe_heavy` là rìu. Khe giữa các dải rìu bị quầng sáng lấp nếu glow đầy: kind giảm glow còn 0.5 và Ink làm mịn nhẹ.
 
+### Luật đã được người dùng xác nhận (góp ý 2026-11-13, sau khi xem trang duyệt fxkit)
+
+1. **Kiếm, đao = nét mịn cùng hướng.** Một cung liền, không để lại "hoa văn" ngoằn ngoèo khi tàn, không răng cưa mặc định.
+2. **Rìu = dải song song.** Các vết cách nhau bởi khe, ngắn và dày hơn kiếm; từng dải tàn riêng.
+3. **Vệt phải theo bề mặt lưỡi quét**, không phải một parabol giữa hai mũi đao: chuôi đi một đường, lưỡi xoay quanh chuôi, mũi vẽ cung của nó
+   (`--track`, `FXKIT.md` mục 6). Mép dẫn của vệt đầy phải trùng lưỡi ở pose cuối.

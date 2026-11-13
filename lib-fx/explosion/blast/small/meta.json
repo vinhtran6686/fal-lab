@@ -64,6 +64,14 @@
    "end": 0.316
   },
   {
+   "id": "splash",
+   "kind": "star",
+   "role": "accent",
+   "z": "back",
+   "start": 0.0,
+   "end": 0.349
+  },
+  {
    "id": "scraps",
    "kind": "scraps",
    "role": "particles",
@@ -81,7 +89,9 @@
  },
  "qa": {
   "fail": [],
-  "warn": [],
+  "warn": [
+   "linger: the last 7 of 31 frames carry under 2 % of the peak"
+  ],
   "frames": 31,
   "peak_frame": 6,
   "peak_size_1x": [

@@ -64,6 +64,14 @@
    "end": 0.316
   },
   {
+   "id": "splash",
+   "kind": "star",
+   "role": "accent",
+   "z": "back",
+   "start": 0.0,
+   "end": 0.349
+  },
+  {
    "id": "scraps",
    "kind": "scraps",
    "role": "particles",
