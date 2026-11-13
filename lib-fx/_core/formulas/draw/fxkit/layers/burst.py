@@ -19,16 +19,21 @@ def _blob(rng, centre, r, k=8):
 
 
 @kind("star")
-def star(c, ph, n=5, length=120.0, width=44.0, arc=(-180, 180), minor=4, linger=3.0):
+def star(c, ph, n=5, length=120.0, width=44.0, arc=(-180, 180), minor=4, linger=3.0, even=False):
     """The body of a hit: a few long, slim, slightly curved points of very different lengths out of a small centre. role primary.
     Designed for Life(0, 0.066, 0.033, 0.3).
     n: main points; length: the longest, px; width: base width of the longest, px; arc: degrees in the axis frame for the point
-    directions (a cone such as (-70, 70) throws them along a -> b); minor: short thin points in the gaps; linger: decay speed.
+    directions (a cone such as (-70, 70) throws them along a -> b); even: True = a cross, the points evenly spaced (about a right angle apart, a few degrees of
+    tilt), all the same size, no gaps (a symbol, the one deliberate exception to "never even"); minor: short thin points in the gaps; linger: decay speed.
     Tones: main, hot (a smaller copy of the star: the hot heart). In the decay the centre opens and the points part into needles."""
     rng = c.rng("design"); s = c.s; x0, y0 = c.o
     n = int(n)
     dirs = _dirs(rng, c, n, arc)
     szs = sizes(rng, n, heroes=1, mid=0.74, small=0.5)
+    if even:
+        rot = rng.uniform(-0.12, 0.12); ax = c.sp.ang(0)
+        dirs = [ax + rot + 2 * math.pi * i / n + rng.uniform(-0.05, 0.05) for i in range(n)]
+        szs = [rng.uniform(0.94, 1.0) for _ in range(n)]
     grow = (0.55 + 0.45 * out_back(ph.grow)) * (1 + 0.08 * ph.age)
     ink = Ink(c)
     for i, (a, sz) in enumerate(zip(dirs, szs)):

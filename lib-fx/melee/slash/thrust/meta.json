@@ -1,7 +1,7 @@
 {
  "id": "melee/slash/thrust",
  "name": "Đâm thẳng",
- "desc": "a straight thrust or dash: the same smear with no bow, thin and fast, a small flash where it ends",
+ "desc": "a straight SWORD thrust or dash: the same smear with no bow, thin and fast, a small flash where it ends",
  "status": "draft",
  "tags": [
   "melee",
@@ -18,15 +18,15 @@
  "frames": 16,
  "frame_size_2x": [
   414,
-  226
+  220
  ],
  "anchor_2x": [
-  64.0,
-  110.0
+  66.0,
+  108.0
  ],
  "target_2x": [
-  294.0,
-  110.0
+  296.0,
+  108.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -79,10 +79,10 @@
    "linger: the last 7 of 16 frames carry under 2 % of the peak"
   ],
   "frames": 16,
-  "peak_frame": 3,
+  "peak_frame": 4,
   "peak_size_1x": [
-   138,
-   37
+   139,
+   33
   ],
   "last_frame_pct": 0.0
  },

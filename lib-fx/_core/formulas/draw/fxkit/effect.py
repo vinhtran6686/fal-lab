@@ -35,15 +35,18 @@ def kind(name):
 
 
 class Layer:
-    def __init__(self, kind, role, life, id=None, z="front", at="a", **p):
+    def __init__(self, kind, role, life, id=None, z="front", at="a", plane=None, **p):
+        """plane: None, or ("ground", k): every shape of this layer is squashed to y/x = k about the layer's anchor, so it lies on the
+        floor (a ground blast seen from above-and-aside reads as a flat ellipse, its glow too). Applied once in Ink.add / Ink.cut."""
         assert role in ROLES, f"unknown role {role}"; assert z in ("front", "back")
-        self.kind, self.role, self.life, self.id, self.z, self.at, self.p = kind, role, life, id or kind, z, at, p
+        assert plane is None or (plane[0] == "ground" and 0 < plane[1] <= 1), f"bad plane {plane}"
+        self.kind, self.role, self.life, self.id, self.z, self.at, self.plane, self.p = kind, role, life, id or kind, z, at, plane, p
 
     def but(self, **changes):
         """A copy with some fields or parameters changed (life=, z=, at= or any parameter of the kind)."""
-        new = Layer(self.kind, self.role, self.life, self.id, self.z, self.at, **self.p)
+        new = Layer(self.kind, self.role, self.life, self.id, self.z, self.at, self.plane, **self.p)
         for k, v in changes.items():
-            if k in ("life", "z", "at", "role"): setattr(new, k, v)
+            if k in ("life", "z", "at", "role", "plane", "id"): setattr(new, k, v)
             else: new.p[k] = v
         return new
 

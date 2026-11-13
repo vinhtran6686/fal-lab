@@ -689,16 +689,16 @@
    "space:aim",
    "weight:heavy"
   ],
-  "desc": "the heavy hit drawn larger and sharper: longer needles, a wider ring, more scraps in every direction",
+  "desc": "a different drawing from the heavy hit, not a bigger one: a long slim cross (four near-square points) over a short five-point burst with a big white core held for two frames, two shock rings a beat apart, long speed lines and big scraps in every direction",
   "fps": 30.0,
-  "frames": 18,
+  "frames": 21,
   "frame_size_2x": [
-   468,
-   458
+   470,
+   474
   ],
   "anchor_2x": [
-   234.0,
-   226.0
+   236.0,
+   242.0
   ],
   "dir": "impact/spark/crit",
   "qa": "warn",
@@ -751,12 +751,12 @@
   "fps": 30.0,
   "frames": 14,
   "frame_size_2x": [
-   230,
-   218
+   214,
+   234
   ],
   "anchor_2x": [
    100.0,
-   108.0
+   132.0
   ],
   "dir": "impact/spark/light",
   "qa": "warn",
@@ -964,6 +964,66 @@
   "dir": "melee/blade_aura/charge_fire",
   "qa": "ok"
  },
+ "melee/slash/axe": {
+  "name": "Chém rìu",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "heavy",
+   "axe",
+   "space:span",
+   "weight:heavy"
+  ],
+  "desc": "an AXE swing: a short, thick smear of 4-6 parallel bands apart by narrow gaps, a blunt head; it fades band by band from the tail, the thin ones first, into parallel strokes",
+  "fps": 30.0,
+  "frames": 16,
+  "frame_size_2x": [
+   380,
+   278
+  ],
+  "anchor_2x": [
+   72.0,
+   196.0
+  ],
+  "dir": "melee/slash/axe",
+  "qa": "ok",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "melee/slash/axe_heavy": {
+  "name": "Chém rìu lớn",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "heavy",
+   "axe",
+   "space:span",
+   "weight:heavy"
+  ],
+  "desc": "a great AXE: a wider, longer-lived smear of six bands, more scraps",
+  "fps": 30.0,
+  "frames": 20,
+  "frame_size_2x": [
+   424,
+   312
+  ],
+  "anchor_2x": [
+   72.0,
+   214.0
+  ],
+  "dir": "melee/slash/axe_heavy",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
  "melee/slash/crescent": {
   "name": "Chém lưỡi liềm",
   "status": "draft",
@@ -977,16 +1037,16 @@
    "space:span",
    "weight:medium"
   ],
-  "desc": "a crescent smear swept from a to b: a needle tail, a fat belly on the inside of the bow, a darker inner tone and a hot leading edge, teeth cut into the inner edge, hair streaks beside it; it is eaten from the inside out into curved slivers; scraps fly off the end of the swing",
+  "desc": "a SWORD smear swept from a to b: a smooth crescent of three touching strands, a needle tail, a fat belly on the inside of the bow, a darker inner tone, a hot clean outer edge, two hair streaks beside it; it fades into two or three long thin strokes that run the way of the swing; scraps fly off the end",
   "fps": 30.0,
   "frames": 16,
   "frame_size_2x": [
-   378,
-   266
+   380,
+   260
   ],
   "anchor_2x": [
-   76.0,
-   186.0
+   78.0,
+   180.0
   ],
   "dir": "melee/slash/crescent",
   "qa": "warn",
@@ -1006,7 +1066,7 @@
    "space:span",
    "weight:heavy"
   ],
-  "desc": "a great weapon: a wider, deeper bow, a second fainter smear behind it, more scraps",
+  "desc": "a great SWORD (a big blade): a wider, deeper bow, a second fainter smear behind it, more scraps",
   "fps": 30.0,
   "frames": 20,
   "frame_size_2x": [
@@ -1018,7 +1078,7 @@
    228.0
   ],
   "dir": "melee/slash/heavy",
-  "qa": "ok",
+  "qa": "warn",
   "hit_frame": 1,
   "kit": true
  },
@@ -1036,16 +1096,16 @@
    "space:span",
    "weight:medium"
   ],
-  "desc": "a straight thrust or dash: the same smear with no bow, thin and fast, a small flash where it ends",
+  "desc": "a straight SWORD thrust or dash: the same smear with no bow, thin and fast, a small flash where it ends",
   "fps": 30.0,
   "frames": 16,
   "frame_size_2x": [
    414,
-   226
+   220
   ],
   "anchor_2x": [
-   64.0,
-   110.0
+   66.0,
+   108.0
   ],
   "dir": "melee/slash/thrust",
   "qa": "warn",

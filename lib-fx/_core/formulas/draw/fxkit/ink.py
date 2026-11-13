@@ -126,11 +126,17 @@ class Ink:
             im = Image.new("L", self.cv.img.size, 0); self.t[tone] = (im, ImageDraw.Draw(im))
         return self.t[tone][1]
 
+    def _px(self, pts):
+        """Polygon points in supersampled px; a layer with plane=("ground", k) is squashed to y/x = k about the layer's anchor."""
+        ss, pl = self.ss, getattr(self.c.layer, "plane", None)
+        if pl: k, oy = pl[1], self.c.o[1]; return [(x * ss, (oy + (y - oy) * k) * ss) for x, y in pts]
+        return [(x * ss, y * ss) for x, y in pts]
+
     def add(self, tone, pts):
-        if len(pts) >= 3: self._d(tone).polygon([(x * self.ss, y * self.ss) for x, y in pts], fill=255)
+        if len(pts) >= 3: self._d(tone).polygon(self._px(pts), fill=255)
 
     def cut(self, tone, pts):
-        if len(pts) >= 3 and tone in self.t: self._d(tone).polygon([(x * self.ss, y * self.ss) for x, y in pts], fill=0)
+        if len(pts) >= 3 and tone in self.t: self._d(tone).polygon(self._px(pts), fill=0)
 
     def mask(self, tone):
         return np.asarray(self.t[tone][0]) > 127 if tone in self.t else np.zeros(self.cv.img.size[::-1], bool)

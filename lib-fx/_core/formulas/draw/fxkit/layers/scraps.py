@@ -15,12 +15,14 @@ def _first(c, ph, ink, glow, hot_too=True):
 
 
 @kind("scraps")
-def scraps(c, ph, n=9, arc=(-180, 180), speed=(170, 430), drag=4.5, gravity=260.0, size=17.0, r0=10.0, spread=0.06):
+def scraps(c, ph, n=9, arc=(-180, 180), speed=(170, 430), drag=4.5, gravity=260.0, size=17.0, r0=10.0, spread=0.06, floor=False):
     """Curved slivers thrown out of the anchor: they fly out fast, slow down (drag), fall (gravity), and each shortens and thins
     to nothing over the last 55 % of its own life. role particles. Designed for Life(0.033, 0.033, 0, 0.5).
     n: pieces; arc: (from, to) degrees in the axis frame (a full circle = every direction); speed: (slowest, fastest) px/s, the
     big pieces are the fast ones; drag: air drag (1/s); gravity: screen-down pull, px/s^2; size: length of the biggest, px;
-    r0: how far from the anchor they are born, px; spread: longest birth delay, s."""
+    r0: how far from the anchor they are born, px; spread: longest birth delay, s;
+    floor: a ground effect: pieces are born on a flat ellipse (y/x = 0.3, radius r0) instead of one point, and a piece that falls back to
+    its own birth height lands and is gone (nothing is drawn below the ground it came from)."""
     rng = c.rng("design"); s = c.s
     lo, hi = float(arc[0]), float(arc[1]); span = hi - lo; mid = (lo + hi) / 2
     ax = c.sp.ang(mid); hand = c.sp.hand
@@ -41,8 +43,13 @@ def scraps(c, ph, n=9, arc=(-180, 180), speed=(170, 430), drag=4.5, gravity=260.
         curl = r.uniform(0.3, 0.9) * r.sign() * 1.7; L0 = size * s * sz; W0 = L0 * r.uniform(0.3, 0.42)
         t = ph.sec - delay; u = t / (total * share)
         if t < 0 or u >= 1: continue
-        px0, py0 = x0 + math.cos(ang) * r0 * s * r.uniform(0.6, 1.2), y0 + math.sin(ang) * r0 * s * r.uniform(0.6, 1.2)
+        if floor:
+            ba, br = r.uniform(0, 6.2832), r0 * s * math.sqrt(r.uniform(0.05, 1.0))
+            px0, py0 = x0 + math.cos(ba) * br, y0 + math.sin(ba) * br * 0.3
+        else:
+            px0, py0 = x0 + math.cos(ang) * r0 * s * r.uniform(0.6, 1.2), y0 + math.sin(ang) * r0 * s * r.uniform(0.6, 1.2)
         x, y, vx, vy = fxcore.drag_pos(px0, py0, math.cos(ang) * v, math.sin(ang) * v, t, drag, gravity * s)
+        if floor and vy > 0 and y >= py0: continue
         a = math.atan2(vy, vx) if math.hypot(vx, vy) > 1e-3 else ang
         f = 1.0 if u < 0.45 else (1 - (u - 0.45) / 0.55) ** 0.85
         L, W = L0 * f, W0 * f

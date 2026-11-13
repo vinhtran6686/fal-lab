@@ -1,7 +1,7 @@
 {
  "id": "melee/slash/heavy",
  "name": "Chém nặng",
- "desc": "a great weapon: a wider, deeper bow, a second fainter smear behind it, more scraps",
+ "desc": "a great SWORD (a big blade): a wider, deeper bow, a second fainter smear behind it, more scraps",
  "status": "draft",
  "tags": [
   "melee",
@@ -74,12 +74,14 @@
  },
  "qa": {
   "fail": [],
-  "warn": [],
+  "warn": [
+   "cut: frame 16 still holds 6 % of the peak, frame 17 is empty"
+  ],
   "frames": 20,
   "peak_frame": 6,
   "peak_size_1x": [
-   140,
-   94
+   138,
+   93
   ],
   "last_frame_pct": 0.0
  },

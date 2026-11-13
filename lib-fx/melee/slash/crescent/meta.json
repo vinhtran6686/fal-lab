@@ -1,7 +1,7 @@
 {
  "id": "melee/slash/crescent",
  "name": "Chém lưỡi liềm",
- "desc": "a crescent smear swept from a to b: a needle tail, a fat belly on the inside of the bow, a darker inner tone and a hot leading edge, teeth cut into the inner edge, hair streaks beside it; it is eaten from the inside out into curved slivers; scraps fly off the end of the swing",
+ "desc": "a SWORD smear swept from a to b: a smooth crescent of three touching strands, a needle tail, a fat belly on the inside of the bow, a darker inner tone, a hot clean outer edge, two hair streaks beside it; it fades into two or three long thin strokes that run the way of the swing; scraps fly off the end",
  "status": "draft",
  "tags": [
   "melee",
@@ -16,16 +16,16 @@
  "fps": 30.0,
  "frames": 16,
  "frame_size_2x": [
-  378,
-  266
+  380,
+  260
  ],
  "anchor_2x": [
-  76.0,
-  186.0
+  78.0,
+  180.0
  ],
  "target_2x": [
-  286.0,
-  186.0
+  288.0,
+  180.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -67,13 +67,14 @@
  "qa": {
   "fail": [],
   "warn": [
+   "cut: frame 12 still holds 15 % of the peak, frame 13 is empty",
    "linger: the last 4 of 16 frames carry under 2 % of the peak"
   ],
   "frames": 16,
-  "peak_frame": 4,
+  "peak_frame": 5,
   "peak_size_1x": [
-   113,
-   65
+   117,
+   64
   ],
   "last_frame_pct": 0.0
  },

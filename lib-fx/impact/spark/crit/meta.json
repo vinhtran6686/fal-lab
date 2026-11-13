@@ -1,7 +1,7 @@
 {
  "id": "impact/spark/crit",
  "name": "Chí mạng",
- "desc": "the heavy hit drawn larger and sharper: longer needles, a wider ring, more scraps in every direction",
+ "desc": "a different drawing from the heavy hit, not a bigger one: a long slim cross (four near-square points) over a short five-point burst with a big white core held for two frames, two shock rings a beat apart, long speed lines and big scraps in every direction",
  "status": "draft",
  "tags": [
   "impact",
@@ -14,18 +14,18 @@
   "weight:heavy"
  ],
  "fps": 30.0,
- "frames": 18,
+ "frames": 21,
  "frame_size_2x": [
-  468,
-  458
+  470,
+  474
  ],
  "anchor_2x": [
-  234.0,
-  226.0
+  236.0,
+  242.0
  ],
  "target_2x": [
-  374.0,
-  226.0
+  376.0,
+  242.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -38,7 +38,31 @@
    "role": "secondary",
    "z": "back",
    "start": 0.033,
-   "end": 0.363
+   "end": 0.433
+  },
+  {
+   "id": "ring2",
+   "kind": "ring",
+   "role": "secondary",
+   "z": "back",
+   "start": 0.133,
+   "end": 0.533
+  },
+  {
+   "id": "flash",
+   "kind": "star",
+   "role": "flash",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.07
+  },
+  {
+   "id": "cross",
+   "kind": "star",
+   "role": "primary",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.532
   },
   {
    "id": "star",
@@ -54,7 +78,7 @@
    "role": "accent",
    "z": "front",
    "start": 0.0,
-   "end": 0.196
+   "end": 0.226
   },
   {
    "id": "scraps",
@@ -62,7 +86,7 @@
    "role": "particles",
    "z": "front",
    "start": 0.033,
-   "end": 0.566
+   "end": 0.666
   }
  ],
  "lint": [],
@@ -75,13 +99,13 @@
  "qa": {
   "fail": [],
   "warn": [
-   "linger: the last 7 of 18 frames carry under 2 % of the peak"
+   "linger: the last 7 of 21 frames carry under 2 % of the peak"
   ],
-  "frames": 18,
+  "frames": 21,
   "peak_frame": 5,
   "peak_size_1x": [
-   146,
-   146
+   182,
+   196
   ],
   "last_frame_pct": 0.0
  },

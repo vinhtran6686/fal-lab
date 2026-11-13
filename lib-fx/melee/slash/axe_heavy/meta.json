@@ -1,0 +1,90 @@
+{
+ "id": "melee/slash/axe_heavy",
+ "name": "Chém rìu lớn",
+ "desc": "a great AXE: a wider, longer-lived smear of six bands, more scraps",
+ "status": "draft",
+ "tags": [
+  "melee",
+  "blade",
+  "slash",
+  "one-shot",
+  "anchor:path",
+  "heavy",
+  "axe",
+  "space:span",
+  "weight:heavy"
+ ],
+ "fps": 30.0,
+ "frames": 20,
+ "frame_size_2x": [
+  424,
+  312
+ ],
+ "anchor_2x": [
+  72.0,
+  214.0
+ ],
+ "target_2x": [
+  322.0,
+  214.0
+ ],
+ "hit_frame": 1,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "blaze",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "echo",
+   "kind": "slash",
+   "role": "secondary",
+   "z": "back",
+   "start": 0.033,
+   "end": 0.486
+  },
+  {
+   "id": "slash",
+   "kind": "slash",
+   "role": "primary",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.56
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.1,
+   "end": 0.633
+  },
+  {
+   "id": "streaks",
+   "kind": "streaks",
+   "role": "accent",
+   "z": "front",
+   "start": 0.066,
+   "end": 0.262
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/axe_heavy_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "cut: frame 16 still holds 8 % of the peak, frame 17 is empty"
+  ],
+  "frames": 20,
+  "peak_frame": 6,
+  "peak_size_1x": [
+   137,
+   82
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/melee/slash/slash.py: EFFECTS['axe_heavy']"
+}

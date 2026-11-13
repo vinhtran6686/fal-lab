@@ -58,14 +58,16 @@ EFFECTS = {"slam": Effect("slam", title="Nện đất", space="ground", weight="
     layers=[
         Layer("dust",   id="dust_back", role="smoke", z="back", life=Life(0.033, 0.12, 0.1, 0.6), tone="dark", reach=170, height=84),
         Layer("ring",   role="secondary", z="back", life=Life(0.033, 0.12, 0.0, 0.25), r=(30, 165), width=17, squash=0.3),
-        Layer("star",   role="primary",             life=Life(0.0, 0.066, 0.033, 0.3), n=5, arc=(25, 155), length=120),
-        Layer("scraps", role="particles",           life=Life(0.033, 0.033, 0.0, 0.55), n=9, arc=(35, 145), gravity=900),
+        Layer("star",   id="splash", role="primary", plane=("ground", 0.32), life=Life(0.0, 0.066, 0.033, 0.3), n=9, arc=(-180, 180), length=160, even=0.7),
+        Layer("star",   id="column", role="core",    life=Life(0.0, 0.066, 0.033, 0.234), n=3, arc=(60, 120), length=110),
+        Layer("scraps", role="particles",           life=Life(0.033, 0.033, 0.0, 0.55), n=9, arc=(35, 145), gravity=900, r0=40, floor=True),
         Layer("dust",   role="smoke",               life=Life(0.066, 0.1, 0.1, 0.6), tone="light", reach=150, height=60)])}
-EFFECTS["stomp"] = EFFECTS["slam"].variant("stomp", weight="medium", layers={"ring": False, "dust_back": False, "star": {"length": 64}})
+EFFECTS["stomp"] = EFFECTS["slam"].variant("stomp", weight="medium", layers={"ring": False, "dust_back": False, "splash": {"length": 80}, "column": False})
 ```
 
 - `space`: `point` (chỉ a), `aim` (a + hướng tới b), `span` (kéo dài từ a tới b: vệt chém), `travel` (bay từ a tới b rồi nổ ở b), `ground` (a nằm trên mặt đất).
 - `at` của lớp: `"a"`, `"b"`, `"mid"`, `("a", dx, dy)`, `("b", dx, dy)` (khung trục), `("path", f, bend)`.
+- `plane` của lớp: `None` (mặc định) hoặc `("ground", k)`: mọi hình của lớp bị bóp về tỉ lệ y / x = `k` quanh điểm neo của lớp (chuẩn 0.3, bằng `squash` của `ring`), nên lớp nằm bẹt trên mặt đất; quầng sáng lấy từ hình đã bóp nên cũng dẹp. Làm một chỗ trong `Ink.add` / `Ink.cut`, kind không phải làm gì. Vụ nổ trên đất = `star` `splash` (có `plane`, `even` cao cho đều) + `star` `column` (không `plane`, đứng lên). `scraps` có `floor=True`: mảnh sinh trên ellipse dẹp bán kính `r0` và biến mất khi rơi về độ cao nơi nó sinh ra.
 - `z`: `back` nằm sau thân nhân vật, `front` nằm trước. Thứ tự trong danh sách = thứ tự vẽ.
 - Thời gian tính bằng giây **từ khung trúng đòn** (t = 0). `start` âm = trước khung trúng đòn (đạn đang bay, tụ lực).
 - `variant()`: bản anh em: bỏ lớp (`False`), đổi tham số, đổi bảng màu, đổi độ nặng.
@@ -108,7 +110,7 @@ vẽ hình vào `Ink` theo tông → **mòn** theo phần diện tích còn lạ
 |---|---|---|---|---|
 | `flames` | `layers/flames.py` | cụm lưỡi lửa phun từ gốc: thân, mảng tối bên trong, vũng nóng ở chân | primary | `0, 0.1, 0.1, 0.55` |
 | `crystals` | `layers/crystals.py` | cụm gai pha lê cạnh thẳng có mặt sáng, màn cánh trong mờ phía sau | primary | `0, 0.1, 0.066, 0.4` |
-| `slash` | `layers/slash.py` | vệt chém lưỡi liềm quét từ a tới b (`bend=0`: đâm thẳng), răng ở mép trong, sợi chạy kèm | primary | `0, 0.1, 0.033, 0.3` |
+| `slash` | `layers/slash.py` | vệt chém quét từ a tới b theo vũ khí: `weapon=sword` (3 sợi dọc liền nhau, mịn, tàn thành 2-3 nét dài), `axe` (4-6 dải song song cách nhau khe hẹp, ngắn, dày, đầu tù), `saw` (kiếm có răng mép trong); `bend=0`: đâm thẳng | primary | `0, 0.1, 0.033, 0.3` |
 | `bolt` | `layers/bolt.py` | đạn bay từ a tới b: đầu giọt nước, đuôi sống, tới b đúng khung trúng đòn | primary | `-0.3, 0.3, 0, 0.1` |
 | `star` | `layers/burst.py` | chớp trúng đòn: vài mũi dài chênh cỡ, ba tông chồng, tách thành kim khi tàn | primary / core | `0, 0.066, 0.033, 0.33` |
 | `streaks` | `layers/burst.py` | vài tia tốc độ mảnh bay ra | accent | `0, 0.033, 0.033, 0.13` |

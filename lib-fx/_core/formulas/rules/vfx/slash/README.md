@@ -43,3 +43,18 @@ User (2026-11-09): sáng tạo slash đơn bằng tool đã khá ổn. Câu hỏ
 Hướng đi hiện tại: Milestone 01, nhát chém xéo đồng bộ kiếm nhân vật thật ([docs/pipeline/pose-pair-fx-method.md](../../../../../../docs/pipeline/pose-pair-fx-method.md)).
 
 Luật chung cho mọi loại VFX (lớp, nét mịn, cấp bậc màu, vòng đời, ánh sáng): [../../README.md](../../README.md) và 01-05.
+
+## Theo loại vũ khí (kind `slash`, tham số `weapon`)
+
+Nguyên tắc: mọi chi tiết và mọi pha tàn sống trong toạ độ nét (`v` dọc cung, `c` ngang nét), không dùng nhiễu trong không gian màn hình. Vệt là một bó
+sợi dọc song song với cung; khi tàn, mỗi sợi mỏng dần về đường tâm của nó và đuôi rút lên theo luật riêng (`c.rng("strand", j)`), nên chỉ còn vài nét dài,
+mảnh, cùng hướng. Không lỗ, không mảnh vụn, không hoa văn.
+
+| Vũ khí | Hình | Pha tàn |
+|---|---|---|
+| `sword` (kiếm, đao) | 3 sợi khít nhau (khoảng 50/30/20 %), mép ngoài là một cung sạch, không răng, 2 sợi tóc mảnh ngoài mép; rộng 46 | 3 nét dài mảnh dần, sợi ngoài (mép sáng) hết sau cùng |
+| `axe` (rìu) | 4-6 dải song song cách nhau khe cố định 6-10 % bề rộng, dải rộng hẹp khác nhau; ngắn (phủ 70 % cung), dày (80), đầu tù | từng dải ngắn dần từ đuôi, dải mảnh hết trước |
+| `saw` | như kiếm, mép trong có răng đều (`teeth=6`) | như kiếm |
+
+Hiệu ứng: `crescent`, `heavy`, `thrust` là kiếm; `axe`, `axe_heavy` là rìu. Khe giữa các dải rìu bị quầng sáng lấp nếu glow đầy: kind giảm glow còn 0.5 và Ink làm mịn nhẹ.
+

@@ -1,98 +1,166 @@
-"""fxkit / layers / slash: a sword slash smear swept from a to b (rules/vfx/slash). A crescent ribbon along the path a -> b: a needle
-tail, the belly near three quarters, a pointed head; a darker tone hugging the inner edge, a hot edge on the outer edge, dry-brush
-teeth bitten out of the inner edge and a few hair-thin streaks beside it. It is born at a, grows towards b in one fast sweep, then is
-eaten in place and from behind (the tail retreats, thin parts and the hot edge go first, slivers and specks are what is left)."""
+"""fxkit / layers / slash: a weapon smear swept from a to b (rules/vfx/slash). A crescent ribbon along the path a -> b: a needle tail,
+the belly near three quarters, a head; a darker tone on the inner edge, a hot tone on the outer edge. The ribbon is a bundle of
+lengthwise strands in stroke coordinates (v along the arc, c across it, 0 = inner edge .. 1 = outer edge) and everything that
+happens to it happens in those coordinates: the weapon sets the bundle (a sword: 3 strands that touch, one clean outer arc; an axe:
+4-6 bands apart by narrow fixed gaps), and when it fades each strand thins towards its own centre line and its tail draws in, so
+what is left is a few long thin strokes running the way of the swing: no holes, no noise, no pattern."""
 import math
-from .. import kind, angles, smooth, out_quint, out_cubic, clamp, Ink, erode, drop_specks, shapes
-from .flames import decay_share, on_twos
+from .. import kind, angles, smooth, out_quint, out_cubic, clamp, Ink, shapes
+from .flames import on_twos
 
 N = 48
 
 
 @kind("slash")
-def slash(c, ph, bend=0.34, width=54.0, tones=3, teeth=4, streaks=3, linger=3.4):
-    """A sword slash from a to b. role primary. Designed for Life(0, 0.1, 0.03, 0.27): the attack is the sweep.
-    bend: how far the path bows to the upper side, share of a-b distance (0 = straight thrust, negative = bows down); width: the
-    widest part of the ribbon, px (54 = a sword, 80 = a heavy weapon); tones: 3 = main + darker inside + hot edge, 2 = no hot edge,
-    1 = flat; teeth: notches bitten out of the inner edge (0 = clean); streaks: hair-thin strokes beside the ribbon (0 = none);
-    linger: how fast it is eaten (3.4 = short, 2.5 = lingers). The belly hangs on the inside of the bow."""
+def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tones=3, teeth=0, streaks=-1, linger=3.4):
+    """A weapon smear from a to b. role primary. Designed for Life(0, 0.1, 0.03, 0.27): the attack is the sweep.
+    weapon: "sword" (also a blade or great sword: a smooth ribbon of 3 touching strands), "axe" (4-6 parallel bands apart by narrow
+    gaps, shorter, thicker, blunt head), "saw" (a sword whose inner edge is toothed); bend: how far the path bows to the upper side,
+    share of a-b distance (0 = straight thrust, negative = bows down); width: the widest part, px (0 = the weapon's own: sword 46,
+    axe 80, a heavy weapon 70-110); span: share of the arc it covers (0 = sword 1.0, axe 0.7); strands: how many (0 = sword 3, axe 5);
+    tones: 3 = main + darker inside + hot edge, 2 = no hot edge, 1 = flat; teeth: notches in the inner edge (0 = clean; saw: 6);
+    streaks: hair-thin strokes beside the outer edge (-1 = sword 2, axe 0); linger: how fast it fades (3.4 = short, 2.5 = lingers).
+    The belly hangs on the inside of the bow."""
+    axe = weapon == "axe"
+    if width <= 0: width = 80.0 if axe else 46.0
+    if span <= 0: span = 0.7 if axe else 1.0
+    if strands <= 0: strands = 5 if axe else 3
+    if streaks < 0: streaks = 0 if axe else 2
+    if weapon == "saw" and teeth <= 0: teeth = 6
     rng = c.rng("design"); s = c.s
     g = ph.grow
     d = on_twos(ph, c)
+    if d >= 0.985: return
     fh = min(1.0, 0.45 + 0.5 * out_quint(g) + 0.05 * out_cubic(min(1.0, ph.decay * 3)))      # the head: born 45 % out, runs on
-    ft = 0.55 * d                                                                           # the tail retreats while it is eaten
+    lo = (1 - span) * fh                                                                    # where the tail begins
     sg = c.sp.hand * (1 if bend >= 0 else -1)                                                # +1: the inside of the bow is the left of travel
     W = width * s
-    ink = Ink(c)
+    ink = Ink(c, smooth=dict(fillet=0.6, burr=0.6, sigma=0.6) if axe else True)     # the gaps between bands must survive
+    L = fh - lo
+    if L < 0.06: return
 
     def prof(v):                                                                           # width along the ribbon, v 0 tail .. 1 head
         v = clamp(v)
+        if axe: return v ** 0.6 * (1 - v ** 3) ** 0.45                                       # fat tail, blunt head
         return v ** 0.75 * (1 - v ** 5) ** 0.6
 
     def at(f):
         p, a = c.sp.path(clamp(f), bend)
         return p, (-math.sin(a) * sg, math.cos(a) * sg)                                    # point, unit vector to the inside of the bow
 
-    def strip(f0, f1, wf, bias, n=N):
-        pts, ws = [], []
+    def pw(f):                                                                             # full ribbon width at arc position f
+        return W * prof((f - lo) / L)
+
+    def lat(f, cc):                                                                        # lateral offset (px, to the inside) of stroke coordinate cc
+        return pw(f) * (0.7 - cc)
+
+    # ---- the bundle: strand j has the band [c0, c1], a frailty phi (1 = goes first) and its own decay law
+    K = strands
+    if axe:
+        ws = [rng.uniform(0.55, 1.6) for _ in range(K)]
+        gaps = [rng.uniform(0.06, 0.10) for _ in range(K - 1)]
+        tot = (1 - sum(gaps)) / sum(ws)
+        ws = [w * tot for w in ws]
+    else:
+        base = [0.5, 0.3, 0.2] if K == 3 else [1.0 / K] * K
+        ws = [w * rng.uniform(0.85, 1.15) for w in base]; t = sum(ws); ws = [w / t for w in ws]
+        gaps = [0.0] * (K - 1)
+    bands, x = [], 0.0
+    for j in range(K):
+        bands.append((x, x + ws[j])); x += ws[j] + (gaps[j] if j < K - 1 else 0.0)
+    wmax = max(ws)
+    lk = linger / 3.4 * (1.3 if axe else 1.0)
+    S = []
+    for j in range(K):
+        r = c.rng("strand", j)
+        phi = (1 - ws[j] / wmax) if axe else 1 - j / max(1, K - 1)
+        S.append(dict(c0=bands[j][0], c1=bands[j][1],
+                      p=(0.8 + 1.5 * phi) * r.uniform(0.85, 1.15) * lk,
+                      rut=(0.2 + 0.55 * phi) * r.uniform(0.85, 1.15),
+                      lag=0.12 * phi * r.uniform(0.6, 1.0),
+                      start=(r.uniform(0.0, 0.1) if axe else 0.0)))
+    END = 0.14 * L                                                                          # length of a tapered end made by fading
+
+    def strand(f0, f1, cin, cout, n=56):
+        """The polygon of the band between stroke coordinates cin(f) .. cout(f) for f in f0..f1 (functions of f)."""
+        Lp, Rp = [], []
         for i in range(n):
-            u = i / (n - 1); f = f0 + (f1 - f0) * u
-            pts.append(at(f)[0]); ws.append(wf(f, u))
-        return shapes.ribbon(pts, ws, bias * sg)
+            f = f0 + (f1 - f0) * i / (n - 1)
+            p, nn = at(f)
+            a, b = lat(f, cin(f)), lat(f, cout(f))
+            Lp.append((p[0] + nn[0] * a, p[1] + nn[1] * a)); Rp.append((p[0] + nn[0] * b, p[1] + nn[1] * b))
+        return Lp + Rp[::-1]
 
-    def wmain(f, u=0.0):
-        w = W * prof(f / fh)
-        if ft > 0.01: w *= min(1.0, max(0.0, (f - ft) / 0.16)) ** 0.8                         # a tapered end where the tail is eaten
-        return w
+    live = []
+    for j, st in enumerate(S):
+        sh = (1 - d) ** st["p"] * min(1.0, (0.93 - d) / 0.3)                                # the last strokes go out, they do not stop
+        fa = lo + st["start"] * L + d * st["rut"] * L
+        fb = fh - d * st["lag"] * L
+        if sh < 0.03 or fb - fa < 0.05: continue
+        cm, hb = (st["c0"] + st["c1"]) / 2, (st["c1"] - st["c0"]) / 2 * sh
+        a_cut = fa > lo + 1e-6                                                              # a tail made by fading is tapered
+        b_cut = fb < fh - 1e-6
+        def tp(f, fa=fa, fb=fb, a_cut=a_cut, b_cut=b_cut):                                  # end taper
+            k = 1.0
+            if a_cut: k *= clamp((f - fa) / END) ** 0.8
+            if b_cut: k *= clamp((fb - f) / END) ** 0.8
+            return k
+        live.append((j, st, cm, hb, fa, fb, tp))
+        ink.add("main", strand(fa, fb, lambda f: cm - hb * tp(f), lambda f: cm + hb * tp(f)))
+    if not live: return
 
-    if fh - ft < 0.06: return
-    # the main ribbon: 30 % of the width on the outer edge, 70 % inside
-    ink.add("main", strip(ft, fh, wmain, 0.4))
-    if tones >= 2:                                                                          # darker tone along the inner edge, towards the tail
-        da, db = max(0.15 * fh, ft), 0.9 * fh
-        if db - da > 0.05:
-            ink.add("deep", strip(da, db, lambda f, u: 0.38 * wmain(f) * math.sin(math.pi * u) ** 0.6, 2.47))
-    if tones >= 3:                                                                          # the hot leading edge, outer side, ending in the point
-        ha = max(0.35 * fh, ft)
-        if fh - ha > 0.05:
-            ink.add("hot", strip(ha, fh, lambda f, u: 0.2 * wmain(f) * smooth(0, 0.3, u), -2.0))
-    # teeth: slim wedges bitten out of the inner edge, pointing back to the tail
-    for i, v in enumerate(angles(rng, teeth, 0.2, 0.88, gaps=1) if teeth > 0 else []):
+    if tones >= 2:                                                                          # darker tone on the inner part of a strand
+        for j, st, cm, hb, fa, fb, tp in live:
+            if j != 0: continue
+            da, db = max(lo + 0.15 * L, fa), min(lo + 0.9 * L, fb)
+            if db - da < 0.05: continue
+            fr = 0.38 if not axe else 0.45
+            def din(f, cm=cm, hb=hb, tp=tp): return cm - hb * tp(f)
+            def dout(f, cm=cm, hb=hb, tp=tp, da=da, db=db, fr=fr):
+                u = (f - da) / (db - da)
+                return din(f) + 2 * hb * tp(f) * fr * math.sin(math.pi * clamp(u)) ** 0.6
+            ink.add("deep", strand(da, db, din, dout))
+    if tones >= 3:                                                                          # the hot edge: outer part of the outermost strand, to the head
+        j, st, cm, hb, fa, fb, tp = live[-1]
+        ha = max(lo + 0.3 * L, fa)
+        if fb - ha > 0.05:
+            def hout(f): return cm + hb * tp(f)
+            def hin(f, ha=ha, fb=fb):
+                u = (f - ha) / (fb - ha)
+                return hout(f) - 2 * hb * tp(f) * 0.6 * smooth(0, 0.3, clamp(u))
+            ink.add("hot", strand(ha, fb, hin, hout))
+
+    # teeth (saw): slim wedges bitten out of the inner edge, pointing back to the tail
+    for i, v in enumerate(angles(rng, teeth, 0.2, 0.88, gaps=1) if teeth > 0 and d < 0.3 else []):
         r = c.rng("tooth", i)
-        if v > fh * 0.95 or v < ft: continue
-        vl = v / fh; w = wmain(v)
-        L = r.uniform(0.06, 0.16); dep = r.uniform(0.3, 0.65)
-        (p0, n0), (p1, n1), (pt, nt) = at(v), at(v + L * 0.35), at(v - L * 0.65)
+        v = lo + v * L
+        if v > fh * 0.95 or v < lo: continue
+        w = pw(v)
+        TL = r.uniform(0.06, 0.16) * L; dep = r.uniform(0.3, 0.65)
+        (p0, n0), (p1, n1), (pt, nt) = at(v), at(v + TL * 0.35), at(v - TL * 0.65)
         edge = lambda p, n_, k: (p[0] + n_[0] * w * k, p[1] + n_[1] * w * k)
         poly = shapes.spline([edge(p0, n0, 0.95), edge(p0, n0, 0.7 - dep * 0.35), edge(pt, nt, 0.7 - dep), edge(p1, n1, 0.7 - dep * 0.2),
                               edge(p1, n1, 0.95)], True, 8, sharp=(2,))
         ink.cut("main", poly); ink.cut("deep", poly)
-    # streaks: hair-thin ribbons beside the main ribbon, lagging behind the head
+
+    # hair streaks: hair-thin ribbons running with the outer edge, lagging behind the head; they thin and draw in like the strands
     for i in range(streaks):
         r = c.rng("streak", i)
-        side = 1 if i % 2 == 0 else -1; off = r.uniform(0.75, 1.4) * W * 0.5 * side
-        f0 = r.uniform(0.04, 0.4); f1 = min(f0 + r.uniform(0.35, 0.7), 0.88) ; f1 = min(f1, fh - r.uniform(0.04, 0.12))
-        f0 = max(f0, ft)
-        if f1 - f0 < 0.12: continue
-        wd = r.uniform(3, 6) * s
-        pts, ws = [], []
+        off = r.uniform(0.14, 0.4)
+        f0 = lo + r.uniform(0.04, 0.4) * L; f1 = min(f0 + r.uniform(0.35, 0.7) * L, lo + 0.88 * L, fh - r.uniform(0.04, 0.12) * L)
+        f0 = f0 + d * 0.5 * (f1 - f0)
+        sh = (1 - d) ** (1.3 * lk)
+        if f1 - f0 < 0.1 or sh < 0.05: continue
+        wd = r.uniform(3, 6) * s * sh
+        pts, ws_ = [], []
         for k in range(24):
             u = k / 23; f = f0 + (f1 - f0) * u; p, n_ = at(f)
-            o = off * (0.35 + 0.65 * prof(f / fh) ** 0.5)
-            pts.append((p[0] + n_[0] * o, p[1] + n_[1] * o)); ws.append(wd * math.sin(math.pi * u) ** 0.7)
-        ink.add("main", shapes.ribbon(pts, ws))
-    # eaten in place
-    if d > 0:
-        keep = decay_share(d, linger); seed = rng.randrange(1 << 16)
-        body0 = ink.mask("main")
-        cur = float(body0.sum()); peak = sum(W * prof(0.04 + 0.92 * i / 40) for i in range(41)) / 41 * 0.92 * c.sp.len * 0.7
-        ke = min(1.0, keep * peak / max(cur / (ink.ss ** 2), 1.0)) if cur else keep
-        body = erode(body0, ke, seed, ink.ss, holes=0.38, grain=width * 0.13 * s, stretch=1.0, hollow=True)   # eaten from the inside out: thin slivers stay along both edges
-        body = drop_specks(body, ink.ss, 4 * s * s)
-        ink.set("main", body)
-        if tones >= 2: ink.set("deep", erode(ink.mask("deep"), ke ** 2.5, seed + 1, ink.ss, holes=0.4, grain=width * 0.2 * s) & body)
-        if tones >= 3: ink.set("hot", drop_specks(erode(ink.mask("hot"), ke ** 1.2, seed + 2, ink.ss, holes=0.4, grain=width * 0.16 * s) & body, ink.ss, 3 * s * s))
+            o = -(0.3 + off) * pw(f)
+            pts.append((p[0] + n_[0] * o, p[1] + n_[1] * o)); ws_.append(wd * math.sin(math.pi * u) ** 0.7)
+        ink.add("main", shapes.ribbon(pts, ws_))
+
+    glw = 0.5 if axe else 1.0                                                                # a full glow would fill the gaps between the bands
     if ph.first:
-        ink.paint([("main", c.pal.tone("hot")), ("hot", c.pal.tone("white"))], glow=1.0)
+        ink.paint([("main", c.pal.tone("hot")), ("hot", c.pal.tone("white"))], glow=glw)
     else:
-        ink.paint([("main", c.pal.tone("main")), ("deep", c.pal.tone("deep")), ("hot", c.pal.tone("hot"))], glow=1.0)
+        ink.paint([("main", c.pal.tone("main")), ("deep", c.pal.tone("deep")), ("hot", c.pal.tone("hot"))], glow=glw)
