@@ -1085,6 +1085,35 @@
   "hit_frame": 1,
   "kit": true
  },
+ "melee/slash/swing": {
+  "name": "Chém theo vũ khí",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "tracked",
+   "space:span",
+   "weight:medium"
+  ],
+  "desc": "a SWORD smear that follows a real weapon swing: use it with --track (the tip's arc is the outer edge, the blade the inner); born one frame before the hit as a thin slice on the blade of pose A, whole on the hit frame with a white edge along the blade, the tail draws in at once; the tip strand is dense and lasts, the hilt strand is faint and goes first; set the hit frame of the fx on the character's hit frame",
+  "fps": 30.0,
+  "frames": 18,
+  "frame_size_2x": [
+   372,
+   248
+  ],
+  "anchor_2x": [
+   72.0,
+   172.0
+  ],
+  "dir": "melee/slash/swing",
+  "qa": "warn",
+  "hit_frame": 3,
+  "kit": true
+ },
  "melee/slash/thrust": {
   "name": "Đâm thẳng",
   "status": "draft",

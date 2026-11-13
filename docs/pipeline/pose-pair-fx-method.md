@@ -129,6 +129,10 @@ Thân ra `frames/skill_crescent_puppet_side/` (cell 352x280 @2x, chân ở pivot
 `python lib-fx/build.py melee/slash/crescent --from <mũi A> --to <mũi B> --track "root_a=<chuôi A>;root_b=<chuôi B>;up=35;turn=cw;ease=1.3" --pal frost --fps 15 --split --out <thư mục>`
 (chi tiết: `lib-fx/_core/formulas/draw/FXKIT.md` mục 6). Khung thứ hai ở 15 fps (mọc xong) có mép dẫn trùng lưỡi pose B; kiểm tra bằng checklist "Vệt chém" mục 5.
 
+**Cách thứ hai (fxkit), vệt mượt như bản đã duyệt:** dùng hiệu ứng `swing` (đầu vệt là lát mỏng trên lưỡi pose A, đầy với mép trắng dọc lưỡi pose B ở khung trúng đòn, tan 3 khung, mũi đậm chuôi nhạt):
+`python lib-fx/build.py melee/slash/swing --from <mũi A> --to <mũi B> --track "root_a=<chuôi A>;root_b=<chuôi B>;up=35;turn=cw;ease=1.3" --pal frost --fps 15 --split --out <thư mục>`
+Đặt `hit_frame` của fx (= 2) trùng khung trúng đòn của thân, nên khung fx đầu rơi vào khung cuối của pose A. `build_crescent.py` vẫn là bản đã duyệt của `azure_blade`.
+
 ### Bước 8: duyệt và chốt
 - Xem `contact.png` và `preview_game_1x_x3.gif` (**duyệt ở cỡ game H = 60 px @1x**, không chỉ @2x).
 - Ghi vào `brief.md` (manifest) và `history.md`; `source_prune.py` xóa bản không chọn.

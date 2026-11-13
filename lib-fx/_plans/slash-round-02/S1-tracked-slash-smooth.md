@@ -87,3 +87,28 @@ Dựng "sau": cùng lệnh nhưng `melee/slash/swing`. Gọi `h` = khung trúng 
 - [ ] Thử thêm một cú vung khác để chắc không khớp riêng cho một nhân vật: `--from 60,200 --to 250,90 --track "root_a=90,170;root_b=190,150;up=20;turn=ccw;ease=1.2"` (hất lên): khung trước đòn vẫn là lát mỏng trên lưỡi đầu, khung đòn có mép trắng trên lưỡi cuối.
 
 ## Kết quả (người làm điền: số đo từng tiêu chí, đường dẫn ảnh và GIF, chỗ chưa đạt)
+
+### Đã làm (2026-11-13)
+`on_twos` bỏ lượng tử dưới 20 fps; hiệu ứng `melee/slash/swing`; chế độ `track` trong `slash.py` viết lại theo bước 3-6 (đầu vệt `fh`, nhịp tan, mũi đậm / chuôi nhạt, `edge`); tài liệu bước 7. Script đo và ảnh nằm ngoài repo, trong thư mục tạm
+`/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/` (`lib.py`, `measure.py`, `run.sh`, `noglow.py`). Khung `h` = 23 (thân); fx khung 1 -> thân 22, hit_frame = 2 -> thân 23.
+Đo "không quầng" bằng cách vô hiệu `add_glow` trong script đo (quầng là vùng alpha thấp quanh hình, không phải mép); "có quầng" là khung xuất thật.
+
+### Kết quả
+Ảnh: `.../scratchpad/before_grid_a.png`, `before_grid_b.png` (trước), `final_grid_a.png` (thân 21-25), `final_grid_b.png` (26-29): cột đã duyệt | trước | sau;
+`r2_zoom.png` (thân 22-24 phóng to), `up_hit_zoom.png`; GIF 15 fps ba cột `.../scratchpad/compare_15fps.gif`; cú vung thứ hai `up_frames.png`.
+
+- **Khung h-1**: đạt. Khoảng cách xa nhất tới đoạn chuôi A - mũi A: 11,3 px (hình, alpha >= 128), 12,8 px kể cả quầng (alpha >= 16); ngưỡng 14. Diện tích hình 74 px (alpha >= 128) so với bản đã duyệt 1159 px: 0,06 lần (<= 1,6). Mặt nhân vật không bị che (đã xem `final_grid_a.png`: một lát trắng mảnh ôm lưỡi).
+- **Khung h, mép ngoài**: **chưa đạt trọn**. Độ lệch mép ngoài so với 6 mẫu `tip_px2x` (alpha >= 128, bản không quầng): 5,0 / 1,0 / 1,4 / 1,0 / 1,0 / 2,2 px. Mẫu 1 là đúng mũi A, đầu kim của đuôi (f = 0, nơi hình thon về bề rộng 0): lệch 5,0 > 4; năm mẫu còn lại <= 2,2. Không có một ngưỡng alpha nào cho cả sáu mẫu đạt: có quầng (alpha >= 128) mẫu 1 đạt nhưng mẫu 4-5 lệch 6-8 px vì quầng; không quầng thì mẫu 1 lệch 5. Bản "trước" (có quầng, alpha >= 128): 2,0 / 5,8 / 9,4 / 11,4 / 11,4 / 1,4.
+- **Khung h, edge trắng**: đạt. Dải trắng (đo trên bản chỉ lớp `slash`, không quầng, màu R >= 249, mảng >= 25 px): cách đoạn chuôi B - mũi B tối đa 3,5 px (<= 5), 0 % điểm xa hơn 5 px, phủ 97,2 % chiều dài lưỡi (>= 70 %).
+- **Mũi đậm, chuôi nhạt**: alpha trung bình 30 % phía mũi = 0,97 (>= 0,9); 30 % phía chuôi = 0,39 (<= 0,55) đo không quầng. **Kể cả quầng thì tip 0,99 và chuôi 0,84: chuôi không đạt** (quầng dưới sợi mũi / giữa tràn xuống dưới sợi chuôi; sợi chuôi đã vẽ với `glow=0`, spec đã chấp nhận quầng lấy từ hợp các tông).
+- **Nhịp tan** (tổng alpha khung xuất thật, quầng kể cả): A(h+1)/A(h) = 0,635 (<= 0,75), A(h+2)/A(h) = 0,36 (<= 0,45), A(h+3)/A(h) = 0,107 (<= 0,2), h+4 = 1,3 % (<= 5 %), h+5 0,6 %, h+6 0,1 % (chỉ hạt vụn `scraps`), h+7 trống. `fxcheck` bản 15 fps: không FAIL, không `pop`, không `cut`; còn cảnh báo `linger` (5 khung cuối dưới 2 %), không nằm trong tiêu chí.
+- **Đuôi**: đạt. Ở khung h+2 điểm fx gần mũi A nhất cách 60 px kể cả quầng (alpha >= 16) và 67,7 px với hình (alpha >= 128); yêu cầu > 30 px. Chưa đo ngưỡng alpha > 0 (quầng rất mờ có thể tới gần hơn 60 px); ngưỡng đã dùng là alpha >= 16 / 128.
+- **Không hồi quy**: đạt. `crescent`, `heavy`, `thrust`, `axe`, `axe_heavy` ở 30 fps (`--from 78,180 --to 288,180 --split`): hash toàn bộ `frames/@2x|@1x`, `back`, `front` trước và sau giống hệt (32/40/32/32/40 file). `build.py melee/slash --check` không FAIL (chỉ các cảnh báo cũ + `swing` mặc định, draft: pop/linger). `git status` chỉ thêm `lib-fx/melee/slash/swing/` và `catalog.json` (mục swing). `fxkit_test.py`: FXKIT_TEST_RESULT.
+- **Cú vung thứ hai** (`--from 60,200 --to 250,90 --track "root_a=90,170;root_b=190,150;up=20;turn=ccw;ease=1.2"`, ảnh `up_frames.png`): khung fx 1 (trước đòn) là lát mỏng ôm lưỡi đầu: xa nhất tới đoạn chuôi A - mũi A 12,0 px (hình) / 25,5 px kể cả quầng; khung đòn có mép trắng dọc lưỡi cuối: cách đoạn chuôi B - mũi B tối đa 5,7 px, 0,5 % điểm xa hơn 5 px, phủ 100 % chiều dài lưỡi (lưỡi 85 px). Cảnh báo `fxcheck` `pop` (mất ~50 % ở khung 2 -> 3) ở hình học này, tức nhịp tan chỉnh cho cú đầu chưa chung cho mọi cú.
+
+### Lệch so với task (và lý do)
+1. `Life(-1/15, 1/15, 0.0, 0.27)` thay `-0.0667`: với `-0.0667`, `n_pre = ceil(1.0005)` = 2 và hit_frame ra 3.
+2. Lớp `streaks` của `swing`: `role="core"`, `Life(0.0, 0.033, 0.033, 0.13)` (vẫn start >= 0). Cổng lint đòi một lớp primary / core / flash có |start| <= 1/30; lớp slash bắt đầu -1/15 nên lint FAIL nếu không có lớp này. Không sửa `effect.py` (ngoài danh sách file).
+3. `swing` đặt `streaks=0` trên lớp slash (sợi tóc nằm ngoài mép mũi đẩy mép ngoài ra thêm 3-5 px, vi phạm tiêu chí mép <= 4 px) và `linger=1.8` (với 2,4 và 3,4 khung h+1 mất > 45 %: `pop`).
+4. Dải `edge` là một băng rộng không đổi 3,6 px nằm trên đường lưỡi của đầu vệt (phía mũi đao đã đi qua) thay vì `strand(fh - 0.045, fh, ...)`: 0,045 theo `f` cho dải dày cỡ 20 px và thon về chuôi, vi phạm tiêu chí 5 px / phủ 70 %.
+5. Sợi chuôi (`faint`) vẽ riêng với `glow=0` (một lệnh `ink.paint` thứ hai thay vì một lệnh chung).

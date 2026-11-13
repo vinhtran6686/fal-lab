@@ -44,7 +44,7 @@ force/shock/
 | `melee/blunt/` | Búa, chùy | đòn nặng: đập, nện xuống đất, vụt ngang | vệt búa nặng, đập đất nứt | - |
 | `melee/polearm/` | Thương, giáo | đâm xuyên dài, quét rộng hình quạt | đâm thương xuyên, quét giáo | - |
 | `melee/beast/` | Quái thú | vuốt, cắn, húc, quật đuôi của quái | ba vệt vuốt, vết cắn | - |
-| `melee/slash/` | Vệt chém theo hai điểm | (fxkit) vệt vũ khí có lưỡi vẽ dọc đường cong từ điểm đầu tới điểm cuối của cú vung, đặt bằng `--from` / `--to` | chém lưỡi liềm (kiếm), chém nặng (đại đao), đâm thẳng, chém rìu, chém rìu lớn (vệt kiếm mịn, vệt rìu gồm các dải song song) | Chém lưỡi liềm, Chém nặng, Đâm thẳng, Chém rìu, Chém rìu lớn (draft) |
+| `melee/slash/` | Vệt chém theo hai điểm | (fxkit) vệt vũ khí có lưỡi vẽ dọc đường cong từ điểm đầu tới điểm cuối của cú vung, đặt bằng `--from` / `--to` | chém lưỡi liềm (kiếm), chém nặng (đại đao), đâm thẳng, chém rìu, chém rìu lớn, chém theo vũ khí (dùng với `--track`) (vệt kiếm mịn, vệt rìu gồm các dải song song) | Chém lưỡi liềm, Chém nặng, Đâm thẳng, Chém rìu, Chém rìu lớn, Chém theo vũ khí (draft) |
 
 ## `ranged/`: Đòn tầm xa vật lý
 

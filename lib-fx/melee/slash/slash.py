@@ -14,6 +14,12 @@ _slash = Effect("crescent", title="Chém lưỡi liềm", space="span", weight="
     ])
 EFFECTS = {
     "crescent": _slash,
+    "swing": _slash.variant("swing", title="Chém theo vũ khí", tags=["tracked"],
+        desc="a SWORD smear that follows a real weapon swing: use it with --track (the tip's arc is the outer edge, the blade the inner); born one "
+             "frame before the hit as a thin slice on the blade of pose A, whole on the hit frame with a white edge along the blade, the tail "
+             "draws in at once; the tip strand is dense and lasts, the hilt strand is faint and goes first; set the hit frame of the fx on the "
+             "character's hit frame",
+        layers={"slash": {"life": Life(-1 / 15, 1 / 15, 0.0, 0.27), "streaks": 0, "linger": 1.8}, "streaks": {"role": "core", "life": Life(0.0, 0.033, 0.033, 0.13)}}),
     "heavy": _slash.variant("heavy", title="Chém nặng", weight="heavy", pal="blaze", reach=250, tags=["heavy"],
         desc="a great SWORD (a big blade): a wider, deeper bow, a second fainter smear behind it, more scraps",
         layers={"slash": {"width": 70, "bend": 0.42, "streaks": 2, "life": Life(0.0, 0.12, 0.05, 0.36)}, "scraps": {"n": 10, "size": 18, "life": Life(0.1, 0.033, 0.0, 0.5)}}),

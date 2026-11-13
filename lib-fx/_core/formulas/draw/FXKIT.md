@@ -132,6 +132,13 @@ python lib-fx/build.py melee/slash/crescent --from 107,191 --to 240,243 --pal fr
   Chuôi đi Bezier bậc hai (điều khiển = giữa x + `dx`, y của chuôi cao hơn - `up`), lưỡi quay quanh chuôi (`turn`, góc nội suy `f ** ease`), vệt = bề mặt lưỡi quét:
   mép ngoài là cung mũi đao, mép trong là đường lưỡi, đầu vệt rộng đúng bằng lưỡi (tham số `blade` của lớp, `--set slash.blade=0.6` = 60 % phía mũi), đuôi nhọn.
   Không có `--track` thì kind chạy như cũ. Tham số `track` có thể đặt bằng code: `Space.world((x, y))` đổi toạ độ người gọi sang canvas.
+- **Vệt bám vũ khí mượt (`melee/slash/swing` + `--track`)**: hiệu ứng dành cho `--track` (sinh trước khung trúng đòn một khung ở 15 fps; `meta.json` `hit_frame` = 2):
+  ```
+  python lib-fx/build.py melee/slash/swing --from <mũi A> --to <mũi B> --pal frost --fps 15 --split \
+      --track "root_a=<chuôi A>;root_b=<chuôi B>;up=35;turn=cw;ease=1.3" --out <thư mục>
+  ```
+  Đặt `hit_frame` của fx trùng khung trúng đòn của thân; khung fx đầu rơi vào khung cuối của pose A (một lát mỏng trên lưỡi pose A), khung trúng đòn vệt đầy với mép trắng
+  dọc lưỡi pose B, rồi tan: đuôi rút trước, mũi đậm tàn sau cùng, chuôi nhạt tàn đầu tiên. Ở dưới 20 fps `on_twos` không lượng tử hoá (15 fps đã là "on twos" của 30 fps).
 - `--pal`, `--s`, `--seed`, `--fps`, `--speed`, `--name`; `--set LỚP.THAM_SỐ=GIÁ_TRỊ` chỉnh một lớp cho riêng lần xuất này (`LỚP.off=true` bỏ lớp).
 - Kết quả: `frames/@2x`, `@1x`; với `--split` thêm hai nửa `back/` và `front/` (vẽ thân nhân vật ở giữa); `meta.json` có `anchor_2x`, `target_2x`,
   `hit_frame` (đặt khung này trùng khung trúng đòn của thân; lưới khung luôn ghim vào khung trúng đòn, ở mọi fps) và `origin` (góc trên trái của khung trong

@@ -38,7 +38,12 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     d = on_twos(ph, c)
     if d >= 0.985: return
     fh = min(1.0, 0.45 + 0.5 * out_quint(g) + 0.05 * out_cubic(min(1.0, ph.decay * 3)))      # the head: born 45 % out, runs on
-    if track: fh = min(1.0, 0.45 + 0.55 * out_quint(g))                                       # a real swing: the head must land on the final blade
+    pre = -c.layer.life.start                                                               # s the layer is born before the hit (a swing: one frame at 15 fps)
+    tt = ph.sec + c.layer.life.start                                                        # s from the hit (negative = before it)
+    if track:
+        if pre > 0 and tt < -1e-6: fh = 0.10 + 0.06 * (1 + tt / pre)                         # before the hit the blade is still at pose A: a thin slice on it
+        elif pre > 0: fh = 1.0                                                              # from the hit the blade is at pose B: the smear is whole
+        else: fh = min(1.0, 0.45 + 0.55 * out_quint(g))                                      # a real swing: the head must land on the final blade
     lo = (1 - span) * fh                                                                    # where the tail begins
     sg = c.sp.hand * (1 if bend >= 0 else -1)                                                # +1: the inside of the bow is the left of travel
     W = width * s
@@ -93,6 +98,9 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         gaps = [rng.uniform(0.06, 0.10) for _ in range(K - 1)]
         tot = (1 - sum(gaps)) / sum(ws)
         ws = [w * tot for w in ws]
+    elif track and K == 3:                                                                  # tip-heavy: the bundle runs from the hilt (c 0) to the tip (c 1)
+        ws = [w * rng.uniform(0.9, 1.1) for w in (0.25, 0.33, 0.42)]; t = sum(ws); ws = [w / t for w in ws]
+        gaps = [0.0] * (K - 1)
     else:
         base = [0.5, 0.3, 0.2] if K == 3 else [1.0 / K] * K
         ws = [w * rng.uniform(0.85, 1.15) for w in base]; t = sum(ws); ws = [w / t for w in ws]
@@ -106,11 +114,14 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     for j in range(K):
         r = c.rng("strand", j)
         phi = (1 - ws[j] / wmax) if axe else 1 - j / max(1, K - 1)
+        pj = r.uniform(0.85, 1.15)
         S.append(dict(c0=bands[j][0], c1=bands[j][1],
-                      p=(0.8 + 1.5 * phi) * r.uniform(0.85, 1.15) * lk,
+                      p=((1.6 + 1.6 * phi) if track else (0.8 + 1.5 * phi)) * pj * lk,
                       rut=(0.2 + 0.55 * phi) * r.uniform(0.85, 1.15),
                       lag=0.12 * phi * r.uniform(0.6, 1.0),
                       start=(r.uniform(0.0, 0.1) if axe else 0.0)))
+        if track and K == 3:                                                                # the tip strand lasts longest, the hilt strand is short and goes first
+            S[j].update(tone=("faint", "mid", "main")[j], lag=0.0, start=0.25 if j == 0 else 0.0)
     END = 0.14 * L                                                                          # length of a tapered end made by fading
 
     def strand(f0, f1, cin, cout, n=56):
@@ -125,9 +136,15 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
 
     live = []
     for j, st in enumerate(S):
-        sh = (1 - d) ** st["p"] * min(1.0, (0.93 - d) / 0.3)                                # the last strokes go out, they do not stop
-        fa = lo + st["start"] * L + d * st["rut"] * L
-        fb = fh - d * st["lag"] * L
+        tone = st.get("tone", "main")
+        if track:                                                                           # fades from the tail early and hard; the leading edge stays on the blade
+            sh = (1 - d) ** st["p"] * (1 - d) ** 0.6
+            fa = lo + st["start"] * L + L * (0.55 + 0.35 * clamp((st["rut"] - 0.2) / 0.55)) * out_cubic(d * 1.6)
+            fb = fh
+        else:
+            sh = (1 - d) ** st["p"] * min(1.0, (0.93 - d) / 0.3)                            # the last strokes go out, they do not stop
+            fa = lo + st["start"] * L + d * st["rut"] * L
+            fb = fh - d * st["lag"] * L
         if sh < 0.03 or fb - fa < 0.05: continue
         cm, hb = (st["c0"] + st["c1"]) / 2, (st["c1"] - st["c0"]) / 2 * sh
         a_cut = fa > lo + 1e-6                                                              # a tail made by fading is tapered
@@ -138,12 +155,12 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
             if b_cut: k *= clamp((fb - f) / END) ** 0.8
             return k
         live.append((j, st, cm, hb, fa, fb, tp))
-        ink.add("main", strand(fa, fb, lambda f: cm - hb * tp(f), lambda f: cm + hb * tp(f)))
+        ink.add(tone, strand(fa, fb, lambda f: cm - hb * tp(f), lambda f: cm + hb * tp(f)))
     if not live: return
 
     if tones >= 2:                                                                          # darker tone on the inner part of a strand
         for j, st, cm, hb, fa, fb, tp in live:
-            if j != 0: continue
+            if j != (K - 1 if track and K == 3 else 0): continue
             da, db = max(lo + 0.15 * L, fa), min(lo + 0.9 * L, fb)
             if db - da < 0.05: continue
             fr = 0.38 if not axe else 0.45
@@ -154,8 +171,9 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
             ink.add("deep", strand(da, db, din, dout))
     if tones >= 3:                                                                          # the hot edge: outer part of the outermost strand, to the head
         j, st, cm, hb, fa, fb, tp = live[-1]
+        if track and K == 3 and j != K - 1: j = None
         ha = max(lo + 0.3 * L, fa)
-        if fb - ha > 0.05:
+        if j is not None and fb - ha > 0.05:
             def hout(f): return cm + hb * tp(f)
             def hin(f, ha=ha, fb=fb):
                 u = (f - ha) / (fb - ha)
@@ -193,7 +211,19 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         ink.add("main", shapes.ribbon(pts, ws_))
 
     glw = 0.5 if axe else 1.0                                                                # a full glow would fill the gaps between the bands
-    if ph.first:
+    if track and pre > 0:                                                                    # a tracked swing: a bright edge along the blade at the head
+        k = 1.0 if tt <= 0.07 else clamp(1 - d / 0.35)                                       # white to the frame after the hit, then a hot sliver that thins out
+        if k > 0.02:                                                                         # a band of constant width lying on the head's blade line, on the side the tip came from
+            (p0, nn), (q0, _) = at(fh), at(max(lo, fh - 0.02))
+            tx, ty = q0[0] - p0[0], q0[1] - p0[1]; dot = tx * nn[0] + ty * nn[1]; ox, oy = tx - dot * nn[0], ty - dot * nn[1]
+            m = math.hypot(ox, oy) or 1.0; ox, oy = ox / m * 3.6 * s * k, oy / m * 3.6 * s * k
+            wb = pw(fh); e1 = (p0[0] + nn[0] * wb, p0[1] + nn[1] * wb)
+            ink.add("edge", [p0, e1, (e1[0] + ox, e1[1] + oy), (p0[0] + ox, p0[1] + oy)])
+        ink.paint([("faint", c.pal.tone("main"))], glow=0.0, opacity={"faint": 0.4})                  # the hilt strand: faint, it does not feed the glow
+        ink.paint([("mid", c.pal.tone("main")), ("main", c.pal.tone("main")), ("deep", c.pal.tone("deep")),
+                   ("hot", c.pal.tone("hot")), ("edge", c.pal.tone("white") if tt <= 0.07 else c.pal.tone("hot"))],
+                  glow=glw, opacity={"mid": 0.7})
+    elif ph.first:
         ink.paint([("main", c.pal.tone("hot")), ("hot", c.pal.tone("white"))], glow=glw)
     else:
         ink.paint([("main", c.pal.tone("main")), ("deep", c.pal.tone("deep")), ("hot", c.pal.tone("hot"))], glow=glw)

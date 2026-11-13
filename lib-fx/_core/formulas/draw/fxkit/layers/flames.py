@@ -11,8 +11,8 @@ def decay_share(d, k=3.9):
 
 
 def on_twos(ph, c, after=0.65):
-    """ph.decay held for two frames once the layer is past `after` of its life (rules/02 section 3)."""
-    if ph.age < after: return ph.decay
+    """ph.decay held for two frames once the layer is past `after` of its life (rules/02 section 3); unchanged below 20 fps."""
+    if ph.age < after or c.fps < 20: return ph.decay                  # 15 fps is already "on twos" of 30 fps: quantising again holds then drops
     n = max(1.0, c.layer.life.release * c.fps)
     return math.floor(ph.decay * n / 2) * 2 / n
 

@@ -4,7 +4,7 @@ Nguồn: đánh giá của người lập kế hoạch và người dùng ngày 
 Người lập kế hoạch không thi công; người thi công làm đúng từng bước trong file task, đánh dấu ô, điền "Kết quả". Xoá thư mục này khi mọi task xong và được duyệt.
 
 ## Checklist
-- [ ] **S1** Vệt chém bám vũ khí mượt như bản đã duyệt của `azure_blade` (khung đầu, nhịp tan ở 15 fps, đuôi rút, mũi đậm chuôi nhạt, mép sáng dọc lưỡi): [S1-tracked-slash-smooth.md](S1-tracked-slash-smooth.md)
+- [x] **S1** Vệt chém bám vũ khí mượt như bản đã duyệt của `azure_blade` (khung đầu, nhịp tan ở 15 fps, đuôi rút, mũi đậm chuôi nhạt, mép sáng dọc lưỡi): [S1-tracked-slash-smooth.md](S1-tracked-slash-smooth.md)
 - [ ] **S2** Mặt phẳng vung: chém ngang, chém xéo theo góc nhìn của game (chưa viết task; chờ người dùng yêu cầu)
 - [ ] **S3** Rìu dày hơn: ít dải, dải rộng (chưa viết task)
 - [ ] **CHẤM** (người lập kế hoạch) sau mỗi task → **DUYỆT** (người dùng)
