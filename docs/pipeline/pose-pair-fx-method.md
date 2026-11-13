@@ -60,6 +60,7 @@ out/heroes/azure_blade/
 ## 4. Quy trình
 
 ### Bước 0: chuẩn bị
+- Xác định **mặt phẳng của động tác** (song song màn hình, nằm ngang trên mặt đất, xéo, đâm thẳng) theo `.claude/skills/fal-image/action-planes.md`: nó quyết định cách tả hai pose và loại vệt dùng ở bước 7.
 - Master đã duyệt (hero: `fal-image`; **không chibi, không dễ thương**, 3,5 đến 4,5 đầu; hai tay và hai chân cùng cỡ; áo choàng nằm sau thân; cả vũ khí trong khung. Xem `fal-image/format.md` "No chibi, no cute").
 - Viết **mô tả skill** từng pha, theo vật lý (cầm, giơ, chém, tiếp đất), cho **hai pose duy nhất**. Không mô tả các khung giữa.
 

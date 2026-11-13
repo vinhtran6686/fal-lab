@@ -11,7 +11,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
     for enemies and bosses, front and back views (`format.md` §3: no diagonals), icon, projectile; towers, props, UI, maps. Format, style
     and views in `format.md`, one file per class in `classes/` (`hero`, `ally`, `enemy`,
     `enemy-flying`, `boss`: roles, size, directions, stills, manifest rows, skills; asked with AskUserQuestion
-    when missing), reference measurements in `reference.md`, other assets in `templates.md`, example
+    when missing), reference measurements in `reference.md`, the view and the plane of a move (vertical / horizontal / diagonal swings, thrusts, casts: how to pose them and where the vfx goes) in `action-planes.md`, other assets in `templates.md`, example
     requests in `examples.md` (`/fal-image --example --hero`); `--creative` proposes designs from a short idea. A `style.md` at the project root, if present, overrides the default style block.
     `--manual`: no fal call: you write fully expanded prompts for the user to run in ChatGPT, review what they bring back and file only the approved
     images with `scripts/ingest_image.py` (checks + next `_vNN`, cost 0, `costs.csv` untouched).
