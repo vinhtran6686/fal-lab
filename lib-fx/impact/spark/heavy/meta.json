@@ -20,12 +20,12 @@
   392
  ],
  "anchor_2x": [
-  201.0,
-  195.0
+  202.0,
+  196.0
  ],
  "target_2x": [
-  341.0,
-  195.0
+  342.0,
+  196.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -80,7 +80,7 @@
   "frames": 18,
   "peak_frame": 5,
   "peak_size_1x": [
-   117,
+   116,
    115
   ],
   "last_frame_pct": 0.0

@@ -16,15 +16,15 @@
  "frames": 34,
  "frame_size_2x": [
   490,
-  508
+  510
  ],
  "anchor_2x": [
   258.0,
-  251.0
+  252.0
  ],
  "target_2x": [
   398.0,
-  251.0
+  252.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -96,7 +96,7 @@
   "peak_frame": 6,
   "peak_size_1x": [
    168,
-   182
+   181
   ],
   "last_frame_pct": 0.0
  },

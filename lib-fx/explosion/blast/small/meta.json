@@ -20,11 +20,11 @@
  ],
  "anchor_2x": [
   182.0,
-  179.0
+  180.0
  ],
  "target_2x": [
   322.0,
-  179.0
+  180.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",

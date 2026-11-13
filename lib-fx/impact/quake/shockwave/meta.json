@@ -17,15 +17,15 @@
  "fps": 30.0,
  "frames": 20,
  "frame_size_2x": [
-  528,
+  530,
   320
  ],
  "anchor_2x": [
-  275.0,
+  276.0,
   184.0
  ],
  "target_2x": [
-  415.0,
+  416.0,
   184.0
  ],
  "hit_frame": 1,
@@ -81,7 +81,7 @@
   "frames": 20,
   "peak_frame": 5,
   "peak_size_1x": [
-   172,
+   173,
    67
   ],
   "last_frame_pct": 0.0

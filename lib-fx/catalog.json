@@ -16,12 +16,12 @@
   "fps": 30.0,
   "frames": 34,
   "frame_size_2x": [
-   298,
+   300,
    298
   ],
   "anchor_2x": [
-   163.0,
-   197.0
+   164.0,
+   198.0
   ],
   "dir": "element/fire/aoe/eruption",
   "qa": "warn",
@@ -46,12 +46,12 @@
   "fps": 30.0,
   "frames": 34,
   "frame_size_2x": [
-   312,
-   364
+   314,
+   366
   ],
   "anchor_2x": [
-   157.0,
-   265.0
+   158.0,
+   266.0
   ],
   "dir": "element/fire/aoe/pillar",
   "qa": "ok",
@@ -76,12 +76,12 @@
   "fps": 30.0,
   "frames": 34,
   "frame_size_2x": [
-   380,
-   254
+   382,
+   256
   ],
   "anchor_2x": [
-   201.0,
-   153.0
+   202.0,
+   154.0
   ],
   "dir": "element/fire/aoe/wildfire",
   "qa": "warn",
@@ -105,11 +105,11 @@
   "frames": 34,
   "frame_size_2x": [
    490,
-   508
+   510
   ],
   "anchor_2x": [
    258.0,
-   251.0
+   252.0
   ],
   "dir": "explosion/blast/blast",
   "qa": "warn",
@@ -137,7 +137,7 @@
   ],
   "anchor_2x": [
    182.0,
-   179.0
+   180.0
   ],
   "dir": "explosion/blast/small",
   "qa": "ok",
@@ -606,11 +606,11 @@
   "fps": 30.0,
   "frames": 20,
   "frame_size_2x": [
-   528,
+   530,
    320
   ],
   "anchor_2x": [
-   275.0,
+   276.0,
    184.0
   ],
   "dir": "impact/quake/shockwave",
@@ -635,11 +635,11 @@
   "fps": 30.0,
   "frames": 27,
   "frame_size_2x": [
-   482,
+   484,
    294
   ],
   "anchor_2x": [
-   247.0,
+   248.0,
    160.0
   ],
   "dir": "impact/quake/slam",
@@ -665,11 +665,11 @@
   "frames": 23,
   "frame_size_2x": [
    242,
-   210
+   212
   ],
   "anchor_2x": [
-   101.0,
-   113.0
+   102.0,
+   114.0
   ],
   "dir": "impact/quake/stomp",
   "qa": "ok",
@@ -698,7 +698,7 @@
   ],
   "anchor_2x": [
    234.0,
-   225.0
+   226.0
   ],
   "dir": "impact/spark/crit",
   "qa": "warn",
@@ -726,8 +726,8 @@
    392
   ],
   "anchor_2x": [
-   201.0,
-   195.0
+   202.0,
+   196.0
   ],
   "dir": "impact/spark/heavy",
   "qa": "warn",
@@ -809,12 +809,12 @@
   "fps": 30.0,
   "frames": 23,
   "frame_size_2x": [
-   410,
+   412,
    336
   ],
   "anchor_2x": [
-   181.0,
-   225.0
+   182.0,
+   226.0
   ],
   "dir": "magic/arcane/aoe/frost",
   "qa": "warn",
@@ -985,8 +985,8 @@
    266
   ],
   "anchor_2x": [
-   75.0,
-   185.0
+   76.0,
+   186.0
   ],
   "dir": "melee/slash/crescent",
   "qa": "warn",
@@ -1014,8 +1014,8 @@
    320
   ],
   "anchor_2x": [
-   83.0,
-   227.0
+   84.0,
+   228.0
   ],
   "dir": "melee/slash/heavy",
   "qa": "ok",
@@ -1070,12 +1070,12 @@
   "fps": 30.0,
   "frames": 26,
   "frame_size_2x": [
-   528,
+   530,
    326
   ],
   "anchor_2x": [
-   101.0,
-   163.0
+   102.0,
+   164.0
   ],
   "dir": "ranged/bolt/bolt",
   "qa": "warn",

@@ -16,16 +16,16 @@
  "fps": 30.0,
  "frames": 34,
  "frame_size_2x": [
-  298,
+  300,
   298
  ],
  "anchor_2x": [
-  163.0,
-  197.0
+  164.0,
+  198.0
  ],
  "target_2x": [
-  303.0,
-  197.0
+  304.0,
+  198.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -80,8 +80,8 @@
   "frames": 34,
   "peak_frame": 7,
   "peak_size_1x": [
-   109,
-   102
+   110,
+   101
   ],
   "last_frame_pct": 0.0
  },

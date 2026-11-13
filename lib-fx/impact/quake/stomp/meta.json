@@ -17,15 +17,15 @@
  "frames": 23,
  "frame_size_2x": [
   242,
-  210
+  212
  ],
  "anchor_2x": [
-  101.0,
-  113.0
+  102.0,
+  114.0
  ],
  "target_2x": [
-  241.0,
-  113.0
+  242.0,
+  114.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -70,7 +70,7 @@
   "frames": 23,
   "peak_frame": 4,
   "peak_size_1x": [
-   103,
+   104,
    27
   ],
   "last_frame_pct": 0.0
