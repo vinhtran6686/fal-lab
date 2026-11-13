@@ -35,7 +35,7 @@ nhất là **đo chính mẫu của hoạ sĩ**, như repo đã làm với `swir
 | H8 | Các tia nối tiếp không lặp vị trí và hình (không có hai tia chồng nhau > 30 %) | IoU giữa các tia |
 
 ## 4. Checklist
-- [ ] **R1** flame-burst: profile, đo, dựng lại, so sánh: [R1-flame-burst.md](R1-flame-burst.md)
+- [x] **R1** flame-burst: profile, đo, dựng lại, so sánh: [R1-flame-burst.md](R1-flame-burst.md)
 - [ ] **R2** lightning: profile, đo, dựng lại, so sánh: [R2-lightning.md](R2-lightning.md)
 - [ ] **CHẤM** (người lập kế hoạch): xem `compare.gif` và số đo của R1, R2; ghi nhận xét vào mục 6. Chưa đạt → trả về đúng task đó
 - [ ] **R3** xuất số đo cho luật (chỉ làm sau khi R1, R2 được chấm đạt): [R3-export-measurements.md](R3-export-measurements.md)
