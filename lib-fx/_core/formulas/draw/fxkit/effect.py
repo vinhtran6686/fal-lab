@@ -61,10 +61,11 @@ class Ctx:
         self.o = sp.at(layer.at)
         self._glow = None
 
-    def add_glow(self, mask, weight=1.0):
-        """Feed the effect's glow with a silhouette (bool, supersampled) of this layer; weight 0..1 = how strongly it glows now."""
+    def add_glow(self, mask, weight=1.0, z=None):
+        """Feed the effect's glow with a silhouette (bool, supersampled) of this layer; weight 0..1 = how strongly it glows now.
+        z: "front" | "back" = the half of the effect that glows (default: the layer's own z)."""
         if self._glow is None or weight <= 0: return
-        g = self._glow[self.layer.z]
+        g = self._glow[z or self.layer.z]
         np.maximum(g, mask * np.float32(min(1.0, weight)), out=g)
 
     def rng(self, *keys):
@@ -135,7 +136,8 @@ class Effect:
         need = {"light": 2, "medium": 3, "heavy": 4}[self.weight]
         if len(roles) < need: out.append(f"{len(roles)} roles ({', '.join(sorted(roles))}); a {self.weight} effect needs {need}+ for depth")
         if "sustained" not in self.tags:
-            if not any(l.role in ("flash", "core", "primary") and abs(l.life.start) <= 1 / 30 + 1e-9 for l in L): out.append("no primary / core / flash layer on the hit frame (the hit does not read)")
+            if not any(l.role in ("flash", "core", "primary") and l.life.start <= 1 / 30 + 1e-9 and l.life.end > 0 for l in L):      # born before the hit and still alive at t = 0 counts
+                out.append("no primary / core / flash layer on the hit frame (the hit does not read)")
             if len({round(l.life.start, 3) for l in L if l.role != "flash"}) < 2 and len(L) > 2: out.append("every layer starts on the same frame (stagger them)")
             ends = sorted(l.life.end for l in L)
             if len(L) > 2 and ends[-1] < ends[0] * 1.5 + 1e-9: out.append("every layer ends at about the same time (fast layers must die early, slow ones linger)")

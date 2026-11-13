@@ -6,13 +6,28 @@ happens to it happens in those coordinates: the weapon sets the bundle (a sword:
 what is left is a few long thin strokes running the way of the swing: no holes, no noise, no pattern."""
 import math
 from .. import kind, angles, smooth, out_quint, out_cubic, clamp, Ink, shapes
+from ..ink import _disc
 from .flames import on_twos
 
 N = 48
 
 
+def _plane(sw, face):
+    """The swing plane as screen vectors: k (flatness), A (the long axis, x times face), P (the short axis, y down, mirrored with the face), sqrt(1 - k^2)."""
+    k = float(sw.get("k", 0.3)); ro = math.radians(float(sw.get("roll", 0.0)))
+    return k, (face * math.cos(ro), math.sin(ro)), (-face * math.sin(ro), math.cos(ro)), math.sqrt(max(0.0, 1 - k * k))
+
+
+def plane_point(sw, u, rho, face=1):
+    """Screen offset from the shoulder of the point at angle u (deg: 0 ahead, 90 near, 180 behind, 270 far) and radius rho of the swing
+    plane `sw` (the `swing` parameter of the slash kind), and its depth (+ = near the viewer). The tip of a weapon swung in that plane
+    draws the circle seen from the game's camera: an ellipse k as tall as wide, turned by `roll`, a near point a little bigger."""
+    k, A, P, sq = _plane(sw, face); r = math.radians(u); dep = math.sin(r) * sq; pr = rho * (1 + 0.16 * dep)
+    return (pr * (math.cos(r) * A[0] + math.sin(r) * k * P[0]), pr * (math.cos(r) * A[1] + math.sin(r) * k * P[1])), dep
+
+
 @kind("slash")
-def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tones=3, teeth=0, streaks=-1, linger=3.4, track=None, blade=1.0):
+def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tones=3, teeth=0, streaks=-1, linger=3.4, track=None, blade=1.0, swing=None):
     """A weapon smear from a to b. role primary. Designed for Life(0, 0.1, 0.03, 0.27): the attack is the sweep.
     weapon: "sword" (also a blade or great sword: a smooth ribbon of 3 touching strands), "axe" (4-6 parallel bands apart by narrow
     gaps, shorter, thicker, blunt head), "saw" (a sword whose inner edge is toothed); bend: how far the path bows to the upper side,
@@ -26,7 +41,14 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     root_a to root_b (control = (midpoint x + root_dx, the higher hilt's y - root_up), as in the approved crescent), the blade turning about the hilt (angle eased by f ** ease, length linear).
     The smear is then the SURFACE the blade swept: its outer edge is the tip's arc, the inner edge the blade's own line (blade = the share of
     the blade, from the tip inwards, that is covered: 1.0 = the whole blade, 0.6 = the tip 60 %); the head keeps the blade's width, the tail
-    draws in to a needle that follows the tip's arc. bend, width and span do not apply (span still cuts the tail)."""
+    draws in to a needle that follows the tip's arc. bend, width and span do not apply (span still cuts the tail).
+    swing: the same smear for a swing in a PLANE seen from the game's camera (dict; build.py --swing): {"k": flatness (1 = flat to the
+    screen, 0.3 = lying on the ground, 0.6 = slanted), "roll": deg, "u0", "u1": the blade's angle in its plane at the start and the end
+    (0 ahead, 90 near, 180 behind, 270 far; u grows ahead -> near -> behind -> far), "r": px the tip is from the shoulder a at s = 1
+    (0 = the distance a -> b), "blade": the share of the radius that is swept, "ease"}. a is the shoulder, b only says which way it
+    faces. The tip runs on a circle around a; what we see is its projection (plane_point). It is drawn in two halves: the far half
+    (depth < 0) on the BACK canvas, cooler and thin, the near half on the FRONT canvas, bright and thick; everything else (fh, fade,
+    three strands, white edge) is the track mode's. Overrides track."""
     axe = weapon == "axe"
     if width <= 0: width = 80.0 if axe else 46.0
     if span <= 0: span = 0.7 if axe else 1.0
@@ -34,13 +56,16 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     if streaks < 0: streaks = 0 if axe else 2
     if weapon == "saw" and teeth <= 0: teeth = 6
     rng = c.rng("design"); s = c.s
+    sw = swing
+    if sw: track = None
+    tracked = bool(track or sw)
     g = ph.grow
     d = on_twos(ph, c)
     if d >= 0.985: return
     fh = min(1.0, 0.45 + 0.5 * out_quint(g) + 0.05 * out_cubic(min(1.0, ph.decay * 3)))      # the head: born 45 % out, runs on
     pre = -c.layer.life.start                                                               # s the layer is born before the hit (a swing: one frame at 15 fps)
     tt = ph.sec + c.layer.life.start                                                        # s from the hit (negative = before it)
-    if track:
+    if tracked:
         if pre > 0 and tt < -1e-6: fh = 0.10 + 0.06 * (1 + tt / pre)                         # before the hit the blade is still at pose A: a thin slice on it
         elif pre > 0: fh = 1.0                                                              # from the hit the blade is at pose B: the smear is whole
         else: fh = min(1.0, 0.45 + 0.55 * out_quint(g))                                      # a real swing: the head must land on the final blade
@@ -48,7 +73,9 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     sg = c.sp.hand * (1 if bend >= 0 else -1)                                                # +1: the inside of the bow is the left of travel
     W = width * s
     OFS = 0.7                                                                              # stroke coordinate lying on the path (bow mode)
-    ink = Ink(c, smooth=dict(fillet=0.6, burr=0.6, sigma=0.6) if axe else True)     # the gaps between bands must survive
+    sm = dict(fillet=0.6, burr=0.6, sigma=0.6) if axe else True
+    ink = Ink(c, smooth=sm, canvas=c.front if sw else None)                              # swing: the near half is always in front of the character
+    fink = Ink(c, smooth=sm, canvas=c.back) if sw else None                                 # and the far half behind it
     L = fh - lo
     if L < 0.06: return
 
@@ -71,13 +98,43 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
             an = a0 + (a1 - a0) * f ** ease; Lf = LA + (LB - LA) * f
             return r, (r[0] + Lf * math.cos(an), r[1] + Lf * math.sin(an)), Lf
 
+    if sw:
+        OFS = 1.0
+        face = c.sp.hand; O = c.sp.a
+        k_, A_, P_, sq_ = _plane(sw, face)
+        u0, u1 = float(sw.get("u0", 235)), float(sw.get("u1", 430)); ease = float(sw.get("ease", 1.3))
+        R = float(sw.get("r", 0.0)) * s or c.sp.len; bl = float(sw.get("blade", 0.75)); blade = bl
+        q_ = (1 - k_) / 0.75; wmin = 7.0 * s; mnear = min(2.4, 1 + 1.4 * q_)
+
+        def uf(f): return u0 + (u1 - u0) * clamp(f) ** ease
+        def pt3(f, rho):
+            (x, y), dep = plane_point(sw, uf(f), rho, face)
+            return (O[0] + x, O[1] + y), dep
+        def depth(f): return math.sin(math.radians(uf(f))) * sq_
+        def mfac(f):                                                                        # how thick the stroke is allowed to be here: far thin, near fat
+            sn = math.sin(math.radians(uf(f)))
+            return clamp(1 + sn * (1.4 if sn >= 0 else 0.7) * q_, 0.3, 2.4)
+        def swing_at(f):                                                                    # tip, unit normal of the tip's arc towards the inside, projected blade
+            tip, _ = pt3(f, R); hilt, _ = pt3(f, R * (1 - bl))
+            r = math.radians(uf(f)); sgn = 1 if u1 >= u0 else -1
+            dep = math.sin(r) * sq_
+            kk = 0.16 * sq_ * math.cos(r)                                                    # d(perspective)/du
+            pr = R * (1 + 0.16 * dep)
+            tx = pr * (-math.sin(r) * A_[0] + math.cos(r) * k_ * P_[0]) + R * kk * (math.cos(r) * A_[0] + math.sin(r) * k_ * P_[0])
+            ty = pr * (-math.sin(r) * A_[1] + math.cos(r) * k_ * P_[1]) + R * kk * (math.cos(r) * A_[1] + math.sin(r) * k_ * P_[1])
+            m = math.hypot(tx, ty) or 1e-6; nx, ny = -ty / m, tx / m
+            if nx * (hilt[0] - tip[0]) + ny * (hilt[1] - tip[1]) < 0: nx, ny = -nx, -ny
+            return tip, (nx, ny), nx * (hilt[0] - tip[0]) + ny * (hilt[1] - tip[1])
+
     def prof(v):                                                                           # width along the ribbon, v 0 tail .. 1 head
         v = clamp(v)
-        if track: return v ** 0.6                                          # needle tail, the head keeps the blade's full width
+        if tracked: return v ** 0.6                                          # needle tail, the head keeps the blade's full width
         if axe: return v ** 0.6 * (1 - v ** 3) ** 0.45                                       # fat tail, blunt head
         return v ** 0.75 * (1 - v ** 5) ** 0.6
 
     def at(f):
+        if sw:
+            p, nn, _ = swing_at(f); return p, nn
         if track:                                                                          # the tip, and the unit vector along the blade towards the hilt
             r, p, Lf = swing(f)
             return p, ((r[0] - p[0]) / (Lf or 1e-6), (r[1] - p[1]) / (Lf or 1e-6))
@@ -85,6 +142,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         return p, (-math.sin(a) * sg, math.cos(a) * sg)                                    # point, unit vector to the inside of the bow
 
     def pw(f):                                                                             # full ribbon width at arc position f
+        if sw: return max(wmin * mfac(f), R * bl * k_ * (1 + 0.16 * depth(f)) * mfac(f) / mnear) * prof((f - lo) / L)   # a stroke: fat where near, thin where far
         if track: return blade * swing(f)[2] * prof((f - lo) / L)                          # the covered share of the blade, tip inwards
         return W * prof((f - lo) / L)
 
@@ -98,7 +156,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         gaps = [rng.uniform(0.06, 0.10) for _ in range(K - 1)]
         tot = (1 - sum(gaps)) / sum(ws)
         ws = [w * tot for w in ws]
-    elif track and K == 3:                                                                  # tip-heavy: the bundle runs from the hilt (c 0) to the tip (c 1)
+    elif tracked and K == 3:                                                                  # tip-heavy: the bundle runs from the hilt (c 0) to the tip (c 1)
         ws = [w * rng.uniform(0.9, 1.1) for w in (0.25, 0.33, 0.42)]; t = sum(ws); ws = [w / t for w in ws]
         gaps = [0.0] * (K - 1)
     else:
@@ -116,11 +174,11 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         phi = (1 - ws[j] / wmax) if axe else 1 - j / max(1, K - 1)
         pj = r.uniform(0.85, 1.15)
         S.append(dict(c0=bands[j][0], c1=bands[j][1],
-                      p=((1.6 + 1.6 * phi) if track else (0.8 + 1.5 * phi)) * pj * lk,
+                      p=((1.6 + 1.6 * phi) if tracked else (0.8 + 1.5 * phi)) * pj * lk,
                       rut=(0.2 + 0.55 * phi) * r.uniform(0.85, 1.15),
                       lag=0.12 * phi * r.uniform(0.6, 1.0),
                       start=(r.uniform(0.0, 0.1) if axe else 0.0)))
-        if track and K == 3:                                                                # the tip strand lasts longest, the hilt strand is short and goes first
+        if tracked and K == 3:                                                                # the tip strand lasts longest, the hilt strand is short and goes first
             S[j].update(tone=("faint", "mid", "main")[j], lag=0.0, start=0.25 if j == 0 else 0.0)
     END = 0.14 * L                                                                          # length of a tapered end made by fading
 
@@ -134,10 +192,29 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
             Lp.append((p[0] + nn[0] * a, p[1] + nn[1] * a)); Rp.append((p[0] + nn[0] * b, p[1] + nn[1] * b))
         return Lp + Rp[::-1]
 
+    def parts(f0, f1):                                                                      # swing: [(fa, fb, near)]: the far part (depth < 0) and the near part
+        n = 64; fs = [f0 + (f1 - f0) * i / n for i in range(n + 1)]; out = []; a = f0; cur = depth(f0) >= 0
+        for x, y in zip(fs, fs[1:]):
+            nx = depth(y) >= 0
+            if nx != cur:
+                lo_, hi_ = x, y
+                for _ in range(24):
+                    mid = (lo_ + hi_) / 2
+                    if (depth(mid) >= 0) == cur: lo_ = mid
+                    else: hi_ = mid
+                out.append((a, (lo_ + hi_) / 2, cur)); a = (lo_ + hi_) / 2; cur = nx
+        out.append((a, f1, cur)); return out
+
+    def put(tone, f0, f1, cin, cout):                                                       # one band of a strand, to the right half of the effect
+        if not sw: ink.add(tone, strand(f0, f1, cin, cout)); return
+        for fa_, fb_, near in parts(f0, f1):
+            if fb_ - fa_ < 1e-4: continue
+            (ink if near else fink).add(tone, strand(fa_, fb_, cin, cout, n=max(8, int(56 * (fb_ - fa_) / max(f1 - f0, 1e-6)))))
+
     live = []
     for j, st in enumerate(S):
         tone = st.get("tone", "main")
-        if track:                                                                           # fades from the tail early and hard; the leading edge stays on the blade
+        if tracked:                                                                           # fades from the tail early and hard; the leading edge stays on the blade
             sh = (1 - d) ** st["p"] * (1 - d) ** 0.6
             fa = lo + st["start"] * L + L * (0.55 + 0.35 * clamp((st["rut"] - 0.2) / 0.55)) * out_cubic(d * 1.6)
             fb = fh
@@ -155,12 +232,12 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
             if b_cut: k *= clamp((fb - f) / END) ** 0.8
             return k
         live.append((j, st, cm, hb, fa, fb, tp))
-        ink.add(tone, strand(fa, fb, lambda f: cm - hb * tp(f), lambda f: cm + hb * tp(f)))
+        put(tone, fa, fb, lambda f: cm - hb * tp(f), lambda f: cm + hb * tp(f))
     if not live: return
 
     if tones >= 2:                                                                          # darker tone on the inner part of a strand
         for j, st, cm, hb, fa, fb, tp in live:
-            if j != (K - 1 if track and K == 3 else 0): continue
+            if j != (K - 1 if tracked and K == 3 else 0): continue
             da, db = max(lo + 0.15 * L, fa), min(lo + 0.9 * L, fb)
             if db - da < 0.05: continue
             fr = 0.38 if not axe else 0.45
@@ -168,17 +245,17 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
             def dout(f, cm=cm, hb=hb, tp=tp, da=da, db=db, fr=fr):
                 u = (f - da) / (db - da)
                 return din(f) + 2 * hb * tp(f) * fr * math.sin(math.pi * clamp(u)) ** 0.6
-            ink.add("deep", strand(da, db, din, dout))
+            put("deep", da, db, din, dout)
     if tones >= 3:                                                                          # the hot edge: outer part of the outermost strand, to the head
         j, st, cm, hb, fa, fb, tp = live[-1]
-        if track and K == 3 and j != K - 1: j = None
+        if tracked and K == 3 and j != K - 1: j = None
         ha = max(lo + 0.3 * L, fa)
         if j is not None and fb - ha > 0.05:
             def hout(f): return cm + hb * tp(f)
             def hin(f, ha=ha, fb=fb):
                 u = (f - ha) / (fb - ha)
                 return hout(f) - 2 * hb * tp(f) * 0.6 * smooth(0, 0.3, clamp(u))
-            ink.add("hot", strand(ha, fb, hin, hout))
+            put("hot", ha, fb, hin, hout)
 
     # teeth (saw): slim wedges bitten out of the inner edge, pointing back to the tail
     for i, v in enumerate(angles(rng, teeth, 0.2, 0.88, gaps=1) if teeth > 0 and d < 0.3 else []):
@@ -206,24 +283,36 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         pts, ws_ = [], []
         for k in range(24):
             u = k / 23; f = f0 + (f1 - f0) * u; p, n_ = at(f)
-            o = -(0.3 + off) * pw(f) if not track else -(0.03 + 0.25 * off) * pw(f)
+            o = -(0.3 + off) * pw(f) if not tracked else -(0.03 + 0.25 * off) * pw(f)
             pts.append((p[0] + n_[0] * o, p[1] + n_[1] * o)); ws_.append(wd * math.sin(math.pi * u) ** 0.7)
         ink.add("main", shapes.ribbon(pts, ws_))
 
     glw = 0.5 if axe else 1.0                                                                # a full glow would fill the gaps between the bands
-    if track and pre > 0:                                                                    # a tracked swing: a bright edge along the blade at the head
+    if tracked and pre > 0:                                                                  # a tracked swing: a bright edge along the blade at the head
         k = 1.0 if tt <= 0.07 else clamp(1 - d / 0.35)                                       # white to the frame after the hit, then a hot sliver that thins out
+        hnear = (not sw) or depth(fh) >= 0                                                   # a head on the far side is dim: no white edge there
+        hink = ink if hnear else fink
         if k > 0.02:                                                                         # a band of constant width lying on the head's blade line, on the side the tip came from
             (p0, nn), (q0, _) = at(fh), at(max(lo, fh - 0.02))
             tx, ty = q0[0] - p0[0], q0[1] - p0[1]; dot = tx * nn[0] + ty * nn[1]; ox, oy = tx - dot * nn[0], ty - dot * nn[1]
             m = math.hypot(ox, oy) or 1.0; ox, oy = ox / m * 3.6 * s * k, oy / m * 3.6 * s * k
             wb = pw(fh); e1 = (p0[0] + nn[0] * wb, p0[1] + nn[1] * wb)
-            ink.add("edge", [p0, e1, (e1[0] + ox, e1[1] + oy), (p0[0] + ox, p0[1] + oy)])
+            if sw:                                                                           # the blade's own line in its plane: from the tip towards the shoulder, as long as the stroke is thick
+                hl, _ = pt3(fh, R * (1 - bl)); rx, ry = hl[0] - p0[0], hl[1] - p0[1]; rm = math.hypot(rx, ry) or 1.0
+                e1 = (p0[0] + rx / rm * min(wb, rm), p0[1] + ry / rm * min(wb, rm))
+            quad = [p0, e1, (e1[0] + ox, e1[1] + oy), (p0[0] + ox, p0[1] + oy)]
+            if hnear: hink.add("edge", quad)
+            if tt < -1e-6:                                                                   # the frame before the hit: the white sliver gets a rim of the smear's own colour
+                hink.add("rim", quad); hink.set("rim", _disc(hink.mask("rim"), 3.0 * s * hink.ss, True))
         ink.paint([("faint", c.pal.tone("main"))], glow=0.0, opacity={"faint": 0.4})                  # the hilt strand: faint, it does not feed the glow
-        ink.paint([("mid", c.pal.tone("main")), ("main", c.pal.tone("main")), ("deep", c.pal.tone("deep")),
+        ink.paint(([("rim", c.pal.tone("main"))] if ink.mask("rim").any() else []) + [("mid", c.pal.tone("main")), ("main", c.pal.tone("main")), ("deep", c.pal.tone("deep")),
                    ("hot", c.pal.tone("hot")), ("edge", c.pal.tone("white") if tt <= 0.07 else c.pal.tone("hot"))],
                   glow=glw, opacity={"mid": 0.7})
     elif ph.first:
         ink.paint([("main", c.pal.tone("hot")), ("hot", c.pal.tone("white"))], glow=glw)
     else:
         ink.paint([("main", c.pal.tone("main")), ("deep", c.pal.tone("deep")), ("hot", c.pal.tone("hot"))], glow=glw)
+    if sw:                                                                                   # the far half, behind the character: cooler (one step down the ramp), no white edge, half the glow
+        fcol = lambda n_: c.pal.tone({"main": "deep", "mid": "deep", "faint": "deep", "rim": "deep", "deep": "shade", "hot": "main"}[n_])
+        fink.paint([("faint", fcol("faint"))] + ([("rim", fcol("rim"))] if fink.mask("rim").any() else []), glow=0.0, opacity={"faint": 0.4})
+        fink.paint([("mid", fcol("mid")), ("main", fcol("main")), ("deep", fcol("deep")), ("hot", fcol("hot"))], glow=glw * 0.5, opacity={"mid": 0.7})

@@ -110,7 +110,7 @@ vẽ hình vào `Ink` theo tông → **mòn** theo phần diện tích còn lạ
 |---|---|---|---|---|
 | `flames` | `layers/flames.py` | cụm lưỡi lửa phun từ gốc: thân, mảng tối bên trong, vũng nóng ở chân | primary | `0, 0.1, 0.1, 0.55` |
 | `crystals` | `layers/crystals.py` | cụm gai pha lê cạnh thẳng có mặt sáng, màn cánh trong mờ phía sau | primary | `0, 0.1, 0.066, 0.4` |
-| `slash` | `layers/slash.py` | vệt chém quét từ a tới b theo vũ khí: `weapon=sword` (3 sợi dọc liền nhau, mịn, tàn thành 2-3 nét dài), `axe` (4-6 dải song song cách nhau khe hẹp, ngắn, dày, đầu tù), `saw` (kiếm có răng mép trong); `bend=0`: đâm thẳng | primary | `0, 0.1, 0.033, 0.3` |
+| `slash` | `layers/slash.py` | vệt chém quét từ a tới b theo vũ khí: `weapon=sword` (3 sợi dọc liền nhau, mịn, tàn thành 2-3 nét dài), `axe` (4-6 dải song song cách nhau khe hẹp, ngắn, dày, đầu tù), `saw` (kiếm có răng mép trong); `bend=0`: đâm thẳng; `track` (bám vũ khí thật) và `swing` (mặt phẳng vung nhìn từ máy quay, nửa xa vào `back/`): mục 6 | primary | `0, 0.1, 0.033, 0.3` |
 | `bolt` | `layers/bolt.py` | đạn bay từ a tới b: đầu giọt nước, đuôi sống, tới b đúng khung trúng đòn | primary | `-0.3, 0.3, 0, 0.1` |
 | `star` | `layers/burst.py` | chớp trúng đòn: vài mũi dài chênh cỡ, ba tông chồng, tách thành kim khi tàn | primary / core | `0, 0.066, 0.033, 0.33` |
 | `streaks` | `layers/burst.py` | vài tia tốc độ mảnh bay ra | accent | `0, 0.033, 0.033, 0.13` |
@@ -139,6 +139,17 @@ python lib-fx/build.py melee/slash/crescent --from 107,191 --to 240,243 --pal fr
   ```
   Đặt `hit_frame` của fx trùng khung trúng đòn của thân; khung fx đầu rơi vào khung cuối của pose A (một lát mỏng trên lưỡi pose A), khung trúng đòn vệt đầy với mép trắng
   dọc lưỡi pose B, rồi tan: đuôi rút trước, mũi đậm tàn sau cùng, chuôi nhạt tàn đầu tiên. Ở dưới 20 fps `on_twos` không lượng tử hoá (15 fps đã là "on twos" của 30 fps).
+- **Mặt phẳng vung (`--swing`, hiệu ứng `melee/slash/sweep`, `diag_down`, `diag_up`)**: máy quay của game cao và chếch xuống, nên cú chém **ngang** là một ellipse rất dẹt (gần một đường)
+  và cú chém **xéo** là ellipse dẹt vừa xoay nghiêng; chỉ bổ dọc / hất lên mới nằm phẳng trên màn hình. Mũi vũ khí chạy trên một đường tròn quanh **vai** trong không gian, hình ta thấy là hình chiếu:
+  ```
+  python lib-fx/build.py melee/slash/sweep --from <vai X,Y> --to <điểm cùng độ cao, phía mặt quay> --pal frost --fps 15 --split \
+      --swing "k=0.3;roll=0;u0=215;u1=410;r=<vai -> mũi vũ khí>;blade=0.75;ease=1.3" --out <thư mục>
+  ```
+  `k` = độ dẹt (1 phẳng với màn hình, 0.3 nằm trên đất, 0.6 xéo), `roll` = độ xoay trục dài (dương: đầu phía trước chúc xuống), `u0` / `u1` = góc lưỡi trong mặt phẳng lúc đầu / cuối
+  (0 phía trước, 90 **gần** người xem, 180 phía sau, 270 **xa**; `u` tăng: trước -> gần -> sau -> xa), `r` = bán kính mũi (px @2x; 0 = khoảng cách `--from` -> `--to`), `blade` = phần bán kính được quét.
+  Nửa **xa** (depth < 0) vẽ vào `back/` (sau thân), mảnh, tông nguội, không mép trắng, quầng giảm nửa; nửa **gần** vào `front/`, dày, sáng; `k = 1` cho cung tròn nằm hết ở `front/`.
+  Nhịp (khung trước đòn, khung trúng đòn, tan) giống `swing`. Không dùng chung với `--track`. Hình học trong `layers/slash.py` (`plane_point`); lệch so với công thức ban đầu của task: bề dày nét lấy theo `k * R * blade` nhân hệ số gần / xa
+  (không lấy hình chiếu của lưỡi), vì hình chiếu thật làm hai đầu trái phải tròn bè, không nhọn như một đường chém.
 - `--pal`, `--s`, `--seed`, `--fps`, `--speed`, `--name`; `--set LỚP.THAM_SỐ=GIÁ_TRỊ` chỉnh một lớp cho riêng lần xuất này (`LỚP.off=true` bỏ lớp).
 - Kết quả: `frames/@2x`, `@1x`; với `--split` thêm hai nửa `back/` và `front/` (vẽ thân nhân vật ở giữa); `meta.json` có `anchor_2x`, `target_2x`,
   `hit_frame` (đặt khung này trùng khung trúng đòn của thân; lưới khung luôn ghim vào khung trúng đòn, ở mọi fps) và `origin` (góc trên trái của khung trong

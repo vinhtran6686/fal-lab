@@ -3,8 +3,8 @@
 Read this before writing a `pose_<action>` / `pose_skill_<name>` prompt, a skill description, or a motion prompt for any class (fighters, mages,
 supports, enemies). It answers one question: **seen from our camera, what does this move look like, and where does its effect go?**
 The stills, the clips and the VFX (`lib-fx`, `fxkit`) must agree on it, or the effect will not sit on the pose.
-Status: the frontal-plane wording is tested (`out/heroes/azure_blade`, overhead smash). The ground-plane and diagonal wordings are *untested*: the first
-pose made with each is the test; write what you learn back here.
+Status: the frontal-plane wording is tested (`out/heroes/azure_blade`, overhead smash). The ground-plane and diagonal POSE wordings are *untested*: the first
+pose made with each is the test; write what you learn back here. Their effects (`sweep`, `diag_down`, `diag_up`) are built and measured on their own (plan S2), not yet placed on a real pose pair.
 
 ## 1. The view (from `format.md` §1 and §3)
 - The camera is high and looks down at the battlefield; the ground is a plane that runs away from the viewer.
@@ -25,8 +25,8 @@ A swing is an arc around the shoulder. What the viewer sees depends on the plane
 | Plane | Moves | What the viewer sees | The effect (fxkit `melee/slash`) |
 |---|---|---|---|
 | **Frontal** (flat to the screen: ahead-behind x up-down) | overhead smash, downward chop, uppercut, upward scoop, a staff raised and brought down | the WHOLE arc, as a big crescent; the full length of the blade sweeps a wide surface | a full crescent (`crescent`, `heavy`, `swing` with `--track`): the widest, most readable smear |
-| **Ground** (flat to the floor: ahead-behind x near-far) | horizontal sweep at waist or chest height, spin attack, a low leg sweep, a wide "push away" gesture, a ground ring cast around the feet | the arc **almost edge-on**: a flat ellipse, nearly a LINE. The part passing in front of the body is near (thick, bright, drawn OVER the body); the part passing behind is far (thin, dim, hidden BEHIND the body); the two ends are sharp points left and right | a flat lens (`sweep`, plan S2): height about 0.3 of its width, split into a back half and a front half |
-| **Diagonal** (tilted between the two) | a slash from high behind the shoulder to low in front (or the reverse, rising), a diagonal staff swipe | a tilted, half-flattened ellipse: it starts high and partly behind the body, ends low and in front of it | a tilted lens (`diag_down`, `diag_up`, plan S2): height about 0.6 of its width, rotated 30-40 degrees |
+| **Ground** (flat to the floor: ahead-behind x near-far) | horizontal sweep at waist or chest height, spin attack, a low leg sweep, a wide "push away" gesture, a ground ring cast around the feet | the arc **almost edge-on**: a flat ellipse, nearly a LINE. The part passing in front of the body is near (thick, bright, drawn OVER the body); the part passing behind is far (thin, dim, hidden BEHIND the body); the two ends are sharp points left and right | a flat lens (`melee/slash/sweep`, build with `--swing`): height about 0.3 of its width, split into a back half and a front half |
+| **Diagonal** (tilted between the two) | a slash from high behind the shoulder to low in front (or the reverse, rising), a diagonal staff swipe | a tilted, half-flattened ellipse: it starts high and partly behind the body, ends low and in front of it | a tilted lens (`melee/slash/diag_down`, `diag_up`, build with `--swing`): height about 0.6 of its width, rotated 30-40 degrees |
 
 And two straight lines:
 
@@ -81,7 +81,7 @@ Measured on the stills (source px), next to the foot mark (`pose-pair-fx-method.
 2. weapon **root** (hilt, hand) and **tip** in pose A and pose B;
 3. for ground and diagonal planes also the **pivot** (the shoulder the arc turns around) and whether the weapon passes **behind** or **in front** of the body on its way;
 4. the height of the hands above the ground line in both poses (they must match for a ground-plane move).
-`weapon_marks.json` keeps these; the effect is then built with `python lib-fx/build.py melee/slash/<effect> --from ... --to ... --track ...` (frontal) or the plane options of plan S2 (ground, diagonal).
+`weapon_marks.json` keeps these; the effect is then built with `python lib-fx/build.py melee/slash/<effect> --from ... --to ... --track ...` (frontal) or `--swing` (ground, diagonal: `FXKIT.md` section 6).
 
 ## 7. Checklist for a pose of a move
 - [ ] The plane is named in the skill description and in `brief.md`.

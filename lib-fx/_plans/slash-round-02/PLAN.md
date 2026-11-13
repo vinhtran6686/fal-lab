@@ -5,7 +5,7 @@ Người lập kế hoạch không thi công; người thi công làm đúng t�
 
 ## Checklist
 - [x] **S1** Vệt chém bám vũ khí mượt như bản đã duyệt của `azure_blade` (khung đầu, nhịp tan ở 15 fps, đuôi rút, mũi đậm chuôi nhạt, mép sáng dọc lưỡi): [S1-tracked-slash-smooth.md](S1-tracked-slash-smooth.md)
-- [ ] **S2** Mặt phẳng vung: chém ngang, chém xéo theo góc nhìn của game (kèm 3 việc nhỏ từ lần chấm S1): [S2-swing-planes.md](S2-swing-planes.md)
+- [x] **S2** Mặt phẳng vung: chém ngang, chém xéo theo góc nhìn của game (kèm 3 việc nhỏ từ lần chấm S1): [S2-swing-planes.md](S2-swing-planes.md)
 - [ ] **S3** Rìu dày hơn: ít dải, dải rộng (chưa viết task)
 - [ ] **CHẤM** (người lập kế hoạch) sau mỗi task → **DUYỆT** (người dùng)
 

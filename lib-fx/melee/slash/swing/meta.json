@@ -14,10 +14,10 @@
   "weight:medium"
  ],
  "fps": 30.0,
- "frames": 18,
+ "frames": 14,
  "frame_size_2x": [
-  372,
-  248
+  364,
+  246
  ],
  "anchor_2x": [
   72.0,
@@ -45,13 +45,13 @@
    "kind": "scraps",
    "role": "particles",
    "z": "front",
-   "start": 0.066,
-   "end": 0.499
+   "start": 0.033,
+   "end": 0.366
   },
   {
    "id": "streaks",
    "kind": "streaks",
-   "role": "core",
+   "role": "accent",
    "z": "front",
    "start": 0.0,
    "end": 0.196
@@ -68,9 +68,10 @@
   "fail": [],
   "warn": [
    "pop: frame 8 -> 9 loses 46 % of the peak",
-   "linger: the last 8 of 18 frames carry under 2 % of the peak"
+   "cut: frame 10 still holds 20 % of the peak, frame 11 is empty",
+   "linger: the last 4 of 14 frames carry under 2 % of the peak"
   ],
-  "frames": 18,
+  "frames": 14,
   "peak_frame": 3,
   "peak_size_1x": [
    102,

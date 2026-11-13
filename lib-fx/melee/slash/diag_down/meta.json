@@ -1,0 +1,80 @@
+{
+ "id": "melee/slash/diag_down",
+ "name": "Chém xéo xuống",
+ "desc": "a SWORD slash on a slanted plane, from high behind the shoulder to low in front, seen from the game's camera: a half-flattened ellipse turned 35 degrees; use it with the shoulder as --from",
+ "status": "draft",
+ "tags": [
+  "melee",
+  "blade",
+  "slash",
+  "one-shot",
+  "anchor:path",
+  "planar",
+  "diagonal",
+  "space:aim",
+  "weight:medium"
+ ],
+ "fps": 30.0,
+ "frames": 15,
+ "frame_size_2x": [
+  302,
+  336
+ ],
+ "anchor_2x": [
+  122.0,
+  152.0
+ ],
+ "target_2x": [
+  242.0,
+  152.0
+ ],
+ "hit_frame": 3,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "frost",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "slash",
+   "kind": "slash",
+   "role": "primary",
+   "z": "front",
+   "start": -0.067,
+   "end": 0.36
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.033,
+   "end": 0.396
+  },
+  {
+   "id": "streaks",
+   "kind": "streaks",
+   "role": "accent",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.196
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/diag_down_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [],
+  "frames": 15,
+  "peak_frame": 3,
+  "peak_size_1x": [
+   89,
+   96
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/melee/slash/slash.py: EFFECTS['diag_down']"
+}

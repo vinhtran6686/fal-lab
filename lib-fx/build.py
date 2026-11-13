@@ -285,7 +285,7 @@ def _value(v):
         except ValueError: return v
 
 
-def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, prefix, sets=(), track=None):
+def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, prefix, sets=(), track=None, swing=None):
     """An fxkit effect between two points of the caller's coordinates, written as a variant. Returns the quality gate."""
     e = mod.EFFECTS[name]
     A = frm or (0.0, 0.0); B = to or (A[0] + e.reach * s, A[1])
@@ -300,6 +300,10 @@ def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, p
     if track:                                                              # --track: every slash layer follows the real weapon swing
         ids = {l.id: {"track": track} for l in e.layers if l.kind == "slash"}
         if not ids: sys.exit("--track: this effect has no slash layer")
+        e = e.variant(layers=ids)
+    if swing:                                                              # --swing: every slash layer swings in a plane seen from the game's camera
+        ids = {l.id: {"swing": swing} for l in e.layers if l.kind == "slash"}
+        if not ids: sys.exit("--swing: this effect has no slash layer")
         e = e.variant(layers=ids)
     r = fxkit.render(e, A, B, pal=pal, s=s, seed=seed, fps=fps, speed=speed)
     tags = kit_tags(mod, e); anchor = r["anchor"]; r2 = lambda p: [round(p[0], 2), round(p[1], 2)]
@@ -324,6 +328,21 @@ def parse_track(text):
     except (KeyError, ValueError): sys.exit("--track wants root_a=X,Y;root_b=X,Y[;up=PX][;dx=PX][;turn=cw|ccw][;ease=N]")
     if len(tr["root_a"]) != 2 or len(tr["root_b"]) != 2 or tr["turn"] not in ("cw", "ccw"): sys.exit("--track: root_a / root_b are X,Y; turn is cw or ccw")
     return tr
+
+
+def parse_swing(text):
+    """--swing 'k=0.3;roll=0;u0=235;u1=430;r=120;blade=0.75;ease=1.3' -> the `swing` dict of the slash kind (r in px at s = 1; 0 = the distance --from -> --to)."""
+    d = {}
+    for part in text.split(";"):
+        k, _, v = part.strip().partition("=")
+        if v: d[k.strip()] = v.strip()
+    bad = set(d) - {"k", "roll", "u0", "u1", "r", "blade", "ease"}
+    if bad: sys.exit(f"--swing: unknown key {', '.join(sorted(bad))}; keys are k, roll, u0, u1, r, blade, ease")
+    try: sw = {"k": float(d.get("k", 0.3)), "roll": float(d.get("roll", 0)), "u0": float(d.get("u0", 235)), "u1": float(d.get("u1", 430)),
+               "r": float(d.get("r", 0)), "blade": float(d.get("blade", 0.75)), "ease": float(d.get("ease", 1.3))}
+    except ValueError: sys.exit("--swing wants numbers: k=0.3;roll=0;u0=235;u1=430;r=120;blade=0.75;ease=1.3")
+    if not 0 < sw["k"] <= 1 or not 0 < sw["blade"] <= 1: sys.exit("--swing: k and blade must be in (0, 1]")
+    return sw
 
 
 def find(fams, want):
@@ -357,6 +376,9 @@ def main():
                          "LAYER.off=true drops the layer")
     ap.add_argument("--track", metavar="SPEC", help="variant, slash effects: follow the real weapon swing: 'root_a=X,Y;root_b=X,Y;up=35;dx=0;turn=cw;ease=1.3' "
                     "(hilt at the start / end, px @2x like --from; --from / --to are the blade tips)")
+    ap.add_argument("--swing", metavar="SPEC", help="variant, slash effects: a swing in a plane seen from the game's camera: 'k=0.3;roll=0;u0=235;u1=430;r=120;blade=0.75;ease=1.3' "
+                    "(k = flatness, 1 = flat to the screen; roll in degrees; u0 / u1 = the blade's angle in its plane at the start / end: 0 ahead, 90 near, 180 behind, 270 far; "
+                    "--from = the SHOULDER, --to = a point ahead of it at the same height; r = shoulder to weapon tip, px @2x). Not with --track")
     ap.add_argument("--split", action="store_true", help="variant, fxkit effects: also write back/ and front/ (layers behind / in front of the character)")
     a = ap.parse_args()
     want = a.path.strip("/")
@@ -367,12 +389,13 @@ def main():
         if is_kit(mod):
             if a.mirror: sys.exit("use --from / --to to aim a kit effect")
             if a.to and not a.frm: sys.exit("--to needs --from")
+            if a.swing and a.track: sys.exit("--swing and --track cannot be used together: --track follows a drawn weapon, --swing a plane")
             if a.pal and a.pal not in palettes.PALETTES: sys.exit(f"no palette '{a.pal}'. Palettes: " + ", ".join(palettes.PALETTES))
-            qa = kit_variant(a.out, fam, mod, name, a.pal, a.s, a.fps or 30.0, a.speed, a.seed or 0, a.split, a.frm, a.to, a.name or name, a.set or (), parse_track(a.track) if a.track else None)
+            qa = kit_variant(a.out, fam, mod, name, a.pal, a.s, a.fps or 30.0, a.speed, a.seed or 0, a.split, a.frm, a.to, a.name or name, a.set or (), parse_track(a.track) if a.track else None, parse_swing(a.swing) if a.swing else None)
             print(fxcheck.line(f"{fam}/{name} -> {pathlib.Path(a.out).as_posix()}", qa))
             if a.check and qa["fail"]: sys.exit(1)
             return
-        if a.frm or a.to or a.seed is not None or a.split or a.track: sys.exit("--from / --to / --seed / --split / --track: only for fxkit effects")
+        if a.frm or a.to or a.seed is not None or a.split or a.track or a.swing: sys.exit("--from / --to / --seed / --split / --track / --swing: only for fxkit effects")
         d = -1 if a.mirror else 1; fps = a.fps or mod.FPS
         fr = render(mod, name, palettes.PALETTES[a.pal] if a.pal else None, a.s, d, fps, a.speed)
         c = mod.CATALOG[name]
@@ -385,7 +408,7 @@ def main():
         print(fxcheck.line(f"{fam}/{name} -> {pathlib.Path(a.out).as_posix()}", qa))
         if a.check and qa["fail"]: sys.exit(1)
         return
-    if a.pal or a.s != 1.0 or a.mirror or a.fps or a.speed != 1.0 or a.name or a.frm or a.to or a.seed is not None or a.split or a.track:
+    if a.pal or a.s != 1.0 or a.mirror or a.fps or a.speed != 1.0 or a.name or a.frm or a.to or a.seed is not None or a.split or a.track or a.swing:
         sys.exit("--pal / --s / --mirror / --fps / --speed / --name / --from / --to / --seed / --split make a variant: add --out DIR")
     catalog_path = HERE / "catalog.json"
     catalog = json.loads(catalog_path.read_text(encoding="utf8")) if catalog_path.exists() else {}

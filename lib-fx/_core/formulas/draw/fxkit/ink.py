@@ -114,10 +114,13 @@ THIN = dict(fillet=1.0, burr=0.5, sigma=0.6)       # for thin kinds (ring, strea
 
 class Ink:
     """The drawing of one layer: named tone masks at the canvas's supersampled size."""
-    def __init__(self, c, smooth=True):
+    def __init__(self, c, smooth=True, canvas=None):
         """smooth: True = the house defaults of `smooth_mask`; a dict of its keywords (fillet, burr, tip_keep, sigma) = tuned
-        (thin kinds: ring, streaks, scraps, bolt ask for less); False = paint the masks as they are."""
-        self.c, self.cv, self.ss = c, c.cv, c.cv.ss
+        (thin kinds: ring, streaks, scraps, bolt ask for less); False = paint the masks as they are.
+        canvas: None = the canvas of the layer (c.cv); c.back or c.front = draw on that half whatever the layer's z (a shape that
+        passes behind the character and in front of it, e.g. a swing seen from above): its glow then goes to that half too."""
+        self.c, self.cv, self.ss = c, canvas or c.cv, (canvas or c.cv).ss
+        self.z = c.layer.z if canvas is None else ("back" if canvas is c.back else "front")
         self.t = {}
         self.smooth = smooth
 
@@ -175,4 +178,4 @@ class Ink:
         if not union.any(): return
         img = Image.fromarray(np.dstack([rgb_, al[..., None] * 255]).round().astype(np.uint8), "RGBA")
         self.cv.img.alpha_composite(img)
-        if glow > 0: self.c.add_glow(union, glow)
+        if glow > 0: self.c.add_glow(union, glow, self.z)

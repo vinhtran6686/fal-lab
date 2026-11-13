@@ -1056,6 +1056,66 @@
   "hit_frame": 1,
   "kit": true
  },
+ "melee/slash/diag_down": {
+  "name": "Chém xéo xuống",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "planar",
+   "diagonal",
+   "space:aim",
+   "weight:medium"
+  ],
+  "desc": "a SWORD slash on a slanted plane, from high behind the shoulder to low in front, seen from the game's camera: a half-flattened ellipse turned 35 degrees; use it with the shoulder as --from",
+  "fps": 30.0,
+  "frames": 15,
+  "frame_size_2x": [
+   302,
+   336
+  ],
+  "anchor_2x": [
+   122.0,
+   152.0
+  ],
+  "dir": "melee/slash/diag_down",
+  "qa": "ok",
+  "hit_frame": 3,
+  "kit": true
+ },
+ "melee/slash/diag_up": {
+  "name": "Chém xéo lên",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "planar",
+   "diagonal",
+   "space:aim",
+   "weight:medium"
+  ],
+  "desc": "a SWORD slash on a slanted plane, from low behind the hip to high in front, seen from the game's camera: a half-flattened ellipse turned the other way; use it with the shoulder as --from",
+  "fps": 30.0,
+  "frames": 15,
+  "frame_size_2x": [
+   362,
+   364
+  ],
+  "anchor_2x": [
+   158.0,
+   174.0
+  ],
+  "dir": "melee/slash/diag_up",
+  "qa": "ok",
+  "hit_frame": 3,
+  "kit": true
+ },
  "melee/slash/heavy": {
   "name": "Chém nặng",
   "status": "draft",
@@ -1085,6 +1145,36 @@
   "hit_frame": 1,
   "kit": true
  },
+ "melee/slash/sweep": {
+  "name": "Chém ngang",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "planar",
+   "horizontal",
+   "space:aim",
+   "weight:medium"
+  ],
+  "desc": "a SWORD swung level with the ground (a horizontal sweep) seen from the game's camera: a very flat ellipse, nearly a line; the far half passes BEHIND the character, cool and thin, the near half in FRONT, bright and thick; use it with the shoulder as --from",
+  "fps": 30.0,
+  "frames": 15,
+  "frame_size_2x": [
+   312,
+   200
+  ],
+  "anchor_2x": [
+   112.0,
+   88.0
+  ],
+  "dir": "melee/slash/sweep",
+  "qa": "warn",
+  "hit_frame": 3,
+  "kit": true
+ },
  "melee/slash/swing": {
   "name": "Chém theo vũ khí",
   "status": "draft",
@@ -1100,10 +1190,10 @@
   ],
   "desc": "a SWORD smear that follows a real weapon swing: use it with --track (the tip's arc is the outer edge, the blade the inner); born one frame before the hit as a thin slice on the blade of pose A, whole on the hit frame with a white edge along the blade, the tail draws in at once; the tip strand is dense and lasts, the hilt strand is faint and goes first; set the hit frame of the fx on the character's hit frame",
   "fps": 30.0,
-  "frames": 18,
+  "frames": 14,
   "frame_size_2x": [
-   372,
-   248
+   364,
+   246
   ],
   "anchor_2x": [
    72.0,
