@@ -38,7 +38,7 @@ docs/
 |---|---|
 | `.claude/skills/fal-image/` | `SKILL.md`, `format.md` (style, góc nhìn, thư mục, manifest), `classes/*.md` (hero, ally, enemy, enemy-flying, boss), `reference.md`, `templates.md`, `examples.md` |
 | `.claude/skills/video-sprite/` | `SKILL.md`, `references/` (prompt chuyển động), `playtest/`, `scripts/` |
-| `lib-fx/` | `README.md` (lệnh, luật nhìn), `GUIDE.md` (bản đồ thư mục), `MINDSET.md`, `lib-fx/_core/formulas/draw/DESIGN.md`, `RECIPE-*.md`, `lib-fx/_core/formulas/draw/SHAPE-RULES.md`, `RESEARCH-*.md` |
+| `lib-fx/` | `README.md` (lệnh, luật nhìn), `GUIDE.md` (bản đồ thư mục), `MINDSET.md`, `lib-fx/_core/formulas/draw/FXKIT.md` (fxkit: hệ thống dựng hiệu ứng theo lớp, phong cách, hợp đồng của một lớp), `lib-fx/_core/formulas/draw/DESIGN.md`, `RECIPE-*.md`, `lib-fx/_core/formulas/draw/SHAPE-RULES.md`, `RESEARCH-*.md` |
 | `lib-fx/_core/` | `README.md` (bản đồ công thức vs kết quả), `formulas/vector/README.md`, `formulas/rules/` (luật + số đo) |
 | `tools/studio/README.md` | lệnh chạy Studio (trỏ tới `docs/tools/studio/`) |
 | `CLAUDE.md` | quy tắc làm việc và chỉ dẫn ngắn cho từng công cụ |

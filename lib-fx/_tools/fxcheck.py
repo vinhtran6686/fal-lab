@@ -10,7 +10,7 @@ Usage (repo root):
 `build.py` runs the same checks on what it has just rendered and stores the result in meta.json / catalog.json ("qa").
 
 What is measured (weight of a frame = sum of its alpha, so a faint big shape and a small solid one count alike):
-  FAIL clip     the effect touches the border of its frame: it is cut off. Enlarge "frame" or move "anchor".
+  FAIL clip     the effect touches the border of its frame: it is cut off. Enlarge "frame" or move "anchor" (fxkit effects: raise the effect's `extent`).
   FAIL end      a one-shot effect is still visible on its last frame (> 0.4 % of its peak): it pops off instead of dissolving.
                 Sustained / looping effects (tag sustained, loop or hold) are exempt.
   FAIL anchor   the anchor lies outside the frame.

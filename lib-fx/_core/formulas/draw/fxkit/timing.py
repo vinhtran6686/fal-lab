@@ -3,6 +3,7 @@ last layer has decayed, so an effect that pops off or never ends cannot be writt
 
 Seconds are measured from the HIT (t = 0: the frame the blow lands). A negative start is anticipation (a gather before the hit).
 """
+import math
 from dataclasses import dataclass
 
 
@@ -45,7 +46,7 @@ class Life:
         """Phase at effect time t (s from the hit), or None when the layer is not alive."""
         if self.step > 1:
             q = self.step / fps
-            t = self.start + ((t - self.start) // q) * q if t >= self.start else t
+            t = self.start + math.floor((t - self.start) / q + 1e-6) * q if t >= self.start else t
         u = t - self.start
         if u < -1e-9 or u >= self.length - 1e-9: return None
         u = max(0.0, u)

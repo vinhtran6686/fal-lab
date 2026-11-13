@@ -2,10 +2,10 @@
 """Review sheet for ONE fxkit layer kind (or one effect of a family module), drawn alone in several seeds, directions, sizes
 and palettes: the way to judge a kind before it goes into effects. 0 USD.
 
-  python lib-fx/_tools/fxkit_sheet.py spikes                         a kind with its default parameters
-  python lib-fx/_tools/fxkit_sheet.py spikes n=11 length=90 arc=-70,70   parameters: key=value (numbers, a,b tuples, true/false, text)
-  python lib-fx/_tools/fxkit_sheet.py puffs --life 0,0.1,0.1,0.6 --step 2 --pal fire
-  python lib-fx/_tools/fxkit_sheet.py impact/burst/heavy             an effect of the library instead of a kind
+  python lib-fx/_tools/fxkit_sheet.py star                           a kind with its default parameters
+  python lib-fx/_tools/fxkit_sheet.py star n=4 length=90 arc=-70,70      parameters: key=value (numbers, a,b tuples, true/false, text)
+  python lib-fx/_tools/fxkit_sheet.py smoke --life 0.033,0.13,0.1,0.6 --z back --pal fire
+  python lib-fx/_tools/fxkit_sheet.py impact/spark/heavy             an effect of the library instead of a kind
 Rows: seed 0 aimed right; seed 1 aimed right; seed 2 aimed up-left at s = 0.7 in another palette; seed 3 aimed left.
 Columns: the frames (every other one when there are more than 12). A yellow dot marks a, a cyan dot marks b.
 Writes lib-fx/_gallery/kinds/<name>.png and .gif (git-ignored), prints the path and the fxcheck line of row 1.

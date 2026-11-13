@@ -1,6 +1,6 @@
 # fxkit: hệ thống dựng hiệu ứng theo lớp
 
-`lib-fx/_core/formulas/draw/fxkit/` là cách dựng hiệu ứng chuẩn của dự án từ 2026-11-12. Một hiệu ứng không còn là một hàm vẽ dài
+`lib-fx/_core/formulas/draw/fxkit/` là cách dựng hiệu ứng chuẩn của dự án từ 2026-11-13. Một hiệu ứng không còn là một hàm vẽ dài
 viết tay, mà là **một chồng lớp (layer)**; mỗi lớp có một vai trò, một vòng đời riêng và một chỗ đặt riêng, vẽ giữa **hai điểm a → b**
 do người gọi chọn, bằng một **dải màu** và một **seed** quyết định mọi biến thiên hình dạng.
 
@@ -116,8 +116,12 @@ vẽ hình vào `Ink` theo tông → **mòn** theo phần diện tích còn lạ
 ## 6. Dùng cho nhân vật
 
 ```
-python lib-fx/build.py impact/burst/heavy --from 120,200 --to 260,150 --pal ice --s 0.8 --seed 3 --fps 15 --out out/heroes/<id>/frames/fx/hit
+python lib-fx/build.py melee/slash/crescent --from 107,191 --to 240,243 --pal frost --seed 3 --fps 15 --split \
+    --set slash.bend=0.85 --set slash.width=40 --out out/heroes/<id>/frames/fx/slash
 ```
-`--from` / `--to` là toạ độ px @2x trong ô của nhân vật (điểm chạm, mũi vũ khí, mục tiêu). Kết quả gồm `frames/@2x`, `@1x`, hai nửa
-`back/` và `front/` (vẽ thân nhân vật ở giữa), `meta.json` có `anchor_2x`, `target_2x`, `hit_frame` (đặt khung này trùng khung trúng đòn
-của thân) và `origin` (góc trên trái của khung trong toạ độ đã cho). Cùng công thức, đổi `--seed` để mỗi lần đánh ra một bản khác.
+- `--from` / `--to`: toạ độ px @2x trong ô của nhân vật (điểm chạm, mũi vũ khí, mục tiêu). Hiệu ứng `ground` và `point` luôn nằm ngang: `--to` chỉ chọn phía trái hay phải.
+- `--pal`, `--s`, `--seed`, `--fps`, `--speed`, `--name`; `--set LỚP.THAM_SỐ=GIÁ_TRỊ` chỉnh một lớp cho riêng lần xuất này (`LỚP.off=true` bỏ lớp).
+- Kết quả: `frames/@2x`, `@1x`; với `--split` thêm hai nửa `back/` và `front/` (vẽ thân nhân vật ở giữa); `meta.json` có `anchor_2x`, `target_2x`,
+  `hit_frame` (đặt khung này trùng khung trúng đòn của thân; lưới khung luôn ghim vào khung trúng đòn, ở mọi fps) và `origin` (góc trên trái của khung trong
+  toạ độ đã cho, luôn là số chẵn để bản @1x rơi đúng điểm ảnh).
+- Cùng công thức, đổi `--seed` để mỗi lần đánh ra một bản khác. Hình vượt quá vùng làm việc (`extent` px quanh a và b) bị cắt và cổng chất lượng báo `clip`: tăng `extent` của hiệu ứng.

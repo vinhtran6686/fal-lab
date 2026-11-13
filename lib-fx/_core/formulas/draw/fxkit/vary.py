@@ -1,6 +1,7 @@
 """fxkit / vary: seeded variation. The first rule of a good effect is that no two shapes in it are alike: every thorn, puff,
 spark and gap gets its own size, direction, delay and speed, with a clear hierarchy (one hero, a few medium, many small).
-Everything here is deterministic: the same seed draws the same effect on every machine (no hash(), no global random)."""
+Everything here is deterministic: the same seed gives the same numbers on every run and machine (no hash(), no global random).
+(The erosion in ink.py goes through numpy / scipy, so pixels are identical on one setup; across library versions they may differ by a hair.)"""
 import math, random, zlib
 
 

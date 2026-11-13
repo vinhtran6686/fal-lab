@@ -1,10 +1,9 @@
 """fxkit / effect: an effect is a STACK OF LAYERS, each with one role, its own life and its own place.
 
   Effect("heavy", space="aim", layers=[
-      Layer("glow",   role="glow",      z="back",  life=Life(0.0, 0.05, 0.05, 0.25), r=90),
-      Layer("spikes", role="primary",              life=Life(0.0, 0.07, 0.03, 0.22), n=9, length=110),
-      Layer("sparks", role="particles",            life=Life(0.03, 0.05, 0.0, 0.45), n=12),
-      Layer("flash",  role="flash",                life=Life(0.0, 0.03, 0.0, 0.07), r=34)])
+      Layer("ring",   role="secondary", z="back",  life=Life(0.033, 0.1, 0.0, 0.23), r=(24, 118)),
+      Layer("star",   role="primary",              life=Life(0.0, 0.066, 0.033, 0.33), n=5, length=124),
+      Layer("scraps", role="particles",            life=Life(0.033, 0.033, 0.0, 0.5), n=10)])
 
 A layer KIND is a drawing function registered with @kind("name"): fn(c: Ctx, ph: Phase, **params). It draws on c.cv with
 positions from c.sp (Space), colours from c.pal (Ramp), variation from c.rng(...) and sizes times c.s. Layer kinds live in
@@ -17,6 +16,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 from scipy import ndimage
 import fxcore
+from . import ink
 from .ramp import Ramp
 from .space import Space
 from .timing import Life
@@ -28,7 +28,7 @@ SPACES = ("point", "aim", "span", "travel", "ground")
 
 
 def kind(name):
-    """Register a layer kind: @kind("spikes") def spikes(c, ph, n=8, length=100, ...)."""
+    """Register a layer kind: @kind("star") def star(c, ph, n=5, length=120, ...)."""
     def deco(fn):
         KINDS[name] = fn; return fn
     return deco
@@ -147,19 +147,25 @@ def render(effect, a=None, b=None, pal=None, s=1.0, seed=0, fps=30.0, speed=1.0,
     (a at the origin, b `reach` px to the right). Returns dict:
       frames (RGBA, back under front), back, front (the two halves, for drawing a character between them), size, anchor (a in
       the frame), target (b in the frame), hit_frame (1-based frame of the hit), fps, origin (frame's top-left in caller px).
-    The frame is cropped to what was drawn (+pad), so nothing is ever clipped and no frame size has to be chosen."""
+    The frame is cropped to what was drawn (+pad), so no frame size has to be chosen; only a shape reaching beyond the work
+    canvas (`extent` px around a and b) is cut, and the quality gate reports that as `clip`: raise the effect's `extent`."""
     a = (0.0, 0.0) if a is None else a
     b = (a[0] + effect.reach * s, a[1]) if b is None else b
+    if effect.space in ("ground", "point"):                                 # these stay level: b only says which side is "ahead"
+        b = (a[0] + math.copysign(effect.reach * s, b[0] - a[0] if b[0] != a[0] else 1.0), a[1])
+    ink._NOISE.clear()                                                      # the noise cache is per work canvas: start clean
     E = effect.extent * s
     x0, y0 = math.floor(min(a[0], b[0]) - E), math.floor(min(a[1], b[1]) - E)
     W, H = math.ceil(max(a[0], b[0]) + E) - x0, math.ceil(max(a[1], b[1]) + E) - y0
     sp = Space((a[0] - x0, a[1] - y0), (b[0] - x0, b[1] - y0), s)
     ramp = Ramp.of(pal or effect.pal)
-    n = int(math.ceil((effect.end - effect.t0) * fps / speed - 1e-6)) + 1
+    dt = speed / fps                                                        # the frame grid is pinned to the hit: frame n_pre is t = 0
+    n_pre = int(math.ceil(-effect.t0 / dt - 1e-6))
+    n = n_pre + int(math.ceil(effect.end / dt - 1e-6)) + 1
     backs, fronts = [], []
     for i in range(n):
         fc, bc = fxcore.Canvas(W, H, ss), fxcore.Canvas(W, H, ss)
-        effect.draw(effect.t0 + i * speed / fps, sp, ramp, seed, fc, bc, fps, only)
+        effect.draw((i - n_pre) * dt, sp, ramp, seed, fc, bc, fps, only)
         backs.append(bc.done()); fronts.append(fc.done())
     al = np.zeros((H, W), bool)
     for im in backs + fronts: al |= np.asarray(im)[..., 3] > 0
@@ -167,7 +173,8 @@ def render(effect, a=None, b=None, pal=None, s=1.0, seed=0, fps=30.0, speed=1.0,
         ys, xs = np.nonzero(al)
         bx0, by0, bx1, by1 = max(0, xs.min() - pad), max(0, ys.min() - pad), min(W, xs.max() + 1 + pad), min(H, ys.max() + 1 + pad)
     else: bx0, by0, bx1, by1 = 0, 0, 2, 2
-    bx1 += (bx1 - bx0) % 2; by1 += (by1 - by0) % 2                          # even size: the @1x frame is exactly half
+    bx0 -= (x0 + bx0) % 2; by0 -= (y0 + by0) % 2                            # even origin and even size: the @1x frame is exactly
+    bx1 += (bx1 - bx0) % 2; by1 += (by1 - by0) % 2                          # half and lands on whole pixels
     box = (int(bx0), int(by0), int(bx1), int(by1))
     backs = [im.crop(box) for im in backs]; fronts = [im.crop(box) for im in fronts]
     frames = []
@@ -175,4 +182,4 @@ def render(effect, a=None, b=None, pal=None, s=1.0, seed=0, fps=30.0, speed=1.0,
         im = bk.copy(); im.alpha_composite(fr); frames.append(im)
     return dict(frames=frames, back=backs, front=fronts, size=(box[2] - box[0], box[3] - box[1]), fps=fps,
                 anchor=(sp.a[0] - box[0], sp.a[1] - box[1]), target=(sp.b[0] - box[0], sp.b[1] - box[1]),
-                hit_frame=int(round(-effect.t0 * fps / speed)) + 1, origin=(x0 + box[0], y0 + box[1]))
+                hit_frame=n_pre + 1, origin=(x0 + box[0], y0 + box[1]))

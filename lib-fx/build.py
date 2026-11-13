@@ -19,7 +19,7 @@ A variant for a character (another palette, size, side or frame rate; nothing in
   writes <out>/frames/@2x and @1x/<name>_NN.png, sheet.png, preview.gif, preview_game.gif, meta.json
 
 An fxkit effect (see below) is aimed between two points instead of mirrored (--mirror is an error for it):
-  python lib-fx/build.py impact/burst/probe --from 300,200 --to 180,120 --pal ice --s 0.8 --seed 3 --split --out DIR
+  python lib-fx/build.py impact/spark/heavy --from 300,200 --to 180,120 --pal ice --s 0.8 --seed 3 --split --out DIR
     --from X,Y   where it starts (px @2x in YOUR coordinates; default 0,0)   --to X,Y   where it points to / ends (default: reach to the right)
                  (--to alone is an error)
     --seed N     another drawing of the same effect (default 0)
@@ -295,7 +295,7 @@ def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, p
             key, _, v = item.partition("="); lid, _, par = key.partition(".")
             if not par or not _: sys.exit(f"--set wants layer.param=value, got '{item}'")
             ch.setdefault(lid, {})[par] = _value(v)
-        ch = {lid: (False if d.get("off") is True else d) for lid, d in ch.items()}
+        ch = {lid: (False if d.get("off") is True else {k: v for k, v in d.items() if k != "off"}) for lid, d in ch.items()}
         e = e.variant(layers=ch)
     r = fxkit.render(e, A, B, pal=pal, s=s, seed=seed, fps=fps, speed=speed)
     tags = kit_tags(mod, e); anchor = r["anchor"]; r2 = lambda p: [round(p[0], 2), round(p[1], 2)]
