@@ -38,6 +38,13 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   shared kit in `lib-fx/_core/` (`fxcore.py`, `palettes.py`). `python lib-fx/build.py [group[/family[/id]]]` renders each effect
   (`sheet.png`, `frames/`, `preview.gif`, `meta.json` with status draft|approved|rework) plus `lib-fx/_gallery/<group>-<family>.png|gif`
   and `lib-fx/catalog.json`. New effects go into the library first; characters use them from there. Show fx alone for review.
+  **fxkit** (since 2026-11-13) is how NEW effects are made: an effect = a stack of layers (role, life from the hit frame, back / front of the
+  character) drawn between two points a -> b in a palette ramp, every shape varied by a seed, in the house style (few bold smooth shapes,
+  2-3 flat stacked tones, glow = the shape blurred, eaten in place). Families declare `EFFECTS` (e.g. `impact/quake/quake.py`); kinds live in
+  `lib-fx/_core/formulas/draw/fxkit/layers/`. **Read `lib-fx/_core/formulas/draw/FXKIT.md` before writing an effect or a layer kind.**
+  For a character: `python lib-fx/build.py <effect> --from X,Y --to X,Y --pal NAME --seed N --fps 15 --split --out <asset>/frames/fx/<name>`.
+  Quality gate: `build.py` stores `qa` per effect (`lib-fx/_tools/fxcheck.py`); a FAIL blocks `approved`. Review a kind alone with
+  `lib-fx/_tools/fxkit_sheet.py`, regression `lib-fx/_tools/fxkit_test.py`. Review `preview_game.gif` (game size), not only @2x.
   Design method: `lib-fx/_core/formulas/draw/DESIGN.md`; hand-drawn organic shapes (thorns, splats, toon dust via `_core/organic.py`): `lib-fx/_core/formulas/draw/RESEARCH-organic-impact.md`.
 - **lib-fx/_core/formulas/vector/** (since 2026-11-08): the vector kit: rebuild or draw hand-drawn flat-colour VFX as clean Bezier paths (measure
   layer colours + edge gradients + halo, fit tapered strokes, Illustrator-style smooth & simplify, stacked render, review page).

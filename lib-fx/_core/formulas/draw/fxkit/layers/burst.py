@@ -11,7 +11,7 @@ def _dirs(rng, c, n, arc, gaps=1):
     degs = angles(rng, n, a0, a1, jitter=0.7, gaps=gaps)
     if a1 - a0 >= 300: degs = [d + rng.uniform(0, 360) for d in degs]
     ax = c.sp.ang(0)
-    return [ax + math.radians(d) * c.sp.hand for d in degs]
+    return [ax - math.radians(d) * c.sp.hand for d in degs]      # screen y points down: axis-frame degrees turn the other way
 
 
 def _blob(rng, centre, r, k=8):

@@ -1,0 +1,81 @@
+{
+ "id": "magic/arcane/aoe/frost",
+ "name": "Gai băng",
+ "desc": "the same eruption as ice: more, lower spikes fanned wide, no veil",
+ "status": "draft",
+ "tags": [
+  "magic",
+  "arcane",
+  "aoe",
+  "one-shot",
+  "anchor:ground",
+  "ice",
+  "space:ground",
+  "weight:medium"
+ ],
+ "fps": 30.0,
+ "frames": 23,
+ "frame_size_2x": [
+  410,
+  336
+ ],
+ "anchor_2x": [
+  181.0,
+  225.0
+ ],
+ "target_2x": [
+  321.0,
+  225.0
+ ],
+ "hit_frame": 1,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "ice",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "ring",
+   "kind": "ring",
+   "role": "secondary",
+   "z": "back",
+   "start": 0.0,
+   "end": 0.3
+  },
+  {
+   "id": "crystals",
+   "kind": "crystals",
+   "role": "primary",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.586
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.1,
+   "end": 0.733
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/frost_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "linger: the last 8 of 23 frames carry under 2 % of the peak"
+  ],
+  "frames": 23,
+  "peak_frame": 4,
+  "peak_size_1x": [
+   140,
+   101
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/magic/arcane/aoe/aoe.py: EFFECTS['frost']"
+}

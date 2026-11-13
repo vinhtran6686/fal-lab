@@ -1,0 +1,79 @@
+{
+ "id": "impact/quake/stomp",
+ "name": "Dậm chân",
+ "desc": "a landing or a stomp: a small flash, low dust rolling out, no ring",
+ "status": "draft",
+ "tags": [
+  "impact",
+  "ground",
+  "one-shot",
+  "anchor:ground",
+  "medium",
+  "dust",
+  "space:ground",
+  "weight:medium"
+ ],
+ "fps": 30.0,
+ "frames": 23,
+ "frame_size_2x": [
+  242,
+  210
+ ],
+ "anchor_2x": [
+  101.0,
+  113.0
+ ],
+ "target_2x": [
+  241.0,
+  113.0
+ ],
+ "hit_frame": 1,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "sun",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "star",
+   "kind": "star",
+   "role": "primary",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.27
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.033,
+   "end": 0.616
+  },
+  {
+   "id": "dust",
+   "kind": "dust",
+   "role": "smoke",
+   "z": "front",
+   "start": 0.033,
+   "end": 0.703
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/stomp_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [],
+  "frames": 23,
+  "peak_frame": 4,
+  "peak_size_1x": [
+   103,
+   27
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/impact/quake/quake.py: EFFECTS['stomp']"
+}

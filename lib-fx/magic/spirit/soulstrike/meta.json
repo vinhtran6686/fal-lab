@@ -91,7 +91,23 @@
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/soulstrike_NN.png",
-  "preview": "preview.gif"
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [
+   "end: 4.9 % of the peak is still visible on the last frame"
+  ],
+  "warn": [
+   "flicker: the weight reverses 3 times by more than 12 % of the peak"
+  ],
+  "frames": 45,
+  "peak_frame": 29,
+  "peak_size_1x": [
+   185,
+   154
+  ],
+  "last_frame_pct": 4.89
  },
  "source": "lib-fx/magic/spirit/spirit.py: spirit_soulstrike"
 }

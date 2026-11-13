@@ -44,6 +44,7 @@ force/shock/
 | `melee/blunt/` | Búa, chùy | đòn nặng: đập, nện xuống đất, vụt ngang | vệt búa nặng, đập đất nứt | - |
 | `melee/polearm/` | Thương, giáo | đâm xuyên dài, quét rộng hình quạt | đâm thương xuyên, quét giáo | - |
 | `melee/beast/` | Quái thú | vuốt, cắn, húc, quật đuôi của quái | ba vệt vuốt, vết cắn | - |
+| `melee/slash/` | Vệt chém theo hai điểm | (fxkit) vệt vũ khí có lưỡi vẽ dọc đường cong từ điểm đầu tới điểm cuối của cú vung, đặt bằng `--from` / `--to` | chém lưỡi liềm, chém nặng, đâm thẳng | Chém lưỡi liềm, Chém nặng, Đâm thẳng (draft) |
 
 ## `ranged/`: Đòn tầm xa vật lý
 
@@ -54,6 +55,7 @@ Vũ khí bắn hoặc ném không dùng phép: đầu nòng, vật bay, vệt ba
 | `ranged/bow/` | Cung, nỏ | vệt tên bay, kéo cung tụ lực, mưa tên, tên xuyên | vệt tên, tia lúc buông dây, mưa tên | - |
 | `ranged/thrown/` | Vật ném | dao, rìu, đá, bom ném tay: vệt xoay khi bay | vệt dao xoay, vòng rìu bay | - |
 | `ranged/siege/` | Công thành | pháo, máy bắn đá, bom (tháp pháo): lửa đầu nòng, quỹ đạo, khói bắn | lửa đầu nòng pháo, vệt đạn cong | - |
+| `ranged/bolt/` | Đạn bay | (fxkit) vật bắn bay từ nguồn tới mục tiêu rồi nổ ở đó: chớp đầu nòng, đầu đạn và đuôi, va chạm | đạn năng lượng, cầu lửa, mũi băng | Đạn năng lượng, Cầu lửa, Mũi băng (draft) |
 
 ## `force/`: Chưởng lực
 
@@ -81,7 +83,7 @@ Mỗi thư mục con chia tiếp theo chức năng:
 
 | Thư mục | Tên | Chứa gì | Ví dụ | Hiện có |
 |---|---|---|---|---|
-| `element/fire/` | Lửa | lửa, than hồng, khói nóng | quả cầu lửa, cột lửa, bị đốt | - |
+| `element/fire/` | Lửa | lửa, than hồng, khói nóng | quả cầu lửa, cột lửa, bị đốt | `aoe/` (fxkit): Lửa phun, Cột lửa, Lửa lan (draft) |
 | `element/water/` | Nước | sóng, tóe nước, bong bóng, xoáy nước | tóe nước, cột nước, xoáy | - |
 | `element/ice/` | Băng | tinh thể, sương lạnh, mảnh băng | gai băng, đóng băng, mưa đá | - |
 | `element/lightning/` | Sét | tia sét gấp khúc, điện nhảy, chớp | sét đánh, sét chuyền, giật điện | - |
@@ -109,7 +111,7 @@ Mỗi thư mục con chia tiếp theo chức năng:
 |---|---|---|---|---|
 | `magic/holy/` | Thánh, ánh sáng | ánh sáng trời, hào quang, lông vũ, chữ thập | cột sáng phán xét, hồi máu, khiên thánh | - |
 | `magic/shadow/` | Bóng tối | khói đen, tay bóng tối, mắt, hư không | lỗ đen, trói bóng, nguyền | - |
-| `magic/arcane/` | Ma thuật | rune, vòng phép, tinh thể tím, dịch chuyển | vòng phép, tên ma thuật, cổng | - |
+| `magic/arcane/` | Ma thuật | rune, vòng phép, tinh thể tím, dịch chuyển | vòng phép, tên ma thuật, cổng | `aoe/` (fxkit): Pha lê bùng, Gai băng (draft) |
 | `magic/blood/` | Huyết thuật | máu, hút máu, gai máu | hút máu, gai máu | - |
 | `magic/spirit/` | Linh hồn | hồn lửa (ma trơi) rời khỏi thân, bay, nhập và đốt mục tiêu; lửa hồn dưới đất; bóng ma bám mục tiêu | xuất hồn kích | Xuất hồn kích (rework; phần linh hồn nhỏ đạt: lib-fx/_core/formulas/draw/recipes/RECIPE-soul-spirits.md) |
 
@@ -119,7 +121,7 @@ Nổ dùng chung cho mọi nhóm (bom, pháo, phép, quái chết). Thêm màu b
 
 | Thư mục | Tên | Chứa gì | Ví dụ | Hiện có |
 |---|---|---|---|---|
-| `explosion/blast/` | Nổ | quả cầu nổ, vòng sóng nổ, chớp nổ; to nhỏ theo cấp | nổ nhỏ, nổ lớn, nổ năng lượng | - |
+| `explosion/blast/` | Nổ | quả cầu nổ, vòng sóng nổ, chớp nổ; to nhỏ theo cấp | nổ nhỏ, nổ lớn, nổ năng lượng | (fxkit) Nổ, Nổ nhỏ (draft) |
 | `explosion/smoke/` | Khói, bụi | khói bốc sau nổ, bụi cuộn, khói tan | cột khói, bụi cuộn | - |
 | `explosion/debris/` | Mảnh văng | đá vụn, mảnh gỗ, mảnh kim loại văng ra | đá văng, mảnh vỡ | - |
 
@@ -132,7 +134,9 @@ Hiệu ứng trúng đòn nhỏ, dùng nhiều nhất, không thuộc vũ khí h
 | `impact/hit/` | Trúng đòn cận chiến | tia trúng của đấm, kiếm, búa: lõi trắng, gai cong, giọt văng (hình tự do, xem lib-fx/_core/formulas/draw/RESEARCH-organic-impact.md) | nổ sao, mũi chéo, vòng gai, chữ thập chí mạng | Mũi chéo (draft), Chữ thập chí mạng (draft), Vòng gai (draft), Nổ sao (draft) |
 | `impact/dash/` | Lướt va chạm | cú va ở cuối một cú lướt / lao: mép sáng phía trước, gai chảy về sau dọc đường lao, giọt bay tới trước | vách lưỡi liềm, xuyên vòng, sao chổi | Sao chổi (draft), Xuyên vòng (draft), Vách lưỡi liềm (draft) |
 | `impact/crit/` | Chí mạng | trúng mạnh nổi bật hơn hit thường | tia chí mạng, vỡ kính | - |
+| `impact/spark/` | Trúng đòn (fxkit) | bản mới của nhóm trúng đòn: chớp nhọn ba tông, vòng, tia tốc độ, mảnh cong văng theo hướng đòn | trúng nhẹ, trúng nặng, chí mạng | Trúng đòn nhẹ, Trúng đòn nặng, Chí mạng (draft) |
 | `impact/ground/` | Mặt đất | nện, đập, tiếp đất: khói nhiều tầng là chính, gai sáng, đá văng, vòng dẹt trên mặt đất | nện bụi, vòng chấn đất, phun đất | Vòng chấn đất (draft), Phun đất (draft), Nện bụi (draft) |
+| `impact/quake/` | Nện đất (fxkit) | bản mới của nhóm mặt đất: chớp nhọn, vòng dẹt, hai bờ bụi múi tròn chênh cỡ có đuôi nhọn, mảnh văng | nện đất, dậm chân, sóng chấn động | Nện đất, Dậm chân, Sóng chấn động (draft) |
 
 ## `status/`: Trạng thái
 

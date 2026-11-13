@@ -1,0 +1,98 @@
+{
+ "id": "ranged/bolt/bolt",
+ "name": "Đạn năng lượng",
+ "desc": "a small flash where it is fired, a teardrop head with a living trail flies to the target, then a pointed impact with a ring and scraps thrown on along the flight",
+ "status": "draft",
+ "tags": [
+  "ranged",
+  "projectile",
+  "one-shot",
+  "anchor:caster",
+  "target:b",
+  "medium",
+  "energy",
+  "space:travel",
+  "weight:medium"
+ ],
+ "fps": 30.0,
+ "frames": 26,
+ "frame_size_2x": [
+  528,
+  326
+ ],
+ "anchor_2x": [
+  101.0,
+  163.0
+ ],
+ "target_2x": [
+  361.0,
+  163.0
+ ],
+ "hit_frame": 10,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "lightning",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "muzzle",
+   "kind": "star",
+   "role": "accent",
+   "z": "front",
+   "start": -0.3,
+   "end": -0.137
+  },
+  {
+   "id": "bolt",
+   "kind": "bolt",
+   "role": "primary",
+   "z": "front",
+   "start": -0.3,
+   "end": 0.1
+  },
+  {
+   "id": "ring",
+   "kind": "ring",
+   "role": "secondary",
+   "z": "back",
+   "start": 0.033,
+   "end": 0.333
+  },
+  {
+   "id": "star",
+   "kind": "star",
+   "role": "core",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.346
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.033,
+   "end": 0.516
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/bolt_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "linger: the last 7 of 26 frames carry under 2 % of the peak"
+  ],
+  "frames": 26,
+  "peak_frame": 14,
+  "peak_size_1x": [
+   87,
+   87
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/ranged/bolt/bolt.py: EFFECTS['bolt']"
+}

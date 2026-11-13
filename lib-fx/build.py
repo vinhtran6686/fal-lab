@@ -15,6 +15,7 @@ A variant for a character (another palette, size, side or frame rate; nothing in
     --s K        size factor: shapes, frame, anchor and glow all scale by K
     --mirror     faces -x      --fps N   drawn at N frames per second (effects are functions of time: no frame is dropped)
     --name ID    file prefix (default: the effect id)
+    --set LAYER.PARAM=VALUE   fxkit effects: tune one layer for this export (repeatable; LAYER.off=true drops it)
   writes <out>/frames/@2x and @1x/<name>_NN.png, sheet.png, preview.gif, preview_game.gif, meta.json
 
 An fxkit effect (see below) is aimed between two points instead of mirrored (--mirror is an error for it):
@@ -274,10 +275,28 @@ def write_variant(out, name, frames, fps, anchor, info, halves=None, qa=None, ex
     return qa
 
 
-def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, prefix):
+def _value(v):
+    """A --set value: true / false, a number, a tuple a,b or text."""
+    if v.lower() in ("true", "false"): return v.lower() == "true"
+    if "," in v: return tuple(_value(x) for x in v.split(","))
+    try: return int(v)
+    except ValueError:
+        try: return float(v)
+        except ValueError: return v
+
+
+def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, prefix, sets=()):
     """An fxkit effect between two points of the caller's coordinates, written as a variant. Returns the quality gate."""
     e = mod.EFFECTS[name]
     A = frm or (0.0, 0.0); B = to or (A[0] + e.reach * s, A[1])
+    if sets:                                                               # --set layer.param=value: a variant of the effect for this export only
+        ch = {}
+        for item in sets:
+            key, _, v = item.partition("="); lid, _, par = key.partition(".")
+            if not par or not _: sys.exit(f"--set wants layer.param=value, got '{item}'")
+            ch.setdefault(lid, {})[par] = _value(v)
+        ch = {lid: (False if d.get("off") is True else d) for lid, d in ch.items()}
+        e = e.variant(layers=ch)
     r = fxkit.render(e, A, B, pal=pal, s=s, seed=seed, fps=fps, speed=speed)
     tags = kit_tags(mod, e); anchor = r["anchor"]; r2 = lambda p: [round(p[0], 2), round(p[1], 2)]
     info = {"id": prefix, "effect": f"{fam}/{name}", "name": e.title, "tags": tags,
@@ -314,6 +333,9 @@ def main():
     ap.add_argument("--from", dest="frm", type=xy, metavar="X,Y", help="variant, fxkit effects: start point X,Y (px @2x in your coordinates; default 0,0)")
     ap.add_argument("--to", type=xy, metavar="X,Y", help="variant, fxkit effects: end / aim point X,Y (default: reach to the right of --from)")
     ap.add_argument("--seed", type=int, help="variant, fxkit effects: random seed (default 0)")
+    ap.add_argument("--set", action="append", metavar="LAYER.PARAM=VALUE",
+                    help="variant, fxkit effects: change one parameter of one layer (repeatable), e.g. --set slash.bend=0.8 --set slash.width=40; "
+                         "LAYER.off=true drops the layer")
     ap.add_argument("--split", action="store_true", help="variant, fxkit effects: also write back/ and front/ (layers behind / in front of the character)")
     a = ap.parse_args()
     want = a.path.strip("/")
@@ -325,7 +347,7 @@ def main():
             if a.mirror: sys.exit("use --from / --to to aim a kit effect")
             if a.to and not a.frm: sys.exit("--to needs --from")
             if a.pal and a.pal not in palettes.PALETTES: sys.exit(f"no palette '{a.pal}'. Palettes: " + ", ".join(palettes.PALETTES))
-            qa = kit_variant(a.out, fam, mod, name, a.pal, a.s, a.fps or 30.0, a.speed, a.seed or 0, a.split, a.frm, a.to, a.name or name)
+            qa = kit_variant(a.out, fam, mod, name, a.pal, a.s, a.fps or 30.0, a.speed, a.seed or 0, a.split, a.frm, a.to, a.name or name, a.set or ())
             print(fxcheck.line(f"{fam}/{name} -> {pathlib.Path(a.out).as_posix()}", qa))
             if a.check and qa["fail"]: sys.exit(1)
             return

@@ -6,7 +6,7 @@ Usage (repo root):
 
 Per kind (one layer, role primary, Life(0, 0.066, 0.034, 0.3), default parameters, reach 140, extent 240):
   a deterministic (same seed twice = same frames)   b seeded (seed 0 vs 1 differ; WARNING when identical)
-  c first frame drawn, last frame empty             d follows the points (centroids printed, never a failure)
+  c something drawn, last frame empty               d follows the points (centroids printed, never a failure)
   e scales (s = 0.5 gives under 45 % of the box area)
 Then every palette must pass Ramp.of(p).problems() (WARNING only), and every effect of every fxkit family under lib-fx must have an
 empty lint() and render with the default --from / --to.
@@ -55,7 +55,8 @@ def test_kind(k):
     say(not same(r0, r1), f"{k}: seed 0 and seed 1 differ" if not same(r0, r1) else f"{k}: seeds 0 and 1 give identical frames (nothing random?)",
         None if not same(r0, r1) else "WARNING")
     A = [np.asarray(f)[..., 3].any() for f in r0["frames"]]
-    say(A[0] and not A[-1], f"{k}: first frame drawn, last frame empty ({sum(A)} of {len(A)} frames drawn)")
+    say(any(A) and not A[-1], f"{k}: something drawn, last frame empty ({sum(A)} of {len(A)} frames drawn)")
+    if not A[0]: print(f"WARN {k}: the first frame is empty (fine for layers that are born late: embers, glints)")
     try:
         rx = fxkit.render(e, (0, 0), (140, 0)); ry = fxkit.render(e, (0, 0), (0, -140))
         ok = box_area(rx) > 0 and box_area(ry) > 0

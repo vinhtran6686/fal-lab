@@ -53,7 +53,21 @@
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/drill_NN.png",
-  "preview": "preview.gif"
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "cut: frame 17 still holds 5 % of the peak, frame 18 is empty"
+  ],
+  "frames": 19,
+  "peak_frame": 7,
+  "peak_size_1x": [
+   92,
+   38
+  ],
+  "last_frame_pct": 0.0
  },
  "source": "lib-fx/force/shock/shock.py: shock_drill"
 }

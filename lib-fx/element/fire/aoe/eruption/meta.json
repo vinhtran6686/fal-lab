@@ -1,7 +1,7 @@
 {
  "id": "element/fire/aoe/eruption",
  "name": "Lửa phun",
- "desc": "flame tongues erupt from the ground, flicker for a moment, then are eaten in place into rising pieces; the hot pool at the foot goes last",
+ "desc": "flame tongues erupt from the ground over a dark smoke mass, flicker for a moment, then are eaten in place into rising pieces; the hot pool at the foot goes last and embers rise after it",
  "status": "draft",
  "tags": [
   "element",
@@ -9,22 +9,23 @@
   "aoe",
   "one-shot",
   "anchor:ground",
+  "medium",
   "space:ground",
-  "weight:light"
+  "weight:medium"
  ],
  "fps": 30.0,
- "frames": 24,
+ "frames": 34,
  "frame_size_2x": [
   298,
-  296
+  298
  ],
  "anchor_2x": [
   163.0,
-  196.0
+  197.0
  ],
  "target_2x": [
   303.0,
-  196.0
+  197.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -32,18 +33,39 @@
  "seed": 0,
  "layers": [
   {
+   "id": "smoke",
+   "kind": "smoke",
+   "role": "smoke",
+   "z": "back",
+   "start": 0.066,
+   "end": 0.896
+  },
+  {
    "id": "flames",
    "kind": "flames",
    "role": "primary",
    "z": "front",
    "start": 0.0,
    "end": 0.75
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.066,
+   "end": 0.599
+  },
+  {
+   "id": "embers",
+   "kind": "embers",
+   "role": "particles",
+   "z": "front",
+   "start": 0.3,
+   "end": 1.1
   }
  ],
- "lint": [
-  "1 roles (primary); a light effect needs 3+ for depth",
-  "no flash / core layer on the hit frame (the hit does not read)"
- ],
+ "lint": [],
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/eruption_NN.png",
@@ -51,16 +73,15 @@
   "preview_game": "preview_game.gif"
  },
  "qa": {
-  "fail": [
-   "lint: 1 roles (primary); a light effect needs 3+ for depth",
-   "lint: no flash / core layer on the hit frame (the hit does not read)"
+  "fail": [],
+  "warn": [
+   "linger: the last 9 of 34 frames carry under 2 % of the peak"
   ],
-  "warn": [],
-  "frames": 24,
+  "frames": 34,
   "peak_frame": 7,
   "peak_size_1x": [
-   75,
-   85
+   109,
+   102
   ],
   "last_frame_pct": 0.0
  },

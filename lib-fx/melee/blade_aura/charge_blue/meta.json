@@ -70,7 +70,19 @@
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/charge_blue_NN.png",
-  "preview": "preview.gif"
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [],
+  "frames": 61,
+  "peak_frame": 51,
+  "peak_size_1x": [
+   37,
+   12
+  ],
+  "last_frame_pct": 96.69
  },
  "source": "lib-fx/melee/blade_aura/blade_aura.py: charge_blue"
 }
