@@ -15,6 +15,7 @@ Xuất bằng `python lib-fx/_tools/vectorfx.py showcase PROFILE` (bộ tool kh�
 | | nhát chém hồng | [slash-trio/pink](slash-trio/pink/) (+ `pink_refl`) | đạt (chấp nhận được) |
 | | nhát chém vàng | [slash-trio/gold](slash-trio/gold/) (+ `gold_refl`) | đạt (chấp nhận được) |
 | `flame-burst` | lửa phụt ngang + khói | [flame-burst/jet](flame-burst/jet/) | chờ chấm |
+| `lightning` | tia sét xanh lá, nét mảnh + quầng nhoè (127 khung, mỗi khung một tia mới) | [lightning/bolt](lightning/bolt/) | chờ chấm |
 
 Trang review đầy đủ (từng lớp, từng frame): Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdKGR,
 Element Trio https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn, Slash Trio https://claude.ai/artifact/69ermXASZKmFccapxfCYis.
