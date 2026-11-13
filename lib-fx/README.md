@@ -29,7 +29,7 @@ Biến thể cho nhân vật (không đụng thư viện):
 ```
 python lib-fx/build.py melee/slash/crescent --from 120,60 --to 300,210 --pal blaze --seed 3 --fps 15 --split --out out/heroes/<id>/frames/fx/slash
 python lib-fx/build.py melee/slash/crescent --from <mũi A> --to <mũi B> --track "root_a=X,Y;root_b=X,Y;up=35;turn=cw;ease=1.3" --pal frost --fps 15 --split --out <thư mục>
-                                                vệt chém theo quỹ đạo vũ khí thật (chuôi + mũi, px ô @2x); `--set slash.weapon=axe` đổi sang vệt rìu
+                                                vệt chém theo quỹ đạo vũ khí thật (chuôi + mũi, px ô @2x); vệt rìu: dùng hiệu ứng `melee/slash/axe` (cùng cờ)
 python lib-fx/build.py impact/hit/star --pal ice --s 0.8 --mirror --out <thư mục>          (họ cũ: --pal, --s, --mirror, --fps, --speed)
 ```
 
