@@ -1,14 +1,14 @@
 {
  "name": "flame-burst",
- "about": "Reference: ref/vfx/flame-burst/dmitry-sarkisov-flame-burst.gif (800x550, 81 frames, 25 fps, author Dmitry Sarkisov; study only). A short kindle at the muzzle of a dark box, then an S-shaped stream of fire thrown to the right with curly dark smoke over its far half; the stream splits, burns down to the root, the smoke outlives it. The box (x 140-202) is cut out of the crop.",
+ "about": "Reference: ref/vfx/flame-burst/dmitry-sarkisov-flame-burst.gif (800x550, 81 frames, 25 fps, author Dmitry Sarkisov; study only). A short kindle at the muzzle of a dark box, then an S-shaped stream of fire thrown to the right with curly dark smoke over its far half; the stream splits, burns down to the root, the smoke outlives it. The dark box (x 140-202) stays in the crop; it is in the background frame, so it is not claimed by any layer.",
  "source": {
   "gif": "ref/vfx/flame-burst/dmitry-sarkisov-flame-burst.gif",
   "crops": {
    "fire": [
-    204,
-    200,
-    776,
-    470
+    124,
+    258,
+    652,
+    447
    ]
   },
   "scale": 1,
