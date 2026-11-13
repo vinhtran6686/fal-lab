@@ -285,7 +285,7 @@ def _value(v):
         except ValueError: return v
 
 
-def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, prefix, sets=()):
+def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, prefix, sets=(), track=None):
     """An fxkit effect between two points of the caller's coordinates, written as a variant. Returns the quality gate."""
     e = mod.EFFECTS[name]
     A = frm or (0.0, 0.0); B = to or (A[0] + e.reach * s, A[1])
@@ -297,6 +297,10 @@ def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, p
             ch.setdefault(lid, {})[par] = _value(v)
         ch = {lid: (False if d.get("off") is True else {k: v for k, v in d.items() if k != "off"}) for lid, d in ch.items()}
         e = e.variant(layers=ch)
+    if track:                                                              # --track: every slash layer follows the real weapon swing
+        ids = {l.id: {"track": track} for l in e.layers if l.kind == "slash"}
+        if not ids: sys.exit("--track: this effect has no slash layer")
+        e = e.variant(layers=ids)
     r = fxkit.render(e, A, B, pal=pal, s=s, seed=seed, fps=fps, speed=speed)
     tags = kit_tags(mod, e); anchor = r["anchor"]; r2 = lambda p: [round(p[0], 2), round(p[1], 2)]
     info = {"id": prefix, "effect": f"{fam}/{name}", "name": e.title, "tags": tags,
@@ -305,6 +309,21 @@ def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, p
     qa = kit_qa(e, r["frames"], tags, anchor)
     return write_variant(out, prefix, r["frames"], r["fps"], anchor, info, {"back": r["back"], "front": r["front"]} if split else None,
                          qa, extra, {"rebuild": "python lib-fx/build.py " + " ".join(sys.argv[1:])})
+
+
+def parse_track(text):
+    """--track 'root_a=X,Y;root_b=X,Y;up=35;dx=0;turn=cw;ease=1.3' -> the `track` dict of the slash kind (px @2x in the caller's coordinates)."""
+    d = {}
+    for part in text.split(";"):
+        k, _, v = part.strip().partition("=")
+        if not v: continue
+        d[k.strip()] = v.strip()
+    try:
+        tr = {"root_a": tuple(float(x) for x in d["root_a"].split(",")), "root_b": tuple(float(x) for x in d["root_b"].split(",")),
+              "root_up": float(d.get("up", 35)), "root_dx": float(d.get("dx", 0)), "turn": d.get("turn", "cw"), "ease": float(d.get("ease", 1.3))}
+    except (KeyError, ValueError): sys.exit("--track wants root_a=X,Y;root_b=X,Y[;up=PX][;dx=PX][;turn=cw|ccw][;ease=N]")
+    if len(tr["root_a"]) != 2 or len(tr["root_b"]) != 2 or tr["turn"] not in ("cw", "ccw"): sys.exit("--track: root_a / root_b are X,Y; turn is cw or ccw")
+    return tr
 
 
 def find(fams, want):
@@ -336,6 +355,8 @@ def main():
     ap.add_argument("--set", action="append", metavar="LAYER.PARAM=VALUE",
                     help="variant, fxkit effects: change one parameter of one layer (repeatable), e.g. --set slash.bend=0.8 --set slash.width=40; "
                          "LAYER.off=true drops the layer")
+    ap.add_argument("--track", metavar="SPEC", help="variant, slash effects: follow the real weapon swing: 'root_a=X,Y;root_b=X,Y;up=35;dx=0;turn=cw;ease=1.3' "
+                    "(hilt at the start / end, px @2x like --from; --from / --to are the blade tips)")
     ap.add_argument("--split", action="store_true", help="variant, fxkit effects: also write back/ and front/ (layers behind / in front of the character)")
     a = ap.parse_args()
     want = a.path.strip("/")
@@ -347,11 +368,11 @@ def main():
             if a.mirror: sys.exit("use --from / --to to aim a kit effect")
             if a.to and not a.frm: sys.exit("--to needs --from")
             if a.pal and a.pal not in palettes.PALETTES: sys.exit(f"no palette '{a.pal}'. Palettes: " + ", ".join(palettes.PALETTES))
-            qa = kit_variant(a.out, fam, mod, name, a.pal, a.s, a.fps or 30.0, a.speed, a.seed or 0, a.split, a.frm, a.to, a.name or name, a.set or ())
+            qa = kit_variant(a.out, fam, mod, name, a.pal, a.s, a.fps or 30.0, a.speed, a.seed or 0, a.split, a.frm, a.to, a.name or name, a.set or (), parse_track(a.track) if a.track else None)
             print(fxcheck.line(f"{fam}/{name} -> {pathlib.Path(a.out).as_posix()}", qa))
             if a.check and qa["fail"]: sys.exit(1)
             return
-        if a.frm or a.to or a.seed is not None or a.split: sys.exit("--from / --to / --seed / --split: only for fxkit effects")
+        if a.frm or a.to or a.seed is not None or a.split or a.track: sys.exit("--from / --to / --seed / --split / --track: only for fxkit effects")
         d = -1 if a.mirror else 1; fps = a.fps or mod.FPS
         fr = render(mod, name, palettes.PALETTES[a.pal] if a.pal else None, a.s, d, fps, a.speed)
         c = mod.CATALOG[name]
@@ -364,7 +385,7 @@ def main():
         print(fxcheck.line(f"{fam}/{name} -> {pathlib.Path(a.out).as_posix()}", qa))
         if a.check and qa["fail"]: sys.exit(1)
         return
-    if a.pal or a.s != 1.0 or a.mirror or a.fps or a.speed != 1.0 or a.name or a.frm or a.to or a.seed is not None or a.split:
+    if a.pal or a.s != 1.0 or a.mirror or a.fps or a.speed != 1.0 or a.name or a.frm or a.to or a.seed is not None or a.split or a.track:
         sys.exit("--pal / --s / --mirror / --fps / --speed / --name / --from / --to / --seed / --split make a variant: add --out DIR")
     catalog_path = HERE / "catalog.json"
     catalog = json.loads(catalog_path.read_text(encoding="utf8")) if catalog_path.exists() else {}

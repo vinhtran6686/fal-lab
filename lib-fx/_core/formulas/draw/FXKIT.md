@@ -127,6 +127,11 @@ python lib-fx/build.py melee/slash/crescent --from 107,191 --to 240,243 --pal fr
     --set slash.bend=0.85 --set slash.width=40 --out out/heroes/<id>/frames/fx/slash
 ```
 - `--from` / `--to`: toạ độ px @2x trong ô của nhân vật (điểm chạm, mũi vũ khí, mục tiêu). Hiệu ứng `ground` và `point` luôn nằm ngang: `--to` chỉ chọn phía trái hay phải.
+- `--track 'root_a=X,Y;root_b=X,Y;up=35;dx=0;turn=cw;ease=1.3'` (chỉ họ `melee/slash`, mọi lớp kind `slash`): vệt đi theo cú chém thật thay cho parabol. `--from` / `--to` là
+  **mũi** đao lúc đầu / lúc cuối, `root_a` / `root_b` là **chuôi** (cùng toạ độ px @2x của người gọi; đổi từ px ảnh gốc sang ô @2x bằng `tf_of` trong `build_crescent.py`).
+  Chuôi đi Bezier bậc hai (điều khiển = giữa x + `dx`, y của chuôi cao hơn - `up`), lưỡi quay quanh chuôi (`turn`, góc nội suy `f ** ease`), vệt = bề mặt lưỡi quét:
+  mép ngoài là cung mũi đao, mép trong là đường lưỡi, đầu vệt rộng đúng bằng lưỡi (tham số `blade` của lớp, `--set slash.blade=0.6` = 60 % phía mũi), đuôi nhọn.
+  Không có `--track` thì kind chạy như cũ. Tham số `track` có thể đặt bằng code: `Space.world((x, y))` đổi toạ độ người gọi sang canvas.
 - `--pal`, `--s`, `--seed`, `--fps`, `--speed`, `--name`; `--set LỚP.THAM_SỐ=GIÁ_TRỊ` chỉnh một lớp cho riêng lần xuất này (`LỚP.off=true` bỏ lớp).
 - Kết quả: `frames/@2x`, `@1x`; với `--split` thêm hai nửa `back/` và `front/` (vẽ thân nhân vật ở giữa); `meta.json` có `anchor_2x`, `target_2x`,
   `hit_frame` (đặt khung này trùng khung trúng đòn của thân; lưới khung luôn ghim vào khung trúng đòn, ở mọi fps) và `origin` (góc trên trái của khung trong

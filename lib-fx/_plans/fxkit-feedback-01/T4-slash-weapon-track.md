@@ -48,3 +48,11 @@ và dữ liệu `weapon_marks.json` (`A.root`, `A.tip`, `B.root`, `B.tip`, `root
 - [ ] `fxkit_test.py` qua; `melee/slash --check` không FAIL.
 
 ## Kết quả (người làm điền)
+
+Làm xong 2026-11-13. Đã sửa: `space.py` (`origin`, `Space.world`), `effect.py` (truyền `x0, y0`), `layers/slash.py` (tham số `track`, `blade`: mũi `swing(f)`, `at/lat/strand` giữ nguyên, chỉ đổi nguồn đường và độ lệch `OFS`), `build.py` (cờ `--track`), `FXKIT.md` mục 6, `docs/pipeline/pose-pair-fx-method.md` (cách gọi mới sau bước 7, bản cũ vẫn là bản đã duyệt).
+- Lệnh thử (azure_blade, ô @2x): `python lib-fx/build.py melee/slash/crescent --from 107.3,191.1 --to 238.6,241.0 --pal frost --fps 15 --split --out <tmp> --track "root_a=118.5,144.1;root_b=202.9,241.5;up=35;turn=cw;ease=1.3"`.
+- Quỹ đạo: mép ngoài lệch so với `track.json` (khoảng cách mẫu mũi tới hợp các khung): 2.0, 0, 0, 0, 0, 1.4 px (bản parabol cũ: 1.4, 11.2, 24.1, 19.6, 0, 2.2). Đạt (<= 4).
+- Mép dẫn ở khung vệt đầy (khung 2 ở 15 fps) nằm trên lưỡi pose B: lệch 1.1 px, trải 34.2 / 35.8 px chiều dài lưỡi (96 %, blade = 1.0). Đạt. Khung đầu: đuôi nhọn bắt đầu ở mũi pose A (2 px).
+- Không `--track`: toàn bộ khung PNG giống hệt (md5) trước và sau. `fxkit_test.py`: all checks passed. `build.py melee/slash --check`: không FAIL (chỉ cảnh báo `pop` / `cut` đã có từ trước, bản cũ cũng báo).
+- Thay đổi so với đặc tả: (1) điểm điều khiển của chuôi dùng `min(y chuôi A, y chuôi B) - up` như `sweep_samples` đã duyệt (đặc tả ghi "trung điểm", sai lệch 12-40 px nếu theo đúng chữ); (2) khi có `track`, đầu vệt mọc tới 1.0 bằng `0.45 + 0.55 * out_quint(g)` (công thức cũ dừng ở 0.95 nên khung đầy chưa tới mũi B); (3) chỉ làm cờ `--track` nhận sẵn toạ độ ô @2x, không làm `--track-file` (đã ghi trong doc); (4) cờ áp cho mọi lớp kind `slash`, gồm cả `echo` của `heavy`.
+- Chưa làm / hạn chế: thử `heavy`, `axe`, `thrust` với `--track` chỉ để chắc không lỗi (không xem kỹ hình); răng cưa `teeth` và sợi tóc `streaks` ở chế độ track chỉ dò mắt (không có ca chạy với `saw`). Ảnh trước / sau xem ở contact sheet 3x3 (ngoài repo): bản trước là cánh bướm lệch, bản sau là dải bám cung mũi đao; xem `preview_game.gif` thấy dải rõ, không bị mất hình ở cỡ game. Các hiệu ứng được khen (spark, quake, bolt) không bị đụng (chỉ sửa kind slash, Space thêm trường mặc định).

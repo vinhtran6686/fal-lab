@@ -11,10 +11,11 @@ import math
 
 
 class Space:
-    def __init__(self, a, b=None, s=1.0, hand=None, floor=None):
+    def __init__(self, a, b=None, s=1.0, hand=None, floor=None, origin=(0.0, 0.0)):
         self.a = (float(a[0]), float(a[1]))
         self.b = (float(b[0]), float(b[1])) if b is not None else (self.a[0] + 100.0 * s, self.a[1])
         self.s = float(s)
+        self.ox, self.oy = float(origin[0]), float(origin[1])                # the caller's origin in canvas px (render() moves it)
         dx, dy = self.b[0] - self.a[0], self.b[1] - self.a[1]
         self.len = math.hypot(dx, dy) or 1e-6                             # px between a and b
         self.ux, self.uy = dx / self.len, dy / self.len                   # unit vector a -> b
@@ -28,6 +29,10 @@ class Space:
         """Canvas point of axis-frame (x, y) px (scaled by s), measured from a or b."""
         ox, oy = self.at(at)
         return (ox + (self.ux * x + self.nx * y) * self.s, oy + (self.uy * x + self.ny * y) * self.s)
+
+    def world(self, p):
+        """A point in the caller's coordinates (the px @2x the caller gave to a and b) -> canvas px. Not scaled by s."""
+        return (float(p[0]) - self.ox, float(p[1]) - self.oy)
 
     def ang(self, deg):
         """Screen angle (radians) of an axis-frame direction: 0 = along a -> b, 90 = to the upper side, 180 = back."""

@@ -32,7 +32,7 @@ T1 làm trước và một mình (đổi lõi tô, mọi hiệu ứng đổi khu
 - [x] **T1** Làm mịn nét trong `Ink` (kiểu Smooth Tool): [T1-smooth-outlines.md](T1-smooth-outlines.md)
 - [x] **T2** Hiệu ứng mặt đất nằm trên mặt phẳng đất: [T2-ground-plane.md](T2-ground-plane.md)
 - [x] **T3** Vệt chém đọc ra loại vũ khí (kiếm mịn, rìu song song): [T3-slash-weapon-profiles.md](T3-slash-weapon-profiles.md)
-- [ ] **T4** Vệt chém theo quỹ đạo vũ khí thật (chuôi + mũi): [T4-slash-weapon-track.md](T4-slash-weapon-track.md)
+- [x] **T4** Vệt chém theo quỹ đạo vũ khí thật (chuôi + mũi): [T4-slash-weapon-track.md](T4-slash-weapon-track.md)
 - [x] **T5** Thang trúng đòn nhẹ / nặng / chí mạng khác nhau rõ: [T5-spark-ladder.md](T5-spark-ladder.md)
 - [ ] **T6** Dựng lại, cập nhật trang duyệt và tài liệu, xoá thư mục kế hoạch: [T6-rebuild-review-docs.md](T6-rebuild-review-docs.md)
 

@@ -160,7 +160,7 @@ def render(effect, a=None, b=None, pal=None, s=1.0, seed=0, fps=30.0, speed=1.0,
     E = effect.extent * s
     x0, y0 = math.floor(min(a[0], b[0]) - E), math.floor(min(a[1], b[1]) - E)
     W, H = math.ceil(max(a[0], b[0]) + E) - x0, math.ceil(max(a[1], b[1]) + E) - y0
-    sp = Space((a[0] - x0, a[1] - y0), (b[0] - x0, b[1] - y0), s)
+    sp = Space((a[0] - x0, a[1] - y0), (b[0] - x0, b[1] - y0), s, origin=(x0, y0))
     ramp = Ramp.of(pal or effect.pal)
     dt = speed / fps                                                        # the frame grid is pinned to the hit: frame n_pre is t = 0
     n_pre = int(math.ceil(-effect.t0 / dt - 1e-6))
