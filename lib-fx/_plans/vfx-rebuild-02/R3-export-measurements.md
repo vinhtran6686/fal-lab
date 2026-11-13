@@ -15,6 +15,8 @@ File được tạo: `lib-fx/_core/formulas/rules/data/*_flame-burst.json`, `*_l
    - H6: số khung sống của từng tia; khung sáng nhất là khung thứ mấy của tia.
    - H7: `halo.sigma` đo được / bề rộng nét trung vị.
    - H8: IoU lớn nhất giữa mặt nạ (đã nở 6 px) của hai tia bất kỳ.
-3. Commit + push; đánh dấu ô R3 trong `PLAN.md`.
+3. Thêm bảng thứ hai "theo phương pháp" (cột: bước của `METHOD.md` mục 1 hoặc điều của mục 2; mẫu nào; số đo; xác nhận / bác bỏ): mỗi dòng **[suy luận]** trong `METHOD.md`
+   phải có một dòng trả lời. Ví dụ: "bước 2, đường năng lượng: tâm lửa lùi X px về nguồn trong N khung, tâm khói đi lên Y px" ; "2.4 giá trị: độ sáng (luma) trung vị từng lớp ở khung đỉnh".
+4. Commit + push; đánh dấu ô R3 trong `PLAN.md`.
 
 ## Kết quả

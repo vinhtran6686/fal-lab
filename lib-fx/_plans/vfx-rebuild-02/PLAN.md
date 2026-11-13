@@ -5,6 +5,9 @@ Nguồn: yêu cầu của người dùng 2026-11-13. Mẫu: `ref/vfx/flame-burst
 Vai trò: người lập kế hoạch chỉ viết task và **chấm kết quả**; người thi công làm đúng từng bước, không tự đổi phương pháp; người dùng duyệt cuối; docs chỉ viết sau khi duyệt.
 Thư mục này xoá khi xong (như `fxkit-feedback-01`). Kế hoạch `fxkit-feedback-01` độc lập, không chờ nhau.
 
+**Mục tiêu thật**: hiểu **cách làm** một hiệu ứng tốt (quy trình và các quyết định), để sáng tạo độc lập, không phải học thuộc lửa hay sét.
+Phương pháp tổng quát (bản nháp, có nguồn): [METHOD.md](METHOD.md). Hai mẫu dưới đây là bài kiểm tra cho phương pháp đó.
+
 ## 1. Vì sao tái tạo trước, viết luật sau
 Tìm trên web không ra luật có số (sách Elemental Magic của Gilland và các khoá học chỉ nêu nguyên tắc chung: hình, năng lượng, nhịp). Nguồn đáng tin
 nhất là **đo chính mẫu của hoạ sĩ**, như repo đã làm với `swirl-slash`, `element-trio` (9-10/10). Tái tạo đạt = bộ đo và bộ dựng đúng → số đo dùng được làm luật.
@@ -36,7 +39,8 @@ nhất là **đo chính mẫu của hoạ sĩ**, như repo đã làm với `swir
 - [ ] **R2** lightning: profile, đo, dựng lại, so sánh: [R2-lightning.md](R2-lightning.md)
 - [ ] **CHẤM** (người lập kế hoạch): xem `compare.gif` và số đo của R1, R2; ghi nhận xét vào mục 6. Chưa đạt → trả về đúng task đó
 - [ ] **R3** xuất số đo cho luật (chỉ làm sau khi R1, R2 được chấm đạt): [R3-export-measurements.md](R3-export-measurements.md)
-- [ ] **DUYỆT** (người dùng) → người lập kế hoạch viết docs (`rules/vfx/flame-jet/`, `rules/vfx/lightning/`, bổ sung `rules/01`, `02`) và task dựng lớp fxkit tương ứng
+- [ ] **DUYỆT** (người dùng) → người lập kế hoạch viết docs **phương pháp chung** (chuyển phần đã được xác nhận của `METHOD.md` vào `rules/`: quy trình 9 bước, bảng thiết kế,
+      duyệt theo tầng, phép đo mới) trước, rồi mới tới ghi chú riêng từng chất liệu và task dựng lớp fxkit tương ứng
 
 R1 và R2 chạy song song được (khác file). Không ai sửa `fxkit/` trong kế hoạch này.
 
