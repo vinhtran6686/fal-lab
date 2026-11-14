@@ -56,12 +56,12 @@ effect a long, thin start that grows into the bright, blunt head at the hit. The
 - One skill, one plane. A move that changes plane halfway (a sweep that ends in a smash) is two effects and two pose pairs.
 - How far three key stills can carry a move: a sweep up to about 270 degrees of arc fits three stills (A, B, C) when no leg between two stills is more than about 190 degrees (the tested sweep: A -> B 188, B -> C 82); beyond that the direction of a leg is a guess. A full turn of the body, a spin of 360 degrees or more, or a run needs a clip (`video-sprite`).
 
-## 4. Writing the two poses (pose A = prepare, pose B = end) for each plane
+## 4. Writing the poses of a move (A = start; two stills: B = end; three stills: B = middle, C = end)
 For a THREE-still ground sweep (section 2) the order of travel is A (prepare) -> B (the middle, about two thirds of the way) -> C (the end and the hit); the Ground row below describes A and B, the pose C row the third still.
 Keep everything of `docs/pipeline/pose-pair-fx-method.md` §4-§5 (design verbatim, both hands, no effects in the still, margins, pose A as a reference for pose B).
 What changes with the plane is WHERE the weapon (or the casting hand, the staff, the focus) is in each pose. Describe it by its place in the IMAGE.
 
-| Plane | Pose A (prepare) | Pose B (end) | Body |
+| Plane | Pose A (start) | Pose B (end of a two-still move; MIDDLE of a three-still sweep) | Body |
 |---|---|---|---|
 | **Frontal, downward** (tested) | weapon raised high above and slightly behind the head, the blade pointing up and to the upper-left of the image | weapon low in front, the blade lying level near the ground and pointing right | A: upright, leaning back a little. B: crouched forward, front knee bent, rear leg stretched |
 | **Frontal, upward** | weapon low and behind, the blade pointing to the lower-left, close to the ground | weapon high in front, the blade pointing to the upper-right | A: crouched, weight on the rear leg. B: stretched up, on the toes |
@@ -76,6 +76,7 @@ Sentences that keep the model on the plane (add them to the pose text):
 - ground: "the weapon stays LEVEL with the ground from start to end, like a helicopter blade seen slightly from above; it never rises above the shoulders and never points up";
 - diagonal: "the weapon travels along a slanted line from the upper-left of the image to the lower-right" (or the reverse).
 - ground, pose C (the approved prompt of `azure_blade` pose C, 2026-11-14; key sentences, copy them with the character's own design block): "POSE C of a three-part horizontal sweep, the END of the sweep (the hit pose; for a near-half arc write "the MIDDLE of the sweep"), the moment the blade points straight at the viewer, SQUARE TO THE VIEWER: the chest faces the viewer, the breastplate and BOTH shoulder plates are visible and level, the shoulders are symmetrical, the back is NOT visible; only the head is turned in PROFILE to look to the RIGHT of the image." "BOTH ARMS are stretched straight out toward the viewer and hold the sword together, both fists gripping the hilt, one fist right above the other, at the SAME chest height as in the other poses; seen from the front the two forearms are FORESHORTENED, short and wide." "The sword points straight at the viewer, level with the ground in space, so in the picture the BLADE is FORESHORTENED: it appears as a SHORT wedge about one third of its real length, starting at the fists and pointing DOWN in the image, the tip about 12% of the image height LOWER than the fists, the flat of the blade facing the viewer; NOT a full-length blade, NOT pointing left, NOT pointing right." Also attach pose B as a reference and say "the same size of the figure and the same feet position as in the second image; do NOT copy the pose". Result: the wedge came out at about 38-40 % of the visible blade of pose B; approved at the first try.
+  Exception to rule 4b.6: a percentage worked here because it sets a LENGTH relative to the figure (the wedge), not a position on the canvas; positions on the canvas (feet, boots) still never hold. Check it on the image.
 
 ## 4b. Say the body's orientation in words a model cannot misread (mandatory for every pose)
 **Why this section exists (learned 2026-11-14, ground-plane pose A).** The prompt said "the body is turned a little more than the usual three-quarter view so that part of his back shows".
@@ -94,6 +95,7 @@ A wording like "slightly", "a little", "more than", "partly turned", "twisted", 
    Add the screen words next to them when you use them.
 6. **No vague quantity words** in a pose: slightly, a bit, a little, somewhat, more or less, about (for positions), partly (without saying which part), dynamic, natural, powerful stance.
    Replace each with a position, a visible / not visible fact or a number measured on the picture (for example "the blade at chest height, the same height in both poses").
+   Exception (2026-11-14): a percentage that sets a LENGTH relative to the figure (pose C: the wedge 12 % of the image height below the fists) held once; a percentage that sets a POSITION on the canvas (feet, boots) never does. Check either on the image.
 7. **Look at the result yourself before showing it**: tick every visible / not visible line against the image. A failed line is a failed pose, whatever the overall impression.
 
 **Orientation vocabulary** (for a character that faces RIGHT; mirror for LEFT). Copy the lines into the prompt.
@@ -106,11 +108,12 @@ A wording like "slightly", "a little", "more than", "partly turned", "twisted", 
 | **Turned away (back three-quarter)** | "VIEWED FROM BEHIND: his back and the cape fill the middle of the picture; the breastplate, the belly and the chest are NOT visible at all; only his head is turned in PROFILE to look to the RIGHT of the image, over his shoulder" | back, cape, both shoulder plates from behind, the head in profile | chest, belly, the face looking at the viewer |
 
 **Template for a ground-plane (horizontal) pose A**, tested 2026-11-14:
-"POSE A of a two-part horizontal sweep, VIEWED FROM BEHIND: he is turned AWAY from the viewer, so the viewer sees mostly his BACK. His back and the cape fill the middle of the picture;
+"POSE A (the START) of a three-part horizontal sweep (A start, B middle, C end), VIEWED FROM BEHIND: he is turned AWAY from the viewer, so the viewer sees mostly his BACK. His back and the cape fill the middle of the picture;
 the front breastplate, the belly and the chest are NOT visible at all, and the face is NOT looking at the viewer: only his head is turned in PROFILE to look to the RIGHT of the image, over his shoulder.
 Both feet planted on ONE horizontal ground line, a wide stable stance, the knees bent, the thighs not horizontal. BOTH ARMS hold the weapon together, the two forearms and the two fists of the SAME size, wound back to the far hip,
 HIDDEN BEHIND his body, so the hands and the hilt are NOT visible. The weapon is held LEVEL at chest height and points to the LEFT of the image, parallel to the ground: only the tip half of the blade
 sticks out past his back and the cape on the LEFT of the image, the rest is hidden behind his body and cape."
+For a two-still sequence write "two-part" instead of "three-part" and call B the END of the sweep.
 Known limit of that take: one arm may still show on the near side holding the weapon; accept it if the hands stay hidden, or add "the near arm is also behind the body".
 
 **Known limits of the ground-plane pair (2026-11-14).** Three tries for pose B showed what a prompt cannot pin:
