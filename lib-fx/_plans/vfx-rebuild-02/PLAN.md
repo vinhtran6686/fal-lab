@@ -37,12 +37,15 @@ nhất là **đo chính mẫu của hoạ sĩ**, như repo đã làm với `swir
 ## 4. Checklist
 - [x] **R1** flame-burst: profile, đo, dựng lại, so sánh: [R1-flame-burst.md](R1-flame-burst.md)
 - [x] **R2** lightning: profile, đo, dựng lại, so sánh: [R2-lightning.md](R2-lightning.md)
-- [ ] **CHẤM** (người lập kế hoạch): xem `compare.gif` và số đo của R1, R2; ghi nhận xét vào mục 6. Chưa đạt → trả về đúng task đó
+- [x] **CHẤM** R1, R2 (2026-11-14): **chưa đạt cả hai**, xem mục 6
+- [ ] **R1b** flame-burst: vỏ khói sáng, khói không quầng, công cụ đo độc lập `rebuild_check.py`: [R1b-flame-burst-smoke.md](R1b-flame-burst-smoke.md) (làm trước R2b)
+- [ ] **R2b** lightning: nét mảnh như gốc, giữ nhánh mờ, quầng đổi màu ở khung chớp: [R2b-lightning-thin.md](R2b-lightning-thin.md)
+- [ ] **CHẤM** R1b, R2b (người lập kế hoạch)
 - [ ] **R3** xuất số đo cho luật (chỉ làm sau khi R1, R2 được chấm đạt): [R3-export-measurements.md](R3-export-measurements.md)
 - [ ] **DUYỆT** (người dùng) → người lập kế hoạch viết docs **phương pháp chung** (chuyển phần đã được xác nhận của `METHOD.md` vào `rules/`: quy trình 9 bước, bảng thiết kế,
       duyệt theo tầng, phép đo mới) trước, rồi mới tới ghi chú riêng từng chất liệu và task dựng lớp fxkit tương ứng
 
-R1 và R2 chạy song song được (khác file). Không ai sửa `fxkit/` trong kế hoạch này.
+R1 và R2 chạy song song được (khác file). R2b cần công cụ do R1b bước 1 tạo. Không ai sửa `fxkit/` trong kế hoạch này.
 
 ## 5. Luật chung cho người thi công
 1. Đọc `lib-fx/_core/formulas/vector/README.md` mục 4-5 và `lib-fx/_core/formulas/rules/03-reading-references.md` trước.
@@ -53,3 +56,12 @@ R1 và R2 chạy song song được (khác file). Không ai sửa `fxkit/` trong
 6. Xong: đánh dấu ô ở mục 4, điền "Kết quả" trong file task (đường dẫn `compare.gif`, bảng IoU, thời gian chạy, chỗ chưa giống), commit + push lên `ccr-38411bc5-l13uki`.
 
 ## 6. Nhận xét khi chấm (người lập kế hoạch điền)
+
+**Lần chấm 1 (2026-11-14): R1, R2 CHƯA ĐẠT.** Người lập kế hoạch xem `compare.gif` ở các khung then chốt và đo lại trên chính ảnh gốc (không dùng `report.json`).
+- **Lỗi chung của cả hai: thước đo vòng tròn.** IoU (R1) và độ phủ (R2) so bản dựng với **mặt nạ của chính nó**; mặt nạ thiếu (R1) hay béo (R2) thì số vẫn đẹp.
+  Từ nay mọi lần dựng lại phải qua thêm `lib-fx/_tools/rebuild_check.py` (so với ảnh gốc, không phụ thuộc bảng màu). Luật này cũng áp cho R3.
+- **R1 flame-burst**: đủ 4 pha, lửa vàng / cam khá giống, móc cuộn ở khung 51, 58 còn. Nhưng khung bùng 33-38 **mất gần hết vỏ khói nâu bọc lửa**: IoU phần tối với ảnh gốc = 0,62 (khung 33), 0,74 (38), 0,42 (14),
+  trong khi báo cáo ghi `smoke` 0,918. Nguyên nhân: `darker_than_bg` loại phần khói được lửa chiếu sáng (không tối hơn nền). Quầng cam quanh khói ở khung 44: `halo_w` của `smoke` chưa đặt về 0. → **R1b**.
+- **R2 lightning**: nhịp các tia đúng, góc gãy giữ được. Nhưng **nét dày gấp ~3 lần gốc** (bề rộng 16,1 / 10,8 / 8,2 / 7,0 so với 5,5 / 4,0 / 2,6 / 2,4 ở khung 8 / 70 / 94 / 110; diện tích sáng gấp 2,7-4,4 lần),
+  nhánh mờ mất, quầng trắng sáng sát nét thay vì xám xanh rộng, không ngả lam ở khung chớp. Nguyên nhân: gán lớp chỉ theo màu nên quầng sát nét bị nhận làm nét; màu quầng là hằng số. → **R2b**.
+- Phát hiện có giá trị giữ lại cho R3: đa số tia sét chỉ sống **1 khung** ở 25 fps (H6 "2-5 khung" sai với mẫu này).
