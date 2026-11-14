@@ -26,3 +26,12 @@ Việc nhỏ còn lại, đã gộp vào S2 (mục "Việc nhỏ gộp từ lầ
 1. `scraps` ở mũi đao rơi xuống dưới mặt đất và còn lác đác tới khung 29 (cảnh báo `linger`): bật `floor=True`, rút ngắn đời.
 2. Lint đòi một lớp primary / core / flash trên khung trúng đòn nên `swing` phải gắn `role="core"` cho `streaks`: sửa `Effect.lint` để lớp primary sinh **trước** đòn và còn sống ở t = 0 cũng được tính.
 3. Khung trước đòn chỉ có màu trắng; bản đã duyệt có thêm sắc xanh của vệt. Thử thêm một viền `main` mỏng quanh lát trắng.
+
+**S2 (2026-11-14): ĐẠT về mô hình, `sweep` cần chỉnh thêm.** Người lập kế hoạch dựng lại `sweep`, `diag_down`, `diag_up` ở 15 fps với `--split` và ghép lên dáng đứng của `azure_blade` (vai (140, 160), `--to 225,160`).
+- `diag_down`, `diag_up`: đạt. Cung nghiêng rõ, mép trắng ở lưỡi cuối, tan thành nét mảnh cùng hướng; `fxcheck` sạch.
+- `sweep`: đúng hình học (một đường dẹt, nửa xa sau thân, nửa gần trước thân) nhưng **yếu**: phần gần (dày, sáng, trước thân) quá ngắn, gần như chỉ còn một vạch trắng ở cuối; `fxcheck` báo `pop` (khung 3 -> 4 mất 47 %) khi r = 85.
+- Các lệch so với task đều hợp lý (đặc biệt sửa vector `P` có nhân `face`: công thức trong task sai với hướng quay trái).
+Việc còn lại (S2b, nhỏ):
+1. `sweep`: kéo dài phần gần: `u1` 410 -> 450-470 và `u0` 215 -> 240-250 (vệt kết thúc trước ngực, không dừng ở bên phải); bề dày tối thiểu phần gần 7 -> 10 px * s; kiểm lại cao / rộng <= 0,40.
+2. `linger` và `release` tính theo bán kính thật (`r * s`) để không `pop` khi r nhỏ (nhân vật cỡ game r ~ 85).
+3. Thử trên một cặp pose thật của chém ngang (chưa có: cần người dùng đồng ý sinh ảnh, ~0,03 USD cho hai pose).
