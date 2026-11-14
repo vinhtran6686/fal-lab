@@ -1,8 +1,8 @@
 {
- "plane": "ground (horizontal sweep), A -> B through the near half (in front of the body)",
- "hit_frame": 2,
+ "plane": "ground (horizontal sweep), A -> C -> B through the near half (in front of the body); cut between poses, no in-betweens",
+ "hit_frame": 3,
  "fps": 15,
- "image": "pose_skill_sweep_p1_v02.png / pose_skill_sweep_p2_v03.png, 1024x1024 source px, origin top-left, y down",
+ "image": "pose_skill_sweep_p1_v02.png (A) / pose_skill_sweep_p3_v01.png (C) / pose_skill_sweep_p2_v03.png (B), 1024x1024 source px, origin top-left, y down",
  "tip_a": [
   129,
   464
@@ -86,5 +86,78 @@
    "ra_px2x": 93.8,
    "rb_px2x": 105.2
   }
+ },
+ "sequence": [
+  "A",
+  "C",
+  "B"
+ ],
+ "hit_frame_note": "frame 1 = pose A, frame 2 = pose C, frame 3 = pose B and the hit (15 fps); before pose C was added the hit frame was 2 (A, B only)",
+ "pose_c": {
+  "file": "pose_skill_sweep_p3_v01.png",
+  "description": "square to the viewer, mid sweep; the blade points at the viewer, foreshortened to a short wedge pointing DOWN from the fists (about 38-40 % of the visible blade of pose B)",
+  "tip_c": [
+   502,
+   537
+  ],
+  "root_c": [
+   502,
+   405
+  ],
+  "root_c_note": "root_c = where the foreshortened blade leaves the fists/guard; blade wedge length 132 px",
+  "pivot_c": [
+   501.5,
+   270
+  ],
+  "pivot_c_note": "torso centre x = middle of the shoulder plates (x 303..700 at y 260); y = breastplate V (not used by the effect)",
+  "foot_mid_c": [
+   496.25,
+   952.5
+  ],
+  "foot_c_note": "boots: left x 183..337 bottom 953, right x 652..813 bottom 952 (level within 1 px)",
+  "head_top_c": 86,
+  "height_c": 866.5,
+  "scale_c_to_a": 0.9371,
+  "scale_ratio_c_over_a": 1.0671,
+  "dx_c_minus_a": -45.5,
+  "dy_c_minus_a": 31.5,
+  "dx_c_minus_b": 58.25,
+  "dy_c_minus_b": 12.5,
+  "offset_pivot_c_minus_a": [
+   -96.5,
+   -40
+  ],
+  "aligned": {
+   "tip_c": [
+    547.1,
+    531.6
+   ],
+   "root_c": [
+    547.1,
+    407.9
+   ],
+   "pivot_c": [
+    546.7,
+    281.4
+   ],
+   "foot_mid": [
+    541.8,
+    921.0
+   ]
+  },
+  "residual_torso_shift_vs_a": [
+   -51.3,
+   -28.6
+  ],
+  "residual_torso_shift_vs_b_aligned": [
+   -5.6,
+   null
+  ],
+  "residual_note": "C is 6.7 % bigger than A (B is 4.9 % bigger): scaled by 0.9371 about the feet midpoint. After the feet alignment the torso of C sits 51 px left of A's torso and 5.6 px left of B's (aligned source px); the feet of C are level (1 px), B's are 22 px apart"
+ },
+ "fit_three": {
+  "note": "effect built in px @2x = aligned source px * 0.2; pivot_c y = the fists (root_c y) because the hands are the pivot of the blade at C; k is NOT given: it is fitted (radius of C on the A -> B radius run)",
+  "swing": "tip_a=25.80,92.80;tip_b=216.81,85.85;pivot=119.60,92.80;pivot_b=110.45,83.05;root_a=78.60,96.60;root_b=151.05,84.32;tip_c=109.43,106.33;pivot_c=109.33,81.59;root_c=109.43,81.59",
+  "command": "python lib-fx/build.py melee/slash/sweep --pal frost --fps 15 --split --swing \"<swing>\" --out <dir>"
  }
 }

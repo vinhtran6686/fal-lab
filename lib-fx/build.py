@@ -38,7 +38,7 @@ preview_game.gif (game size: @1x shown x3 beside a 60 px body mark; review THIS 
 Per family: _gallery/<family with - for />.png (every other frame) and .gif (all effects playing together, real speed).
 All effects: catalog.json. Map of the folders: GUIDE.md.
 """
-import argparse, importlib.util, inspect, json, math, pathlib, sys
+import argparse, dataclasses, importlib.util, inspect, json, math, pathlib, sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / "_core" / "formulas" / "draw"))
@@ -307,6 +307,9 @@ def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, p
     if swing:                                                              # --swing: every slash layer swings in a plane seen from the game's camera
         ids = {l.id: {"swing": swing} for l in e.layers if l.kind == "slash"}
         if not ids: sys.exit("--swing: this effect has no slash layer")
+        if fitted and swing.get("tip_c"):                                  # three poses: the smear is born one frame earlier (A, C, then the hit on B), the hit stays t = 0
+            for l in e.layers:
+                if l.id in ids: ids[l.id]["life"] = dataclasses.replace(l.life, start=l.life.start - 1 / fps, attack=l.life.attack + 1 / fps)
         if fitted:                                                         # sparks leave from the tip at the hit (measured), not from the plane's default end
             ids.update({l.id: {"at": "b"} for l in e.layers if l.id in ("scraps", "streaks")})
         e = e.variant(layers=ids)
@@ -341,9 +344,9 @@ def parse_swing(text):
     for part in text.split(";"):
         k, _, v = part.strip().partition("=")
         if v: d[k.strip()] = v.strip()
-    pts = ("tip_a", "tip_b", "pivot", "pivot_b", "root_a", "root_b")
-    bad = set(d) - {"k", "roll", "u0", "u1", "r", "blade", "ease", "via", *pts}
-    if bad: sys.exit(f"--swing: unknown key {', '.join(sorted(bad))}; keys are k, roll, u0, u1, r, blade, ease, tip_a, tip_b, pivot, pivot_b, root_a, root_b, via")
+    pts = ("tip_a", "tip_b", "tip_c", "pivot", "pivot_b", "pivot_c", "root_a", "root_b", "root_c")
+    bad = set(d) - {"k", "roll", "u0", "u1", "r", "blade", "ease", "via", "lead", *pts}
+    if bad: sys.exit(f"--swing: unknown key {', '.join(sorted(bad))}; keys are k, roll, u0, u1, r, blade, ease, tip_a, tip_b, tip_c, pivot, pivot_b, pivot_c, root_a, root_b, root_c, via, lead")
     try: sw = {"k": float(d.get("k", 0.3)), "roll": float(d.get("roll", 0)), "u0": float(d.get("u0", 235)), "u1": float(d.get("u1", 430)),
                "r": float(d.get("r", 0)), "blade": float(d.get("blade", 0.75)), "ease": float(d.get("ease", 1.3))}
     except ValueError: sys.exit("--swing wants numbers: k=0.3;roll=0;u0=235;u1=430;r=120;blade=0.75;ease=1.3")
@@ -353,11 +356,17 @@ def parse_swing(text):
             try: sw[key] = tuple(float(x) for x in d[key].split(","))
             except ValueError: sys.exit(f"--swing: {key} wants X,Y")
             if len(sw[key]) != 2: sys.exit(f"--swing: {key} wants X,Y")
+    if "lead" in d:
+        if d["lead"] not in ("0", "1"): sys.exit("--swing: lead is 0 or 1")
+        if d["lead"] == "1": sw["lead"] = 1.0
+    if "tip_c" in d and "k" not in d: sw["kfit"] = True                    # three tips and no k: the flatness is fitted to them
     if "via" in d:
         if d["via"] not in ("near", "far"): sys.exit("--swing: via is near or far")
         sw["via"] = d["via"]
     if any(key in sw for key in ("tip_a", "tip_b", "pivot")) and not all(key in sw for key in ("tip_a", "tip_b", "pivot")):
         sys.exit("--swing: a fitted swing needs tip_a, tip_b and pivot together")
+    if any(key in sw for key in ("tip_c", "pivot_c", "root_c")) and "tip_c" not in sw: sys.exit("--swing: pivot_c / root_c need tip_c")
+    if "lead" in sw and "tip_a" not in sw: sys.exit("--swing: lead needs a fitted swing (tip_a, tip_b, pivot)")
     return sw
 
 
