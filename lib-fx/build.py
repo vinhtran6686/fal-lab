@@ -312,7 +312,7 @@ def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, p
                 if l.id in ids: ids[l.id]["life"] = dataclasses.replace(l.life, start=l.life.start - 1 / fps, attack=l.life.attack + 1 / fps)
         if fitted:                                                         # sparks leave from the tip at the hit (measured), not from the plane's default end
             ids.update({l.id: {"at": "b"} for l in e.layers if l.id in ("scraps", "streaks")})
-        if fitted and swing.get("tip_c") and "streaks" in ids: ids["streaks"].update(n=3, length=62.0, width=3.5, r0=22.0, arc=(75, 115))   # three poses: short hair-thin slivers, a long white spike at the end pose would read as an arrow on the head
+        if fitted and swing.get("tip_c") and "streaks" in ids: ids["streaks"].update(n=2, length=40.0, width=3.0, r0=16.0, arc=(80, 110))   # three poses: short hair-thin slivers, a long white spike at the end pose would read as an arrow on the head
         e = e.variant(layers=ids)
     hand = (1 if swing["tip_b"][0] >= swing["pivot"][0] else -1) if fitted and swing.get("tip_c") else None     # three points: it faces the side of the middle pose, whatever side the end tip is on
     r = fxkit.render(e, A, B, pal=pal, s=s, seed=seed, fps=fps, speed=speed, hand=hand)
