@@ -37,3 +37,15 @@ Việc còn lại (S2b, nhỏ):
 1. `sweep`: kéo dài phần gần: `u1` 410 -> 450-470 và `u0` 215 -> 240-250 (vệt kết thúc trước ngực, không dừng ở bên phải); bề dày tối thiểu phần gần 7 -> 10 px * s; kiểm lại cao / rộng <= 0,40.
 2. `linger` và `release` tính theo bán kính thật (`r * s`) để không `pop` khi r nhỏ (nhân vật cỡ game r ~ 85).
 3. Thử trên một cặp pose thật của chém ngang (chưa có: cần người dùng đồng ý sinh ảnh, ~0,03 USD cho hai pose).
+
+**S2b (2026-11-14): ĐẠT.** Người lập kế hoạch dựng lại `sweep` cũ (commit trước `976edd8`) và mới ở 15 fps với `--split`, r = 85 (`--to 225,160`) và r = 120 (`--to 260,160`),
+ghép `back/` dưới thân, `front/` trên thân dáng đứng `azure_blade` (khung 1), 6 khung đầu. Số đo tự đo khớp báo cáo:
+- r = 85: `front/` / `back/` 1462 / 294 (cũ 567 / 279); `front/` dài 128 px = 1,51 r (cũ 57); cao / rộng 0,392; A(h+1, h+2, h+3) / A(h) = 0,71 / 0,31 / 0,00; `fxcheck` chỉ còn `linger` (cũ có `pop` 47 %).
+- r = 120: 2160 / 265; dài 164 px; cao / rộng 0,318; 0,69 / 0,28 / 0,00.
+- Ảnh: phần gần giờ là dải sáng dày quét ngang trước eo, nửa xa mảnh vòng sau đầu, đúng hình chiếu; khung h+1 còn đủ vệt, h+2 tan thành nét mảnh, h+3 trống.
+- Lệch được chấp nhận: `u0` = 175 (công thức trong task đi sai hướng: tăng `u0` làm vệt cao hơn); chấm xanh trước đòn nằm sau lưng ngang eo **khớp pose A thật** vừa duyệt
+  (`pose_skill_sweep_p1_v02.png`: lưỡi duỗi ra sau lưng ngang eo). `w_near` = 12, `release` = 0,33, cung bay của mảnh vụn ra sau: hợp lý. Phần xa ở r = 120 mảnh hơn (2,8 px): chấp nhận, nửa xa nên mảnh.
+Việc nhỏ ghi lại (không mở task, xem lại khi ghép lên cặp pose chém ngang thật):
+1. Khung trước đòn chỉ là một chấm, chưa là lát mỏng dọc lưỡi pose A như `swing --track`; khi có pose B thật, cân nhắc dùng `--track` cho chém ngang.
+2. Khung h+2 các mảnh trắng bay qua ngang chân (lớp `front/`), hơi rối ở cỡ @2x.
+3. Đuôi tắt hẳn ở h+3 (0,00): ổn ở 15 fps, nhưng nếu người dùng thấy cụt thì nâng `release` 0,33 -> 0,35.
