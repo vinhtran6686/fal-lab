@@ -41,3 +41,22 @@ mẫu ghép đã duyệt: `out/heroes/azure_blade/source/vfx/crescent/build_cres
 Danh sách file tạo / sửa (`git diff --stat`), đường dẫn `contact.png` và GIF, kết quả `asset_status.py`, lệch so với task và lý do.
 
 ## Kết quả
+**Trạng thái: xong. Ghép chính xác, không đổi số nào của S4. 1 lệch nhỏ ở `meta.json` (xem cuối).**
+
+### File
+`git diff --stat` (file đã có): `out/heroes/azure_blade/brief.md` (+7 -3), `history.md` (+1), `meta.json` (+41 -1). File mới (`git add -f`): `out/heroes/azure_blade/frames/skill_sweep_puppet_side/`, `frames/fx/sweep/`, `frames/skill_sweep_side/`, `source/vfx/sweep/build_sweep.py` (152 file). `skill_crescent_*`, `fx/blade_charge*`, rig / anim S4, `source/design/`, `lib-fx/`, `scripts/` không đổi.
+
+### Ảnh
+- contact: `/home/user/fal-lab/out/heroes/azure_blade/frames/skill_sweep_side/contact.png`
+- GIF: `/home/user/fal-lab/out/heroes/azure_blade/frames/skill_sweep_side/preview_2x.gif`, `/home/user/fal-lab/out/heroes/azure_blade/frames/skill_sweep_side/preview_game_1x_x3.gif`
+
+### Số đo (script tạm ở scratchpad, không vào repo)
+- Thân: 21 ảnh 352x280 @2x. Vệt: 9 khung, `hit_frame` 3, `qa.fail` rỗng (`warn` rỗng), có `back/`, `front/`, `origin` (80, 106).
+- `skill_sweep_side`: 21 ảnh @2x và @1x. So từng khung với ghép độc lập (cùng thân, vệt, origin, composite "over" bằng numpy): chênh tối đa 1,16 / 255 (làm tròn 8 bit, tức <= 1 mức màu).
+- Vệt có mặt chỉ ở khung 6-11 (tổng alpha khác thân: 111, 776, 1870, 1295, 589, 114); khung 1-5 và 12-21 không có vệt (0). Khung 6 lát mỏng xanh trên lưỡi A, khung 7 đầu vệt ở mũi B, khung 8 đầu vệt ở nêm C (mở `contact.png` và ảnh phóng khung 6-8).
+- `python lib-fx/build.py melee/slash --check`: không FAIL (còn cảnh báo `linger` có sẵn của `melee/slash/sweep`).
+- `asset_status.py azure_blade` đọc được ba dòng mới (`skill_sweep_side` ✅, `skill_sweep_puppet_side` ✅, `fx_sweep` ✅), tổng "Xong 12/18", không lỗi.
+
+### Lệch
+1. `puppet.py render` ghi vào `meta.json` ngoài khối sheet mới còn thêm ba tên pose `pose_skill_sweep_p1/p2/p3` vào `sources.design` (danh sách ảnh gốc của các rig của sheet). Giữ lại vì do chính lệnh render tự thêm cho sheet này và đúng chuỗi nguồn; không đụng phần nào khác của `meta.json`.
+2. `export_meta.json` có thêm `fx_origin_2x` và lệnh vệt có dấu nháy quanh `--swing` (lệnh `rebuild` trong `meta.json` của vệt không có nháy, không chạy lại được trực tiếp).

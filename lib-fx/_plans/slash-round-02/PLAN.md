@@ -9,7 +9,7 @@ Người lập kế hoạch không thi công; người thi công làm đúng t�
 - [x] **S2** Mặt phẳng vung: chém ngang, chém xéo theo góc nhìn của game (kèm 3 việc nhỏ từ lần chấm S1): [S2-swing-planes.md](S2-swing-planes.md)
 - [x] **S2b** `sweep` đủ mạnh (phần gần dài và dày hơn), nhịp tan theo bán kính: [S2b-sweep-strength.md](S2b-sweep-strength.md)
 - [x] **S4** Chém ngang ba pose: nhịp 5 pha + rig một mảnh cho thân (bớt đơ), vệt dựng từ vị trí lưỡi thật của rig: [S4-sweep-body-timing.md](S4-sweep-body-timing.md) **(ưu tiên 1)**
-- [ ] **S4b** Xuất chính thức `skill_sweep_side` (thân + vệt) vào `frames/`, cập nhật manifest: [S4b-sweep-export.md](S4b-sweep-export.md) **(ưu tiên 1)**
+- [x] **S4b** Xuất chính thức `skill_sweep_side` (thân + vệt) vào `frames/`, cập nhật manifest: [S4b-sweep-export.md](S4b-sweep-export.md) **(ưu tiên 1)**
 - [ ] **S5** Việc nhỏ từ review chém ngang ba pose (chưa viết task; danh sách ở `../HANDOVER.md` mục 4)
 - [ ] **S3** Rìu dày hơn: ít dải, dải rộng (chưa viết task)
 - [ ] **CHẤM** (người lập kế hoạch) sau mỗi task → **DUYỆT** (người dùng)
