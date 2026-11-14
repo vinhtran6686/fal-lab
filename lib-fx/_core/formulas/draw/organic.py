@@ -217,10 +217,14 @@ def shards_at(sh, cx, cy, shards, t, life, sy=1.0, g=0.0):
 
 
 def cloud(canvas, puffs, pal=DUST, a=1.0, light=(-0.55, -0.83), off=5.0, fillet=4.0, erode=0.0, noise=0.0, seed=3,
-          tones=("shadow", "base", "light"), curls=True, holes=()):
+          tones=("shadow", "base", "light"), curls=True, holes=(), gone=0.0, curl_on=None, curl_min=10.0, curl_w=1.6, curl_rot=0.0):
     """A cartoon dust cloud: the union of wobbly puffs (x, y, r), shaded in flat tones by shifting the silhouette towards the light:
     the side away from the light gets the dark tone, the side facing it the light tone. Curl lines sit on the big puffs' shadow
-    side. holes = [(x, y, rx, ry)] open the middle as it dissipates; erode + noise break it into wisps."""
+    side. holes = [(x, y, rx, ry)] open the middle as it dissipates; erode + noise break it into wisps.
+    gone 0..1 finishes the dissolve: it moves the erosion depth from erode + noise towards the thickest point of the cloud, so at 1
+    nothing is left whatever the size of the puffs (ramp it over the last frames: the wisps thin out and vanish, no pop).
+    curl_on: None = every puff with r >= curl_min gets a curl line (the old behaviour); otherwise a set of indices into `puffs` that
+    get one (still only when r >= curl_min); curl_w = line width in px; curl_rot = turns every curl by this many radians."""
     sh = Shape(canvas)
     for x, y, r in puffs:
         sh.poly(blob(x, y, r, wob=0.07, freq=4, phase=x * 0.37 + y * 0.11))
@@ -231,7 +235,10 @@ def cloud(canvas, puffs, pal=DUST, a=1.0, light=(-0.55, -0.83), off=5.0, fillet=
     dist = ndimage.distance_transform_edt(m) / ss
     if erode > 0 or noise > 0:
         thr = erode + noise * noise_field(m.shape, seed, 7 * ss)
+        if gone > 0: thr = thr + min(1.0, gone) * (float(dist.max()) + 1 - thr)
         m = m & (dist > thr)
+    elif gone > 0:
+        m = m & (dist > min(1.0, gone) * (float(dist.max()) + 1))
     if sh.h is not None:
         m = m & ~(np.asarray(sh.h) > 127)
     if not m.any(): return
@@ -248,10 +255,10 @@ def cloud(canvas, puffs, pal=DUST, a=1.0, light=(-0.55, -0.83), off=5.0, fillet=
     img = Image.fromarray(np.dstack([rgb, (m * 255 * min(1, a)).astype(np.uint8)]), "RGBA")
     if curls:
         cd = ImageDraw.Draw(img)
-        for x, y, r in puffs:
-            if r < 10: continue
-            pts = [(x + r * 0.55 * math.cos(t) * (0.55 + 0.12 * t), y + r * 0.5 * math.sin(t) * (0.55 + 0.12 * t)) for t in np.linspace(0.3, 3.4, 16)]
-            cd.line([(px * ss, py * ss) for px, py in pts], fill=tuple(pal["curl"]) + (int(200 * a),), width=max(1, int(1.6 * ss)), joint="curve")
+        for i, (x, y, r) in enumerate(puffs):
+            if r < curl_min or (curl_on is not None and i not in curl_on): continue
+            pts = [(x + r * 0.55 * math.cos(t) * (0.55 + 0.12 * t), y + r * 0.5 * math.sin(t) * (0.55 + 0.12 * t)) for t in np.linspace(0.3 + curl_rot, 3.4 + curl_rot, 16)]
+            cd.line([(px * ss, py * ss) for px, py in pts], fill=tuple(pal["curl"]) + (int(200 * a),), width=max(1, int(curl_w * ss)), joint="curve")
         arr = np.asarray(img).copy(); arr[~m] = 0; img = Image.fromarray(arr, "RGBA")
     canvas.img.alpha_composite(img)
 

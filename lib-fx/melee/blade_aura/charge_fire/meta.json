@@ -76,7 +76,19 @@
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/charge_fire_NN.png",
-  "preview": "preview.gif"
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [],
+  "frames": 61,
+  "peak_frame": 51,
+  "peak_size_1x": [
+   37,
+   13
+  ],
+  "last_frame_pct": 97.0
  },
  "source": "lib-fx/melee/blade_aura/blade_aura.py: charge_fire"
 }

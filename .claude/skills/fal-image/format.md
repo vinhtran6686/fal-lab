@@ -135,6 +135,8 @@ ground line".
 the turned master: name the angle in capitals, say what must and must not be visible (eyes, face, which side
 the weapon or the asymmetric mark is on), and end with "Not a side view". A `pose_<action>` still uses the
 same skeleton with the master's view, the pose instead of `{UPRIGHT}`, and `--ref <master>`.
+**Poses of a move** (`pose_<action>`, `pose_skill_<name>`, any class): the plane the move lives in (flat to the screen, flat to the ground, diagonal)
+decides where the weapon or the casting hand is in each pose and where the effect goes. Read `action-planes.md` (this folder) before writing them.
 
 **biped** (two legs; front and back tested on bandit 2026-10-13/14). `{weapon hand}` is the hand that holds
 the weapon (or the staff, the book ...).

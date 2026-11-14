@@ -34,7 +34,21 @@
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/pierce_NN.png",
-  "preview": "preview.gif"
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "cut: frame 12 still holds 11 % of the peak, frame 13 is empty"
+  ],
+  "frames": 15,
+  "peak_frame": 6,
+  "peak_size_1x": [
+   122,
+   94
+  ],
+  "last_frame_pct": 0.0
  },
  "source": "lib-fx/impact/dash/dash.py: dash_pierce"
 }

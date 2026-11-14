@@ -33,7 +33,22 @@
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/star_NN.png",
-  "preview": "preview.gif"
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "cut: frame 10 still holds 11 % of the peak, frame 11 is empty",
+   "linger: the last 4 of 14 frames carry under 2 % of the peak"
+  ],
+  "frames": 14,
+  "peak_frame": 5,
+  "peak_size_1x": [
+   130,
+   78
+  ],
+  "last_frame_pct": 0.0
  },
  "source": "lib-fx/impact/hit/hit.py: hit_star"
 }

@@ -1,0 +1,82 @@
+{
+ "id": "melee/slash/crescent",
+ "name": "Chém lưỡi liềm",
+ "desc": "a SWORD smear swept from a to b: a smooth crescent of three touching strands, a needle tail, a fat belly on the inside of the bow, a darker inner tone, a hot clean outer edge, two hair streaks beside it; it fades into two or three long thin strokes that run the way of the swing; scraps fly off the end",
+ "status": "draft",
+ "tags": [
+  "melee",
+  "blade",
+  "slash",
+  "one-shot",
+  "anchor:path",
+  "medium",
+  "space:span",
+  "weight:medium"
+ ],
+ "fps": 30.0,
+ "frames": 16,
+ "frame_size_2x": [
+  380,
+  260
+ ],
+ "anchor_2x": [
+  78.0,
+  180.0
+ ],
+ "target_2x": [
+  288.0,
+  180.0
+ ],
+ "hit_frame": 1,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "frost",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "slash",
+   "kind": "slash",
+   "role": "primary",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.433
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.066,
+   "end": 0.499
+  },
+  {
+   "id": "streaks",
+   "kind": "streaks",
+   "role": "accent",
+   "z": "front",
+   "start": 0.066,
+   "end": 0.262
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/crescent_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "cut: frame 12 still holds 15 % of the peak, frame 13 is empty",
+   "linger: the last 4 of 16 frames carry under 2 % of the peak"
+  ],
+  "frames": 16,
+  "peak_frame": 5,
+  "peak_size_1x": [
+   117,
+   64
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/melee/slash/slash.py: EFFECTS['crescent']"
+}

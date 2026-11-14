@@ -1,0 +1,103 @@
+{
+ "id": "impact/quake/slam",
+ "name": "Nện đất",
+ "desc": "a weapon or a fist slams the floor: a flat splash of flash points lies on the floor and a narrow pointed column stands up from the impact, a flat shock ring races out on the ground, a dark dust bank behind and a light one in front roll out to both sides with unequal lobes and pointed tails, scraps are thrown up and fall back; the dust opens from the middle and is eaten in place last",
+ "status": "draft",
+ "tags": [
+  "impact",
+  "ground",
+  "one-shot",
+  "anchor:ground",
+  "heavy",
+  "dust",
+  "space:ground",
+  "weight:heavy"
+ ],
+ "fps": 30.0,
+ "frames": 27,
+ "frame_size_2x": [
+  484,
+  286
+ ],
+ "anchor_2x": [
+  248.0,
+  152.0
+ ],
+ "target_2x": [
+  388.0,
+  152.0
+ ],
+ "hit_frame": 1,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "sun",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "dust_back",
+   "kind": "dust",
+   "role": "smoke",
+   "z": "back",
+   "start": 0.033,
+   "end": 0.853
+  },
+  {
+   "id": "ring",
+   "kind": "ring",
+   "role": "secondary",
+   "z": "back",
+   "start": 0.033,
+   "end": 0.403
+  },
+  {
+   "id": "splash",
+   "kind": "star",
+   "role": "primary",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.399
+  },
+  {
+   "id": "column",
+   "kind": "star",
+   "role": "core",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.333
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.033,
+   "end": 0.616
+  },
+  {
+   "id": "dust",
+   "kind": "dust",
+   "role": "smoke",
+   "z": "front",
+   "start": 0.066,
+   "end": 0.866
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/slam_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [],
+  "frames": 27,
+  "peak_frame": 5,
+  "peak_size_1x": [
+   184,
+   67
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/impact/quake/quake.py: EFFECTS['slam']"
+}

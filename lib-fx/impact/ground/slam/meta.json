@@ -12,7 +12,7 @@
   "dust"
  ],
  "fps": 30,
- "frames": 25,
+ "frames": 28,
  "frame_size_2x": [
   440,
   300
@@ -32,7 +32,19 @@
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/slam_NN.png",
-  "preview": "preview.gif"
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [],
+  "frames": 28,
+  "peak_frame": 13,
+  "peak_size_1x": [
+   198,
+   42
+  ],
+  "last_frame_pct": 0.0
  },
  "source": "lib-fx/impact/ground/ground.py: ground_slam"
 }

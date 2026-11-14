@@ -60,6 +60,7 @@ out/heroes/azure_blade/
 ## 4. Quy trình
 
 ### Bước 0: chuẩn bị
+- Xác định **mặt phẳng của động tác** (song song màn hình, nằm ngang trên mặt đất, xéo, đâm thẳng) theo `.claude/skills/fal-image/action-planes.md`: nó quyết định cách tả hai pose và loại vệt dùng ở bước 7.
 - Master đã duyệt (hero: `fal-image`; **không chibi, không dễ thương**, 3,5 đến 4,5 đầu; hai tay và hai chân cùng cỡ; áo choàng nằm sau thân; cả vũ khí trong khung. Xem `fal-image/format.md` "No chibi, no cute").
 - Viết **mô tả skill** từng pha, theo vật lý (cầm, giơ, chém, tiếp đất), cho **hai pose duy nhất**. Không mô tả các khung giữa.
 
@@ -124,6 +125,14 @@ Thân ra `frames/skill_crescent_puppet_side/` (cell 352x280 @2x, chân ở pivot
 - Hai lớp: (a) bộ sinh layered `slash_from_track.py` (`scripts/slash_fx/`) (sợi, răng, vụn; mờ) và (b) **bề mặt lưỡi quét**: vẽ mọi đường gốc→mũi, nên dải **dày đúng bằng lưỡi**, mép dẫn song song lưỡi.
 - Màu: đuôi xanh đậm, giữa xanh sáng, **đầu vệt trắng**, đường trắng mảnh theo quỹ đạo mũi; **mũi đậm và đục, cán nhạt và mờ**; quầng xanh.
 - Đặt vệt: bước mọc đầu tiên trên khung cuối pose A (bắt đầu **đúng trên lưỡi pose A**), vệt đầy trên khung đầu pose B, rồi 3 khung tan. Không đặt vệt bước giữa lên thân pose A vì lưỡi trong thân vẫn ở vị trí cũ (lệch).
+
+**Cách gọi mới (lib-fx fxkit, chưa dùng cho bản đã duyệt):** `build_crescent.py` ở trên vẫn là bản đã duyệt của `azure_blade`. Cách thay thế một lệnh, cùng số liệu `weapon_marks.json` đã đổi sang px ô @2x:
+`python lib-fx/build.py melee/slash/crescent --from <mũi A> --to <mũi B> --track "root_a=<chuôi A>;root_b=<chuôi B>;up=35;turn=cw;ease=1.3" --pal frost --fps 15 --split --out <thư mục>`
+(chi tiết: `lib-fx/_core/formulas/draw/FXKIT.md` mục 6). Khung thứ hai ở 15 fps (mọc xong) có mép dẫn trùng lưỡi pose B; kiểm tra bằng checklist "Vệt chém" mục 5.
+
+**Cách thứ hai (fxkit), vệt mượt như bản đã duyệt:** dùng hiệu ứng `swing` (đầu vệt là lát mỏng trên lưỡi pose A, đầy với mép trắng dọc lưỡi pose B ở khung trúng đòn, tan 3 khung, mũi đậm chuôi nhạt):
+`python lib-fx/build.py melee/slash/swing --from <mũi A> --to <mũi B> --track "root_a=<chuôi A>;root_b=<chuôi B>;up=35;turn=cw;ease=1.3" --pal frost --fps 15 --split --out <thư mục>`
+Đặt `hit_frame` của fx (= 2) trùng khung trúng đòn của thân, nên khung fx đầu rơi vào khung cuối của pose A. `build_crescent.py` vẫn là bản đã duyệt của `azure_blade`.
 
 ### Bước 8: duyệt và chốt
 - Xem `contact.png` và `preview_game_1x_x3.gif` (**duyệt ở cỡ game H = 60 px @1x**, không chỉ @2x).

@@ -6,6 +6,9 @@ Nơi lưu trữ chuẩn cho mọi hiệu ứng (fx) của dự án, dùng chung 
 **Tư duy xây lib-fx (mục tiêu, các bước tái tạo → mô tả → biên độ → gắn nhân vật, tái tạo và sáng tạo, thư mục anh em): [MINDSET.md](MINDSET.md).**
 **Bản đồ thư mục (mỗi nhóm, mỗi họ chứa gì): [GUIDE.md](GUIDE.md).**
 
+**Hiệu ứng mới dựng bằng fxkit** (chồng lớp, vẽ giữa hai điểm a → b, phong cách tông phẳng xếp chồng): [_core/formulas/draw/FXKIT.md](_core/formulas/draw/FXKIT.md).
+Họ dùng fxkit khai báo `EFFECTS` (vd. `impact/quake/quake.py`); họ cũ khai báo `VARIANTS` vẫn chạy như trước.
+
 ## Lệnh
 
 ```
@@ -15,7 +18,28 @@ python lib-fx/build.py force/shock             một họ (kèm gallery)
 python lib-fx/build.py force/shock/drill       một hiệu ứng
 ```
 
-Xem trước: `_gallery/<nhóm>-<họ>.png` (mọi hiệu ứng, frame cách 1) và `.gif` (chạy cùng lúc, đúng tốc độ);
+```
+python lib-fx/build.py --check [đường dẫn]     dựng rồi thoát mã 1 nếu có hiệu ứng FAIL cổng chất lượng
+python lib-fx/_tools/fxcheck.py [đường dẫn]    chỉ đo lại khung đã có trên đĩa
+python lib-fx/_tools/fxkit_sheet.py <kind|hiệu ứng> [key=value ...]   bảng duyệt một lớp: 4 seed / hướng / cỡ / bảng màu
+python lib-fx/_tools/fxkit_test.py             kiểm hồi quy fxkit (tất định, có seed, tự tan, theo a → b, co giãn)
+```
+
+Biến thể cho nhân vật (không đụng thư viện):
+```
+python lib-fx/build.py melee/slash/crescent --from 120,60 --to 300,210 --pal blaze --seed 3 --fps 15 --split --out out/heroes/<id>/frames/fx/slash
+python lib-fx/build.py melee/slash/crescent --from <mũi A> --to <mũi B> --track "root_a=X,Y;root_b=X,Y;up=35;turn=cw;ease=1.3" --pal frost --fps 15 --split --out <thư mục>
+                                                vệt chém theo quỹ đạo vũ khí thật (chuôi + mũi, px ô @2x); vệt rìu: dùng hiệu ứng `melee/slash/axe` (cùng cờ)
+python lib-fx/build.py impact/hit/star --pal ice --s 0.8 --mirror --out <thư mục>          (họ cũ: --pal, --s, --mirror, --fps, --speed)
+```
+
+## Cổng chất lượng
+
+`build.py` đo mọi hiệu ứng vừa dựng và ghi `qa` vào `meta.json` / `catalog.json`. FAIL: `clip` (chạm mép khung), `end` (khung cuối chưa trống),
+`anchor`, `lint` (họ fxkit: thiếu vai trò, không lệch nhịp ...). Cảnh báo: `pop`, `cut`, `linger`, `empty0`, `flicker`, `tiny`, `speck`.
+Hiệu ứng còn FAIL thì không được đổi `status` thành `approved`. Chi tiết từng phép đo: đầu file `_tools/fxcheck.py`.
+
+Xem trước: `<nhóm>/<họ>/<id>/preview_game.gif` (cỡ game @1x phóng 3 lần, cạnh vạch cao 60 px của thân nhân vật: **duyệt bản này**), `_gallery/<nhóm>-<họ>.png` (mọi hiệu ứng, frame cách 1) và `.gif` (chạy cùng lúc, đúng tốc độ);
 từng hiệu ứng: `<nhóm>/<họ>/<id>/preview.gif`.
 
 ## Một hiệu ứng gồm
@@ -28,7 +52,7 @@ force/shock/tiers/
   meta.json            id, tên, trạng thái, tag, fps, số frame, cỡ frame @2x, điểm neo, hướng, bảng màu, nguồn
 ```
 
-Code của cả họ nằm cạnh đó: `force/shock/shock.py`. Hiện chỉ xuất @2x (chưa có @1x).
+Code của cả họ nằm cạnh đó: `force/shock/shock.py`. Thư viện lưu @2x; biến thể cho nhân vật (`--out`) xuất cả @2x và @1x.
 
 ## Luật nhìn (mọi hiệu ứng trong thư viện)
 

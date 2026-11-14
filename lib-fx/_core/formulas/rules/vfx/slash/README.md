@@ -43,3 +43,34 @@ User (2026-11-09): sáng tạo slash đơn bằng tool đã khá ổn. Câu hỏ
 Hướng đi hiện tại: Milestone 01, nhát chém xéo đồng bộ kiếm nhân vật thật ([docs/pipeline/pose-pair-fx-method.md](../../../../../../docs/pipeline/pose-pair-fx-method.md)).
 
 Luật chung cho mọi loại VFX (lớp, nét mịn, cấp bậc màu, vòng đời, ánh sáng): [../../README.md](../../README.md) và 01-05.
+
+## Theo loại vũ khí (kind `slash`, tham số `weapon`)
+
+Nguyên tắc: mọi chi tiết và mọi pha tàn sống trong toạ độ nét (`v` dọc cung, `c` ngang nét), không dùng nhiễu trong không gian màn hình. Vệt là một bó
+sợi dọc song song với cung; khi tàn, mỗi sợi mỏng dần về đường tâm của nó và đuôi rút lên theo luật riêng (`c.rng("strand", j)`), nên chỉ còn vài nét dài,
+mảnh, cùng hướng. Không lỗ, không mảnh vụn, không hoa văn.
+
+| Vũ khí | Hình | Pha tàn |
+|---|---|---|
+| `sword` (kiếm, đao) | 3 sợi khít nhau (khoảng 50/30/20 %), mép ngoài là một cung sạch, không răng, 2 sợi tóc mảnh ngoài mép; rộng 46 | 3 nét dài mảnh dần, sợi ngoài (mép sáng) hết sau cùng |
+| `axe` (rìu) | 4-6 dải song song cách nhau khe cố định 6-10 % bề rộng, dải rộng hẹp khác nhau; ngắn (phủ 70 % cung), dày (80), đầu tù | từng dải ngắn dần từ đuôi, dải mảnh hết trước |
+| `saw` | như kiếm, mép trong có răng đều (`teeth=6`) | như kiếm |
+
+Hiệu ứng: `crescent`, `heavy`, `thrust` là kiếm; `axe`, `axe_heavy` là rìu. Khe giữa các dải rìu bị quầng sáng lấp nếu glow đầy: kind giảm glow còn 0.5 và Ink làm mịn nhẹ.
+
+### Luật đã được người dùng xác nhận (góp ý 2026-11-13, sau khi xem trang duyệt fxkit)
+
+1. **Kiếm, đao = nét mịn cùng hướng.** Một cung liền, không để lại "hoa văn" ngoằn ngoèo khi tàn, không răng cưa mặc định.
+2. **Rìu = dải song song.** Các vết cách nhau bởi khe, ngắn và dày hơn kiếm; từng dải tàn riêng.
+3. **Vệt phải theo bề mặt lưỡi quét**, không phải một parabol giữa hai mũi đao: chuôi đi một đường, lưỡi xoay quanh chuôi, mũi vẽ cung của nó
+   (`--track`, `FXKIT.md` mục 6). Mép dẫn của vệt đầy phải trùng lưỡi ở pose cuối.
+
+## Theo mặt phẳng vung (`--swing`; `sweep`, `diag_down`, `diag_up`)
+
+Cú vung nằm trong một mặt phẳng; máy quay cao, chếch xuống, nên hình ta thấy là **hình chiếu** của đường tròn mũi vũ khí vẽ quanh vai (mô hình trong `layers/slash.py`, `plane_point`):
+- **bổ dọc / hất lên** (mặt phẳng song song màn hình, `k = 1`): cung tròn đầy đủ, toàn bộ ở trước thân (`melee/slash/swing` + `--track`);
+- **chém ngang** (`k = 0.3`, `sweep`): ellipse cao / rộng ~ 0,3, gần thành một đường; nửa đi sau thân (xa) mảnh và nguội, vẽ SAU thân; nửa đi trước (gần) dày và sáng, vẽ ĐÈ lên thân;
+- **chém xéo** (`k = 0.6`, `roll = +-35`, `diag_down` / `diag_up`): ellipse dẹt vừa, xoay nghiêng; từ cao phía sau xuống thấp phía trước, hoặc ngược lại.
+Luật: nét dày mỏng theo gần xa (xa 0,3 - gần 2,4 lần nét tối thiểu, nội suy theo `k`), không biến mất ở chỗ nhìn từ cạnh; nửa xa không có mép trắng; hai đầu vệt thon nhọn.
+Số đo đã đạt (2026-11-13, 15 fps): `sweep` cao / rộng 0,31, nét gần dày gấp 2,6 nét xa; `diag_down` 1,09, `diag_up` 1,0 (khung bao ở khung trúng đòn). Chi tiết: `lib-fx/_plans/slash-round-02/S2-swing-planes.md`.
+Còn mở: rìu theo mặt phẳng (S3), thử trên một pose pair thật của ngang / xéo.

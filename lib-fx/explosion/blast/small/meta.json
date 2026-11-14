@@ -1,0 +1,104 @@
+{
+ "id": "explosion/blast/small",
+ "name": "Nổ nhỏ",
+ "desc": "a small burst: a bomb, a barrel",
+ "status": "draft",
+ "tags": [
+  "explosion",
+  "one-shot",
+  "anchor:centre",
+  "medium",
+  "fire",
+  "space:point",
+  "weight:medium"
+ ],
+ "fps": 30.0,
+ "frames": 31,
+ "frame_size_2x": [
+  358,
+  354
+ ],
+ "anchor_2x": [
+  182.0,
+  180.0
+ ],
+ "target_2x": [
+  322.0,
+  180.0
+ ],
+ "hit_frame": 1,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "fire",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "smoke",
+   "kind": "smoke",
+   "role": "smoke",
+   "z": "back",
+   "start": 0.066,
+   "end": 0.976
+  },
+  {
+   "id": "ring",
+   "kind": "ring",
+   "role": "secondary",
+   "z": "back",
+   "start": 0.033,
+   "end": 0.403
+  },
+  {
+   "id": "flames",
+   "kind": "flames",
+   "role": "primary",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.83
+  },
+  {
+   "id": "star",
+   "kind": "star",
+   "role": "core",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.316
+  },
+  {
+   "id": "splash",
+   "kind": "star",
+   "role": "accent",
+   "z": "back",
+   "start": 0.0,
+   "end": 0.349
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.033,
+   "end": 0.616
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/small_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "linger: the last 7 of 31 frames carry under 2 % of the peak"
+  ],
+  "frames": 31,
+  "peak_frame": 6,
+  "peak_size_1x": [
+   104,
+   103
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/explosion/blast/blast.py: EFFECTS['small']"
+}

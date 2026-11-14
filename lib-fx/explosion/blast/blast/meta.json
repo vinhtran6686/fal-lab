@@ -1,0 +1,112 @@
+{
+ "id": "explosion/blast/blast",
+ "name": "Nổ",
+ "desc": "a pointed flash, flames thrown up and out over a dark smoke mass, a ring racing out, scraps in every direction, embers after",
+ "status": "draft",
+ "tags": [
+  "explosion",
+  "one-shot",
+  "anchor:centre",
+  "heavy",
+  "fire",
+  "space:point",
+  "weight:heavy"
+ ],
+ "fps": 30.0,
+ "frames": 34,
+ "frame_size_2x": [
+  490,
+  510
+ ],
+ "anchor_2x": [
+  258.0,
+  252.0
+ ],
+ "target_2x": [
+  398.0,
+  252.0
+ ],
+ "hit_frame": 1,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "fire",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "smoke",
+   "kind": "smoke",
+   "role": "smoke",
+   "z": "back",
+   "start": 0.066,
+   "end": 0.976
+  },
+  {
+   "id": "ring",
+   "kind": "ring",
+   "role": "secondary",
+   "z": "back",
+   "start": 0.033,
+   "end": 0.403
+  },
+  {
+   "id": "flames",
+   "kind": "flames",
+   "role": "primary",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.83
+  },
+  {
+   "id": "star",
+   "kind": "star",
+   "role": "core",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.316
+  },
+  {
+   "id": "splash",
+   "kind": "star",
+   "role": "accent",
+   "z": "back",
+   "start": 0.0,
+   "end": 0.349
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.033,
+   "end": 0.616
+  },
+  {
+   "id": "embers",
+   "kind": "embers",
+   "role": "particles",
+   "z": "front",
+   "start": 0.3,
+   "end": 1.1
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/blast_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "linger: the last 8 of 34 frames carry under 2 % of the peak"
+  ],
+  "frames": 34,
+  "peak_frame": 6,
+  "peak_size_1x": [
+   168,
+   181
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/explosion/blast/blast.py: EFFECTS['blast']"
+}

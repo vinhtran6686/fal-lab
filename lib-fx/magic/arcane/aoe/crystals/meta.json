@@ -1,0 +1,81 @@
+{
+ "id": "magic/arcane/aoe/crystals",
+ "name": "Pha lê bùng",
+ "desc": "hard-edged crystal spikes with lit facets snap out of the ground in front of a see-through veil of wings, a flat ring on the floor; the veil is eaten into an outline of curved slivers, the spikes thin away",
+ "status": "draft",
+ "tags": [
+  "magic",
+  "arcane",
+  "aoe",
+  "one-shot",
+  "anchor:ground",
+  "medium",
+  "space:ground",
+  "weight:medium"
+ ],
+ "fps": 30.0,
+ "frames": 23,
+ "frame_size_2x": [
+  384,
+  416
+ ],
+ "anchor_2x": [
+  190.0,
+  300.0
+ ],
+ "target_2x": [
+  330.0,
+  300.0
+ ],
+ "hit_frame": 1,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "arcane",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "ring",
+   "kind": "ring",
+   "role": "secondary",
+   "z": "back",
+   "start": 0.0,
+   "end": 0.3
+  },
+  {
+   "id": "crystals",
+   "kind": "crystals",
+   "role": "primary",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.586
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.1,
+   "end": 0.733
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/crystals_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "linger: the last 8 of 23 frames carry under 2 % of the peak"
+  ],
+  "frames": 23,
+  "peak_frame": 4,
+  "peak_size_1x": [
+   125,
+   140
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/magic/arcane/aoe/aoe.py: EFFECTS['crystals']"
+}

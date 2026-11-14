@@ -1,0 +1,106 @@
+{
+ "id": "ranged/bolt/frost",
+ "name": "Mũi băng",
+ "desc": "an ice shard: a slim fast head, crystals snap out of the target",
+ "status": "draft",
+ "tags": [
+  "ranged",
+  "projectile",
+  "one-shot",
+  "anchor:caster",
+  "target:b",
+  "ice",
+  "piercing",
+  "space:travel",
+  "weight:medium"
+ ],
+ "fps": 30.0,
+ "frames": 26,
+ "frame_size_2x": [
+  518,
+  360
+ ],
+ "anchor_2x": [
+  92.0,
+  200.0
+ ],
+ "target_2x": [
+  352.0,
+  200.0
+ ],
+ "hit_frame": 10,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "ice",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "muzzle",
+   "kind": "star",
+   "role": "accent",
+   "z": "front",
+   "start": -0.3,
+   "end": -0.137
+  },
+  {
+   "id": "bolt",
+   "kind": "bolt",
+   "role": "primary",
+   "z": "front",
+   "start": -0.3,
+   "end": 0.1
+  },
+  {
+   "id": "ring",
+   "kind": "ring",
+   "role": "secondary",
+   "z": "back",
+   "start": 0.033,
+   "end": 0.333
+  },
+  {
+   "id": "crystals",
+   "kind": "crystals",
+   "role": "primary",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.433
+  },
+  {
+   "id": "star",
+   "kind": "star",
+   "role": "core",
+   "z": "front",
+   "start": 0.0,
+   "end": 0.25
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.033,
+   "end": 0.516
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/frost_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "linger: the last 7 of 26 frames carry under 2 % of the peak"
+  ],
+  "frames": 26,
+  "peak_frame": 14,
+  "peak_size_1x": [
+   87,
+   128
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/ranged/bolt/bolt.py: EFFECTS['frost']"
+}

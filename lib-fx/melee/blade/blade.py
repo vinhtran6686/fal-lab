@@ -100,6 +100,7 @@ def paint(canvas, mask, col, alpha=1.0):
 PINK_LICKS = [(0.34, 0.13, 0.2, 0.12, 0.04), (0.41, 0.05, 0.12, 0.06, 0.0), (0.58, 0.16, 0.24, 0.14, 0.05),
               (0.68, 0.06, 0.14, 0.08, 0.02), (0.79, 0.11, 0.2, 0.12, 0.04), (0.94, 0.08, 0.16, 0.1, 0.03)]
 RED_LICKS = [(0.27, 0.09, 0.16, 0.1, 0.03), (0.5, 0.13, 0.2, 0.12, 0.04), (0.64, 0.04, 0.1, 0.06, 0.0), (0.86, 0.1, 0.16, 0.1, 0.03)]
+BURN = 0.19                                                             # extra erosion (in C) reached on the last frame
 GAPS = [(0.2, 0.07), (0.44, 0.05), (0.6, 0.09), (0.83, 0.04)]          # where it breaks (v, half width): four pieces of four sizes
 NOTCH = [(0.47, 0.05, 0.06), (0.71, 0.04, 0.05), (0.86, 0.06, 0.07)]   # small notches cut into the outer edge (v, length, depth)
 
@@ -134,7 +135,7 @@ def swirl_fire(t, P, front, back, pal=BLAZE, s=1.0, d=1):
     gaps = np.zeros_like(v)
     for gv, gw in GAPS: gaps = np.maximum(gaps, np.clip(1 - np.abs(v - gv) / gw, 0, 1) ** 0.8)
     pace = 1 + 0.35 * noise1(v * 2.5, 41)
-    c_alpha = -0.1 + 1.25 * smooth(0.09, 0.38, t) * pace + 0.8 * brk * gaps
+    c_alpha = -0.1 + 1.25 * smooth(0.09, 0.38, t) * pace + 0.8 * brk * gaps + BURN * clamp((t - 0.3) / 0.135)   # last term: the pieces left burn out evenly over the last four frames
     size = front.img.size
     # the needle: the tail runs on thin for a while before the stroke starts
     tx, ty = pts(0.0, 0.35)
@@ -157,7 +158,7 @@ def swirl_fire(t, P, front, back, pal=BLAZE, s=1.0, d=1):
     ly = Canvas(front.w, front.h, front.ss)
     paint(ly, body, pal['yellow']); paint(ly, rim | edge, pal['amber']); paint(ly, pink, pal['pink']); paint(ly, red, pal['crimson'])
     front.paste(ly)
-    GL = [(15, (96, 26, 52), 0.55), (9, (160, 36, 76), 0.6), (4, (232, 60, 112), 0.8)]
+    GL = [(15, pal['glow1'], 0.55), (9, pal['glow2'], 0.6), (4, pal['glow3'], 0.8)]
     stepped_glow(back, body, [(px * s, c, a * (1 - smooth(0.2, 0.5, t))) for px, c, a in GL], front.ss)
 
 
@@ -235,7 +236,7 @@ def swirl_frost(t, P, front, back, pal=FROST, s=1.0, d=1):
             g = clamp(u); pe = (p0[0] + (p1[0] - p0[0]) * g, p0[1] + (p1[1] - p0[1]) * g)
             lens(cr, p0, pe, 1.6 * s, pal['mid'], a, n=6); lens(cr, p0, pe, 0.7 * s, pal['cyan'], a, n=6)
     back.paste(cr)
-    GL = [(14, (18, 52, 80), 0.6), (8, (30, 90, 140), 0.6), (3, (60, 170, 227), 0.75)]
+    GL = [(14, pal['glow1'], 0.6), (8, pal['glow2'], 0.6), (3, pal['glow3'], 0.75)]
     stepped_glow(back, white | blue, [(px * s, c, al * (1 - smooth(0.15, 0.5, t))) for px, c, al in GL], front.ss)
 
 

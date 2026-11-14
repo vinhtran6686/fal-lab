@@ -33,7 +33,22 @@
  "files": {
   "sheet": "sheet.png",
   "frames": "frames/chevron_NN.png",
-  "preview": "preview.gif"
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "pop: frame 9 -> 10 loses 46 % of the peak",
+   "linger: the last 4 of 14 frames carry under 2 % of the peak"
+  ],
+  "frames": 14,
+  "peak_frame": 5,
+  "peak_size_1x": [
+   89,
+   65
+  ],
+  "last_frame_pct": 0.0
  },
  "source": "lib-fx/impact/hit/hit.py: hit_chevron"
 }

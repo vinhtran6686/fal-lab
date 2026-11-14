@@ -1,4 +1,178 @@
 {
+ "element/fire/aoe/eruption": {
+  "name": "Lửa phun",
+  "status": "draft",
+  "tags": [
+   "element",
+   "fire",
+   "aoe",
+   "one-shot",
+   "anchor:ground",
+   "medium",
+   "space:ground",
+   "weight:medium"
+  ],
+  "desc": "flame tongues erupt from the ground over a dark smoke mass, flicker for a moment, then are eaten in place into rising pieces; the hot pool at the foot goes last and embers rise after it",
+  "fps": 30.0,
+  "frames": 34,
+  "frame_size_2x": [
+   300,
+   298
+  ],
+  "anchor_2x": [
+   164.0,
+   198.0
+  ],
+  "dir": "element/fire/aoe/eruption",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "element/fire/aoe/pillar": {
+  "name": "Cột lửa",
+  "status": "draft",
+  "tags": [
+   "element",
+   "fire",
+   "aoe",
+   "one-shot",
+   "anchor:ground",
+   "heavy",
+   "vertical",
+   "space:ground",
+   "weight:medium"
+  ],
+  "desc": "a tall narrow column of fire: fewer, longer tongues close together, burning longer",
+  "fps": 30.0,
+  "frames": 34,
+  "frame_size_2x": [
+   314,
+   366
+  ],
+  "anchor_2x": [
+   158.0,
+   266.0
+  ],
+  "dir": "element/fire/aoe/pillar",
+  "qa": "ok",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "element/fire/aoe/wildfire": {
+  "name": "Lửa lan",
+  "status": "draft",
+  "tags": [
+   "element",
+   "fire",
+   "aoe",
+   "one-shot",
+   "anchor:ground",
+   "medium",
+   "wide",
+   "space:ground",
+   "weight:medium"
+  ],
+  "desc": "a low wide blaze spreading over the ground: many tongues fanned wide",
+  "fps": 30.0,
+  "frames": 34,
+  "frame_size_2x": [
+   382,
+   256
+  ],
+  "anchor_2x": [
+   202.0,
+   154.0
+  ],
+  "dir": "element/fire/aoe/wildfire",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "explosion/blast/blast": {
+  "name": "Nổ",
+  "status": "draft",
+  "tags": [
+   "explosion",
+   "one-shot",
+   "anchor:centre",
+   "heavy",
+   "fire",
+   "space:point",
+   "weight:heavy"
+  ],
+  "desc": "a pointed flash, flames thrown up and out over a dark smoke mass, a ring racing out, scraps in every direction, embers after",
+  "fps": 30.0,
+  "frames": 34,
+  "frame_size_2x": [
+   490,
+   510
+  ],
+  "anchor_2x": [
+   258.0,
+   252.0
+  ],
+  "dir": "explosion/blast/blast",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "explosion/blast/ground": {
+  "name": "Nổ trên đất",
+  "status": "draft",
+  "tags": [
+   "explosion",
+   "one-shot",
+   "anchor:centre",
+   "heavy",
+   "fire",
+   "ground",
+   "space:point",
+   "weight:heavy"
+  ],
+  "desc": "the blast on the floor: the ring lies flat on the ground and the splash is a flat ellipse under the flames",
+  "fps": 30.0,
+  "frames": 34,
+  "frame_size_2x": [
+   470,
+   340
+  ],
+  "anchor_2x": [
+   250.0,
+   208.0
+  ],
+  "dir": "explosion/blast/ground",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "explosion/blast/small": {
+  "name": "Nổ nhỏ",
+  "status": "draft",
+  "tags": [
+   "explosion",
+   "one-shot",
+   "anchor:centre",
+   "medium",
+   "fire",
+   "space:point",
+   "weight:medium"
+  ],
+  "desc": "a small burst: a bomb, a barrel",
+  "fps": 30.0,
+  "frames": 31,
+  "frame_size_2x": [
+   358,
+   354
+  ],
+  "anchor_2x": [
+   182.0,
+   180.0
+  ],
+  "dir": "explosion/blast/small",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
  "force/shock/bloom": {
   "name": "Hoa nổ",
   "status": "draft",
@@ -23,7 +197,8 @@
    64,
    160
   ],
-  "dir": "force/shock/bloom"
+  "dir": "force/shock/bloom",
+  "qa": "ok"
  },
  "force/shock/drill": {
   "name": "Khoan xoắn",
@@ -48,7 +223,8 @@
    64,
    160
   ],
-  "dir": "force/shock/drill"
+  "dir": "force/shock/drill",
+  "qa": "warn"
  },
  "force/shock/inferno": {
   "name": "Hỏa xung tầng",
@@ -76,7 +252,8 @@
    60,
    200
   ],
-  "dir": "force/shock/inferno"
+  "dir": "force/shock/inferno",
+  "qa": "ok"
  },
  "force/shock/shatter": {
   "name": "Vòng vỡ",
@@ -100,7 +277,8 @@
    64,
    160
   ],
-  "dir": "force/shock/shatter"
+  "dir": "force/shock/shatter",
+  "qa": "warn"
  },
  "force/shock/tiers": {
   "name": "Tầng vòng",
@@ -125,7 +303,8 @@
    64,
    160
   ],
-  "dir": "force/shock/tiers"
+  "dir": "force/shock/tiers",
+  "qa": "ok"
  },
  "force/shock/vapor": {
   "name": "Nón hơi",
@@ -150,7 +329,8 @@
    64,
    160
   ],
-  "dir": "force/shock/vapor"
+  "dir": "force/shock/vapor",
+  "qa": "ok"
  },
  "impact/dash/comet": {
   "name": "Sao chổi",
@@ -176,7 +356,8 @@
    236,
    140
   ],
-  "dir": "impact/dash/comet"
+  "dir": "impact/dash/comet",
+  "qa": "warn"
  },
  "impact/dash/pierce": {
   "name": "Xuyên vòng",
@@ -202,7 +383,8 @@
    236,
    140
   ],
-  "dir": "impact/dash/pierce"
+  "dir": "impact/dash/pierce",
+  "qa": "warn"
  },
  "impact/dash/wall": {
   "name": "Vách lưỡi liềm",
@@ -227,7 +409,8 @@
    236,
    140
   ],
-  "dir": "impact/dash/wall"
+  "dir": "impact/dash/wall",
+  "qa": "warn"
  },
  "impact/ground/crater": {
   "name": "Vòng chấn đất",
@@ -251,7 +434,8 @@
    220,
    236
   ],
-  "dir": "impact/ground/crater"
+  "dir": "impact/ground/crater",
+  "qa": "ok"
  },
  "impact/ground/geyser": {
   "name": "Phun đất",
@@ -275,7 +459,8 @@
    220,
    236
   ],
-  "dir": "impact/ground/geyser"
+  "dir": "impact/ground/geyser",
+  "qa": "ok"
  },
  "impact/ground/slam": {
   "name": "Nện bụi",
@@ -290,7 +475,7 @@
   ],
   "desc": "a fist or weapon slams the floor: light thorns erupt out of a rolling dust bank (a dark back bank and a light front bank, both rolling outward), pebbles arc to both sides, the middle clears first",
   "fps": 30,
-  "frames": 25,
+  "frames": 28,
   "frame_size_2x": [
    440,
    300
@@ -299,7 +484,8 @@
    220,
    236
   ],
-  "dir": "impact/ground/slam"
+  "dir": "impact/ground/slam",
+  "qa": "ok"
  },
  "impact/hit/chevron": {
   "name": "Mũi chéo",
@@ -324,7 +510,8 @@
    74,
    130
   ],
-  "dir": "impact/hit/chevron"
+  "dir": "impact/hit/chevron",
+  "qa": "warn"
  },
  "impact/hit/cross": {
   "name": "Chữ thập chí mạng",
@@ -349,7 +536,8 @@
    150,
    150
   ],
-  "dir": "impact/hit/cross"
+  "dir": "impact/hit/cross",
+  "qa": "warn"
  },
  "impact/hit/ring": {
   "name": "Vòng gai",
@@ -374,7 +562,8 @@
    150,
    150
   ],
-  "dir": "impact/hit/ring"
+  "dir": "impact/hit/ring",
+  "qa": "warn"
  },
  "impact/hit/star": {
   "name": "Nổ sao",
@@ -399,7 +588,241 @@
    150,
    150
   ],
-  "dir": "impact/hit/star"
+  "dir": "impact/hit/star",
+  "qa": "warn"
+ },
+ "impact/quake/shockwave": {
+  "name": "Sóng chấn động",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "ground",
+   "one-shot",
+   "anchor:ground",
+   "heavy",
+   "ring",
+   "magic",
+   "space:ground",
+   "weight:medium"
+  ],
+  "desc": "a magic ground wave: two flat rings one after the other, a tall flash, no dust",
+  "fps": 30.0,
+  "frames": 20,
+  "frame_size_2x": [
+   530,
+   322
+  ],
+  "anchor_2x": [
+   276.0,
+   186.0
+  ],
+  "dir": "impact/quake/shockwave",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "impact/quake/slam": {
+  "name": "Nện đất",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "ground",
+   "one-shot",
+   "anchor:ground",
+   "heavy",
+   "dust",
+   "space:ground",
+   "weight:heavy"
+  ],
+  "desc": "a weapon or a fist slams the floor: a flat splash of flash points lies on the floor and a narrow pointed column stands up from the impact, a flat shock ring races out on the ground, a dark dust bank behind and a light one in front roll out to both sides with unequal lobes and pointed tails, scraps are thrown up and fall back; the dust opens from the middle and is eaten in place last",
+  "fps": 30.0,
+  "frames": 27,
+  "frame_size_2x": [
+   484,
+   286
+  ],
+  "anchor_2x": [
+   248.0,
+   152.0
+  ],
+  "dir": "impact/quake/slam",
+  "qa": "ok",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "impact/quake/stomp": {
+  "name": "Dậm chân",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "ground",
+   "one-shot",
+   "anchor:ground",
+   "medium",
+   "dust",
+   "space:ground",
+   "weight:medium"
+  ],
+  "desc": "a landing or a stomp: a small flash, low dust rolling out, no ring",
+  "fps": 30.0,
+  "frames": 23,
+  "frame_size_2x": [
+   250,
+   202
+  ],
+  "anchor_2x": [
+   114.0,
+   100.0
+  ],
+  "dir": "impact/quake/stomp",
+  "qa": "ok",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "impact/spark/crit": {
+  "name": "Chí mạng",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "hit",
+   "one-shot",
+   "anchor:contact",
+   "crit",
+   "heavy",
+   "space:aim",
+   "weight:heavy"
+  ],
+  "desc": "a different drawing from the heavy hit, not a bigger one: a long slim cross (four near-square points) over a short five-point burst with a big white core held for two frames, two shock rings a beat apart, long speed lines and big scraps in every direction",
+  "fps": 30.0,
+  "frames": 21,
+  "frame_size_2x": [
+   470,
+   474
+  ],
+  "anchor_2x": [
+   236.0,
+   242.0
+  ],
+  "dir": "impact/spark/crit",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "impact/spark/heavy": {
+  "name": "Trúng đòn nặng",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "hit",
+   "one-shot",
+   "anchor:contact",
+   "heavy",
+   "melee",
+   "space:aim",
+   "weight:heavy"
+  ],
+  "desc": "a bold pointed flash in three stacked tones bursts at the contact point and breaks into needles; a shock ring behind it, speed lines along the blow, curved scraps thrown forward that outlive everything",
+  "fps": 30.0,
+  "frames": 18,
+  "frame_size_2x": [
+   394,
+   392
+  ],
+  "anchor_2x": [
+   202.0,
+   196.0
+  ],
+  "dir": "impact/spark/heavy",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "impact/spark/light": {
+  "name": "Trúng đòn nhẹ",
+  "status": "draft",
+  "tags": [
+   "impact",
+   "hit",
+   "one-shot",
+   "anchor:contact",
+   "light",
+   "melee",
+   "space:aim",
+   "weight:light"
+  ],
+  "desc": "a quick small pointed flash and a few scraps: for fast, weak hits",
+  "fps": 30.0,
+  "frames": 14,
+  "frame_size_2x": [
+   214,
+   234
+  ],
+  "anchor_2x": [
+   100.0,
+   132.0
+  ],
+  "dir": "impact/spark/light",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "magic/arcane/aoe/crystals": {
+  "name": "Pha lê bùng",
+  "status": "draft",
+  "tags": [
+   "magic",
+   "arcane",
+   "aoe",
+   "one-shot",
+   "anchor:ground",
+   "medium",
+   "space:ground",
+   "weight:medium"
+  ],
+  "desc": "hard-edged crystal spikes with lit facets snap out of the ground in front of a see-through veil of wings, a flat ring on the floor; the veil is eaten into an outline of curved slivers, the spikes thin away",
+  "fps": 30.0,
+  "frames": 23,
+  "frame_size_2x": [
+   384,
+   416
+  ],
+  "anchor_2x": [
+   190.0,
+   300.0
+  ],
+  "dir": "magic/arcane/aoe/crystals",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "magic/arcane/aoe/frost": {
+  "name": "Gai băng",
+  "status": "draft",
+  "tags": [
+   "magic",
+   "arcane",
+   "aoe",
+   "one-shot",
+   "anchor:ground",
+   "ice",
+   "space:ground",
+   "weight:medium"
+  ],
+  "desc": "the same eruption as ice: more, lower spikes fanned wide, no veil",
+  "fps": 30.0,
+  "frames": 23,
+  "frame_size_2x": [
+   412,
+   336
+  ],
+  "anchor_2x": [
+   182.0,
+   226.0
+  ],
+  "dir": "magic/arcane/aoe/frost",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
  },
  "magic/spirit/soulstrike": {
   "name": "Xuất hồn kích",
@@ -427,7 +850,8 @@
    150,
    240
   ],
-  "dir": "magic/spirit/soulstrike"
+  "dir": "magic/spirit/soulstrike",
+  "qa": "fail"
  },
  "melee/blade/swirl_fire": {
   "name": "Xoáy chém lửa",
@@ -454,7 +878,8 @@
    190,
    190
   ],
-  "dir": "melee/blade/swirl_fire"
+  "dir": "melee/blade/swirl_fire",
+  "qa": "ok"
  },
  "melee/blade/swirl_frost": {
   "name": "Xoáy chém băng",
@@ -482,7 +907,8 @@
    190,
    190
   ],
-  "dir": "melee/blade/swirl_frost"
+  "dir": "melee/blade/swirl_frost",
+  "qa": "warn"
  },
  "melee/blade_aura/charge_blue": {
   "name": "Tụ lực lưỡi đao (xanh)",
@@ -509,7 +935,8 @@
    34,
    45
   ],
-  "dir": "melee/blade_aura/charge_blue"
+  "dir": "melee/blade_aura/charge_blue",
+  "qa": "ok"
  },
  "melee/blade_aura/charge_fire": {
   "name": "Tụ lực lưỡi đao (lửa)",
@@ -537,6 +964,364 @@
    34,
    45
   ],
-  "dir": "melee/blade_aura/charge_fire"
+  "dir": "melee/blade_aura/charge_fire",
+  "qa": "ok"
+ },
+ "melee/slash/axe": {
+  "name": "Chém rìu",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "heavy",
+   "axe",
+   "space:span",
+   "weight:heavy"
+  ],
+  "desc": "an AXE swing: a short, thick smear of 4-6 parallel bands apart by narrow gaps, a blunt head; it fades band by band from the tail, the thin ones first, into parallel strokes",
+  "fps": 30.0,
+  "frames": 16,
+  "frame_size_2x": [
+   380,
+   278
+  ],
+  "anchor_2x": [
+   72.0,
+   196.0
+  ],
+  "dir": "melee/slash/axe",
+  "qa": "ok",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "melee/slash/axe_heavy": {
+  "name": "Chém rìu lớn",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "heavy",
+   "axe",
+   "space:span",
+   "weight:heavy"
+  ],
+  "desc": "a great AXE: a wider, longer-lived smear of six bands, more scraps",
+  "fps": 30.0,
+  "frames": 20,
+  "frame_size_2x": [
+   424,
+   312
+  ],
+  "anchor_2x": [
+   72.0,
+   214.0
+  ],
+  "dir": "melee/slash/axe_heavy",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "melee/slash/crescent": {
+  "name": "Chém lưỡi liềm",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "medium",
+   "space:span",
+   "weight:medium"
+  ],
+  "desc": "a SWORD smear swept from a to b: a smooth crescent of three touching strands, a needle tail, a fat belly on the inside of the bow, a darker inner tone, a hot clean outer edge, two hair streaks beside it; it fades into two or three long thin strokes that run the way of the swing; scraps fly off the end",
+  "fps": 30.0,
+  "frames": 16,
+  "frame_size_2x": [
+   380,
+   260
+  ],
+  "anchor_2x": [
+   78.0,
+   180.0
+  ],
+  "dir": "melee/slash/crescent",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "melee/slash/diag_down": {
+  "name": "Chém xéo xuống",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "planar",
+   "diagonal",
+   "space:aim",
+   "weight:medium"
+  ],
+  "desc": "a SWORD slash on a slanted plane, from high behind the shoulder to low in front, seen from the game's camera: a half-flattened ellipse turned 35 degrees; use it with the shoulder as --from",
+  "fps": 30.0,
+  "frames": 15,
+  "frame_size_2x": [
+   302,
+   336
+  ],
+  "anchor_2x": [
+   122.0,
+   152.0
+  ],
+  "dir": "melee/slash/diag_down",
+  "qa": "ok",
+  "hit_frame": 3,
+  "kit": true
+ },
+ "melee/slash/diag_up": {
+  "name": "Chém xéo lên",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "planar",
+   "diagonal",
+   "space:aim",
+   "weight:medium"
+  ],
+  "desc": "a SWORD slash on a slanted plane, from low behind the hip to high in front, seen from the game's camera: a half-flattened ellipse turned the other way; use it with the shoulder as --from",
+  "fps": 30.0,
+  "frames": 15,
+  "frame_size_2x": [
+   362,
+   364
+  ],
+  "anchor_2x": [
+   158.0,
+   174.0
+  ],
+  "dir": "melee/slash/diag_up",
+  "qa": "ok",
+  "hit_frame": 3,
+  "kit": true
+ },
+ "melee/slash/heavy": {
+  "name": "Chém nặng",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "heavy",
+   "space:span",
+   "weight:heavy"
+  ],
+  "desc": "a great SWORD (a big blade): a wider, deeper bow, a second fainter smear behind it, more scraps",
+  "fps": 30.0,
+  "frames": 20,
+  "frame_size_2x": [
+   428,
+   320
+  ],
+  "anchor_2x": [
+   84.0,
+   228.0
+  ],
+  "dir": "melee/slash/heavy",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "melee/slash/sweep": {
+  "name": "Chém ngang",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "planar",
+   "horizontal",
+   "space:aim",
+   "weight:medium"
+  ],
+  "desc": "a SWORD swung level with the ground (a horizontal sweep) seen from the game's camera: a very flat ellipse, nearly a line; the far half passes BEHIND the character, cool and thin, the near half in FRONT, bright and thick; use it with the shoulder as --from",
+  "fps": 30.0,
+  "frames": 15,
+  "frame_size_2x": [
+   312,
+   200
+  ],
+  "anchor_2x": [
+   112.0,
+   88.0
+  ],
+  "dir": "melee/slash/sweep",
+  "qa": "warn",
+  "hit_frame": 3,
+  "kit": true
+ },
+ "melee/slash/swing": {
+  "name": "Chém theo vũ khí",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "tracked",
+   "space:span",
+   "weight:medium"
+  ],
+  "desc": "a SWORD smear that follows a real weapon swing: use it with --track (the tip's arc is the outer edge, the blade the inner); born one frame before the hit as a thin slice on the blade of pose A, whole on the hit frame with a white edge along the blade, the tail draws in at once; the tip strand is dense and lasts, the hilt strand is faint and goes first; set the hit frame of the fx on the character's hit frame",
+  "fps": 30.0,
+  "frames": 14,
+  "frame_size_2x": [
+   364,
+   246
+  ],
+  "anchor_2x": [
+   72.0,
+   172.0
+  ],
+  "dir": "melee/slash/swing",
+  "qa": "warn",
+  "hit_frame": 3,
+  "kit": true
+ },
+ "melee/slash/thrust": {
+  "name": "Đâm thẳng",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "piercing",
+   "fast",
+   "space:span",
+   "weight:medium"
+  ],
+  "desc": "a straight SWORD thrust or dash: the same smear with no bow, thin and fast, a small flash where it ends",
+  "fps": 30.0,
+  "frames": 16,
+  "frame_size_2x": [
+   414,
+   220
+  ],
+  "anchor_2x": [
+   66.0,
+   108.0
+  ],
+  "dir": "melee/slash/thrust",
+  "qa": "warn",
+  "hit_frame": 1,
+  "kit": true
+ },
+ "ranged/bolt/bolt": {
+  "name": "Đạn năng lượng",
+  "status": "draft",
+  "tags": [
+   "ranged",
+   "projectile",
+   "one-shot",
+   "anchor:caster",
+   "target:b",
+   "medium",
+   "energy",
+   "space:travel",
+   "weight:medium"
+  ],
+  "desc": "a small flash where it is fired, a teardrop head with a living trail flies to the target, then a pointed impact with a ring and scraps thrown on along the flight",
+  "fps": 30.0,
+  "frames": 26,
+  "frame_size_2x": [
+   530,
+   326
+  ],
+  "anchor_2x": [
+   102.0,
+   164.0
+  ],
+  "dir": "ranged/bolt/bolt",
+  "qa": "warn",
+  "hit_frame": 10,
+  "kit": true
+ },
+ "ranged/bolt/fireball": {
+  "name": "Cầu lửa",
+  "status": "draft",
+  "tags": [
+   "ranged",
+   "projectile",
+   "one-shot",
+   "anchor:caster",
+   "target:b",
+   "heavy",
+   "fire",
+   "space:travel",
+   "weight:heavy"
+  ],
+  "desc": "a thrown fireball on a bowed path: a bigger head, then flames erupt at the target over dark smoke and embers rise",
+  "fps": 30.0,
+  "frames": 37,
+  "frame_size_2x": [
+   510,
+   282
+  ],
+  "anchor_2x": [
+   114.0,
+   170.0
+  ],
+  "dir": "ranged/bolt/fireball",
+  "qa": "ok",
+  "hit_frame": 10,
+  "kit": true
+ },
+ "ranged/bolt/frost": {
+  "name": "Mũi băng",
+  "status": "draft",
+  "tags": [
+   "ranged",
+   "projectile",
+   "one-shot",
+   "anchor:caster",
+   "target:b",
+   "ice",
+   "piercing",
+   "space:travel",
+   "weight:medium"
+  ],
+  "desc": "an ice shard: a slim fast head, crystals snap out of the target",
+  "fps": 30.0,
+  "frames": 26,
+  "frame_size_2x": [
+   518,
+   360
+  ],
+  "anchor_2x": [
+   92.0,
+   200.0
+  ],
+  "dir": "ranged/bolt/frost",
+  "qa": "warn",
+  "hit_frame": 10,
+  "kit": true
  }
 }

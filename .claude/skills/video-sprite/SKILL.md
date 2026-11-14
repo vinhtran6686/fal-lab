@@ -364,6 +364,6 @@ clip is never bought twice. `--drop-rejected-clips` also deletes clips of takes 
   correct to watch, twice the frames; `gaitStride: period` halves it.
 
 ## References (upstream, kept for detail)
-`references/sprite-set.md` (plan/run/gates), `references/motion-prompts.md` (templates, fix clauses; the
+`references/action-planes.md` (the plane of a move as seen from the game camera: what the motion prompt must keep, clip or pose pair; main text in `.claude/skills/fal-image/action-planes.md`), `references/sprite-set.md` (plan/run/gates), `references/motion-prompts.md` (templates, fix clauses; the
 `death` template is ours), `references/matte.md`, `references/finishing.md`, `references/animation-review.md`.
 Where they mention `route_media.py`, Grok or xAI, read `scripts/fal_video.py`: it takes the same arguments.
