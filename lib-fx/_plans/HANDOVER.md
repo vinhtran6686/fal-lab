@@ -38,17 +38,21 @@ Họ hiệu ứng cũ (khai báo `VARIANTS`: `force/shock`, `impact/hit`, `impac
 8. Tìm trên web không ra luật VFX có số; nguồn đáng tin là **đo mẫu của hoạ sĩ**. Bản nháp phương pháp chung (quy trình 9 bước của hoạ sĩ FX, 6 yếu tố chất lượng, đề xuất "bảng thiết kế trước khi code" và "duyệt theo tầng"): `lib-fx/_plans/vfx-rebuild-02/METHOD.md`, chưa thành luật.
 9. Người thi công hay lệch task có lý do chính đáng (công thức trong task có thể sai: ví dụ vector `P` phải nhân `face`). Khi chấm: đọc mục "Lệch so với task", chấp nhận nếu ảnh đúng.
 
-## 4. Việc đang mở (theo thứ tự ưu tiên)
-| # | Việc | Ở đâu | Ai |
+## 4. Việc đang mở (theo thứ tự ưu tiên; cập nhật 2026-11-14)
+Đã xong và được duyệt: S1, S2, S2b, chém ngang ba pose A -> B -> C (`sweep --swing` ba điểm, ghi ở `slash-round-02/PLAN.md`).
+| # | Việc | Ở đâu | Ai / trạng thái |
 |---|---|---|---|
-| 1 | **S2b**: `sweep` (chém ngang) còn yếu: kéo dài và làm dày phần gần; nhịp tan theo bán kính | `slash-round-02/S2b-sweep-strength.md` | AI thi công, rồi chấm |
-| 2 | **Thử pose chém ngang thật** cho `azure_blade` (hai ảnh, ~0,03 USD): kiểm cả `action-planes.md` lẫn `sweep` | chưa có task; **chờ người dùng đồng ý chi** | người dùng quyết |
-| 3 | **Chấm R1, R2** (flame-burst, lightning): xem `compare.gif` và mục "Kết quả" của hai task | `vfx-rebuild-02/PLAN.md` ô CHẤM | người lập kế hoạch |
-| 4 | **R3**: xuất số đo cho 8 giả thuyết H1-H8 và cho từng dòng [suy luận] của `METHOD.md` (chỉ sau khi R1, R2 đạt) | `vfx-rebuild-02/R3-export-measurements.md` | AI thi công |
-| 5 | Sau khi người dùng duyệt R1-R3: **viết docs phương pháp chung** vào `lib-fx/_core/formulas/rules/` (phương pháp trước, ghi chú từng chất liệu sau), rồi task dựng lớp fxkit cho lửa phụt và sét | - | người lập kế hoạch |
-| 6 | **S3**: rìu dày hơn (ít dải, dải rộng); hiện dải mảnh như răng lược | chưa viết task | khi người dùng yêu cầu |
-| 7 | Quyết định của người dùng còn treo: có thay vệt đã duyệt của `azure_blade` (`build_crescent.py`) bằng `melee/slash/swing --track` không; các họ cũ trùng việc giữ hay bỏ | - | người dùng |
-| 8 | Việc nhỏ đã biết: `embers` quá nhỏ ở cỡ game; `charge_blue` / `charge_fire` chưa đổi được màu / cỡ qua dòng lệnh; `swing` ở 30 fps mặc định còn cảnh báo `pop` / `cut`; trang duyệt cần dựng lại | - | khi cần |
+| 1 | **S4**: thân chém ngang ba pose bớt đơ: nhịp 5 pha + rig một mảnh, vệt dựng từ vị trí lưỡi thật của rig | `slash-round-02/S4-sweep-body-timing.md` | đã viết task, chờ giao AI thi công, rồi chấm |
+| 2 | **R1b** flame-burst làm lại (vỏ khói sáng, khói không quầng, công cụ đo độc lập `rebuild_check.py`) | `vfx-rebuild-02/R1b-flame-burst-smoke.md` | đã viết task, chờ giao; làm trước R2b |
+| 3 | **R2b** lightning làm lại (nét mảnh như gốc, nhánh mờ, quầng đổi màu ở khung chớp) | `vfx-rebuild-02/R2b-lightning-thin.md` | đã viết task, cần công cụ của R1b |
+| 4 | **S5** việc nhỏ từ review chém ngang ba pose: (a) `action-planes.md` mục 4: tiêu đề và cột bảng còn ghi "pose B = end", mẫu 4b còn "two-part": đổi theo thứ tự đi A / B / C; (b) prompt pose C tả vị trí bằng phần trăm, trái luật 4b.6: ghi rõ ngoại lệ hoặc đổi; (c) ghi `k`, `u0` / `uc` / `u1`, bán kính, `fc` đã khớp vào `meta.json` của vệt; (d) định nghĩa phép đo độ dày vệt vào `FXKIT.md` mục 6 (phần đặc alpha > 0,95, bỏ vùng quay gắt và nhát cắt đầu); (e) test cho chế độ ba điểm và `lead=1` trong `fxkit_test.py`; (f) khấc nhỏ ở đầu vệt `lead=1` hai điểm; (g) tia lửa khung 4-5 của chém ngang cắt qua chân | chưa viết task | người lập kế hoạch viết khi người dùng gọi |
+| 5 | **R3** xuất số đo cho H1-H8 và `METHOD.md` (chỉ sau khi R1b, R2b đạt; dùng `rebuild_check.py`, không dùng `report.json`) | `vfx-rebuild-02/R3-export-measurements.md` | chờ |
+| 6 | Sau khi người dùng duyệt R1b-R3: viết docs phương pháp chung vào `lib-fx/_core/formulas/rules/`, rồi task lớp fxkit cho lửa phụt và sét | - | người lập kế hoạch |
+| 7 | **S3** rìu dày hơn (ít dải, dải rộng) | chưa viết task | khi người dùng yêu cầu |
+| 8 | Vẽ thêm pose giữa cho chém ngang (tốn tiền, ~0,016 USD / ảnh) | - | chỉ khi S4 chưa đủ mượt; hỏi người dùng trước |
+| 9 | Quyết định treo của người dùng: thay vệt đã duyệt của `azure_blade` (`build_crescent.py`) bằng `swing --track`?; các họ cũ trùng việc giữ hay bỏ; chưa thử cú quét trái, chưa có cặp pose thật cho `diag_down` / `diag_up` | - | người dùng |
+| 10 | Việc nhỏ đã biết: `embers` quá nhỏ ở cỡ game; `charge_blue` / `charge_fire` chưa đổi màu / cỡ qua dòng lệnh; `swing` ở 30 fps còn `pop` / `cut`; trang duyệt cần dựng lại; `sweep` khung trước đòn chỉ là chấm (dùng vệt ba điểm thì hết) | - | khi cần |
+Luật chấm mới (2026-11-14): mọi lần dựng lại mẫu phải đo so với **ảnh gốc** (`rebuild_check.py`), không so với mặt nạ của chính nó; số của người thi công đạt nhờ đổi cách đo thì phải nêu cả hai.
 
 ## 5. Số liệu hay dùng khi chấm (nhân vật `out/heroes/azure_blade`, px ô @2x, ô 352x280)
 - Skill "Trảm Trăng Khuyết": thân `frames/skill_crescent_puppet_side/frames/@2x/` (44 khung, 15 fps, khung trúng đòn 23); bản đã duyệt có vệt `frames/skill_crescent_side/` (không sửa); đường mũi đao `frames/skill_crescent_side/track.json`.
