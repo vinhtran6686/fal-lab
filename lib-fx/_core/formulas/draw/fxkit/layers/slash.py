@@ -2,7 +2,7 @@
 the belly near three quarters, a head; a darker tone on the inner edge, a hot tone on the outer edge. The ribbon is a bundle of
 lengthwise strands in stroke coordinates (v along the arc, c across it, 0 = inner edge .. 1 = outer edge) and everything that
 happens to it happens in those coordinates: the weapon sets the bundle (a sword: 3 strands that touch, one clean outer arc; an axe:
-4-6 bands apart by narrow fixed gaps), and when it fades each strand thins towards its own centre line and its tail draws in, so
+3-4 broad bands apart by narrow fixed gaps), and when it fades each strand thins towards its own centre line and its tail draws in, so
 what is left is a few long thin strokes running the way of the swing: no holes, no noise, no pattern."""
 import math
 from .. import kind, angles, smooth, out_quint, out_cubic, clamp, Ink, shapes
@@ -100,7 +100,7 @@ def fit_swing(sw, face, world):
 @kind("slash")
 def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tones=3, teeth=0, streaks=-1, linger=3.4, track=None, blade=1.0, swing=None):
     """A weapon smear from a to b. role primary. Designed for Life(0, 0.1, 0.03, 0.27): the attack is the sweep.
-    weapon: "sword" (also a blade or great sword: a smooth ribbon of 3 touching strands), "axe" (4-6 parallel bands apart by narrow
+    weapon: "sword" (also a blade or great sword: a smooth ribbon of 3 touching strands), "axe" (3-4 broad parallel bands apart by narrow
     gaps, shorter, thicker, blunt head), "saw" (a sword whose inner edge is toothed); bend: how far the path bows to the upper side,
     share of a-b distance (0 = straight thrust, negative = bows down); width: the widest part, px (0 = the weapon's own: sword 46,
     axe 80, a heavy weapon 70-110); span: share of the arc it covers (0 = sword 1.0, axe 0.7); strands: how many (0 = sword 3, axe 5);
@@ -130,9 +130,9 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     With "tip_c" the path runs A -> B -> C in the order of travel (`fit_swing`: k fitted when not given, far half first by default, `via` near for the other way) and the smear is born two frames
     before the hit: the frame plan at 15 fps is frame 1 = pose A (a thin slice on blade A), frame 2 = pose B (the stroke A -> B, head at B), frame 3 = pose C and the hit (the whole stroke, head at C), then it fades tail first."""
     axe = weapon == "axe"
-    if width <= 0: width = 80.0 if axe else 46.0
+    if width <= 0: width = 96.0 if axe else 46.0
     if span <= 0: span = 0.7 if axe else 1.0
-    if strands <= 0: strands = 5 if axe else 3
+    if strands <= 0: strands = 3 if axe else 3
     if streaks < 0: streaks = 0 if axe else 2
     if weapon == "saw" and teeth <= 0: teeth = 6
     rng = c.rng("design"); s = c.s
@@ -297,8 +297,8 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     # ---- the bundle: strand j has the band [c0, c1], a frailty phi (1 = goes first) and its own decay law
     K = strands
     if axe:
-        ws = [rng.uniform(0.55, 1.6) for _ in range(K)]
-        gaps = [rng.uniform(0.06, 0.10) for _ in range(K - 1)]
+        ws = [rng.uniform(0.85, 1.25) for _ in range(K)]
+        gaps = [rng.uniform(0.11, 0.15) for _ in range(K - 1)]
         tot = (1 - sum(gaps)) / sum(ws)
         ws = [w * tot for w in ws]
     elif tracked and K == 3:                                                                  # tip-heavy: the bundle runs from the hilt (c 0) to the tip (c 1)
@@ -402,10 +402,10 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
 
     if tones >= 2:                                                                          # darker tone on the inner part of a strand
         for j, st, cm, hb, fa, fb, tp in live:
-            if j != (K - 1 if tracked and K == 3 else 0): continue
+            if j != (max(range(K), key=lambda i: ws[i]) if axe else K - 1 if tracked and K == 3 else 0): continue   # an axe: the widest band
             da, db = max(lo + 0.15 * L, fa), min(lo + 0.9 * L, fb)
             if db - da < 0.05: continue
-            fr = 0.38 if not axe else 0.45
+            fr = 0.38 if not axe else 0.25
             def din(f, cm=cm, hb=hb, tp=tp): return cm - hb * tp(f)
             def dout(f, cm=cm, hb=hb, tp=tp, da=da, db=db, fr=fr):
                 u = (f - da) / (db - da)
@@ -452,7 +452,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
             pts.append((p[0] + n_[0] * o, p[1] + n_[1] * o)); ws_.append(wd * math.sin(math.pi * u) ** 0.7)
         ink.add("main", shapes.ribbon(pts, ws_))
 
-    glw = 0.5 if axe else 1.0                                                                # a full glow would fill the gaps between the bands
+    glw = 0.3 if axe else 1.0                                                                # a full glow would fill the gaps between the bands
     if tracked and pre > 0:                                                                  # a tracked swing: a bright edge along the blade at the head
         k = 1.0 if tt <= 0.07 else clamp(1 - d / 0.35)                                       # white to the frame after the hit, then a hot sliver that thins out
         hnear = (not sw) or depth(fh) >= 0                                                   # a head on the far side is dim: no white edge there

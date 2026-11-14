@@ -48,3 +48,29 @@ Mốc trước khi sửa: dựng cùng các lệnh trên từ commit hiện tạ
 Giá trị cuối cùng; bảng số dải / bề rộng dải / khe trên 5 lát cho cả hai hiệu ứng (mốc và mới); diện tích, hình bao, tỉ lệ tan; hash hồi quy; đường dẫn lưới so sánh; lệch so với task và lý do.
 
 ## Kết quả
+
+**Giá trị cuối** (số dải, bề rộng, khe, `echo` trong `layers/slash.py` và `melee/slash/slash.py`):
+- `slash.py`: `strands = 3 if axe`, `ws` 0,85-1,25, `gaps` 0,11-0,15 (task 0,10-0,14; chỉnh trong khoảng cho phép 0,09-0,15), `deep` chỉ ở dải rộng nhất với `fr = 0.25`, quầng `glw` 0,5 -> 0,3 (lệch, xem dưới), `width` mặc định rìu 80 -> 96. Phi tàn không đổi.
+- `melee/slash/slash.py`: `axe` width 96, linger 4,0; `axe_heavy` width 112, **strands 3** (không phải 4), linger 4,6; lớp `echo` đổi từ `sword` thành `axe` một dải (`span` 1,0, `strands` 1): axe bend 0,55 width 44; axe_heavy bend 0,58 width 42.
+
+**Mốc** dựng từ commit `89bc573` (trước khi sửa), 15 fps, `--from 40,100 --to 200,140`. Khung trúng đòn = khung đỉnh diện tích (axe tệp 3, axe_heavy tệp 4; `hit_frame` trong meta là khung t = 0 nên không dùng). Số đo trên alpha >= 128 @2x, 5 lát cắt vuông góc đường cung ở 30..70 % (đoạn >= 3 px).
+| | mốc axe | mới axe | mốc heavy | mới heavy |
+|---|---|---|---|---|
+| diện tích khung đỉnh | 8462 | 7653 (-9,6 %) | 8474 | 7844 (-7,4 %) |
+| hình bao (rộng x cao) | 177x135 | 161x145 (-9,0 / +7,4 %) | 192x140 | 189x153 (-1,6 / +9,3 %) |
+| A(h+1)/A(h), A(h+2)/A(h) | 0,961 / 0,683 | 0,903 / 0,644 | 0,806 / 0,501 | 0,784 / 0,537 |
+Số đoạn trên 5 lát (gộp cả `echo`): mốc axe 1,1,1,1,1; mới axe 4,3,3,3,2; mốc heavy 2,2,2,2,2; mới heavy 3,3,3,3,3.
+Chỉ lớp `slash` (không `echo`, `--only slash`): mới axe 3,3,3,3,3 (lát 50 %: 15,2 / 17,8 / 15,2 px, khe 6,8 / 7,8 px), mới heavy 3,3,3,3,3 (lát 50 %: 14,8 / 19,5 / 15,5 px, khe 10,8 / 10,5 px); mốc axe 5,3,3,3,3 (đoạn 6-10 px, khe 0,2-3,8), mốc heavy 6,6,7,7,6 (đoạn 5-10 px).
+Lát 50 % khi gộp `echo`: axe 37,5 (echo + dải ngoài) / 18,0 / 15,2, khe 6,0 / 7,8; heavy 30,0 / 19,5 / 15,8, khe 7,0 / 10,2.
+Dải tắt (số mẫu bật theo từng dải, axe): khung 6 -> 7: 315/453/219 -> 60/172/57, hết ở khung 8; dải giữa (rộng nhất) giữ lâu nhất, hai dải ngoài / trong tắt trước một chút nhưng cùng khung cuối (ba dải gần bằng nhau). heavy: 383/472/278 -> 209/372/180 -> 32/119/21, hết ở khung 9.
+`fxcheck`: axe còn `cut` ở khung 7 (15 % đỉnh, mốc 16 %, không tệ hơn), heavy sạch như mốc.
+
+**Không đạt / lệch so với task**
+1. `axe_heavy` dùng 3 dải, không phải 4: với 4 dải, khe 0,09-0,15 và width <= 120 cho dải nhỏ nhất chỉ 7-13 px, không thể >= 15 px (thử 4 dải width 112 và 120, 5 dải width 120). 3 dải width 112 cho 14,8 px khi chỉ tính lớp `slash` và 15,5 khi gộp `echo`.
+2. Lớp `echo` kiểu kiếm (bend 0,46 width 40, đục) phủ kín khe ở mọi lát nên bị đổi thành một dải rìu cong hơn. Hệ quả: khi đếm cả `echo`, axe chỉ có 3 đoạn ở 3/5 lát (30 % tách riêng ra 4 đoạn, 70 % `echo` lấp khe đầu nên còn 2): không đạt "4/5". Đường `echo` và đường dải gặp nhau ở đầu vệt nên không thể tách đều ở cả 5 lát (đã quét bend 0,50-0,62 và width 26-46). axe_heavy đạt 5/5 nhưng khe đầu ở lát 60-70 % chỉ 2,8 và 0,2 px. Số đo "đúng" cho yêu cầu dải là số của lớp `slash` riêng (5/5, đều đạt).
+3. `width` axe 96 (task: 88, tối đa 96) và quầng 0,5 -> 0,3: cần để dải nhỏ nhất >= 14 px và để khe >= 5 px (alpha < 128; quầng 0,35-0,5 lấp khe ở khung đỉnh). Quầng yếu hơn là nhìn thấy rõ ở `preview_game.gif`.
+4. Khoảng khe 0,11-0,15 thay 0,10-0,14; thêm `linger` (axe 4,0; heavy 4,6) để tỉ lệ tan không lệch quá 0,1 và `cut` không tệ hơn mốc.
+5. `sweep` ba điểm khác hash so với mốc: do `build.py` của S5 (đổi `streaks` của ba pose: n=2, length 40...), đã kiểm: dựng bằng mã `slash.py` cũ + `build.py` hiện tại cho đúng hash của bản mới. Bảy lệnh còn lại (crescent, heavy, thrust, sweep, diag_down, diag_up, swing --track) giống hệt từng byte ảnh @2x.
+6. "Dải hẹp nhất tắt trước" chỉ đạt một phần: ba dải gần bằng nhau (phi <= 0,21) nên cả ba cùng hết ở một khung (axe khung 7, heavy khung 8); dải giữa (rộng nhất) giữ lâu hơn một chút, hai dải còn lại mỏng nhanh hơn.
+7. `fxcheck` ở 30 fps trong thư viện: `axe` mốc và mới đều không cảnh báo; `axe_heavy` mốc có `cut` (khung 16 còn 8 %), mới `cut` (còn 7 %): không có cảnh báo mới. Ở 15 fps `axe` có `cut` ở cả mốc (16 %) và mới (15 %).
+8. Lưới so sánh (mốc trên, mới dưới, khung đỉnh tới đỉnh + 4, @2x) và số đo là tệp / script tạm, không đưa vào repo: `/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/grid_axe_hit_h4.png`, `/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/grid_axe_heavy_hit_h4.png`; gif cỡ game: `/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/final3/axe/preview_game.gif`, `/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/final3/axe_heavy/preview_game.gif` (mốc ở `/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/before/...`). Gallery `lib-fx/_gallery/` bị git bỏ qua nên không commit.

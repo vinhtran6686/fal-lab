@@ -981,16 +981,16 @@
    "space:span",
    "weight:heavy"
   ],
-  "desc": "an AXE swing: a short, thick smear of 4-6 parallel bands apart by narrow gaps, a blunt head; it fades band by band from the tail, the thin ones first, into parallel strokes",
+  "desc": "an AXE swing: a short, thick smear of 3 broad parallel bands apart by narrow gaps (an outer sheet behind them), a blunt head; it fades band by band from the tail, the narrower ones first, into parallel strokes",
   "fps": 30.0,
   "frames": 16,
   "frame_size_2x": [
-   380,
-   278
+   360,
+   282
   ],
   "anchor_2x": [
-   72.0,
-   196.0
+   54.0,
+   200.0
   ],
   "dir": "melee/slash/axe",
   "qa": "ok",
@@ -1011,16 +1011,16 @@
    "space:span",
    "weight:heavy"
   ],
-  "desc": "a great AXE: a wider, longer-lived smear of six bands, more scraps",
+  "desc": "a great AXE: a wider smear of 3 very broad bands, more scraps",
   "fps": 30.0,
   "frames": 20,
   "frame_size_2x": [
-   424,
-   312
+   408,
+   328
   ],
   "anchor_2x": [
-   72.0,
-   214.0
+   56.0,
+   230.0
   ],
   "dir": "melee/slash/axe_heavy",
   "qa": "warn",
