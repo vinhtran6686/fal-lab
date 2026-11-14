@@ -60,4 +60,5 @@ Mặt phẳng: **ground** (`fal-image/action-planes.md`). Pose A: nhìn từ sau
 | skill_crescent_side (có fx) | ghép ($0) | one-shot | ⏳ p03 | thân puppet + vệt xanh sáng bề mặt lưỡi quét; `build_crescent.py` |
 | pose_skill_sweep_p1 | fal-image | ảnh tĩnh | ✅ v02 | user chốt 2026-11-14 (ground pose A, nhìn từ sau lưng) |
 | pose_skill_sweep_p2 | fal-image | ảnh tĩnh | ✅ v03 | user chốt 2026-11-14; chân lệch trái và to hơn A ~4%, chưa đo điểm bám |
-| skill_sweep_side | ghép + `melee/slash/sweep` | one-shot | ⏭ | chưa làm: cần foot_marks, pivot vai, rig |
+| pose_skill_sweep_p3 | fal-image | ảnh tĩnh | ✅ v01 | pose C giữa cú quét (đao chỉ vào người xem), user chốt 2026-11-14 |
+| skill_sweep_side | ghép + `melee/slash/sweep` | one-shot | ⏳ | A -> C -> B; đo ba điểm, swing nhận ba điểm; chưa rig |
