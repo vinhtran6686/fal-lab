@@ -49,3 +49,9 @@ Việc nhỏ ghi lại (không mở task, xem lại khi ghép lên cặp pose ch
 1. Khung trước đòn chỉ là một chấm, chưa là lát mỏng dọc lưỡi pose A như `swing --track`; khi có pose B thật, cân nhắc dùng `--track` cho chém ngang.
 2. Khung h+2 các mảnh trắng bay qua ngang chân (lớp `front/`), hơi rối ở cỡ @2x.
 3. Đuôi tắt hẳn ở h+3 (0,00): ổn ở 15 fps, nhưng nếu người dùng thấy cụt thì nâng `release` 0,33 -> 0,35.
+
+**Chém ngang ba pose A -> B -> C (`sweep --swing` ba điểm, `azure_blade`) (2026-11-14): người dùng DUYỆT hiệu ứng** sau khi xem GIF (trong scope hiện tại).
+Review của người lập kế hoạch: hồi quy 184 / 184 ảnh giống hệt, `--check` thoát 0, `fxkit_test.py` đầy đủ qua; từng khung đúng chỗ (lát trên lưỡi A, đầu ở mũi B, đầu ở nêm C, đuôi rút trước).
+Chỗ còn "đơ" là THÂN, không phải vệt: 3 ảnh cắt cứng, mỗi pose 1 khung, thân nhảy vị trí / cỡ giữa các pose.
+Việc nhỏ còn mở từ review (chưa viết task): tiêu đề / cột mục 4 và mẫu 4b của `action-planes.md` còn gọi "B = end" / "two-part"; ghi `k`, góc, bán kính đã khớp vào `meta.json`;
+định nghĩa phép đo độ dày vào `FXKIT.md` mục 6; test cho `lead=1` và ba điểm; khấc ở đầu `lead=1`; tia lửa khung 4-5 cắt qua chân.
