@@ -276,3 +276,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-12 18:34:28,out/heroes/pyre_witch/source/design/parts_sheet_A1_v01.png,gpt-image-2,low,1536x1024,False,23.3,0.0140,True
 2026-11-12 19:19:20,out/heroes/pyre_witch/source/design/plate_noarms_v01.png,gpt-image-2,low,1024x1024,False,19.0,0.0114,True
 2026-11-14 10:23:03,pose_skill_sweep_p1_v01.png,gpt-image-2,low,1024x1024,False,17.6,0.0158,True
+2026-11-14 10:25:12,pose_skill_sweep_p1_v02.png,gpt-image-2,low,1024x1024,False,15.3,0.0160,True
