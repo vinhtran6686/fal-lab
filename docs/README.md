@@ -11,7 +11,7 @@ docs/
 │   ├── asset-manifest.md                                  bảng checklist asset trong brief.md, lệnh asset_status.py
 │   ├── pose-pair-fx-method.md                             skill bằng pose A/B + vệt chém lib-fx + rig Studio (quy trình, checklist, chi phí)
 │   ├── images/pose-pair-sweep-fit-before-after.png       ảnh trước / sau của mục "Hai pose lệch nhau" trong pose-pair-fx-method.md
-│   ├── images/pose-pair-sweep-acb-before-after.png       ảnh trước (hai pose A, B) / sau (ba pose A, C, B) của mục 10.6 trong pose-pair-fx-method.md
+│   ├── images/pose-pair-sweep-abc-before-after.png       ảnh trước (hai pose A, B) / sau (ba pose A, B, C) của mục 10.6 trong pose-pair-fx-method.md
 ├── skills/                                                tài liệu bổ sung cho .claude/skills/<skill>/
 │   ├── fal-image/                                         ảnh tĩnh qua scripts/gen_image.py
 │   │   ├── fal-image-manual-prompt-style-transfer.md      prompt chuyển concept image sang style của dự án (chế độ --manual)

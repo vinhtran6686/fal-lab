@@ -58,7 +58,7 @@ Mặt phẳng: **ground** (`fal-image/action-planes.md`). Pose A: nhìn từ sau
 | rig pose A + pose B (studio) | Puppet Kit ($0) | rig | ⏳ p02 | `source/rig/rig_a.json`, `rig_b.json`: torso / arms (hai tay, nắm đấm, giáp vai) / blade; dây chằng `shoulder_chest` (tay trượt thì vai + ngực theo); dựng lại: `make_rigs.py`, `make_anim.py` |
 | skill_crescent_puppet_side | Puppet Kit pose-to-pose ($0) | one-shot | ⏳ p02 | 44 khung @15 fps, chỉ pose A và B (không idle): P1 đao nâng cao + thở, P2 về pose A, cắt, P3 pose B đập xuống, P4 nhún theo quán tính rồi về pose B; hit 23 |
 | skill_crescent_side (có fx) | ghép ($0) | one-shot | ⏳ p03 | thân puppet + vệt xanh sáng bề mặt lưỡi quét; `build_crescent.py` |
-| pose_skill_sweep_p1 | fal-image | ảnh tĩnh | ✅ v02 | user chốt 2026-11-14 (ground pose A, nhìn từ sau lưng) |
-| pose_skill_sweep_p2 | fal-image | ảnh tĩnh | ✅ v03 | user chốt 2026-11-14; chân lệch trái và to hơn A ~4%, chưa đo điểm bám |
-| pose_skill_sweep_p3 | fal-image | ảnh tĩnh | ✅ v01 | pose C giữa cú quét (đao chỉ vào người xem), user chốt 2026-11-14 |
-| skill_sweep_side | ghép + `melee/slash/sweep` | one-shot | ⏳ | A -> C -> B; đo ba điểm, swing nhận ba điểm; chưa rig |
+| pose_skill_sweep_p1 | fal-image | ảnh tĩnh | ✅ v02 | user chốt 2026-11-14 (ground pose A: hông xoay ra sau, đao ở sau thân chỉ sang TRÁI, nhìn từ sau lưng); thứ tự cú quét A -> B -> C |
+| pose_skill_sweep_p2 | fal-image | ảnh tĩnh | ✅ v03 | pose B = đao đi được ~2/3 cung (góc khớp 368 độ), chỉ sang PHẢI và hơi xuống; user chốt 2026-11-14; chân to hơn A ~4,9%, đã đo, căn theo trung điểm hai bàn chân |
+| pose_skill_sweep_p3 | fal-image | ảnh tĩnh | ✅ v01 | pose C = KẾT THÚC cú quét và khung trúng đòn (đao chỉ thẳng vào người xem, nêm ngắn chỉ xuống), user chốt 2026-11-14 |
+| skill_sweep_side | ghép + `melee/slash/sweep` | one-shot | ⏳ | thứ tự A -> B -> C (cung 270 độ: trái, qua nửa XA, phải, vòng nửa GẦN về người xem); đo ba điểm `weapon_marks_sweep.json`, `--swing` ba điểm theo thứ tự đi; chưa rig |
