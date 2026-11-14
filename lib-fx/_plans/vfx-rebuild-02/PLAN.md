@@ -34,6 +34,8 @@ nhất là **đo chính mẫu của hoạ sĩ**, như repo đã làm với `swir
 | H7 | Quầng của sét rộng hơn nhiều so với nét (bán kính nhoè ≥ 10 lần bề rộng nét) | `measure` halo |
 | H8 | Các tia nối tiếp không lặp vị trí và hình (không có hai tia chồng nhau > 30 %) | IoU giữa các tia |
 
+**TẠM DỪNG (2026-11-14, người dùng): ưu tiên vệt chém. R1b, R2b, R3 giữ nguyên, mở lại khi được gọi.**
+
 ## 4. Checklist
 - [x] **R1** flame-burst: profile, đo, dựng lại, so sánh: [R1-flame-burst.md](R1-flame-burst.md)
 - [x] **R2** lightning: profile, đo, dựng lại, so sánh: [R2-lightning.md](R2-lightning.md)

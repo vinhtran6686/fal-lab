@@ -43,8 +43,8 @@ Họ hiệu ứng cũ (khai báo `VARIANTS`: `force/shock`, `impact/hit`, `impac
 | # | Việc | Ở đâu | Ai / trạng thái |
 |---|---|---|---|
 | 1 | **S4** xong, đạt (2026-11-14). Còn: **xuất chính thức** `skill_sweep_puppet_side` vào `frames/` (thân + vệt) và dòng manifest trong `brief.md` | `slash-round-02/S4-sweep-body-timing.md` | chờ người dùng cho phép xuất |
-| 2 | **R1b** flame-burst làm lại (vỏ khói sáng, khói không quầng, công cụ đo độc lập `rebuild_check.py`) | `vfx-rebuild-02/R1b-flame-burst-smoke.md` | đã viết task, chờ giao; làm trước R2b |
-| 3 | **R2b** lightning làm lại (nét mảnh như gốc, nhánh mờ, quầng đổi màu ở khung chớp) | `vfx-rebuild-02/R2b-lightning-thin.md` | đã viết task, cần công cụ của R1b |
+| 2 | **R1b** flame-burst làm lại (vỏ khói sáng, khói không quầng, công cụ đo độc lập `rebuild_check.py`) | `vfx-rebuild-02/R1b-flame-burst-smoke.md` | **TẠM DỪNG** (người dùng, 2026-11-14); task giữ nguyên, làm trước R2b khi mở lại |
+| 3 | **R2b** lightning làm lại (nét mảnh như gốc, nhánh mờ, quầng đổi màu ở khung chớp) | `vfx-rebuild-02/R2b-lightning-thin.md` | **TẠM DỪNG** (người dùng, 2026-11-14); cần công cụ của R1b |
 | 4 | **S5** việc nhỏ từ review chém ngang ba pose: (a) `action-planes.md` mục 4: tiêu đề và cột bảng còn ghi "pose B = end", mẫu 4b còn "two-part": đổi theo thứ tự đi A / B / C; (b) prompt pose C tả vị trí bằng phần trăm, trái luật 4b.6: ghi rõ ngoại lệ hoặc đổi; (c) ghi `k`, `u0` / `uc` / `u1`, bán kính, `fc` đã khớp vào `meta.json` của vệt; (d) định nghĩa phép đo độ dày vệt vào `FXKIT.md` mục 6 (phần đặc alpha > 0,95, bỏ vùng quay gắt và nhát cắt đầu); (e) test cho chế độ ba điểm và `lead=1` trong `fxkit_test.py`; (f) khấc nhỏ ở đầu vệt `lead=1` hai điểm; (g) tia lửa khung 4-5 của chém ngang cắt qua chân | chưa viết task | người lập kế hoạch viết khi người dùng gọi |
 | 5 | **R3** xuất số đo cho H1-H8 và `METHOD.md` (chỉ sau khi R1b, R2b đạt; dùng `rebuild_check.py`, không dùng `report.json`) | `vfx-rebuild-02/R3-export-measurements.md` | chờ |
 | 6 | Sau khi người dùng duyệt R1b-R3: viết docs phương pháp chung vào `lib-fx/_core/formulas/rules/`, rồi task lớp fxkit cho lửa phụt và sét | - | người lập kế hoạch |
