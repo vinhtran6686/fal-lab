@@ -145,6 +145,9 @@ Thân ra `frames/skill_crescent_puppet_side/` (cell 352x280 @2x, chân ở pivot
 - [ ] Prompt pose A và B giữ `{design}` nguyên văn, ghi rõ hai tay cùng cỡ, hai chân cùng cỡ.
 - [ ] Prompt **cấm mọi fx** (vệt, bụi, phát sáng, bóng dưới đất).
 - [ ] Hướng đao và vị trí tay mô tả bằng vị trí trên ảnh, không bằng "trái/phải" của nhân vật.
+- [ ] **Hướng thân là một tên cố định** (xem thân từ sau lưng, nhìn nghiêng thuần, mở ngực về phía người xem, hướng master) kèm danh sách "thấy" và "KHÔNG thấy" (`fal-image/action-planes.md` §4b); không dùng từ mơ hồ ("hơi xoay", "xoay hơn dáng ba phần tư một chút", "vặn người"): mô hình sẽ vẽ lại dáng mặc định của master (bài học 2026-11-14, pose A chém ngang).
+- [ ] Phần bị che được tả là bị che, kèm phần còn thấy ("cán và hai tay nằm sau thân, chỉ nửa mũi đao thò ra bên trái ảnh").
+- [ ] Sinh xong, **tự nhìn ảnh và đối chiếu từng dòng "thấy / không thấy"** trước khi gửi người dùng; một dòng sai là pose sai.
 - [ ] Pose B dùng pose A làm ảnh tham chiếu, kèm câu "không chép dáng".
 - [ ] Hai pose cùng hướng nhìn; nhân vật cùng cỡ gần bằng nhau (đầu rộng bằng nhau); ghi lại nếu lệch.
 - [ ] Mỗi pose đạt theo mắt: đúng động tác mô tả, hai tay nắm đúng, vũ khí **nguyên cả lưỡi trong khung**, lề ≥ 8%.

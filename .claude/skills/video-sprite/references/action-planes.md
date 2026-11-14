@@ -3,6 +3,11 @@
 The rules of the view (what a move looks like from the game's camera, the three planes a swing can live in, how casters use them, what to
 record for the VFX) are in **`.claude/skills/fal-image/action-planes.md`**. Read it first; this file only adds what is specific to motion.
 
+## Say the orientation, never a degree of it
+A motion prompt that says "turns a little", "slightly more than three-quarter" or "twists" gets the model's default pose. Name the orientation and what is visible / NOT visible at the
+start and at the end of the move (table in `fal-image/action-planes.md` section 4b: master view, pure profile, open to the viewer, turned away), and say what hides what
+("the hands and the hilt are hidden behind the torso at first"). Look at the first and last frame of the take against those lines before accepting it.
+
 ## What a clip must keep
 - **The plane does not change during the move.** State it in the motion prompt in screen words:
   frontal: "the weapon swings like a clock hand seen from the front, flat to the picture";

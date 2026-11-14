@@ -3,8 +3,9 @@
 Read this before writing a `pose_<action>` / `pose_skill_<name>` prompt, a skill description, or a motion prompt for any class (fighters, mages,
 supports, enemies). It answers one question: **seen from our camera, what does this move look like, and where does its effect go?**
 The stills, the clips and the VFX (`lib-fx`, `fxkit`) must agree on it, or the effect will not sit on the pose.
-Status: the frontal-plane wording is tested (`out/heroes/azure_blade`, overhead smash). The ground-plane and diagonal POSE wordings are *untested*: the first
-pose made with each is the test; write what you learn back here. Their effects (`sweep`, `diag_down`, `diag_up`) are built and measured on their own (plan S2), not yet placed on a real pose pair.
+Status: the frontal-plane wording is tested (overhead smash). The ground-plane pose A wording is tested (2026-11-14, section 4b: the body turned away from the viewer);
+ground pose B and the diagonal POSE wordings are still *untested*: the first pose made with each is the test; write what you learn back here.
+Their effects (`sweep`, `diag_down`, `diag_up`) are built and measured on their own, not yet placed on a real pose pair.
 
 ## 1. The view (from `format.md` §1 and §3)
 - The camera is high and looks down at the battlefield; the ground is a plane that runs away from the viewer.
@@ -53,7 +54,7 @@ What changes with the plane is WHERE the weapon (or the casting hand, the staff,
 |---|---|---|---|
 | **Frontal, downward** (tested) | weapon raised high above and slightly behind the head, the blade pointing up and to the upper-left of the image | weapon low in front, the blade lying level near the ground and pointing right | A: upright, leaning back a little. B: crouched forward, front knee bent, rear leg stretched |
 | **Frontal, upward** | weapon low and behind, the blade pointing to the lower-left, close to the ground | weapon high in front, the blade pointing to the upper-right | A: crouched, weight on the rear leg. B: stretched up, on the toes |
-| **Ground (horizontal sweep)** | weapon held LEVEL at chest height, drawn back on the FAR side: the blade points LEFT and is partly HIDDEN BEHIND the body, both hands at the far hip or far shoulder; the chest turned AWAY from the viewer so part of the back shows | weapon held LEVEL at the same height, swung across to the NEAR side: the blade points RIGHT and slightly toward the BOTTOM of the image, fully visible IN FRONT of the body, arms extended; the chest turned OPEN to the viewer | feet stay planted in both poses; the torso twists, the hips follow a little; the blade stays level (never tilted up or down), at the SAME height in both poses |
+| **Ground (horizontal sweep)** | weapon held LEVEL at chest height, drawn back on the FAR side: the blade points LEFT and is partly HIDDEN BEHIND the body, both hands at the far hip or far shoulder; body TURNED AWAY (section 4b): viewed from behind, back and cape in the middle, chest NOT visible, head in profile looking right | weapon held LEVEL at the same height, swung across to the NEAR side: the blade points RIGHT and slightly toward the BOTTOM of the image, fully visible IN FRONT of the body, arms extended; body OPEN TO THE VIEWER (section 4b): breastplate and both shoulder plates visible | feet stay planted in both poses; the torso twists, the hips follow a little; the blade stays level (never tilted up or down), at the SAME height in both poses |
 | **Diagonal, downward** | weapon high behind the FAR shoulder, the blade pointing to the upper-left, partly hidden behind the head and shoulder | weapon low in front of the NEAR hip, the blade pointing to the lower-right, fully visible in front of the body | A: torso twisted away. B: torso twisted open, leaning into the cut |
 | **Diagonal, upward** | weapon low behind the far hip, the blade pointing to the lower-left, partly hidden | weapon high in front, the blade pointing to the upper-right, in front of the body | mirror of the row above |
 | **Ahead (thrust)** | weapon pulled back level at the near hip, the tip pointing right | weapon fully extended level to the right, the arm straight | A: weight back. B: lunge, front knee bent |
@@ -62,6 +63,45 @@ Sentences that keep the model on the plane (add them to the pose text):
 - frontal: "the whole swing stays flat to the picture, like a clock hand seen from the front";
 - ground: "the weapon stays LEVEL with the ground from start to end, like a helicopter blade seen slightly from above; it never rises above the shoulders and never points up";
 - diagonal: "the weapon travels along a slanted line from the upper-left of the image to the lower-right" (or the reverse).
+
+## 4b. Say the body's orientation in words a model cannot misread (mandatory for every pose)
+**Why this section exists (learned 2026-11-14, ground-plane pose A).** The prompt said "the body is turned a little more than the usual three-quarter view so that part of his back shows".
+The model drew the usual standing front view: chest, both shoulder plates and symmetric legs facing the viewer, only the face turned right. Nothing in the sentence was
+checkable, so nothing forced the model to change. The same prompt rewritten as a list of what the viewer SEES and what the viewer must NOT see gave the intended pose at once.
+A wording like "slightly", "a little", "more than", "partly turned", "twisted", "dynamic" is a request for the model's default. The default is the master's pose.
+
+**Rules**
+1. **Name one orientation from the table below**, and give its visible / not visible list in the prompt. Never describe a turn by degrees alone, by "three-quarter" alone
+   (front three-quarter or back three-quarter?) or by a comparison to another view.
+2. **Write what is NOT visible**, not only what is. A model keeps whatever you do not forbid: if the chest must be hidden, say "the breastplate, the belly and the chest are NOT visible at all".
+3. **Say what hides what** (depth order): "the hands and the hilt are hidden behind the torso", "only the tip half of the blade sticks out past the back on the LEFT of the image".
+   A thing that must be partly hidden is described as hidden, with the part that stays visible named.
+4. **Name the head separately** from the body: the head turns independently ("only the head is turned in profile to look to the RIGHT of the image, over the shoulder").
+5. **Every part gets a place in the image** (left / right / top / bottom, in front of / behind the body, at chest height), never "the far side", "the near side" or the character's own left / right alone.
+   Add the screen words next to them when you use them.
+6. **No vague quantity words** in a pose: slightly, a bit, a little, somewhat, more or less, about (for positions), partly (without saying which part), dynamic, natural, powerful stance.
+   Replace each with a position, a visible / not visible fact or a number measured on the picture (for example "the blade at chest height, the same height in both poses").
+7. **Look at the result yourself before showing it**: tick every visible / not visible line against the image. A failed line is a failed pose, whatever the overall impression.
+
+**Orientation vocabulary** (for a character that faces RIGHT; mirror for LEFT). Copy the lines into the prompt.
+
+| Name | Say in the prompt | Visible | NOT visible |
+|---|---|---|---|
+| **Master view** (default) | "side view, facing RIGHT, the body turned only about 30 degrees toward the viewer" | face (one eye and a bit of the second), the front of the chest at a slant, the near arm and leg in full | the far arm and leg are partly hidden |
+| **Pure profile** | "a pure profile facing RIGHT, only one eye visible, the near shoulder toward the viewer, the chest edge-on" | one eye, the near shoulder, the near arm and leg | the chest face, the far shoulder |
+| **Open to the viewer** | "the chest turned OPEN toward the viewer: the breastplate and both shoulder plates visible, the face looking RIGHT of the image" | chest, both shoulders, both legs side by side | the back |
+| **Turned away (back three-quarter)** | "VIEWED FROM BEHIND: his back and the cape fill the middle of the picture; the breastplate, the belly and the chest are NOT visible at all; only his head is turned in PROFILE to look to the RIGHT of the image, over his shoulder" | back, cape, both shoulder plates from behind, the head in profile | chest, belly, the face looking at the viewer |
+
+**Template for a ground-plane (horizontal) pose A**, tested 2026-11-14:
+"POSE A of a two-part horizontal sweep, VIEWED FROM BEHIND: he is turned AWAY from the viewer, so the viewer sees mostly his BACK. His back and the cape fill the middle of the picture;
+the front breastplate, the belly and the chest are NOT visible at all, and the face is NOT looking at the viewer: only his head is turned in PROFILE to look to the RIGHT of the image, over his shoulder.
+Both feet planted on ONE horizontal ground line, a wide stable stance, the knees bent, the thighs not horizontal. BOTH ARMS hold the weapon together, the two forearms and the two fists of the SAME size, wound back to the far hip,
+HIDDEN BEHIND his body, so the hands and the hilt are NOT visible. The weapon is held LEVEL at chest height and points to the LEFT of the image, parallel to the ground: only the tip half of the blade
+sticks out past his back and the cape on the LEFT of the image, the rest is hidden behind his body and cape."
+Known limit of that take: one arm may still show on the near side holding the weapon; accept it if the hands stay hidden, or add "the near arm is also behind the body".
+
+**Pose B must return to a named orientation too.** Name the orientation (table above) and the feet: "the feet are in the SAME place on the ground line as in pose A".
+A model that is told to "open the chest" without a name may keep the back view: write "OPEN TO THE VIEWER: the breastplate and both shoulder plates visible".
 
 ## 5. Casters and supports use the same planes
 A mage or a support has no blade, but the staff, the hand or the focus draws the same arcs, and the effect follows the same plane.
@@ -89,5 +129,8 @@ Measured on the stills (source px), next to the foot mark (`pose-pair-fx-method.
 - [ ] Positions are given by place in the image (left / right / top / bottom, in front of / hidden behind the body), never by the character's left / right.
 - [ ] For ground and diagonal planes: pose A shows the weapon partly hidden behind the body, pose B shows it fully in front.
 - [ ] The whole weapon is inside the frame with at least 8 % margin in both poses.
+- [ ] The body orientation is a NAME from section 4b with its visible / NOT visible list; no vague quantity word (slightly, a little, more than, partly, twisted) is left in the pose text.
+- [ ] Hidden parts are said to be hidden, with the visible part named (what hides what).
+- [ ] The result was looked at and each visible / NOT visible line ticked against the image before it was shown to anyone.
 - [ ] No effect, no motion lines, no dust in the still.
 - [ ] Root, tip, pivot and plane are recorded for the VFX.
