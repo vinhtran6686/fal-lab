@@ -57,3 +57,8 @@ Review của người lập kế hoạch: hồi quy 184 / 184 ảnh giống hệ
 Chỗ còn "đơ" là THÂN, không phải vệt: 3 ảnh cắt cứng, mỗi pose 1 khung, thân nhảy vị trí / cỡ giữa các pose.
 Việc nhỏ còn mở từ review (chưa viết task): tiêu đề / cột mục 4 và mẫu 4b của `action-planes.md` còn gọi "B = end" / "two-part"; ghi `k`, góc, bán kính đã khớp vào `meta.json`;
 định nghĩa phép đo độ dày vào `FXKIT.md` mục 6; test cho `lead=1` và ba điểm; khấc ở đầu `lead=1`; tia lửa khung 4-5 cắt qua chân.
+
+**S4 (2026-11-14): ĐẠT, người dùng thấy "linh hoạt hơn, đúng hơn".** Người lập kế hoạch tự render `anims/sweep.json` (21 khung) và dựng lại vệt từ số track, ghép vệt n vào thân n + 5:
+lấy đà khung 1-6 thấy được (lún, ngả sau), chém 1 khung (B), khung 8 nén rồi nảy, thở khung 14-21; đầu vệt ở mũi B (khung 7) và nêm C (khung 8), đuôi rút trước; `fxcheck` sạch.
+Lệch được chấp nhận: `shx` của B = 0 và C bắt đầu 0,01 (task ghi +0,10 / +0,12). Công thức trong task sai vì quên rằng A đã ngả sau -0,10. Số đo: chỗ cắt 6 -> 7 giảm 9,50 -> 6,93 px; 7 -> 8 là nhảy dọc do nén (chấp nhận).
+Chưa xuất ra `frames/` (chờ người dùng cho phép xuất chính thức + dòng manifest trong `brief.md`).
