@@ -63,3 +63,6 @@ Việc nhỏ còn mở từ review (chưa viết task): tiêu đề / cột mụ
 lấy đà khung 1-6 thấy được (lún, ngả sau), chém 1 khung (B), khung 8 nén rồi nảy, thở khung 14-21; đầu vệt ở mũi B (khung 7) và nêm C (khung 8), đuôi rút trước; `fxcheck` sạch.
 Lệch được chấp nhận: `shx` của B = 0 và C bắt đầu 0,01 (task ghi +0,10 / +0,12). Công thức trong task sai vì quên rằng A đã ngả sau -0,10. Số đo: chỗ cắt 6 -> 7 giảm 9,50 -> 6,93 px; 7 -> 8 là nhảy dọc do nén (chấp nhận).
 Chưa xuất ra `frames/` (chờ người dùng cho phép xuất chính thức + dòng manifest trong `brief.md`).
+
+**S4b (2026-11-14): ĐẠT.** Người lập kế hoạch so 21 khung `frames/skill_sweep_side/@2x` với bản ghép tự dựng ở lần chấm S4 (cùng thân, vệt, origin): chỉ lệch do bảng màu GIF; `contact.png`: vệt chỉ ở khung 6-11, lát trên lưỡi A (6), đầu ở mũi B (7), nêm C (8).
+`git diff` trong `out/` ngoài file mới chỉ có `brief.md`, `history.md`, `meta.json` (khối sheet mới + 3 nguồn pose do `puppet.py render` tự thêm: chấp nhận). Skill chém ngang của `azure_blade` xong.
