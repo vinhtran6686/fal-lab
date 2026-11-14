@@ -318,11 +318,11 @@ Khớp ra: **k = 0.195**; góc u = **180.0 (A), 367.7 (B), 450.0 (C)** độ, t�
 |---|---|
 | khung 2: đầu tới mũi B | 1.2 px (yêu cầu <= 4); dọc đường đi, nét vượt qua mũi B: 0 px; điểm xa nhất về bên phải mũi B: -0.8 px |
 | khung 3: đầu tới mũi C | 0.7 px (yêu cầu <= 5); vượt qua C dọc đường đi: 0 px |
-| khung 3: mép ngoài so với đường A -> B -> C | pixel đặc (alpha > 0.95) cách đường đi lớn nhất 0.5 px ngoài mép trên t = 0.1 - 0.94 (khung 2 trên t = 0.1 - 0.69: 0.5 px); 0.9 - 1.0 của đường đi: 7.5 px vì tia lửa bay ra từ mũi C (không phải mép nét); khoảng cách đường đi tới pixel nét gần nhất: <= 1.1 px |
+| khung 3: mép ngoài so với đường A -> B -> C | pixel đặc (alpha > 0.95) cách đường đi lớn nhất 0.5 px ngoài mép trên t = 0.1 - 0.94 (khung 2 trên t = 0.1 - 0.69: 0.5 px); 0.94 - 1.0 của đường đi: 7.5 px vì tia lửa bay ra từ mũi C, không phải mép nét (tắt `scraps` và `streaks`: -0.5 px); khoảng cách đường đi tới pixel nét gần nhất: <= 1.1 px |
 | khung 2: phần vệt ở lớp sau (nửa xa) | 99.6 % tổng alpha; bị thân che 50.3 % (che một phần) |
 | khung 1: lát mỏng so với đường lưỡi A nhìn thấy (đuôi -> chuôi), trung bình / p95 / lớn nhất | 2.6 / 5.6 / 6.5 px (gồm viền quầng) |
 | bề dày dọc nét, tối đa đường kính nội tiếp theo 8 khoảng của tham số đường đi (cắt ở 3.5 % đường đi ngay chỗ đổi lớp trước / sau và ở nhát cắt đầu, vì khoảng cách tại mặt cắt mảnh đi theo cấu tạo) | khung 2: 4.0, 5.7, 8.0, 10.0, 12.0, 14.1, 16.5, 17.1 (không giảm); khung 3: 2.8, 4.5, 8.0, 10.0, 12.2, 11.3, 24.7, 28.0 (tụt lớn nhất 0.9 px, mức cho phép 2.8). Bề dày ở đầu: khung 2 17.1, khung 3 28.1 |
-| tham số đường đi của đầu (0 ở A, 1 ở C) | khung 1: 0.062 (lát trên lưỡi A) -> khung 2: 0.674 (mũi B ở 0.695) -> khung 3: 0.997 -> khung 4: 1.0 (tăng chặt chẽ); khung tan sau đó: nét còn lại chưa tới 40 pixel nên không đo đầu; một lần chạy trước có khung 5 = 0.987 (giữ) |
+| tham số đường đi của đầu (0 ở A, 1 ở C) | khung 1: 0.062 (lát trên lưỡi A) -> khung 2: 0.674 (mũi B ở 0.695) -> khung 3: 0.997 -> khung 4: 1.0 (tăng chặt chẽ); khung 5 (ngưỡng alpha > 0.3, 31 pixel gần đường đi): 0.987, tức tụt 0.013 so với khung 4 (khoảng 2 px), coi là giữ trong dung sai đó; khung 6 trở đi không còn nét |
 | tan: A(h+1), A(h+2), A(h+3) so với A(h), h = 3 | 0.707, 0.272, 0.018 (yêu cầu <= 0.75, 0.45, 0.2) |
 | cổng chất lượng | `python lib-fx/build.py melee/slash --check`: không FAIL (cảnh báo cũ `pop`, `cut`, `linger`); `python lib-fx/_tools/fxkit_test.py slash`: đạt |
 | hồi quy | `crescent`, `heavy`, `thrust`, `axe`, `axe_heavy` (30 fps) và `sweep`, `diag_down`, `diag_up`, `swing --track`, `sweep` với `--swing` thường, lệnh hai điểm của mục 10.3 (15 fps): 11 / 11 bản dựng giống nhau từng byte so với trước khi sửa (băm sha256 các PNG) |
