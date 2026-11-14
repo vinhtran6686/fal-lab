@@ -37,6 +37,9 @@ Mô tả gốc: "xoay người ngang, cầm đao bằng 2 tay, giơ lên cao qua
 | 4 giữ | giữ pose B vài khung rồi về idle | - | - |
 Rủi ro: model nhầm tay, hai tay không cùng nắm cán; đao quá dài ra khỏi khung ở pose A; pose B không đủ khom. Duyệt từng pose, chỉ làm lại pose sai.
 
+### 2. Quét ngang (`pose_skill_sweep_p1`, `pose_skill_sweep_p2` + `melee/slash/sweep`), thử mặt phẳng nằm ngang 2026-11-14
+Mặt phẳng: **ground** (`fal-image/action-planes.md`). Pose A: nhìn từ sau lưng, đao nằm ngang độ cao ngực, mũi chỉ trái, tay và cán sau thân. Pose B: mở ngực về người xem, đao nằm ngang cùng độ cao, mũi chỉ phải-xuống, thấy đủ lưỡi. Chân đứng yên (thực tế lệch trái ~70-100 px ở B: căn khi ghép). Chưa đo điểm bám, chưa dựng rig.
+
 ## Asset manifest
 | Asset | Từ | Loại | Trạng thái | Ghi chú |
 |---|---|---|---|---|
@@ -55,3 +58,6 @@ Rủi ro: model nhầm tay, hai tay không cùng nắm cán; đao quá dài ra k
 | rig pose A + pose B (studio) | Puppet Kit ($0) | rig | ⏳ p02 | `source/rig/rig_a.json`, `rig_b.json`: torso / arms (hai tay, nắm đấm, giáp vai) / blade; dây chằng `shoulder_chest` (tay trượt thì vai + ngực theo); dựng lại: `make_rigs.py`, `make_anim.py` |
 | skill_crescent_puppet_side | Puppet Kit pose-to-pose ($0) | one-shot | ⏳ p02 | 44 khung @15 fps, chỉ pose A và B (không idle): P1 đao nâng cao + thở, P2 về pose A, cắt, P3 pose B đập xuống, P4 nhún theo quán tính rồi về pose B; hit 23 |
 | skill_crescent_side (có fx) | ghép ($0) | one-shot | ⏳ p03 | thân puppet + vệt xanh sáng bề mặt lưỡi quét; `build_crescent.py` |
+| pose_skill_sweep_p1 | fal-image | ảnh tĩnh | ✅ v02 | user chốt 2026-11-14 (ground pose A, nhìn từ sau lưng) |
+| pose_skill_sweep_p2 | fal-image | ảnh tĩnh | ✅ v03 | user chốt 2026-11-14; chân lệch trái và to hơn A ~4%, chưa đo điểm bám |
+| skill_sweep_side | ghép + `melee/slash/sweep` | one-shot | ⏭ | chưa làm: cần foot_marks, pivot vai, rig |

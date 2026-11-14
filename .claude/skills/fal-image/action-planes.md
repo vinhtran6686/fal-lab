@@ -3,8 +3,8 @@
 Read this before writing a `pose_<action>` / `pose_skill_<name>` prompt, a skill description, or a motion prompt for any class (fighters, mages,
 supports, enemies). It answers one question: **seen from our camera, what does this move look like, and where does its effect go?**
 The stills, the clips and the VFX (`lib-fx`, `fxkit`) must agree on it, or the effect will not sit on the pose.
-Status: the frontal-plane wording is tested (overhead smash). The ground-plane pose A wording is tested (2026-11-14, section 4b: the body turned away from the viewer);
-ground pose B and the diagonal POSE wordings are still *untested*: the first pose made with each is the test; write what you learn back here.
+Status: the frontal-plane wording is tested (overhead smash). The ground-plane pose pair is tested (2026-11-14, section 4b): pose A (back view) worked at the second try, pose B (open to the viewer) at the third, see the limits below;
+the diagonal POSE wordings are still *untested*: the first pose made with each is the test; write what you learn back here.
 Their effects (`sweep`, `diag_down`, `diag_up`) are built and measured on their own, not yet placed on a real pose pair.
 
 ## 1. The view (from `format.md` §1 and §3)
@@ -99,6 +99,11 @@ Both feet planted on ONE horizontal ground line, a wide stable stance, the knees
 HIDDEN BEHIND his body, so the hands and the hilt are NOT visible. The weapon is held LEVEL at chest height and points to the LEFT of the image, parallel to the ground: only the tip half of the blade
 sticks out past his back and the cape on the LEFT of the image, the rest is hidden behind his body and cape."
 Known limit of that take: one arm may still show on the near side holding the weapon; accept it if the hands stay hidden, or add "the near arm is also behind the body".
+
+**Known limits of the ground-plane pair (2026-11-14).** Three tries for pose B showed what a prompt cannot pin:
+- *Feet and size*: percentages of the image ("left boot at 28 % from the left edge") did NOT hold; the figure came out 70-100 px (of 1024) to the left of pose A and 4 % bigger, and the third try was worse than the second. Do not spend retries on it: measure the feet, then align and scale when compositing (`pose-pair-fx-method.md` step 3).
+- *Blade slant*: "the tip is lower than the hilt" gave about a quarter to a third of the slant asked for, even with image coordinates and an angle. Ask for a larger slant than needed, or accept a nearly level blade and let the effect carry the depth.
+- What did work: orientation names with visible / NOT visible lists, the level-at-chest-height sentence, hiding the hands and hilt in pose A, naming the blade's place in the image.
 
 **Pose B must return to a named orientation too.** Name the orientation (table above) and the feet: "the feet are in the SAME place on the ground line as in pose A".
 A model that is told to "open the chest" without a name may keep the back view: write "OPEN TO THE VIEWER: the breastplate and both shoulder plates visible".
