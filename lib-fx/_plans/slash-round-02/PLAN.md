@@ -1,11 +1,13 @@
 # Vệt chém, vòng 02: kế hoạch
 
 Nguồn: đánh giá của người lập kế hoạch và người dùng ngày 2026-11-13 sau khi áp `melee/slash/crescent --track` lên `out/heroes/azure_blade`.
+Bối cảnh chung và cách làm việc: [../HANDOVER.md](../HANDOVER.md).
 Người lập kế hoạch không thi công; người thi công làm đúng từng bước trong file task, đánh dấu ô, điền "Kết quả". Xoá thư mục này khi mọi task xong và được duyệt.
 
 ## Checklist
 - [x] **S1** Vệt chém bám vũ khí mượt như bản đã duyệt của `azure_blade` (khung đầu, nhịp tan ở 15 fps, đuôi rút, mũi đậm chuôi nhạt, mép sáng dọc lưỡi): [S1-tracked-slash-smooth.md](S1-tracked-slash-smooth.md)
 - [x] **S2** Mặt phẳng vung: chém ngang, chém xéo theo góc nhìn của game (kèm 3 việc nhỏ từ lần chấm S1): [S2-swing-planes.md](S2-swing-planes.md)
+- [ ] **S2b** `sweep` đủ mạnh (phần gần dài và dày hơn), nhịp tan theo bán kính: [S2b-sweep-strength.md](S2b-sweep-strength.md)
 - [ ] **S3** Rìu dày hơn: ít dải, dải rộng (chưa viết task)
 - [ ] **CHẤM** (người lập kế hoạch) sau mỗi task → **DUYỆT** (người dùng)
 
