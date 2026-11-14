@@ -56,6 +56,10 @@
       "master_v06.png",
       "pose_skill_crescent_p1_v01.png",
       "pose_skill_crescent_p2_v03.png"
+    ],
+    "vfx": [
+      "sweep_puppet",
+      "sweep_puppet_pivot"
     ]
   }
 }

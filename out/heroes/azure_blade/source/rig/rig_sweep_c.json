@@ -1,0 +1,63 @@
+{
+ "id": "azure_blade",
+ "note": "Sweep pose C: the end and the hit, blade foreshortened toward the viewer: one picture, no cut-out (breath, squash and lean around the feet only).",
+ "sources": {
+  "pose": "../design/pose_skill_sweep_p3_v01.png"
+ },
+ "ground": [
+  496.25,
+  952.5
+ ],
+ "unit": 906.0,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    496.25,
+    952.5
+   ]
+  },
+  {
+   "name": "body",
+   "parent": "root",
+   "pivot": [
+    496.25,
+    952.5
+   ]
+  }
+ ],
+ "sockets": {
+  "blade_tip": {
+   "bone": "body",
+   "pt": [
+    502,
+    537
+   ]
+  },
+  "blade_root": {
+   "bone": "body",
+   "pt": [
+    502,
+    405
+   ]
+  },
+  "pivot": {
+   "bone": "body",
+   "pt": [
+    501.5,
+    405
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "whole",
+   "source": "pose",
+   "bone": "body",
+   "select": {
+    "rest": true
+   }
+  }
+ ]
+}
