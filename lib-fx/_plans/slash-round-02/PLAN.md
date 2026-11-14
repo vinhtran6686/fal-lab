@@ -10,8 +10,8 @@ Người lập kế hoạch không thi công; người thi công làm đúng t�
 - [x] **S2b** `sweep` đủ mạnh (phần gần dài và dày hơn), nhịp tan theo bán kính: [S2b-sweep-strength.md](S2b-sweep-strength.md)
 - [x] **S4** Chém ngang ba pose: nhịp 5 pha + rig một mảnh cho thân (bớt đơ), vệt dựng từ vị trí lưỡi thật của rig: [S4-sweep-body-timing.md](S4-sweep-body-timing.md) **(ưu tiên 1)**
 - [x] **S4b** Xuất chính thức `skill_sweep_side` (thân + vệt) vào `frames/`, cập nhật manifest: [S4b-sweep-export.md](S4b-sweep-export.md) **(ưu tiên 1)**
-- [ ] **S5** Việc nhỏ từ review chém ngang ba pose (chưa viết task; danh sách ở `../HANDOVER.md` mục 4)
-- [ ] **S3** Rìu dày hơn: ít dải, dải rộng (chưa viết task)
+- [ ] **S5** Việc nhỏ từ review chém ngang ba pose (tài liệu, `swing_fit` vào `meta.json`, `rebuild` chạy lại được, định nghĩa đo độ dày, test, tia lửa): [S5-sweep-review-leftovers.md](S5-sweep-review-leftovers.md) (song song với S3)
+- [ ] **S3** Rìu dày hơn: ít dải, dải rộng: [S3-axe-thick-bands.md](S3-axe-thick-bands.md) (song song với S5; S3 giữ `layers/slash.py`, `melee/slash/slash.py`, `rules/vfx/slash/README.md`)
 - [ ] **CHẤM** (người lập kế hoạch) sau mỗi task → **DUYỆT** (người dùng)
 
 ## Luật chung
