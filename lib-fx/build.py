@@ -288,6 +288,9 @@ def _value(v):
 def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, prefix, sets=(), track=None, swing=None):
     """An fxkit effect between two points of the caller's coordinates, written as a variant. Returns the quality gate."""
     e = mod.EFFECTS[name]
+    fitted = bool(swing and swing.get("tip_a"))                            # a fitted swing: the points come with it, so --from / --to are optional
+    if fitted:
+        frm = frm or swing["pivot"]; to = to or swing["tip_b"]
     A = frm or (0.0, 0.0); B = to or (A[0] + e.reach * s, A[1])
     if sets:                                                               # --set layer.param=value: a variant of the effect for this export only
         ch = {}
@@ -304,6 +307,8 @@ def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, p
     if swing:                                                              # --swing: every slash layer swings in a plane seen from the game's camera
         ids = {l.id: {"swing": swing} for l in e.layers if l.kind == "slash"}
         if not ids: sys.exit("--swing: this effect has no slash layer")
+        if fitted:                                                         # sparks leave from the tip at the hit (measured), not from the plane's default end
+            ids.update({l.id: {"at": "b"} for l in e.layers if l.id in ("scraps", "streaks")})
         e = e.variant(layers=ids)
     r = fxkit.render(e, A, B, pal=pal, s=s, seed=seed, fps=fps, speed=speed)
     tags = kit_tags(mod, e); anchor = r["anchor"]; r2 = lambda p: [round(p[0], 2), round(p[1], 2)]
@@ -336,12 +341,23 @@ def parse_swing(text):
     for part in text.split(";"):
         k, _, v = part.strip().partition("=")
         if v: d[k.strip()] = v.strip()
-    bad = set(d) - {"k", "roll", "u0", "u1", "r", "blade", "ease"}
-    if bad: sys.exit(f"--swing: unknown key {', '.join(sorted(bad))}; keys are k, roll, u0, u1, r, blade, ease")
+    pts = ("tip_a", "tip_b", "pivot", "pivot_b", "root_a", "root_b")
+    bad = set(d) - {"k", "roll", "u0", "u1", "r", "blade", "ease", "via", *pts}
+    if bad: sys.exit(f"--swing: unknown key {', '.join(sorted(bad))}; keys are k, roll, u0, u1, r, blade, ease, tip_a, tip_b, pivot, pivot_b, root_a, root_b, via")
     try: sw = {"k": float(d.get("k", 0.3)), "roll": float(d.get("roll", 0)), "u0": float(d.get("u0", 235)), "u1": float(d.get("u1", 430)),
                "r": float(d.get("r", 0)), "blade": float(d.get("blade", 0.75)), "ease": float(d.get("ease", 1.3))}
     except ValueError: sys.exit("--swing wants numbers: k=0.3;roll=0;u0=235;u1=430;r=120;blade=0.75;ease=1.3")
     if not 0 < sw["k"] <= 1 or not 0 < sw["blade"] <= 1: sys.exit("--swing: k and blade must be in (0, 1]")
+    for key in pts:                                                        # fitted swing: points measured on the two stills (px @2x, like --from)
+        if key in d:
+            try: sw[key] = tuple(float(x) for x in d[key].split(","))
+            except ValueError: sys.exit(f"--swing: {key} wants X,Y")
+            if len(sw[key]) != 2: sys.exit(f"--swing: {key} wants X,Y")
+    if "via" in d:
+        if d["via"] not in ("near", "far"): sys.exit("--swing: via is near or far")
+        sw["via"] = d["via"]
+    if any(key in sw for key in ("tip_a", "tip_b", "pivot")) and not all(key in sw for key in ("tip_a", "tip_b", "pivot")):
+        sys.exit("--swing: a fitted swing needs tip_a, tip_b and pivot together")
     return sw
 
 
@@ -378,7 +394,9 @@ def main():
                     "(hilt at the start / end, px @2x like --from; --from / --to are the blade tips)")
     ap.add_argument("--swing", metavar="SPEC", help="variant, slash effects: a swing in a plane seen from the game's camera: 'k=0.3;roll=0;u0=235;u1=430;r=120;blade=0.75;ease=1.3' "
                     "(k = flatness, 1 = flat to the screen; roll in degrees; u0 / u1 = the blade's angle in its plane at the start / end: 0 ahead, 90 near, 180 behind, 270 far; "
-                    "--from = the SHOULDER, --to = a point ahead of it at the same height; r = shoulder to weapon tip, px @2x). Not with --track")
+                    "--from = the SHOULDER, --to = a point ahead of it at the same height; r = shoulder to weapon tip, px @2x). Not with --track. "
+                    "FITTED to measured points (px @2x like --from): 'tip_a=X,Y;tip_b=X,Y;pivot=X,Y[;pivot_b=X,Y][;root_a=X,Y;root_b=X,Y][;via=near|far][;k=0.3]' derives r, u0, u1 "
+                    "so the stroke passes through both tips (--from / --to then default to pivot / tip_b)")
     ap.add_argument("--split", action="store_true", help="variant, fxkit effects: also write back/ and front/ (layers behind / in front of the character)")
     a = ap.parse_args()
     want = a.path.strip("/")

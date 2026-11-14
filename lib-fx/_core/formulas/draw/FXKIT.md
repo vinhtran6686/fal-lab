@@ -148,6 +148,16 @@ python lib-fx/build.py melee/slash/crescent --from 107,191 --to 240,243 --pal fr
   `k` = độ dẹt (1 phẳng với màn hình, 0.3 nằm trên đất, 0.6 xéo), `roll` = độ xoay trục dài (dương: đầu phía trước chúc xuống), `u0` / `u1` = góc lưỡi trong mặt phẳng lúc đầu / cuối
   (0 phía trước, 90 **gần** người xem, 180 phía sau, 270 **xa**; `u` tăng: trước -> gần -> sau -> xa), `r` = bán kính mũi (px @2x; 0 = khoảng cách `--from` -> `--to`), `blade` = phần bán kính được quét. Khoá `w_near` (chỉ có trong dict `swing` của hiệu ứng, không có trên dòng lệnh; px @2x ở s = 1) đặt bề dày của phần gần thay cho công thức theo bán kính (`sweep`: 12; 0 / không có = công thức cũ, `diag_*`); nhịp tan được nhân `(r * s / 120) ** 0.5` nên vệt nhỏ tan chậm lại.
   Nửa **xa** (depth < 0) vẽ vào `back/` (sau thân), mảnh, tông nguội, không mép trắng, quầng giảm nửa; nửa **gần** vào `front/`, dày, sáng; `k = 1` cho cung tròn nằm hết ở `front/`.
+  **Khớp vào điểm đo trên hai pose** (thay cho đặt tay `u0` / `u1` / `r`; mọi toạ độ px @2x như `--from`):
+  ```
+  python lib-fx/build.py melee/slash/sweep --pal frost --fps 15 --split \
+      --swing "tip_a=X,Y;tip_b=X,Y;pivot=X,Y[;pivot_b=X,Y][;root_a=X,Y;root_b=X,Y][;via=near|far][;k=0.22]" --out <thư mục>
+  ```
+  `tip_a` / `tip_b` = mũi vũ khí ở pose A / B, `pivot` = tâm thân (x) ở độ cao của lưỡi (y: đường lưỡi tại x của thân, hoặc độ cao mũi), `pivot_b` nếu thân dịch giữa hai pose, `root_a` / `root_b` = đầu chuôi của phần lưỡi
+  NHÌN THẤY (pose A giấu chuôi: điểm lưỡi chìm sau thân). Với `k` (mặc định 0.3; chọn 0.2 - 0.25 nếu bụng vệt tụt quá thấp) mỗi mũi cho ra góc và bán kính của riêng nó: độ lệch của mũi so với trục quay trong hai trục
+  của mặt phẳng (dọc trục dài, ngang chia `k`) là `pr * (cos u, sin u)`, `pr = r (1 + 0.16 sin u sqrt(1 - k^2))`; bán kính và trục quay nội suy từ A sang B theo góc. Vệt = bề mặt lưỡi quét: mép ngoài qua cả hai mũi, mép trong
+  và mép trắng trên đường `root -> tip` của từng pose (khung 1: lát mỏng nằm trên phần lưỡi A nhìn thấy; khung trúng đòn: mép trắng phủ cả phần lưỡi B). Không có `--from` / `--to`: mặc định `pivot` / `tip_b`. Hai pose lệch nhau phải được căn
+  về cùng một hệ toạ độ trước khi đo (`docs/pipeline/pose-pair-fx-method.md` mục 10). Không đổi gì khi thiếu các khoá này. Hình học: `fit_swing` trong `layers/slash.py`.
   Nhịp (khung trước đòn, khung trúng đòn, tan) giống `swing`. Không dùng chung với `--track`. Hình học trong `layers/slash.py` (`plane_point`); lệch so với công thức ban đầu của task: bề dày nét lấy theo `k * R * blade` nhân hệ số gần / xa
   (không lấy hình chiếu của lưỡi), vì hình chiếu thật làm hai đầu trái phải tròn bè, không nhọn như một đường chém.
 - `--pal`, `--s`, `--seed`, `--fps`, `--speed`, `--name`; `--set LỚP.THAM_SỐ=GIÁ_TRỊ` chỉnh một lớp cho riêng lần xuất này (`LỚP.off=true` bỏ lớp).

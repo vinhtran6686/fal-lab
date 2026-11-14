@@ -126,7 +126,7 @@ Measured on the stills (source px), next to the foot mark (`pose-pair-fx-method.
 2. weapon **root** (hilt, hand) and **tip** in pose A and pose B;
 3. for ground and diagonal planes also the **pivot** (the shoulder the arc turns around) and whether the weapon passes **behind** or **in front** of the body on its way;
 4. the height of the hands above the ground line in both poses (they must match for a ground-plane move).
-`weapon_marks.json` keeps these; the effect is then built with `python lib-fx/build.py melee/slash/<effect> --from ... --to ... --track ...` (frontal) or `--swing` (ground, diagonal: `FXKIT.md` section 6).
+`weapon_marks.json` keeps these (for a ground pair that does not line up, `out/heroes/azure_blade/source/design/weapon_marks_sweep.json` is the model: measure BOTH stills, align B to A by the feet, and fit the effect to the measured tips with `--swing "tip_a=..;tip_b=..;pivot=.."` instead of a fixed shape; `docs/pipeline/pose-pair-fx-method.md` section 10); the effect is then built with `python lib-fx/build.py melee/slash/<effect> --from ... --to ... --track ...` (frontal) or `--swing` (ground, diagonal: `FXKIT.md` section 6).
 
 ## 7. Checklist for a pose of a move
 - [ ] The plane is named in the skill description and in `brief.md`.

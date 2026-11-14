@@ -1,0 +1,90 @@
+{
+ "plane": "ground (horizontal sweep), A -> B through the near half (in front of the body)",
+ "hit_frame": 2,
+ "fps": 15,
+ "image": "pose_skill_sweep_p1_v02.png / pose_skill_sweep_p2_v03.png, 1024x1024 source px, origin top-left, y down",
+ "tip_a": [
+  129,
+  464
+ ],
+ "root_a": [
+  393,
+  483
+ ],
+ "tip_b": [
+  1007,
+  424
+ ],
+ "root_b": [
+  662,
+  416
+ ],
+ "root_a_note": "the blade of A vanishes behind the cape at x=393: root_a is the end of the VISIBLE blade (hilt hidden)",
+ "pivot_a": [
+  598,
+  310
+ ],
+ "pivot_b": [
+  449,
+  300
+ ],
+ "pivot_note": "torso centre x = middle of the shoulder plates; y of the torso point = shoulder line (for the effect the pivot y is the height of the blade line at that x)",
+ "foot_mid_a": [
+  541.75,
+  921.0
+ ],
+ "foot_mid_b": [
+  438.0,
+  940.0
+ ],
+ "height_a": 812.0,
+ "height_b": 852.0,
+ "height_note": "head top to the mean of the lowest boot pixels (B: left boot 951, right 929)",
+ "dx": -103.75,
+ "dy": 19.0,
+ "offset_pivot_ab": [
+  -149,
+  -10
+ ],
+ "scale_b_to_a": 0.9531,
+ "scale_ratio_b_over_a": 1.0493,
+ "alignment": {
+  "policy": "feet: scale B by scale_b_to_a about foot_mid_b, then put foot_mid_b on foot_mid_a (planted feet). Everything below in the aligned (A) frame, source px",
+  "residual_torso_shift": [
+   -45.8,
+   1.0
+  ],
+  "tip_b": [
+   1084.0,
+   429.2
+  ],
+  "root_b": [
+   755.2,
+   421.6
+  ],
+  "pivot_b": [
+   552.2,
+   311.0
+  ]
+ },
+ "fit": {
+  "note": "effect built in px @2x = aligned source px * 0.2 (character drawn at 0.2); pivot y = tip height (A) / blade-line height at the torso x minus 14 (B); k 0.22",
+  "scale": 0.2,
+  "k": 0.22,
+  "pivot_a": [
+   598,
+   464
+  ],
+  "pivot_b_aligned": [
+   552.2,
+   415.2
+  ],
+  "swing": "tip_a=25.80,92.80;tip_b=216.81,85.85;pivot=119.60,92.80;pivot_b=110.45,83.05;root_a=78.60,96.60;root_b=151.05,84.32;k=0.22",
+  "derived": {
+   "u0": 180.0,
+   "u1": 6.8,
+   "ra_px2x": 93.8,
+   "rb_px2x": 105.2
+  }
+ }
+}
