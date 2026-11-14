@@ -335,3 +335,26 @@ Hai bộ ba tự nghĩ (khác hẳn pose thật, chỉ để chứng minh tổng
 - Thân C lệch -51.3 px (ngang) và -28.6 px (dọc, vì C là chính diện: giữa hai giáp vai ở y 270 so với y 310 của lưng A) so với thân A sau căn, chỉ lệch 5.6 px (ngang) so với thân B; C to hơn A 6.7 % (hơn B 1.7 %), bù bằng phóng về A quanh chân. `pivot_c` đặt theo nắm tay (y 81.6) và `pivot_b` theo đường lưỡi B trừ 14: `k` tự khớp phụ thuộc hai y này (y thấp hơn thì `k` lớn hơn): đổi y thì kiểm lại hình vệt.
 - Tia lửa ở khung 3 - 5 bay xuống về phía người xem từ mũi C (arc 75 - 115 độ từ trục tâm thân -> C, 3 vệt dài 62 px): đã thu nhỏ, nhưng vẫn là phần dễ chướng mắt nhất ở khung trúng đòn.
 **Khi duyệt cần nhìn gì.** (1) Đọc GIF ở tốc độ thường: đầu có đi trái -> (sau thân) -> phải -> vòng về phía người xem qua A, B, C không; (2) khung 2: nét có đứng ở lưỡi B, phần lớn nằm sau thân và cánh tay không; (3) khung 3: đầu cụt sáng nằm trên nêm lưỡi C, không có thanh trắng đứng, không có mũi móc; nét dày dần về phía C; (4) khung tan: phần còn lại nằm gần đầu C, đuôi rút trước; (5) mép trắng nằm trên mép ngoài, không trượt khỏi nét; (6) thân C lệch so với A, B: nếu chướng mắt thì dịch rig, đừng dịch vệt.
+
+### 10.7 Bài học và báo cáo cho reviewer (chuỗi chém ngang A -> B -> C, 2026-11-14)
+**Bài học** (bản tiếng Anh đầy đủ ở `.claude/skills/fal-image/action-planes.md` mục 8; đọc trước khi làm động tác quét vũ khí quanh thân):
+1. Chốt với người dùng bằng chữ **trước khi sinh ảnh**: bảng `pose | vai trò | % quãng đường | đao chỉ về đâu trên màn hình | hướng thân (tên ở mục 4b)`. Lần này gọi C là "giữa" trong khi người dùng nghĩ C là "cuối": phải dựng lại cả chuỗi và hai tài liệu. Chữ cái theo THỨ TỰ ĐI.
+2. Đổi bảng thành **cung có số**: góc 0 = trước (phải), 90 = gần người xem nhất, 180 = sau lưng (trái), 270 = xa; tổng góc quét, nửa ellipse (gần / xa) đi qua, đoạn nào chạy phải sang trái trên màn hình. Pose đao chỉ vào người xem là điểm GIỮA của cung 180° qua phía gần và điểm CUỐI của cung 270° qua phía xa. Hỏi người dùng chọn cung nào.
+3. **Hai pose không đủ** cho cú quét đi qua đường gần-xa: cả vệt hiện trong một khung nên hướng đọc từ HÌNH DÁNG, và bụng dày nằm sai phía làm vệt đọc ngược. Mỗi chặng của cung có một pose, đầu vệt ở chỗ khác nhau mỗi khung.
+4. Hướng đọc của vệt do **hình** quyết định, không do dữ liệu: đầu = dày, sáng, tù, mép trắng; đuôi = kim mảnh, tan trước; không móc cong ngược; đo độ dày dọc vệt.
+5. Prompt không ghim được chân, cỡ, độ chếch nhỏ: **đo, căn theo điểm giữa hai chân, khớp vệt vào điểm đo** (mục 10.1-10.3). Đừng tốn lần thử cho việc đó.
+6. Tự nhìn mọi ảnh trước khi gửi; số của người làm hộ có thể "đạt" vì đổi cách đo: nêu cả hai.
+7. Chi phí 6 ảnh = 0,0979 USD (A 2 lần, B 3 lần, C 1 lần).
+
+**Báo cáo cho reviewer: cần xem và quyết định**
+| Mục | Trạng thái |
+|---|---|
+| Ba ảnh đã duyệt (người dùng): `pose_skill_sweep_p1_v02`, `p2_v03`, `p3_v01` trong `out/heroes/azure_blade/source/design/` | duyệt; dữ liệu đo: `weapon_marks_sweep.json` (nằm trong `out/` bị git bỏ qua, thêm bằng `git add -f`) |
+| Cung: 270° qua phía xa rồi vòng phía gần, B ở khoảng 0,695 quãng đường (không đúng một nửa), k = 0,195, góc 180 / 367,7 / 450 | người dùng chọn; đoạn B -> C chạy phải sang trái trên màn hình, đã làm đầu vệt rõ nhưng **chưa có người ngoài xác nhận hướng đọc** |
+| Đạt (px @2x): đầu tới mũi B 1,2; tới mũi C 0,7; nửa xa 99,6% lớp sau; tan 0,707 / 0,272 / 0,018; hash 11/11 giống hệt | đạt |
+| **Chưa đạt / đổi cách đo**: độ dày không giảm chỉ đạt sau khi bỏ 3,5% quanh chỗ cắt đầu và chỗ đổi lớp (đo nguyên bản các ô cuối giảm 3,3-4,3 px); độ dày gồm quầng nên đầu đọc 28 px so với thiết kế 16,5 | reviewer nên xem ảnh, không chỉ số |
+| **Chưa đạt**: lát đao khung 1 lệch tối đa 6,5 px (ngưỡng 6; 9 px ở bộ ba tự nghĩ); đầu vệt ở B tù nhưng không sáng (đoạn nửa gần ngắn) | chấp nhận hay sửa |
+| Thay đổi ngoài kind `swing`: tham số `hand=` của `fxkit.render` (mặc định không đổi, hash giữ); `--to` mặc định ở ba điểm là `tip_c`; chế độ hai điểm `lead=1` đổi hình và **không nằm trong bộ hồi quy** | reviewer kiểm |
+| Chưa chạy: `fxkit_test.py` đủ (chỉ phần `slash`); chưa dựng rig / thở / nảy cho cặp pose; thân C chỉ ghép từ khung 3; chân và cỡ các pose vẫn lệch (căn khi ghép, residual ở mục 10.1-10.5); `k` phụ thuộc độ cao `pivot_c` (chọn = độ cao nắm đấm) | mở |
+| Chưa thử trên nhân vật khác và chưa thử cú quét trái; chưa có cặp pose thật cho `diag_down` / `diag_up` | mở |
+| Ảnh trước/sau: `docs/pipeline/images/pose-pair-sweep-abc-before-after.png` (142 KB); GIF và lưới nằm trong thư mục tạm của phiên (không có trong repo) | cần lưu GIF nếu muốn giữ |
