@@ -147,7 +147,7 @@ class Effect:
         return out
 
 
-def render(effect, a=None, b=None, pal=None, s=1.0, seed=0, fps=30.0, speed=1.0, only=None, ss=3, pad=6):
+def render(effect, a=None, b=None, pal=None, s=1.0, seed=0, fps=30.0, speed=1.0, only=None, ss=3, pad=6, hand=None):
     """Every frame of an effect between two points. a, b: canvas px of the caller (any origin); None = the library default
     (a at the origin, b `reach` px to the right). Returns dict:
       frames (RGBA, back under front), back, front (the two halves, for drawing a character between them), size, anchor (a in
@@ -162,7 +162,7 @@ def render(effect, a=None, b=None, pal=None, s=1.0, seed=0, fps=30.0, speed=1.0,
     E = effect.extent * s
     x0, y0 = math.floor(min(a[0], b[0]) - E), math.floor(min(a[1], b[1]) - E)
     W, H = math.ceil(max(a[0], b[0]) + E) - x0, math.ceil(max(a[1], b[1]) + E) - y0
-    sp = Space((a[0] - x0, a[1] - y0), (b[0] - x0, b[1] - y0), s, origin=(x0, y0))
+    sp = Space((a[0] - x0, a[1] - y0), (b[0] - x0, b[1] - y0), s, hand=hand, origin=(x0, y0))
     ramp = Ramp.of(pal or effect.pal)
     dt = speed / fps                                                        # the frame grid is pinned to the hit: frame n_pre is t = 0
     n_pre = int(math.ceil(-effect.t0 / dt - 1e-6))

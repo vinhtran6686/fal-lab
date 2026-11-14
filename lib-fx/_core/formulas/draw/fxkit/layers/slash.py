@@ -35,15 +35,21 @@ def fit_swing(sw, face, world):
     radius runs from ra to rb with the angle. `via` = near (default: the path crosses the near half, in front of the body) or far.
     root_a / root_b (the hilt end of the VISIBLE blade, a pose that hides the hilt gives the point where the blade vanishes) set the blade line: the
     inner edge of the smear and the white edge lie on the line root -> tip in each pose. Returns the numbers the kind needs (canvas px).
-    THREE tips (`tip_c`, the middle pose of the swing: the blade pointing at the viewer, the nearest point of the arc; optional `pivot_c`, `root_c`):
-    the same closed form for the third tip, and when `k` is not given it is FITTED: the k in 0.10 .. 0.60 for which the radius of the middle tip equals
-    the radius run from A to B at its angle, so the ellipse through the three tips is found, not assumed (`pivot_c` = the torso centre x at the hand height). The path then runs A -> C -> B: `fc` is the path fraction at
-    which the tip is at C (share of the angle A -> C), and the angle, radius, pivot and hilt are piecewise linear with a knot at C."""
+    THREE tips, in the ORDER OF TRAVEL: `tip_a` the start, `tip_b` the MIDDLE pose, `tip_c` the END pose (optional `pivot_b`, `pivot_c`, `root_b`, `root_c`).
+    All three lie on ONE ellipse swept with a continuously growing angle (unwrapped, it may pass 360): `via` far (the default for three tips) starts through
+    the far half (180 -> 270 -> 360 -> 450: about +270 degrees for a start on the left, a middle on the right and an end nearest the viewer), `via` near
+    makes the angle decrease. When `k` is not given it is FITTED: the k in 0.10 .. 0.60 for which the radius of the middle tip lies on the radius run from
+    the start tip to the end tip at its angle, so the ellipse through the three tips is found, not assumed. `fc` is the path fraction at which the tip is at
+    the middle pose (its share of the angle); the angle, radius, pivot and hilt are piecewise linear with a knot there. In the returned dict the knot is
+    `uc / rc / pc / tip_c / root_c` (the middle pose) and `u1 / rb / pb / tip_b / root_b` the end pose (internal names of the first three-point round)."""
     k, A, P, sq = _plane(sw, face)
-    ta, tb, pa = world(sw["tip_a"]), world(sw["tip_b"]), world(sw["pivot"])
-    pb = world(sw["pivot_b"]) if sw.get("pivot_b") else pa
-    tc = world(sw["tip_c"]) if sw.get("tip_c") else None
-    pc = (world(sw["pivot_c"]) if sw.get("pivot_c") else ((pa[0] + pb[0]) / 2, (pa[1] + pb[1]) / 2)) if tc else None
+    three = bool(sw.get("tip_c"))
+    ta, pa = world(sw["tip_a"]), world(sw["pivot"])
+    tb, pb = world(sw["tip_b"]), (world(sw["pivot_b"]) if sw.get("pivot_b") else pa)         # two tips: the end; three: the middle (renamed below)
+    tc = pc = None; ra_, rb_ = sw.get("root_a"), sw.get("root_b")
+    if three:
+        tc, pc, rc_ = tb, pb, rb_                                                            # the middle pose
+        tb = world(sw["tip_c"]); pb = world(sw["pivot_c"]) if sw.get("pivot_c") else pc; rb_ = sw.get("root_c")
 
     def polar(t, o, k, A, P, sq):
         dx, dy = t[0] - o[0], t[1] - o[1]
@@ -52,17 +58,18 @@ def fit_swing(sw, face, world):
         return u, math.hypot(a_, p_) / (1 + 0.16 * math.sin(math.radians(u)) * sq)
     want = -1 if str(sw.get("via", "near")).lower() == "far" else 1                     # the half the path crosses: + near
 
-    def legs(kk):                                                                       # angles and radii of the tips for the flatness kk; the path A -> (C) -> B unwrapped
+    def legs(kk):                                                                       # angles and radii of the tips for the flatness kk; the path A -> (mid) -> end unwrapped
         k_, A_, P_, sq_ = _plane(dict(sw, k=kk), face)
         u0, ra = polar(ta, pa, k_, A_, P_, sq_); ub, rb = polar(tb, pb, k_, A_, P_, sq_)
-        cands = sorted((ub + 360.0 * m for m in (-2, -1, 0, 1, 2)), key=lambda x: abs(x - u0))
-        u1 = next((x for x in cands if want * math.sin(math.radians((u0 + x) / 2)) > 0), cands[0])
-        if not tc: return u0, ra, None, None, u1, rb
-        uc0, rc = polar(tc, pc, k_, A_, P_, sq_)
-        mid = (u0 + u1) / 2; lo_, hi_ = min(u0, u1), max(u0, u1)
-        alts = [uc0 + 360.0 * m for m in (-2, -1, 0, 1, 2)]
-        inside = [x for x in alts if lo_ - 1e-9 <= x <= hi_ + 1e-9]
-        return u0, ra, min(inside or alts, key=lambda x: abs(x - mid)), rc, u1, rb
+        if not tc:
+            cands = sorted((ub + 360.0 * m for m in (-2, -1, 0, 1, 2)), key=lambda x: abs(x - u0))
+            u1 = next((x for x in cands if want * math.sin(math.radians((u0 + x) / 2)) > 0), cands[0])
+            return u0, ra, None, None, u1, rb
+        um0, rm = polar(tc, pc, k_, A_, P_, sq_)
+        dirn = -1.0 if str(sw.get("via", "far")).lower() == "near" else 1.0              # + : the angle grows from the start through the far half
+        um = u0 + dirn * ((dirn * (um0 - u0)) % 360.0)                                    # the middle pose: the first time after the start (in the travel direction)
+        u1 = um + dirn * ((dirn * (ub - um)) % 360.0)                                     # the end pose: the first time after the middle
+        return u0, ra, um, rm, u1, rb
     kfit = None
     if tc and sw.get("kfit"):                                                           # the flatness for which the middle tip sits on the radius run from A to B
         best = None
@@ -74,7 +81,6 @@ def fit_swing(sw, face, world):
             if best is None or err < best[0] - 1e-9: best = (err, kk)
         kfit = best[1]; k, A, P, sq = _plane(dict(sw, k=kfit), face)
     u0, ra, uc, rc, u1, rb = legs(kfit or k)
-    ra_, rb_ = sw.get("root_a"), sw.get("root_b")
     corr = []
     for key, tip, piv, u, r, root in (("a", ta, pa, u0, ra, ra_), ("b", tb, pb, u1, rb, rb_)):
         if not root: corr.append((0.0, 0.0, float(sw.get("blade", 0.75)))); continue
@@ -84,8 +90,9 @@ def fit_swing(sw, face, world):
     out = dict(u0=u0, u1=u1, ra=ra, rb=rb, pa=pa, pb=pb, corr=corr, tip_a=ta, tip_b=tb)
     if tc:
         fc = min(0.8, max(0.2, (uc - u0) / (u1 - u0))) if u1 != u0 else 0.5
-        out.update(c=True, uc=uc, rc=rc, pc=pc, tip_c=tc, fc=fc, root_c=world(sw["root_c"]) if sw.get("root_c") else None,
+        out.update(c=True, uc=uc, rc=rc, pc=pc, tip_c=tc, fc=fc,
                    root_a=world(ra_) if ra_ else None, root_b=world(rb_) if rb_ else None)
+        out["root_c"] = world(rc_) if rc_ else None
         if kfit: out["k"] = kfit
     return out
 
@@ -116,11 +123,12 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     FITTED swing: give "tip_a", "tip_b" (the tip at the start and at the hit), "pivot" (the torso centre at the height of the blade; optional "pivot_b" if the
     torso moved, "root_a" / "root_b" the hilt end of the visible blade, "via" near | far) and u0, u1, r come from the points (`fit_swing`): the smear's
     outer edge passes through both tips, its inner edge and the white edge lie on the blade line of each pose. k and roll are still the plane's.
-    LEAD swing (fitted, with "tip_c" = the tip in the middle pose, optional "pivot_c", "root_c"; or "lead": 1 for two tips): the smear must READ in its direction.
-    The head (the end at the tip's present place) is the thickest, brightest, blunt end with the white edge, the tail a needle that fades first: the width
-    grows from tail to head (it never exceeds the blade's own projected length behind the head), and the end cap is the head's blade line, so nothing hooks back.
-    With "tip_c" the path runs A -> C -> B (`fit_swing`: k fitted when not given) and the smear is born two frames before the hit: the frame plan at 15 fps is
-    frame 1 = pose A (a thin slice on blade A), frame 2 = pose C (the stroke A -> C, head at C), frame 3 = pose B and the hit (the whole stroke, head at B), then it fades tail first."""
+    LEAD swing (fitted, with "tip_c" = the tip in the END pose, "tip_b" then the MIDDLE pose, optional "pivot_c", "root_c"; or "lead": 1 for two tips): the smear must READ in its direction.
+    The head (the end at the tip's present place) is the thickest, brightest, blunt end with a white edge along the stroke's own outer edge (near part only), the tail a needle that
+    fades first: the width grows from tail to head (it never exceeds the blade's own projected length behind the head), the stroke is drawn as small quads (a tight turn of
+    the path cannot fold it), the head is cut square to the path at the tip (nothing lies beyond it along the path) and the last 20 % turn the offset to the head's blade line.
+    With "tip_c" the path runs A -> B -> C in the order of travel (`fit_swing`: k fitted when not given, far half first by default, `via` near for the other way) and the smear is born two frames
+    before the hit: the frame plan at 15 fps is frame 1 = pose A (a thin slice on blade A), frame 2 = pose B (the stroke A -> B, head at B), frame 3 = pose C and the hit (the whole stroke, head at C), then it fades tail first."""
     axe = weapon == "axe"
     if width <= 0: width = 80.0 if axe else 46.0
     if span <= 0: span = 0.7 if axe else 1.0
@@ -242,13 +250,17 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         def lead_n(f):                                                                      # the tip, and the unit normal of its path towards the hilt side
             tip, nn, _ = swing_at(f)
             if fh < 0.09: return tip, nn                                                    # the slice on blade A follows the blade
-            e = 0.06; p1, p0 = swing_at(min(1.0, f + e))[0], swing_at(max(0.0, f - e))[0]
+            e = 0.06; hi_ = min(1.0, f + e, fh); p1, p0 = swing_at(hi_)[0], swing_at(max(0.0, min(f - e, hi_ - e)))[0]   # never looks past the head: the end cap is square to the path where the stroke ends
             tx, ty = p1[0] - p0[0], p1[1] - p0[1]; m_ = math.hypot(tx, ty) or 1e-6; nx, ny = -ty / m_, tx / m_
             hl = hilt_pt(f)
             if nx * (hl[0] - tip[0]) + ny * (hl[1] - tip[1]) < 0: nx, ny = -nx, -ny      # the hilt side of the path
             return tip, (nx, ny)
-        LEADW = float(sw.get('lead_w', 0.26))
+        LEADW = float(sw.get('lead_w', 0.16))
         sliver = fh < 0.09                                                                  # the thin slice on blade A: as wide as the blade itself
+        hcut = None
+        if fh >= 0.09:                                                                      # the head is cut square to the path at the tip: nothing of the stroke lies beyond the head along the path (the inner side of a thick stroke would otherwise swing over the path past a tight turn, a hook)
+            tH = swing_at(fh)[0]; t0_ = swing_at(max(0.0, fh - 0.015))[0]; tx_, ty_ = tH[0] - t0_[0], tH[1] - t0_[1]; tm_ = math.hypot(tx_, ty_) or 1e-6
+            hcut = (tH, tx_ / tm_, ty_ / tm_)
         Wh = swing_at(fh)[2] if sliver else min(swing_at(fh)[2], LEADW * R)       # the head's width: the blade's projected length, at most a fifth of the radius
 
     def prof(v):                                                                           # width along the ribbon, v 0 tail .. 1 head
@@ -296,6 +308,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         base = [0.5, 0.3, 0.2] if K == 3 else [1.0 / K] * K
         ws = [w * rng.uniform(0.85, 1.15) for w in base]; t = sum(ws); ws = [w / t for w in ws]
         gaps = [0.0] * (K - 1)
+    if lead and K == 3: ws = [0.0, 0.42, 0.58]                                               # a lead stroke has no faint hilt strand: it would show as a translucent wedge beside the stroke
     bands, x = [], 0.0
     for j in range(K):
         bands.append((x, x + ws[j])); x += ws[j] + (gaps[j] if j < K - 1 else 0.0)
@@ -308,7 +321,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         phi = (1 - ws[j] / wmax) if axe else 1 - j / max(1, K - 1)
         pj = r.uniform(0.85, 1.15)
         S.append(dict(c0=bands[j][0], c1=bands[j][1],
-                      p=((1.6 + 1.6 * phi) if tracked else (0.8 + 1.5 * phi)) * pj * lk,
+                      p=((1.6 + 1.6 * phi) if tracked else (0.8 + 1.5 * phi)) * pj * lk * (1.35 if lead else 1.0),
                       rut=(0.2 + 0.55 * phi) * r.uniform(0.85, 1.15),
                       lag=0.12 * phi * r.uniform(0.6, 1.0),
                       start=(r.uniform(0.0, 0.1) if axe else 0.0)))
@@ -339,15 +352,33 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
                 out.append((a, (lo_ + hi_) / 2, cur)); a = (lo_ + hi_) / 2; cur = nx
         out.append((a, f1, cur)); return out
 
+    def headclip(poly):                                                                     # Sutherland-Hodgman against the half-plane behind the head (the side the tip came from)
+        if not hcut: return poly
+        (hx, hy), tx_, ty_ = hcut; side = lambda q: (q[0] - hx) * tx_ + (q[1] - hy) * ty_ - 0.4 * s
+        out = []
+        for i, q in enumerate(poly):
+            r = poly[i - 1]; a_, b_ = side(r), side(q)
+            if (a_ <= 0) != (b_ <= 0): w_ = a_ / (a_ - b_); out.append((r[0] + (q[0] - r[0]) * w_, r[1] + (q[1] - r[1]) * w_))
+            if b_ <= 0: out.append(q)
+        return out
+
+    def quads(f0, f1, cin, cout, n):                                                        # a lead stroke: one small quad per step, so a tight turn of the path can never fold the polygon
+        pl = strand(f0, f1, cin, cout, n); m = len(pl) // 2; Lp, Rp = pl[:m], pl[m:][::-1]
+        return [(headclip if (f0 + (f1 - f0) * i / max(m - 1, 1) - lo) / L >= 0.78 else (lambda q: q))([Lp[i], Lp[i + 1], Rp[i + 1], Rp[i]]) for i in range(m - 1)]    # only the last 22 % of the stroke can swing over the path past the head
+
     def put(tone, f0, f1, cin, cout):                                                       # one band of a strand, to the right half of the effect
         if not sw: ink.add(tone, strand(f0, f1, cin, cout)); return
         for fa_, fb_, near in parts(f0, f1):
             if fb_ - fa_ < 1e-4: continue
-            (ink if near else fink).add(tone, strand(fa_, fb_, cin, cout, n=max(8, int(56 * (fb_ - fa_) / max(f1 - f0, 1e-6)))))
+            n_ = max(8, int(56 * (fb_ - fa_) / max(f1 - f0, 1e-6)))
+            if lead:
+                for q_ in quads(fa_, fb_, cin, cout, max(n_, 24)): (ink if near else fink).add(tone, q_)
+            else: (ink if near else fink).add(tone, strand(fa_, fb_, cin, cout, n=n_))
 
     live = []
     for j, st in enumerate(S):
         tone = st.get("tone", "main")
+        if lead and K == 3 and j == 0: continue
         if tracked:                                                                           # fades from the tail early and hard; the leading edge stays on the blade
             sh = (1 - d) ** st["p"] * (1 - d) ** 0.6
             fa = lo + st["start"] * L + L * (0.55 + 0.35 * clamp((st["rut"] - 0.2) / 0.55)) * out_cubic(d * 1.6)
@@ -426,7 +457,18 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         k = 1.0 if tt <= 0.07 else clamp(1 - d / 0.35)                                       # white to the frame after the hit, then a hot sliver that thins out
         hnear = (not sw) or depth(fh) >= 0                                                   # a head on the far side is dim: no white edge there
         hink = ink if hnear else fink
-        if k > 0.02:                                                                         # a band of constant width lying on the head's blade line, on the side the tip came from
+        if k > 0.02 and lead and fh >= 0.09:                                                 # a lead stroke: the white edge is a band along the smear's own outer edge, widest at the head (no bar across the stroke)
+            if hnear:                                                                        # only on the near part: the far half is dim and has no white edge
+                fe = max(lo, fh - 0.34 * L); ne = 30
+                for i in range(ne):
+                    if depth(fe + (fh - fe) * (i + 0.5) / ne) < 0: continue
+                    qs = []
+                    for ii in (i, i + 1):
+                        f = fe + (fh - fe) * ii / ne; p_, nn_ = at(f); u_ = ii / ne
+                        qs.append((p_, nn_, 3.6 * s * k * (0.12 + 0.88 * smooth(0.0, 0.6, u_))))
+                    (pa_, na_, wa_), (pb_, nb_, wb_) = qs
+                    hink.add("edge", [pa_, pb_, (pb_[0] + nb_[0] * wb_, pb_[1] + nb_[1] * wb_), (pa_[0] + na_[0] * wa_, pa_[1] + na_[1] * wa_)])
+        elif k > 0.02:                                                                       # a band of constant width lying on the head's blade line, on the side the tip came from
             (p0, nn), (q0, _) = at(fh), at(max(lo, fh - 0.02))
             tx, ty = q0[0] - p0[0], q0[1] - p0[1]; dot = tx * nn[0] + ty * nn[1]; ox, oy = tx - dot * nn[0], ty - dot * nn[1]
             m = math.hypot(ox, oy) or 1.0; ox, oy = ox / m * 3.6 * s * k, oy / m * 3.6 * s * k

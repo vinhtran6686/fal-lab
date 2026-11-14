@@ -290,7 +290,7 @@ def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, p
     e = mod.EFFECTS[name]
     fitted = bool(swing and swing.get("tip_a"))                            # a fitted swing: the points come with it, so --from / --to are optional
     if fitted:
-        frm = frm or swing["pivot"]; to = to or swing["tip_b"]
+        frm = frm or swing["pivot"]; to = to or swing.get("tip_c") or swing["tip_b"]      # the end tip: tip_c with three points, else tip_b
     A = frm or (0.0, 0.0); B = to or (A[0] + e.reach * s, A[1])
     if sets:                                                               # --set layer.param=value: a variant of the effect for this export only
         ch = {}
@@ -307,13 +307,15 @@ def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, p
     if swing:                                                              # --swing: every slash layer swings in a plane seen from the game's camera
         ids = {l.id: {"swing": swing} for l in e.layers if l.kind == "slash"}
         if not ids: sys.exit("--swing: this effect has no slash layer")
-        if fitted and swing.get("tip_c"):                                  # three poses: the smear is born one frame earlier (A, C, then the hit on B), the hit stays t = 0
+        if fitted and swing.get("tip_c"):                                  # three poses: the smear is born one frame earlier (A, then B in the middle, then the hit on C), the hit stays t = 0
             for l in e.layers:
                 if l.id in ids: ids[l.id]["life"] = dataclasses.replace(l.life, start=l.life.start - 1 / fps, attack=l.life.attack + 1 / fps)
         if fitted:                                                         # sparks leave from the tip at the hit (measured), not from the plane's default end
             ids.update({l.id: {"at": "b"} for l in e.layers if l.id in ("scraps", "streaks")})
+        if fitted and swing.get("tip_c") and "streaks" in ids: ids["streaks"].update(n=3, length=62.0, width=3.5, r0=22.0, arc=(75, 115))   # three poses: short hair-thin slivers, a long white spike at the end pose would read as an arrow on the head
         e = e.variant(layers=ids)
-    r = fxkit.render(e, A, B, pal=pal, s=s, seed=seed, fps=fps, speed=speed)
+    hand = (1 if swing["tip_b"][0] >= swing["pivot"][0] else -1) if fitted and swing.get("tip_c") else None     # three points: it faces the side of the middle pose, whatever side the end tip is on
+    r = fxkit.render(e, A, B, pal=pal, s=s, seed=seed, fps=fps, speed=speed, hand=hand)
     tags = kit_tags(mod, e); anchor = r["anchor"]; r2 = lambda p: [round(p[0], 2), round(p[1], 2)]
     info = {"id": prefix, "effect": f"{fam}/{name}", "name": e.title, "tags": tags,
             "variant": {"pal": pal, "s": s, "seed": seed, "speed": speed, "from": list(A), "to": list(B)}}
