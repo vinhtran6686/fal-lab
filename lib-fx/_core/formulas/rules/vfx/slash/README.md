@@ -72,5 +72,5 @@ Cú vung nằm trong một mặt phẳng; máy quay cao, chếch xuống, nên h
 - **chém ngang** (`k = 0.3`, `sweep`): ellipse cao / rộng ~ 0,3, gần thành một đường; nửa đi sau thân (xa) mảnh và nguội, vẽ SAU thân; nửa đi trước (gần) dày và sáng, vẽ ĐÈ lên thân;
 - **chém xéo** (`k = 0.6`, `roll = +-35`, `diag_down` / `diag_up`): ellipse dẹt vừa, xoay nghiêng; từ cao phía sau xuống thấp phía trước, hoặc ngược lại.
 Luật: nét dày mỏng theo gần xa (xa 0,3 - gần 2,4 lần nét tối thiểu, nội suy theo `k`), không biến mất ở chỗ nhìn từ cạnh; nửa xa không có mép trắng; hai đầu vệt thon nhọn.
-Số đo đã đạt (2026-11-13, 15 fps): `sweep` cao / rộng 0,31, nét gần dày gấp 2,6 nét xa; `diag_down` 1,09, `diag_up` 1,0 (khung bao ở khung trúng đòn). Chi tiết: `lib-fx/_plans/slash-round-02/S2-swing-planes.md`.
+Số đo đã đạt (2026-11-14, 15 fps, S2b): `sweep` (u0 = 175, u1 = 460, `w_near` = 12, release 0,33) quét ngang qua trước ngực (phần gần dài 1,4 - 1,5 lần bán kính), cao / rộng 0,32 - 0,40, nét gần dày 16 - 18 px, gấp 3,6 - 6 lần nét xa; (S2, 2026-11-13: `sweep` cao / rộng 0,31, nét gần dày gấp 2,6 nét xa); `diag_down` 1,09, `diag_up` 1,0 (khung bao ở khung trúng đòn). Chi tiết: `lib-fx/_plans/slash-round-02/S2-swing-planes.md`.
 Còn mở: rìu theo mặt phẳng (S3), thử trên một pose pair thật của ngang / xéo.

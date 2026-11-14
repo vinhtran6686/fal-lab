@@ -54,3 +54,48 @@ Dựng `diag_down`, `diag_up` với cùng `--from/--to` ở 15 fps trước và 
 - [ ] `python lib-fx/build.py melee/slash --check` không FAIL; `python lib-fx/_tools/fxkit_test.py` qua; commit + push; đánh dấu ô S2b trong `PLAN.md`.
 
 ## Kết quả (người làm điền: `u0`, `u1`, `w_near`, `release` cuối cùng; số đo từng tiêu chí; đường dẫn ảnh; lệch so với task và lý do)
+
+### Giá trị cuối cùng (người làm: S2b, 2026-11-14)
+`sweep`: **u0 = 175, u1 = 460, w_near = 12, release = 0,33** (k = 0.3, blade = 0.75, ease = 1.3 giữ nguyên). Mới thêm: khoá `w_near` của dict `swing`; hệ số tan `(R / 120) ** 0.5` trong nhánh mặt phẳng vung; tham số `release` (mặc định 0,36) và `sparks` (cung bay của `scraps` / `streaks`, mặc định như cũ) của `_plane_effect`. `diag_down`, `diag_up` giữ `w_near` = 0 (công thức cũ), `release` 0,36, sparks cũ.
+
+Ảnh (thư mục tạm, không ghi vào `out/`; thư mục scratchpad của session, có thể bị dọn):
+- trước / sau, r = 85, 6 khung đầu, trên thân `azure_blade`: `/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/s2b/before_after_r85.png`
+- lưới 6 khung r = 85 / r = 120 (sau): `.../s2b/t8_r85.png`, `.../s2b/t8_r120.png`; khung trúng đòn phóng 300 %: `.../s2b/t8_zoom.png`; lưới trước: `.../s2b/before_r85_grid.png`, `.../s2b/before_r120_grid.png`
+- khung dựng: `.../s2b/before/{r85,r120,left85}` (mốc) và `.../s2b/t8/{r85,r120,left85,solo_r85,solo_r120}` (sau).
+
+### Số đo (15 fps, khung trúng đòn h = `hit_frame` trong `meta.json` = 2, 1-based; alpha >= 128; ghép lên khung 1 của `skill_crescent_puppet_side`, vai (140, 160))
+Mốc trước khi sửa (`u0 = 215`, `u1 = 410`), r = 85: `front/` 567 điểm, `back/` 279 (tỉ lệ 2,03); `front/` dài 57 px = 0,67 r; cao / rộng 0,335; `fxcheck`: pop (khung 3 -> 4 mất 47 %); A(h+1)/A(h) = 0,98, A(h+2)/A(h) = 0,51, A(h+3)/A(h) = 0,05; cung phần gần phủ: từ u = 0 tới 50° (u1 410 -> 50°). r = 120: front 1016, back 556, `front/` dài 0,48 r, cao / rộng 0,31, tỉ lệ A 0,69 / 0,41 / 0,10.
+
+Sau khi sửa:
+| tiêu chí | r = 85 | r = 120 | quay trái r = 85 |
+|---|---|---|---|
+| `front/` / `back/` (điểm) | 1462 / 294 = 4,97 | 2160 / 265 = 8,15 | 1474 / 294 = 5,01 |
+| `front/` dài ngang / (r * s) | 128 px = 1,51 | 164 px = 1,37 | 1,51 |
+| cao / rộng khung bao | 0,392 (67 / 171) | 0,318 (77 / 242) | 0,398 (68 / 171) |
+| bề dày lớn nhất phần gần (đường kính nội tiếp, nét riêng không scraps / streaks) | 16 px | 18 px | - |
+| gần / xa | 3,58 | 6,36 | - |
+| A(h+1) / A(h) | 0,71 | 0,69 | 0,74 |
+| A(h+2) / A(h) | 0,31 | 0,28 | 0,31 |
+| A(h+3) / A(h) | 0,00 | 0,00 | 0,00 |
+| `fxcheck` | chỉ cảnh báo `linger` (4 khung cuối < 2 %); không pop, không cut | như vậy | như vậy |
+- Cung phần gần phủ: từ u = 0 (trước mặt) tới 100° (u1 = 460), tức đi hết phần trước ngực và dừng ở phía gần hơi về sau.
+- Ảnh gương: IoU mặt nạ (khung trúng đòn, quay trái lật so với quay phải, cho phép lệch 1 px) = 0,987. Mốc trước khi sửa: 0,978.
+- Hai đầu: đuôi vệt nhọn như kim (xem `t8_zoom.png`); đầu vệt (bên trái, gần eo) vẫn mang bề rộng lưỡi và dải `edge` trắng nằm trong vệt như cũ (không thò ra); đầu này không nhọn hơn bản cũ (thiết kế của chế độ theo dõi: "đầu giữ bề rộng lưỡi").
+- Ảnh ghép: lưới 6 khung "trước" và "sau" cạnh nhau: lưỡi quét ngang qua trước ngực từ khung 2, rồi tan thành nét mảnh ở khung 4, rỗng ở khung 5.
+- Không hồi quy (hash SHA-256 của mọi png dựng, so trước / sau khi sửa, dựng hai lần giống nhau): `crescent`, `heavy`, `thrust`, `axe`, `axe_heavy` (30 fps, `--from 40,100 --to 200,140`), `swing --track` (15 fps, lệnh trong HANDOVER mục 5): **giống hệt**. `diag_down`, `diag_up` ở r = 120 giống hệt; ở r = 85 đổi (xem dưới).
+- `python lib-fx/build.py melee/slash --check`: không FAIL (xong, thoát 0; thư viện có `sweep` dựng lại, `lib-fx/catalog.json` đổi theo). `python lib-fx/_tools/fxkit_test.py`: xem dòng cuối của mục này.
+
+### Lệch so với task và lý do
+1. **`u0 = 175` thay vì 245** (task: 245, tối đa 255). Với 245 / 460 cao / rộng là 0,59 (r = 85) và 0,51 (r = 120). Quy tắc của task (giảm `u1`, tăng `u0`) đi sai hướng: tăng `u0` đưa điểm bắt đầu về phía xa nhất (u = 270), làm vệt cao thêm và hẹp đi (quét lưới u0 215 / 235 / 245 / 225 x u1 430 / 445 / 460, cao / rộng 0,45 - 0,59 cho r = 85). Chỉ hạ `u0` (đuôi kéo dài ra sau lưng) đưa tỉ lệ xuống <= 0,40: u0 = 195 cho 0,399, 185 cho 0,385, 175 cho 0,392 khi có sparks bay về sau. Hệ quả: vệt bắt đầu ở sau lưng nhân vật (x ~ -r), khung trước đòn là một chấm xanh nhỏ nằm sau lưng cách thân ~ 0,9 r (xem khung 1); `u1` giữ 460 (đo: u1 = 430 cho `front/` dài 0,72 r < 0,9; u1 = 445 cho 0,95 r, sát giới hạn; 460 cho 1,2 - 1,5 r và vệt đi hết qua điểm gần nhất u = 90).
+2. **`w_near = 12` thay vì 16.** Mạch task: `w_near` thay hằng `wmin` (7 px) làm bề dày nhỏ nhất, đặt 16. Nhưng `wmin` bị nhân `mfac` (tới 2,4 ở chỗ gần nhất), nên phần gần ra 38 px, và cách đo của tôi (đường kính nội tiếp mặt nạ alpha >= 128 ở khung trúng đòn) ở mốc đã cho 16,5 px (r = 85), không phải 10 - 12 như task ghi. Tôi định nghĩa `w_near` là bề dày nét ở chỗ gần nhất (px ở s = 1, trước hệ số phối cảnh 1,16) và hạ sàn `wmin * mfac` của phần gần để không làm dày thêm (phần xa không đổi: `4,5 px` ở r = 85 so với 4,5 trước đó). Với 14 thì đo ra 20 px (> 18); 12 cho 16 (r = 85) và 18 (r = 120), vào khoảng 14-18.
+3. **`release = 0,33` (hạ) thay vì 0,36 -> tối đa 0,42.** Sau khi nhân `(R / 120) ** 0.5` (làm vệt nhỏ tan chậm hơn), A(h+1) / A(h) ở r = 85 là 0,76 (hơi quá 0,75); không còn `pop`. Tăng `release` làm tan chậm hơn nên sai hướng; hạ xuống 0,33 cho 0,71 / 0,69 (đo 0,30: 0,68 / 0,64 nhưng A(h+2) của r = 120 thành 0,11, quá nhanh). `release` chỉ áp cho `sweep` (tham số mới, mặc định 0,36 cho `diag_*`).
+4. **Cung bay của `scraps` / `streaks` của `sweep` đổi** thành `(150, 215)` / `(160, 200)` (bay về sau, tiếp nối chiều đi của mũi lúc u = 100°). Với `u1` = 460 điểm cuối của mũi nằm cạnh eo, và cung cũ (về phía trước, lên) làm tia trắng cắt chéo qua thân ở khung 4. Không có trong task; không đụng `diag_*`.
+5. **`diag_down`, `diag_up` ở r = 85 đổi nhẹ** do hệ số tan `(R / 120) ** 0.5` (bước 3 áp cho cả nhánh mặt phẳng vung, đúng như task). Tỉ lệ A (h+1 / h+2 / h+3): `diag_down` 0,76 / 0,41 / 0,16 -> 0,78 / 0,43 / 0,17; `diag_up` 0,58 / 0,25 / 0,09 -> 0,59 / 0,26 / 0,12; `fxcheck` sạch trước và sau. `diag_down` ở r = 85 đã nhỉnh quá 0,75 từ trước (0,76). Ở r = 120 cả hai giống hệt (hash).
+6. Khung trúng đòn: lấy `hit_frame` của `meta.json` (1-based, = 2) làm h; chỉ số `peak@2` / `pop: frame 3 -> 4` của `fxcheck` đếm khác (khung 3 -> 4 = h+1 -> h+2).
+7. `parse_swing` trong `build.py` (dòng lệnh `--swing`) không nhận `w_near`: không nằm trong danh sách file được sửa; khoá này chỉ đặt qua dict trong `slash.py`.
+
+### Chưa đạt / cần người chấm xem
+- Cao / rộng r = 85: 0,392 (bản quay trái 0,398): sát giới hạn 0,40; sparks có thể làm vượt (cung `(165, 225)` cho 0,414).
+- Khung 1 (trước đòn) là một chấm xanh nằm sau lưng nhân vật (hệ quả của u0 = 175); nếu không muốn, phải đổi `k` hoặc giảm yêu cầu cao / rộng.
+- "Đầu vệt nhọn" chỉ đúng cho đuôi; đầu giữ bề rộng lưỡi (theo thiết kế chế độ theo dõi).
+- Chưa thử trên cặp pose thật của chém ngang (cần sinh ảnh, tốn tiền).

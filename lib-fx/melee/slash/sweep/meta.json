@@ -17,16 +17,16 @@
  "fps": 30.0,
  "frames": 15,
  "frame_size_2x": [
-  312,
-  200
+  334,
+  198
  ],
  "anchor_2x": [
-  112.0,
-  88.0
+  146.0,
+  68.0
  ],
  "target_2x": [
-  232.0,
-  88.0
+  266.0,
+  68.0
  ],
  "hit_frame": 3,
  "direction": "a -> b (set with --from / --to)",
@@ -39,7 +39,7 @@
    "role": "primary",
    "z": "front",
    "start": -0.067,
-   "end": 0.36
+   "end": 0.33
   },
   {
    "id": "scraps",
@@ -68,13 +68,13 @@
  "qa": {
   "fail": [],
   "warn": [
-   "linger: the last 5 of 15 frames carry under 2 % of the peak"
+   "linger: the last 7 of 15 frames carry under 2 % of the peak"
   ],
   "frames": 15,
   "peak_frame": 3,
   "peak_size_1x": [
-   108,
-   36
+   121,
+   42
   ],
   "last_frame_pct": 0.0
  },

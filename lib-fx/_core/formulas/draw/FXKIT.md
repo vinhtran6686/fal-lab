@@ -143,10 +143,10 @@ python lib-fx/build.py melee/slash/crescent --from 107,191 --to 240,243 --pal fr
   và cú chém **xéo** là ellipse dẹt vừa xoay nghiêng; chỉ bổ dọc / hất lên mới nằm phẳng trên màn hình. Mũi vũ khí chạy trên một đường tròn quanh **vai** trong không gian, hình ta thấy là hình chiếu:
   ```
   python lib-fx/build.py melee/slash/sweep --from <vai X,Y> --to <điểm cùng độ cao, phía mặt quay> --pal frost --fps 15 --split \
-      --swing "k=0.3;roll=0;u0=215;u1=410;r=<vai -> mũi vũ khí>;blade=0.75;ease=1.3" --out <thư mục>
+      --swing "k=0.3;roll=0;u0=175;u1=460;r=<vai -> mũi vũ khí>;blade=0.75;ease=1.3" --out <thư mục>
   ```
   `k` = độ dẹt (1 phẳng với màn hình, 0.3 nằm trên đất, 0.6 xéo), `roll` = độ xoay trục dài (dương: đầu phía trước chúc xuống), `u0` / `u1` = góc lưỡi trong mặt phẳng lúc đầu / cuối
-  (0 phía trước, 90 **gần** người xem, 180 phía sau, 270 **xa**; `u` tăng: trước -> gần -> sau -> xa), `r` = bán kính mũi (px @2x; 0 = khoảng cách `--from` -> `--to`), `blade` = phần bán kính được quét.
+  (0 phía trước, 90 **gần** người xem, 180 phía sau, 270 **xa**; `u` tăng: trước -> gần -> sau -> xa), `r` = bán kính mũi (px @2x; 0 = khoảng cách `--from` -> `--to`), `blade` = phần bán kính được quét. Khoá `w_near` (chỉ có trong dict `swing` của hiệu ứng, không có trên dòng lệnh; px @2x ở s = 1) đặt bề dày của phần gần thay cho công thức theo bán kính (`sweep`: 12; 0 / không có = công thức cũ, `diag_*`); nhịp tan được nhân `(r * s / 120) ** 0.5` nên vệt nhỏ tan chậm lại.
   Nửa **xa** (depth < 0) vẽ vào `back/` (sau thân), mảnh, tông nguội, không mép trắng, quầng giảm nửa; nửa **gần** vào `front/`, dày, sáng; `k = 1` cho cung tròn nằm hết ở `front/`.
   Nhịp (khung trước đòn, khung trúng đòn, tan) giống `swing`. Không dùng chung với `--track`. Hình học trong `layers/slash.py` (`plane_point`); lệch so với công thức ban đầu của task: bề dày nét lấy theo `k * R * blade` nhân hệ số gần / xa
   (không lấy hình chiếu của lưỡi), vì hình chiếu thật làm hai đầu trái phải tròn bè, không nhọn như một đường chém.

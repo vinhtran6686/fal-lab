@@ -1163,12 +1163,12 @@
   "fps": 30.0,
   "frames": 15,
   "frame_size_2x": [
-   312,
-   200
+   334,
+   198
   ],
   "anchor_2x": [
-   112.0,
-   88.0
+   146.0,
+   68.0
   ],
   "dir": "melee/slash/sweep",
   "qa": "warn",

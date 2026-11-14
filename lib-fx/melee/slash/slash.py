@@ -40,21 +40,21 @@ EFFECTS = {
 }
 
 
-def _plane_effect(name, title, desc, sw, tags, linger):
+def _plane_effect(name, title, desc, sw, tags, linger, sparks=((-10, 60), (0, 50)), release=0.36):
     """A smear of a swing in a PLANE seen from the game's camera (kind slash, parameter swing): a = the shoulder, b = one `reach` ahead of it,
     the tip runs on a circle of radius `reach` round a; the far half goes behind the character, the near half in front. The sparks start at
     the tip's last position (worked out from the same plane, so they follow the plane if it is changed)."""
     (x, y), _ = plane_point(sw, sw["u1"], 120.0)
     end = ("a", round(x, 1), round(-y, 1))
     return _slash.variant(name, title=title, space="aim", reach=120, extent=260, tags=["planar"] + tags, desc=desc,
-        layers={"slash": {"life": Life(-1 / 15, 1 / 15, 0.0, 0.36), "streaks": 0, "linger": linger, "swing": sw},
-                "scraps": {"at": end, "floor": True, "arc": (-10, 60), "life": Life(0.033, 0.033, 0.0, 0.33)},
-                "streaks": {"at": end, "arc": (0, 50), "life": Life(0.0, 0.033, 0.033, 0.13)}})
+        layers={"slash": {"life": Life(-1 / 15, 1 / 15, 0.0, release), "streaks": 0, "linger": linger, "swing": sw},
+                "scraps": {"at": end, "floor": True, "arc": sparks[0], "life": Life(0.033, 0.033, 0.0, 0.33)},
+                "streaks": {"at": end, "arc": sparks[1], "life": Life(0.0, 0.033, 0.033, 0.13)}})
 
 
 EFFECTS["sweep"] = _plane_effect("sweep", "Chém ngang", "a SWORD swung level with the ground (a horizontal sweep) seen from the game's camera: a very flat ellipse, nearly a line; the "
     "far half passes BEHIND the character, cool and thin, the near half in FRONT, bright and thick; use it with the shoulder as --from",
-    dict(k=0.3, roll=0.0, u0=215, u1=410, blade=0.75, ease=1.3), ["horizontal"], 3.4)
+    dict(k=0.3, roll=0.0, u0=175, u1=460, blade=0.75, ease=1.3, w_near=12), ["horizontal"], 3.4, sparks=((150, 215), (160, 200)), release=0.33)
 EFFECTS["diag_down"] = _plane_effect("diag_down", "Chém xéo xuống", "a SWORD slash on a slanted plane, from high behind the shoulder to low in front, seen from the "
     "game's camera: a half-flattened ellipse turned 35 degrees; use it with the shoulder as --from",
     dict(k=0.6, roll=35.0, u0=205, u1=400, blade=0.8, ease=1.3), ["diagonal"], 2.4)

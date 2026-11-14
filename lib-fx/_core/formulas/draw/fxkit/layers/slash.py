@@ -45,7 +45,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     swing: the same smear for a swing in a PLANE seen from the game's camera (dict; build.py --swing): {"k": flatness (1 = flat to the
     screen, 0.3 = lying on the ground, 0.6 = slanted), "roll": deg, "u0", "u1": the blade's angle in its plane at the start and the end
     (0 ahead, 90 near, 180 behind, 270 far; u grows ahead -> near -> behind -> far), "r": px the tip is from the shoulder a at s = 1
-    (0 = the distance a -> b), "blade": the share of the radius that is swept, "ease"}. a is the shoulder, b only says which way it
+    (0 = the distance a -> b), "blade": the share of the radius that is swept, "ease", "w_near": thickness of the near part, px at s = 1 (0 = from the radius)}. a is the shoulder, b only says which way it
     faces. The tip runs on a circle around a; what we see is its projection (plane_point). It is drawn in two halves: the far half
     (depth < 0) on the BACK canvas, cooler and thin, the near half on the FRONT canvas, bright and thick; everything else (fh, fade,
     three strands, white edge) is the track mode's. Overrides track."""
@@ -105,6 +105,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         u0, u1 = float(sw.get("u0", 235)), float(sw.get("u1", 430)); ease = float(sw.get("ease", 1.3))
         R = float(sw.get("r", 0.0)) * s or c.sp.len; bl = float(sw.get("blade", 0.75)); blade = bl
         q_ = (1 - k_) / 0.75; wmin = 7.0 * s; mnear = min(2.4, 1 + 1.4 * q_)
+        wnear = float(sw.get('w_near', 0) or 0) * s                                          # the near part's own thickness (px at s = 1) instead of the radius-based one; 0 = old
 
         def uf(f): return u0 + (u1 - u0) * clamp(f) ** ease
         def pt3(f, rho):
@@ -142,7 +143,10 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         return p, (-math.sin(a) * sg, math.cos(a) * sg)                                    # point, unit vector to the inside of the bow
 
     def pw(f):                                                                             # full ribbon width at arc position f
-        if sw: return max(wmin * mfac(f), R * bl * k_ * (1 + 0.16 * depth(f)) * mfac(f) / mnear) * prof((f - lo) / L)   # a stroke: fat where near, thin where far
+        if sw:                                                                              # a stroke: fat where near, thin where far
+            g = wnear if wnear else R * bl * k_
+            fl = wmin * (min(mfac(f), 1.0) if wnear else mfac(f))                         # the floor: with w_near it does not fatten the near part
+            return max(fl, g * (1 + 0.16 * depth(f)) * mfac(f) / mnear) * prof((f - lo) / L)
         if track: return blade * swing(f)[2] * prof((f - lo) / L)                          # the covered share of the blade, tip inwards
         return W * prof((f - lo) / L)
 
@@ -168,6 +172,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         bands.append((x, x + ws[j])); x += ws[j] + (gaps[j] if j < K - 1 else 0.0)
     wmax = max(ws)
     lk = linger / 3.4 * (1.3 if axe else 1.0)
+    if sw: lk *= (R / 120.0) ** 0.5                                                         # a small swing fades slower, a 120 px one as before
     S = []
     for j in range(K):
         r = c.rng("strand", j)
