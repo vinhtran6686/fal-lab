@@ -5,7 +5,7 @@ supports, enemies). It answers one question: **seen from our camera, what does t
 The stills, the clips and the VFX (`lib-fx`, `fxkit`) must agree on it, or the effect will not sit on the pose.
 Status: the frontal-plane wording is tested (overhead smash). The ground-plane pose pair is tested (2026-11-14, section 4b): pose A (back view) worked at the second try, pose B (open to the viewer) at the third, see the limits below;
 the diagonal POSE wordings are still *untested*: the first pose made with each is the test; write what you learn back here.
-Their effects (`sweep`, `diag_down`, `diag_up`) are built and measured on their own, not yet placed on a real pose pair.
+The ground-plane pair needs a third still, pose C, to read left to right (2026-11-14, section 2 and `pose-pair-fx-method.md` 10.6). Effects `diag_down`, `diag_up` are built and measured on their own, not yet placed on a real pose pair.
 
 ## 1. The view (from `format.md` §1 and §3)
 - The camera is high and looks down at the battlefield; the ground is a plane that runs away from the viewer.
@@ -36,7 +36,10 @@ And two straight lines:
 | **Ahead** | thrust, stab, dash, a bolt or a beam fired at a target | a straight streak to the right | `thrust`, `ranged/bolt` |
 | **Up / down** | a pillar cast from the sky, a geyser, a jump smash landing | a vertical streak, then a flat ellipse on the ground where it lands | `element/*/aoe`, `impact/quake` |
 
-A move **toward or away from the viewer** (near / far line: a thrust at the camera) cannot be read in this view and is never used: turn it into "ahead".
+A move **toward or away from the viewer** (near / far line: a thrust at the camera) cannot be read as a MOVE in this view: turn it into "ahead".
+But a ground-plane arc (horizontal sweep, spin) always passes through the near / far line at its nearest point, and the blade then points AT the camera. A two-pose pair (A far left, B far right) hides that point and the
+effect then reads backwards (right to left: tested 2026-11-14, `pose-pair-fx-method.md` section 10.6). **Rule: a horizontal sweep or spin whose arc passes through the near-far line needs a third still, pose C**
+(section 4, "Ground, pose C"): the blade (or the hand) points at the viewer and is drawn FORESHORTENED, a short wedge about a third to 40 % of its real length, pointing DOWN in the image from the hands. Sequence A -> C -> B, a cut between poses.
 
 ## 3. Choosing the plane when a skill is designed
 - Prefer the **frontal** plane for the hero's signature and heavy hits: it shows the most and gives the biggest effect.
@@ -55,6 +58,7 @@ What changes with the plane is WHERE the weapon (or the casting hand, the staff,
 | **Frontal, downward** (tested) | weapon raised high above and slightly behind the head, the blade pointing up and to the upper-left of the image | weapon low in front, the blade lying level near the ground and pointing right | A: upright, leaning back a little. B: crouched forward, front knee bent, rear leg stretched |
 | **Frontal, upward** | weapon low and behind, the blade pointing to the lower-left, close to the ground | weapon high in front, the blade pointing to the upper-right | A: crouched, weight on the rear leg. B: stretched up, on the toes |
 | **Ground (horizontal sweep)** | weapon held LEVEL at chest height, drawn back on the FAR side: the blade points LEFT and is partly HIDDEN BEHIND the body, both hands at the far hip or far shoulder; body TURNED AWAY (section 4b): viewed from behind, back and cape in the middle, chest NOT visible, head in profile looking right | weapon held LEVEL at the same height, swung across to the NEAR side: the blade points RIGHT and slightly toward the BOTTOM of the image, fully visible IN FRONT of the body, arms extended; body OPEN TO THE VIEWER (section 4b): breastplate and both shoulder plates visible | feet stay planted in both poses; the torso twists, the hips follow a little; the blade stays level (never tilted up or down), at the SAME height in both poses |
+| **Ground, pose C** (the middle of a horizontal sweep or spin, the blade points at the viewer) | not used | not used; pose C is the third still, between A and B: the weapon, held with both hands at the SAME chest height, points straight at the viewer; the BLADE is a short wedge (about one third to 40 % of its length) that starts at the fists and points DOWN in the image, its tip about 12 % of the image height lower than the fists | body SQUARE TO THE VIEWER (chest, both shoulder plates and both boots visible and symmetric, the back NOT visible), only the head in profile looking RIGHT; arms stretched toward the viewer and foreshortened (short and wide); the feet in the same place as in A and B |
 | **Diagonal, downward** | weapon high behind the FAR shoulder, the blade pointing to the upper-left, partly hidden behind the head and shoulder | weapon low in front of the NEAR hip, the blade pointing to the lower-right, fully visible in front of the body | A: torso twisted away. B: torso twisted open, leaning into the cut |
 | **Diagonal, upward** | weapon low behind the far hip, the blade pointing to the lower-left, partly hidden | weapon high in front, the blade pointing to the upper-right, in front of the body | mirror of the row above |
 | **Ahead (thrust)** | weapon pulled back level at the near hip, the tip pointing right | weapon fully extended level to the right, the arm straight | A: weight back. B: lunge, front knee bent |
@@ -63,6 +67,7 @@ Sentences that keep the model on the plane (add them to the pose text):
 - frontal: "the whole swing stays flat to the picture, like a clock hand seen from the front";
 - ground: "the weapon stays LEVEL with the ground from start to end, like a helicopter blade seen slightly from above; it never rises above the shoulders and never points up";
 - diagonal: "the weapon travels along a slanted line from the upper-left of the image to the lower-right" (or the reverse).
+- ground, pose C (the approved prompt of `azure_blade` pose C, 2026-11-14; key sentences, copy them with the character's own design block): "POSE C of a three-part horizontal sweep, the MIDDLE of the sweep, the moment the blade points straight at the viewer, SQUARE TO THE VIEWER: the chest faces the viewer, the breastplate and BOTH shoulder plates are visible and level, the shoulders are symmetrical, the back is NOT visible; only the head is turned in PROFILE to look to the RIGHT of the image." "BOTH ARMS are stretched straight out toward the viewer and hold the sword together, both fists gripping the hilt, one fist right above the other, at the SAME chest height as in the other poses; seen from the front the two forearms are FORESHORTENED, short and wide." "The sword points straight at the viewer, level with the ground in space, so in the picture the BLADE is FORESHORTENED: it appears as a SHORT wedge about one third of its real length, starting at the fists and pointing DOWN in the image, the tip about 12% of the image height LOWER than the fists, the flat of the blade facing the viewer; NOT a full-length blade, NOT pointing left, NOT pointing right." Also attach pose B as a reference and say "the same size of the figure and the same feet position as in the second image; do NOT copy the pose". Result: the wedge came out at about 38-40 % of the visible blade of pose B; approved at the first try.
 
 ## 4b. Say the body's orientation in words a model cannot misread (mandatory for every pose)
 **Why this section exists (learned 2026-11-14, ground-plane pose A).** The prompt said "the body is turned a little more than the usual three-quarter view so that part of his back shows".
@@ -123,10 +128,10 @@ A mage or a support has no blade, but the staff, the hand or the focus draws the
 ## 6. What to record for the VFX after a pose pair is approved
 Measured on the stills (source px), next to the foot mark (`pose-pair-fx-method.md` step 3):
 1. the **plane** of the move (frontal / ground / diagonal up / diagonal down / ahead) and the hit frame;
-2. weapon **root** (hilt, hand) and **tip** in pose A and pose B;
+2. weapon **root** (hilt, hand) and **tip** in pose A and pose B, and in pose C when there is one (`tip_c`: the end of the foreshortened wedge, `root_c`: where it leaves the fists, the torso centre and the feet of C too);
 3. for ground and diagonal planes also the **pivot** (the shoulder the arc turns around) and whether the weapon passes **behind** or **in front** of the body on its way;
 4. the height of the hands above the ground line in both poses (they must match for a ground-plane move).
-`weapon_marks.json` keeps these (for a ground pair that does not line up, `out/heroes/azure_blade/source/design/weapon_marks_sweep.json` is the model: measure BOTH stills, align B to A by the feet, and fit the effect to the measured tips with `--swing "tip_a=..;tip_b=..;pivot=.."` instead of a fixed shape; `docs/pipeline/pose-pair-fx-method.md` section 10); the effect is then built with `python lib-fx/build.py melee/slash/<effect> --from ... --to ... --track ...` (frontal) or `--swing` (ground, diagonal: `FXKIT.md` section 6).
+`weapon_marks.json` keeps these (for a ground pair that does not line up, `out/heroes/azure_blade/source/design/weapon_marks_sweep.json` is the model: measure BOTH stills, align B to A by the feet, and fit the effect to the measured tips with `--swing "tip_a=..;tip_b=..;pivot=.."` (with a pose C add `tip_c=..;root_c=..;pivot_c=..`: the ellipse is then fitted through THREE tips, k included, and the smear reads left to right) instead of a fixed shape; `docs/pipeline/pose-pair-fx-method.md` section 10); the effect is then built with `python lib-fx/build.py melee/slash/<effect> --from ... --to ... --track ...` (frontal) or `--swing` (ground, diagonal: `FXKIT.md` section 6).
 
 ## 7. Checklist for a pose of a move
 - [ ] The plane is named in the skill description and in `brief.md`.
@@ -139,3 +144,4 @@ Measured on the stills (source px), next to the foot mark (`pose-pair-fx-method.
 - [ ] The result was looked at and each visible / NOT visible line ticked against the image before it was shown to anyone.
 - [ ] No effect, no motion lines, no dust in the still.
 - [ ] Root, tip, pivot and plane are recorded for the VFX.
+- [ ] A ground-plane arc that passes through the near-far line (horizontal sweep, spin) has a pose C (the blade at the viewer, foreshortened, pointing down in the image) and the VFX is fitted to three tips.

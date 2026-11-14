@@ -271,3 +271,51 @@ Cặp tự nghĩ (mũi A (20, 560), mũi B (1220, 610): tầm dài hơn, đao th
 - Bụng vệt tụt xuống ngang đai lưng (độ dẹt `k`): hạ `k` xuống 0.2 nếu thấy quá thấp; vệt đi trước thân ở mọi khung (không có nửa sau thân vì mũi A nằm trên trục dài).
 - Phần thân B lệch 46 px so với A và chân phải B cao hơn chân trái 22 px là lỗi của ảnh, không phải của vệt: kiểm cả hai khi duyệt; nếu chướng mắt thì dịch rig, đừng dịch vệt.
 - Cảnh báo còn lại của cổng (`build.py --check`): `cut` ở khung 5 (vệt còn 8-9 % đỉnh rồi hết ở khung 6).
+
+### 10.6 Pose C (giữa cú chém ngang): vì sao vệt đọc ngược khi chỉ có A và B, và cái gì sửa được (2026-11-14)
+**Triệu chứng.** Bản khớp hai pose (10.3 - 10.5) đạt mọi số đo (mép ngoài qua hai mũi, mép trắng trên lưỡi B) nhưng người duyệt đọc vệt chạy **phải sang trái**. Số liệu đúng hướng (mũi A ở trái -> nửa gần -> mũi B ở phải, đuôi rút trước), nhưng hình đọc ngược vì hai lẽ:
+1. Vệt là **bề mặt lưỡi quét**; lưỡi nằm dọc đường đi của chính nó ở hai đầu cung nên bề mặt mảnh dần về phía mũi: dày nhất ở trái-giữa, mảnh thành kim móc ngược ở phải: một sao chổi có đầu ở TRÁI.
+2. Cả vệt hiện đủ trong một khung (khung 2), nên không có đầu nào được thấy đi qua.
+Hai pose cũng không cho biết ellipse: `k` phải đoán (0.22). Điểm gần nhất của cung (lưỡi chỉ vào người xem) không có trong hai ảnh.
+
+**Sửa.** Thêm pose C (`pose_skill_sweep_p3_v01.png`, đã duyệt: thân chính diện, hai tay duỗi về phía người xem, lưỡi rút ngắn còn một đoạn nêm chúc xuống ảnh; prompt và cách viết: `.claude/skills/fal-image/action-planes.md` mục 4), đo như A, B (cùng chính sách căn theo chân), và đổi hai thứ ở `lib-fx` (`FXKIT.md` mục 6): ellipse khớp qua BA mũi (`tip_c`; `k` tự khớp) và nét "lead": đầu dày nhất, cụt, sáng, có mép trắng, đuôi kim; đầu đi qua ba khung A -> C -> B.
+
+**Số đo (px của ảnh gốc 1024, tách nền magenta, vẽ điểm lên ảnh để kiểm bằng mắt; file `weapon_marks_sweep.json`, khoá `pose_c`).**
+| | A (v02) | C (p3_v01) | B (v03) |
+|---|---|---|---|
+| mũi đao | (129, 464) | (502, 537) | (1007, 424) |
+| đầu chuôi phần lưỡi nhìn thấy | (393, 483) | (502, 405) (chỗ lưỡi rời nắm tay) | (662, 416) |
+| tâm thân (giữa hai giáp vai) | (598, 310) | (501.5, 270) | (449, 300) |
+| điểm giữa hai bàn chân | (541.8, 921) | (496.25, 952.5) (hai ủng cùng mức, lệch 1 px) | (438, 940) |
+| cao (đỉnh đầu tới chân) | 812 | 866.5 (đỉnh đầu 86) | 852 |
+| tỉ lệ về A | 1 | 0.9371 (C to hơn A 6.7 %) | 0.9531 |
+| lệch so với A (chân) | | dx = -45.5, dy = +31.5 | dx = -103.8, dy = +19 |
+| lệch C so với B (chân) | dx = +58.25, dy = +12.5 (C - B) | | |
+Lưỡi C dài 132 px, bằng 38 - 40 % phần lưỡi nhìn thấy của B (345 px). Sau căn theo chân: mũi C (547.1, 531.6), chuôi C (547.1, 407.9), tâm thân C (546.7, 281.4).
+
+**Lệnh ba điểm với số thật** (px ô @2x = toạ độ đã căn x 0.2; `pivot_c` có x = tâm thân C, y = độ cao nắm tay vì tay là trục của lưỡi ở C; không ghi `k`):
+```
+python lib-fx/build.py melee/slash/sweep --pal frost --fps 15 --split \
+    --swing "tip_a=25.80,92.80;tip_b=216.81,85.85;pivot=119.60,92.80;pivot_b=110.45,83.05;root_a=78.60,96.60;root_b=151.05,84.32;tip_c=109.43,106.33;pivot_c=109.33,81.59;root_c=109.43,81.59" \
+    --out <thư mục>
+```
+Suy ra: k = 0.215, u0 = 180, uc = 89.95, u1 = 7.0 độ; bán kính 93.8 (A), 99.5 (C), 105.2 (B); `fc` = 0.52. Thân ghép: khung 1 thân A, khung 2 thân C, khung 3 trở đi thân B (cắt giữa các pose, không có pose chen); `hit_frame` = 3.
+
+**Trước / sau** (hàng trên: hai pose A, B; hàng dưới: ba pose A, C, B):
+
+![trước và sau, ba pose](images/pose-pair-sweep-acb-before-after.png)
+
+**Số đo nghiệm thu** (px ô @2x, 15 fps, ghép trên nền xám, vệt sau dưới thân, vệt trước trên thân; vùng alpha > 0.5):
+| Tiêu chí | Kết quả |
+|---|---|
+| khung 2: đầu tới mũi C | 1.4 px; điểm xa nhất về bên phải mũi C: +1.6 px (không có gì vượt qua C) |
+| khung 3: mép ngoài tới mũi B | 0.8 px, không vượt mũi B (-0.8 px) |
+| khung 3: mép trắng so với đường chuôi B -> mũi B | phủ 100 % chiều dài lưỡi (điểm trắng cách đường lưỡi <= 5 px); khoảng cách trung bình 5.1 px nhưng gồm cả vòng trắng của mép ngoài gần mũi |
+| khung 1: lát mỏng trên lưỡi A nhìn thấy | trung bình 3.2, 95 % trong 7.0, lớn nhất 8.4 px (gồm viền quầng 3 px); chạm mũi A 0.3 px. **Chưa đạt yêu cầu 6 px ở p95 / max** (bản hai pose: lớn nhất 6.4) |
+| bề dày dọc nét (10 khoảng theo x, đường kính nội tiếp lớn nhất) | khung 3: 8, 12, 16, 18, 22, 24, 28, 30, 29, 24.7; khung 2: 13, 19, 23, 24, 26, 28, 30, 30, 30, 26. Tăng đơn điệu tới khoảng thứ 9; khoảng cuối (góc cụt của đầu) tụt 18 % / 13 % so với cực đại: **vượt mức nhiễu 10 %** ở khoảng cuối này |
+| trọng tâm x của vệt (khung 1 -> 2 -> 3) | 53.3 -> 72.7 -> 134.7 (sang phải); khung tan 4, 5: 159.3, 175.6 (tiếp tục sang phải); khung 6 chỉ còn 4 px² nên không tính |
+| tan: A(h+1), A(h+2), A(h+3) so với A(h), h = 3 | 0.545, 0.232, 0.001 (yêu cầu <= 0.75, 0.45, 0.2) |
+Cặp tự nghĩ (mũi A (60, 540), mũi C (700, 720), mũi B (1230, 470), trục khác nhau): đầu tới mũi C 1.4 px, mép ngoài tới mũi B 1.0 px, bề dày khung 3 tăng 6 -> 30.5, trọng tâm x 46 -> 88 -> 161 -> 209 -> 219. Mép trắng chỉ phủ 26 % lưỡi B vì mũi B nằm trên trục (nửa xa, theo luật cũ: đầu ở nửa xa không có mép trắng); cổng chất lượng cảnh báo `pop` (khung 3 -> 4 mất 54 %).
+
+**Sai số còn lại của C.** Thân C lệch -51.3 px (ngang) và -28.6 px (dọc, vì C là chính diện: giữa hai giáp vai ở y 270 so với y 310 của lưng A) so với thân A, chỉ lệch 5.6 px so với thân B; C to hơn A 6.7 % (hơn B 1.7 %), bù bằng phóng về A quanh chân; hai ủng của C ngang nhau. `pivot_c` đặt theo nắm tay (y 81.6), và `k` tự khớp phụ thuộc vào y này (y thấp hơn thì `k` lớn hơn): đổi y thì kiểm lại hình vệt. Chuôi A là điểm lưỡi chìm sau áo choàng chứ không phải nắm tay, nên không so độ cao với C.
+**Khi duyệt cần nhìn gì.** (1) Đọc GIF ở tốc độ thường: đầu có đi trái sang phải qua A, C, B không; khung 2 có đầu đứng ở lưỡi nêm của pose C không; (2) vệt khung 3 dày dần về phía phải, không có mũi móc ngược; (3) khung tan: phần còn lại nằm ở phía phải; (4) mép trắng nằm trên lưỡi của pose đang hiện (A, C, B), không trượt; (5) thân C lệch so với A, B: nếu chướng mắt thì dịch rig, đừng dịch vệt.

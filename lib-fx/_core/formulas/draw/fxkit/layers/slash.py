@@ -144,7 +144,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     if tracked:
         if pre > 0 and tt < -1e-6 and fc:                                                    # three poses: the slice on blade A, then the head at C
             sv = (tt + pre) / pre                                                              # 0 at the first frame .. 1 at the hit; pose C is at 0.5
-            fh = 0.10 if sv <= 0.25 else (0.10 + (fc - 0.10) * (sv - 0.25) / 0.25 if sv < 0.5 - 1e-6 else fc + (1 - fc) * (sv - 0.5) / 0.5)
+            fh = 0.07 if sv <= 0.25 else (0.07 + (fc - 0.07) * (sv - 0.25) / 0.25 if sv < 0.5 - 1e-6 else fc + (1 - fc) * (sv - 0.5) / 0.5)
         elif pre > 0 and tt < -1e-6: fh = 0.10 + 0.06 * (1 + tt / pre)                         # before the hit the blade is still at pose A: a thin slice on it
         elif pre > 0: fh = 1.0                                                              # from the hit the blade is at pose B: the smear is whole
         else: fh = min(1.0, 0.45 + 0.55 * out_quint(g))                                      # a real swing: the head must land on the final blade
@@ -241,14 +241,14 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
     if lead:                                                                               # a stroke that reads in its direction: it is swept on the path's own normal (the side of the hilt) and grows towards the head
         def lead_n(f):                                                                      # the tip, and the unit normal of its path towards the hilt side
             tip, nn, _ = swing_at(f)
-            if fh < 0.12: return tip, nn                                                    # the slice on blade A follows the blade
+            if fh < 0.09: return tip, nn                                                    # the slice on blade A follows the blade
             e = 0.06; p1, p0 = swing_at(min(1.0, f + e))[0], swing_at(max(0.0, f - e))[0]
             tx, ty = p1[0] - p0[0], p1[1] - p0[1]; m_ = math.hypot(tx, ty) or 1e-6; nx, ny = -ty / m_, tx / m_
             hl = hilt_pt(f)
             if nx * (hl[0] - tip[0]) + ny * (hl[1] - tip[1]) < 0: nx, ny = -nx, -ny      # the hilt side of the path
             return tip, (nx, ny)
         LEADW = float(sw.get('lead_w', 0.26))
-        sliver = fh < 0.12                                                                  # the thin slice on blade A: as wide as the blade itself
+        sliver = fh < 0.09                                                                  # the thin slice on blade A: as wide as the blade itself
         Wh = swing_at(fh)[2] if sliver else min(swing_at(fh)[2], LEADW * R)       # the head's width: the blade's projected length, at most a fifth of the radius
 
     def prof(v):                                                                           # width along the ribbon, v 0 tail .. 1 head
@@ -437,7 +437,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
                 e1 = (p0[0] + rx / rm * wl, p0[1] + ry / rm * wl)
             quad = [p0, e1, (e1[0] + ox, e1[1] + oy), (p0[0] + ox, p0[1] + oy)]
             if hnear: hink.add("edge", quad)
-            if tt < -1e-6 and not (lead and fh >= 0.12):                                     # the frame before the hit: the white sliver gets a rim of the smear's own colour
+            if tt < -1e-6 and not (lead and fh >= 0.09):                                     # the frame before the hit: the white sliver gets a rim of the smear's own colour
                 hink.add("rim", quad); hink.set("rim", _disc(hink.mask("rim"), 3.0 * s * hink.ss, True))
         ink.paint([("faint", c.pal.tone("main"))], glow=0.0, opacity={"faint": 0.4})                  # the hilt strand: faint, it does not feed the glow
         ink.paint(([("rim", c.pal.tone("main"))] if ink.mask("rim").any() else []) + [("mid", c.pal.tone("main")), ("main", c.pal.tone("main")), ("deep", c.pal.tone("deep")),
