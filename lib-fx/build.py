@@ -38,7 +38,7 @@ preview_game.gif (game size: @1x shown x3 beside a 60 px body mark; review THIS 
 Per family: _gallery/<family with - for />.png (every other frame) and .gif (all effects playing together, real speed).
 All effects: catalog.json. Map of the folders: GUIDE.md.
 """
-import argparse, dataclasses, importlib.util, inspect, json, math, pathlib, sys
+import argparse, dataclasses, importlib.util, inspect, json, math, pathlib, shlex, sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / "_core" / "formulas" / "draw"))
@@ -320,9 +320,16 @@ def kit_variant(out, fam, mod, name, pal, s, fps, speed, seed, split, frm, to, p
     info = {"id": prefix, "effect": f"{fam}/{name}", "name": e.title, "tags": tags,
             "variant": {"pal": pal, "s": s, "seed": seed, "speed": speed, "from": list(A), "to": list(B)}}
     extra = {"target_2x": r2(r["target"]), "hit_frame": r["hit_frame"], "origin": r2(r["origin"]), "layers": kit_layers(e), "lint": e.lint()}
+    if fitted:                                                             # the numbers the fit found (caller px @2x; the canvas is only a translation of them, so the identity stands for `world`)
+        from fxkit.layers.slash import fit_swing
+        face = hand if hand is not None else (1 if B[0] - A[0] >= 0 else -1)      # the rule of fxkit.Space
+        ft = fit_swing(swing, face, lambda p: p); r2n = lambda v: round(float(v), 2)
+        sf = {"k": r2n(ft.get("k", swing["k"])), "u0": r2n(ft["u0"]), "u1": r2n(ft["u1"]), "ra": r2n(ft["ra"]), "rb": r2n(ft["rb"])}
+        if swing.get("tip_c"): sf.update(uc=r2n(ft["uc"]), rc=r2n(ft["rc"]), fc=r2n(ft["fc"]))
+        extra["swing_fit"] = sf
     qa = kit_qa(e, r["frames"], tags, anchor)
     return write_variant(out, prefix, r["frames"], r["fps"], anchor, info, {"back": r["back"], "front": r["front"]} if split else None,
-                         qa, extra, {"rebuild": "python lib-fx/build.py " + " ".join(sys.argv[1:])})
+                         qa, extra, {"rebuild": "python lib-fx/build.py " + shlex.join(sys.argv[1:])})
 
 
 def parse_track(text):
@@ -432,7 +439,7 @@ def main():
                 "tags": list(dict.fromkeys(list(getattr(mod, "TAGS", [])) + list(c.get("tags", [])))),
                 "variant": {"pal": a.pal, "s": a.s, "mirror": a.mirror, "speed": a.speed},
                 "direction": "-x" if a.mirror else "+x",
-                "rebuild": "python lib-fx/build.py " + " ".join(sys.argv[1:])}
+                "rebuild": "python lib-fx/build.py " + shlex.join(sys.argv[1:])}
         qa = write_variant(a.out, a.name or name, fr, fps, geometry(mod, name, a.s, d)[1], info)
         print(fxcheck.line(f"{fam}/{name} -> {pathlib.Path(a.out).as_posix()}", qa))
         if a.check and qa["fail"]: sys.exit(1)
