@@ -1,0 +1,27 @@
+{
+  "prompt": "The same stocky heroic cartoon spear-warrior as in the frames: big head, huge fists, short legs, slate-blue armour with a large gold crane emblem, a giant cream crane-wing shoulder guard behind his left shoulder, a black topknot with a brick-red cord, and an oversized spear with a bright silver leaf-shaped spearhead, a gold crescent cross-guard and a brick-red tassel. The spear keeps exactly the same rigid shape and length in every frame; it never bends, stretches or melts. The camera is fixed in front of him and a little above, and never moves. One continuous move: a full horizontal spear sweep in which the spear travels one complete circle around his body at waist height while he turns once on the spot. He starts standing in a three-quarter view facing the camera, boots shoulder-width apart, the spear held upright in the fist on the LEFT of the image beside his head. He then turns his chest toward the LEFT of the image, steps the left boot forward, and winds up: the spear hand pulls back behind his head and the spear tilts up toward the upper left of the image. He releases: the spear swings down to shoulder height pointing LEFT of the image, then sweeps level across the FRONT of his body, toward the camera, to point RIGHT of the image, while his body drops into a deep crouch with a rounded back and his head turned in profile toward the RIGHT of the image. He keeps turning until his BACK faces the camera; the spear passes behind his body on the far side, where the body and the crane-wing guard completely hide it. He rises a little, still with his back to the camera, and the spear comes out on the LEFT of the image, level with his hip, pointing left and slightly down. He turns on, through a profile toward the LEFT of the image, back to a three-quarter view facing the camera, and finishes in a low wide horse stance with the spear carried across his shoulders. His boots stay planted on the same spots and do not travel, and his body stays the same size in the frame. The clip starts EXACTLY on the first frame and ends EXACTLY on the last frame. No effects at all: no trails, no sparks, no glow, no dust, no motion blur, no speed lines. Solid flat pure magenta background only. Keep the exact flat vector look, outline weight, palette, proportions and costume of the frames.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab2982e/dQUup3iUMBlB_98Qnt9gx_start.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0ab2982e/66qqdrPPa2TQwQLhg4_xD_end.png"
+  },
+  "seconds": 5,
+  "resolution": "768P",
+  "size": [
+    768,
+    768
+  ],
+  "estimateUsd": 0.075,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/ks2/start.png",
+  "lastFrame": "/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/ks2/end.png",
+  "requestId": "01a1e058-a348-78d0-a63f-cce1f44eeab7",
+  "seconds_elapsed": 3.2,
+  "source_url": "https://v3b.fal.media/files/b/0ab2982e/B6yv3Lz-bgW1RrQE4tG_8_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

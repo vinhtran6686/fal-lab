@@ -318,3 +318,5 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-15 17:03:15,clip.mp4,h3-max-turbo,video,768P 2s,False,3.1,0.0300,True
 2026-11-15 17:37:40,clip.mp4,h3-max-turbo,video,768P 4s,False,5.3,0.0600,True
 2026-11-15 17:37:41,clip.mp4,h3-max-turbo,video,768P 4s,False,5.0,0.0600,True
+2026-11-15 17:54:30,clip.mp4,h3-max-turbo,video,768P 5s,False,3.1,0.0750,True
+2026-11-15 17:54:31,clip.mp4,h3-max-turbo,video,768P 5s,False,3.2,0.0750,True
