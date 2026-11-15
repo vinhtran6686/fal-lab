@@ -19,3 +19,6 @@ Pose copied from a user reference frame (single pixel-art frame as `--ref`, desi
 
 ## 2026-11-15 — spin test discarded
 A spear spin over the head (A -> mirrored A -> A, 2 clips, 0.06 USD, logged in `out/costs.csv`) was made from ONE reference frame and did not match the user's reference (a gif with several skills, of which only one frame reached us). Files removed; redo from the full reference frames when they are added to `ref/`.
+
+## 2026-11-15 — skill_spin_back (body spin, back to the viewer, from the king reference gif)
+Reference: `ref/king/leon-leon-yase2.gif`, character 1 (ready, wind-up, drop and turn, back to the viewer with the weapon hidden, recover, low guard). Two 4 s clips, h3-max-turbo 768P, first frame `master_v08`, prompts in `source/video/prompts/skill_spin_back_t0N.txt`. t01: last frame pinned to `pose_horse_stance_v01`; t02: no last frame. 0.12 USD (`out/costs.csv`). Not accepted yet (user reviews). Known: the body is larger in the first frames than later (the two pinned stills have different fill), one smeared frame at the release, spear visible during the back view.
