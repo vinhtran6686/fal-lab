@@ -10,6 +10,8 @@ docs/
 ├── pipeline/                                              quy trình xuyên nhiều công cụ, trên một nhân vật
 │   ├── asset-manifest.md                                  bảng checklist asset trong brief.md, lệnh asset_status.py
 │   ├── pose-pair-fx-method.md                             skill bằng pose A/B + vệt chém lib-fx + rig Studio (quy trình, checklist, chi phí)
+│   ├── images/pose-pair-sweep-fit-before-after.png       ảnh trước / sau của mục "Hai pose lệch nhau" trong pose-pair-fx-method.md
+│   ├── images/pose-pair-sweep-abc-before-after.png       ảnh trước (hai pose A, B) / sau (ba pose A, B, C) của mục 10.6 trong pose-pair-fx-method.md
 ├── skills/                                                tài liệu bổ sung cho .claude/skills/<skill>/
 │   ├── fal-image/                                         ảnh tĩnh qua scripts/gen_image.py
 │   │   ├── fal-image-manual-prompt-style-transfer.md      prompt chuyển concept image sang style của dự án (chế độ --manual)
@@ -36,7 +38,7 @@ docs/
 
 | Vị trí | Nội dung |
 |---|---|
-| `.claude/skills/fal-image/` | `SKILL.md`, `format.md` (style, góc nhìn, thư mục, manifest), `classes/*.md` (hero, ally, enemy, enemy-flying, boss), `reference.md`, `templates.md`, `examples.md`, `action-planes.md` (góc nhìn của game và mặt phẳng của động tác: chém dọc, ngang, xéo, đâm, phép; cách viết pose và nơi đặt vfx) |
+| `.claude/skills/fal-image/` | `SKILL.md`, `format.md` (style, góc nhìn, thư mục, manifest), `classes/*.md` (hero, ally, enemy, enemy-flying, boss), `reference.md`, `templates.md`, `examples.md`, `action-planes.md` (góc nhìn của game và mặt phẳng của động tác: chém dọc, ngang, xéo, đâm, phép; cách viết pose và nơi đặt vfx), `preflight.md` (suy nghĩ và kiểm tra trước khi tạo ảnh: ghi chú thiết kế, lint prompt, một quyết định một ảnh), `style-chunky.md` (phong cách mặc định cho nhân vật mới: tỉ lệ 3 đầu, nét viền, bảng màu hài hoà, mặt, mức chi tiết, mẫu prompt, checklist có phép thử thu nhỏ 60 px) |
 | `.claude/skills/video-sprite/` | `SKILL.md`, `references/` (prompt chuyển động; `action-planes.md`: mặt phẳng của động tác trong clip), `playtest/`, `scripts/` |
 | `lib-fx/` | `README.md` (lệnh, luật nhìn), `GUIDE.md` (bản đồ thư mục), `MINDSET.md`, `lib-fx/_core/formulas/draw/FXKIT.md` (fxkit: hệ thống dựng hiệu ứng theo lớp, phong cách, hợp đồng của một lớp), `lib-fx/_core/formulas/draw/DESIGN.md`, `RECIPE-*.md`, `lib-fx/_core/formulas/draw/SHAPE-RULES.md`, `RESEARCH-*.md` |
 | `lib-fx/_core/` | `README.md` (bản đồ công thức vs kết quả), `formulas/vector/README.md`, `formulas/rules/` (luật + số đo) |

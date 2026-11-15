@@ -1,0 +1,573 @@
+{
+ "state": "sweep",
+ "take": "out/heroes/azure_blade/source/rig/anims/sweep.json",
+ "cell": [
+  176,
+  140
+ ],
+ "pivot": [
+  0.5,
+  0.88
+ ],
+ "fps": 15,
+ "frames": 21,
+ "frame_ms": 67,
+ "units": "H, origin = feet pivot, x forward (right), y up; time ms from frame 1; tip_speed in H per frame",
+ "body_height_px": 60.0,
+ "coordinate_H_px": 60.0,
+ "subframes": 1,
+ "px_to_H_2x": {
+  "x": "(px - 176) / 120",
+  "y": "(246.4 - py) / 120"
+ },
+ "hit_frame": 8,
+ "marked_by": "puppet rig sockets (exact at whole frames; 'estimated' samples are the swing across a cut)",
+ "samples": [
+  {
+   "frame": 1.0,
+   "ms": 0,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.1753,
+    0.5159
+   ],
+   "tip": [
+    -0.4862,
+    0.5383
+   ],
+   "root_px2x": [
+    155.0,
+    184.5
+   ],
+   "tip_px2x": [
+    117.7,
+    181.8
+   ],
+   "note": "",
+   "tip_speed": 0.0
+  },
+  {
+   "frame": 2.0,
+   "ms": 67,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.1998,
+    0.503
+   ],
+   "tip": [
+    -0.5155,
+    0.5248
+   ],
+   "root_px2x": [
+    152.0,
+    186.0
+   ],
+   "tip_px2x": [
+    114.1,
+    183.4
+   ],
+   "note": "",
+   "tip_speed": 0.0323
+  },
+  {
+   "frame": 3.0,
+   "ms": 133,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.2139,
+    0.4953
+   ],
+   "tip": [
+    -0.5325,
+    0.5167
+   ],
+   "root_px2x": [
+    150.3,
+    187.0
+   ],
+   "tip_px2x": [
+    112.1,
+    184.4
+   ],
+   "note": "",
+   "tip_speed": 0.0188
+  },
+  {
+   "frame": 4.0,
+   "ms": 200,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.2185,
+    0.4927
+   ],
+   "tip": [
+    -0.538,
+    0.5141
+   ],
+   "root_px2x": [
+    149.8,
+    187.3
+   ],
+   "tip_px2x": [
+    111.4,
+    184.7
+   ],
+   "note": "",
+   "tip_speed": 0.0061
+  },
+  {
+   "frame": 5.0,
+   "ms": 267,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.2236,
+    0.4914
+   ],
+   "tip": [
+    -0.5438,
+    0.5127
+   ],
+   "root_px2x": [
+    149.2,
+    187.4
+   ],
+   "tip_px2x": [
+    110.7,
+    184.9
+   ],
+   "note": "",
+   "tip_speed": 0.006
+  },
+  {
+   "frame": 6.0,
+   "ms": 333,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.2287,
+    0.4901
+   ],
+   "tip": [
+    -0.5495,
+    0.5114
+   ],
+   "root_px2x": [
+    148.6,
+    187.6
+   ],
+   "tip_px2x": [
+    110.1,
+    185.0
+   ],
+   "note": "",
+   "tip_speed": 0.0058
+  },
+  {
+   "frame": 7.0,
+   "ms": 400,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.2477,
+    0.6059
+   ],
+   "tip": [
+    0.6292,
+    0.5966
+   ],
+   "root_px2x": [
+    205.7,
+    173.7
+   ],
+   "tip_px2x": [
+    251.5,
+    174.8
+   ],
+   "note": "",
+   "tip_speed": 1.1818
+  },
+  {
+   "frame": 8.0,
+   "ms": 467,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0123,
+    0.5439
+   ],
+   "tip": [
+    0.011,
+    0.4127
+   ],
+   "root_px2x": [
+    177.5,
+    181.1
+   ],
+   "tip_px2x": [
+    177.3,
+    196.9
+   ],
+   "note": "",
+   "tip_speed": 0.645
+  },
+  {
+   "frame": 9.0,
+   "ms": 533,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.0011,
+    0.6028
+   ],
+   "tip": [
+    0.0007,
+    0.4575
+   ],
+   "root_px2x": [
+    175.9,
+    174.1
+   ],
+   "tip_px2x": [
+    176.1,
+    191.5
+   ],
+   "note": "",
+   "tip_speed": 0.046
+  },
+  {
+   "frame": 10.0,
+   "ms": 600,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    -0.0062,
+    0.6224
+   ],
+   "tip": [
+    -0.0032,
+    0.4724
+   ],
+   "root_px2x": [
+    175.3,
+    171.7
+   ],
+   "tip_px2x": [
+    175.6,
+    189.7
+   ],
+   "note": "",
+   "tip_speed": 0.0154
+  },
+  {
+   "frame": 11.0,
+   "ms": 667,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0002,
+    0.6134
+   ],
+   "tip": [
+    0.0016,
+    0.4655
+   ],
+   "root_px2x": [
+    176.0,
+    172.8
+   ],
+   "tip_px2x": [
+    176.2,
+    190.5
+   ],
+   "note": "",
+   "tip_speed": 0.0084
+  },
+  {
+   "frame": 12.0,
+   "ms": 733,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0063,
+    0.6043
+   ],
+   "tip": [
+    0.0063,
+    0.4586
+   ],
+   "root_px2x": [
+    176.8,
+    173.9
+   ],
+   "tip_px2x": [
+    176.8,
+    191.4
+   ],
+   "note": "",
+   "tip_speed": 0.0083
+  },
+  {
+   "frame": 13.0,
+   "ms": 800,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0063,
+    0.6043
+   ],
+   "tip": [
+    0.0063,
+    0.4586
+   ],
+   "root_px2x": [
+    176.8,
+    173.9
+   ],
+   "tip_px2x": [
+    176.8,
+    191.4
+   ],
+   "note": "",
+   "tip_speed": 0.0
+  },
+  {
+   "frame": 14.0,
+   "ms": 867,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0063,
+    0.6043
+   ],
+   "tip": [
+    0.0063,
+    0.4586
+   ],
+   "root_px2x": [
+    176.8,
+    173.9
+   ],
+   "tip_px2x": [
+    176.8,
+    191.4
+   ],
+   "note": "",
+   "tip_speed": 0.0
+  },
+  {
+   "frame": 15.0,
+   "ms": 933,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0063,
+    0.6013
+   ],
+   "tip": [
+    0.0063,
+    0.4563
+   ],
+   "root_px2x": [
+    176.8,
+    174.2
+   ],
+   "tip_px2x": [
+    176.8,
+    191.6
+   ],
+   "note": "",
+   "tip_speed": 0.0023
+  },
+  {
+   "frame": 16.0,
+   "ms": 1000,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0063,
+    0.6001
+   ],
+   "tip": [
+    0.0063,
+    0.4554
+   ],
+   "root_px2x": [
+    176.8,
+    174.4
+   ],
+   "tip_px2x": [
+    176.8,
+    191.8
+   ],
+   "note": "",
+   "tip_speed": 0.0009
+  },
+  {
+   "frame": 17.0,
+   "ms": 1067,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0063,
+    0.6013
+   ],
+   "tip": [
+    0.0063,
+    0.4563
+   ],
+   "root_px2x": [
+    176.8,
+    174.2
+   ],
+   "tip_px2x": [
+    176.8,
+    191.6
+   ],
+   "note": "",
+   "tip_speed": 0.0009
+  },
+  {
+   "frame": 18.0,
+   "ms": 1133,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0063,
+    0.6043
+   ],
+   "tip": [
+    0.0063,
+    0.4586
+   ],
+   "root_px2x": [
+    176.8,
+    173.9
+   ],
+   "tip_px2x": [
+    176.8,
+    191.4
+   ],
+   "note": "",
+   "tip_speed": 0.0023
+  },
+  {
+   "frame": 19.0,
+   "ms": 1200,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0063,
+    0.6073
+   ],
+   "tip": [
+    0.0063,
+    0.4609
+   ],
+   "root_px2x": [
+    176.8,
+    173.5
+   ],
+   "tip_px2x": [
+    176.8,
+    191.1
+   ],
+   "note": "",
+   "tip_speed": 0.0023
+  },
+  {
+   "frame": 20.0,
+   "ms": 1267,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0063,
+    0.6085
+   ],
+   "tip": [
+    0.0063,
+    0.4618
+   ],
+   "root_px2x": [
+    176.8,
+    173.4
+   ],
+   "tip_px2x": [
+    176.8,
+    191.0
+   ],
+   "note": "",
+   "tip_speed": 0.0009
+  },
+  {
+   "frame": 21.0,
+   "ms": 1333,
+   "visible": true,
+   "used": true,
+   "estimated": false,
+   "side": "front",
+   "root": [
+    0.0063,
+    0.6073
+   ],
+   "tip": [
+    0.0063,
+    0.4609
+   ],
+   "root_px2x": [
+    176.8,
+    173.5
+   ],
+   "tip_px2x": [
+    176.8,
+    191.1
+   ],
+   "note": "",
+   "tip_speed": 0.0009
+  }
+ ]
+}

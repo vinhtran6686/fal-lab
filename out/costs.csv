@@ -275,3 +275,44 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-12 18:16:55,out/heroes/pyre_witch/source/design/parts_sheet_v02.png,gpt-image-2,low,1536x1024,False,23.3,0.0135,True
 2026-11-12 18:34:28,out/heroes/pyre_witch/source/design/parts_sheet_A1_v01.png,gpt-image-2,low,1536x1024,False,23.3,0.0140,True
 2026-11-12 19:19:20,out/heroes/pyre_witch/source/design/plate_noarms_v01.png,gpt-image-2,low,1024x1024,False,19.0,0.0114,True
+2026-11-14 10:23:03,pose_skill_sweep_p1_v01.png,gpt-image-2,low,1024x1024,False,17.6,0.0158,True
+2026-11-14 10:25:12,pose_skill_sweep_p1_v02.png,gpt-image-2,low,1024x1024,False,15.3,0.0160,True
+2026-11-14 10:30:16,pose_skill_sweep_p2_v01.png,gpt-image-2,low,1024x1024,False,14.2,0.0161,True
+2026-11-14 10:57:58,pose_skill_sweep_p2_v02.png,gpt-image-2,low,1024x1024,False,16.9,0.0165,True
+2026-11-14 11:43:54,pose_skill_sweep_p2_v03.png,gpt-image-2,low,1024x1024,False,17.1,0.0170,True
+2026-11-14 17:55:12,pose_skill_sweep_p3_v01.png,gpt-image-2,low,1024x1024,False,17.7,0.0165,True
+2026-11-15 04:30:24,master_axe_v01.png,gpt-image-2,low,1024x1024,False,17.2,0.0160,True
+2026-11-15 04:31:01,master_axe_v02.png,gpt-image-2,low,1024x1024,False,16.2,0.0163,True
+2026-11-15 04:31:55,axe_pose_sweep_p1_v01.png,gpt-image-2,low,1024x1024,False,14.6,0.0167,True
+2026-11-15 04:32:21,axe_pose_sweep_p2_v01.png,gpt-image-2,low,1024x1024,False,19.7,0.0171,True
+2026-11-15 04:32:49,axe_pose_sweep_p3_v01.png,gpt-image-2,low,1024x1024,False,18.4,0.0169,True
+2026-11-15 04:52:24,axe_pose_sweep_p1_v02.png,gpt-image-2,low,1024x1024,False,15.3,0.0174,True
+2026-11-15 04:52:51,axe_pose_sweep_p2_v02.png,gpt-image-2,low,1024x1024,False,21.1,0.0178,True
+2026-11-15 04:53:26,axe_pose_sweep_p3_v02.png,gpt-image-2,low,1024x1024,False,28.1,0.0176,True
+2026-11-15 05:07:36,out/heroes/moon_crane/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,12.3,0.0163,True
+2026-11-15 05:13:18,out/heroes/moon_crane/source/design/master_v02.png,gpt-image-2,low,1024x1024,False,16.0,0.0154,True
+2026-11-15 07:10:08,out/heroes/moon_crane/source/design/master_v03.png,gpt-image-2,low,1024x1024,False,15.5,0.0154,True
+2026-11-15 07:13:09,out/heroes/moon_crane/source/design/master_v04.png,gpt-image-2,low,1024x1024,False,13.3,0.0159,True
+2026-11-15 07:20:38,out/heroes/moon_crane/source/design/master_v05.png,gpt-image-2,low,1024x1024,False,16.4,0.0157,True
+2026-11-15 07:23:20,out/heroes/moon_crane/source/design/master_v06.png,gpt-image-2,low,1024x1024,False,14.0,0.0159,True
+2026-11-15 07:27:30,out/heroes/moon_crane/source/design/master_v07.png,gpt-image-2,low,1024x1024,False,16.2,0.0167,True
+2026-11-15 07:30:23,out/heroes/moon_crane/source/design/master_v08.png,gpt-image-2,low,1024x1024,False,14.1,0.0177,True
+2026-11-15 08:37:08,out/heroes/tide_caller/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,13.2,0.0168,True
+2026-11-15 08:40:08,out/heroes/tide_caller/source/design/master_v02.png,gpt-image-2,low,1024x1024,False,12.9,0.0172,True
+2026-11-15 08:42:28,out/enemies/urn_thief/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,15.7,0.0158,True
+2026-11-15 08:45:30,out/bosses/cairn_seer/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,14.6,0.0156,True
+2026-11-15 08:49:25,out/heroes/dragon_sabre/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,14.5,0.0174,True
+2026-11-15 08:50:31,out/heroes/dragon_sabre/source/design/master_v02.png,gpt-image-2,low,1024x1024,False,20.3,0.0176,True
+2026-11-15 08:51:01,out/heroes/dragon_sabre/source/design/master_v03.png,gpt-image-2,low,1024x1024,False,13.0,0.0178,True
+2026-11-15 09:00:03,spear_pose_a_v01.png,gpt-image-2,low,1024x1024,False,13.6,0.0192,True
+2026-11-15 09:00:30,spear_pose_b_v01.png,gpt-image-2,low,1024x1024,False,18.5,0.0195,True
+2026-11-15 09:00:54,spear_pose_c_v01.png,gpt-image-2,low,1024x1024,False,16.2,0.0195,True
+2026-11-15 09:14:31,clip.mp4,h3-max-turbo,video,768P 5s,False,3.2,0.0750,True
+2026-11-15 09:14:31,clip.mp4,h3-max-turbo,video,768P 5s,False,3.1,0.0750,True
+2026-11-15 09:29:07,clip.mp4,h3-max-turbo,video,768P 2s,False,3.0,0.0300,True
+2026-11-15 09:29:08,clip.mp4,h3-max-turbo,video,768P 2s,False,3.6,0.0300,True
+2026-11-15 10:50:57,clip.mp4,h3-max-turbo,video,768P 2s,False,2.9,0.0300,True
+2026-11-15 16:37:33,horse_stance_pose_v01.png,gpt-image-2,low,1024x1024,False,20.6,0.0188,True
+2026-11-15 16:43:41,horse_stance_pose2_v01.png,gpt-image-2,low,1024x1024,False,23.0,0.0189,True
+2026-11-15 17:03:15,clip.mp4,h3-max-turbo,video,768P 2s,False,3.1,0.0300,True
+2026-11-15 17:03:15,clip.mp4,h3-max-turbo,video,768P 2s,False,3.1,0.0300,True

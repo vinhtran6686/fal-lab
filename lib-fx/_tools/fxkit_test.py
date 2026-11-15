@@ -11,8 +11,9 @@ Per kind (one layer, role primary, Life(0, 0.066, 0.034, 0.3), default parameter
 Then every palette must pass Ramp.of(p).problems() (WARNING only), and every effect of every fxkit family under lib-fx must have an
 empty lint() and render with the default --from / --to.
 """
-import pathlib, sys
+import json, pathlib, sys, tempfile
 import numpy as np
+from PIL import Image
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))               # lib-fx/build.py
 import build                                        # also puts the draw folder and _tools on sys.path
@@ -93,6 +94,41 @@ def test_smooth():
     say(np.array_equal(smooth_mask(m2, 1, fillet=0, burr=0, sigma=0), m2), "smooth_mask: all zero = unchanged")
 
 
+SWING3 = ("tip_a=25.80,92.80;tip_b=216.81,85.85;pivot=119.60,92.80;pivot_b=110.45,83.05;root_a=78.60,96.60;root_b=151.05,84.32;"
+          "tip_c=109.43,106.33;pivot_c=109.33,81.59;root_c=109.43,81.59")          # docs/pipeline/pose-pair-fx-method.md 10.6
+SWING2 = "tip_a=25.80,92.80;tip_b=216.81,85.85;pivot=119.60,92.80;root_a=78.60,96.60;root_b=151.05,84.32"      # two points (10.3)
+
+
+def kit_build(swing_text, seed=0):
+    """build.kit_variant of melee/slash/sweep with a --swing spec into a temp folder -> (meta dict, [frames @2x as arrays])."""
+    mod = build.families()["melee/slash"]
+    with tempfile.TemporaryDirectory() as d:
+        build.kit_variant(d, "melee/slash", mod, "sweep", "frost", 1.0, 15, 1.0, seed, True, None, None, "sweep", (), None, build.parse_swing(swing_text))
+        meta = json.loads((pathlib.Path(d) / "meta.json").read_text(encoding="utf8"))
+        fr = [np.asarray(Image.open(f).convert("RGBA")) for f in sorted((pathlib.Path(d) / "frames" / "@2x").glob("*.png"))]
+    return meta, fr
+
+
+def test_swing_fit():
+    """The fitted three-point sweep of 10.6 (and the two-point lead=1 case of 10.3)."""
+    try:
+        m1, f1 = kit_build(SWING3); m2, f2 = kit_build(SWING3)
+    except Exception as ex:
+        say(False, f"swing three points: builds ({type(ex).__name__}: {ex})"); return
+    say(len(f1) == len(f2) and all(np.array_equal(x, y) for x, y in zip(f1, f2)), "swing three points: same seed twice = identical frames")
+    sf = m1.get("swing_fit", {}); want = {"k": (0.2, 0.01), "u0": (180.0, 0.2), "uc": (367.7, 0.2), "u1": (450.0, 0.2),
+                                          "ra": (93.8, 0.2), "rc": (105.1, 0.2), "rb": (109.7, 0.2), "fc": (0.695, 0.01)}
+    bad = {k: sf.get(k) for k, (v, tol) in want.items() if sf.get(k) is None or abs(sf[k] - v) > tol}
+    say(not bad, f"swing three points: swing_fit k {sf.get('k')} u {sf.get('u0')} / {sf.get('uc')} / {sf.get('u1')} r {sf.get('ra')} / {sf.get('rc')} / {sf.get('rb')} fc {sf.get('fc')}"
+                 + (f"  (off: {bad})" if bad else ""))
+    say(m1.get("hit_frame") == 3 and len(f1) == 9, f"swing three points: hit_frame {m1.get('hit_frame')} (want 3), {len(f1)} frames (want 9)")
+    try:
+        m3, f3 = kit_build(SWING2 + ";lead=1")
+    except Exception as ex:
+        say(False, f"swing two points lead=1: builds ({type(ex).__name__}: {ex})"); return
+    say(len(f3) > 0 and not m3.get("lint"), f"swing two points lead=1: builds ({len(f3)} frames), lint {'clean' if not m3.get('lint') else '; '.join(m3['lint'])}")
+
+
 def fairness_report():
     """Printed, never a failure: Bezier fairness of the outline of the peak frame (hit + 3) of three reference effects (vector kit metrics)."""
     sys.path.insert(0, str(HERE.parent / "_core" / "formulas"))
@@ -117,6 +153,7 @@ def main():
     for k in (want or kinds): test_kind(k)
     if want: sys.exit(1 if fails else 0)
     test_smooth()
+    test_swing_fit()
     fairness_report()
     for name in palettes.PALETTES:
         probs = Ramp.of(name).problems()

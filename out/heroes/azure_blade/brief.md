@@ -37,6 +37,11 @@ Mô tả gốc: "xoay người ngang, cầm đao bằng 2 tay, giơ lên cao qua
 | 4 giữ | giữ pose B vài khung rồi về idle | - | - |
 Rủi ro: model nhầm tay, hai tay không cùng nắm cán; đao quá dài ra khỏi khung ở pose A; pose B không đủ khom. Duyệt từng pose, chỉ làm lại pose sai.
 
+### 2. Quét ngang (`pose_skill_sweep_p1`, `p2`, `p3` + `melee/slash/sweep`), mặt phẳng nằm ngang, xuất chính thức 2026-11-14
+Mặt phẳng: **ground** (`fal-image/action-planes.md`). Thứ tự A -> B -> C (cung 270 độ: trái, qua nửa xa, phải, vòng nửa gần về người xem).
+Thân: rig một mảnh x3 (`rig_sweep_a/b/c`) + `anims/sweep.json` 21 khung (lấy đà 6, chém 1, trúng đòn 6, nghỉ 8, hit 8).
+Vệt: `melee/slash/sweep --swing` ba điểm lấy từ sockets của rig (`puppet.py track`), ghép vào thân bằng `source/vfx/sweep/build_sweep.py`.
+
 ## Asset manifest
 | Asset | Từ | Loại | Trạng thái | Ghi chú |
 |---|---|---|---|---|
@@ -55,3 +60,9 @@ Rủi ro: model nhầm tay, hai tay không cùng nắm cán; đao quá dài ra k
 | rig pose A + pose B (studio) | Puppet Kit ($0) | rig | ⏳ p02 | `source/rig/rig_a.json`, `rig_b.json`: torso / arms (hai tay, nắm đấm, giáp vai) / blade; dây chằng `shoulder_chest` (tay trượt thì vai + ngực theo); dựng lại: `make_rigs.py`, `make_anim.py` |
 | skill_crescent_puppet_side | Puppet Kit pose-to-pose ($0) | one-shot | ⏳ p02 | 44 khung @15 fps, chỉ pose A và B (không idle): P1 đao nâng cao + thở, P2 về pose A, cắt, P3 pose B đập xuống, P4 nhún theo quán tính rồi về pose B; hit 23 |
 | skill_crescent_side (có fx) | ghép ($0) | one-shot | ⏳ p03 | thân puppet + vệt xanh sáng bề mặt lưỡi quét; `build_crescent.py` |
+| pose_skill_sweep_p1 | fal-image | ảnh tĩnh | ✅ v02 | user chốt 2026-11-14 (ground pose A: hông xoay ra sau, đao ở sau thân chỉ sang TRÁI, nhìn từ sau lưng); thứ tự cú quét A -> B -> C |
+| pose_skill_sweep_p2 | fal-image | ảnh tĩnh | ✅ v03 | pose B = đao đi được ~2/3 cung (góc khớp 368 độ), chỉ sang PHẢI và hơi xuống; user chốt 2026-11-14; chân to hơn A ~4,9%, đã đo, căn theo trung điểm hai bàn chân |
+| pose_skill_sweep_p3 | fal-image | ảnh tĩnh | ✅ v01 | pose C = KẾT THÚC cú quét và khung trúng đòn (đao chỉ thẳng vào người xem, nêm ngắn chỉ xuống), user chốt 2026-11-14 |
+| skill_sweep_side | ghép + `melee/slash/sweep` | one-shot | ✅ | user duyệt 2026-11-14; 21 khung @15 fps, hit 8, `frames/skill_sweep_side/`; dựng lại: `python out/heroes/azure_blade/source/vfx/sweep/build_sweep.py` (sau khi dựng thân và vệt) |
+| skill_sweep_puppet_side | Puppet Kit | one-shot | ✅ | thân không vệt, 21 khung @15 fps; `frames/skill_sweep_puppet_side/`; `puppet.py render ... anims/sweep.json --sheet skill_sweep_puppet_side` |
+| fx_sweep | lib-fx `melee/slash/sweep` | hiệu ứng | ✅ | vệt ba điểm `--swing`, 9 khung, hit 3; `frames/fx/sweep/` |

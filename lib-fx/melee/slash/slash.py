@@ -30,31 +30,31 @@ EFFECTS = {
         layers={"slash": {"bend": 0.0, "width": 34, "life": Life(0.0, 0.066, 0.033, 0.22)},
                 "streaks": {"at": "b", "arc": (-40, 40), "n": 4}, "scraps": {"arc": (-50, 50)}}),
     "axe": _slash.variant("axe", title="Chém rìu", weight="heavy", pal="sun", reach=210, tags=["heavy", "axe"],
-        desc="an AXE swing: a short, thick smear of 4-6 parallel bands apart by narrow gaps, a blunt head; it fades band by band "
-             "from the tail, the thin ones first, into parallel strokes",
-        layers={"slash": {"weapon": "axe", "width": 80, "bend": 0.3, "life": Life(0.0, 0.1, 0.05, 0.33)}, "scraps": {"n": 8, "size": 16}}),
+        desc="an AXE swing: a short, thick smear of 3 broad parallel bands apart by narrow gaps (an outer sheet behind them), a blunt head; it fades band by band "
+             "from the tail, the narrower ones first, into parallel strokes",
+        layers={"slash": {"weapon": "axe", "width": 96, "linger": 4.0, "bend": 0.3, "life": Life(0.0, 0.1, 0.05, 0.33)}, "scraps": {"n": 8, "size": 16}}),
     "axe_heavy": _slash.variant("axe_heavy", title="Chém rìu lớn", weight="heavy", pal="blaze", reach=250, tags=["heavy", "axe"],
-        desc="a great AXE: a wider, longer-lived smear of six bands, more scraps",
-        layers={"slash": {"weapon": "axe", "width": 104, "strands": 6, "bend": 0.38, "life": Life(0.0, 0.12, 0.06, 0.38)},
+        desc="a great AXE: a wider smear of 3 very broad bands, more scraps",
+        layers={"slash": {"weapon": "axe", "width": 112, "strands": 3, "linger": 4.6, "bend": 0.38, "life": Life(0.0, 0.12, 0.06, 0.38)},
                 "scraps": {"n": 12, "size": 20, "life": Life(0.1, 0.033, 0.0, 0.5)}}),
 }
 
 
-def _plane_effect(name, title, desc, sw, tags, linger):
+def _plane_effect(name, title, desc, sw, tags, linger, sparks=((-10, 60), (0, 50)), release=0.36):
     """A smear of a swing in a PLANE seen from the game's camera (kind slash, parameter swing): a = the shoulder, b = one `reach` ahead of it,
     the tip runs on a circle of radius `reach` round a; the far half goes behind the character, the near half in front. The sparks start at
     the tip's last position (worked out from the same plane, so they follow the plane if it is changed)."""
     (x, y), _ = plane_point(sw, sw["u1"], 120.0)
     end = ("a", round(x, 1), round(-y, 1))
     return _slash.variant(name, title=title, space="aim", reach=120, extent=260, tags=["planar"] + tags, desc=desc,
-        layers={"slash": {"life": Life(-1 / 15, 1 / 15, 0.0, 0.36), "streaks": 0, "linger": linger, "swing": sw},
-                "scraps": {"at": end, "floor": True, "arc": (-10, 60), "life": Life(0.033, 0.033, 0.0, 0.33)},
-                "streaks": {"at": end, "arc": (0, 50), "life": Life(0.0, 0.033, 0.033, 0.13)}})
+        layers={"slash": {"life": Life(-1 / 15, 1 / 15, 0.0, release), "streaks": 0, "linger": linger, "swing": sw},
+                "scraps": {"at": end, "floor": True, "arc": sparks[0], "life": Life(0.033, 0.033, 0.0, 0.33)},
+                "streaks": {"at": end, "arc": sparks[1], "life": Life(0.0, 0.033, 0.033, 0.13)}})
 
 
 EFFECTS["sweep"] = _plane_effect("sweep", "Chém ngang", "a SWORD swung level with the ground (a horizontal sweep) seen from the game's camera: a very flat ellipse, nearly a line; the "
     "far half passes BEHIND the character, cool and thin, the near half in FRONT, bright and thick; use it with the shoulder as --from",
-    dict(k=0.3, roll=0.0, u0=215, u1=410, blade=0.75, ease=1.3), ["horizontal"], 3.4)
+    dict(k=0.3, roll=0.0, u0=175, u1=460, blade=0.75, ease=1.3, w_near=12), ["horizontal"], 3.4, sparks=((150, 215), (160, 200)), release=0.33)
 EFFECTS["diag_down"] = _plane_effect("diag_down", "Chém xéo xuống", "a SWORD slash on a slanted plane, from high behind the shoulder to low in front, seen from the "
     "game's camera: a half-flattened ellipse turned 35 degrees; use it with the shoulder as --from",
     dict(k=0.6, roll=35.0, u0=205, u1=400, blade=0.8, ease=1.3), ["diagonal"], 2.4)
@@ -63,5 +63,5 @@ EFFECTS["diag_up"] = _plane_effect("diag_up", "Chém xéo lên", "a SWORD slash 
     dict(k=0.6, roll=-35.0, u0=160, u1=-35, blade=0.8, ease=1.3), ["diagonal"], 2.0)
 EFFECTS["heavy"].layers.insert(0, Layer("slash", id="echo", role="secondary", z="back", life=Life(0.033, 0.12, 0.033, 0.3), bend=0.5, width=44, streaks=0, tones=1))
 EFFECTS["thrust"].layers.append(Layer("star", role="core", at="b", life=Life(0.05, 0.05, 0.0, 0.22), n=4, length=60, width=24, arc=(-60, 60), minor=2))
-for _k in ("axe", "axe_heavy"):                                              # a fainter sword-like smear behind the bands, for depth
-    EFFECTS[_k].layers.insert(0, Layer("slash", id="echo", role="secondary", z="back", life=Life(0.033, 0.12, 0.033, 0.3), weapon="sword", bend=0.46, width=40, strands=2, streaks=0, tones=1))
+for _k, _bend, _w in (("axe", 0.55, 44), ("axe_heavy", 0.58, 42)):          # one wide outer sheet behind the bands (a single axe band bowed 0.2-0.25 more than they are): it reads as the outer band, the gaps stay open
+    EFFECTS[_k].layers.insert(0, Layer("slash", id="echo", role="secondary", z="back", life=Life(0.033, 0.12, 0.033, 0.3), weapon="axe", span=1.0, bend=_bend, width=_w, strands=1, streaks=0, tones=1))

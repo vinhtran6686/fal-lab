@@ -1,7 +1,7 @@
 {
  "id": "melee/slash/axe",
  "name": "Chém rìu",
- "desc": "an AXE swing: a short, thick smear of 4-6 parallel bands apart by narrow gaps, a blunt head; it fades band by band from the tail, the thin ones first, into parallel strokes",
+ "desc": "an AXE swing: a short, thick smear of 3 broad parallel bands apart by narrow gaps (an outer sheet behind them), a blunt head; it fades band by band from the tail, the narrower ones first, into parallel strokes",
  "status": "draft",
  "tags": [
   "melee",
@@ -17,16 +17,16 @@
  "fps": 30.0,
  "frames": 16,
  "frame_size_2x": [
-  380,
-  278
+  360,
+  282
  ],
  "anchor_2x": [
-  72.0,
-  196.0
+  54.0,
+  200.0
  ],
  "target_2x": [
-  282.0,
-  196.0
+  264.0,
+  200.0
  ],
  "hit_frame": 1,
  "direction": "a -> b (set with --from / --to)",
@@ -79,8 +79,8 @@
   "frames": 16,
   "peak_frame": 5,
   "peak_size_1x": [
-   114,
-   73
+   106,
+   76
   ],
   "last_frame_pct": 0.0
  },

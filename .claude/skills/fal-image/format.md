@@ -9,6 +9,8 @@ stills (image-to-video) and exports the frames into the same asset folder. Style
 designs, never name the game they come from).
 
 ## 1. Style block `{STYLE}` (fixed, append to every prompt)
+**Two style presets** (2026-11-15). **Chunky vector** (`style-chunky.md`: about 3 heads, enormous fists, thick mauve-brown outline, 3-4 flat tones, one dominant hue in four values plus a warm family and a gold accent, face of the fewest marks, medium detail) is the **default for every new character**; the block below is the **flat preset**, kept for the assets made before that date and for a user who asks for it. A character records its preset in `brief.md` (`style: chunky` or `style: flat`) and reuses it for every still. Where the two disagree (proportions, detail, outline, colour), the character's preset wins over the rules below.
+
 The block fixes the **design principles** (how things are drawn), not a look: body type, costume, armour,
 weapon, colours and which parts are exaggerated belong to each character's `{design}`, so a robed mage, an
 armoured knight and a fire elemental can all share it.
@@ -89,7 +91,7 @@ it the first masters came back with buckles, pouches, bandages and fabric textur
 > colour families. The weapon and every part of the body stay inside the frame with margin on every side.
 
 **No chibi, no cute (user rule, 2026-11-12, every class unless the user asks for it in words).** Never write "chibi", "cute", "adorable", "kawaii",
-"round", "big round head", "2 heads tall" in a `{design}`. A hero or ally is a **warrior built for its role**: humanoid about 3.5 to 4.5 heads tall (head
+"round", "big round head", "2 heads tall" in a `{design}`. A hero or ally is a **warrior built for its role**: humanoid about 3.5 to 4.5 heads tall (about 3 heads in the chunky preset; head
 about 1/4 of the height), broad shoulders and chest, strong forearms and thighs, grim or determined face (a hard brow line, a narrow eye slit, a firm
 mouth line), angular armour and weapon shapes, sharp not rounded corners; a "powerful" read comes from a wide stance and big shoulders/hands, never from a big head. Add to every
 `{design}`: "a serious, powerful, battle-hardened warrior, not cute, not childlike, not a mascot". Keep what the earlier rig tests taught for animation: the two
@@ -136,7 +138,7 @@ the turned master: name the angle in capitals, say what must and must not be vis
 the weapon or the asymmetric mark is on), and end with "Not a side view". A `pose_<action>` still uses the
 same skeleton with the master's view, the pose instead of `{UPRIGHT}`, and `--ref <master>`.
 **Poses of a move** (`pose_<action>`, `pose_skill_<name>`, any class): the plane the move lives in (flat to the screen, flat to the ground, diagonal)
-decides where the weapon or the casting hand is in each pose and where the effect goes. Read `action-planes.md` (this folder) before writing them.
+decides where the weapon or the casting hand is in each pose and where the effect goes. Read `action-planes.md` (this folder) before writing them; its section 4b is mandatory for the body's orientation (a named orientation with a visible / NOT visible list; vague words such as "slightly turned" or "a little more than three-quarter" are not allowed in any pose prompt).
 
 **biped** (two legs; front and back tested on bandit 2026-10-13/14). `{weapon hand}` is the hand that holds
 the weapon (or the staff, the book ...).

@@ -49,13 +49,57 @@
         ]
       },
       "hit_frame": 23
+    },
+    "skill_sweep_puppet_side": {
+      "version": "p01",
+      "dir": "frames/skill_sweep_puppet_side",
+      "source": "source/rig/anims/sweep.json",
+      "frames": 21,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/skill_sweep_puppet_side/frames/@1x/hero_azure_blade_skill_sweep_puppet_side_NN.png",
+      "sheet": "frames/skill_sweep_puppet_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig_sweep_a.json",
+          "source/rig/rig_sweep_b.json",
+          "source/rig/rig_sweep_c.json"
+        ],
+        "shots": [
+          [
+            "wind",
+            6
+          ],
+          [
+            "cross",
+            1
+          ],
+          [
+            "hit",
+            6
+          ],
+          [
+            "settle",
+            8
+          ]
+        ]
+      },
+      "hit_frame": 8
     }
   },
   "sources": {
     "design": [
       "master_v06.png",
       "pose_skill_crescent_p1_v01.png",
-      "pose_skill_crescent_p2_v03.png"
+      "pose_skill_crescent_p2_v03.png",
+      "pose_skill_sweep_p1_v02.png",
+      "pose_skill_sweep_p2_v03.png",
+      "pose_skill_sweep_p3_v01.png"
+    ],
+    "vfx": [
+      "sweep_puppet",
+      "sweep_puppet_pivot"
     ]
   }
 }

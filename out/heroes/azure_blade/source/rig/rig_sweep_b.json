@@ -1,0 +1,63 @@
+{
+ "id": "azure_blade",
+ "note": "Sweep pose B: about 2/3 of the arc, blade pointing right: one picture, no cut-out (breath, squash and lean around the feet only).",
+ "sources": {
+  "pose": "../design/pose_skill_sweep_p2_v03.png"
+ },
+ "ground": [
+  438,
+  940
+ ],
+ "unit": 890.8,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    438,
+    940
+   ]
+  },
+  {
+   "name": "body",
+   "parent": "root",
+   "pivot": [
+    438,
+    940
+   ]
+  }
+ ],
+ "sockets": {
+  "blade_tip": {
+   "bone": "body",
+   "pt": [
+    1007,
+    424
+   ]
+  },
+  "blade_root": {
+   "bone": "body",
+   "pt": [
+    662,
+    416
+   ]
+  },
+  "pivot": {
+   "bone": "body",
+   "pt": [
+    449.0,
+    409.4
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "whole",
+   "source": "pose",
+   "bone": "body",
+   "select": {
+    "rest": true
+   }
+  }
+ ]
+}

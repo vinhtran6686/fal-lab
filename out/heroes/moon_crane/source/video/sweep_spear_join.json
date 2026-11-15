@@ -1,0 +1,28 @@
+{
+  "name": "sweep_spear_join",
+  "approved": "2026-11-15 (user: 'Hiện tại mình nghĩ cũng khá đúng rồi. Chốt phiên bản đó')",
+  "what": "horizontal spear spin-sweep, three key poses A (back to the viewer, spear behind), B (chest open, spear level in front, both hands), C (one hand, spear flung behind the back)",
+  "fps": 24,
+  "size": [768, 768],
+  "frames": 88,
+  "takes": {
+    "a": {"file": "sweep_spear_take_a.mp4", "job": "sweep_spear_take_a.job.json", "model": "h3-max-turbo", "start_still": "source/design/master_v08.png", "prompt": "prompts/take_a_full_move.txt"},
+    "b": {"file": "sweep_spear_take_b.mp4", "job": "sweep_spear_take_b.job.json", "model": "h3-max-turbo", "first_frame": "prompts/take_b_first_frame_keyB.png (take a, t=2.8 s)", "last_frame": "prompts/take_b_last_frame_keyC.png (take a, t=4.3 s)", "prompt": "prompts/take_b_pinned_b_to_c.txt"}
+  },
+  "join_frames_1_based": [
+    {"take": "a", "from": 31, "to": 46},
+    {"take": "a", "from": 51, "to": 68},
+    {"take": "b", "from": 1, "to": 30},
+    {"take": "b", "from": 33, "to": 56}
+  ],
+  "dropped": {"a": "47-50 (spear leaves the top of the frame, smeared)", "b": "31-32 (spear leaves the left edge, smeared)"},
+  "key_poses_in_join": {"A": "frames 1-16 (t 0-0.67 s)", "mid": "frames 17-24: side three-quarter, arms out, spear level, pointing right", "B": "frames 25-41", "B_to_C": "frames 42-64 (spear dips low in front, left hand lets go)", "C": "frames 65-88"},
+  "known_limits": [
+    "snap of about 0.04 s from the back view (frame 16) to the side view (frame 17)",
+    "small jump at frame 64 to 65 where the smeared frames were removed",
+    "the B to C stretch dips the spear downward more than level",
+    "pinning A and B as first and last frame of one clip makes the model lift the spear over the head (tried twice); frames 47-50 of take a show the same overhead pass"
+  ],
+  "cost_usd": {"take_a": 0.075, "take_b": 0.03, "failed_trials_not_kept": "take v02 free 0.075, pinned A to B 0.03 and 0.03"},
+  "rebuild": "python out/heroes/moon_crane/source/video/build_sweep_join.py"
+}

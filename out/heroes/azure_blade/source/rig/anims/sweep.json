@@ -1,0 +1,155 @@
+{
+ "note": "azure_blade horizontal sweep A -> B -> C: three one-piece poses, five-phase body timing (wind-up, cross, hit squash and rebound, settle); the vfx is built from the rig sockets (puppet.py track).",
+ "version": "p01",
+ "fps": 15,
+ "loop": false,
+ "hit_frame": 8,
+ "shots": [
+  {
+   "name": "wind",
+   "rig": "source/rig/rig_sweep_a.json",
+   "frames": 6,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      1.0
+     ],
+     [
+      3,
+      0.955,
+      "out"
+     ],
+     [
+      5,
+      0.95
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      1.0
+     ],
+     [
+      3,
+      1.022,
+      "out"
+     ],
+     [
+      5,
+      1.025
+     ]
+    ],
+    "root.shx": [
+     [
+      0,
+      0
+     ],
+     [
+      3,
+      -0.08,
+      "out"
+     ],
+     [
+      5,
+      -0.1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "cross",
+   "rig": "source/rig/rig_sweep_b.json",
+   "frames": 1,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      1.03
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      0.985
+     ]
+    ],
+    "root.shx": [
+     [
+      0,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "hit",
+   "rig": "source/rig/rig_sweep_c.json",
+   "frames": 6,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      0.9
+     ],
+     [
+      2,
+      1.03,
+      "out"
+     ],
+     [
+      4,
+      1.0,
+      "inout"
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      1.08
+     ],
+     [
+      2,
+      0.985,
+      "out"
+     ],
+     [
+      4,
+      1.0,
+      "inout"
+     ]
+    ],
+    "root.shx": [
+     [
+      0,
+      0.01
+     ],
+     [
+      2,
+      -0.02,
+      "out"
+     ],
+     [
+      4,
+      0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "settle",
+   "rig": "source/rig/rig_sweep_c.json",
+   "frames": 8,
+   "tracks": {
+    "body.sy": {
+     "base": 1.0,
+     "osc": {
+      "amp": -0.007,
+      "period": 8
+     }
+    }
+   }
+  }
+ ]
+}

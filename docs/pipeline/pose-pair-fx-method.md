@@ -145,6 +145,9 @@ Thân ra `frames/skill_crescent_puppet_side/` (cell 352x280 @2x, chân ở pivot
 - [ ] Prompt pose A và B giữ `{design}` nguyên văn, ghi rõ hai tay cùng cỡ, hai chân cùng cỡ.
 - [ ] Prompt **cấm mọi fx** (vệt, bụi, phát sáng, bóng dưới đất).
 - [ ] Hướng đao và vị trí tay mô tả bằng vị trí trên ảnh, không bằng "trái/phải" của nhân vật.
+- [ ] **Hướng thân là một tên cố định** (xem thân từ sau lưng, nhìn nghiêng thuần, mở ngực về phía người xem, hướng master) kèm danh sách "thấy" và "KHÔNG thấy" (`fal-image/action-planes.md` §4b); không dùng từ mơ hồ ("hơi xoay", "xoay hơn dáng ba phần tư một chút", "vặn người"): mô hình sẽ vẽ lại dáng mặc định của master (bài học 2026-11-14, pose A chém ngang).
+- [ ] Phần bị che được tả là bị che, kèm phần còn thấy ("cán và hai tay nằm sau thân, chỉ nửa mũi đao thò ra bên trái ảnh").
+- [ ] Sinh xong, **tự nhìn ảnh và đối chiếu từng dòng "thấy / không thấy"** trước khi gửi người dùng; một dòng sai là pose sai.
 - [ ] Pose B dùng pose A làm ảnh tham chiếu, kèm câu "không chép dáng".
 - [ ] Hai pose cùng hướng nhìn; nhân vật cùng cỡ gần bằng nhau (đầu rộng bằng nhau); ghi lại nếu lệch.
 - [ ] Mỗi pose đạt theo mắt: đúng động tác mô tả, hai tay nắm đúng, vũ khí **nguyên cả lưỡi trong khung**, lề ≥ 8%.
@@ -222,3 +225,136 @@ Hiệu ứng thứ hai của skill, thêm 2026-11-12: năng lượng xanh dâng 
 Cách họ làm (suy luận, chưa xác nhận): vẽ tay các **tư thế khoá** (rất có thể vector, tái dùng mảnh, đổi mảnh khi đổi tư thế), xuất ra cỡ nhỏ, giữ
 khung on twos, và vẽ riêng vài hình vệt chém. Họ không mô phỏng vật lý từng khung: **người vẽ quyết định tư thế đúng**, hiệu ứng che phần còn lại.
 Phương pháp ở file này thay "người vẽ tư thế đúng" bằng hai pose do model ảnh vẽ từng hình và người duyệt, còn vệt chém lớn che chỗ đổi pose.
+
+## 10. Hai pose lệch nhau (A và B): đo, căn, khớp vệt
+
+Thử trên cặp chém ngang đã duyệt của `azure_blade` (`pose_skill_sweep_p1_v02.png` nhìn từ sau lưng, đao ngang ngực chỉ sang TRÁI, nửa sau thân; `pose_skill_sweep_p2_v03.png` ngực mở, đao ngang chỉ sang PHẢI, đầy đủ trước thân). Hai ảnh **không khớp nhau**, và một vệt hình cố định (đặt tay `--from`, `u0`, `u1`) đặt lên sẽ trượt: ellipse nằm ở cổ, khung 1 chỉ là một chấm xa thân, vệt không chạm lưỡi B. Quy trình: đo cả hai ảnh, căn B vào A, rồi để lệnh dựng **tự suy ra** hình vệt từ các điểm đo. Số đo nằm ở `out/heroes/azure_blade/source/design/weapon_marks_sweep.json`.
+
+### 10.1 Số đo (px của ảnh gốc 1024, tách nền magenta, kiểm bằng mắt trên ảnh có vẽ điểm)
+| | A (v02) | B (v03) | B - A |
+|---|---|---|---|
+| mũi đao | (129, 464) | (1007, 424) | |
+| đầu chuôi phần lưỡi nhìn thấy | (393, 483) (lưỡi chìm sau áo choàng) | (662, 416) (ló khỏi nắm tay) | |
+| tâm thân (giữa hai giáp vai) | (598, 310) | (449, 300) | (-149, -10) |
+| điểm giữa hai bàn chân (đáy ủng) | (541.8, 921) | (438, 940) | dx = -103.8, dy = +19 |
+| cao (đỉnh đầu tới chân) | 812 | 852 (đỉnh đầu 88, chân 940) | tỉ lệ B/A = 1.049 |
+Ghi chú: chân trái của B thấp hơn chân phải (951 so với 929), nên lấy trung bình; B to hơn A 4.9 %.
+
+### 10.2 Chính sách căn: theo CHÂN, không theo thân
+Phóng B với `scale_b_to_a = 0.953` quanh điểm giữa hai chân, rồi đặt điểm giữa hai chân của B lên của A. Lý do: hai pose được yêu cầu "chân đứng yên, thân xoay", nên chân là điểm duy nhất thật sự cố định giữa hai pose; căn theo thân sẽ làm chân trượt 100 px (của 1024) giữa hai khung. Phần dư còn lại là **thân B lệch 45.8 px sang trái so với thân A** (khoảng 5.6 % chiều cao, vẫn đọc được như thân xoay và nghiêng), và bàn chân của B không nằm trên một đường ngang (chênh 22 px) nên bàn chân phải của B nhấc lên nhẹ. Mọi toạ độ của vệt dựng **trên cùng hệ toạ độ đã căn** (hệ của A, nhân 0.2 thành px ô @2x); khi ghép, ảnh B cũng được phóng và đặt theo đúng phép đó. Sau căn: mũi B (1084.0, 429.2), đầu chuôi B (755.2, 421.6), tâm thân B (552.2, 311.0).
+
+### 10.3 Khớp vệt vào các điểm đo
+`--swing` nhận mũi A, mũi B và trục quay (`fit_swing` trong `lib-fx/_core/formulas/draw/fxkit/layers/slash.py`, mô tả ở `FXKIT.md` mục 6): với độ dẹt `k` đã chọn, mỗi mũi cho ra góc `u` và bán kính `r` của riêng nó, nên mép ngoài đi **đúng qua cả hai mũi**; bán kính và trục quay nội suy từ A sang B; mép trong và mép trắng nằm trên đường chuôi -> mũi của từng pose. Trục quay = tâm thân (x) ở độ cao của lưỡi (y), không phải ở cổ: A (598, 464), B (552.2, 415.2) sau căn. Lệnh thật (px ô @2x = toạ độ đã căn x 0.2, `k = 0.22` để bụng vệt không tụt quá thấp):
+```
+python lib-fx/build.py melee/slash/sweep --pal frost --fps 15 --split \
+    --swing "tip_a=25.80,92.80;tip_b=216.81,85.85;pivot=119.60,92.80;pivot_b=110.45,83.05;root_a=78.60,96.60;root_b=151.05,84.32;k=0.22" \
+    --out <thư mục>
+```
+Kết quả suy ra: u0 = 180 (mũi A nằm đúng trên trục dài), u1 = 6.8 (đao B chúc nhẹ xuống), bán kính 93.8 (A) và 105.2 (B) px @2x. Đặt `hit_frame` = 2 (khung B đầu tiên); khung 1 là thân A.
+Trước / sau (dựng lại bản cũ: lệnh `--from 176,120 --to 261,120`, tâm thân đặt vào vai; hàng trên cũ, hàng dưới đã khớp):
+
+![trước và sau](images/pose-pair-sweep-fit-before-after.png)
+
+### 10.4 Số đo nghiệm thu (px ô @2x, 15 fps, ghép trên nền xám: vệt sau dưới thân, vệt trước trên thân)
+| Tiêu chí | Kết quả |
+|---|---|
+| (a) khung trúng đòn: mép ngoài tới mũi B | gần nhất 0.8 px, không vượt qua mũi (0 px) |
+| (a) mép trắng so với đường chuôi B -> mũi B | trung bình 1.6, lớn nhất 4.5 px; phủ 100 % chiều dài lưỡi nhìn thấy (66 px) |
+| (b) khung 1: lát mỏng so với phần lưỡi A nhìn thấy | trung bình 2.7, 95 % trong 5.3, lớn nhất 6.4 px (pixel quầng); chạm mũi A trong 0.3 px |
+| (c) tâm vệt phần gần so với đường lưỡi | thấp hơn lưỡi 4.3 px tại chỗ gần nhất, trung bình 11.7 px (không chỗ nào cao hơn lưỡi) |
+| (d) tan: A(h+1), A(h+2), A(h+3) so với A(h) | 0.60, 0.28, 0.08 (yêu cầu <= 0.75, 0.45, 0.2) |
+Cặp tự nghĩ (mũi A (20, 560), mũi B (1220, 610): tầm dài hơn, đao thấp hơn): mép ngoài tới mũi B 1.0 px, mép trắng lớn nhất 5.6 px (trung bình 1.5), lát mỏng khung 1 lớn nhất 7.2 px, chạm mũi A 0 px, tâm vệt không cao hơn lưỡi (3.5 px thấp hơn). Dùng được cho điểm bất kỳ, không phải một hình cố định.
+
+### 10.5 Sai số còn lại và khi duyệt cần nhìn gì
+- Lát mỏng khung 1 là mảnh trắng có viền xanh nằm **đè lên** lưỡi A (nửa gần ở trước thân), không phải sau thân: nếu trục quay đặt thấp hơn mũi A thì mảnh rơi vào nửa xa, mờ và nằm sau lưỡi. Chọn y của trục bằng độ cao mũi A.
+- Lưỡi cong (mũi nằm cao hơn thân lưỡi): đường chuôi -> mũi là dây cung, thân lưỡi thật thấp hơn tới ~10 px (ở cỡ @2x) so với dây cung; mép trắng đi dọc sống lưỡi.
+- Bụng vệt tụt xuống ngang đai lưng (độ dẹt `k`): hạ `k` xuống 0.2 nếu thấy quá thấp; vệt đi trước thân ở mọi khung (không có nửa sau thân vì mũi A nằm trên trục dài).
+- Phần thân B lệch 46 px so với A và chân phải B cao hơn chân trái 22 px là lỗi của ảnh, không phải của vệt: kiểm cả hai khi duyệt; nếu chướng mắt thì dịch rig, đừng dịch vệt.
+- Cảnh báo còn lại của cổng (`build.py --check`): `cut` ở khung 5 (vệt còn 8-9 % đỉnh rồi hết ở khung 6).
+
+### 10.6 Pose C (kết thúc cú chém ngang, chỉ vào người xem): thứ tự A -> B -> C, vì sao vệt đọc ngược khi chỉ có A và B, và cái gì sửa được (2026-11-14, viết lại sau khi sửa thứ tự)
+**Triệu chứng.** Bản khớp hai pose (10.3 - 10.5) đạt mọi số đo (mép ngoài qua hai mũi, mép trắng trên lưỡi B) nhưng người duyệt đọc vệt chạy **phải sang trái**. Số liệu đúng hướng (mũi A ở trái -> mũi B ở phải, đuôi rút trước), nhưng hình đọc ngược vì hai lẽ:
+1. Vệt là **bề mặt lưỡi quét**; lưỡi nằm dọc đường đi của chính nó ở hai đầu cung nên bề mặt mảnh dần về phía mũi: dày nhất ở trái-giữa, mảnh thành kim ở phải: một sao chổi có đầu ở TRÁI.
+2. Cả vệt hiện đủ trong một khung, nên không có đầu nào được thấy đi qua.
+Hai pose cũng không cho biết ellipse: `k` phải đoán (0.22). Điểm gần nhất của cung (lưỡi chỉ vào người xem) không có trong hai ảnh.
+
+**Sửa lần 1 sai thứ tự (đã thay).** Vòng trước coi pose C (lưỡi chỉ vào người xem) là pose GIỮA của cung 180 độ đi qua nửa gần: thứ tự A -> C -> B. Người dùng định nghĩa lại và đó là định nghĩa chuẩn: **A** = hông xoay ra sau, đao ở sau thân chỉ sang TRÁI (`pose_skill_sweep_p1_v02.png`); **B** = đao đã đi khoảng 2/3 cung, chỉ sang PHẢI và hơi xuống (`pose_skill_sweep_p2_v03.png`); **C** = KẾT THÚC cú chém và là pose trúng đòn, đao chỉ thẳng vào người xem, rút ngắn thành nêm chúc xuống ảnh (`pose_skill_sweep_p3_v01.png`). Thứ tự đi và thứ tự khung: A -> B -> C, C là khung cuối và khung trúng đòn. Hỏi người dùng chọn cung nào, họ chọn **cung 270 độ**: mũi đi từ trái (sau thân) QUA NỬA XA (nửa ellipse sau thân, phần trên, mảnh và mờ, vẽ ở lớp sau nên thân che) sang phải (B), rồi vòng lại qua nửa GẦN về phía người xem (C). Quy ước góc của code: 0 = trước (phải), 90 = gần người xem nhất (đáy ellipse), 180 = sau (trái), 270 = xa (đỉnh); đường đi là u: 180 -> 270 -> 360 (quanh B) -> 450 (= 90, C), góc tăng, tổng +270.
+
+**Sửa.** Đổi `lib-fx` (`FXKIT.md` mục 6): ellipse khớp qua BA mũi theo thứ tự đi (`tip_a` đầu, `tip_b` giữa, `tip_c` cuối; `k` tự khớp; góc mở liên tục, không có lỗi nhảy `atan2`), và nét "lead": đầu dày nhất, cụt, sáng, có mép trắng chạy dọc mép ngoài; đuôi kim; đầu đi qua ba khung A -> B -> C.
+
+**Số đo (px của ảnh gốc 1024, tách nền magenta, vẽ điểm lên ảnh để kiểm bằng mắt; file `weapon_marks_sweep.json`, khoá `pose_c`, `offsets`, `aligned_in_order`).**
+| | A (v02) | B (v03) | C (p3_v01) |
+|---|---|---|---|
+| mũi đao | (129, 464) | (1007, 424) | (502, 537) |
+| đầu chuôi phần lưỡi nhìn thấy | (393, 483) (lưỡi chìm sau áo choàng) | (662, 416) | (502, 405) (chỗ lưỡi rời nắm tay) |
+| tâm thân (giữa hai giáp vai) | (598, 310) | (449, 300) | (501.5, 270) |
+| điểm giữa hai bàn chân | (541.8, 921) | (438, 940) | (496.25, 952.5) (hai ủng cùng mức, lệch 1 px) |
+| cao (đỉnh đầu tới chân) | 812 | 852 | 866.5 (đỉnh đầu 86) |
+| tỉ lệ về A | 1 | 0.9531 (B to hơn A 4.9 %) | 0.9371 (C to hơn A 6.7 %) |
+| lệch chân A -> B, B -> C | A -> B: dx = -103.8, dy = +19 | B -> C: dx = +58.25, dy = +12.5 | (A -> C: dx = -45.5, dy = +31.5) |
+| lệch tâm thân A -> B, B -> C | A -> B: (-149, -10) | B -> C: (+52.5, -30) | (A -> C: (-96.5, -40)) |
+Sau căn theo chân (hệ của A, px của ảnh gốc): mũi A (129, 464), mũi B (1084.0, 429.2), mũi C (547.1, 531.6); lệch mũi A -> B (+955.0, -34.8), B -> C (-536.9, +102.4); chuôi B (755.2, 421.6), chuôi C (547.1, 407.9); lệch tâm thân sau căn A -> B (-45.8, +1.0), B -> C (-5.5, -29.6), A -> C (-51.3, -28.6). Lưỡi C dài 132 px, bằng 38 - 40 % phần lưỡi nhìn thấy của B (345 px).
+
+**Lệnh ba điểm với số thật** (px ô @2x = toạ độ đã căn x 0.2; `pivot_b` có y = độ cao đường lưỡi B trừ 14, `pivot_c` có x = tâm thân C, y = độ cao nắm tay vì tay là trục của lưỡi ở C; không ghi `k`, không ghi `via` nên đi qua nửa xa):
+```
+python lib-fx/build.py melee/slash/sweep --pal frost --fps 15 --split \
+    --swing "tip_a=25.80,92.80;tip_b=216.81,85.85;pivot=119.60,92.80;pivot_b=110.45,83.05;root_a=78.60,96.60;root_b=151.05,84.32;tip_c=109.43,106.33;pivot_c=109.33,81.59;root_c=109.43,81.59" \
+    --out <thư mục>
+```
+Khớp ra: **k = 0.195**; góc u = **180.0 (A), 367.7 (B), 450.0 (C)** độ, tức A -> B +187.7, B -> C +82.3, tổng +270; bán kính **93.8 (A), 105.1 (B), 109.7 (C)** px @2x; `fc` = 0.695 (B nằm ở 0.695 của đường đi, không phải đúng nửa: B ở 2/3 cung chứ không ở 50 % góc). Mũi B không ở đúng u = 360 mà 7.7 độ sau đó, nên chỗ B không phải điểm cực phải mà là ngay sau nó. Hướng nhìn lấy theo phía của `tip_b` (phải), và `--from` / `--to` mặc định là `pivot` / `tip_c`. Thân ghép: khung 1 thân A, khung 2 thân B, khung 3 trở đi thân C (cắt giữa các pose, không có pose chen); `hit_frame` = 3.
+
+**Đường đi: nửa xa trước, nửa gần sau.** Đoạn A -> B (góc 180 -> 367.7) đi qua đỉnh ellipse (u = 270): nằm ở lớp sau, mảnh, tông nguội, bị thân che một phần; đoạn B -> C (367.7 -> 450) đi qua nửa gần: lớp trước, dày, sáng, đè lên thân. Mỗi quãng giữa hai pose có góc, bán kính, trục quay và đầu chuôi nội suy tuyến tính, nút ở B.
+
+**Vì sao chiều đi có thể đọc ngược ở đoạn cuối, và cái gì sửa.** Đoạn B -> C chạy từ PHẢI sang TRÁI trên màn hình, ngược với thói quen đọc trái sang phải; nếu vệt cuối mảnh hơn đầu hoặc cả vệt hiện cùng lúc thì mắt đọc đuôi như đầu. Ba thứ giữ cho nó đọc đúng: (1) đầu dày nhất, sáng nhất, cụt và có mép trắng ở chỗ mũi đang đứng (C), đuôi là kim mảnh nằm SAU đầu và rút trước (bề dày không giảm từ đuôi tới đầu); (2) đầu di chuyển qua các khung (khung 1 lát mỏng trên lưỡi A, khung 2 đầu ở B, khung 3 đầu ở C, khung 4 trở đi đuôi rút về phía đầu); (3) tia lửa / vệt tốc độ chỉ bắt đầu từ mũi C và chạy xuống về phía người xem, không có mũi tên trắng dài đè lên đầu. Đọc GIF ở tốc độ thường: đầu đi trái -> (sau thân) -> phải -> vòng về phía người xem.
+
+**Trước / sau** (hàng trên: bản hai pose A, B của 10.3, đọc ngược; hàng dưới: ba pose A, B, C, các khung 1 - 3):
+
+![trước và sau, ba pose A B C](images/pose-pair-sweep-abc-before-after.png)
+
+**Hai lỗi hình của vòng trước, đã sửa (so với bản A, C, B).** (a) Thanh trắng đứng có góc vuông cạnh nắm tay ở pose C: mép trắng trước đây là dải bề rộng không đổi nằm trên đường lưỡi của đầu, mà lưỡi C rút ngắn thành nêm thẳng đứng nên thành thanh đứng. Nay mép trắng là một dải chạy dọc MÉP NGOÀI của nét (theo đường mũi, từ mảnh tới 3.6 px ở đầu, chỉ ở nửa gần); riêng khung 1 (lát mỏng trên lưỡi A) vẫn nằm trên đường lưỡi A. (b) Mũi móc ngược ở đầu bên phải và cái nêm trong mờ phía trên nét chính: móc do mép trong của nét dày bị gập lại qua đường đi ở hai đầu ellipse dẹt (bán kính cong chỉ 4 px ở B, nhỏ hơn bề dày); nêm là sợi "faint" (hilt) mờ 40 %. Nay: nét dựng bằng từng tứ giác nhỏ, đầu cắt vuông góc với đường đi tại mũi (không gì nằm sau đầu dọc đường đi), bỏ sợi faint, 20 % cuối pháp tuyến xoay về đường lưỡi.
+
+**Số đo nghiệm thu** (px ô @2x, 15 fps, ghép trên nền xám, vệt sau dưới thân, vệt trước trên thân; vùng alpha > 0.5; đường đi A -> B -> C tính lại từ cùng công thức `fit_swing`).
+| Tiêu chí | Kết quả |
+|---|---|
+| khung 2: đầu tới mũi B | 1.2 px (yêu cầu <= 4); dọc đường đi, nét vượt qua mũi B: 0 px; điểm xa nhất về bên phải mũi B: -0.8 px |
+| khung 3: đầu tới mũi C | 0.7 px (yêu cầu <= 5); vượt qua C dọc đường đi: 0 px |
+| khung 3: mép ngoài so với đường A -> B -> C | pixel đặc (alpha > 0.95) cách đường đi lớn nhất 0.5 px ngoài mép trên t = 0.1 - 0.94 (khung 2 trên t = 0.1 - 0.69: 0.5 px); 0.94 - 1.0 của đường đi: 7.5 px vì tia lửa bay ra từ mũi C, không phải mép nét (tắt `scraps` và `streaks`: -0.5 px); khoảng cách đường đi tới pixel nét gần nhất: <= 1.1 px |
+| khung 2: phần vệt ở lớp sau (nửa xa) | 99.6 % tổng alpha; bị thân che 50.3 % (che một phần) |
+| khung 1: lát mỏng so với đường lưỡi A nhìn thấy (đuôi -> chuôi), trung bình / p95 / lớn nhất | 2.6 / 5.6 / 6.5 px (gồm viền quầng) |
+| bề dày dọc nét, tối đa đường kính nội tiếp theo 8 khoảng của tham số đường đi (cắt ở 3.5 % đường đi ngay chỗ đổi lớp trước / sau và ở nhát cắt đầu, vì khoảng cách tại mặt cắt mảnh đi theo cấu tạo) | khung 2: 4.0, 5.7, 8.0, 10.0, 12.0, 14.1, 16.5, 17.1 (không giảm); khung 3: 2.8, 4.5, 8.0, 10.0, 12.2, 11.3, 24.7, 28.0 (tụt lớn nhất 0.9 px, mức cho phép 2.8). Bề dày ở đầu: khung 2 17.1, khung 3 28.1 |
+| tham số đường đi của đầu (0 ở A, 1 ở C) | khung 1: 0.062 (lát trên lưỡi A) -> khung 2: 0.674 (mũi B ở 0.695) -> khung 3: 0.997 -> khung 4: 1.0 (tăng chặt chẽ); khung 5 (ngưỡng alpha > 0.3, 31 pixel gần đường đi): 0.987, tức tụt 0.013 so với khung 4 (khoảng 2 px), coi là giữ trong dung sai đó; khung 6 trở đi không còn nét |
+| tan: A(h+1), A(h+2), A(h+3) so với A(h), h = 3 | 0.707, 0.272, 0.018 (yêu cầu <= 0.75, 0.45, 0.2) |
+| cổng chất lượng | `python lib-fx/build.py melee/slash --check`: không FAIL (cảnh báo cũ `pop`, `cut`, `linger`); `python lib-fx/_tools/fxkit_test.py slash`: đạt |
+| hồi quy | `crescent`, `heavy`, `thrust`, `axe`, `axe_heavy` (30 fps) và `sweep`, `diag_down`, `diag_up`, `swing --track`, `sweep` với `--swing` thường, lệnh hai điểm của mục 10.3 (15 fps): 11 / 11 bản dựng giống nhau từng byte so với trước khi sửa (băm sha256 các PNG) |
+Hai bộ ba tự nghĩ (khác hẳn pose thật, chỉ để chứng minh tổng quát; px ô @2x): (i) nhìn sang TRÁI, mũi A (246, 104), B (16, 94), C (128, 144), trục (132, 108): k khớp 0.27, góc 187.4 -> 341.7 -> 449.2, bán kính 117.3 / 124.0 / 128.4; đầu tới B 0.0 px, tới C 1.4 px; vượt qua B 0.6 px; bề dày khung 2 tăng 2.8 -> 20.9, khung 3 4.0 -> 33.5 (tụt 0.8 ở chỗ đổi lớp); tan 0.58 / 0.19 / 0.01. (ii) đi qua nửa GẦN trước (`via=near`, góc giảm) rồi lên nửa xa: A (12, 108), B (246, 112), C (140, 72), trục (132, 108): k khớp 0.36, góc 180.0 -> 11.3 -> -88.7 (liên tục, không nhảy), bán kính 120.0 / 109.0 / 103.0; đầu tới B 1.0 px, tới C 1.0 px; vượt qua B 0.9 px; tan 0.38 / 0.10 / 0.0; lát mỏng khung 1 lớn nhất 9.2 px vì chuôi A tự nghĩ nằm xa.
+
+**Sai số còn lại và điều chưa đạt.**
+- Đầu ở khung 2 (B) là nhát cắt phẳng dọc lưỡi (ngang), rộng 17 px nhưng mép trắng chỉ là một chấm nhỏ ở mũi (mép trắng chỉ vẽ ở nửa gần, mà đoạn gần của nét ở khung 2 rất ngắn): đầu sáng nhất vẫn là khung 3. Nét ở B không thể dày hơn nhiều mà không gập qua đường đi: bán kính cong của ellipse dẹt ở B chỉ 4.3 px; thay vào đó đầu bị cắt vuông góc với đường đi tại mũi (nhát cắt phẳng), phần thò qua bị bỏ.
+- Phép đo bề dày bỏ 3.5 % đường đi quanh nhát cắt đầu và chỗ đổi lớp; số đo thô (khoảng cuối chứa nhát cắt) tụt 4.3 px ở khung 2 và 3.3 px ở khung 3 vượt mức 10 %: đó là hiệu ứng của mặt cắt, không phải nét mỏng đi, nhưng phép đo đã đổi cách tính; ghi rõ để người duyệt biết.
+- Lát mỏng khung 1: lớn nhất 6.5 px, p95 5.6 (bản hai pose: 6.4): chưa đạt yêu cầu 6 px của vòng trước nếu tính theo lớn nhất.
+- Thân C lệch -51.3 px (ngang) và -28.6 px (dọc, vì C là chính diện: giữa hai giáp vai ở y 270 so với y 310 của lưng A) so với thân A sau căn, chỉ lệch 5.6 px (ngang) so với thân B; C to hơn A 6.7 % (hơn B 1.7 %), bù bằng phóng về A quanh chân. `pivot_c` đặt theo nắm tay (y 81.6) và `pivot_b` theo đường lưỡi B trừ 14: `k` tự khớp phụ thuộc hai y này (y thấp hơn thì `k` lớn hơn): đổi y thì kiểm lại hình vệt.
+- Tia lửa ở khung 3 - 5 bay xuống về phía người xem từ mũi C (arc 75 - 115 độ từ trục tâm thân -> C, 3 vệt dài 62 px): đã thu nhỏ, nhưng vẫn là phần dễ chướng mắt nhất ở khung trúng đòn.
+**Khi duyệt cần nhìn gì.** (1) Đọc GIF ở tốc độ thường: đầu có đi trái -> (sau thân) -> phải -> vòng về phía người xem qua A, B, C không; (2) khung 2: nét có đứng ở lưỡi B, phần lớn nằm sau thân và cánh tay không; (3) khung 3: đầu cụt sáng nằm trên nêm lưỡi C, không có thanh trắng đứng, không có mũi móc; nét dày dần về phía C; (4) khung tan: phần còn lại nằm gần đầu C, đuôi rút trước; (5) mép trắng nằm trên mép ngoài, không trượt khỏi nét; (6) thân C lệch so với A, B: nếu chướng mắt thì dịch rig, đừng dịch vệt.
+
+### 10.7 Bài học và báo cáo cho reviewer (chuỗi chém ngang A -> B -> C, 2026-11-14)
+**Bài học** (bản tiếng Anh đầy đủ ở `.claude/skills/fal-image/action-planes.md` mục 8; đọc trước khi làm động tác quét vũ khí quanh thân):
+1. Chốt với người dùng bằng chữ **trước khi sinh ảnh**: bảng `pose | vai trò | % quãng đường | đao chỉ về đâu trên màn hình | hướng thân (tên ở mục 4b)`. Lần này gọi C là "giữa" trong khi người dùng nghĩ C là "cuối": phải dựng lại cả chuỗi và hai tài liệu. Chữ cái theo THỨ TỰ ĐI.
+2. Đổi bảng thành **cung có số**: góc 0 = trước (phải), 90 = gần người xem nhất, 180 = sau lưng (trái), 270 = xa; tổng góc quét, nửa ellipse (gần / xa) đi qua, đoạn nào chạy phải sang trái trên màn hình. Pose đao chỉ vào người xem là điểm GIỮA của cung 180° qua phía gần và điểm CUỐI của cung 270° qua phía xa. Hỏi người dùng chọn cung nào.
+3. **Hai pose không đủ** cho cú quét đi qua đường gần-xa: cả vệt hiện trong một khung nên hướng đọc từ HÌNH DÁNG, và bụng dày nằm sai phía làm vệt đọc ngược. Mỗi chặng của cung có một pose, đầu vệt ở chỗ khác nhau mỗi khung.
+4. Hướng đọc của vệt do **hình** quyết định, không do dữ liệu: đầu = dày, sáng, tù, mép trắng; đuôi = kim mảnh, tan trước; không móc cong ngược; đo độ dày dọc vệt.
+5. Prompt không ghim được chân, cỡ, độ chếch nhỏ: **đo, căn theo điểm giữa hai chân, khớp vệt vào điểm đo** (mục 10.1-10.3). Đừng tốn lần thử cho việc đó.
+6. Tự nhìn mọi ảnh trước khi gửi; số của người làm hộ có thể "đạt" vì đổi cách đo: nêu cả hai.
+7. Chi phí 6 ảnh = 0,0979 USD (A 2 lần, B 3 lần, C 1 lần).
+
+**Báo cáo cho reviewer: cần xem và quyết định**
+| Mục | Trạng thái |
+|---|---|
+| Ba ảnh đã duyệt (người dùng): `pose_skill_sweep_p1_v02`, `p2_v03`, `p3_v01` trong `out/heroes/azure_blade/source/design/` | duyệt; dữ liệu đo: `weapon_marks_sweep.json` (nằm trong `out/` bị git bỏ qua, thêm bằng `git add -f`) |
+| Cung: 270° qua phía xa rồi vòng phía gần, B ở khoảng 0,695 quãng đường (không đúng một nửa), k = 0,195, góc 180 / 367,7 / 450 | người dùng chọn; đoạn B -> C chạy phải sang trái trên màn hình, đã làm đầu vệt rõ nhưng **chưa có người ngoài xác nhận hướng đọc** |
+| Đạt (px @2x): đầu tới mũi B 1,2; tới mũi C 0,7; nửa xa 99,6% lớp sau; tan 0,707 / 0,272 / 0,018; hash 11/11 giống hệt | đạt |
+| **Chưa đạt / đổi cách đo**: độ dày không giảm chỉ đạt sau khi bỏ 3,5% quanh chỗ cắt đầu và chỗ đổi lớp (đo nguyên bản các ô cuối giảm 3,3-4,3 px); độ dày gồm quầng nên đầu đọc 28 px so với thiết kế 16,5 | reviewer nên xem ảnh, không chỉ số |
+| **Chưa đạt**: lát đao khung 1 lệch tối đa 6,5 px (ngưỡng 6; 9 px ở bộ ba tự nghĩ); đầu vệt ở B tù nhưng không sáng (đoạn nửa gần ngắn) | chấp nhận hay sửa |
+| Thay đổi ngoài kind `swing`: tham số `hand=` của `fxkit.render` (mặc định không đổi, hash giữ); `--to` mặc định ở ba điểm là `tip_c`; chế độ hai điểm `lead=1` đổi hình và **không nằm trong bộ hồi quy** | reviewer kiểm |
+| Chưa chạy: `fxkit_test.py` đủ (chỉ phần `slash`); chưa dựng rig / thở / nảy cho cặp pose; thân C chỉ ghép từ khung 3; chân và cỡ các pose vẫn lệch (căn khi ghép, residual ở mục 10.1-10.5); `k` phụ thuộc độ cao `pivot_c` (chọn = độ cao nắm đấm) | mở |
+| Chưa thử trên nhân vật khác và chưa thử cú quét trái; chưa có cặp pose thật cho `diag_down` / `diag_up` | mở |
+| Ảnh trước/sau: `docs/pipeline/images/pose-pair-sweep-abc-before-after.png` (142 KB); GIF và lưới nằm trong thư mục tạm của phiên (không có trong repo) | cần lưu GIF nếu muốn giữ |

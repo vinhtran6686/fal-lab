@@ -1,12 +1,17 @@
 # Vệt chém, vòng 02: kế hoạch
 
 Nguồn: đánh giá của người lập kế hoạch và người dùng ngày 2026-11-13 sau khi áp `melee/slash/crescent --track` lên `out/heroes/azure_blade`.
+Bối cảnh chung và cách làm việc: [../HANDOVER.md](../HANDOVER.md).
 Người lập kế hoạch không thi công; người thi công làm đúng từng bước trong file task, đánh dấu ô, điền "Kết quả". Xoá thư mục này khi mọi task xong và được duyệt.
 
 ## Checklist
 - [x] **S1** Vệt chém bám vũ khí mượt như bản đã duyệt của `azure_blade` (khung đầu, nhịp tan ở 15 fps, đuôi rút, mũi đậm chuôi nhạt, mép sáng dọc lưỡi): [S1-tracked-slash-smooth.md](S1-tracked-slash-smooth.md)
 - [x] **S2** Mặt phẳng vung: chém ngang, chém xéo theo góc nhìn của game (kèm 3 việc nhỏ từ lần chấm S1): [S2-swing-planes.md](S2-swing-planes.md)
-- [ ] **S3** Rìu dày hơn: ít dải, dải rộng (chưa viết task)
+- [x] **S2b** `sweep` đủ mạnh (phần gần dài và dày hơn), nhịp tan theo bán kính: [S2b-sweep-strength.md](S2b-sweep-strength.md)
+- [x] **S4** Chém ngang ba pose: nhịp 5 pha + rig một mảnh cho thân (bớt đơ), vệt dựng từ vị trí lưỡi thật của rig: [S4-sweep-body-timing.md](S4-sweep-body-timing.md) **(ưu tiên 1)**
+- [x] **S4b** Xuất chính thức `skill_sweep_side` (thân + vệt) vào `frames/`, cập nhật manifest: [S4b-sweep-export.md](S4b-sweep-export.md) **(ưu tiên 1)**
+- [x] **S5** Việc nhỏ từ review chém ngang ba pose (tài liệu, `swing_fit` vào `meta.json`, `rebuild` chạy lại được, định nghĩa đo độ dày, test, tia lửa): [S5-sweep-review-leftovers.md](S5-sweep-review-leftovers.md) (song song với S3)
+- [x] **S3** Rìu dày hơn: ít dải, dải rộng: [S3-axe-thick-bands.md](S3-axe-thick-bands.md) (song song với S5; S3 giữ `layers/slash.py`, `melee/slash/slash.py`, `rules/vfx/slash/README.md`)
 - [ ] **CHẤM** (người lập kế hoạch) sau mỗi task → **DUYỆT** (người dùng)
 
 ## Luật chung
@@ -26,3 +31,38 @@ Việc nhỏ còn lại, đã gộp vào S2 (mục "Việc nhỏ gộp từ lầ
 1. `scraps` ở mũi đao rơi xuống dưới mặt đất và còn lác đác tới khung 29 (cảnh báo `linger`): bật `floor=True`, rút ngắn đời.
 2. Lint đòi một lớp primary / core / flash trên khung trúng đòn nên `swing` phải gắn `role="core"` cho `streaks`: sửa `Effect.lint` để lớp primary sinh **trước** đòn và còn sống ở t = 0 cũng được tính.
 3. Khung trước đòn chỉ có màu trắng; bản đã duyệt có thêm sắc xanh của vệt. Thử thêm một viền `main` mỏng quanh lát trắng.
+
+**S2 (2026-11-14): ĐẠT về mô hình, `sweep` cần chỉnh thêm.** Người lập kế hoạch dựng lại `sweep`, `diag_down`, `diag_up` ở 15 fps với `--split` và ghép lên dáng đứng của `azure_blade` (vai (140, 160), `--to 225,160`).
+- `diag_down`, `diag_up`: đạt. Cung nghiêng rõ, mép trắng ở lưỡi cuối, tan thành nét mảnh cùng hướng; `fxcheck` sạch.
+- `sweep`: đúng hình học (một đường dẹt, nửa xa sau thân, nửa gần trước thân) nhưng **yếu**: phần gần (dày, sáng, trước thân) quá ngắn, gần như chỉ còn một vạch trắng ở cuối; `fxcheck` báo `pop` (khung 3 -> 4 mất 47 %) khi r = 85.
+- Các lệch so với task đều hợp lý (đặc biệt sửa vector `P` có nhân `face`: công thức trong task sai với hướng quay trái).
+Việc còn lại (S2b, nhỏ):
+1. `sweep`: kéo dài phần gần: `u1` 410 -> 450-470 và `u0` 215 -> 240-250 (vệt kết thúc trước ngực, không dừng ở bên phải); bề dày tối thiểu phần gần 7 -> 10 px * s; kiểm lại cao / rộng <= 0,40.
+2. `linger` và `release` tính theo bán kính thật (`r * s`) để không `pop` khi r nhỏ (nhân vật cỡ game r ~ 85).
+3. Thử trên một cặp pose thật của chém ngang (chưa có: cần người dùng đồng ý sinh ảnh, ~0,03 USD cho hai pose).
+
+**S2b (2026-11-14): ĐẠT.** Người lập kế hoạch dựng lại `sweep` cũ (commit trước `976edd8`) và mới ở 15 fps với `--split`, r = 85 (`--to 225,160`) và r = 120 (`--to 260,160`),
+ghép `back/` dưới thân, `front/` trên thân dáng đứng `azure_blade` (khung 1), 6 khung đầu. Số đo tự đo khớp báo cáo:
+- r = 85: `front/` / `back/` 1462 / 294 (cũ 567 / 279); `front/` dài 128 px = 1,51 r (cũ 57); cao / rộng 0,392; A(h+1, h+2, h+3) / A(h) = 0,71 / 0,31 / 0,00; `fxcheck` chỉ còn `linger` (cũ có `pop` 47 %).
+- r = 120: 2160 / 265; dài 164 px; cao / rộng 0,318; 0,69 / 0,28 / 0,00.
+- Ảnh: phần gần giờ là dải sáng dày quét ngang trước eo, nửa xa mảnh vòng sau đầu, đúng hình chiếu; khung h+1 còn đủ vệt, h+2 tan thành nét mảnh, h+3 trống.
+- Lệch được chấp nhận: `u0` = 175 (công thức trong task đi sai hướng: tăng `u0` làm vệt cao hơn); chấm xanh trước đòn nằm sau lưng ngang eo **khớp pose A thật** vừa duyệt
+  (`pose_skill_sweep_p1_v02.png`: lưỡi duỗi ra sau lưng ngang eo). `w_near` = 12, `release` = 0,33, cung bay của mảnh vụn ra sau: hợp lý. Phần xa ở r = 120 mảnh hơn (2,8 px): chấp nhận, nửa xa nên mảnh.
+Việc nhỏ ghi lại (không mở task, xem lại khi ghép lên cặp pose chém ngang thật):
+1. Khung trước đòn chỉ là một chấm, chưa là lát mỏng dọc lưỡi pose A như `swing --track`; khi có pose B thật, cân nhắc dùng `--track` cho chém ngang.
+2. Khung h+2 các mảnh trắng bay qua ngang chân (lớp `front/`), hơi rối ở cỡ @2x.
+3. Đuôi tắt hẳn ở h+3 (0,00): ổn ở 15 fps, nhưng nếu người dùng thấy cụt thì nâng `release` 0,33 -> 0,35.
+
+**Chém ngang ba pose A -> B -> C (`sweep --swing` ba điểm, `azure_blade`) (2026-11-14): người dùng DUYỆT hiệu ứng** sau khi xem GIF (trong scope hiện tại).
+Review của người lập kế hoạch: hồi quy 184 / 184 ảnh giống hệt, `--check` thoát 0, `fxkit_test.py` đầy đủ qua; từng khung đúng chỗ (lát trên lưỡi A, đầu ở mũi B, đầu ở nêm C, đuôi rút trước).
+Chỗ còn "đơ" là THÂN, không phải vệt: 3 ảnh cắt cứng, mỗi pose 1 khung, thân nhảy vị trí / cỡ giữa các pose.
+Việc nhỏ còn mở từ review (chưa viết task): tiêu đề / cột mục 4 và mẫu 4b của `action-planes.md` còn gọi "B = end" / "two-part"; ghi `k`, góc, bán kính đã khớp vào `meta.json`;
+định nghĩa phép đo độ dày vào `FXKIT.md` mục 6; test cho `lead=1` và ba điểm; khấc ở đầu `lead=1`; tia lửa khung 4-5 cắt qua chân.
+
+**S4 (2026-11-14): ĐẠT, người dùng thấy "linh hoạt hơn, đúng hơn".** Người lập kế hoạch tự render `anims/sweep.json` (21 khung) và dựng lại vệt từ số track, ghép vệt n vào thân n + 5:
+lấy đà khung 1-6 thấy được (lún, ngả sau), chém 1 khung (B), khung 8 nén rồi nảy, thở khung 14-21; đầu vệt ở mũi B (khung 7) và nêm C (khung 8), đuôi rút trước; `fxcheck` sạch.
+Lệch được chấp nhận: `shx` của B = 0 và C bắt đầu 0,01 (task ghi +0,10 / +0,12). Công thức trong task sai vì quên rằng A đã ngả sau -0,10. Số đo: chỗ cắt 6 -> 7 giảm 9,50 -> 6,93 px; 7 -> 8 là nhảy dọc do nén (chấp nhận).
+Chưa xuất ra `frames/` (chờ người dùng cho phép xuất chính thức + dòng manifest trong `brief.md`).
+
+**S4b (2026-11-14): ĐẠT.** Người lập kế hoạch so 21 khung `frames/skill_sweep_side/@2x` với bản ghép tự dựng ở lần chấm S4 (cùng thân, vệt, origin): chỉ lệch do bảng màu GIF; `contact.png`: vệt chỉ ở khung 6-11, lát trên lưỡi A (6), đầu ở mũi B (7), nêm C (8).
+`git diff` trong `out/` ngoài file mới chỉ có `brief.md`, `history.md`, `meta.json` (khối sheet mới + 3 nguồn pose do `puppet.py render` tự thêm: chấp nhận). Skill chém ngang của `azure_blade` xong.
