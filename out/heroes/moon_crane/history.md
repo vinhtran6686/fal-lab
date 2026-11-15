@@ -34,3 +34,5 @@ Round 3 (two hits with a stop) was read by the model as two opposite thrusts and
 
 ### skill_spin_back, round 5 (spear level at waist height, no slash)
 The user approved round 4 clip 1 as the direction (one continuous sweep) and asked for a level, waist-height sweep and no slash. Round 5 prompt = round 4 + "the spear stays LEVEL, parallel to the ground at waist height" + a longer no-streak sentence. Two 5 s clips (`prompts/skill_spin_back_v5.txt`), 0.15 USD; round 4 clips removed. t01: the spear is level at waist height in front of the crouched body, then the body turns and the back faces the viewer with the spear level; t02: the spear swings down to point at the ground (not level). The model still paints pink/white arcs on the fast frames; a tighter key (alpha ramp from min(R,B)-G = 8 to 53) removes them completely, so the preview gif is clean. Preview: `skill_spin_back_v5_t01_preview.gif` (static frames 51-62 cut). Not accepted yet.
+
+**2026-11-15: user approved `skill_spin_back_v5_t01` (round 5, clip 1).** t02 not kept as final.
