@@ -1,0 +1,26 @@
+{
+  "prompt": "The same stocky heroic cartoon spear-warrior as in the frame: big head, huge fists, short legs, slate-blue armour with a large gold crane emblem, a giant cream crane-wing shoulder guard behind his left shoulder, a black topknot with a brick-red cord, and an oversized spear with a bright silver leaf-shaped spearhead, a gold crescent cross-guard and a brick-red tassel. The spear keeps exactly the same rigid shape and length in every frame; it never bends, stretches or melts. The camera is fixed in front of him and a little above, and never moves. One spinning spear attack with TWO hits, on two enemies who stand out of frame, one on the RIGHT of the image and one on the LEFT, each at chest height exactly one spear-length away from him. He starts standing in a three-quarter view facing the camera, boots shoulder-width apart, the spear held upright in the fist on the LEFT of the image beside his head. He coils: his hips and shoulders twist toward the LEFT of the image, his weight goes onto the back leg, his knees bend, and the spear pulls back behind his head toward the upper left of the image. First hit: his hips fire first, then his shoulders, then his arms, and the spear sweeps down and across the FRONT of his body, toward the camera, and strikes the enemy on the RIGHT of the image: at the moment of impact his whole body STOPS dead for a beat, boots planted, knees bent, the spear stretched level and pointing right, his head turned in profile toward the right, with a small shudder of recoil. Then his hips keep turning and his body winds on until his BACK faces the camera, crouched low with a rounded back; the spear passes behind his body on the far side, hidden by his body and the crane-wing guard. Second hit: the spear comes out on the LEFT of the image and strikes the enemy on the LEFT of the image: again his whole body STOPS dead for a beat, low and wide, turned toward the left, the spear stretched level and pointing left, and he HOLDS this final pose until the end of the clip; he does not return to a rest pose. The turning comes from his hips and waist: his boots only pivot on their toes where they stand and never slide, and the whole character never spins like a top. His body stays the same size in the frame. No arcs, no swooshes and no slash shapes drawn in the air, no motion blur, no speed lines, no effects of any kind, no enemies visible. Solid flat pure magenta background only. Keep the exact flat vector look, outline weight, palette, proportions and costume of the frame.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 6,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab2985a/5hJd51JMwT4HYR2reY6-J_start.png"
+  },
+  "seconds": 6,
+  "resolution": "768P",
+  "size": [
+    768,
+    768
+  ],
+  "estimateUsd": 0.09,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/ks2/start.png",
+  "lastFrame": null,
+  "requestId": "01a1e05f-5cfb-7253-a366-b0ebc745b6d8",
+  "seconds_elapsed": 3.2,
+  "source_url": "https://v3b.fal.media/files/b/0ab2985a/Un-0XTJV4ejpo6pepOr0C_minimax-h3.mp4",
+  "cost_is_estimate": true
+}
