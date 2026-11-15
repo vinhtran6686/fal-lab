@@ -307,3 +307,5 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-15 09:00:03,spear_pose_a_v01.png,gpt-image-2,low,1024x1024,False,13.6,0.0192,True
 2026-11-15 09:00:30,spear_pose_b_v01.png,gpt-image-2,low,1024x1024,False,18.5,0.0195,True
 2026-11-15 09:00:54,spear_pose_c_v01.png,gpt-image-2,low,1024x1024,False,16.2,0.0195,True
+2026-11-15 09:14:31,clip.mp4,h3-max-turbo,video,768P 5s,False,3.2,0.0750,True
+2026-11-15 09:14:31,clip.mp4,h3-max-turbo,video,768P 5s,False,3.1,0.0750,True
