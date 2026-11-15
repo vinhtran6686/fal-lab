@@ -12,8 +12,17 @@ versions of one hero (`out/heroes/moon_crane`); the criteria below are what made
 ## 1. Proportions: role parts big, the rest small
 - **About 3 heads tall**: the head is about one third of the figure. Massive barrel chest, huge round shoulders, **enormous fists (each almost as big as the face)**, thick forearms, **short thick legs and big boots**, wide planted stance.
 - The weapon is oversized: a spear a little taller than the figure, a blade or a spearhead about as big as the head. The weapon head is the part that must read at 60 px.
-- Size varies with the role (a brute is wide, an archer is small and slender, about 4 heads); the 3-head chunk is the default for melee and tank roles.
+- Size varies with the role: see "Body types" below. The 3-head brawny chunk is for melee and tank roles only.
 - This overrides "3.5-4.5 heads" of `format.md` §1 for this preset only. The character is still **grim, serious, mature: never cute, never a mascot** (`format.md` "No chibi, no cute" keeps its other bans).
+
+### Body types (choose one per character; never copy the body paragraph of the previous character)
+The preset fixes how shapes are drawn, not one body. The first test (a brawny male spearman) wrote "massive barrel chest, enormous fists, short thick legs" and the same words, copied into a female mage, gave a beefy, androgynous figure (`tide_caller` v01). Pick the type from the role and the sex and write its own paragraph:
+| Type | Use for | Heads | Body words that worked |
+|---|---|---|---|
+| **Brawny** | melee, tank, brute, male warriors | about 3 | BIG head one third of the height, massive barrel chest, huge round shoulders, ENORMOUS fists (as big as the face), short thick legs, big boots |
+| **Slender** | casters, archers, supports, most female heroes | about 3.5-4 | big head (about 28 % of the height), narrow rounded shoulders, a clearly CINCHED waist, a bell-shaped robe or skirt that flares, slim arms, hands only a little bigger than life, slim legs in sturdy boots, weight on one leg |
+Feminine cues are told by BIG shapes, never by detail: a small soft chin and rounded jaw, lips as ONE small colour shape, thin brows, a cinched waist (belt and fitted bodice), a flared hem, a long braid or bun as a few solid clumps. A "stout", "massive" or "enormous" word anywhere in a female prompt returns the brawny body.
+Tested limit (`tide_caller` v02): the slender body gets a more illustrative look (soft skin shading, thinner outline, more face detail) than the brawny one; repeat "thick outline, bold flat shapes, face of the fewest marks" in the prompt and check against §8 at 60 px.
 
 ## 2. Outline, tones, texture
 - Thick clean **dark mauve-brown outline (never pure black)**, clearly thicker on the outer silhouette and thinner for inner lines, rounded joins.
