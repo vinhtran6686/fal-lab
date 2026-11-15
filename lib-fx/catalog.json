@@ -1145,6 +1145,37 @@
   "hit_frame": 1,
   "kit": true
  },
+ "melee/slash/ring": {
+  "name": "Quét vòng quanh người",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "planar",
+   "horizontal",
+   "full-turn",
+   "space:aim",
+   "weight:medium"
+  ],
+  "desc": "a WEAPON swung level with the ground through a FULL turn round the body (360 degrees) seen from the game's camera: a flat ring, the near half in FRONT of the character, bright and thick, the far half BEHIND it, cool and thin; the head runs the circle in about a second (u falls: from the left, across the front to the right, behind the body and back to the left); use it with the body centre as --from and --to = a point at the weapon's reach on the side of the first position; set k, u0, u1 and r with --swing when the real path differs",
+  "fps": 30.0,
+  "frames": 50,
+  "frame_size_2x": [
+   698,
+   338
+  ],
+  "anchor_2x": [
+   340.0,
+   148.0
+  ],
+  "dir": "melee/slash/ring",
+  "qa": "warn",
+  "hit_frame": 3,
+  "kit": true
+ },
  "melee/slash/sweep": {
   "name": "Chém ngang",
   "status": "draft",

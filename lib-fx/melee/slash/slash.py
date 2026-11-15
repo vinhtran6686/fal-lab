@@ -40,14 +40,14 @@ EFFECTS = {
 }
 
 
-def _plane_effect(name, title, desc, sw, tags, linger, sparks=((-10, 60), (0, 50)), release=0.36):
+def _plane_effect(name, title, desc, sw, tags, linger, sparks=((-10, 60), (0, 50)), release=0.36, attack=1 / 15, extent=260, reach=120):
     """A smear of a swing in a PLANE seen from the game's camera (kind slash, parameter swing): a = the shoulder, b = one `reach` ahead of it,
     the tip runs on a circle of radius `reach` round a; the far half goes behind the character, the near half in front. The sparks start at
     the tip's last position (worked out from the same plane, so they follow the plane if it is changed)."""
     (x, y), _ = plane_point(sw, sw["u1"], 120.0)
     end = ("a", round(x, 1), round(-y, 1))
-    return _slash.variant(name, title=title, space="aim", reach=120, extent=260, tags=["planar"] + tags, desc=desc,
-        layers={"slash": {"life": Life(-1 / 15, 1 / 15, 0.0, release), "streaks": 0, "linger": linger, "swing": sw},
+    return _slash.variant(name, title=title, space="aim", reach=reach, extent=extent, tags=["planar"] + tags, desc=desc,
+        layers={"slash": {"life": Life(-1 / 15, attack, 0.0, release), "streaks": 0, "linger": linger, "swing": sw},
                 "scraps": {"at": end, "floor": True, "arc": sparks[0], "life": Life(0.033, 0.033, 0.0, 0.33)},
                 "streaks": {"at": end, "arc": sparks[1], "life": Life(0.0, 0.033, 0.033, 0.13)}})
 
@@ -55,6 +55,12 @@ def _plane_effect(name, title, desc, sw, tags, linger, sparks=((-10, 60), (0, 50
 EFFECTS["sweep"] = _plane_effect("sweep", "Chém ngang", "a SWORD swung level with the ground (a horizontal sweep) seen from the game's camera: a very flat ellipse, nearly a line; the "
     "far half passes BEHIND the character, cool and thin, the near half in FRONT, bright and thick; use it with the shoulder as --from",
     dict(k=0.3, roll=0.0, u0=175, u1=460, blade=0.75, ease=1.3, w_near=12), ["horizontal"], 3.4, sparks=((150, 215), (160, 200)), release=0.33)
+EFFECTS["ring"] = _plane_effect("ring", "Quét vòng quanh người", "a WEAPON swung level with the ground through a FULL turn round the body (360 degrees) seen from the game's camera: a flat ring, "
+    "the near half in FRONT of the character, bright and thick, the far half BEHIND it, cool and thin; the head runs the circle in about a second (u falls: from the left, across the "
+    "front to the right, behind the body and back to the left); use it with the body centre as --from and --to = a point at the weapon's reach on the side of the first position; "
+    "set k, u0, u1 and r with --swing when the real path differs",
+    dict(k=0.3, roll=0.0, u0=180, u1=-180, blade=0.8, ease=1.0, w_near=95, run=1, tail=0.5), ["horizontal", "full-turn"], 3.4, sparks=((150, 215), (160, 200)), release=0.3, attack=0.85, extent=340, reach=270)
+EFFECTS["ring"].layers = [_L.but(life=Life(0.8, 0.033, 0.033, 0.7 if _L.id == "scraps" else 0.1)) if _L.id in ("scraps", "streaks") else _L for _L in EFFECTS["ring"].layers]   # the sparks belong to the END of the long path (the head arrives about 0.8 s after the start)
 EFFECTS["diag_down"] = _plane_effect("diag_down", "Chém xéo xuống", "a SWORD slash on a slanted plane, from high behind the shoulder to low in front, seen from the "
     "game's camera: a half-flattened ellipse turned 35 degrees; use it with the shoulder as --from",
     dict(k=0.6, roll=35.0, u0=205, u1=400, blade=0.8, ease=1.3), ["diagonal"], 2.4)

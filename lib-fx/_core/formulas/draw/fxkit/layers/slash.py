@@ -156,7 +156,13 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         elif pre > 0 and tt < -1e-6: fh = 0.10 + 0.06 * (1 + tt / pre)                         # before the hit the blade is still at pose A: a thin slice on it
         elif pre > 0: fh = 1.0                                                              # from the hit the blade is at pose B: the smear is whole
         else: fh = min(1.0, 0.45 + 0.55 * out_quint(g))                                      # a real swing: the head must land on the final blade
-    lo = (1 - span) * fh                                                                    # where the tail begins
+    run = float(sw.get("run", 0) or 0) if sw else 0.0                                      # a LONG swing (a full turn of the body, about a second): the head travels the whole path over the attack
+    if run > 0:
+        fh = 0.04 + 0.96 * g
+        lo = max(0.0, fh - float(sw.get("tail", 0.4)) * (1.0 - ph.decay))                    # `tail` = the share of the path that stays drawn behind the head; it is pulled in during the release
+    else:
+        lo = (1 - span) * fh
+    #                                                                   # where the tail begins
     sg = c.sp.hand * (1 if bend >= 0 else -1)                                                # +1: the inside of the bow is the left of travel
     W = width * s
     OFS = 0.7                                                                              # stroke coordinate lying on the path (bow mode)

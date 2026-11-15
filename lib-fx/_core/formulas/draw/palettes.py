@@ -26,9 +26,10 @@ FROST = dict(rim=(30, 109, 157), body=(59, 169, 226), light=(105, 231, 254), cor
              deep=(30, 109, 157), blue=(34, 119, 172), mid=(59, 169, 226), cyan=(105, 231, 254), ice=(239, 255, 255), ghost=(28, 74, 104),
              glow1=(18, 52, 80), glow2=(30, 90, 140), glow3=(60, 170, 227))        # stepped glow, far -> near
 BLOOD = dict(rim=(80, 10, 15), body=(170, 25, 35), light=(220, 70, 70), core=(250, 160, 150), white=(255, 225, 220))
+STEEL = dict(rim=(104, 122, 140), body=(196, 208, 222), light=(230, 238, 246), core=(250, 252, 255), white=(255, 255, 255))      # silver-white steel (a plain weapon smear)
 
 PALETTES = {"sun": SUN, "fire": FIRE, "ice": ICE, "water": WATER, "lightning": LIGHTNING, "earth": EARTH, "wind": WIND,
-            "nature": NATURE, "poison": POISON, "holy": HOLY, "shadow": SHADOW, "arcane": ARCANE, "blood": BLOOD, "spirit": SPIRIT, "blaze": BLAZE, "frost": FROST}
+            "nature": NATURE, "poison": POISON, "holy": HOLY, "shadow": SHADOW, "arcane": ARCANE, "blood": BLOOD, "spirit": SPIRIT, "blaze": BLAZE, "frost": FROST, "steel": STEEL}
 
 
 def _lum(c): return 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
