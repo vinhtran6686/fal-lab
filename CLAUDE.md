@@ -15,6 +15,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
     requests in `examples.md` (`/fal-image --example --hero`); `--creative` proposes designs from a short idea. A `style.md` at the project root, if present, overrides the default style block.
     `--manual`: no fal call: you write fully expanded prompts for the user to run in ChatGPT, review what they bring back and file only the approved
     images with `scripts/ingest_image.py` (checks + next `_vNN`, cost 0, `costs.csv` untouched).
+    **Preflight (since 2026-11-15)**: before a paid character or pose image write the design note of `preflight.md` and run `python scripts/prompt_lint.py <prompt> --body brawny|slender|agile`; one decision, one image (no draw-look-redraw loops).
     **Style (since 2026-11-15)**: new characters use the chunky vector preset in `style-chunky.md` (about 3 heads, thick mauve-brown outline, one dominant hue in four values + warm family + gold accent, glowing-eye face, medium detail; review with a shrink test at 60 px); the flat block of `format.md` §1 is for older assets.
   - `video-sprite` (`.claude/skills/video-sprite/`): every character animation (move, attack, death ...) from
     the approved stills: image-to-video on fal.ai (`scripts/fal_video.py`) -> keyed, registered, looped or
