@@ -300,3 +300,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-15 08:37:08,out/heroes/tide_caller/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,13.2,0.0168,True
 2026-11-15 08:40:08,out/heroes/tide_caller/source/design/master_v02.png,gpt-image-2,low,1024x1024,False,12.9,0.0172,True
 2026-11-15 08:42:28,out/enemies/urn_thief/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,15.7,0.0158,True
+2026-11-15 08:45:30,out/bosses/cairn_seer/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,14.6,0.0156,True
