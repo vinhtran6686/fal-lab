@@ -302,3 +302,5 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-15 08:42:28,out/enemies/urn_thief/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,15.7,0.0158,True
 2026-11-15 08:45:30,out/bosses/cairn_seer/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,14.6,0.0156,True
 2026-11-15 08:49:25,out/heroes/dragon_sabre/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,14.5,0.0174,True
+2026-11-15 08:50:31,out/heroes/dragon_sabre/source/design/master_v02.png,gpt-image-2,low,1024x1024,False,20.3,0.0176,True
+2026-11-15 08:51:01,out/heroes/dragon_sabre/source/design/master_v03.png,gpt-image-2,low,1024x1024,False,13.0,0.0178,True
