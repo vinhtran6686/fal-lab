@@ -1,0 +1,27 @@
+{
+  "prompt": "The same stocky heroic cartoon spear-warrior in both frames: big head, huge fists, short legs, slate-blue armour with a large gold crane emblem, a giant cream crane-wing shoulder guard, a black topknot with a brick-red cord, and an oversized spear with a bright silver leaf-shaped spearhead, a gold crescent cross-guard and a brick-red tassel. He stays in the SAME low wide horse stance, both boots planted on the same ground line and not moving; only the arms, the spear and a little of the torso move. Use the clock face of the frame: 12 o'clock at the top, 3 at the right, 6 at the bottom, 9 at the left. FIRST FRAME: the spear lies across his shoulders, the butt end at 2 o'clock beside his raised fist on the right of the frame, the spearhead at 8 o'clock low on the left of the frame. LAST FRAME: the butt end at 10 o'clock beside his raised fist on the left of the frame, the spearhead at 4 o'clock low on the right of the frame. IN BETWEEN: a fast spin of the spear above his head: the spear is thrown up off his shoulders, turns half a revolution in the air above his head in the plane of the frame, passing level at 12 o'clock over his head, and comes back down across his shoulders on the other side; his hands guide it, one fist opens and the other grips the haft at the end. The clip starts EXACTLY on the first frame and ends EXACTLY on the last frame. The camera is locked and the character stays in the same place of the frame. No effects at all: no trails, no sparks, no glow, no dust, no motion blur. Solid flat pure magenta background only. Keep the exact flat vector look, outline weight, palette, proportions and costume of the frames.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 2,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab296fb/qPXraASBOgCsURcFHmj_Y_keyM.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0ab296fb/p-t-C9t_yiVENfiKUItZ4_keyA.png"
+  },
+  "seconds": 2,
+  "resolution": "768P",
+  "size": [
+    768,
+    768
+  ],
+  "estimateUsd": 0.03,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/spin/keyM.png",
+  "lastFrame": "/tmp/claude-0/-home-user-fal-lab/0d4327dc-c403-51b7-8868-48c89542b69c/scratchpad/spin/keyA.png",
+  "requestId": "01a1e029-b468-7cd0-8361-a412f0d36f34",
+  "seconds_elapsed": 3.1,
+  "source_url": "https://v3b.fal.media/files/b/0ab296fb/Q7TWhLHOLzwol7UlIDu0r_minimax-h3.mp4",
+  "cost_is_estimate": true
+}
