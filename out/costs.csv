@@ -293,3 +293,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-15 05:13:18,out/heroes/moon_crane/source/design/master_v02.png,gpt-image-2,low,1024x1024,False,16.0,0.0154,True
 2026-11-15 07:10:08,out/heroes/moon_crane/source/design/master_v03.png,gpt-image-2,low,1024x1024,False,15.5,0.0154,True
 2026-11-15 07:13:09,out/heroes/moon_crane/source/design/master_v04.png,gpt-image-2,low,1024x1024,False,13.3,0.0159,True
+2026-11-15 07:20:38,out/heroes/moon_crane/source/design/master_v05.png,gpt-image-2,low,1024x1024,False,16.4,0.0157,True
