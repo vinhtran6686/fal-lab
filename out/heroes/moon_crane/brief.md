@@ -38,6 +38,7 @@ Người dùng chọn A, sau đó đổi vũ khí rìu -> cây thương (nhìn h
 | master (= idle) | fal-image | ảnh tĩnh | ✅ v08 | user chốt 2026-11-15, style chunky |
 | icon | fal-image | ảnh tĩnh | ⏭ | chưa làm |
 | skill_sweep_spear (nguồn video) | video-sprite (h3-max-turbo, 2 take ghép) | video thô | ✅ chốt 2026-11-15 | `source/video/sweep_spear_join.mp4`: 88 khung @24 fps 768x768, chém ngang quay người 3 pose A/B/C (thương sau lưng -> hai tay trước ngực -> một tay hất ra sau lưng); dựng lại `python out/heroes/moon_crane/source/video/build_sweep_join.py`; giới hạn trong `sweep_spear_join.json`; chưa tách key / đăng ký / xuất frames |
+| pose_horse_stance | fal-image (ảnh mẫu 1 khung) | ảnh tĩnh | ✅ 2026-11-15 | `source/design/pose_horse_stance_v01.png`: tấn thấp, thương vắt ngang vai, tư thế chép từ một khung của user; cắt và thu lại để lề 10%; thân vẫn gần chính diện |
 | pose_skill_* | fal-image | ảnh tĩnh | ⏭ | chưa chọn kỹ năng |
 | run_side, attack_side, death_side, pose_respawn, respawn_side, levelup_side, package | - | - | ⏭ | ngoài phạm vi thử phong cách |
 

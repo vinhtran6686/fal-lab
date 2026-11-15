@@ -17,5 +17,5 @@
 ## 2026-11-15 — pose_horse_stance_v01 (low horse stance, spear across the shoulders)
 Pose copied from a user reference frame (single pixel-art frame as `--ref`, design not copied). 2 images (0.0188 + 0.0189 USD); v2 kept, cropped and rescaled to a 10% margin (the model ignored the margin and the 50-degree turn). Body still near-front.
 
-## 2026-11-15 — spin_overhead_loop.gif (spear spin over the head, from the horse-stance pose)
-Only ONE frame of the user's reference reached us, so the move is inferred: pose A (horse stance, spear across the shoulders) -> pose M (A mirrored) via a pinned first/last-frame clip (spear thrown over the head, half turn), then M -> A back. 2 clips, 0.06 USD; joined (111 frames @24 fps), keyed on grey. Known limits: motion-blur smears on the mid frames, the mirrored half has the wing guard on the other shoulder, the golden trail of the reference is not drawn (VFX later).
+## 2026-11-15 — spin test discarded
+A spear spin over the head (A -> mirrored A -> A, 2 clips, 0.06 USD, logged in `out/costs.csv`) was made from ONE reference frame and did not match the user's reference (a gif with several skills, of which only one frame reached us). Files removed; redo from the full reference frames when they are added to `ref/`.
