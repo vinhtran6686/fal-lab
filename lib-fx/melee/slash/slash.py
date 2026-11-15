@@ -59,7 +59,7 @@ EFFECTS["ring"] = _plane_effect("ring", "Quét vòng quanh người", "a WEAPON 
     "the near half in FRONT of the character, bright and thick, the far half BEHIND it, cool and thin; the head runs the circle in about a second (u falls: from the left, across the "
     "front to the right, behind the body and back to the left); use it with the body centre as --from and --to = a point at the weapon's reach on the side of the first position; "
     "set k, u0, u1 and r with --swing when the real path differs",
-    dict(k=0.3, roll=0.0, u0=180, u1=-180, blade=0.8, ease=1.0, w_near=95, run=1, tail=0.5), ["horizontal", "full-turn"], 3.4, sparks=((150, 215), (160, 200)), release=0.3, attack=0.85, extent=340, reach=270)
+    dict(k=0.3, roll=0.0, u0=180, u1=-180, blade=0.8, ease=1.0, w_near=150, run=1, tail=0.55, full=1, glow=2.0), ["horizontal", "full-turn"], 3.4, sparks=((150, 215), (160, 200)), release=0.3, attack=0.85, extent=340, reach=270)
 EFFECTS["ring"].layers = [_L.but(life=Life(0.8, 0.033, 0.033, 0.7 if _L.id == "scraps" else 0.1)) if _L.id in ("scraps", "streaks") else _L for _L in EFFECTS["ring"].layers]   # the sparks belong to the END of the long path (the head arrives about 0.8 s after the start)
 EFFECTS["diag_down"] = _plane_effect("diag_down", "Chém xéo xuống", "a SWORD slash on a slanted plane, from high behind the shoulder to low in front, seen from the "
     "game's camera: a half-flattened ellipse turned 35 degrees; use it with the shoulder as --from",

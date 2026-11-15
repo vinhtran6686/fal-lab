@@ -32,20 +32,20 @@
  "frames": 41,
  "frame_size_2x": [
   698,
-  338
+  352
  ],
  "anchor_2x": [
   340.0,
-  148.0
+  162.0
  ],
  "target_2x": [
   610.0,
-  148.0
+  162.0
  ],
  "hit_frame": 3,
  "origin": [
   30,
-  462
+  448
  ],
  "layers": [
   {
@@ -92,10 +92,10 @@
    "empty0: the first frame is empty"
   ],
   "frames": 41,
-  "peak_frame": 10,
+  "peak_frame": 12,
   "peak_size_1x": [
-   277,
-   67
+   285,
+   94
   ],
   "last_frame_pct": 0.0
  },

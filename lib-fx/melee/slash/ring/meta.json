@@ -19,15 +19,15 @@
  "frames": 50,
  "frame_size_2x": [
   698,
-  338
+  352
  ],
  "anchor_2x": [
   340.0,
-  148.0
+  162.0
  ],
  "target_2x": [
   610.0,
-  148.0
+  162.0
  ],
  "hit_frame": 3,
  "direction": "a -> b (set with --from / --to)",
@@ -73,10 +73,10 @@
    "empty0: the first frame is empty"
   ],
   "frames": 50,
-  "peak_frame": 11,
+  "peak_frame": 15,
   "peak_size_1x": [
-   270,
-   68
+   286,
+   94
   ],
   "last_frame_pct": 0.0
  },
