@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Lint a character prompt BEFORE it is sent to gen_image.py (costs nothing).
 
-    python scripts/prompt_lint.py <prompt.txt> [--body brawny|slender|agile]
+    python scripts/prompt_lint.py <prompt.txt> [--body brawny|slender|agile] [--kind master|pose]
 
 It checks what the chunky style (`.claude/skills/fal-image/style-chunky.md`) and `preflight.md` ask for:
 required parts, banned words, words that return the wrong body, vague quantity words, frame fit, colour families.
@@ -32,18 +32,28 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("prompt")
     ap.add_argument("--body", choices=["brawny", "slender", "agile"], default="brawny")
+    ap.add_argument("--kind", choices=["master", "pose"], default="master", help="pose: a pose still of an approved master (no UPRIGHT, a named ORIENTATION instead of a master view)")
     a = ap.parse_args()
     t = open(a.prompt, encoding="utf-8").read()
     low = t.lower()
     err, warn = [], []
 
     # required parts
-    for key, why in [("Background:", "background sentence"), ("#FF00FF", "magenta key colour"), ("UPRIGHT", "upright idle"),
-                     ("TWO ARMS", "two arms the same size"), ("TWO LEGS", "two legs the same size")]:
+    req = [("Background:", "background sentence"), ("#FF00FF", "magenta key colour"),
+           ("TWO ARMS", "two arms the same size"), ("TWO LEGS", "two legs the same size")]
+    if a.kind == "master":
+        req.append(("UPRIGHT", "upright idle"))
+    for key, why in req:
         if key not in t:
             err.append(f"missing {why} ({key!r})")
-    if not re.search(r"NEAR-FRONT VIEW|SIDE VIEW|FRONT VIEW|BACK VIEW|VIEWED FROM BEHIND", t):
-        err.append("missing a named view (NEAR-FRONT VIEW / SIDE VIEW ...)")
+    if a.kind == "master":
+        if not re.search(r"NEAR-FRONT VIEW|SIDE VIEW|FRONT VIEW|BACK VIEW|VIEWED FROM BEHIND", t):
+            err.append("missing a named view (NEAR-FRONT VIEW / SIDE VIEW ...)")
+    else:
+        if "ORIENTATION:" not in t:
+            err.append("missing a named ORIENTATION (action-planes.md section 4b)")
+        if "visible" not in low and "NOT visible" not in t:
+            warn.append("no visible / NOT visible list for the body orientation")
     if "COLOUR PLAN" not in t:
         err.append("missing COLOUR PLAN with hex values")
     if "outline" not in low:
@@ -91,7 +101,11 @@ def main():
         warn.append(f"a weapon taller than the figure with the figure filling {fill.group(1)}%: use 60-66% or the tip leaves the frame")
     if top and int(top.group(1)) < 8:
         warn.append(f"tip margin {top.group(1)}% is below 8%")
-    if not top and re.search(r"staff|spear|glaive|dao|polearm|bow", low):
+    if a.kind == "pose":
+        mm = re.search(r"margin of at least (\d+)%", t)
+        if not mm:
+            warn.append("no frame margin sentence ('a margin of at least 10% on every side')")
+    elif not top and re.search(r"staff|spear|glaive|dao|polearm|bow", low):
         warn.append("a long weapon without a tip margin sentence ('at least 8% below the top edge')")
 
     # colour plan
