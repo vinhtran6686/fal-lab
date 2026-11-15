@@ -82,6 +82,29 @@ when you enrich a user's description, in `--creative` and `--example`, never to 
 | straining, gripping | braced pose yes, tremor tiny | pose in the prompt, tremor in the export (`shake`) |
 | heavy swing "losing balance" | overswung, dynamic move, not a literal stumble | fine; describe the recovery |
 
+## Writing a move from a reference animation (hand-written clip; added 2026-11-15)
+The description follows `.claude/skills/fal-image/action-planes.md` section 9 (frame of reference, orientation per beat, weapon path as
+geometry, one continuous move, a target for every strike, rotation from the hips, no seconds, hold the end). What is specific to the clip:
+1. **Start frame and end frame have the same body size and the same ground line.** A start still drawn at another fill makes the
+   body shrink or grow during the clip. Rescale the start still to the end still (or to the tier) before sending.
+2. **Pin the last frame only to an approved still.** Without a pinned end the move ends where the description says; with one it must
+   end exactly there and the model may rush the move to arrive.
+3. **Length**: a full turn of the body needs about 5 s (768P, h3-max-turbo, 0.015 USD per second); two takes per round, cost shown first.
+4. **Every prompt carries**: identity lock of the character, "the weapon keeps the same rigid shape and length", the fixed camera,
+   the boots stay planted and the body keeps one size in the frame, no effect of any kind and no arcs, crescents, streaks, ghost copies,
+   after-images, flashes or motion blur, and the flat magenta background.
+5. **What the model ignores or does badly, and what to do about it** (not by repeating the prompt):
+   - It still paints white or pink arcs and blur on fast frames even when forbidden. Fix in the key: a tighter alpha ramp on
+     min(R,B) - G (0 at 8, 1 at 53) removes them without touching the character; no frame is cut.
+   - It holds the last pose for a long time and plays one-shots slowly: cut the static frames when the gif is made.
+   - It does not follow angles in degrees, a frame margin or a hold length: do not spend words on them.
+   - It reads "points left, then points right" as two thrusts and an invented second strike as a second move: use one continuous
+     sweep sentence and no extra strike.
+   - A coil may go the wrong way (the weapon up on the wrong side): look at the frames, name it in the review, retake only if it matters.
+   - A weapon that should be hidden behind the body may still show: accept it; the effect layer covers it.
+6. **Review** every take frame by frame against the beat table (orientation, gaze, weapon direction, path), not only by feel; list
+   what could not be checked.
+
 ## Physical motion: write every skill and attack as five phases (added 2026-10-21, from a hero's slam and charge)
 
 The phase table of fal-image `format.md` §11 (level 2) is written in this order and is the input here: copy its body column into the beats and its effect column into the fx recipe.

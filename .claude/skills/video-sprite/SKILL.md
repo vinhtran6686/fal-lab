@@ -170,7 +170,7 @@ interleaving is the mistake this structure exists to prevent.
    `motion` there is what step 4 writes and gets approved, not a generic default. One action per clip; no
    effects in character clips (the game adds FX; big ones are the manifest's vfx rows).
 4. **Describe the action, get it approved in a loop, THEN price and run - before touching the next row.**
-   This is the biggest lever on quality and on cost (`references/motion-prompts.md` "Writing the action").
+   This is the biggest lever on quality and on cost (`references/motion-prompts.md` "Writing the action"). The description follows the frame-of-reference rules of `.claude/skills/fal-image/action-planes.md` section 9 (forward = toward the target = screen right, left and right are the screen's, orientation and gaze and weapon direction in every beat, a target for every strike, rotation from the hips, no seconds, hold the end) and `references/motion-prompts.md` "Writing a move from a reference animation" (human version: `docs/skills/video-sprite/video-sprite-motion-description-rules.md`).
    Skipped entirely in `--auto` mode (see "Run modes"): there, write the description yourself from the
    template below and the character's `brief.md`, with no stop, and go straight to step 5.
    a. Write the full action, beat by beat, body part by body part, each beat with its time range, e.g.

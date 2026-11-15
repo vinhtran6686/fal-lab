@@ -169,3 +169,43 @@ Read these before planning any move that sweeps a weapon, a hand or a staff arou
 8. **One image per call, show it, wait, then the next.** The user judged each still before any further spend; retries were then one sentence each.
 9. **Cost of the sequence:** pose A 2 tries, pose B 3 tries, pose C 1 try: 6 images, 0.0979 USD (`out/costs.csv`, names `pose_skill_sweep_p*`). Budget 3 tries for the pose that carries a position or a slant, 1-2 for the others.
 10. **A pose can be copied from ONE reference frame (tested 2026-11-15, 2 images, about 0.038 USD).** Attach the approved master first and the frame second (`--ref master --ref frame`, the frame cropped to one figure, upscaled with nearest-neighbour onto a grey square), and say in the prompt: the second image is ONLY a pose reference, copy the pose of the body and the weapon, not the design, colours, face or any trail. Write the pose in words too (legs, each hand and what it holds, the weapon's slant in degrees and which end is where). What held: wide low stance, which fist is raised and where it grips, the other fist not holding, the weapon's diagonal and its head at the lower end. What did NOT hold: a turn "about 50 degrees" (the body stayed near-front), a frame margin (a horizontal weapon ran to the edge at any asked fill of 42-52 %), and "thighs horizontal" only half held. Plan to crop and rescale the still to the margin you need (measure with `ingest_image.py --check`) instead of retrying.
+
+## 9. Writing the description of a move (every class, every weapon; the rules for any pose set and any clip)
+Learned over a long round of rewrites (2026-11-15) in which a correct-looking description still produced the wrong move because it
+lacked a direction, or contradicted itself. Write the description as a table, one row per beat, then turn it into the prompt.
+
+1. **Fix the frame of reference first and say it in the description.** The camera is the game camera (fixed, in front and a little
+   above, section 1). The character's FORWARD is the direction of its target; in the base side view that is screen RIGHT (the master
+   faces right; a left-facing character is the mirror). BEHIND = screen LEFT, NEAR side = toward the viewer, FAR side = away from the
+   viewer. Left and right in every sentence mean the SCREEN's left and right, never the character's own, and the description says so
+   once at the top. Never mix a screen word and a body word in one sentence. This is what lets a model, and the reviewer comparing
+   with what the user sees, agree on where the character looks and where it strikes.
+2. **Every beat states five things:** (a) body orientation as a named view (section 4b) seen from the camera, (b) where the head
+   looks, (c) the feet (planted, pivoting, which one is forward), (d) each hand and what it holds, (e) the direction of the weapon on
+   the screen. A beat without its facing is incomplete: the model fills the gap with the master's default.
+3. **Describe the path of the weapon as geometry**: the plane it travels in (section 2), its height (waist, shoulder, overhead), which
+   side of the body it passes (the NEAR side crosses in front of the body, the FAR side behind it where the body hides it), the
+   direction of travel on the screen (from the screen's left to the screen's right) and when it is hidden. Do not write "points
+   left, then points right": a model plays that as two opposite thrusts. Write "sweeps across the front of the body from left to
+   right". A sweep meant to read as one straight edge says: level, parallel to the ground, at the wanted height; the shaft and the
+   head are then one straight horizontal line.
+4. **One move is one continuous description.** Do not add a second strike, a hold or a reset the user did not ask for. A held beat
+   (a hit-stop) is used only to separate two different actions; inside a single move it makes the model split the move in two.
+5. **Give every strike a target**: an enemy out of the frame, with its side (screen left or right), its height and its distance
+   (for a melee weapon one weapon length). The weapon passes through it; it is never "swung in the air". The head and eyes stay
+   on the target for the whole move, even while the body turns away (looking back over the shoulder).
+6. **Rotation comes from the body, in the order of a real turn:** hips first, then shoulders, then arms and weapon. The feet pivot on
+   their toes where they stand and never slide, and the character never spins as a whole like a top. A wind-up (coil) turns the
+   hips and shoulders AWAY from the target, then the release turns them toward it.
+7. **No seconds in the description.** Give the beats in order; the model sets the tempo. The length of the move is chosen by the clip
+   duration. State which beat must be the fastest only when it matters.
+8. **End on the last beat and hold it.** No return to the rest pose: the game resets the character after the animation.
+9. **Two actions that look alike but go opposite ways need a visible beat between them; one action does not.** When a move is a
+   single continuous sweep, write it in one sentence chain with no pause.
+10. **When the user corrects a description, rewrite the whole description from the top**, never patch it. After a failed
+    result name the sentence of the prompt that caused it (an ambiguous direction word, a contradiction, a detail the model cannot
+    draw) before paying again.
+11. **Read a reference completely before writing from it**: split the animation into frames, identify the exact character and cell
+    with the user, read the key frames at high zoom, note orientation, head and weapon per frame, and check the path of the weapon
+    frame by frame (near side, far side, hidden). If only one frame reaches you (a gif or webp sent in chat arrives as one still),
+    stop and ask for the file in `ref/`; do not invent the rest.

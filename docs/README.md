@@ -17,6 +17,7 @@ docs/
 │   │   ├── fal-image-manual-prompt-style-transfer.md      prompt chuyển concept image sang style của dự án (chế độ --manual)
 │   │   └── fal-image-manual-prompt-assets-from-master.md  prompt cho các ảnh còn lại từ master đã duyệt (chế độ --manual)
 │   └── video-sprite/                                      animation bằng video qua scripts/fal_video.py
+│       ├── video-sprite-motion-description-rules.md       quy tắc viết mô tả động tác (hệ quy chiếu, hướng từng bước, mục tiêu)
 │       └── video-sprite-reference-video-route.md          route video tham chiếu (scripts/make_ref_video.py)
 ├── scripts/                                               tài liệu cho code trong scripts/
 │   ├── puppet_kit/                                        scripts/puppet*.py, scripts/puppet_kit/
