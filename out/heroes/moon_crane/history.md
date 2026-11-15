@@ -13,3 +13,6 @@
 | 2026-11-15 | skill_sweep_spear (video) | take a | h3-max-turbo | 7 | dùng một phần | A đúng, mid và B đúng, C đúng; có 4 khung nhoè và thương bay khỏi khung (khung 47-50) | bỏ khung nhoè, ghép với clip B->C | user: "v01 tốt hơn nhiều" |
 | 2026-11-15 | skill_sweep_spear (video) | take b (B->C ghim) | h3-max-turbo | 7.5 | dùng | ghim đầu cuối đúng; 2 khung nhoè; thương hạ chúi | - | user |
 | 2026-11-15 | skill_sweep_spear (video) | join | ghép 0 USD | 7.5 | approved by user | một cú nhảy 0,04 s từ quay lưng sang nghiêng | - | user: "Chốt phiên bản đó" |
+
+## 2026-11-15 — pose_horse_stance_v01 (low horse stance, spear across the shoulders)
+Pose copied from a user reference frame (single pixel-art frame as `--ref`, design not copied). 2 images (0.0188 + 0.0189 USD); v2 kept, cropped and rescaled to a 10% margin (the model ignored the margin and the 50-degree turn). Body still near-front.
