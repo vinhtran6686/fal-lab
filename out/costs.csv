@@ -281,3 +281,8 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-14 10:57:58,pose_skill_sweep_p2_v02.png,gpt-image-2,low,1024x1024,False,16.9,0.0165,True
 2026-11-14 11:43:54,pose_skill_sweep_p2_v03.png,gpt-image-2,low,1024x1024,False,17.1,0.0170,True
 2026-11-14 17:55:12,pose_skill_sweep_p3_v01.png,gpt-image-2,low,1024x1024,False,17.7,0.0165,True
+2026-11-15 04:30:24,master_axe_v01.png,gpt-image-2,low,1024x1024,False,17.2,0.0160,True
+2026-11-15 04:31:01,master_axe_v02.png,gpt-image-2,low,1024x1024,False,16.2,0.0163,True
+2026-11-15 04:31:55,axe_pose_sweep_p1_v01.png,gpt-image-2,low,1024x1024,False,14.6,0.0167,True
+2026-11-15 04:32:21,axe_pose_sweep_p2_v01.png,gpt-image-2,low,1024x1024,False,19.7,0.0171,True
+2026-11-15 04:32:49,axe_pose_sweep_p3_v01.png,gpt-image-2,low,1024x1024,False,18.4,0.0169,True
