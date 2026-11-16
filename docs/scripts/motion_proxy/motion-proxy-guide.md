@@ -59,6 +59,26 @@ Code không chứa số của nhân vật nào. Mọi thứ nằm trong JSON (v�
 
 Chiều quay: yaw 0 = nhìn camera, 90 = nhìn mục tiêu (phải màn hình), 180 = lưng về camera, 270 = nhìn trái. Tăng yaw là xoay ngược chiều kim đồng hồ nhìn từ trên, cùng chiều cú quét của `ref/king`.
 
+## Chữ → chuyển động 3D (HY-Motion trên fal)
+
+Thay cho việc đặt khoá kênh bằng tay, có thể lấy chuyển động người từ mô hình chữ → chuyển động HY-Motion (Tencent, mã nguồn mở) qua fal.ai, rồi chuyển sang nhân vật:
+
+```bash
+python scripts/motion_proxy/text2motion.py --asset out/heroes/<id> --name <skill> --prompt "<tiếng Anh>" --seeds 1 2 3
+python scripts/motion_proxy/fbx_motion.py <asset>/.work/motion_proxy/t2m/<skill>/seed1/<file>.fbx
+python scripts/motion_proxy/retarget.py <.../seed1/motion.json> --base <asset>/source/rig/proxy_<x>.json --out <.../seed1/proxy.json>
+python scripts/motion_proxy/build.py <.../seed1/proxy.json> --out <.../seed1/proxy>
+```
+
+| Bước | Làm gì | Ghi chú |
+|---|---|---|
+| `text2motion.py` | gọi `fal-ai/hunyuan-motion/fast` (0,06 USD/lần) hoặc `fal-ai/hunyuan-motion`, lưu `result.json`, FBX, `job.json`, ghi `out/costs.csv` | fal trả một FBX khung xương SMPL-H, 30 fps, khoảng 5 s; `motion_json` để trống |
+| `fbx_motion.py` | đọc FBX bằng Blender dạng module (`pip install bpy`), xuất toạ độ khớp từng khung (y lên) | 24 khớp: thân, tay, chân, đốt giữa ngón tay làm tâm bàn tay |
+| `retarget.py` | chuyển **góc và nhịp** sang thân trong `--base`: góc hông, vai; độ cao và dịch hông theo tỉ lệ chân; trục vũ khí từ đường nối hai bàn tay; vết chân (đoạn chạm đất được khoá); khung trúng = đỉnh tốc độ bàn tay; cắt quanh cú đánh; xoay để thân lúc đầu đoạn nhìn về `--face` | trễ pha lấy nguyên từ nguồn (`lag = 0`); `checks` chọn tiêu chí hợp với động tác (bỏ cú đâm, nửa xa) |
+| `build.py` | như phần trên: hình, tiêu chí, `frames.json`, `weapon_track.json`, `clean/fNN.png` | |
+
+Giới hạn đã thấy: nguồn là người tay không, nên trục vũ khí suy từ hai bàn tay chỉ là ước lượng; mô hình ít khi có pha lấy đà rõ và dồn trọng tâm như cần cho đòn game. Tiêu chí đo cho thấy ngay chỗ thiếu, để chọn seed hoặc sửa kênh bằng tay sau khi retarget.
+
 ## Tiêu chí: "đo" và "cấu trúc"
 
 `metrics.md` ghi loại của mỗi tiêu chí. Chỉ tiêu chí **đo** mới có thể hỏng và mới chứng minh được điều gì:

@@ -26,7 +26,7 @@ docs/
 │   │   ├── puppet-kit-asset-prep-and-rig-v2.md            chuẩn bị tài nguyên, bộ xương 17 xương, Rig Tuner v2, quy tắc mỏ neo, nợ kỹ thuật
 │   │   └── puppet-kit-pose-reel.md                        pose reel: clip tư thế cho động tác rig không vẽ được (puppet_reel.py)
 │   ├── motion_proxy/                                      scripts/motion_proxy/
-│   │   └── motion-proxy-guide.md                          bộ xương 3D proxy: chuyển động đúng vật lý cho skill, tiêu chí đo, so với tham chiếu
+│   │   └── motion-proxy-guide.md                          bộ xương 3D proxy: chuyển động đúng vật lý cho skill, tiêu chí đo, so với tham chiếu, chữ → chuyển động (HY-Motion)
 ├── tools/                                                 tài liệu cho ứng dụng trong tools/
 │   ├── studio/                                            tools/studio/ (Rig & Pose Studio)
 │   │   ├── puppet-studio-guide.md                         cách dùng Studio, schema limit/links, quy tắc

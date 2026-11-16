@@ -96,8 +96,10 @@ class Proxy:
         self.fps = params.get("fps", 15)
         self.ch = {k: pchip(v) for k, v in params["channels"].items()}
         ft = params["feet"]
-        self.back_toe = np.array(ft["back_toe"], float)
-        self.front_toe0 = np.array(ft["front_toe"], float)
+        self.tracks = ft.get("tracks")          # vết chân từ chuyển động nguồn (retarget.py)
+        if not self.tracks:
+            self.back_toe = np.array(ft["back_toe"], float)
+            self.front_toe0 = np.array(ft["front_toe"], float)
         self.steps = ft.get("steps", [])
         self.mass = self.b["mass"]
 
@@ -135,6 +137,26 @@ class Proxy:
                 return p, 0 < s < 1, b
             pos = b
         return pos, False, pos.copy()
+
+    def track_toe(self, side, t):
+        """Mũi chân theo vết: [{t0, t1, pos}] là các đoạn chạm đất (mũi khoá ở pos);
+        giữa hai đoạn là một bước (nội suy smoothstep, nhấc theo 'lift')."""
+        segs = self.tracks[side]
+        lift = self.tracks.get("lift", 0.14)
+        for k, sg in enumerate(segs):
+            if t < sg["t0"]:
+                if k == 0:
+                    return np.array(sg["pos"], float), False, np.array(sg["pos"], float)
+                a, b = segs[k - 1], sg
+                s = (t - a["t1"]) / max(b["t0"] - a["t1"], 1e-6)
+                pa, pb = np.array(a["pos"], float), np.array(b["pos"], float)
+                p = pa + (pb - pa) * smoothstep(s)
+                p[1] = lift * math.sin(math.pi * min(max(s, 0), 1)) * min(1.0, np.linalg.norm(pb - pa) / 0.15)
+                return p, True, pb
+            if t <= sg["t1"]:
+                return np.array(sg["pos"], float), False, np.array(sg["pos"], float)
+        last = np.array(segs[-1]["pos"], float)
+        return last, False, last
 
     # -------------------------------------------------------------- tư thế
     def pose(self, t):
@@ -190,8 +212,12 @@ class Proxy:
 
         # chân
         fy = ch["pelvis_yaw"](t - c["foot_lag"])
-        toeR = self.back_toe.copy()
-        toeL, swingL, landL = self.front_toe(t)
+        if self.tracks:
+            toeR, swingR, landR = self.track_toe("R", t)
+            toeL, swingL, landL = self.track_toe("L", t)
+        else:
+            toeR, swingR, landR = self.back_toe.copy(), False, self.back_toe.copy()
+            toeL, swingL, landL = self.front_toe(t)
         sw = self.tm["spin_heel_window"]
         spin = sw[0] < t < sw[1]
         hl = self.tm["spin_heel_lift"] if spin else 0.0
@@ -211,8 +237,10 @@ class Proxy:
                     return heel, kn, ank2, over, lift
                 lift = min(max_lift, lift + 0.01)
 
-        heelR, knR, ankR2, oLR, hlR = leg(hipR, toeR, fy - 15, hlR)
-        heelL, knL, ankL2, oLL, hlL = leg(hipL, toeL, fy + 15, hl)
+        fyR = fy - 15 if not self.tracks else self.foot_yaw("R", t, fy)
+        fyL = fy + 15 if not self.tracks else self.foot_yaw("L", t, fy)
+        heelR, knR, ankR2, oLR, hlR = leg(hipR, toeR, fyR, hlR)
+        heelL, knL, ankL2, oLL, hlL = leg(hipL, toeL, fyL, hl)
 
         J = dict(pelvis=pelvis, chest=chest, neck=neck, head=head,
                  hipR=hipR, hipL=hipL, kneeR=knR, kneeL=knL, ankleR=ankR2, ankleL=ankL2,
@@ -223,8 +251,13 @@ class Proxy:
                     twist=twist, twist_raw=C_raw - P, weapon_shift=float(np.linalg.norm(shift)),
                     spin_rate=(ch["pelvis_yaw"](t + 0.1) - ch["pelvis_yaw"](t - 0.1)) / 0.2,
                     reach_over=dict(armR=overR, armL=overL, legR=oLR, legL=oLL),
-                    foot_swing=swingL, swing_land=landL, heel_lift=dict(R=hlR, L=hlL))
+                    foot_swing=swingL or swingR, swing=dict(R=swingR, L=swingL),
+                    swing_land=landL if swingL else landR, heel_lift=dict(R=hlR, L=hlL))
         return J, info
+
+    def foot_yaw(self, side, t, fallback):
+        fy = self.tracks.get("yaw_" + side)
+        return pchip(fy)(t) if fy else fallback
 
     def com(self, J):
         tot = sum(self.mass.values())

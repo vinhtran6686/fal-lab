@@ -3,7 +3,7 @@
     python scripts/motion_proxy/build.py out/heroes/<id>/source/rig/proxy_<skill>.json [--out DIR]
 
 Mặc định ghi vào <asset>/.work/motion_proxy/<tên file>/ (git bỏ qua):
-  clean.gif, clean_slow.gif hình đẹp: nhân vật + vệt chém, nền xám như ref (để xem)
+  clean.gif, clean_slow.gif hình đẹp: nhân vật + vệt chém, nền xám như ref (để xem); clean/fNN.png từng khung
   anim.gif, anim_slow.gif   hình đo đạc: + trọng tâm, mũi chân, nhìn từ trên, thanh nhịp
   compare.gif               tham chiếu (ghép theo pha, 'reference.align') cạnh proxy
   sheet.png                 bảng khung
@@ -74,8 +74,34 @@ def support(P, J, com_p, inf, com_v=None):
     b = J["toeR"]
     f = J["toeL"]
     c = com_p.copy()
+    sw = inf.get("swing", {"L": inf["foot_swing"], "R": False})
+    if P.tracks:
+        # vết chân từ nguồn: chân sau / chân trước xác định theo hướng mục tiêu (+x), không theo trái/phải
+        if sw["R"] != sw["L"]:
+            b = J["toeL"] if sw["R"] else J["toeR"]
+            f = inf["swing_land"].copy()
+        else:
+            b, f = (J["toeR"], J["toeL"]) if J["toeR"][0] <= J["toeL"][0] else (J["toeL"], J["toeR"])
+        if sw["R"] and sw["L"]:
+            return 0.5, 0.0, True
+        seg = f - b
+        seg[1] = 0
+        if np.dot(seg, seg) < 1e-6:
+            return 0.5, 0.0, True
+        cc = c - b
+        if inf["foot_swing"] and com_v is not None:
+            m_per_u = P.b.get("real_height_m", 1.8) / P.b["height"]
+            cc = cc + com_v * math.sqrt(max(com_p[1], 1e-3) / (9.81 / m_per_u))
+        cc[1] = 0
+        u = float(np.dot(cc, seg) / np.dot(seg, seg))
+        perp = float(np.linalg.norm(cc - seg * u))
+        return u, perp, (-0.05 <= u <= 1.05) and perp < 0.30
+    if sw["R"] and sw["L"]:
+        return 0.5, 0.0, True            # nhảy: cả hai chân trên không, không xét vùng đỡ
+    if sw["R"]:
+        b, f = J["toeL"], inf["swing_land"].copy()   # chân trụ là chân trái
     if inf["foot_swing"]:
-        f = inf["swing_land"].copy()
+        f = inf["swing_land"].copy() if not sw["R"] else f
         if com_v is not None:
             m_per_u = P.b.get("real_height_m", 1.8) / P.b["height"]
             g = 9.81 / m_per_u
@@ -335,6 +361,9 @@ def main():
     M["clean"] = [render_clean(P, cam, J, inf, slash_trail(P, TS[i])) for i, (J, inf) in enumerate(F)]
     dur = int(1000 / P.fps)
     clean = M["clean"]
+    os.makedirs(os.path.join(out, "clean"), exist_ok=True)
+    for i, im in enumerate(clean):
+        im.save(os.path.join(out, "clean", f"f{i:02d}.png"))
     clean[0].save(os.path.join(out, "clean.gif"), save_all=True, append_images=clean[1:], duration=dur, loop=0)
     clean[0].save(os.path.join(out, "clean_slow.gif"), save_all=True, append_images=clean[1:], duration=250, loop=0)
     TW = 300
@@ -468,7 +497,7 @@ def write_metrics(P, M, out):
     # khung nạp = khung có thương rút về nhiều nhất (kênh weapon_slide), không chọn theo tốc độ
     cs = mt.get("chamber_search", [P.tm["t_hit"] - 5, P.tm["t_hit"]])
     cand = [i for i in range(N) if cs[0] <= TS[i] < P.tm["t_hit"]]
-    chamber = min(cand, key=lambda i: P.ch["weapon_slide"](TS[i]))
+    chamber = min(cand, key=lambda i: P.ch["weapon_slide"](TS[i])) if cand else hit0
     # vận tốc mũi thương VỀ PHÍA MỤC TIÊU (+x) từ khung nạp tới khung trúng: dương và tăng dần
     pre = [tipx[i] - tipx[i - 1] for i in range(chamber + 1, hit0 + 1)]
     hit_ok = all(x > 0 for x in pre) and all(b > a for a, b in zip(pre, pre[1:]))
@@ -517,11 +546,16 @@ def write_metrics(P, M, out):
         ("Mũi chân khoá khi chạm đất; hitstop giữ nguyên tư thế", "cấu trúc",
          f"hitstop {len(M['hit_frames'])} khung {M['hit_frames']}", True),
     ]
+    keys = ["order", "order", "twist", "cross", "reach", "shift", "support", "weight", "antic", "thrust",
+            "sweep_hit", "far_half", "struct"]
+    enabled = P.p.get("checks")
+    if enabled:
+        rows = [r for r, k in zip(rows, keys) if k in enabled or (k in ("order", "struct") and P.c.get("lag_chest", 0) > 0)]
     n_ok = sum(1 for r in rows if r[3] and r[1] == "đo")
     n_meas = sum(1 for r in rows if r[1] == "đo")
     L = [f"# Proxy {P.p.get('name', '')}", "",
          f"{N} khung ở {P.fps} fps ({N / P.fps:.2f} s). Khung trúng quét: {M['sweep_hit']}. "
-         f"Khung trúng đâm (giữ hitstop): {M['hit_frames']}.", "",
+         f"Khung trúng (giữ hitstop): {M['hit_frames']}.", "",
          f"**Tiêu chí đo: {n_ok}/{n_meas} đạt.** Tiêu chí 'cấu trúc' đúng do cách dựng bộ xương, chỉ để nhắc,"
          " không chứng minh gì thêm.", "",
          "| # | Tiêu chí | Loại | Số đo | Kết quả |", "|---|---|---|---|---|"]

@@ -326,3 +326,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-15 18:09:38,clip.mp4,h3-max-turbo,video,768P 5s,False,3.6,0.0750,True
 2026-11-15 18:14:41,clip.mp4,h3-max-turbo,video,768P 5s,False,2.9,0.0750,True
 2026-11-15 18:14:41,clip.mp4,h3-max-turbo,video,768P 5s,False,3.1,0.0750,True
+2026-11-16 17:50:01,out/heroes/moon_crane/.work/motion_proxy/t2m/spear_guard_sweep/seed1/result.json,fal-ai/hunyuan-motion/fast,motion,,False,12.7,0.0600,True
