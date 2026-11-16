@@ -1,0 +1,83 @@
+{
+  "id": "moon_crane",
+  "kind": "hero",
+  "cell": [
+    176,
+    140
+  ],
+  "scale_2x": 2,
+  "pivot": [
+    0.5,
+    0.88
+  ],
+  "body_height_2x": 120,
+  "shadow": {
+    "w_2x": 64,
+    "h_2x": 19,
+    "color": "#000000",
+    "alpha": 0.35
+  },
+  "states": {
+    "spin_puppet_side": {
+      "version": "p01",
+      "dir": "frames/spin_puppet_side",
+      "source": "source/rig/anims/spin.json",
+      "frames": 23,
+      "fps": 15,
+      "loop": false,
+      "files": "frames/spin_puppet_side/frames/@1x/hero_moon_crane_spin_puppet_side_NN.png",
+      "sheet": "frames/spin_puppet_side/sheet.png",
+      "split": "puppet",
+      "puppet": {
+        "rigs": [
+          "source/rig/rig_spin_k0.json",
+          "source/rig/rig_spin_k1.json",
+          "source/rig/rig_spin_k2.json",
+          "source/rig/rig_spin_k3.json",
+          "source/rig/rig_spin_k4.json",
+          "source/rig/rig_spin_k5.json"
+        ],
+        "shots": [
+          [
+            "ready",
+            3
+          ],
+          [
+            "coil",
+            4
+          ],
+          [
+            "load",
+            3
+          ],
+          [
+            "release",
+            1
+          ],
+          [
+            "hit",
+            5
+          ],
+          [
+            "follow",
+            7
+          ]
+        ]
+      },
+      "hit_frame": 12
+    }
+  },
+  "sources": {
+    "vfx": [
+      "spin_puppet"
+    ],
+    "design": [
+      "pose_spin_k0_v01.png",
+      "pose_spin_k1_v01.png",
+      "pose_spin_k2_v01.png",
+      "pose_spin_k3_v01.png",
+      "pose_spin_k4_v01.png",
+      "pose_spin_k5_v01.png"
+    ]
+  }
+}

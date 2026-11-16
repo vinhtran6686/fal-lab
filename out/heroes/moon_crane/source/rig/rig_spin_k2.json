@@ -1,0 +1,63 @@
+{
+ "id": "moon_crane",
+ "note": "Spin attack k2: loaded, crouched, spear low on the left; one picture, no cut-out.",
+ "sources": {
+  "pose": "../design/pose_spin_k2_v01.png"
+ },
+ "ground": [
+  388,
+  635
+ ],
+ "unit": 495.0,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    388,
+    635
+   ]
+  },
+  {
+   "name": "body",
+   "parent": "root",
+   "pivot": [
+    388,
+    635
+   ]
+  }
+ ],
+ "sockets": {
+  "weapon_tip": {
+   "bone": "body",
+   "pt": [
+    112,
+    618
+   ]
+  },
+  "weapon_root": {
+   "bone": "body",
+   "pt": [
+    290,
+    534
+   ]
+  },
+  "pivot": {
+   "bone": "body",
+   "pt": [
+    385,
+    560
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "whole",
+   "source": "pose",
+   "bone": "body",
+   "select": {
+    "rest": true
+   }
+  }
+ ]
+}

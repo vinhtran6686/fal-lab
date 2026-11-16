@@ -1,0 +1,308 @@
+{
+ "note": "moon_crane spin attack: six one-piece poses cut from the approved clip, five-phase body timing; the vfx is built from the rig sockets.",
+ "version": "p01",
+ "fps": 15,
+ "loop": false,
+ "hit_frame": 12,
+ "shots": [
+  {
+   "name": "ready",
+   "rig": "source/rig/rig_spin_k0.json",
+   "frames": 3,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      1.0
+     ],
+     [
+      2,
+      0.955,
+      "out"
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      1.0
+     ],
+     [
+      2,
+      1.022,
+      "out"
+     ]
+    ],
+    "root.shx": [
+     [
+      0,
+      0.0
+     ],
+     [
+      2,
+      -0.05,
+      "out"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "coil",
+   "rig": "source/rig/rig_spin_k1.json",
+   "frames": 4,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      1.05
+     ],
+     [
+      1,
+      1.0,
+      "out"
+     ],
+     [
+      3,
+      0.97
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      0.97
+     ],
+     [
+      1,
+      1.0,
+      "out"
+     ],
+     [
+      3,
+      1.02
+     ]
+    ],
+    "root.shx": [
+     [
+      0,
+      -0.09
+     ],
+     [
+      1,
+      -0.04,
+      "out"
+     ],
+     [
+      3,
+      -0.06
+     ]
+    ]
+   }
+  },
+  {
+   "name": "load",
+   "rig": "source/rig/rig_spin_k2.json",
+   "frames": 3,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      0.92
+     ],
+     [
+      1,
+      1.0,
+      "out"
+     ],
+     [
+      2,
+      0.985
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      1.06
+     ],
+     [
+      1,
+      1.0,
+      "out"
+     ],
+     [
+      2,
+      1.01
+     ]
+    ],
+    "root.shx": [
+     [
+      0,
+      -0.05
+     ],
+     [
+      2,
+      -0.07
+     ]
+    ]
+   }
+  },
+  {
+   "name": "release",
+   "rig": "source/rig/rig_spin_k3.json",
+   "frames": 1,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      1.03
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      0.985
+     ]
+    ],
+    "root.shx": [
+     [
+      0,
+      0.11
+     ]
+    ]
+   }
+  },
+  {
+   "name": "hit",
+   "rig": "source/rig/rig_spin_k4.json",
+   "frames": 5,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      0.9
+     ],
+     [
+      2,
+      1.03,
+      "out"
+     ],
+     [
+      4,
+      1.0,
+      "inout"
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      1.08
+     ],
+     [
+      2,
+      0.985,
+      "out"
+     ],
+     [
+      4,
+      1.0,
+      "inout"
+     ]
+    ],
+    "root.shx": [
+     [
+      0,
+      0.04
+     ],
+     [
+      2,
+      -0.02,
+      "out"
+     ],
+     [
+      4,
+      0.0,
+      "inout"
+     ]
+    ],
+    "root.tx": [
+     [
+      0,
+      10.0
+     ],
+     [
+      1,
+      -7.0
+     ],
+     [
+      2,
+      4.0
+     ],
+     [
+      3,
+      -2.0
+     ],
+     [
+      4,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "follow",
+   "rig": "source/rig/rig_spin_k5.json",
+   "frames": 7,
+   "tracks": {
+    "body.sy": [
+     [
+      0,
+      0.94
+     ],
+     [
+      2,
+      1.02,
+      "out"
+     ],
+     [
+      5,
+      1.0,
+      "inout"
+     ],
+     [
+      6,
+      0.995
+     ]
+    ],
+    "body.sx": [
+     [
+      0,
+      1.05
+     ],
+     [
+      2,
+      0.99,
+      "out"
+     ],
+     [
+      5,
+      1.0,
+      "inout"
+     ]
+    ],
+    "root.shx": [
+     [
+      0,
+      0.03
+     ],
+     [
+      3,
+      -0.01,
+      "out"
+     ],
+     [
+      6,
+      0.0
+     ]
+    ]
+   }
+  }
+ ]
+}

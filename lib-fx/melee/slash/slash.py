@@ -61,6 +61,12 @@ EFFECTS["ring"] = _plane_effect("ring", "Quét vòng quanh người", "a WEAPON 
     "set k, u0, u1 and r with --swing when the real path differs",
     dict(k=0.3, roll=0.0, u0=180, u1=-180, blade=0.8, ease=1.0, w_near=150, run=1, tail=0.55, full=1, glow=2.0), ["horizontal", "full-turn"], 3.4, sparks=((150, 215), (160, 200)), release=0.3, attack=0.85, extent=340, reach=270)
 EFFECTS["ring"].layers = [_L.but(life=Life(0.8, 0.033, 0.033, 0.7 if _L.id == "scraps" else 0.1)) if _L.id in ("scraps", "streaks") else _L for _L in EFFECTS["ring"].layers]   # the sparks belong to the END of the long path (the head arrives about 0.8 s after the start)
+EFFECTS["ring_fast"] = _plane_effect("ring_fast", "Quét vòng nhanh", "the same full-turn level sweep as `ring` but FAST (a decisive strike): the head runs the front half in about two frames "
+    "(born one frame before the hit, at the hit it is at the target) and the back half one frame later, then the stroke is pulled in from the tail; made for a body that cuts "
+    "from a loaded pose to a hit pose (pose to pose); use it with the body centre as --from and the target side as --to, set k, roll, u0, u1 and r with --swing",
+    dict(k=0.28, roll=-8.0, u0=180, u1=-180, blade=0.8, ease=1.0, w_near=75, run=1, tail=0.6, full=1, glow=2.2), ["horizontal", "full-turn", "fast"], 3.4,
+    sparks=((150, 215), (160, 200)), release=0.55, attack=2 / 15, extent=220, reach=90)
+EFFECTS["ring_fast"].layers = [_L.but(life=Life(0.1, 0.033, 0.033, 0.5 if _L.id == "scraps" else 0.1)) if _L.id in ("scraps", "streaks") else _L for _L in EFFECTS["ring_fast"].layers]
 EFFECTS["diag_down"] = _plane_effect("diag_down", "Chém xéo xuống", "a SWORD slash on a slanted plane, from high behind the shoulder to low in front, seen from the "
     "game's camera: a half-flattened ellipse turned 35 degrees; use it with the shoulder as --from",
     dict(k=0.6, roll=35.0, u0=205, u1=400, blade=0.8, ease=1.3), ["diagonal"], 2.4)

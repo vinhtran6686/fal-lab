@@ -1,0 +1,63 @@
+{
+ "id": "moon_crane",
+ "note": "Spin attack k4: hit, spear out on the right; the spearhead was cut by the clip frame and smeared, so it is the spearhead of k5 mirrored (the still is padded to 1010 px wide); one picture, no cut-out.",
+ "sources": {
+  "pose": "../design/pose_spin_k4_v01.png"
+ },
+ "ground": [
+  396,
+  645
+ ],
+ "unit": 495.0,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    396,
+    645
+   ]
+  },
+  {
+   "name": "body",
+   "parent": "root",
+   "pivot": [
+    396,
+    645
+   ]
+  }
+ ],
+ "sockets": {
+  "weapon_tip": {
+   "bone": "body",
+   "pt": [
+    787,
+    418
+   ]
+  },
+  "weapon_root": {
+   "bone": "body",
+   "pt": [
+    674,
+    435
+   ]
+  },
+  "pivot": {
+   "bone": "body",
+   "pt": [
+    385,
+    430
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "whole",
+   "source": "pose",
+   "bone": "body",
+   "select": {
+    "rest": true
+   }
+  }
+ ]
+}

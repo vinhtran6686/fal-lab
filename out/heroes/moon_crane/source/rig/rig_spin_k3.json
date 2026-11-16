@@ -1,0 +1,63 @@
+{
+ "id": "moon_crane",
+ "note": "Spin attack k3: release, the spear across the front; one picture, no cut-out.",
+ "sources": {
+  "pose": "../design/pose_spin_k3_v01.png"
+ },
+ "ground": [
+  390,
+  635
+ ],
+ "unit": 495.0,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    390,
+    635
+   ]
+  },
+  {
+   "name": "body",
+   "parent": "root",
+   "pivot": [
+    390,
+    635
+   ]
+  }
+ ],
+ "sockets": {
+  "weapon_tip": {
+   "bone": "body",
+   "pt": [
+    364,
+    676
+   ]
+  },
+  "weapon_root": {
+   "bone": "body",
+   "pt": [
+    405,
+    560
+   ]
+  },
+  "pivot": {
+   "bone": "body",
+   "pt": [
+    385,
+    560
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "whole",
+   "source": "pose",
+   "bone": "body",
+   "select": {
+    "rest": true
+   }
+  }
+ ]
+}

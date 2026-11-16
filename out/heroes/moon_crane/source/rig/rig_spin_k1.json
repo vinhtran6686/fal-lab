@@ -1,0 +1,63 @@
+{
+ "id": "moon_crane",
+ "note": "Spin attack k1: coil, spear behind the head; one picture, no cut-out.",
+ "sources": {
+  "pose": "../design/pose_spin_k1_v01.png"
+ },
+ "ground": [
+  386.5,
+  635
+ ],
+ "unit": 495.0,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    386.5,
+    635
+   ]
+  },
+  {
+   "name": "body",
+   "parent": "root",
+   "pivot": [
+    386.5,
+    635
+   ]
+  }
+ ],
+ "sockets": {
+  "weapon_tip": {
+   "bone": "body",
+   "pt": [
+    621,
+    126
+   ]
+  },
+  "weapon_root": {
+   "bone": "body",
+   "pt": [
+    522,
+    200
+   ]
+  },
+  "pivot": {
+   "bone": "body",
+   "pt": [
+    385,
+    330
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "whole",
+   "source": "pose",
+   "bone": "body",
+   "select": {
+    "rest": true
+   }
+  }
+ ]
+}

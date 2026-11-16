@@ -1,0 +1,63 @@
+{
+ "id": "moon_crane",
+ "note": "Spin attack k5: follow-through, back to the viewer, spear out on the left; one picture, no cut-out.",
+ "sources": {
+  "pose": "../design/pose_spin_k5_v01.png"
+ },
+ "ground": [
+  412.5,
+  637
+ ],
+ "unit": 495.0,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    412.5,
+    637
+   ]
+  },
+  {
+   "name": "body",
+   "parent": "root",
+   "pivot": [
+    412.5,
+    637
+   ]
+  }
+ ],
+ "sockets": {
+  "weapon_tip": {
+   "bone": "body",
+   "pt": [
+    84,
+    425
+   ]
+  },
+  "weapon_root": {
+   "bone": "body",
+   "pt": [
+    197,
+    438
+   ]
+  },
+  "pivot": {
+   "bone": "body",
+   "pt": [
+    400,
+    430
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "whole",
+   "source": "pose",
+   "bone": "body",
+   "select": {
+    "rest": true
+   }
+  }
+ ]
+}
