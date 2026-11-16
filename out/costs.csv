@@ -333,3 +333,5 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-16 18:22:40,out/heroes/moon_crane/source/design/pose_sweep_guard_v01.png,gpt-image-2,low,1024x1024,False,21.3,0.0189,True
 2026-11-16 18:22:40,out/heroes/moon_crane/source/design/pose_sweep_hit_v01.png,gpt-image-2,low,1024x1024,False,21.1,0.0189,True
 2026-11-16 18:22:40,out/heroes/moon_crane/source/design/pose_sweep_follow_v01.png,gpt-image-2,low,1024x1024,False,21.3,0.0188,True
+2026-11-16 18:38:39,out/heroes/moon_crane/source/design/pose_sweep_guard_v02.png,gpt-image-2,low,1024x1024,False,19.5,0.0192,True
+2026-11-16 18:38:39,out/heroes/moon_crane/source/design/pose_sweep_follow_v02.png,gpt-image-2,low,1024x1024,False,20.4,0.0191,True
