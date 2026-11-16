@@ -29,7 +29,7 @@ buộc người viết ghi đủ những gì mô hình không tự suy ra đư�
    lưng (nhìn ngoái qua vai).
 6. **Xoay đến từ thân, đúng thứ tự thật:** hông trước, rồi vai, rồi tay và vũ khí. Chân chỉ xoay trên mũi chân tại chỗ, không trượt,
    và cả người không quay như con quay. Gồng thì hông và vai xoắn **ra xa** mục tiêu, nhả thì xoắn **về phía** mục tiêu.
-7. **Không ghi giây.** Chỉ liệt kê các bước theo thứ tự, mô hình tự dàn nhịp. Độ dài động tác chọn bằng độ dài clip.
+7. **Không ghi giây, nối các bước bằng "then".** Mỗi bước một câu, nối bằng "then" ("he coils ... then he strikes ... then he turns ..."), mô hình tự dàn nhịp. Một khung giây cho mỗi bước làm mô hình vội để lấp đầy khung đó. Độ dài động tác chọn bằng độ dài clip.
 8. **Kết thúc ở bước cuối và giữ nguyên.** Không về thế gốc, vì game tự reset nhân vật.
 9. **Một động tác thì không có điểm dừng; hai động tác giống nhau mà ngược hướng thì cần một nhịp dừng nhìn thấy được giữa chúng.**
 10. **Khi người dùng góp ý, viết lại toàn bộ mô tả từ đầu**, không vá. Sau một kết quả hỏng, nêu câu nào của prompt gây lỗi
@@ -38,7 +38,7 @@ buộc người viết ghi đủ những gì mô hình không tự suy ra đư�
     phóng đại lớn, ghi hướng thân, mắt và vũ khí từng khung, rồi kiểm tra đường đi của vũ khí từng khung (phía gần, phía xa, bị che).
     Gif hoặc webp gửi qua chat chỉ tới AI **một khung**: phải có file trong `ref/`; thiếu thì dừng, không đoán.
 
-## Mẫu bảng mô tả (điền trước khi viết prompt)
+## Mẫu bảng mô tả (điền trước khi viết prompt; không ô nào được để trống, ô trống là lỗi vì mô hình lấp bằng hướng mặc định của master)
 
 | Bước | Thân và hướng so với camera | Mắt | Chân | Tay | Vũ khí (hướng trên màn hình, độ cao, đi phía gần hay xa) |
 |---|---|---|---|---|---|
@@ -52,11 +52,12 @@ Mở đầu mô tả luôn có câu hệ quy chiếu (quy tắc 1) và câu mụ
 
 ## Quy tắc khi tạo clip
 
-- Khung đầu và khung cuối **cùng kích thước thân và cùng đường chân**; nếu không, nhân vật to rồi nhỏ trong clip.
+- Khung đầu và khung cuối **cùng kích thước thân và cùng đường chân**; nếu không, nhân vật to rồi nhỏ trong clip. **Căn ảnh ghim theo cỡ thân (đo đầu từ búi tóc tới cằm hoặc một nắm đấm), không theo chiều dài vũ khí.**
+  Ảnh mà vũ khí dài hơn thân (bước đâm thương nằm ngang) cần canvas rộng hơn 768x768; căn theo thương làm thân nhỏ đi 40% và mô hình giữ khung đầu rồi nhảy cắt sang khung cuối.
 - Chỉ ghim khung cuối khi có ảnh đã duyệt cho tư thế cuối.
 - Một vòng xoay trọn thân cần khoảng 5 giây; mỗi vòng thử 2 clip; báo giá trước (0,015 USD mỗi giây ở 768P).
-- Mỗi prompt có: khoá nhận dạng nhân vật, vũ khí cứng giữ nguyên hình, camera cố định, chân không trượt và thân giữ một kích thước,
-  cấm mọi hiệu ứng và cung, vệt, bóng mờ, quầng sáng, nhòe, nền magenta phẳng.
+- Mỗi prompt có: khoá nhận dạng nhân vật, vũ khí cứng giữ nguyên hình, camera cố định, chân không trượt và thân giữ một kích thước, nền magenta phẳng, và **danh sách cấm cụ thể** (clause `no-effects-list`
+  trong `motion-prompts.md`): không vệt chém, cung, trăng khuyết, đường gió, đường tốc độ, quầng sáng, bụi, tia lửa, bóng mờ, ảnh tàn, loé sáng, nhòe chuyển động, viền trắng hồng xanh quanh vũ khí. Chỉ ghi "no effects" thì mô hình vẫn vẽ cung và vệt.
 
 ## Mô hình hay làm sai và cách xử lý
 

@@ -85,14 +85,16 @@ when you enrich a user's description, in `--creative` and `--example`, never to 
 ## Writing a move from a reference animation (hand-written clip; added 2026-11-15)
 The description follows `.claude/skills/fal-image/action-planes.md` section 9 (frame of reference, orientation per beat, weapon path as
 geometry, one continuous move, a target for every strike, rotation from the hips, no seconds, hold the end). What is specific to the clip:
-1. **Start frame and end frame have the same body size and the same ground line.** A start still drawn at another fill makes the
-   body shrink or grow during the clip. Rescale the start still to the end still (or to the tier) before sending.
+1. **Start frame and end frame have the same BODY size and the same ground line; size a pinned still by the body, never by the weapon.** A start still drawn at another fill
+   makes the body shrink or grow during the clip. Measure the body on a part that has the same size in every view (the head from the topknot to the chin, or a fist), scale every pinned still
+   so that part matches, and put the boots on the same ground line. A still whose weapon is longer relative to the body (a lunge with a level spear) needs a wider canvas than 768x768, or a
+   smaller weapon in the prompt of that still: scaling it by the weapon length shrank the body by 40% and the model then held the first frame and jump-cut to the last one.
 2. **Pin the last frame only to an approved still.** Without a pinned end the move ends where the description says; with one it must
    end exactly there and the model may rush the move to arrive.
 3. **Length**: a full turn of the body needs about 5 s (768P, h3-max-turbo, 0.015 USD per second); two takes per round, cost shown first.
 4. **Every prompt carries**: identity lock of the character, "the weapon keeps the same rigid shape and length", the fixed camera,
-   the boots stay planted and the body keeps one size in the frame, no effect of any kind and no arcs, crescents, streaks, ghost copies,
-   after-images, flashes or motion blur, and the flat magenta background.
+   the boots stay planted and the body keeps one size in the frame, the flat magenta background, and the **explicit ban list**, clause `no-effects-list` of the clause library
+   (a plain "no effects" was not enough: the model still painted arcs and streaks until each kind was named).
 5. **What the model ignores or does badly, and what to do about it** (not by repeating the prompt):
    - It still paints white or pink arcs and blur on fast frames even when forbidden. Fix in the key: a tighter alpha ramp on
      min(R,B) - G (0 at 8, 1 at 53) removes them without touching the character; no frame is cut.
@@ -381,6 +383,7 @@ in-place | The character stays in the same spot and never travels across the fra
 fluid-motion | One continuous, fluid motion at natural speed: no pauses, no frozen poses, no hovering, no slow motion.
 steady-cycle | A steady, evenly timed cycle: every step looks the same, the legs clearly alternate and the pose at the end of each cycle matches its start.
 no-blur | No motion-blur smears, no afterimages, no colour fringing on the weapon.
+no-effects-list | No effects of any kind: no slash trails, no arcs, no crescents, no swooshes, no streaks, no speed lines, no glow, no dust, no sparks, no ghost copies, no after-images, no flashes, no motion blur, no white, pink or green fringes around the weapon. The weapon and the character stay sharp, flat and fully outlined in every frame, even when moving fast.
 ```
 
 ## Gate to fix map

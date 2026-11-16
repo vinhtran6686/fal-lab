@@ -197,8 +197,8 @@ lacked a direction, or contradicted itself. Write the description as a table, on
 6. **Rotation comes from the body, in the order of a real turn:** hips first, then shoulders, then arms and weapon. The feet pivot on
    their toes where they stand and never slide, and the character never spins as a whole like a top. A wind-up (coil) turns the
    hips and shoulders AWAY from the target, then the release turns them toward it.
-7. **No seconds in the description.** Give the beats in order; the model sets the tempo. The length of the move is chosen by the clip
-   duration. State which beat must be the fastest only when it matters.
+7. **No seconds in the description; chain the beats with "then".** Give the beats in order, one sentence each, joined by "then" ("he coils ... then he strikes ... then he turns ..."); the model sets the tempo.
+   A time slot per beat makes the model rush to fill it. The length of the move is chosen by the clip duration. State which beat must be the fastest only when it matters.
 8. **End on the last beat and hold it.** No return to the rest pose: the game resets the character after the animation.
 9. **Two actions that look alike but go opposite ways need a visible beat between them; one action does not.** When a move is a
    single continuous sweep, write it in one sentence chain with no pause.
@@ -209,3 +209,13 @@ lacked a direction, or contradicted itself. Write the description as a table, on
     with the user, read the key frames at high zoom, note orientation, head and weapon per frame, and check the path of the weapon
     frame by frame (near side, far side, hidden). If only one frame reaches you (a gif or webp sent in chat arrives as one still),
     stop and ask for the file in `ref/`; do not invent the rest.
+
+### Fill-in table (write it before the prompt; one row per beat, nothing left empty)
+Header sentences of the prompt: the frame of reference (camera fixed in front and a little above, forward = the target = screen right, left and right are the screen's) and the target
+(side, height, distance). Then one row per move:
+
+| Beat | Body orientation seen from the camera (a named view, section 4b) | Eyes look at | Feet | Hands (which holds what) | Weapon: direction on the screen, height, near side or far side, hidden or not |
+|---|---|---|---|---|---|
+| 1 | | | | | |
+
+Turn the table into the prompt: one sentence per row, joined by "then". An empty cell is a defect: the model fills it with the master's default (usually the body facing the camera).
