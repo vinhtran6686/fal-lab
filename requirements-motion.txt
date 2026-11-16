@@ -1,0 +1,5 @@
+# scripts/motion_proxy/ (pip install -r requirements-motion.txt), on top of requirements.txt
+matplotlib>=3.8   # build.py: curves.png
+# fbx_motion.py / render_source.py only: Blender as a Python module (~400 MB). Wheels exist only for the
+# Python version each Blender release targets (bpy 5.x: cp313); install it where that matches.
+bpy>=4.2

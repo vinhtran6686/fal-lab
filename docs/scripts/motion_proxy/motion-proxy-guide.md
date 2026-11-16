@@ -68,7 +68,10 @@ python scripts/motion_proxy/text2motion.py --asset out/heroes/<id> --name <skill
 python scripts/motion_proxy/fbx_motion.py <asset>/.work/motion_proxy/t2m/<skill>/seed1/<file>.fbx
 python scripts/motion_proxy/retarget.py <.../seed1/motion.json> --base <asset>/source/rig/proxy_<x>.json --out <.../seed1/proxy.json>
 python scripts/motion_proxy/build.py <.../seed1/proxy.json> --out <.../seed1/proxy>
+python scripts/motion_proxy/render_source.py <.../seed1/proxy.json> <file.fbx> <.../seed1/proxy>   # so 3D nguồn với proxy
 ```
+
+Cài thêm: `pip install -r requirements-motion.txt` (matplotlib; `bpy` = Blender dạng module, khoảng 400 MB, chỉ có bản cho đúng phiên bản Python mà bản Blender đó nhắm tới, ví dụ bpy 5.x cho Python 3.13). Dựng hình 3D trên Linux không màn hình cần EGL (`libegl1`, `libegl-mesa0`).
 
 | Bước | Làm gì | Ghi chú |
 |---|---|---|
@@ -76,8 +79,11 @@ python scripts/motion_proxy/build.py <.../seed1/proxy.json> --out <.../seed1/pro
 | `fbx_motion.py` | đọc FBX bằng Blender dạng module (`pip install bpy`), xuất toạ độ khớp từng khung (y lên) | 24 khớp: thân, tay, chân, đốt giữa ngón tay làm tâm bàn tay |
 | `retarget.py` | chuyển **góc và nhịp** sang thân trong `--base`: góc hông, vai; độ cao và dịch hông theo tỉ lệ chân; trục vũ khí từ đường nối hai bàn tay; vết chân (đoạn chạm đất được khoá); khung trúng = đỉnh tốc độ bàn tay; cắt quanh cú đánh; xoay để thân lúc đầu đoạn nhìn về `--face` | trễ pha lấy nguyên từ nguồn (`lag = 0`); `checks` chọn tiêu chí hợp với động tác (bỏ cú đâm, nửa xa) |
 | `build.py` | như phần trên: hình, tiêu chí, `frames.json`, `weapon_track.json`, `clean/fNN.png` | |
+| `render_source.py` | dựng FBX nguồn ở góc camera game, xoay và cắt đúng như retarget (đọc `retarget` trong proxy.json), ghép cạnh proxy: `compare_3d.gif`, `compare_3d_slow.gif`, `compare_3d_key.png` | in sai lệch góc hông 3D so với proxy để kiểm tra phép xoay |
 
-Giới hạn đã thấy: nguồn là người tay không, nên trục vũ khí suy từ hai bàn tay chỉ là ước lượng; mô hình ít khi có pha lấy đà rõ và dồn trọng tâm như cần cho đòn game. Tiêu chí đo cho thấy ngay chỗ thiếu, để chọn seed hoặc sửa kênh bằng tay sau khi retarget.
+`retarget.py` đặt `chain.clip_twist = false`: chuyển động lấy từ nguồn không bị bộ chặn xoắn sửa, tiêu chí xoắn chỉ đo. `--trim auto` cắt quanh cú đánh (10 khung trước lúc nhả, `--after` khung sau khung trúng); `--trim none` giữ nguyên clip để xem mô hình có theo đủ prompt không.
+
+Giới hạn đã thấy: nguồn là người tay không, nên trục vũ khí suy từ hai bàn tay chỉ là ước lượng; mô hình ít khi có pha lấy đà rõ và dồn trọng tâm như cần cho đòn game. Tiêu chí đo cho thấy ngay chỗ thiếu, để chọn seed hoặc sửa kênh bằng tay sau khi retarget. Chiều của trục vũ khí (mũi về phía nào) có thể bị lật khi hai tay đổi chỗ: một khung trúng lệch mục tiêu gần 180° là dấu hiệu của lỗi này, không phải của đòn đánh sai hướng.
 
 ## Tiêu chí: "đo" và "cấu trúc"
 

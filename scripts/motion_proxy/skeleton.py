@@ -163,7 +163,8 @@ class Proxy:
         b, w, c, ch = self.b, self.w, self.c, self.ch
         P = ch["pelvis_yaw"](t)
         C_raw = ch["pelvis_yaw"](t - c["lag_chest"]) + ch["chest_off"](t)
-        twist = float(np.clip(C_raw - P, -c["max_twist"], c["max_twist"]))
+        # chặn xoắn cho chuyển động đặt tay; chuyển động lấy từ nguồn (clip_twist=false) giữ nguyên, chỉ đo
+        twist = float(np.clip(C_raw - P, -c["max_twist"], c["max_twist"])) if c.get("clip_twist", True) else C_raw - P
         C = P + twist
         S = ch["pelvis_yaw"](t - c["lag_weapon"]) + ch["weapon_off"](t)
         pitch = ch["weapon_pitch"](t)

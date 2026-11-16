@@ -192,7 +192,7 @@ def main():
     p["name"] = a.name or f"{base.get('name', '').split('/')[0].strip()} / text2motion"
     p["note"] = (f"Retarget từ {m.get('source', '')} ({n} khung @ {fps_src} fps), cắt τ {t0:.1f}–{t1:.1f}, "
                  f"xoay {math.degrees(th):+.0f}°, tỉ lệ chân {s:.3f}.")
-    p["chain"] = dict(base["chain"], lag_chest=0.0, lag_weapon=0.0, foot_lag=0.0)
+    p["chain"] = dict(base["chain"], lag_chest=0.0, lag_weapon=0.0, foot_lag=0.0, clip_twist=False)
     p["channels"] = {
         "pelvis_yaw": ch(pel, 2),
         "chest_off": ch(chest - pel, 2),
@@ -215,6 +215,8 @@ def main():
         "lunge_heel": {"start": 0, "rise": 1, "end": 0, "fall": 1, "lift": 0.0},
         "slash_windows": [[max(0.0, T_rel), T_hit + 1.5]],
     }
+    p["retarget"] = {"source": m.get("source", ""), "t0": t0, "t1": t1, "rotate_deg": round(math.degrees(th), 3),
+                     "frame_offset": m.get("frame_range", [1, 1])[0], "src_per_frame": step, "leg_scale": round(s, 4)}
     p["checks"] = ["twist", "cross", "reach", "shift", "support", "weight", "antic", "sweep_hit"]
     p.pop("reference", None)
     with open(a.out, "w", encoding="utf-8") as fh:
