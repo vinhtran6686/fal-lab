@@ -47,3 +47,15 @@ Seeds 2 and 3 (0.12 USD) with the same prompt, same pipeline: seed 1 4/8, seed 2
 
 ## 2026-11-16 — hybrid on HY-Motion seed 1 (0 USD)
 Body (hip and shoulder turn, hip height, timing, foot pivot) from seed 1; hand-set layers on top: spear yaw/pitch and hand height (the source is unarmed), +30° hip wind-up before the release, a staggered stance with a front-foot step that lands before the push, the back foot dragged one step in the follow-through, a recovery step, root shifts for the weight transfer, -10° shoulder twist in the guard. Measured 8/8 (seed 1 alone: 4/8): weight 38% → 62% on the front foot, wind-up away from the target, sweep hit 0° off, twist 49°, limbs in reach, hands on the authored grip, capture point inside support, crossed legs only behind the skirt. Open: after the hit the source body keeps turning to ~155° (back to the viewer), so the spear ends hidden behind the back. Layer file in `.work/motion_proxy/t2m/spear_guard_sweep/seed1/hybrid.json`. Not approved.
+
+## 2026-11-16 — pose stills from the motion proxy (route A, 4 images, 0.0756 USD)
+gpt-image-2 low, two references each: `master_v08.png` (design) and the proxy block frame of the hybrid (`.work/pose_refs/ref_*.png`, pose only). Prompts `source/design/prompts/pose_sweep_<k>_p01.txt`: the body paragraph copied verbatim from `pose_horse_stance_v01`, the pose written with the orientation names and visible / NOT visible lists (`action-planes.md` §4b, §9), lint clean (`--kind pose`). Keyframe 10 replaces 09 (at 09 the spear points straight at the camera and does not read).
+
+| still | v | score | verdict | notes |
+|---|---|---|---|---|
+| pose_sweep_guard | v01 | 9 | pending | open chest, head looks right, staggered stance, haft diagonal butt upper-left to spearhead lower-right, both fists on the haft |
+| pose_sweep_windup | v01 | 8.5 | pending | chest open, spearhead drawn back upper-left at shoulder height, butt lower-right at the hip; figure drawn larger (77 % of the frame height vs 64 %) |
+| pose_sweep_hit | v01 | 8 | pending | lunge, spear perfectly level to the right; the chest is more open than the asked 30° side view; spearhead 3 px from the right edge (intact) |
+| pose_sweep_follow | v01 | 8.5 | pending | viewed from behind, wing on the left, emblem hidden, head in profile to the right, spear upright behind with the head above the shoulder |
+
+Design kept in all four (face, topknot, crane wing, crane emblem, crescent guard, tassel). Sizes differ between stills; normalise when compositing (known limit, `action-planes.md` §4b).

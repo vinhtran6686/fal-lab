@@ -41,9 +41,29 @@ Người dùng chọn A, sau đó đổi vũ khí rìu -> cây thương (nhìn h
 | pose_horse_stance | fal-image (ảnh mẫu 1 khung) | ảnh tĩnh | ✅ 2026-11-15 | `source/design/pose_horse_stance_v01.png`: tấn thấp, thương vắt ngang vai, tư thế chép từ một khung của user; cắt và thu lại để lề 10%; thân vẫn gần chính diện |
 | skill_spin_back (nguồn video) | video-sprite (h3-max-turbo, 5 s) | video thô | ✅ chốt 2026-11-15 | `source/video/skill_spin_back_v5_t01.mp4`: một cú quét ngang hông liên tục (thương nằm ngang), thân xoay từ hông, quay lưng về người xem, mắt luôn nhìn mục tiêu bên phải, giữ thế cuối; prompt `prompts/skill_spin_back_v5.txt`; vệt thừa của mô hình bị loại ở bước tách nền (key chặt), xem history; chưa xuất frames, chưa ghép fx |
 | skill_spin_thrust (proxy chuyển động) | motion_proxy | thông số + khối 3D | ⏳ chờ duyệt | `source/rig/proxy_spin_thrust.json`: quét 360 ngang eo rồi đâm, 27 khung @15 fps, tỉ lệ đo từ master_v08, nhịp ghép theo pha với `ref/king` nhân vật 1; 10/10 tiêu chí đo (chân chéo khi xoay được vạt áo che, theo lựa chọn của user); dựng lại `python scripts/motion_proxy/build.py out/heroes/moon_crane/source/rig/proxy_spin_thrust.json` (kết quả trong `.work/`); bước sau: khung khoá bằng gpt-image-2 từ `blocks/` |
+| pose_sweep_guard / windup / hit / follow | fal-image (khung khoá từ motion proxy) | ảnh tĩnh | ⏳ v01 chờ duyệt | 4 khung khoá của skill quét thương (bản lai HY-Motion seed1), master + khung khối proxy làm tham chiếu; 0,0756 USD; xem history 2026-11-16 |
 | pose_skill_* | fal-image | ảnh tĩnh | ⏭ | chưa chọn kỹ năng |
 | run_side, attack_side, death_side, pose_respawn, respawn_side, levelup_side, package | - | - | ⏭ | ngoài phạm vi thử phong cách |
 
 ## Video thử chém ngang (2026-11-15)
 - Ba pose ảnh tĩnh sinh bằng prompt không đạt (cứng, đối xứng); thay bằng các khung của video v01. Pose A, B, C lấy từ take a ở 1,5 s / 2,8 s / 4,3 s.
 - Ghim khung đầu và cuối A và B trong một clip khiến mô hình vung thương qua đầu (thử hai lần). Cách dùng được: take không ghim cộng clip B->C ghim, bỏ các khung nhoè.
+
+## Pose stills từ motion proxy (2026-11-16): design note (preflight)
+1. Yêu cầu: user duyệt chuyển động lai (HY-Motion seed1 + lớp đặt tay), muốn "apply đúng nhân vật master" → hướng A: 4 khung khoá vẽ bằng gpt-image-2 low, sau đó rig cắt lớp cho khung giữa. Hero M, melee, nam, thương.
+2. Preset chunky, thân brawny; đoạn mô tả thân và thương chép nguyên văn từ prompt `pose_horse_stance_v01` (đã giữ đúng thiết kế), không viết lại.
+3. Tỉ lệ: như master (≈3 đầu, nắm đấm to bằng mặt, chân ngắn); không đổi.
+4. Thương: dài hơn người ~13 %, mũi lá nằm trên trục cán, chắn trăng khuyết hai sừng ngang cán; hai tay cùng nắm.
+5. Khung: hình chiếm 42 % chiều cao ảnh (như pose trước), mũi và đuôi thương cách mép ≥ 8 %.
+6. Đặc trưng: cánh hạc ngà trên vai trái nhân vật, mũi thương bạc to.
+7. Màu: bảng hex của master (không đổi).
+8. Mặt: như master.
+9. Tư thế: lấy từ `frames.json` của bản lai, ảnh mẫu = khung khối proxy (`.work/pose_refs/ref_*.png`); hướng thân theo `action-planes.md` §4b, mô tả theo §9 (trái/phải của ảnh, mục tiêu bên phải ở ngang eo):
+   | Khung | Pha | Hướng thân | Đầu | Chân | Thương |
+   |---|---|---|---|---|---|
+   | 00 | thủ thế | OPEN TO THE VIEWER, hông quay phải | nghiêng nhìn phải | so le, sau trái, trước phải | chéo trước thân, mũi phải ngang hông |
+   | 10 | gồng (thay 09: ở 09 thương chĩa thẳng vào camera, không đọc được) | OPEN TO THE VIEWER, ngực quay trái | ngoái nhìn phải | so le, trọng tâm chân sau | kéo về trái ngang vai, đuôi phải ngang hông |
+   | 13 | trúng | side view facing RIGHT 30° | nghiêng nhìn phải | lunge, chân trước phải | thẳng ngang eo, mũi ở mục tiêu |
+   | 16 | theo đà | VIEWED FROM BEHIND (back 3/4) | ngoái nhìn phải | hai chân sát dưới hông | sau thân, mũi trên vai phải |
+10. Lint: `prompt_lint.py --kind pose --body brawny` sạch cả 4 (đã bỏ "slightly", thêm câu lề mũi thương).
+11. Chi phí: 4 ảnh low có 2 ảnh tham chiếu ≈ 0,08 USD (user duyệt).
