@@ -61,3 +61,16 @@ gpt-image-2 low, two references each: `master_v08.png` (design) and the proxy bl
 Design kept in all four (face, topknot, crane wing, crane emblem, crescent guard, tassel). Sizes differ between stills; normalise when compositing (known limit, `action-planes.md` §4b).
 User approved the four pose stills (2026-11-16). Compose (0 USD, `scripts/motion_proxy/compose.py`, spec `.work/motion_proxy/t2m/spear_guard_sweep/seed1/compose.json`): 23 frames at 15 fps on the hybrid's timing, guard 0-7, wind-up 8-12, hit 13-14 (hitstop), follow-through 15-22; each still placed on the proxy's ground line and head height, sheared and scaled from the feet during its hold, the slash ribbon from the proxy's tip path (far half behind the still, near half in front). Fixes during the take: swap to the hit still at 13, not 12 (at 12 the spear is still crossing the front); a shear anchor bug pushed every still 250 px right. Not approved yet.
 Rebuild files moved to git (2026-11-16): `source/rig/proxy_spear_sweep_hy.json` (HY-Motion seed 1 retargeted onto moon_crane, self-contained, no FBX needed), `source/rig/hybrid_spear_sweep.json` (layers), `source/rig/compose_spear_sweep.json` (stills and timing). Rebuilt from them into `.work/motion_proxy/spear_sweep/`: identical to the first take, pixel for pixel. Known flaws of this pose-swap v1: frame 12 shows the wind-up still while the slash ribbon already leads across the front (reads as a smear frame, the spear itself is not drawn there); guard 0-7 and follow-through 15-22 are near-static holds; the guard → wind-up swap at frame 8 is a cut with no slash over it; the grey far half of the slash at frame 15 is lost at 60 px.
+
+## 2026-11-16 — spear sweep v2: A and D redrawn for continuity (2 images, 0.0383 USD)
+User review of v1: B (wind-up) and C (hit) right; A (guard) and D (follow-through) wrong: A's spear far from B's, D's end far from C's, so the swaps jerk.
+Diagnosis (preflight rule 2): not the prompts but the proxy motion I set. A: spear pointing down-right at the target, about 100° of spear turn away from B (the user's original prompt asked for the spear held UPRIGHT). D: after the hit the body still followed HY-Motion to ~155° (back to the viewer) and the back foot stepped, while C is at 92°.
+Fix in `source/rig/hybrid_spear_sweep.json`: guard spear upright, tilting left into the wind-up; after the hit the hips and shoulders replace the source (+20° of carry only), the lunge root, height and both feet are held, the spear keeps sweeping past the target to the upper right and holds (`action-planes.md` §9 rule 8). Proxy 8/8.
+New stills with a THIRD reference, the approved neighbour still (A with B, D with C), and "keep his body size, stance and boots exactly as in the third image" (`pose_sweep_<k>_p02.txt`, lint clean).
+
+| still | v | score | verdict | notes |
+|---|---|---|---|---|
+| pose_sweep_guard | v02 | 9 | pending | same stance and size as B, spear upright beside the face on the left (not covering it), spearhead above the head |
+| pose_sweep_follow | v02 | 9 | pending | same lunge as C, spear raised to the upper right; chest more open than the asked pure profile, matching C |
+
+Compose spec now uses guard v02 and follow v02 (proxy frame 18 for D).

@@ -2,7 +2,7 @@
  "build": "out/heroes/moon_crane/.work/motion_proxy/spear_sweep/hybrid",
  "keys": [
   {
-   "still": "out/heroes/moon_crane/source/design/pose_sweep_guard_v01.png",
+   "still": "out/heroes/moon_crane/source/design/pose_sweep_guard_v02.png",
    "proxy_frame": 0,
    "frames": [
     0,
@@ -26,8 +26,8 @@
    ]
   },
   {
-   "still": "out/heroes/moon_crane/source/design/pose_sweep_follow_v01.png",
-   "proxy_frame": 16,
+   "still": "out/heroes/moon_crane/source/design/pose_sweep_follow_v02.png",
+   "proxy_frame": 18,
    "frames": [
     15,
     22
