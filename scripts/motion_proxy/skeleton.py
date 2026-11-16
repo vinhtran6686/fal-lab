@@ -221,6 +221,7 @@ class Proxy:
                  butt=butt, tip=tip, blade_root=tip - sd * w["blade_len"])
         info = dict(yaw_pelvis=P, yaw_chest=C, yaw_weapon=S, yaw_head=H, weapon_pitch=pitch,
                     twist=twist, twist_raw=C_raw - P, weapon_shift=float(np.linalg.norm(shift)),
+                    spin_rate=(ch["pelvis_yaw"](t + 0.1) - ch["pelvis_yaw"](t - 0.1)) / 0.2,
                     reach_over=dict(armR=overR, armL=overL, legR=oLR, legL=oLL),
                     foot_swing=swingL, swing_land=landL, heel_lift=dict(R=hlR, L=hlL))
         return J, info

@@ -27,7 +27,8 @@ Kết quả ghi vào `out/heroes/<id>/.work/motion_proxy/proxy_<skill>/` (git b�
 
 | File | Dùng để |
 |---|---|
-| `anim.gif`, `anim_slow.gif` | xem ở 15 fps và chậm. Mỗi khung có camera game, góc nhìn từ trên (tia hông/vai/vũ khí), thanh nhịp |
+| `clean.gif`, `clean_slow.gif` | **hình để xem**: nhân vật vẽ kiểu chunky (`paint.py`: chi thuôn hai tông, viền dày, vẽ gấp 3 rồi thu nhỏ), vạt áo xoè theo tốc độ xoay, vệt chém theo quỹ đạo mũi vũ khí (nửa gần trước thân, nửa xa sau thân), nền xám như ref |
+| `anim.gif`, `anim_slow.gif` | **hình đo đạc**: hình đẹp cộng thêm trọng tâm, mũi chân khoá, mốc mục tiêu, góc nhìn từ trên (tia hông/vai/vũ khí), thanh nhịp |
 | `compare.gif` | tham chiếu (`reference`) ghép theo pha, đặt cạnh proxy, để so khung theo khung |
 | `sheet.png` | bảng khung |
 | `metrics.md` | tiêu chí vật lý ĐẠT / KHÔNG ĐẠT (loại 'đo' hoặc 'cấu trúc', xem dưới), cùng bảng từng khung |
@@ -52,7 +53,9 @@ Code không chứa số của nhân vật nào. Mọi thứ nằm trong JSON (v�
   - `root_x`, `root_y`: dồn trọng tâm và độ hạ người.
 - `feet`: mũi chân sau/trước và các bước (`from`, `to`, `dx`, `lift`).
 - `reference`: gif, vùng cắt, bảng `align` `[[τ proxy, khung ref], ...]` ghép theo pha.
-- `palette`, `camera` (tuỳ chọn): màu khối, góc camera.
+- `body.skirt`: vạt áo (`drop` độ dài, `flare_base`, `flare_spin` độ xoè theo tốc độ xoay, `lift_spin`).
+- `timing.slash_windows`: các khoảng τ có vệt chém (chỉ quét và đâm, không vẽ khi gồng).
+- `palette`, `camera` (tuỳ chọn), `target_x`: màu, góc camera, mốc mục tiêu.
 
 Chiều quay: yaw 0 = nhìn camera, 90 = nhìn mục tiêu (phải màn hình), 180 = lưng về camera, 270 = nhìn trái. Tăng yaw là xoay ngược chiều kim đồng hồ nhìn từ trên, cùng chiều cú quét của `ref/king`.
 
@@ -64,7 +67,7 @@ Chiều quay: yaw 0 = nhìn camera, 90 = nhìn mục tiêu (phải màn hình), 
 |---|---|---|
 | Thứ tự nhả gồng, thứ tự đỉnh vận tốc | cấu trúc | Đúng vì vai và vũ khí đọc `pelvis_yaw` trễ pha. Chỉ hỏng khi `chest_off` / `weapon_off` chống lại |
 | Xoắn ngực–hông | đo | Xoắn **thô**, trước khi bị chặn. Hỏng khi bộ chặn phải can thiệp (gây giật) |
-| Chân bắt chéo | đo | Thứ tự hai cổ chân theo trục ngang của hông bị đảo |
+| Chân bắt chéo được che | đo | Khi xoay trên mũi chân, hai chân được phép bắt chéo (như ref/king). Chỉ hỏng nếu chỗ hai chân cắt nhau trên ảnh nằm ngoài vạt áo |
 | Tầm tay, chân | đo | Độ vượt tầm sau khi gót đã kiễng tối đa |
 | Tay với tới đường tay | đo | Độ dời vũ khí của bộ giải tay ≤ `metrics.max_weapon_shift_pct` % chiều cao |
 | Trọng tâm trong vùng đỡ | đo | Hai chân chạm đất: trọng tâm nằm giữa hai mũi chân. Một chân nhấc: điểm bắt (trọng tâm + vận tốc × √(h/g)) nằm giữa chân trụ và điểm chân sắp đặt |
@@ -102,4 +105,5 @@ Chiều quay: yaw 0 = nhìn camera, 90 = nhìn mục tiêu (phải màn hình), 
 
 - Thân là khối cứng: không có áo choàng, tóc hay dải vải lay động. Phần đó để cho rig hoặc fx.
 - Mỗi tay chỉ có một khớp khuỷu. Cổ tay không xoay riêng, vũ khí nắm cứng.
-- Khi quay 360° tại chỗ với hai mũi chân khoá, chân bắt chéo ở các khung quay lưng (tiêu chí 'chân bắt chéo' báo). Có hai cách: chấp nhận rồi che bằng thân hoặc áo khi vẽ (ref/king làm vậy), hoặc thêm bước chân xoay quanh trong `feet.steps`.
+- Khi quay 360° tại chỗ với hai mũi chân khoá, chân bắt chéo ở các khung quay lưng. Cách đã chọn (2026-11-16): giữ chân xoay trên mũi như ref/king, vạt áo xoè theo tốc độ xoay che chỗ chéo; tiêu chí kiểm tra chỗ chéo không lộ. Nhân vật không có vạt áo thì thêm bước chân trong `feet.steps`.
+- `paint.py` là hình khối gần giống master để đánh giá động tác, không phải asset game. Asset thật vẫn đi qua ảnh tĩnh và rig.

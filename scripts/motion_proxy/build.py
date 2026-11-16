@@ -3,7 +3,8 @@
     python scripts/motion_proxy/build.py out/heroes/<id>/source/rig/proxy_<skill>.json [--out DIR]
 
 Mặc định ghi vào <asset>/.work/motion_proxy/<tên file>/ (git bỏ qua):
-  anim.gif, anim_slow.gif   camera game + nhìn từ trên + thanh nhịp
+  clean.gif, clean_slow.gif hình đẹp: nhân vật + vệt chém, nền xám như ref (để xem)
+  anim.gif, anim_slow.gif   hình đo đạc: + trọng tâm, mũi chân, nhìn từ trên, thanh nhịp
   compare.gif               tham chiếu (ghép theo pha, 'reference.align') cạnh proxy
   sheet.png                 bảng khung
   blocks/fNN.png            khung khối màu nền trong (khung mẫu cho mô hình ảnh)
@@ -25,6 +26,7 @@ from matplotlib.path import Path as MplPath
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from skeleton import Proxy, fwd, right, UP  # noqa: E402
+from paint import Painter, render_clean, skirt_points, convex_hull  # noqa: E402
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
@@ -49,7 +51,7 @@ def hexc(h):
 
 # ================================================================== camera
 class Cam:
-    def __init__(self, pitch_deg=15, scale=78, size=(700, 470), origin=(250, 420)):
+    def __init__(self, pitch_deg=15, scale=100, size=(780, 480), origin=(300, 440)):
         self.pitch = math.radians(pitch_deg)
         self.s = scale
         self.size = size
@@ -61,203 +63,6 @@ class Cam:
 
     def depth(self, p):
         return p[2] * math.cos(self.pitch) + p[1] * math.sin(self.pitch)
-
-
-# ================================================================== vẽ nhân vật
-class Painter:
-    def __init__(self, proxy, cam):
-        self.px = proxy
-        self.cam = cam
-        pal = {k: hexc(v) for k, v in proxy.p["palette"].items()}
-        self.pal = pal
-        self.ink = pal["ink"]
-
-    # --- nguyên tố
-    def capsule(self, dr, a, b, w, col, ow=3):
-        for c, ww in ((self.ink, w + 2 * ow), (col, w)):
-            dr.line([tuple(a), tuple(b)], fill=c, width=int(ww))
-            for q in (a, b):
-                r = ww / 2
-                dr.ellipse([q[0] - r, q[1] - r, q[0] + r, q[1] + r], fill=c)
-
-    def disc(self, dr, q, r, col, ow=3):
-        dr.ellipse([q[0] - r - ow, q[1] - r - ow, q[0] + r + ow, q[1] + r + ow], fill=self.ink)
-        dr.ellipse([q[0] - r, q[1] - r, q[0] + r, q[1] + r], fill=col)
-
-    def poly(self, dr, pts, col, ow=4):
-        dr.polygon([tuple(p) for p in pts], fill=col, outline=self.ink, width=ow)
-
-    # --- danh sách phần thân (tên, độ sâu, hàm vẽ)
-    def parts(self, J, inf):
-        P, cam, b, pal = self.px, self.cam, self.px.b, self.pal
-        pr = cam.proj
-        s = cam.s
-        out = []
-
-        def add(name, pts3d, fn, bias=0.0):
-            d = float(np.mean([cam.depth(q) for q in pts3d])) + bias
-            out.append((name, d, fn))
-
-        # chân: đùi (quần da), ống (ủng) + ốp gối vàng
-        for side, shade in (("R", 1.0), ("L", 0.78)):
-            hip, kn, an, he, to = (J["hip" + side], J["knee" + side], J["ankle" + side],
-                                   J["heel" + side], J["toe" + side])
-            pants = tuple(int(c * shade) for c in pal["leather"])
-            boot = tuple(int(c * shade) for c in pal["shaft"])
-            add("thigh" + side, (hip, kn), lambda dr, hip=hip, kn=kn, c=pants:
-                self.capsule(dr, pr(hip), pr(kn), 0.30 * s, c))
-            add("shin" + side, (kn, an), lambda dr, kn=kn, an=an, c=boot:
-                self.capsule(dr, pr(kn), pr(an), 0.26 * s, c))
-            add("foot" + side, (he, to), lambda dr, he=he, to=to, c=boot:
-                self.capsule(dr, pr(he), pr(to), 0.20 * s, c))
-            add("knee" + side, (kn,), lambda dr, kn=kn:
-                self.disc(dr, pr(kn), 0.10 * s, pal["gold"]), bias=0.05)
-
-        # thân: giáp ngực hình thang + váy giáp + thắt lưng + huy hiệu
-        C, Pv = inf["yaw_chest"], inf["yaw_pelvis"]
-        ch, pe = J["chest"], J["pelvis"]
-        rC, rP = right(C), right(Pv)
-        waist = pe + UP * 0.48
-        shoulder_top = ch + UP * 0.05
-
-        def torso(dr):
-            sp = b["shoulder_pad_half"] * 0.85
-            wh = b["waist_half"]
-            q = [pr(shoulder_top + rC * sp), pr(shoulder_top - rC * sp),
-                 pr(waist - rP * wh), pr(waist + rP * wh)]
-            self.poly(dr, q, pal["armor"])
-            sk = [pr(waist + rP * wh), pr(waist - rP * wh),
-                  pr(pe - UP * 0.16 - rP * (wh + 0.06)), pr(pe - UP * 0.16 + rP * (wh + 0.06))]
-            self.poly(dr, sk, pal["armor_dark"])
-            belt = [pr(waist + rP * wh + UP * 0.08), pr(waist - rP * wh + UP * 0.08),
-                    pr(waist - rP * wh - UP * 0.06), pr(waist + rP * wh - UP * 0.06)]
-            self.poly(dr, belt, pal["leather"], 3)
-            fP = fwd(Pv)
-            if fP[2] > 0.0:
-                bq = pr(waist + fP * 0.40)
-                self.disc(dr, bq, 0.08 * s, pal["gold"], 2)
-                sash = [pr(waist + fP * 0.40 + rP * 0.07 - UP * 0.05),
-                        pr(waist + fP * 0.40 - rP * 0.07 - UP * 0.05),
-                        pr(pe + fP * 0.40 - UP * 0.30)]
-                self.poly(dr, sash, pal["red"], 2)
-            fC = fwd(C)
-            if fC[2] > 0.1:                       # chim vàng trước ngực
-                e = ch - UP * 0.42 + fC * 0.42
-                q = pr(e)
-                r = 0.22 * s * min(1.0, fC[2] + 0.25)
-                dr.ellipse([q[0] - r, q[1] - r * 0.8, q[0] + r, q[1] + r * 0.8],
-                           fill=pal["gold"], outline=self.ink, width=3)
-                dr.ellipse([q[0] - r * 0.45, q[1] - r * 0.35, q[0] + r * 0.45, q[1] + r * 0.35],
-                           fill=pal["armor"])
-        add("torso", (ch - UP * 0.5,), torso)
-
-        # giáp vai + cánh hạc (vai trái nhân vật, như master)
-        for side, k in (("R", "shR"), ("L", "shL")):
-            q3 = J[k] + UP * 0.04
-            def pad(dr, q3=q3):
-                q = pr(q3)
-                r = 0.27 * s
-                dr.ellipse([q[0] - r - 3, q[1] - r * 0.8 - 3, q[0] + r + 3, q[1] + r * 0.8 + 3], fill=self.ink)
-                dr.ellipse([q[0] - r, q[1] - r * 0.8, q[0] + r, q[1] + r * 0.8], fill=pal["armor"],
-                           outline=pal["gold"], width=max(3, int(0.06 * s)))
-            add("pad" + side, (q3,), pad, bias=0.06)
-        wing_root = J["shL"] + UP * 0.10
-
-        def wing(dr):
-            # quạt 4 lông ngà rộng bản, gốc ở vai trái, xoè lên và ra ngoài (như master)
-            out_dir = -rC
-            back = -fwd(C) * 0.08
-            for k, (ang, ln) in enumerate(((80, 0.95), (62, 0.88), (44, 0.80), (26, 0.70))):
-                a = math.radians(ang)
-                axis = UP * math.sin(a) + out_dir * math.cos(a)
-                side = UP * math.cos(a) - out_dir * math.sin(a)
-                root = wing_root + out_dir * (0.04 * k) + back
-                q = [root + side * 0.07, root + axis * ln * 0.55 + side * 0.13,
-                     root + axis * ln, root + axis * ln * 0.55 - side * 0.11, root - side * 0.06]
-                self.poly(dr, [pr(p) for p in q], pal["ivory"], 3)
-                g0 = root + axis * ln * 0.55 - side * 0.11
-                dr.line([tuple(pr(root + axis * 0.08)), tuple(pr(g0 + side * 0.05))],
-                        fill=pal["gold"], width=3)
-        add("wing", (wing_root - fwd(C) * 0.15,), wing, bias=-0.02)
-
-        # tay: bắp tay da, cẳng tay giáp + đai vàng, nắm đấm to
-        for side, shade in (("R", 1.0), ("L", 0.8)):
-            sh, el, hd = J["sh" + side], J["elbow" + side], J["hand" + side]
-            skin = tuple(int(c * shade) for c in pal["skin"])
-            arm = tuple(int(c * shade) for c in pal["armor"])
-            add("upperArm" + side, (sh, el), lambda dr, sh=sh, el=el, c=skin:
-                self.capsule(dr, pr(sh), pr(el), 0.28 * s, c))
-            add("forearm" + side, (el, hd), lambda dr, el=el, hd=hd, c=arm:
-                (self.capsule(dr, pr(el), pr(hd), 0.32 * s, c),
-                 self.capsule(dr, pr(el + (hd - el) * 0.75), pr(el + (hd - el) * 0.78),
-                              0.34 * s, pal["gold"], 2)))
-            add("fist" + side, (hd,), lambda dr, hd=hd, c=skin:
-                self.disc(dr, pr(hd), b["fist_r"] * s, c), bias=0.03)
-
-        # đầu: da, tóc, búi, râu, mắt phát sáng
-        hd3 = J["head"]
-        H = inf["yaw_head"]
-
-        def head(dr):
-            q = pr(hd3)
-            r = b["head_r"] * s
-            fH, rH = fwd(H), right(H)
-            bun = pr(hd3 + UP * (b["head_r"] + 0.10) - fH * 0.06)
-            self.disc(dr, bun, 0.13 * s, pal["hair"])
-            self.disc(dr, q, r, pal["skin"], 4)
-            dr.pieslice([q[0] - r, q[1] - r, q[0] + r, q[1] + r], 180, 360, fill=pal["hair"])
-            if fH[2] > -0.3:
-                beard = pr(hd3 - UP * 0.14 + fH * 0.14)
-                rb = r * 0.62
-                dr.pieslice([beard[0] - rb, beard[1] - rb, beard[0] + rb, beard[1] + rb], 0, 180,
-                            fill=pal["hair"], outline=self.ink, width=2)
-                for sgn in (1, -1):
-                    e3 = hd3 + fH * b["head_r"] * 0.85 + rH * 0.12 * sgn + UP * 0.03
-                    if np.dot(fH * 0.85 + rH * 0.36 * sgn, [0, 0, 1]) > -0.15:
-                        e = pr(e3)
-                        dr.ellipse([e[0] - 5, e[1] - 3, e[0] + 5, e[1] + 3], fill=pal["eye"],
-                                   outline=self.ink, width=1)
-            else:
-                dr.pieslice([q[0] - r, q[1] - r, q[0] + r, q[1] + r], 0, 360, fill=pal["hair"])
-                self.disc(dr, pr(hd3 + UP * 0.05 - fH * 0.25), 0.10 * s, pal["red"], 2)
-        add("head", (hd3,), head)
-
-        # thương: cán chia đoạn để thân che đúng phần, mũi lá + chắn trăng + tua
-        w = self.px.w
-        bt, tp = J["butt"], J["tip"]
-        d = (tp - bt) / np.linalg.norm(tp - bt)
-        base = tp - d * w["blade_len"]
-        n = 10
-        for i in range(n):
-            a3 = bt + (base - bt) * (i / n)
-            b3 = bt + (base - bt) * ((i + 1) / n)
-            add(f"shaft{i}", (a3, b3), lambda dr, a3=a3, b3=b3:
-                self.capsule(dr, pr(a3), pr(b3), 0.07 * s, pal["shaft"], 2))
-
-        def blade(dr):
-            side = np.cross(d, [0, 0, 1.0])
-            if np.linalg.norm(side) < 1e-3:
-                side = np.array([0, 1.0, 0])
-            side = side / np.linalg.norm(side)
-            hw = w["blade_half_w"]
-            leaf = [pr(tp), pr(base + d * w["blade_len"] * 0.35 + side * hw), pr(base),
-                    pr(base + d * w["blade_len"] * 0.35 - side * hw)]
-            self.poly(dr, leaf, pal["blade"], 3)
-            cq = pr(base)
-            rr = 0.15 * s
-            dr.arc([cq[0] - rr, cq[1] - rr, cq[0] + rr, cq[1] + rr], 200, 340, fill=self.ink, width=9)
-            dr.arc([cq[0] - rr, cq[1] - rr, cq[0] + rr, cq[1] + rr], 200, 340, fill=pal["gold"], width=5)
-            tq = pr(base - d * 0.12)
-            self.capsule(dr, tq, tq + np.array([0, 0.30 * s]), 0.07 * s, pal["red"], 2)
-        add("blade", (base, tp), blade)
-        return out
-
-    def draw(self, img, J, inf):
-        dr = ImageDraw.Draw(img)
-        ps = sorted(self.parts(J, inf), key=lambda p: p[1])
-        for _, _, fn in ps:
-            fn(dr)
-        return [p[0] for p in ps]
 
 
 # ================================================================== chỉ số
@@ -284,11 +89,39 @@ def support(P, J, com_p, inf, com_v=None):
     return u, perp, (-0.05 <= u <= 1.05) and perp < 0.30
 
 
+def slash_trail(P, t, span=0.8, step=0.08, inward=1.1, min_path=0.9):
+    """Mẫu (mũi, điểm trong) cho vệt chém, chỉ trong timing.slash_windows; rỗng khi mũi đi chậm."""
+    wins = P.tm.get("slash_windows")
+    if wins and not any(a <= t <= b for a, b in wins):
+        return None
+    lo = max([a for a, b in wins if a <= t <= b] + [0]) if wins else 0
+    ts = np.arange(max(lo, t - span), t + 1e-9, step)
+    if len(ts) < 2:
+        return None
+    out = []
+    for x in ts:
+        J = P.pose(x)[0]
+        d = (J["tip"] - J["butt"]) / np.linalg.norm(J["tip"] - J["butt"])
+        out.append((J["tip"], J["tip"] - d * inward))
+    path = sum(np.linalg.norm(out[k + 1][0] - out[k][0]) for k in range(len(out) - 1))
+    return out if path >= min_path else None
+
+
 def tip_trail(P, t, span=1.0, step=0.125):
     return [P.pose(x)[0]["tip"] for x in np.arange(max(0, t - span), t + 1e-9, step)]
 
 
 PAINTER = None
+
+
+def seg_cross(a0, a1, b0, b1):
+    d1, d2 = a1 - a0, b1 - b0
+    den = d1[0] * d2[1] - d1[1] * d2[0]
+    if abs(den) < 1e-9:
+        return None
+    t = ((b0[0] - a0[0]) * d2[1] - (b0[1] - a0[1]) * d2[0]) / den
+    u = ((b0[0] - a0[0]) * d1[1] - (b0[1] - a0[1]) * d1[0]) / den
+    return a0 + d1 * t if 0 <= t <= 1 and 0 <= u <= 1 else None
 
 
 def compute(P, cam):
@@ -324,7 +157,20 @@ def compute(P, cam):
         sup.append(support(P, J, P.com(J), inf, cv))
         # chân bắt chéo: thứ tự hai bàn chân theo trục ngang của hông bị đảo
         rP = right(inf["yaw_pelvis"])
-        cross.append(float(np.dot(J["ankleR"] - J["ankleL"], rP)) < 0)
+        crossed = float(np.dot(J["ankleR"] - J["ankleL"], rP)) < 0
+        exposed = False
+        if crossed:
+            # chỗ hai chân cắt nhau trên ảnh có nằm ngoài vạt áo và thân không
+            legR = [cam.proj(J[k]) for k in ("hipR", "kneeR", "ankleR")]
+            legL = [cam.proj(J[k]) for k in ("hipL", "kneeL", "ankleL")]
+            top3, hem3 = skirt_points(P.b, J, inf)
+            cover = MplPath(convex_hull([cam.proj(q) for q in top3 + hem3]))
+            for a0, a1 in zip(legR, legR[1:]):
+                for b0, b1 in zip(legL, legL[1:]):
+                    x = seg_cross(a0, a1, b0, b1)
+                    if x is not None and not cover.contains_point(x):
+                        exposed = True
+        cross.append((crossed, exposed))
         shift.append(inf["weapon_shift"])
         # lưỡi thương trước hay sau thân (theo thứ tự vẽ thật của painter)
         parts = {p[0]: p[1] for p in PAINTER.parts(J, inf)}
@@ -367,34 +213,33 @@ def view_name(yaw):
             return n
 
 
-def render_game(P, cam, painter, M, i, overlay=True, bg=(250, 250, 247)):
+def render_game(P, cam, M, i):
+    """Khung đo đạc: khung đẹp + trọng tâm, mũi chân khoá, mốc mục tiêu."""
     J, inf = M["F"][i]
-    W, H = cam.size
-    img = Image.new("RGB", (W, H), bg)
+    img = M["clean"][i].copy()
     dr = ImageDraw.Draw(img)
     cp = P.com(J)
     g = cam.proj(np.array([cp[0], 0, cp[2]]))
-    dr.line([(0, cam.o[1]), (W, cam.o[1])], fill=(205, 205, 200), width=1)
-    dr.ellipse([g[0] - 75, g[1] - 13, g[0] + 75, g[1] + 13], fill=(222, 222, 216))
     tx = cam.proj(np.array([P.p.get("target_x", 4.2), 0, 0]))
-    dr.rectangle([tx[0] - 4, tx[1] - 170, tx[0] + 4, tx[1]], fill=(200, 120, 110))
-    dr.text((tx[0] - 30, tx[1] + 6), "mục tiêu", font=F_SM, fill=(160, 90, 80))
-    painter.draw(img, J, inf)
-    if overlay:
-        trail = tip_trail(P, M["TS"][i])
-        dP = cam.depth(J["pelvis"])
-        for a, b in zip(trail[:-1], trail[1:]):
-            near = (cam.depth(a) + cam.depth(b)) / 2 > dP
-            dr.line([tuple(cam.proj(a)), tuple(cam.proj(b))],
-                    fill=(70, 150, 230) if near else (170, 196, 222), width=4 if near else 2)
-        ok = M["support"][i][2]
-        col = (40, 160, 80) if ok else (220, 60, 50)
-        dr.line([(g[0] - 10, g[1]), (g[0] + 10, g[1])], fill=col, width=3)
-        dr.line([(g[0], g[1] - 10), (g[0], g[1] + 10)], fill=col, width=3)
-        for k, sw in (("toeR", False), ("toeL", inf["foot_swing"])):
-            q = cam.proj(J[k])
-            dr.rectangle([q[0] - 4, q[1] - 4, q[0] + 4, q[1] + 4], fill=(240, 150, 40) if sw else (40, 160, 80))
+    dr.line([(tx[0], tx[1] - 160), (tx[0], tx[1])], fill=(200, 120, 110), width=3)
+    dr.text((tx[0] - 28, tx[1] + 6), "mục tiêu", font=F_SM, fill=(220, 160, 150))
+    ok = M["support"][i][2]
+    col = (90, 210, 120) if ok else (240, 80, 70)
+    dr.line([(g[0] - 10, g[1]), (g[0] + 10, g[1])], fill=col, width=3)
+    dr.line([(g[0], g[1] - 10), (g[0], g[1] + 10)], fill=col, width=3)
+    for k, sw in (("toeR", False), ("toeL", inf["foot_swing"])):
+        q = cam.proj(J[k])
+        dr.rectangle([q[0] - 4, q[1] - 4, q[0] + 4, q[1] + 4], fill=(240, 150, 40) if sw else (90, 210, 120))
     return img
+
+
+def render_block(P, cam, J, inf, ss=3):
+    """Khung khối nền trong, không vệt chém, không bóng: khung mẫu cho mô hình ảnh."""
+    big = Cam(pitch_deg=math.degrees(cam.pitch), scale=cam.s * ss, size=(cam.size[0] * ss, cam.size[1] * ss),
+              origin=(cam.o[0] * ss, cam.o[1] * ss))
+    im = Image.new("RGBA", big.size, (0, 0, 0, 0))
+    Painter(P, big).draw(im, J, inf)
+    return im.resize(cam.size, Image.LANCZOS)
 
 
 def render_top(P, J, inf, size=300):
@@ -487,15 +332,19 @@ def main():
     M = compute(P, cam)
     N, TS, F = M["N"], M["TS"], M["F"]
     GW, GH = cam.size
+    M["clean"] = [render_clean(P, cam, J, inf, slash_trail(P, TS[i])) for i, (J, inf) in enumerate(F)]
+    dur = int(1000 / P.fps)
+    clean = M["clean"]
+    clean[0].save(os.path.join(out, "clean.gif"), save_all=True, append_images=clean[1:], duration=dur, loop=0)
+    clean[0].save(os.path.join(out, "clean_slow.gif"), save_all=True, append_images=clean[1:], duration=250, loop=0)
     TW = 300
 
     frames = []
     for i in range(N):
         J, inf = F[i]
         u, perp, ok = M["support"][i]
-        game = render_game(P, cam, painter, M, i)
-        ImageDraw.Draw(game).text((10, 8), f"camera game — proxy {P.p.get('name', '')}", font=F_BD,
-                                  fill=(26, 31, 38))
+        game = render_game(P, cam, M, i)
+        ImageDraw.Draw(game).text((10, 8), f"proxy {P.p.get('name', '')}", font=F_BD, fill=(235, 235, 235))
         info = Image.new("RGB", (TW, GH - TW), (255, 255, 255))
         di = ImageDraw.Draw(info)
         lines = [f"hông {inf['yaw_pelvis'] % 360:4.0f}°  ngực {inf['yaw_chest'] % 360:4.0f}°",
@@ -512,7 +361,6 @@ def main():
         cv.paste(info, (GW, TW))
         cv.paste(timeline(P, M, i, GW + TW), (0, GH))
         frames.append(cv)
-    dur = int(1000 / P.fps)
     frames[0].save(os.path.join(out, "anim.gif"), save_all=True, append_images=frames[1:], duration=dur, loop=0)
     frames[0].save(os.path.join(out, "anim_slow.gif"), save_all=True, append_images=frames[1:], duration=300, loop=0)
 
@@ -523,13 +371,13 @@ def main():
         cmp = []
         for i in range(N):
             ri = ref_index(P, TS[i])
-            cv = Image.new("RGB", (RS + GW, max(RS, GH) + 30), (255, 255, 255))
+            cv = Image.new("RGB", (RS + GW, max(RS, GH) + 30), (40, 41, 44))
             cv.paste(refs[ri].resize((RS, RS), Image.NEAREST), (0, 30))
-            cv.paste(render_game(P, cam, painter, M, i), (RS, 30))
+            cv.paste(clean[i], (RS, 30 + (RS - GH) // 2 if RS > GH else 30))
             d = ImageDraw.Draw(cv)
-            d.text((8, 6), f"tham chiếu khung {ri}", font=F_BD, fill=(26, 31, 38))
+            d.text((8, 6), f"tham chiếu khung {ri}", font=F_BD, fill=(230, 230, 230))
             d.text((RS + 8, 6), f"proxy khung {i:02d} · {P.phase_of(TS[i])}", font=F_BD,
-                   fill=(170, 30, 20) if (i in M["hit_frames"] or i == M["sweep_hit"]) else (26, 31, 38))
+                   fill=(255, 120, 100) if (i in M["hit_frames"] or i == M["sweep_hit"]) else (230, 230, 230))
             cmp.append(cv)
         cmp[0].save(os.path.join(out, "compare.gif"), save_all=True, append_images=cmp[1:], duration=200, loop=0)
 
@@ -539,7 +387,7 @@ def main():
     sheet = Image.new("RGB", (cols * tw, rows * (th + 22)), (255, 255, 255))
     ds = ImageDraw.Draw(sheet)
     for i in range(N):
-        g = render_game(P, cam, painter, M, i).resize((tw, th), Image.LANCZOS)
+        g = clean[i].resize((tw, th), Image.LANCZOS)
         x, y = (i % cols) * tw, (i // cols) * (th + 22)
         sheet.paste(g, (x, y + 22))
         hit = i in M["hit_frames"] or i == M["sweep_hit"]
@@ -547,8 +395,7 @@ def main():
                 fill=(170, 30, 20) if hit else (26, 31, 38))
     sheet.save(os.path.join(out, "sheet.png"))
     for i in range(N):
-        im = Image.new("RGBA", (GW, GH), (255, 255, 255, 0))
-        painter.draw(im, *F[i])
+        im = render_block(P, cam, *F[i])
         im.save(os.path.join(out, "blocks", f"f{i:02d}.png"))
 
     write_curves(P, M, out)
@@ -627,7 +474,8 @@ def write_metrics(P, M, out):
     hit_ok = all(x > 0 for x in pre) and all(b > a for a, b in zip(pre, pre[1:]))
     tw_lim = P.c["max_twist"]
     tw_ok = M["twist_raw_max"] <= tw_lim
-    cross = [i for i, c in enumerate(M["cross"]) if c]
+    crossed = [i for i, c in enumerate(M["cross"]) if c[0]]
+    cross = [i for i, c in enumerate(M["cross"]) if c[1]]
     shift_lim = mt.get("max_weapon_shift_pct", 5) / 100 * H
     shift_max = max(M["shift"])
     shift_bad = [i for i, s in enumerate(M["shift"]) if s > shift_lim]
@@ -647,8 +495,8 @@ def write_metrics(P, M, out):
          + "/".join(f"{v:.0f}" for v in M["peak_v"].values()) + " °/khung)", pk_ok),
         (f"Xoắn ngực–hông tự nhiên ≤ {tw_lim}° (bộ chặn không phải can thiệp)", "đo",
          f"xoắn thô tối đa {M['twist_raw_max']:.0f}°", tw_ok),
-        ("Chân không bắt chéo (thứ tự hai chân theo trục hông)", "đo",
-         f"khung bắt chéo: {cross or 'không'}", not cross),
+        ("Chân bắt chéo khi xoay trên mũi chân phải được vạt áo / thân che", "đo",
+         f"khung bắt chéo: {crossed or 'không'}; lộ ra: {cross or 'không'}", not cross),
         ("Tay, chân trong tầm (gót đã kiễng tối đa)", "đo",
          f"vượt tối đa {reach_max:.3f} đv ({reach_max / H * 100:.1f}% chiều cao)", reach_max / H < 0.01),
         (f"Tay với tới đường tay đã đặt (dời thương ≤ {shift_lim:.2f} đv)", "đo",
@@ -688,7 +536,7 @@ def write_metrics(P, M, out):
                  f"{inf['yaw_pelvis'] % 360:.0f} | {inf['yaw_chest'] % 360:.0f} | {wy[i]:.0f} | "
                  f"{inf['yaw_head'] % 360:.0f} | {view_name(inf['yaw_chest'])} | {inf['twist']:+.0f} | "
                  f"{u[i] * 100:.0f} | {inf['heel_lift']['R']:.2f}/{inf['heel_lift']['L']:.2f} | "
-                 f"{'trước' if M['side'][i] == 'front' else 'sau'} | {'có' if M['cross'][i] else ''} |")
+                 f"{'trước' if M['side'][i] == 'front' else 'sau'} | {('lộ' if M['cross'][i][1] else 'che') if M['cross'][i][0] else ''} |")
     with open(os.path.join(out, "metrics.md"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(L) + "\n")
 

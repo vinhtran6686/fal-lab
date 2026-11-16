@@ -36,7 +36,13 @@
       "right": 0.0,
       "forward": 0.34
     },
-    "real_height_m": 1.8
+    "real_height_m": 1.8,
+    "skirt": {
+      "drop": 0.14,
+      "flare_base": 0.04,
+      "flare_spin": 0.28,
+      "lift_spin": 0.06
+    }
   },
   "weapon": {
     "length": 3.4,
@@ -115,7 +121,17 @@
       "fall": 2.0,
       "lift": 0.14
     },
-    "spin_heel_lift": 0.06
+    "spin_heel_lift": 0.06,
+    "slash_windows": [
+      [
+        5.8,
+        13.5
+      ],
+      [
+        16.6,
+        19.0
+      ]
+    ]
   },
   "channels": {
     "pelvis_yaw": {
@@ -321,5 +337,6 @@
     "red": "#B5472F",
     "hair": "#2E2224",
     "eye": "#FFE9A6"
-  }
+  },
+  "target_x": 4.0
 }
