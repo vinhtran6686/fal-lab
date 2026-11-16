@@ -109,6 +109,30 @@ python scripts/motion_proxy/render_source.py <.../seed1/hybrid/params_used.json>
 - `build.py` ghi `params_used.json` (thông số đã gộp) để chạy lại và để `render_source.py` so với 3D gốc. Sai lệch góc hông lớn ở các khung có lớp `pelvis_yaw` là cố ý.
 - Thứ tự sửa hay dùng: hướng và độ cao vũ khí (`weapon_yaw`, `weapon_pitch`, `hand_drop`) → lấy đà (`pelvis_yaw` add) → thế đứng, bước chân (`feet`) → dồn trọng tâm (`root_x` add) → kiểm tra tiêu chí.
 
+## Khoác nhân vật thật: ảnh khung khoá + ghép (`compose.py`)
+
+1. Chọn 4-5 khung khoá trong proxy (thủ thế, gồng, trúng, theo đà). Tránh khung vũ khí chĩa thẳng vào camera (co lại thành một điểm, không đọc được).
+2. Vẽ từng khung bằng `gen_image.py` với hai `--ref`: master (thiết kế) và khung khối `blocks/fNN.png` đặt trên nền xám (tư thế); mô tả tư thế theo `fal-image/action-planes.md` §4b, §9, `prompt_lint.py --kind pose`.
+3. Ghép theo nhịp của proxy:
+
+```bash
+python scripts/motion_proxy/compose.py <compose.json>
+```
+
+```json
+{"build": "<thư mục build của proxy>",
+ "keys": [{"still": "out/heroes/<id>/source/design/pose_<x>_v01.png", "proxy_frame": 0, "frames": [0, 7]}, "..."],
+ "trail": {"span": 1.6, "inward": 1.9}}
+```
+
+- Mỗi ảnh được tách nền (`puppet_kit/core.key_magenta`), đo đỉnh đầu, đáy ủng, tâm hai chân, rồi đặt vào toạ độ camera proxy cho khớp `proxy_frame` (chân trên mặt đất, cùng chiều cao đầu). `check/align.png` đặt ảnh mờ lên khung khối để kiểm tra: mũi vũ khí của ảnh phải rơi gần mũi của proxy, vì vệt chém đi theo proxy. Số đo sai thì sửa bằng `align` trong compose.json.
+- Trong `frames` của một ảnh, ảnh được nghiêng và co giãn dọc **neo ở chân** theo đầu của proxy (chân không trượt).
+- Đổi ảnh ở khung mà vũ khí đã tới tư thế của ảnh sau. Đổi sớm hơn một khung thì thương trên ảnh đã ở mục tiêu trong khi vệt chém còn bên kia thân.
+- Vệt chém: dải thuôn theo quỹ đạo mũi vũ khí trong `span` khung, rộng `inward` đơn vị vào phía tay; nửa xa vẽ sau ảnh, nửa gần trước ảnh.
+- Ra `frames/fNN.png` (RGBA), `preview.gif`, `preview_slow.gif`, `preview_game.gif` (cao 60 px), `sheet.png`.
+
+Giới hạn: giữa hai ảnh khoá chỉ có nghiêng và co giãn cả hình, chưa có khung trung gian thật (tay, chân, thương đổi tư thế). Khung trung gian thật cần rig cắt lớp cho từng ảnh (Puppet Kit) chạy theo `frames.json`.
+
 ## Tiêu chí: "đo" và "cấu trúc"
 
 `metrics.md` ghi loại của mỗi tiêu chí. Chỉ tiêu chí **đo** mới có thể hỏng và mới chứng minh được điều gì:
