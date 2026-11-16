@@ -1,6 +1,6 @@
 """Dựng proxy 3D của một skill cận chiến: hình, chỉ số vật lý, so với tham chiếu, dữ liệu cho rig.
 
-    python scripts/motion_proxy/build.py out/heroes/<id>/source/rig/proxy_<skill>.json [--out DIR]
+    python scripts/motion_proxy/build.py out/heroes/<id>/source/rig/proxy_<skill>.json [--layers L.json] [--out DIR]
 
 Mặc định ghi vào <asset>/.work/motion_proxy/<tên file>/ (git bỏ qua):
   clean.gif, clean_slow.gif hình đẹp: nhân vật + vệt chém, nền xám như ref (để xem); clean/fNN.png từng khung
@@ -12,6 +12,7 @@ Mặc định ghi vào <asset>/.work/motion_proxy/<tên file>/ (git bỏ qua):
   metrics.md                tiêu chí vật lý ĐẠT / KHÔNG ĐẠT
   frames.json               toạ độ 2D, độ sâu, hướng thân, thứ tự lớp, vệt mũi vũ khí
   weapon_track.json         gốc lưỡi / mũi vũ khí theo định dạng scripts/puppet.py track (đơn vị H)
+  params_used.json          thông số đã gộp --layers (dùng cho render_source.py)
 Doc: docs/scripts/motion_proxy/motion-proxy-guide.md
 """
 import argparse
@@ -344,12 +345,28 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("params")
     ap.add_argument("--out")
+    ap.add_argument("--layers", help="file lớp đè lên params: layers, feet (vết chân thay thế), timing, checks, name")
     a = ap.parse_args()
-    P = Proxy(a.params)
-    name = os.path.splitext(os.path.basename(a.params))[0]
+    with open(a.params, encoding="utf-8") as fh:
+        params = json.load(fh)
+    if a.layers:
+        with open(a.layers, encoding="utf-8") as fh:
+            lay = json.load(fh)
+        params["layers"] = params.get("layers", []) + lay.get("layers", [])
+        if lay.get("feet"):
+            params["feet"]["tracks"].update(lay["feet"])
+        params["timing"].update(lay.get("timing", {}))
+        params["chain"].update(lay.get("chain", {}))
+        for k in ("checks", "name"):
+            if k in lay:
+                params[k] = lay[k]
+    P = Proxy(params)
+    name = os.path.splitext(os.path.basename(a.layers or a.params))[0]
     asset = os.path.abspath(os.path.join(os.path.dirname(a.params), "..", ".."))
     out = a.out or os.path.join(asset, ".work", "motion_proxy", name)
     os.makedirs(os.path.join(out, "blocks"), exist_ok=True)
+    with open(os.path.join(out, "params_used.json"), "w", encoding="utf-8") as fh:
+        json.dump(params, fh, ensure_ascii=False, indent=1)   # thông số đã gộp lớp: chạy lại / render_source
 
     cam = Cam(**P.p.get("camera", {}))
     painter = Painter(P, cam)

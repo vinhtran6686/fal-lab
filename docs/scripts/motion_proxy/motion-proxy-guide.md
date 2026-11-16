@@ -85,6 +85,30 @@ Cài thêm: `pip install -r requirements-motion.txt` (matplotlib; `bpy` = Blende
 
 Giới hạn đã thấy: nguồn là người tay không, nên trục vũ khí suy từ hai bàn tay chỉ là ước lượng; mô hình ít khi có pha lấy đà rõ và dồn trọng tâm như cần cho đòn game. Tiêu chí đo cho thấy ngay chỗ thiếu, để chọn seed hoặc sửa kênh bằng tay sau khi retarget. Chiều của trục vũ khí (mũi về phía nào) có thể bị lật khi hai tay đổi chỗ: một khung trúng lệch mục tiêu gần 180° là dấu hiệu của lỗi này, không phải của đòn đánh sai hướng.
 
+## Lai: thân từ nguồn, phần chất game đặt tay (`--layers`)
+
+Mô hình chữ → chuyển động cho thân có hồn nhưng thiếu đạo cụ, lấy đà và dồn trọng tâm. File lớp đè lên chuyển động đã retarget, kênh theo kênh, không sửa nguồn:
+
+```bash
+python scripts/motion_proxy/build.py <.../seed1/proxy.json> --layers <hybrid.json> --out <.../seed1/hybrid>
+python scripts/motion_proxy/render_source.py <.../seed1/hybrid/params_used.json> <file.fbx> <.../seed1/hybrid>
+```
+
+```json
+{"layers": [
+   {"channel": "weapon_yaw", "mode": "replace", "keys": {"0": 60, "10.5": -45, "13": 90, "15": 175}},
+   {"channel": "pelvis_yaw", "mode": "add", "keys": {"6.5": 0, "10.5": -30, "13": 0}},
+   {"channel": "chest_off", "mode": "add", "window": [-1, 0, 7, 9.5], "keys": {"0": 10}}],
+ "feet": {"L": [{"t0": 0, "t1": 10.6, "pos": [0.28, 0, -0.30]}, {"t0": 11.8, "t1": 30, "pos": [0.56, 0, -0.28]}]},
+ "timing": {"slash_windows": [[10.5, 14.5]]}}
+```
+
+- `mode`: `add` cộng thêm vào kênh nguồn, `replace` thay thế. `window` `[a, b, c, d]` là trọng số tăng êm a→b, giữ, giảm êm c→d; bỏ trống thì áp suốt clip.
+- Kênh: mọi kênh trong `channels` (`pelvis_yaw` có lớp thì vai, chân, vũ khí đọc theo), cộng thêm `weapon_yaw` là hướng vũ khí tuyệt đối trong thế giới (90 = mục tiêu).
+- `feet` thay vết chân của một bên. Đặt bước chân trước khi dồn người (điểm bắt), kéo chân sau theo đà khi thân xoay quá xa, rút chân khi hồi thế.
+- `build.py` ghi `params_used.json` (thông số đã gộp) để chạy lại và để `render_source.py` so với 3D gốc. Sai lệch góc hông lớn ở các khung có lớp `pelvis_yaw` là cố ý.
+- Thứ tự sửa hay dùng: hướng và độ cao vũ khí (`weapon_yaw`, `weapon_pitch`, `hand_drop`) → lấy đà (`pelvis_yaw` add) → thế đứng, bước chân (`feet`) → dồn trọng tâm (`root_x` add) → kiểm tra tiêu chí.
+
 ## Tiêu chí: "đo" và "cấu trúc"
 
 `metrics.md` ghi loại của mỗi tiêu chí. Chỉ tiêu chí **đo** mới có thể hỏng và mới chứng minh được điều gì:

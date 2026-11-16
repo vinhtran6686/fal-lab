@@ -44,6 +44,35 @@ def pchip(keys):
     return f
 
 
+def envelope(win, t):
+    """Trọng số lớp: [a, b, c, d] = tăng êm a->b, giữ 1, giảm êm c->d. None = luôn 1."""
+    if not win:
+        return 1.0
+    a, b_, c, d = win
+    if t <= a or t >= d:
+        return 0.0
+    if t < b_:
+        return smoothstep((t - a) / max(b_ - a, 1e-6))
+    if t > c:
+        return smoothstep((d - t) / max(d - c, 1e-6))
+    return 1.0
+
+
+def layered(base, layers):
+    """Áp các lớp theo thứ tự: mode 'add' (cộng thêm) hoặc 'replace' (thay thế), trọng số theo 'window'."""
+    fs = [(ly, pchip(ly["keys"])) for ly in layers]
+
+    def f(t):
+        v = base(t)
+        for ly, k in fs:
+            w = envelope(ly.get("window"), t)
+            if w <= 0:
+                continue
+            v = v + w * k(t) if ly.get("mode", "add") == "add" else v * (1 - w) + w * k(t)
+        return v
+    return f
+
+
 # ------------------------------------------------------------------ hình học
 def fwd(yaw):
     a = math.radians(yaw)
@@ -95,6 +124,12 @@ class Proxy:
         self.tm = params["timing"]
         self.fps = params.get("fps", 15)
         self.ch = {k: pchip(v) for k, v in params["channels"].items()}
+        # lớp (layers): đè chuyển động đặt tay lên chuyển động nguồn, kênh theo kênh
+        self.layers = params.get("layers", [])
+        for name in {ly["channel"] for ly in self.layers} - {"weapon_yaw"}:
+            self.ch[name] = layered(self.ch.get(name, lambda t: 0.0),
+                                    [ly for ly in self.layers if ly["channel"] == name])
+        self.weapon_yaw_layers = [ly for ly in self.layers if ly["channel"] == "weapon_yaw"]
         ft = params["feet"]
         self.tracks = ft.get("tracks")          # vết chân từ chuyển động nguồn (retarget.py)
         if not self.tracks:
@@ -167,6 +202,8 @@ class Proxy:
         twist = float(np.clip(C_raw - P, -c["max_twist"], c["max_twist"])) if c.get("clip_twist", True) else C_raw - P
         C = P + twist
         S = ch["pelvis_yaw"](t - c["lag_weapon"]) + ch["weapon_off"](t)
+        if self.weapon_yaw_layers:                      # hướng thương tuyệt đối (thế giới) đặt tay
+            S = layered(lambda _t, S=S: S, self.weapon_yaw_layers)(t)
         pitch = ch["weapon_pitch"](t)
 
         pelvis = np.array([ch["root_x"](t), ch["root_y"](t), 0.0])
