@@ -1,0 +1,325 @@
+{
+  "name": "moon_crane / spin_thrust",
+  "note": "Quét 360 độ ngang eo rồi đâm. Tỉ lệ đo từ source/design/master_v08.png (cao 3.0 đv). Nhịp các pha khớp ref/king/leon-leon-yase2.gif nhân vật 1 (xem 'reference').",
+  "fps": 15,
+  "body": {
+    "height": 3.0,
+    "head_r": 0.33,
+    "head_above_neck": 0.3,
+    "thigh": 0.38,
+    "shin": 0.34,
+    "ankle_h": 0.08,
+    "foot_len": 0.26,
+    "spine": 1.3,
+    "neck": 0.04,
+    "hip_half": 0.22,
+    "shoulder_half": 0.5,
+    "waist_half": 0.44,
+    "shoulder_pad_half": 0.64,
+    "upper_arm": 0.52,
+    "forearm": 0.48,
+    "fist_r": 0.22,
+    "mass": {
+      "head": 0.14,
+      "chest": 0.36,
+      "pelvis": 0.22,
+      "kneeR": 0.05,
+      "kneeL": 0.05,
+      "ankleR": 0.02,
+      "ankleL": 0.02,
+      "elbowR": 0.03,
+      "elbowL": 0.03,
+      "handR": 0.04,
+      "handL": 0.04
+    },
+    "grip_center": {
+      "right": 0.0,
+      "forward": 0.34
+    },
+    "real_height_m": 1.8
+  },
+  "weapon": {
+    "length": 3.4,
+    "grip_rear": 1.1,
+    "grip_gap": 0.7,
+    "blade_len": 0.6,
+    "blade_half_w": 0.17,
+    "slide_gap_factor": 0.6
+  },
+  "chain": {
+    "lag_chest": 0.5,
+    "lag_weapon": 1.1,
+    "max_twist": 55,
+    "foot_lag": 0.8,
+    "head_spot_target": 90,
+    "head_spot_limit": 60
+  },
+  "timing": {
+    "t_end": 25,
+    "t_hit": 18,
+    "hitstop_frames": 1,
+    "phases": [
+      [
+        0,
+        "sẵn sàng"
+      ],
+      [
+        1,
+        "dựng thương"
+      ],
+      [
+        4,
+        "gồng"
+      ],
+      [
+        5.5,
+        "nhả + quét 360"
+      ],
+      [
+        14,
+        "nạp đâm"
+      ],
+      [
+        16.5,
+        "đâm"
+      ],
+      [
+        18,
+        "TRÚNG (hitstop)"
+      ],
+      [
+        19,
+        "theo đà"
+      ],
+      [
+        21.5,
+        "hồi thế"
+      ]
+    ],
+    "sweep_window": [
+      5.5,
+      14.0
+    ],
+    "release_window": [
+      3.0,
+      8.0
+    ],
+    "spin_heel_window": [
+      5.5,
+      14.5
+    ],
+    "lunge_heel": {
+      "start": 16.0,
+      "rise": 1.5,
+      "end": 22.5,
+      "fall": 2.0,
+      "lift": 0.14
+    },
+    "spin_heel_lift": 0.06
+  },
+  "channels": {
+    "pelvis_yaw": {
+      "0": 50,
+      "1": 48,
+      "3.5": -10,
+      "5": -42,
+      "6.5": 20,
+      "7.5": 118,
+      "9": 218,
+      "10.5": 278,
+      "12": 330,
+      "13.5": 372,
+      "15": 388,
+      "16.5": 410,
+      "18": 432,
+      "19.5": 430,
+      "22": 418,
+      "25": 410
+    },
+    "chest_off": {
+      "0": 10,
+      "3": 5,
+      "15": 10,
+      "18": 18,
+      "25": 10
+    },
+    "weapon_off": {
+      "0": 40,
+      "2": 20,
+      "4": -20,
+      "5.5": -45,
+      "8.5": 25,
+      "14": 30,
+      "16": 25,
+      "18": 30,
+      "21": 35,
+      "25": 40
+    },
+    "weapon_pitch": {
+      "0": 25,
+      "2": 68,
+      "4": 60,
+      "5.5": 38,
+      "7": 5,
+      "8": 0,
+      "13.5": 0,
+      "15": -4,
+      "18": 0,
+      "20": 2,
+      "22": 8,
+      "25": 25
+    },
+    "hand_drop": {
+      "0": 0.55,
+      "2": 0.1,
+      "4": 0.1,
+      "5.5": 0.2,
+      "7.5": 0.48,
+      "13.5": 0.58,
+      "15": 0.55,
+      "18": 0.52,
+      "25": 0.55
+    },
+    "weapon_slide": {
+      "0": 0,
+      "14": 0,
+      "15.5": -0.18,
+      "17.2": 0.02,
+      "18": 0.2,
+      "19.5": 0.19,
+      "21.5": 0.1,
+      "25": 0
+    },
+    "root_y": {
+      "0": 0.66,
+      "2": 0.66,
+      "4": 0.64,
+      "5.5": 0.6,
+      "7": 0.55,
+      "13.5": 0.55,
+      "15": 0.58,
+      "16.5": 0.54,
+      "18": 0.48,
+      "19.5": 0.49,
+      "22": 0.59,
+      "25": 0.66
+    },
+    "root_x": {
+      "0": 0.0,
+      "4": -0.05,
+      "5.5": -0.1,
+      "7": -0.03,
+      "8": 0.0,
+      "13.5": 0.0,
+      "15": -0.1,
+      "16.5": -0.04,
+      "17.3": 0.06,
+      "18": 0.24,
+      "20": 0.23,
+      "22": 0.14,
+      "23.5": 0.06,
+      "25": 0.0
+    }
+  },
+  "feet": {
+    "back_toe": [
+      -0.27,
+      0.0,
+      -0.07
+    ],
+    "front_toe": [
+      0.27,
+      0.0,
+      0.08
+    ],
+    "steps": [
+      {
+        "from": 15.3,
+        "to": 16.8,
+        "dx": 0.3,
+        "lift": 0.16
+      },
+      {
+        "from": 22.0,
+        "to": 24.0,
+        "dx": -0.3,
+        "lift": 0.12
+      }
+    ]
+  },
+  "metrics": {
+    "coil_frames_max_front_pct": 45,
+    "hit_min_front_pct": 60,
+    "chamber_search": [
+      13.5,
+      18
+    ]
+  },
+  "reference": {
+    "gif": "ref/king/leon-leon-yase2.gif",
+    "crop": [
+      0,
+      0,
+      300,
+      300
+    ],
+    "note": "Nhân vật 1 (ô trên-trái). Chu kỳ 0-59 (30 ms/khung). Phần đâm của proxy không có trong ref: ref đi vào thế thủ thấp.",
+    "align": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        4,
+        14
+      ],
+      [
+        5.5,
+        16
+      ],
+      [
+        6.5,
+        17
+      ],
+      [
+        8,
+        19
+      ],
+      [
+        10,
+        24
+      ],
+      [
+        12,
+        30
+      ],
+      [
+        14,
+        39
+      ],
+      [
+        25,
+        59
+      ]
+    ]
+  },
+  "palette": {
+    "ink": "#2B1E22",
+    "skin": "#C98A55",
+    "armor": "#3F5F80",
+    "armor_dark": "#26394F",
+    "armor_light": "#7FA0C0",
+    "gold": "#D6A03A",
+    "ivory": "#EFE2BE",
+    "leather": "#6A4430",
+    "shaft": "#8E5A3A",
+    "blade": "#DDE9F2",
+    "red": "#B5472F",
+    "hair": "#2E2224",
+    "eye": "#FFE9A6"
+  }
+}
