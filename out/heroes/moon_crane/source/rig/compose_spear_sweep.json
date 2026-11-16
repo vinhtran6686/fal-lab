@@ -1,0 +1,42 @@
+{
+ "build": "out/heroes/moon_crane/.work/motion_proxy/spear_sweep/hybrid",
+ "keys": [
+  {
+   "still": "out/heroes/moon_crane/source/design/pose_sweep_guard_v01.png",
+   "proxy_frame": 0,
+   "frames": [
+    0,
+    7
+   ]
+  },
+  {
+   "still": "out/heroes/moon_crane/source/design/pose_sweep_windup_v01.png",
+   "proxy_frame": 10,
+   "frames": [
+    8,
+    12
+   ]
+  },
+  {
+   "still": "out/heroes/moon_crane/source/design/pose_sweep_hit_v01.png",
+   "proxy_frame": 13,
+   "frames": [
+    13,
+    14
+   ]
+  },
+  {
+   "still": "out/heroes/moon_crane/source/design/pose_sweep_follow_v01.png",
+   "proxy_frame": 16,
+   "frames": [
+    15,
+    22
+   ]
+  }
+ ],
+ "trail": {
+  "span": 1.6,
+  "inward": 1.9
+ },
+ "note": "Dựng lại: python scripts/motion_proxy/build.py out/heroes/moon_crane/source/rig/proxy_spear_sweep_hy.json --layers out/heroes/moon_crane/source/rig/hybrid_spear_sweep.json --out out/heroes/moon_crane/.work/motion_proxy/spear_sweep/hybrid, rồi compose.py file này."
+}
