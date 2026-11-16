@@ -10,6 +10,7 @@ docs/
 ├── pipeline/                                              quy trình xuyên nhiều công cụ, trên một nhân vật
 │   ├── asset-manifest.md                                  bảng checklist asset trong brief.md, lệnh asset_status.py
 │   ├── pose-pair-fx-method.md                             skill bằng pose A/B + vệt chém lib-fx + rig Studio (quy trình, checklist, chi phí)
+│   ├── reference-gif-pose-extraction-difficulties.md      từ gif tham chiếu (king) đến bộ pose của moon_crane: khung tham chiếu, video ổn nhất, khó khăn còn lại
 │   ├── images/pose-pair-sweep-fit-before-after.png       ảnh trước / sau của mục "Hai pose lệch nhau" trong pose-pair-fx-method.md
 │   ├── images/pose-pair-sweep-abc-before-after.png       ảnh trước (hai pose A, B) / sau (ba pose A, B, C) của mục 10.6 trong pose-pair-fx-method.md
 ├── skills/                                                tài liệu bổ sung cho .claude/skills/<skill>/
