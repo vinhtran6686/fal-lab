@@ -1,0 +1,18 @@
+{
+ "clip": "pose_library_h3_t02.mp4 (243 frames @24 fps, 768x768, frames counted from 1)",
+ "verified": "2026-11-16, by motion analysis (holds, sharpness, fringe) and by looking at every frame listed",
+ "usable": [
+  {"pose": "ready", "frames": [1, 239], "note": "sharp"},
+  {"pose": "coil, spear behind the head", "frames": [24], "note": "slight fringe"},
+  {"pose": "low stance, spear across the shoulders (3/4 to the camera)", "frames": [35], "note": "sharp, long hold (31-80)"},
+  {"pose": "spear level across the chest, body facing the camera, wide stance", "frames": [103], "note": "sharp; NOT a profile"},
+  {"pose": "overhead raise, spear above the head", "frames": [120], "note": "a little soft"},
+  {"pose": "chop end, crouched, spear down and to the right", "frames": [137], "note": "a little soft"},
+  {"pose": "back to the camera, spear out to the right", "frames": [148], "note": "soft (dark blue), frames 142-151 are the same pose"},
+  {"pose": "turning, seen from the rear right, spear to the right", "frames": [154], "note": "sharp"},
+  {"pose": "lunge toward the left, spear level at the hip, spearhead on the left", "frames": [166, 169], "note": "sharp; body turned to the left, nearest to a profile"},
+  {"pose": "deep squat facing the camera, spear planted", "frames": [205], "note": "sharp"},
+  {"pose": "spear raised straight above the head, facing the camera", "frames": [229], "note": "sharp"}
+ ],
+ "avoid": "frames 56, 120-123, 157-162: motion smears with white / pink fringes"
+}
