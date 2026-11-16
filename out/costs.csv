@@ -330,3 +330,6 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-16 11:36:17,clip.mp4,h3-max-turbo,video,768P 10s,False,4.1,0.1500,True
 2026-11-16 12:05:25,pose_profile_right_v01.png,gpt-image-2,low,1024x1024,False,18.0,0.0183,True
 2026-11-16 12:05:54,clip.mp4,h3-max-turbo,video,768P 5s,False,3.3,0.0750,True
+2026-11-16 12:46:00,ltx_union_0.70.mp4,fal-ai/ltx-2.3-22b/distilled/reference-video-to-video,video,512x512 60f (15.7 MP),False,100,0.0189,True
+2026-11-16 12:49:00,ltx_match_0.70.mp4,fal-ai/ltx-2.3-22b/distilled/reference-video-to-video,video,512x512 60f (15.7 MP),False,100,0.0189,True
+2026-11-16 12:55:00,ltx_union_0.45.mp4,fal-ai/ltx-2.3-22b/distilled/reference-video-to-video,video,512x512 60f (15.7 MP),False,100,0.0189,True
