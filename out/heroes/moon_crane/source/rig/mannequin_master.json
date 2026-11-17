@@ -1,0 +1,40 @@
+{
+ "id": "moon_crane",
+ "note": "Người nộm 3D đo từ source/design/master_v08.png (lưới 25 px, .work/rig/grid_master.png). px_per_unit = chiều cao thân (đỉnh búi 155 đến đáy ủng 965 = 810 px) / 3.0. Master gần chính diện: số đo ngang là bề rộng nhìn từ trước; bề sâu ước bằng tỉ lệ 'depth'.",
+ "source": "../design/master_v08.png",
+ "px_per_unit": 270,
+ "measured_px": {
+  "bun_top": 155, "hair_top": 220, "beard_bottom": 395, "head_center": [530, 310], "head_width": 170,
+  "bun_center": [490, 185], "bun_r": 30,
+  "shoulder_R": [370, 450], "shoulder_L": [690, 450], "pad_R_center": [345, 420], "pad_r": 75,
+  "chest_y": 450, "chest_x": [365, 700], "belt_y": 625, "belt_x": [395, 680], "belt_h": 50,
+  "elbow_R": [320, 570], "fist_R": [240, 665], "fist_L": [800, 750], "fist_r": 72, "bracer_r": 80,
+  "hip_R": [430, 740], "hip_L": [640, 740], "knee_R": [400, 845], "knee_L": [670, 845], "knee_guard_r": 60,
+  "ankle_R": [405, 905], "ankle_L": [670, 905], "ground_y": 965, "boot_len": 170,
+  "skirt_hem_y": 790, "skirt_hem_x": [330, 720],
+  "wing_box": [640, 130, 860, 470],
+  "spear_tip": [120, 60], "spear_blade_base": [180, 330], "spear_butt": [280, 950], "blade_w": 160, "crescent_r": 70
+ },
+ "body": {
+  "height": 3.0,
+  "head_r": 0.32, "head_above_neck": 0.49, "neck": 0.04,
+  "spine": 1.07,
+  "hip_half": 0.39, "shoulder_half": 0.59,
+  "thigh": 0.40, "shin": 0.26, "ankle_h": 0.17, "foot_len": 0.36,
+  "upper_arm": 0.48, "forearm": 0.52, "fist_r": 0.27,
+  "waist_half": 0.53, "shoulder_pad_half": 0.64,
+  "grip_center": {"right": 0.0, "forward": 0.34},
+  "max_heel_lift": 0.24, "real_height_m": 1.8,
+  "mass": {"head": 0.14, "chest": 0.36, "pelvis": 0.22, "kneeR": 0.05, "kneeL": 0.05, "ankleR": 0.02, "ankleL": 0.02,
+           "elbowR": 0.03, "elbowL": 0.03, "handR": 0.04, "handL": 0.04}
+ },
+ "shape": {
+  "chest_half": 0.62, "waist_half": 0.53, "depth": 0.72,
+  "pad_r": 0.32, "upper_arm_r": 0.17, "bracer_r": 0.30, "bracer_len": 0.62,
+  "thigh_r": 0.21, "shin_r": 0.2, "knee_guard_r": 0.22, "boot_w": 0.22, "boot_h": 0.2,
+  "skirt_len": 0.61, "skirt_hem_half": 0.72, "belt_h": 0.18,
+  "bun_r": 0.11, "wing_h": 1.36, "wing_w": 0.9
+ },
+ "weapon": {"length": 3.3, "grip_rear": 1.1, "grip_gap": 0.7, "blade_len": 0.89, "blade_half_w": 0.3, "crescent_r": 0.26,
+            "slide_gap_factor": 0.6}
+}

@@ -1,0 +1,217 @@
+{
+ "name": "moon_crane / lai HY-Motion seed1, thân master",
+ "note": "Thân (xoay hông, vai, độ cao, nhịp) từ HY-Motion seed1 tới lúc trúng. Đặt tay: thương (thủ thế cầm DỰNG ĐỨNG trước ngực như prompt gốc, nghiêng dần về trái thành gồng), lấy đà ở hông, thế đứng, dồn trọng tâm. Sau khi trúng (τ13): hông và vai giữ hướng mục tiêu (+20° theo đà), giữ thế lunge, chân không bước, thương quét tiếp qua mục tiêu sang phải-ra-sau rồi giữ (v2, 2026-11-16: A và D của v1 lệch B và C). Thân master (mannequin_master.json): chân ngắn, hông rộng nên chân sau đặt gần hơn (x -0.02), hai bàn chân rộng theo hông (z ±0.38), lunge ngắn (chân trước x 0.46), bàn chân sau xoay 25° để gót không lùi, tâm tay 0.34. Trọng tâm lúc trúng 59%: dồn thêm thì chân sau quá tầm.",
+ "layers": [
+  {
+   "channel": "weapon_yaw",
+   "mode": "replace",
+   "keys": {
+    "0": -12,
+    "6": -16,
+    "9": -40,
+    "10.5": -45,
+    "11.5": -15,
+    "12.3": 40,
+    "13": 90,
+    "14": 125,
+    "15": 145,
+    "17": 150,
+    "21": 150,
+    "8": -28
+   }
+  },
+  {
+   "channel": "weapon_pitch",
+   "mode": "replace",
+   "keys": {
+    "0": 66,
+    "6": 62,
+    "9": 35,
+    "10.5": 22,
+    "12": 5,
+    "13": 0,
+    "14": 6,
+    "15": 12,
+    "21": 14
+   }
+  },
+  {
+   "channel": "pelvis_yaw",
+   "mode": "add",
+   "keys": {
+    "0": 0,
+    "6.5": 0,
+    "9": -22,
+    "10.5": -30,
+    "12": -8,
+    "13": 0,
+    "21": 0
+   }
+  },
+  {
+   "channel": "root_x",
+   "mode": "add",
+   "keys": {
+    "0": 0.03,
+    "6": 0.0,
+    "9.5": -0.12,
+    "10.5": -0.12,
+    "11.8": -0.03,
+    "12.4": 0.06,
+    "13": 0.2,
+    "15": 0.22,
+    "18": 0.2,
+    "21": 0.18
+   }
+  },
+  {
+   "channel": "root_y",
+   "mode": "add",
+   "keys": {
+    "0": 0,
+    "10": -0.02,
+    "13": -0.1,
+    "16": -0.1,
+    "21": -0.14
+   }
+  },
+  {
+   "channel": "hand_drop",
+   "mode": "replace",
+   "keys": {
+    "0": 0.22,
+    "6": 0.24,
+    "9": 0.3,
+    "10.5": 0.32,
+    "12": 0.5,
+    "13": 0.58,
+    "15": 0.55,
+    "21": 0.55
+   }
+  },
+  {
+   "channel": "chest_off",
+   "mode": "add",
+   "window": [
+    -1,
+    0,
+    7,
+    9.5
+   ],
+   "keys": {
+    "0": 10,
+    "21": 10
+   }
+  },
+  {
+   "channel": "pelvis_yaw",
+   "mode": "replace",
+   "window": [
+    13,
+    14,
+    30,
+    31
+   ],
+   "keys": {
+    "13": 92,
+    "14": 105,
+    "15": 112,
+    "21": 112
+   }
+  },
+  {
+   "channel": "chest_off",
+   "mode": "replace",
+   "window": [
+    13,
+    14,
+    30,
+    31
+   ],
+   "keys": {
+    "13": -25,
+    "14": -15,
+    "15": -8,
+    "21": -8
+   }
+  },
+  {
+   "channel": "root_x",
+   "mode": "replace",
+   "window": [
+    12.2,
+    12.9,
+    30,
+    31
+   ],
+   "keys": {
+    "12.2": 0.2,
+    "13": 0.37,
+    "15": 0.35,
+    "21": 0.33
+   }
+  },
+  {
+   "channel": "root_y",
+   "mode": "replace",
+   "window": [
+    12.2,
+    12.9,
+    30,
+    31
+   ],
+   "keys": {
+    "12.2": 0.6,
+    "13": 0.55,
+    "15": 0.54,
+    "21": 0.55
+   }
+  }
+ ],
+ "feet": {
+  "R": [
+   {
+    "t0": 0,
+    "t1": 30,
+    "pos": [
+     -0.02,
+     0.0,
+     0.38
+    ]
+   }
+  ],
+  "L": [
+   {
+    "t0": 0,
+    "t1": 10.6,
+    "pos": [
+     0.3,
+     0.0,
+     -0.4
+    ]
+   },
+   {
+    "t0": 11.8,
+    "t1": 30,
+    "pos": [
+     0.46,
+     0.0,
+     -0.38
+    ]
+   }
+  ],
+  "yaw_R": {
+   "0": 25,
+   "30": 25
+  }
+ },
+ "timing": {
+  "slash_windows": [
+   [
+    10.5,
+    14.5
+   ]
+  ]
+ },
+ "body_from": "mannequin_master.json"
+}

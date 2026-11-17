@@ -16,6 +16,8 @@ def main():
     ap.add_argument("params")
     ap.add_argument("--name", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--mannequin", help="mannequin_*.json đo từ master: thay thân, vũ khí và thêm hình khối + ảnh master")
+    ap.add_argument("--master-img", help="ảnh master đã tách nền (webp/png) để so trong trang")
     a = ap.parse_args()
     P = Proxy(a.params)
     seen, frames = set(), []
@@ -33,6 +35,16 @@ def main():
                        "toeR": r(J["toeR"]), "toeL": r(J["toeL"]), "fyR": round(fy("R"), 2), "fyL": round(fy("L"), 2)})
     out = {"name": a.name, "fps": P.fps, "hit": P.tm["t_hit"], "body": P.b, "weapon": P.w,
            "palette": P.p["palette"], "frames": frames}
+    if a.mannequin:
+        man = json.load(open(a.mannequin, encoding="utf-8"))
+        out["body"], out["weapon"], out["shape"] = man["body"], dict(P.w, **man["weapon"]), man["shape"]
+        mp = man["measured_px"]
+        out["master"] = {"px_per_unit": man["px_per_unit"], "ground_y": mp["ground_y"],
+                         "center_x": (mp["hip_R"][0] + mp["hip_L"][0]) / 2, "size_px": 1024}
+    if a.master_img:
+        import base64
+        ext = os.path.splitext(a.master_img)[1].lstrip(".").replace("jpg", "jpeg")
+        out.setdefault("master", {})["img"] = f"data:image/{ext};base64," + base64.b64encode(open(a.master_img, "rb").read()).decode()
     with open(a.out, "w", encoding="utf-8") as fh:
         json.dump(out, fh, ensure_ascii=False, separators=(",", ":"))
     print(len(frames), "khung ->", a.out, os.path.getsize(a.out), "byte")

@@ -3,35 +3,42 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: xưởng chỉnh dáng — khung 3D lớn bên trái, bảng thanh trượt theo nhóm khớp bên phải; điện thoại: xếp dọc. */
+/* Layout: xưởng chỉnh dáng: khung 3D lớn (kéo trực tiếp lên bộ phận), bảng phụ bên phải; điện thoại: xếp dọc. */
 :root {
   --bg: #eef0f2; --panel: #ffffff; --ink: #1d232b; --muted: #5d6874; --line: #d5dae0;
-  --accent: #3f5f80; --accent-ink: #ffffff; --gold: #b07f1f; --good: #2f7d4f; --warn: #b5472f; --stage: #4e5157;
+  --accent: #3f5f80; --accent-ink: #ffffff; --good: #2f7d4f; --warn: #b5472f; --stage: #4e5157;
   --f-ui: "IBM Plex Sans", system-ui, sans-serif; --f-num: "IBM Plex Mono", ui-monospace, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #15191e; --panel: #1d232a; --ink: #e6e9ed; --muted: #9aa5b1; --line: #313a44;
-  --accent: #7fa0c0; --accent-ink: #10161c; --gold: #d6a03a; --good: #5cbf85; --warn: #e07a62; --stage: #3a3d42; color-scheme: dark } }
+  --accent: #7fa0c0; --accent-ink: #10161c; --good: #5cbf85; --warn: #e07a62; --stage: #3a3d42; color-scheme: dark } }
 :root[data-theme="dark"] {
   --bg: #15191e; --panel: #1d232a; --ink: #e6e9ed; --muted: #9aa5b1; --line: #313a44;
-  --accent: #7fa0c0; --accent-ink: #10161c; --gold: #d6a03a; --good: #5cbf85; --warn: #e07a62; --stage: #3a3d42; color-scheme: dark }
+  --accent: #7fa0c0; --accent-ink: #10161c; --good: #5cbf85; --warn: #e07a62; --stage: #3a3d42; color-scheme: dark }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font: 14px/1.45 var(--f-ui);
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 12px; }
-.app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; height: calc(100% - 0px); min-height: 560px; }
-.stage { position: relative; background: var(--stage); border-radius: 10px; overflow: hidden; min-height: 420px; }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; height: 100%; min-height: 600px; }
+.stage { position: relative; background: var(--stage); border-radius: 10px; overflow: hidden; min-height: 460px; }
 .stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 .hud { position: absolute; left: 12px; top: 10px; right: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; pointer-events: none; }
 .hud > * { pointer-events: auto; }
+.hint { position: absolute; left: 12px; bottom: 10px; right: 12px; color: #e9edf1; font-size: 12.5px; pointer-events: none; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+.hint b { color: #fff; }
 .chip { font: 12px/1 var(--f-ui); padding: 6px 9px; border-radius: 999px; background: rgba(0,0,0,.45); color: #fff; }
 .chip.ok { background: rgba(47,125,79,.85); } .chip.bad { background: rgba(181,71,47,.9); }
 .btn { font: 500 13px/1 var(--f-ui); padding: 8px 12px; border-radius: 7px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
-.btn:hover { border-color: var(--accent); } .btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn:hover { border-color: var(--accent); } .btn:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .btn.small { padding: 5px 8px; font-size: 12px; }
+.btn.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow-y: auto; min-height: 0; display: flex; flex-direction: column; }
 .sec { padding: 12px 14px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
-.sec h2 { margin: 0; font: 600 12px/1.2 var(--f-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.sec h2, summary { margin: 0; font: 600 12px/1.2 var(--f-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+summary { cursor: pointer; }
+details[open] > summary { margin-bottom: 8px; }
+.grp { display: grid; gap: 6px; margin-bottom: 8px; }
+.grp h3 { margin: 4px 0 0; font: 500 12px var(--f-ui); color: var(--muted); }
 .row { display: grid; grid-template-columns: 112px minmax(0,1fr) 54px; gap: 8px; align-items: center; }
 .row label { font-size: 13px; }
 .row output { font: 12px var(--f-num); text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -40,37 +47,54 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
 .title h1 { margin: 0; font: 600 16px/1.2 var(--f-ui); }
 .title p { margin: 4px 0 0; color: var(--muted); font-size: 12.5px; }
 .inline { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.inline select, .inline input[type=text] { flex: 1 1 140px; min-width: 0; font: 13px var(--f-ui); padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); }
+.inline input[type=text] { flex: 1 1 140px; min-width: 0; font: 13px var(--f-ui); padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); }
 textarea { width: 100%; box-sizing: border-box; font: 12.5px var(--f-ui); padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); resize: vertical; min-height: 44px; }
 .checks { display: grid; gap: 4px; font-size: 12.5px; }
 .checks div { display: flex; justify-content: space-between; gap: 8px; }
 .checks b { font: 500 12px var(--f-num); }
 .ok-t { color: var(--good); } .bad-t { color: var(--warn); }
+.gest { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 4px 10px; font-size: 12.5px; }
+.gest dt { font-weight: 600; } .gest dd { margin: 0; color: var(--muted); }
 .poses { display: grid; gap: 6px; }
 .pose { display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: 6px; align-items: center; padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; }
 .pose .n { font-weight: 500; overflow-wrap: anywhere; } .pose .m { color: var(--muted); font-size: 11.5px; }
 .empty { color: var(--muted); font-size: 12.5px; }
 .status { font-size: 12px; color: var(--muted); min-height: 1.2em; }
 pre.json { font: 11px/1.35 var(--f-num); max-height: 160px; overflow: auto; background: var(--bg); padding: 8px; border-radius: 7px; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-@media (max-width: 860px) { .app { grid-template-columns: 1fr; height: auto; } .stage { height: 62vh; } .panel { max-height: none; } }
-@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+@media (max-width: 860px) { .app { grid-template-columns: 1fr; height: auto; } .stage { height: 64vh; } }
 </style>
 
 <div class="app">
   <div class="stage" id="stage">
     <div class="hud">
-      <button class="btn small" id="camGame" type="button">Camera game</button>
+      <button class="btn small on" id="camGame" type="button">Camera game</button>
       <button class="btn small" id="camFree" type="button">Nhìn chéo</button>
       <button class="btn small" id="camTop" type="button">Nhìn từ trên</button>
+      <button class="btn small" id="cmpMaster" type="button">So với master</button>
       <span class="chip" id="chipCom">Trọng tâm</span>
       <span class="chip" id="chipReach">Tầm với</span>
     </div>
+    <div class="hint" id="hint">Rê chuột lên một bộ phận để thấy nó sáng lên, rồi <b>kéo</b> để chỉnh. Kéo vùng trống để xoay camera, cuộn để thu phóng.</div>
   </div>
 
   <aside class="panel" aria-label="Bảng chỉnh tư thế">
     <div class="title">
       <h1>Pose3D · moon_crane</h1>
-      <p>Kéo khung 3D để xoay camera. Chỉnh các thanh trượt; tay tự bám thương, chân tự bám đất. Mục tiêu ở bên phải màn hình.</p>
+      <p>Người nộm đo từ master (cao 3,0 đơn vị). Tay tự bám thương, chân tự bám đất. Mục tiêu ở bên phải màn hình.</p>
+    </div>
+
+    <div class="sec">
+      <h2>Kéo trực tiếp</h2>
+      <dl class="gest">
+        <dt>Hông, vạt áo</dt><dd>dời cả người (giữ Shift: xoay hông)</dd>
+        <dt>Ngực, giáp vai</dt><dd>ngang: xoay ngực · dọc: cúi/ngả (Shift: nghiêng)</dd>
+        <dt>Đầu</dt><dd>ngang: quay đầu</dd>
+        <dt>Nắm đấm, cẳng tay</dt><dd>dời chỗ hai tay nắm thương</dd>
+        <dt>Mũi thương</dt><dd>ngắm hướng thương</dd>
+        <dt>Cán thương</dt><dd>đẩy / rút thương dọc cán</dd>
+        <dt>Ủng</dt><dd>đặt chân trên mặt đất (Shift: xoay bàn chân)</dd>
+      </dl>
+      <div class="inline"><button class="btn small" id="undo" type="button">Hoàn tác</button><button class="btn small" id="redo" type="button">Làm lại</button><span class="status" id="dragStatus"></span></div>
     </div>
 
     <div class="sec">
@@ -78,11 +102,6 @@ pre.json { font: 11px/1.35 var(--f-num); max-height: 160px; overflow: auto; back
       <div class="row"><label for="frame">Khung</label><input id="frame" type="range" min="0" max="0" step="1" value="0"><output id="frameOut">0</output></div>
       <div class="inline"><span class="status" id="phase"></span><button class="btn small" id="play" type="button">Phát</button><button class="btn small" id="takeFrame" type="button">Lấy dáng khung này</button></div>
     </div>
-
-    <div class="sec" id="secBody"><h2>Hông và thân</h2></div>
-    <div class="sec" id="secHead"><h2>Đầu</h2></div>
-    <div class="sec" id="secSpear"><h2>Thương và tay</h2></div>
-    <div class="sec" id="secFeet"><h2>Chân</h2></div>
 
     <div class="sec">
       <h2>Kiểm tra vật lý</h2>
@@ -98,9 +117,19 @@ pre.json { font: 11px/1.35 var(--f-num); max-height: 160px; overflow: auto; back
     </div>
 
     <div class="sec">
-      <h2>Dữ liệu tư thế hiện tại</h2>
-      <div class="inline"><button class="btn small" id="copy" type="button">Sao chép JSON</button><span class="status" id="copyStatus"></span></div>
-      <pre class="json" id="json"></pre>
+      <details id="fine">
+        <summary>Tinh chỉnh bằng số</summary>
+        <div id="sliders"></div>
+        <label class="inline"><input type="checkbox" id="spot" checked> Mắt luôn nhìn mục tiêu</label>
+      </details>
+    </div>
+
+    <div class="sec">
+      <details>
+        <summary>Dữ liệu tư thế hiện tại</summary>
+        <div class="inline"><button class="btn small" id="copy" type="button">Sao chép JSON</button><span class="status" id="copyStatus"></span></div>
+        <pre class="json" id="json"></pre>
+      </details>
     </div>
   </aside>
 </div>
@@ -113,42 +142,47 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const M = JSON.parse(document.getElementById("motion").textContent);
 const B = M.body, W = M.weapon, PAL = M.palette;
+const SH = Object.assign({ chest_half: 0.62, waist_half: 0.53, depth: 0.72, pad_r: 0.28, upper_arm_r: 0.17, bracer_r: 0.3, bracer_len: 0.62,
+  thigh_r: 0.21, shin_r: 0.2, knee_guard_r: 0.22, boot_w: 0.22, boot_h: 0.2, skirt_len: 0.61, skirt_hem_half: 0.72, belt_h: 0.18,
+  bun_r: 0.11, wing_h: 1.26, wing_w: 0.82 }, M.shape || {});
 const D2R = Math.PI / 180;
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const UP = V(0, 1, 0);
 const fwd = y => V(Math.sin(y * D2R), 0, Math.cos(y * D2R));
 const right = y => V(-Math.cos(y * D2R), 0, Math.sin(y * D2R));
+const wrap = a => ((a + 180) % 360 + 360) % 360 - 180;
 
 // ---------------------------------------------------------------- điều khiển (một tư thế = các giá trị này)
 const SL = [
-  ["secBody", "px", "Hông trái/phải", -1.2, 1.4, 0.01], ["secBody", "py", "Hông cao/thấp", 0.35, 0.85, 0.005],
-  ["secBody", "pz", "Hông trước/sau", -0.6, 0.6, 0.01], ["secBody", "yawP", "Hông xoay", -180, 540, 1],
-  ["secBody", "chestRel", "Ngực xoay thêm", -75, 75, 1], ["secBody", "lean", "Ngực cúi/ngả", -30, 45, 1],
-  ["secBody", "tilt", "Ngực nghiêng", -30, 30, 1],
-  ["secHead", "headRel", "Đầu xoay thêm", -90, 90, 1],
-  ["secSpear", "wYaw", "Thương hướng", -180, 540, 1], ["secSpear", "wPitch", "Thương nghiêng", -80, 88, 1],
-  ["secSpear", "handDrop", "Tay cao/thấp", -0.4, 1.1, 0.01], ["secSpear", "slide", "Đẩy/rút thương", -0.35, 0.5, 0.01],
-  ["secFeet", "rx", "Chân phải X", -1.2, 1.4, 0.01], ["secFeet", "rz", "Chân phải Z", -0.7, 0.7, 0.01], ["secFeet", "fyR", "Bàn phải xoay", -180, 360, 1],
-  ["secFeet", "lx", "Chân trái X", -1.2, 1.4, 0.01], ["secFeet", "lz", "Chân trái Z", -0.7, 0.7, 0.01], ["secFeet", "fyL", "Bàn trái xoay", -180, 360, 1],
+  ["Hông và thân", "px", "Hông trái/phải", -1.6, 1.8, 0.01], ["Hông và thân", "py", "Hông cao/thấp", 0.35, 0.95, 0.005],
+  ["Hông và thân", "pz", "Hông trước/sau", -0.8, 0.8, 0.01], ["Hông và thân", "yawP", "Hông xoay", -180, 540, 1],
+  ["Hông và thân", "chestRel", "Ngực xoay thêm", -75, 75, 1], ["Hông và thân", "lean", "Ngực cúi/ngả", -30, 45, 1],
+  ["Hông và thân", "tilt", "Ngực nghiêng", -30, 30, 1], ["Đầu", "headRel", "Đầu xoay thêm", -90, 90, 1],
+  ["Thương và tay", "wYaw", "Thương hướng", -180, 540, 1], ["Thương và tay", "wPitch", "Thương nghiêng", -85, 89, 1],
+  ["Thương và tay", "gx", "Tay sang ngang", -0.8, 0.8, 0.01], ["Thương và tay", "gz", "Tay ra trước", -0.3, 1.1, 0.01],
+  ["Thương và tay", "handDrop", "Tay cao/thấp", -0.6, 1.2, 0.01], ["Thương và tay", "slide", "Đẩy/rút thương", -0.6, 0.8, 0.01],
+  ["Chân", "rx", "Chân phải X", -1.6, 1.8, 0.01], ["Chân", "rz", "Chân phải Z", -0.9, 0.9, 0.01], ["Chân", "fyR", "Bàn phải xoay", -180, 360, 1],
+  ["Chân", "lx", "Chân trái X", -1.6, 1.8, 0.01], ["Chân", "lz", "Chân trái Z", -0.9, 0.9, 0.01], ["Chân", "fyL", "Bàn trái xoay", -180, 360, 1],
 ];
-const ctl = {};
-const inputs = {};
-for (const [sec, key, label, mn, mx, st] of SL) {
-  const row = document.createElement("div"); row.className = "row";
-  row.innerHTML = `<label for="c_${key}">${label}</label><input id="c_${key}" type="range" min="${mn}" max="${mx}" step="${st}"><output id="o_${key}"></output>`;
-  document.getElementById(sec).appendChild(row);
-  const inp = row.querySelector("input"); inputs[key] = inp;
-  inp.addEventListener("input", () => { ctl[key] = +inp.value; refresh(); });
+const ctl = {}, inputs = {};
+{
+  const host = document.getElementById("sliders"); let grp = null, cur = "";
+  for (const [g, key, label, mn, mx, st] of SL) {
+    if (g !== cur) { grp = document.createElement("div"); grp.className = "grp"; grp.innerHTML = `<h3>${g}</h3>`; host.appendChild(grp); cur = g; }
+    const row = document.createElement("div"); row.className = "row";
+    row.innerHTML = `<label for="c_${key}">${label}</label><input id="c_${key}" type="range" min="${mn}" max="${mx}" step="${st}"><output id="o_${key}"></output>`;
+    grp.appendChild(row);
+    const inp = row.querySelector("input"); inputs[key] = inp;
+    inp.addEventListener("pointerdown", () => pushUndo());
+    inp.addEventListener("input", () => { ctl[key] = +inp.value; refresh(); });
+  }
 }
-const headSpot = document.createElement("div"); headSpot.className = "inline";
-headSpot.innerHTML = `<label><input type="checkbox" id="spot" checked> Mắt luôn nhìn mục tiêu</label>`;
-document.getElementById("secHead").appendChild(headSpot);
-document.getElementById("spot").addEventListener("change", e => { ctl.spot = e.target.checked; refresh(); });
+document.getElementById("spot").addEventListener("change", e => { pushUndo(); ctl.spot = e.target.checked; refresh(); });
 
 function fromFrame(f) {
   return { px: f.pelvis[0], py: f.pelvis[1], pz: f.pelvis[2], yawP: f.yawP, chestRel: f.yawC - f.yawP, lean: 0, tilt: 0,
-    headRel: 0, spot: true, wYaw: f.wYaw, wPitch: f.wPitch, handDrop: f.handDrop, slide: f.slide,
-    rx: f.toeR[0], rz: f.toeR[2], fyR: f.fyR, lx: f.toeL[0], lz: f.toeL[2], fyL: f.fyL };
+    headRel: 0, spot: true, wYaw: f.wYaw, wPitch: f.wPitch, gx: B.grip_center.right, gz: B.grip_center.forward,
+    handDrop: f.handDrop, slide: f.slide, rx: f.toeR[0], rz: f.toeR[2], fyR: f.fyR, lx: f.toeL[0], lz: f.toeL[2], fyL: f.fyL };
 }
 
 // ---------------------------------------------------------------- bộ giải (như scripts/motion_proxy/skeleton.py, không trễ pha)
@@ -162,23 +196,23 @@ function ik2(root, target, l1, l2, pole) {
   p.normalize();
   return { mid: root.clone().addScaledVector(dn, a).addScaledVector(p, h), end, over };
 }
-const wrap = a => ((a + 180) % 360 + 360) % 360 - 180;
-function solve(c) {
-  const P = c.yawP, C = c.yawP + c.chestRel;
-  const pelvis = V(c.px, c.py, c.pz);
-  const rC = right(C), fC = fwd(C);
+function frameOf(c) {
+  const C = c.yawP + c.chestRel, rC = right(C), fC = fwd(C);
   const spineDir = UP.clone().applyAxisAngle(rC, c.lean * D2R).applyAxisAngle(fC, -c.tilt * D2R);
+  const pelvis = V(c.px, c.py, c.pz);
   const chest = pelvis.clone().addScaledVector(spineDir, B.spine).addScaledVector(fC, 0.04);
+  const sd = fwd(c.wYaw).multiplyScalar(Math.cos(c.wPitch * D2R)).addScaledVector(UP, Math.sin(c.wPitch * D2R));
+  const center = chest.clone().addScaledVector(rC, c.gx).addScaledVector(fC, c.gz).addScaledVector(UP, -c.handDrop).addScaledVector(sd, c.slide);
+  return { C, rC, fC, spineDir, pelvis, chest, sd, center };
+}
+function solve(c) {
+  const P = c.yawP, F = frameOf(c), { C, rC, fC, spineDir, pelvis, chest, sd, center } = F;
   const neck = chest.clone().addScaledVector(spineDir, B.neck);
   const head = neck.clone().addScaledVector(spineDir, B.head_above_neck);
-  let H = C + (c.spot ? Math.max(-60, Math.min(60, wrap(90 - C))) : 0) + c.headRel;
+  const H = C + (c.spot ? Math.max(-60, Math.min(60, wrap(90 - C))) : 0) + c.headRel;
   const hipR = pelvis.clone().addScaledVector(right(P), B.hip_half), hipL = pelvis.clone().addScaledVector(right(P), -B.hip_half);
   const shR = chest.clone().addScaledVector(rC, B.shoulder_half), shL = chest.clone().addScaledVector(rC, -B.shoulder_half);
-  const a = c.wPitch * D2R;
-  const sd = fwd(c.wYaw).multiplyScalar(Math.cos(a)).addScaledVector(UP, Math.sin(a));
-  const gc = B.grip_center;
   const gap = W.grip_gap - (W.slide_gap_factor ?? 0.6) * Math.max(0, c.slide);
-  const center = chest.clone().addScaledVector(rC, gc.right).addScaledVector(fC, gc.forward).addScaledVector(UP, -c.handDrop).addScaledVector(sd, c.slide);
   let rear = center.clone().addScaledVector(sd, -gap / 2), front = center.clone().addScaledVector(sd, gap / 2);
   const reach = (B.upper_arm + B.forearm) * 0.97; const shift = V(0, 0, 0);
   for (let i = 0; i < 60; i++) {
@@ -197,7 +231,7 @@ function solve(c) {
     let lift = 0, res;
     for (;;) {
       const heel = toe.clone().addScaledVector(fwd(fy), -B.foot_len).addScaledVector(UP, lift);
-      const ank = heel.clone().addScaledVector(fwd(fy), 0.08).addScaledVector(UP, B.ankle_h);
+      const ank = heel.clone().addScaledVector(fwd(fy), 0.12).addScaledVector(UP, B.ankle_h);
       res = ik2(hip, ank, B.thigh, B.shin, fwd(fy).addScaledVector(UP, 0.2));
       res.heel = heel; res.toe = toe; res.lift = lift;
       if (res.over <= 1e-4 || lift >= (B.max_heel_lift ?? 0.24)) break;
@@ -208,10 +242,10 @@ function solve(c) {
   const J = { pelvis, chest, neck, head, hipR, hipL, shR, shL, kneeR: legs.R.mid, kneeL: legs.L.mid, ankleR: legs.R.end, ankleL: legs.L.end,
     heelR: legs.R.heel, heelL: legs.L.heel, toeR: legs.R.toe, toeL: legs.L.toe, elbowR: armR.mid, elbowL: armL.mid,
     handR: armR.end, handL: armL.end, butt, tip, blade_root: tip.clone().addScaledVector(sd, -W.blade_len) };
-  const mass = B.mass; let tot = 0; const com = V(0, 0, 0);
-  for (const [k, m] of Object.entries(mass)) { com.addScaledVector(J[k], m); tot += m; }
+  let tot = 0; const com = V(0, 0, 0);
+  for (const [k, m] of Object.entries(B.mass)) { com.addScaledVector(J[k], m); tot += m; }
   com.divideScalar(tot);
-  return { J, yaw: { pelvis: P, chest: C, head: H, weapon: c.wYaw }, pitch: c.wPitch, sd, shift: shift.length(), com,
+  return { J, F, yaw: { pelvis: P, chest: C, head: H, weapon: c.wYaw }, pitch: c.wPitch, sd, shift: shift.length(), com,
     over: { armR: armR.over, armL: armL.over, legR: legs.R.over, legL: legs.L.over }, heel: { R: legs.R.lift, L: legs.L.lift } };
 }
 
@@ -220,137 +254,247 @@ const stage = document.getElementById("stage");
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
 stage.appendChild(renderer.domElement);
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x4e5157);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x4e5157);
 const cam = new THREE.OrthographicCamera(-4, 4, 3, -3, -50, 50);
-const orbit = new OrbitControls(cam, renderer.domElement);
-orbit.target.set(0.4, 1.35, 0); orbit.enableDamping = true;
+const orbit = new OrbitControls(cam, renderer.domElement); orbit.enableDamping = true;
 scene.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1.15));
 const sun = new THREE.DirectionalLight(0xffffff, 1.35); sun.position.set(-3, 6, 5); scene.add(sun);
-
 const col = h => new THREE.Color(h);
 const mat = (h, k = 1) => new THREE.MeshStandardMaterial({ color: col(h).multiplyScalar(k), roughness: 0.75, metalness: 0.05 });
-const MAT = {
-  skinN: mat(PAL.skin), skinF: mat(PAL.skin, 0.8), armorN: mat(PAL.armor), armorF: mat(PAL.armor, 0.82), armor: mat(PAL.armor),
-  legN: mat(PAL.leather, 1.25), legF: mat(PAL.leather, 1.0), bootN: mat(PAL.shaft), bootF: mat(PAL.shaft, 0.85),
-  gold: mat(PAL.gold), ivory: mat(PAL.ivory), hair: mat(PAL.hair), shaft: mat(PAL.shaft, 0.9), blade: mat(PAL.blade), red: mat(PAL.red),
-  eye: new THREE.MeshBasicMaterial({ color: col(PAL.eye) }),
-};
-const U = B.height / 3.0;
-const cyl = (r1, r2, m) => new THREE.Mesh(new THREE.CylinderGeometry(r2, r1, 1, 18), m);
-const sph = (r, m) => new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), m);
-function placeSeg(mesh, a, b) {
-  const d = b.clone().sub(a); const L = d.length();
-  mesh.position.copy(a).addScaledVector(d, 0.5);
-  mesh.scale.set(1, Math.max(L, 1e-4), 1);
-  mesh.quaternion.setFromUnitVectors(UP, d.normalize());
-}
 const fig = new THREE.Group(); scene.add(fig);
 const S = {};
-const add = (k, m) => { S[k] = m; fig.add(m); return m; };
+// mỗi khối thuộc một "bộ phận kéo được"
+function add(k, mesh, part) { S[k] = mesh; mesh.userData.part = part; mesh.traverse(o => { o.userData.part = part; }); fig.add(mesh); return mesh; }
+const cyl = (r1, r2, m, seg = 20) => new THREE.Mesh(new THREE.CylinderGeometry(r2, r1, 1, seg), m);
+const sph = (r, m) => new THREE.Mesh(new THREE.SphereGeometry(r, 22, 16), m);
 for (const s of ["R", "L"]) {
-  const n = s === "R";
-  add("thigh" + s, cyl(0.19, 0.15, n ? MAT.legN : MAT.legF)); add("shin" + s, cyl(0.16, 0.15, n ? MAT.bootN : MAT.bootF));
-  add("foot" + s, cyl(0.12, 0.13, n ? MAT.bootN : MAT.bootF)); add("knee" + s, sph(0.12, MAT.gold));
-  add("jk" + s, sph(0.17, n ? MAT.legN : MAT.legF)); add("ja" + s, sph(0.15, n ? MAT.bootN : MAT.bootF)); add("toecap" + s, sph(0.09, MAT.gold));
-  add("upper" + s, cyl(0.18, 0.15, n ? MAT.skinN : MAT.skinF)); add("fore" + s, cyl(0.17, 0.17, n ? MAT.armorN : MAT.armorF));
-  add("je" + s, sph(0.16, n ? MAT.skinN : MAT.skinF)); add("fist" + s, sph(B.fist_r, n ? MAT.skinN : MAT.skinF));
-  add("pad" + s, sph(0.27, MAT.armor)); add("padrim" + s, new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.05, 8, 24), MAT.gold));
+  const n = s === "R", k = n ? 1 : 0.82;
+  add("thigh" + s, cyl(SH.thigh_r, SH.thigh_r * 0.85, mat(PAL.leather, 1.25 * k)), "hips");
+  add("shin" + s, cyl(SH.shin_r, SH.shin_r * 1.05, mat(PAL.shaft, k)), "foot" + s);
+  add("knee" + s, sph(SH.knee_guard_r, mat(PAL.gold, k)), "foot" + s);
+  add("boot" + s, new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), mat(PAL.shaft, k)), "foot" + s);
+  add("toecap" + s, sph(SH.boot_w * 0.9, mat(PAL.gold, k)), "foot" + s);
+  add("upper" + s, cyl(SH.upper_arm_r, SH.upper_arm_r * 0.9, mat(PAL.skin, k)), "chest");
+  add("bracer" + s, cyl(SH.bracer_r, SH.bracer_r * 0.92, mat(PAL.armor, k)), "hands");
+  add("band" + s, new THREE.Mesh(new THREE.TorusGeometry(SH.bracer_r * 0.98, 0.05, 8, 24), mat(PAL.gold, k)), "hands");
+  add("fist" + s, sph(B.fist_r, mat(PAL.skin, k)), "hands");
+  add("pad" + s, sph(SH.pad_r, mat(PAL.armor, k)), "chest");
+  add("padrim" + s, new THREE.Mesh(new THREE.TorusGeometry(SH.pad_r * 0.95, 0.06, 8, 28), mat(PAL.gold, k)), "chest");
 }
-add("torso", new THREE.Mesh(new THREE.CylinderGeometry(1, 0.78, 1, 24), MAT.armor));
-add("skirt", new THREE.Mesh(new THREE.CylinderGeometry(1, 1.25, 1, 24, 1, true), MAT.armorF));
-add("belt", new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 24), mat(PAL.leather)));
-add("emblem", sph(0.16, MAT.gold));
-add("head", sph(B.head_r, MAT.skinN)); add("bun", sph(0.13, MAT.hair)); add("hairCap", new THREE.Mesh(new THREE.SphereGeometry(B.head_r * 1.03, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.42), MAT.hair));
-add("beard", new THREE.Mesh(new THREE.SphereGeometry(B.head_r * 1.02, 20, 12, -Math.PI * 0.45, Math.PI * 0.9, Math.PI * 0.55, Math.PI * 0.35), MAT.hair));
-add("eyeR", sph(0.045, MAT.eye)); add("eyeL", sph(0.045, MAT.eye));
-const wing = new THREE.Group(); fig.add(wing); S.wing = wing;
+add("torso", new THREE.Mesh(new THREE.CylinderGeometry(1, SH.waist_half / SH.chest_half, 1, 28), mat(PAL.armor)), "chest");
+add("collar", new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.07, 8, 24), mat(PAL.gold)), "chest");
+add("emblem", sph(0.2, mat(PAL.gold)), "chest");
+add("belt", new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 28), mat(PAL.leather)), "hips");
+add("buckle", new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.2, 0.06), mat(PAL.gold)), "hips");
+add("skirt", new THREE.Mesh(new THREE.CylinderGeometry(1, SH.skirt_hem_half / SH.waist_half, 1, 28, 1, true), Object.assign(mat(PAL.armor, 0.85), { side: THREE.DoubleSide })), "hips");
+add("sash", new THREE.Mesh(new THREE.BoxGeometry(0.18, 1, 0.04), mat(PAL.red)), "hips");
+add("head", sph(B.head_r, mat(PAL.skin)), "head");
+add("hair", new THREE.Mesh(new THREE.SphereGeometry(B.head_r * 1.04, 22, 12, 0, Math.PI * 2, 0, Math.PI * 0.42), mat(PAL.hair)), "head");
+add("bun", sph(SH.bun_r, mat(PAL.hair)), "head");
+add("beard", new THREE.Mesh(new THREE.SphereGeometry(B.head_r * 1.03, 22, 12, -Math.PI * 0.42, Math.PI * 0.84, Math.PI * 0.52, Math.PI * 0.4), mat(PAL.hair)), "head");
+add("eyeR", sph(0.05, new THREE.MeshBasicMaterial({ color: col(PAL.eye) })), "head");
+add("eyeL", sph(0.05, new THREE.MeshBasicMaterial({ color: col(PAL.eye) })), "head");
+const wing = new THREE.Group(); S.wing = wing; fig.add(wing); wing.userData.part = "chest";
 for (let k = 0; k < 4; k++) {
-  const sh = new THREE.Shape(); sh.moveTo(0, -0.08); sh.quadraticCurveTo(0.2, 0.5, 0, 1); sh.quadraticCurveTo(-0.16, 0.5, 0, -0.08);
+  const sh = new THREE.Shape(); sh.moveTo(0, -0.06); sh.quadraticCurveTo(0.22, 0.5, 0, 1); sh.quadraticCurveTo(-0.15, 0.5, 0, -0.06);
   const m = new THREE.Mesh(new THREE.ShapeGeometry(sh), new THREE.MeshStandardMaterial({ color: col(PAL.ivory), side: THREE.DoubleSide, roughness: 0.8 }));
-  const ln = [1.0, 0.92, 0.82, 0.7][k]; m.scale.set(1, ln, 1); m.rotation.z = -(84 - [84, 64, 45, 27][k]) * D2R; m.position.x = 0.05 * k;
-  wing.add(m);
+  const ln = SH.wing_h * [1.0, 0.85, 0.7, 0.55][k]; m.scale.set(SH.wing_w * 0.9, ln, 1);
+  m.rotation.z = -([6, 22, 40, 58][k]) * D2R; m.userData.part = "chest"; wing.add(m);
 }
-add("shaft", cyl(0.045, 0.045, MAT.shaft));
-const leaf = new THREE.Shape(); leaf.moveTo(0, 0); leaf.quadraticCurveTo(0.2, 0.25, 0, 0.6); leaf.quadraticCurveTo(-0.2, 0.25, 0, 0);
-add("bladeA", new THREE.Mesh(new THREE.ShapeGeometry(leaf), new THREE.MeshStandardMaterial({ color: col(PAL.blade), side: THREE.DoubleSide, metalness: 0.4, roughness: 0.35 })));
-add("bladeB", new THREE.Mesh(new THREE.ShapeGeometry(leaf), new THREE.MeshStandardMaterial({ color: col(PAL.blade), side: THREE.DoubleSide, metalness: 0.4, roughness: 0.35 })));
-add("guard", new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.035, 8, 20, Math.PI), MAT.gold));
-add("tassel", cyl(0.05, 0.02, MAT.red));
-add("butt", sph(0.06, MAT.gold));
+add("shaft", cyl(0.05, 0.05, mat(PAL.shaft, 0.9), 12), "shaft");
+const leaf = new THREE.Shape(); leaf.moveTo(0, 0); leaf.quadraticCurveTo(0.34, 0.38, 0, 1); leaf.quadraticCurveTo(-0.34, 0.38, 0, 0);
+for (const k of ["bladeA", "bladeB"]) add(k, new THREE.Mesh(new THREE.ShapeGeometry(leaf), new THREE.MeshStandardMaterial({ color: col(PAL.blade), side: THREE.DoubleSide, metalness: 0.4, roughness: 0.35 })), "tip");
+add("guard", new THREE.Mesh(new THREE.TorusGeometry(W.crescent_r ?? 0.2, 0.045, 8, 22, Math.PI), mat(PAL.gold)), "tip");
+add("tassel", cyl(0.06, 0.02, mat(PAL.red), 8), "tip");
+add("butt", sph(0.07, mat(PAL.gold)), "shaft");
 // mặt đất, bóng, trọng tâm, vùng đỡ, mục tiêu
-const grid = new THREE.GridHelper(12, 24, 0x7a7f86, 0x63676d); grid.position.y = -0.002; scene.add(grid);
-const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.9, 32), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25 }));
+const grid = new THREE.GridHelper(14, 28, 0x7a7f86, 0x63676d); grid.position.y = -0.002; scene.add(grid);
+const shadow = new THREE.Mesh(new THREE.CircleGeometry(1.0, 32), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25 }));
 shadow.rotation.x = -Math.PI / 2; shadow.scale.set(1, 0.6, 1); scene.add(shadow);
 const comDot = new THREE.Mesh(new THREE.RingGeometry(0.05, 0.1, 24), new THREE.MeshBasicMaterial({ color: 0x5cbf85, side: THREE.DoubleSide }));
 comDot.rotation.x = -Math.PI / 2; scene.add(comDot);
 const supGeo = new THREE.BufferGeometry().setFromPoints([V(0, 0.01, 0), V(1, 0.01, 0)]);
 const supLine = new THREE.Line(supGeo, new THREE.LineBasicMaterial({ color: 0x5cbf85 })); scene.add(supLine);
 const target = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 2.4, 10), new THREE.MeshBasicMaterial({ color: 0xc87a6e }));
-target.position.set(3.4, 1.2, 0); scene.add(target);
+target.position.set(3.6, 1.2, 0); scene.add(target);
+// ảnh master (so khối)
+let masterPlane = null;
+if (M.master && M.master.img) {
+  const tex = new THREE.TextureLoader().load(M.master.img); tex.colorSpace = THREE.SRGBColorSpace;
+  const w = M.master.size_px / M.master.px_per_unit;
+  masterPlane = new THREE.Mesh(new THREE.PlaneGeometry(w, w), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.5, depthWrite: false }));
+  masterPlane.visible = false; scene.add(masterPlane);
+}
 
+function placeSeg(mesh, a, b) {
+  const d = b.clone().sub(a); const L = d.length();
+  mesh.position.copy(a).addScaledVector(d, 0.5); mesh.scale.set(1, Math.max(L, 1e-4), 1);
+  mesh.quaternion.setFromUnitVectors(UP, d.normalize());
+}
 function orient(obj, xAxis, yAxis) {
   const x = xAxis.clone().normalize(); const y = yAxis.clone().addScaledVector(x, -yAxis.dot(x)).normalize(); const z = x.clone().cross(y);
   obj.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
 }
 function draw(r) {
-  const J = r.J;
+  const J = r.J, rC = right(r.yaw.chest), fC = fwd(r.yaw.chest), rP = right(r.yaw.pelvis), fP = fwd(r.yaw.pelvis);
   for (const s of ["R", "L"]) {
     placeSeg(S["thigh" + s], J["hip" + s], J["knee" + s]); placeSeg(S["shin" + s], J["knee" + s], J["ankle" + s]);
-    placeSeg(S["foot" + s], J["heel" + s], J["toe" + s]); S["knee" + s].position.copy(J["knee" + s]);
-    S["jk" + s].position.copy(J["knee" + s]); S["ja" + s].position.copy(J["ankle" + s]); S["toecap" + s].position.copy(J["toe" + s]);
-    placeSeg(S["upper" + s], J["sh" + s], J["elbow" + s]); placeSeg(S["fore" + s], J["elbow" + s], J["hand" + s]);
-    S["je" + s].position.copy(J["elbow" + s]); S["fist" + s].position.copy(J["hand" + s]);
-    S["pad" + s].position.copy(J["sh" + s]).addScaledVector(UP, 0.06); S["pad" + s].scale.set(1, 0.85, 1);
-    S["padrim" + s].position.copy(J["sh" + s]); orient(S["padrim" + s], right(r.yaw.chest), fwd(r.yaw.chest));
+    S["knee" + s].position.copy(J["knee" + s]);
+    const fy = s === "R" ? ctl.fyR : ctl.fyL, ff = fwd(fy);
+    const heel = J["heel" + s], toe = J["toe" + s];
+    S["boot" + s].position.copy(heel).add(toe).multiplyScalar(0.5).addScaledVector(UP, SH.boot_h * 0.45);
+    orient(S["boot" + s], toe.clone().sub(heel), UP); S["boot" + s].scale.set(heel.distanceTo(toe) + 0.12, SH.boot_h, SH.boot_w * 2);
+    S["toecap" + s].position.copy(toe).addScaledVector(UP, SH.boot_h * 0.45); S["toecap" + s].scale.set(1, 0.8, 1);
+    placeSeg(S["upper" + s], J["sh" + s], J["elbow" + s]);
+    const fa = J["hand" + s].clone().sub(J["elbow" + s]);
+    placeSeg(S["bracer" + s], J["elbow" + s].clone().addScaledVector(fa, 0.15), J["hand" + s].clone().addScaledVector(fa, -0.25));
+    S["band" + s].position.copy(J["elbow" + s]).addScaledVector(fa, 0.7); S["band" + s].quaternion.setFromUnitVectors(V(0, 0, 1), fa.clone().normalize());
+    S["fist" + s].position.copy(J["hand" + s]);
+    S["pad" + s].position.copy(J["sh" + s]).addScaledVector(UP, 0.07); S["pad" + s].scale.set(1, 0.85, 1);
+    S["padrim" + s].position.copy(J["sh" + s]).addScaledVector(UP, -0.02); orient(S["padrim" + s], rC, fC);
   }
-  const waist = J.pelvis.clone().addScaledVector(UP, 0.46);
-  const spine = J.chest.clone().sub(waist);
-  S.torso.position.copy(waist).addScaledVector(spine, 0.5);
-  orient(S.torso, right(r.yaw.chest), spine); S.torso.scale.set(B.shoulder_half * 0.9, spine.length() + 0.12, 0.34);
-  S.skirt.position.copy(J.pelvis).addScaledVector(UP, 0.16); orient(S.skirt, right(r.yaw.pelvis), UP); S.skirt.scale.set(B.waist_half, 0.6, 0.38);
-  S.belt.position.copy(waist); orient(S.belt, right(r.yaw.pelvis), UP); S.belt.scale.set(B.waist_half * 1.04, 0.14, 0.4);
-  S.emblem.position.copy(J.chest).addScaledVector(spine.clone().normalize(), -0.35).addScaledVector(fwd(r.yaw.chest), 0.4); S.emblem.scale.set(1.4, 1, 0.4);
-  orient(S.emblem, right(r.yaw.chest), UP);
-  S.head.position.copy(J.head); S.hairCap.position.copy(J.head); orient(S.hairCap, right(r.yaw.head), UP);
-  S.bun.position.copy(J.head).addScaledVector(UP, B.head_r + 0.08).addScaledVector(fwd(r.yaw.head), -0.1);
-  S.beard.position.copy(J.head); orient(S.beard, right(r.yaw.head).negate(), UP);
+  const waist = J.pelvis.clone().addScaledVector(UP, 0.42);
+  const top = J.chest.clone().addScaledVector(r.F.spineDir, 0.12);
+  placeSeg(S.torso, waist, top); orient(S.torso, rC, top.clone().sub(waist)); S.torso.scale.set(SH.chest_half, waist.distanceTo(top), SH.chest_half * SH.depth);
+  S.collar.position.copy(top).addScaledVector(r.F.spineDir, -0.02); orient(S.collar, rC, fC);
+  S.emblem.position.copy(J.chest).addScaledVector(r.F.spineDir, -0.32).addScaledVector(fC, SH.chest_half * SH.depth * 0.95);
+  orient(S.emblem, rC, r.F.spineDir); S.emblem.scale.set(1.5, 1.1, 0.3);
+  S.belt.position.copy(waist); orient(S.belt, rP, UP); S.belt.scale.set(SH.waist_half * 1.04, SH.belt_h, SH.waist_half * SH.depth * 1.04);
+  S.buckle.position.copy(waist).addScaledVector(fP, SH.waist_half * SH.depth * 1.06); orient(S.buckle, rP, UP);
+  S.skirt.position.copy(waist).addScaledVector(UP, -SH.skirt_len / 2 - SH.belt_h / 2); orient(S.skirt, rP, UP);
+  S.skirt.scale.set(SH.waist_half, SH.skirt_len, SH.waist_half * SH.depth);
+  S.sash.position.copy(waist).addScaledVector(UP, -0.38).addScaledVector(fP, SH.waist_half * SH.depth * 1.08); orient(S.sash, rP, UP); S.sash.scale.set(1, 0.6, 1);
+  S.head.position.copy(J.head); S.hair.position.copy(J.head); orient(S.hair, right(r.yaw.head), UP);
   const fH = fwd(r.yaw.head), rH = right(r.yaw.head);
-  S.eyeR.position.copy(J.head).addScaledVector(fH, B.head_r * 0.9).addScaledVector(rH, 0.12).addScaledVector(UP, 0.03);
-  S.eyeL.position.copy(J.head).addScaledVector(fH, B.head_r * 0.9).addScaledVector(rH, -0.12).addScaledVector(UP, 0.03);
-  S.wing.position.copy(J.shL).addScaledVector(UP, 0.08).addScaledVector(fwd(r.yaw.chest), -0.08);
-  orient(S.wing, right(r.yaw.chest).negate(), UP);
-  const base = J.blade_root;
+  S.bun.position.copy(J.head).addScaledVector(UP, B.head_r + SH.bun_r * 0.6).addScaledVector(fH, -0.12);
+  S.beard.position.copy(J.head); orient(S.beard, rH.clone().negate(), UP);
+  S.eyeR.position.copy(J.head).addScaledVector(fH, B.head_r * 0.92).addScaledVector(rH, 0.12).addScaledVector(UP, 0.04);
+  S.eyeL.position.copy(J.head).addScaledVector(fH, B.head_r * 0.92).addScaledVector(rH, -0.12).addScaledVector(UP, 0.04);
+  S.wing.position.copy(J.shL).addScaledVector(UP, 0.1).addScaledVector(fC, -0.1); orient(S.wing, rC.clone().negate(), UP);
+  const base = J.blade_root, sdn = r.sd.clone().normalize();
   placeSeg(S.shaft, J.butt, base); S.butt.position.copy(J.butt);
-  for (const [k, rot] of [["bladeA", 0], ["bladeB", Math.PI / 2]]) {
-    const m = S[k]; m.position.copy(base); const q = new THREE.Quaternion().setFromUnitVectors(UP, r.sd.clone().normalize());
-    m.quaternion.copy(q).multiply(new THREE.Quaternion().setFromAxisAngle(UP, rot)); m.scale.setScalar(W.blade_len / 0.6);
-  }
-  S.guard.position.copy(base); { const q = new THREE.Quaternion().setFromUnitVectors(UP, r.sd.clone().normalize()); S.guard.quaternion.copy(q).multiply(new THREE.Quaternion().setFromAxisAngle(V(1, 0, 0), Math.PI / 2)); }
-  placeSeg(S.tassel, base.clone().addScaledVector(r.sd, -0.08), base.clone().addScaledVector(r.sd, -0.08).addScaledVector(UP, -0.32));
-  shadow.position.set(r.com.x, 0.003, r.com.z);
-  comDot.position.set(r.com.x, 0.006, r.com.z);
+  const q = new THREE.Quaternion().setFromUnitVectors(UP, sdn);
+  S.bladeA.position.copy(base); S.bladeA.quaternion.copy(q); S.bladeA.scale.set(W.blade_half_w * 2 / 0.68, W.blade_len, 1);
+  S.bladeB.position.copy(base); S.bladeB.quaternion.copy(q).multiply(new THREE.Quaternion().setFromAxisAngle(UP, Math.PI / 2)); S.bladeB.scale.copy(S.bladeA.scale);
+  S.guard.position.copy(base); S.guard.quaternion.copy(q).multiply(new THREE.Quaternion().setFromAxisAngle(V(1, 0, 0), Math.PI / 2));
+  placeSeg(S.tassel, base.clone().addScaledVector(sdn, -0.1), base.clone().addScaledVector(sdn, -0.1).addScaledVector(UP, -0.4));
+  shadow.position.set(r.com.x, 0.003, r.com.z); comDot.position.set(r.com.x, 0.006, r.com.z);
 }
 
 // ---------------------------------------------------------------- camera
-let camMode = "game";
+const camBtns = { game: "camGame", free: "camFree", top: "camTop", front: "cmpMaster" };
 function fitCam() {
   const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false);
   const half = 3.3, asp = w / Math.max(h, 1);
   cam.left = -half * asp; cam.right = half * asp; cam.top = half; cam.bottom = -half; cam.updateProjectionMatrix();
 }
 function setCam(mode) {
-  camMode = mode; const t = V(0.4, 1.35, 0); orbit.target.copy(t);
-  const d = 20;
+  const t = V(0.4, 1.35, 0); orbit.target.copy(t); const d = 20;
   if (mode === "game") cam.position.set(t.x, t.y + d * Math.sin(15 * D2R), d * Math.cos(15 * D2R));
   if (mode === "free") cam.position.set(t.x + d * 0.62, t.y + d * 0.35, d * 0.7);
   if (mode === "top") cam.position.set(t.x, t.y + d, 0.001);
+  if (mode === "front") { orbit.target.set(0, 1.45, 0); cam.position.set(0, 1.45, d); }
   cam.zoom = 1; cam.updateProjectionMatrix(); orbit.update();
+  for (const [k, id] of Object.entries(camBtns)) document.getElementById(id).classList.toggle("on", k === mode);
+  if (masterPlane) masterPlane.visible = mode === "front";
 }
 document.getElementById("camGame").onclick = () => setCam("game");
 document.getElementById("camFree").onclick = () => setCam("free");
 document.getElementById("camTop").onclick = () => setCam("top");
+document.getElementById("cmpMaster").onclick = () => {
+  pushUndo();
+  // dáng đứng của master: thân gần chính diện, hai ủng choãi ra, thương dựng bên trái ảnh
+  Object.assign(ctl, { px: 0, py: B.thigh + B.shin + B.ankle_h - 0.01, pz: 0, yawP: 8, chestRel: 0, lean: 0, tilt: 0, headRel: 0, spot: false,
+    wYaw: 0, wPitch: 86, gx: 0.55, gz: 0.2, handDrop: 0.85, slide: 0, rx: -0.75, rz: 0.12, fyR: -55, lx: 0.95, lz: 0.12, fyL: 55 });
+  if (masterPlane) {
+    const ppu = M.master.px_per_unit, w = M.master.size_px / ppu;
+    masterPlane.position.set((M.master.size_px / 2 - M.master.center_x) / ppu, w / 2 - (M.master.size_px - M.master.ground_y) / ppu, -0.9);
+  }
+  refresh(); setCam("front");
+  document.getElementById("dragStatus").textContent = "Ảnh master mờ phía sau: so đầu, vai, thân, chân. Tay và thương của master khác dáng (một tay cầm thương).";
+};
 new ResizeObserver(fitCam).observe(stage);
+
+// ---------------------------------------------------------------- kéo trực tiếp
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+let hover = null, drag = null;
+const undo = [], redo = [];
+function pushUndo() { undo.push(JSON.stringify(ctl)); if (undo.length > 100) undo.shift(); redo.length = 0; }
+document.getElementById("undo").onclick = () => { if (!undo.length) return; redo.push(JSON.stringify(ctl)); Object.assign(ctl, JSON.parse(undo.pop())); refresh(); };
+document.getElementById("redo").onclick = () => { if (!redo.length) return; undo.push(JSON.stringify(ctl)); Object.assign(ctl, JSON.parse(redo.pop())); refresh(); };
+window.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); document.getElementById(e.shiftKey ? "redo" : "undo").click(); }
+});
+const PART_NAME = { hips: "Hông", chest: "Ngực", head: "Đầu", hands: "Tay", tip: "Mũi thương", shaft: "Cán thương", footR: "Chân phải", footL: "Chân trái" };
+function pick(ev) {
+  const rc = renderer.domElement.getBoundingClientRect();
+  ndc.set(((ev.clientX - rc.left) / rc.width) * 2 - 1, -((ev.clientY - rc.top) / rc.height) * 2 + 1);
+  ray.setFromCamera(ndc, cam);
+  const hits = ray.intersectObjects(fig.children, true);
+  if (!hits.length) return null;
+  // tay cầm nhỏ (mũi thương, nắm đấm, ủng) thắng các khối to che phía trước chúng
+  const PRI = ["tip", "hands", "footR", "footL"];
+  const small = hits.find(h => PRI.includes(h.object.userData.part));
+  const hit = small || hits[0];
+  return { part: hit.object.userData.part, point: hit.point };
+}
+function setHover(part) {
+  if (hover === part) return; hover = part;
+  fig.traverse(o => { if (o.material && o.material.emissive) o.material.emissive.setHex(o.userData.part === part ? 0x2a3a4a : 0x000000); });
+  renderer.domElement.style.cursor = part ? "grab" : "";
+}
+function planeAt(p) { const n = V(0, 0, 0); cam.getWorldDirection(n); return new THREE.Plane().setFromNormalAndCoplanarPoint(n.negate(), p); }
+function hitPlane(ev, plane) {
+  const rc = renderer.domElement.getBoundingClientRect();
+  ndc.set(((ev.clientX - rc.left) / rc.width) * 2 - 1, -((ev.clientY - rc.top) / rc.height) * 2 + 1);
+  ray.setFromCamera(ndc, cam); const out = V(0, 0, 0); return ray.ray.intersectPlane(plane, out) ? out : null;
+}
+const ground = new THREE.Plane(V(0, 1, 0), 0);
+const el = renderer.domElement;
+el.addEventListener("pointermove", ev => {
+  if (!drag) { const h = pick(ev); setHover(h ? h.part : null); return; }
+  const d = drag, c = ctl, base = d.start;
+  if (d.part === "footR" || d.part === "footL") {
+    const g = hitPlane(ev, ground); if (!g) return;
+    const s = d.part === "footR" ? "r" : "l";
+    if (ev.shiftKey) { c["fy" + s.toUpperCase()] = base["fy" + s.toUpperCase()] + (ev.clientX - d.x0) * 0.6; }
+    else { c[s + "x"] = base[s + "x"] + (g.x - d.p0.x); c[s + "z"] = base[s + "z"] + (g.z - d.p0.z); }
+  } else {
+    const p = hitPlane(ev, d.plane); if (!p) return;
+    const dv = p.clone().sub(d.p0), dx = ev.clientX - d.x0, dy = ev.clientY - d.y0;
+    if (d.part === "hips") {
+      if (ev.shiftKey) c.yawP = base.yawP + dx * 0.5;
+      else { c.px = base.px + dv.x; c.py = Math.max(0.3, base.py + dv.y); c.pz = base.pz + dv.z; }
+    } else if (d.part === "chest") {
+      if (ev.shiftKey) c.tilt = Math.max(-30, Math.min(30, base.tilt + dx * 0.25));
+      else { c.chestRel = Math.max(-75, Math.min(75, base.chestRel + dx * 0.4)); c.lean = Math.max(-30, Math.min(45, base.lean + dy * 0.25)); }
+    } else if (d.part === "head") {
+      c.headRel = Math.max(-90, Math.min(90, base.headRel + dx * 0.5));
+    } else if (d.part === "hands") {
+      const F = frameOf(base), nc = d.center0.clone().add(dv), off = nc.clone().sub(F.chest).addScaledVector(F.sd, -base.slide);
+      c.gx = off.dot(F.rC); c.gz = off.dot(F.fC); c.handDrop = -off.dot(UP);
+    } else if (d.part === "tip") {
+      const F = frameOf(base), dir = p.clone().sub(F.center).normalize();
+      c.wYaw = base.wYaw + wrap(Math.atan2(dir.x, dir.z) / D2R - base.wYaw);
+      c.wPitch = Math.max(-85, Math.min(89, Math.asin(Math.max(-1, Math.min(1, dir.y))) / D2R));
+    } else if (d.part === "shaft") {
+      const F = frameOf(base); c.slide = Math.max(-0.6, Math.min(0.8, base.slide + dv.dot(F.sd)));
+    }
+  }
+  refresh();
+});
+el.addEventListener("pointerdown", ev => {
+  const h = pick(ev); if (!h || !h.part) return;
+  pushUndo(); orbit.enabled = false; el.setPointerCapture(ev.pointerId);
+  const F = frameOf(ctl);
+  drag = { part: h.part, start: { ...ctl }, x0: ev.clientX, y0: ev.clientY, plane: planeAt(h.point), p0: h.point.clone(), center0: F.center.clone() };
+  if (h.part === "footR" || h.part === "footL") { const g = hitPlane(ev, ground); drag.p0 = g || h.point.clone(); }
+  if (h.part === "tip") drag.plane = planeAt(F.center);
+  renderer.domElement.style.cursor = "grabbing";
+  document.getElementById("dragStatus").textContent = "Đang kéo: " + (PART_NAME[h.part] || h.part);
+});
+function endDrag(ev) { if (!drag) return; drag = null; orbit.enabled = true; try { el.releasePointerCapture(ev.pointerId); } catch {} renderer.domElement.style.cursor = hover ? "grab" : ""; document.getElementById("dragStatus").textContent = ""; }
+el.addEventListener("pointerup", endDrag); el.addEventListener("pointercancel", endDrag);
 
 // ---------------------------------------------------------------- kiểm tra vật lý
 function checks(r) {
@@ -364,7 +508,7 @@ function checks(r) {
   const seg = f.clone().sub(b); seg.y = 0; const c = r.com.clone().sub(b); c.y = 0;
   const u = seg.lengthSq() > 1e-6 ? c.dot(seg) / seg.lengthSq() : 0.5;
   const perp = c.clone().addScaledVector(seg, -u).length();
-  const inside = u >= -0.05 && u <= 1.05 && perp < 0.3;
+  const inside = u >= -0.05 && u <= 1.05 && perp < 0.35;
   out.push(["Trọng tâm trong vùng đỡ", `${(u * 100).toFixed(0)}% về chân trước`, inside]);
   const crossed = J.ankleR.clone().sub(J.ankleL).dot(right(r.yaw.pelvis)) < 0;
   out.push(["Hai chân không bắt chéo", crossed ? "chéo" : "ổn", !crossed]);
@@ -373,6 +517,7 @@ function checks(r) {
 
 // ---------------------------------------------------------------- vòng chính
 let cur = null;
+function round(v, n = 4) { return Math.round(v * 10 ** n) / 10 ** n; }
 function refresh() {
   for (const [, key, , , , st] of SL) { inputs[key].value = ctl[key]; document.getElementById("o_" + key).textContent = (+ctl[key]).toFixed(st < 1 ? 2 : 0); }
   document.getElementById("spot").checked = !!ctl.spot;
@@ -386,31 +531,24 @@ function refresh() {
   const chipReach = document.getElementById("chipReach"); chipReach.textContent = reachOk ? "Tay chân với tới" : "Tay hoặc chân quá tầm"; chipReach.className = "chip " + (reachOk ? "ok" : "bad");
   document.getElementById("json").textContent = JSON.stringify(poseRecord("(chưa đặt tên)", ""), null, 1);
 }
-function round(v, n = 4) { return Math.round(v * 10 ** n) / 10 ** n; }
 function poseRecord(name, note) {
   const r = cur; const J = {};
   for (const [k, v] of Object.entries(r.J)) J[k] = [round(v.x), round(v.y), round(v.z)];
   return { name, note, motion: M.name, fromFrame: +frameIn.value, controls: { ...ctl },
     yaw: Object.fromEntries(Object.entries(r.yaw).map(([k, v]) => [k, round(v, 2)])), weaponPitch: round(r.pitch, 2),
-    heel: { R: round(r.heel.R, 3), L: round(r.heel.L, 3) }, joints: J, body: "moon_crane", savedAt: Date.now() };
+    heel: { R: round(r.heel.R, 3), L: round(r.heel.L, 3) }, joints: J, body: "moon_crane", mannequin: M.shape ? "master" : "proxy", savedAt: Date.now() };
 }
-
-// khung của chuyển động
 const frameIn = document.getElementById("frame"); frameIn.max = M.frames.length - 1;
-function showFrame(i) {
-  const f = M.frames[i]; document.getElementById("frameOut").textContent = i;
-  document.getElementById("phase").textContent = `τ ${f.t} · ${f.phase}`;
-}
+function showFrame(i) { const f = M.frames[i]; document.getElementById("frameOut").textContent = i; document.getElementById("phase").textContent = `τ ${f.t} · ${f.phase}`; }
+frameIn.addEventListener("pointerdown", () => pushUndo());
 frameIn.addEventListener("input", () => { showFrame(+frameIn.value); Object.assign(ctl, fromFrame(M.frames[+frameIn.value])); refresh(); });
-document.getElementById("takeFrame").onclick = () => { Object.assign(ctl, fromFrame(M.frames[+frameIn.value])); refresh(); };
+document.getElementById("takeFrame").onclick = () => { pushUndo(); Object.assign(ctl, fromFrame(M.frames[+frameIn.value])); refresh(); };
 let playing = null;
 document.getElementById("play").onclick = e => {
   if (playing) { clearInterval(playing); playing = null; e.target.textContent = "Phát"; return; }
   e.target.textContent = "Dừng";
   playing = setInterval(() => { const i = (+frameIn.value + 1) % M.frames.length; frameIn.value = i; showFrame(i); Object.assign(ctl, fromFrame(M.frames[i])); refresh(); }, 1000 / M.fps);
 };
-
-// sao chép JSON
 document.getElementById("copy").onclick = async () => {
   const st = document.getElementById("copyStatus"); const txt = document.getElementById("json").textContent;
   try { await navigator.clipboard.writeText(txt); st.textContent = "Đã sao chép."; }
@@ -424,18 +562,18 @@ function renderList(docs) {
   if (!docs.length) { listEl.innerHTML = `<div class="empty">Chưa có tư thế nào. Chỉnh dáng rồi bấm Lưu; tư thế sẽ hiện ở đây và Claude đọc được để vẽ.</div>`; return; }
   listEl.innerHTML = "";
   for (const d of docs) {
-    const p = d.data(); const el = document.createElement("div"); el.className = "pose";
+    const p = d.data(); const it = document.createElement("div"); it.className = "pose";
     const when = p.savedAt ? new Date(p.savedAt).toLocaleString("vi-VN") : "";
-    el.innerHTML = `<div><div class="n"></div><div class="m"></div></div><button class="btn small" type="button">Mở</button><button class="btn small" type="button">Xoá</button>`;
-    el.querySelector(".n").textContent = p.name || d.id; el.querySelector(".m").textContent = `từ khung ${p.fromFrame ?? "?"} · ${when}`;
-    const [bOpen, bDel] = el.querySelectorAll("button");
-    bOpen.onclick = () => { Object.assign(ctl, p.controls); refresh(); saveStatus.textContent = `Đã mở "${p.name}".`; };
+    it.innerHTML = `<div><div class="n"></div><div class="m"></div></div><button class="btn small" type="button">Mở</button><button class="btn small" type="button">Xoá</button>`;
+    it.querySelector(".n").textContent = p.name || d.id; it.querySelector(".m").textContent = `từ khung ${p.fromFrame ?? "?"} · ${when}`;
+    const [bOpen, bDel] = it.querySelectorAll("button");
+    bOpen.onclick = () => { pushUndo(); Object.assign(ctl, fromFrame(M.frames[0]), p.controls); refresh(); saveStatus.textContent = `Đã mở "${p.name}".`; };
     let armed = false;
     bDel.onclick = async () => {
       if (!armed) { armed = true; bDel.textContent = "Chắc chưa?"; setTimeout(() => { armed = false; bDel.textContent = "Xoá"; }, 2500); return; }
       try { await db.collection("poses").doc(d.id).delete(); saveStatus.textContent = `Đã xoá "${p.name}".`; } catch (e) { saveStatus.textContent = "Không xoá được: " + (e?.message || e); }
     };
-    listEl.appendChild(el);
+    listEl.appendChild(it);
   }
 }
 document.getElementById("save").onclick = async () => {
@@ -449,9 +587,7 @@ document.getElementById("save").onclick = async () => {
   catch (e) { saveStatus.textContent = "Không lưu được: " + (e?.message || e?.code || e); }
 };
 (async () => {
-  try {
-    db = window.claude ? await window.claude.use("db") : null;
-  } catch { db = null; }
+  try { db = window.claude ? await window.claude.use("db") : null; } catch { db = null; }
   if (!db) { saveStatus.textContent = "Chế độ không lưu: dùng Sao chép JSON."; return; }
   const timer = setTimeout(() => { saveStatus.textContent = "Chưa tải được danh sách tư thế, thử mở lại sau."; }, 10000);
   db.collection("poses").orderBy("savedAt", "desc").onSnapshot(
@@ -459,8 +595,8 @@ document.getElementById("save").onclick = async () => {
     e => { clearTimeout(timer); saveStatus.textContent = "Không đọc được danh sách: " + (e?.message || e?.code); });
 })();
 
-// khởi động
 Object.assign(ctl, fromFrame(M.frames[0])); showFrame(0);
 fitCam(); setCam("game"); refresh();
 renderer.setAnimationLoop(() => { orbit.update(); renderer.render(scene, cam); });
+window.__pose3d = { ctl, refresh, setCam, solve, cam };
 </script>

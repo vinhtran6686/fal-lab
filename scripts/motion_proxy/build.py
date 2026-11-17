@@ -357,6 +357,11 @@ def main():
             params["feet"]["tracks"].update(lay["feet"])
         params["timing"].update(lay.get("timing", {}))
         params["chain"].update(lay.get("chain", {}))
+        if lay.get("body_from"):            # thân đo từ master (mannequin_*.json): một nguồn tỉ lệ cho proxy và Pose3D
+            with open(os.path.join(os.path.dirname(os.path.abspath(a.layers)), lay["body_from"]), encoding="utf-8") as fh:
+                man = json.load(fh)
+            params["body"] = dict(params["body"], **man["body"])
+            params["weapon"] = dict(params["weapon"], **man["weapon"])
         for k in ("checks", "name"):
             if k in lay:
                 params[k] = lay[k]
