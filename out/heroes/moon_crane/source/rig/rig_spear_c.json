@@ -1,0 +1,276 @@
+{
+ "id": "moon_crane",
+ "note": "Spear sweep C: the hit, spear level to the right. Cut-out: torso (rest), spear, two arm layers on bone arms; muscle link shoulder_chest. Ground = planted rear boot; unit from the head height so the body keeps one size across the cuts.",
+ "sources": {
+  "pose": "../design/pose_sweep_hit_v01.png"
+ },
+ "ground": [
+  130,
+  815
+ ],
+ "unit": 750.8,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    130,
+    815
+   ]
+  },
+  {
+   "name": "body",
+   "parent": "root",
+   "pivot": [
+    130,
+    815
+   ]
+  },
+  {
+   "name": "arms",
+   "parent": "body",
+   "pivot": [
+    460,
+    540
+   ]
+  }
+ ],
+ "links": [
+  {
+   "name": "shoulder_chest",
+   "arm": "arms",
+   "mode": "stretch",
+   "max_pull": 50,
+   "anchors": [
+    {
+     "pt": [
+      460,
+      500
+     ],
+     "radius": 120,
+     "gain": 1.0,
+     "part": "torso"
+    },
+    {
+     "pt": [
+      300,
+      440
+     ],
+     "radius": 100,
+     "gain": 0.7,
+     "part": "torso"
+    }
+   ]
+  }
+ ],
+ "sockets": {
+  "spear_tip": {
+   "bone": "arms",
+   "pt": [
+    1020,
+    545
+   ]
+  },
+  "spear_root": {
+   "bone": "arms",
+   "pt": [
+    820,
+    545
+   ]
+  }
+ },
+ "parts": [
+  {
+   "name": "torso",
+   "source": "pose",
+   "bone": "body",
+   "select": {
+    "rest": true
+   },
+   "fill_under": [
+    {
+     "part": "arm_l",
+     "erode": 10,
+     "reach": 30
+    },
+    {
+     "part": "arm_r",
+     "erode": 10,
+     "reach": 30
+    },
+    {
+     "part": "spear",
+     "erode": 4,
+     "reach": 14
+    }
+   ]
+  },
+  {
+   "name": "spear",
+   "source": "pose",
+   "bone": "arms",
+   "select": {
+    "poly": [
+     [
+      10.8,
+      523.8
+     ],
+     [
+      796.3,
+      523.3
+     ],
+     [
+      806.0,
+      480.5
+     ],
+     [
+      860.8,
+      474.1
+     ],
+     [
+      902.1,
+      489.4
+     ],
+     [
+      1028.0,
+      539.9
+     ],
+     [
+      902.2,
+      595.6
+     ],
+     [
+      861.1,
+      610.9
+     ],
+     [
+      816.4,
+      609.8
+     ],
+     [
+      808.8,
+      570.9
+     ],
+     [
+      810.3,
+      654.2
+     ],
+     [
+      753.8,
+      656.3
+     ],
+     [
+      755.7,
+      572.2
+     ],
+     [
+      10.8,
+      572.2
+     ]
+    ]
+   }
+  },
+  {
+   "name": "arm_l",
+   "source": "pose",
+   "bone": "arms",
+   "select": {
+    "poly": [
+     [
+      188.5,
+      496.5
+     ],
+     [
+      225.3,
+      454.0
+     ],
+     [
+      288.0,
+      456.4
+     ],
+     [
+      333.4,
+      478.5
+     ],
+     [
+      406.4,
+      487.9
+     ],
+     [
+      431.7,
+      527.3
+     ],
+     [
+      425.7,
+      585.4
+     ],
+     [
+      399.3,
+      609.2
+     ],
+     [
+      300.5,
+      610.0
+     ],
+     [
+      252.8,
+      613.8
+     ],
+     [
+      200.2,
+      587.0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "arm_r",
+   "source": "pose",
+   "bone": "arms",
+   "select": {
+    "poly": [
+     [
+      509.7,
+      493.9
+     ],
+     [
+      557.0,
+      468.4
+     ],
+     [
+      611.5,
+      466.1
+     ],
+     [
+      656.2,
+      479.7
+     ],
+     [
+      691.3,
+      515.9
+     ],
+     [
+      685.6,
+      580.6
+     ],
+     [
+      648.9,
+      611.4
+     ],
+     [
+      589.1,
+      610.0
+     ],
+     [
+      533.3,
+      602.0
+     ],
+     [
+      510.4,
+      563.2
+     ]
+    ]
+   }
+  }
+ ]
+}

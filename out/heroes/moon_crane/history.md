@@ -74,3 +74,6 @@ New stills with a THIRD reference, the approved neighbour still (A with B, D wit
 | pose_sweep_follow | v02 | 9 | pending | same lunge as C, spear raised to the upper right; chest more open than the asked pure profile, matching C |
 
 Compose spec now uses guard v02 and follow v02 (proxy frame 18 for D).
+
+## 2026-11-17 — cut-out rigs for the spear sweep (work in progress, paused by the user)
+`source/rig/make_rigs_spear.py` writes `rig_spear_a/b/c.json` (guard v02, wind-up v01, hit v01): torso (rest) + spear + two arm layers on bone `arms`, muscle link `shoulder_chest`, ground on the planted rear boot, unit from the head height. `meta.json` created with `puppet.py init --cell 176x140 --height 120`. Extreme poses (arms.ty -25/+20, arms.rot ±4) hold; arm and spear polygons grown outward (12 / 6 px) to take the outline with them, a few faint seam lines remain on the torso. Not animated yet: the user paused to evaluate a 3D posing tool (pose by hand in 3D, then draw each pose with fal-image).
