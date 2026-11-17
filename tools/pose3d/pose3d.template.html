@@ -80,8 +80,8 @@ label.cb { display: flex; gap: 8px; align-items: center; font-size: 13px; }
 
   <aside class="panel" aria-label="Bảng tạo dáng">
     <div class="title">
-      <h1>Pose3D · moon_crane</h1>
-      <p>Ma-nơ-canh theo thân chính của master (cao 3,0 đơn vị, đầu to, vai rộng, chân ngắn). Mục tiêu ở bên phải màn hình.</p>
+      <h1 id="ttl">Pose3D · moon_crane</h1>
+      <p id="subttl">Ma-nơ-canh theo thân chính của master (cao 3,0 đơn vị, đầu to, vai rộng, chân ngắn). Mục tiêu ở bên phải màn hình.</p>
     </div>
 
     <div class="sec">
@@ -151,9 +151,12 @@ const L = {
   clav: B.shoulder_half * 0.55, shoulder: B.shoulder_half, upper: B.upper_arm, fore: B.forearm, hand: 0.2,
   hip: B.hip_half, thigh: B.thigh, shin: B.shin, ankle: B.ankle_h, foot: B.foot_len, headR: B.head_r,
 };
+Object.assign(L, B.L || {});   // người chuẩn (bake_human.py): độ dài đoạn thân đo từ khung xương nguồn
+const HUMAN = M.mode === "human";
 // bề dày khối (ma-nơ-canh trơn, không trang phục)
 const R = { pelvis: [0.42, 0.2, 0.28], belly: [0.42, 0.26, 0.29], chest: [0.55, 0.36, 0.34], neck: 0.13, upper: [0.15, 0.13], fore: [0.14, 0.11],
   hand: [0.13, 0.17, 0.09], thigh: [0.19, 0.15], shin: [0.15, 0.11], foot: [0.12, 0.1] };
+Object.assign(R, M.R || {});
 
 // ---------------------------------------------------------------- cảnh
 const stage = document.getElementById("stage");
@@ -180,7 +183,7 @@ const matFace = new THREE.MeshStandardMaterial({ color: 0x3b4250, roughness: 0.5
 const bone = (name, parent, x, y, z) => { const o = new THREE.Object3D(); o.name = name; o.position.set(x, y, z); parent.add(o); return o; };
 const root = new THREE.Group(); scene.add(root);
 const pelvis = bone("pelvis", root, 0, B.thigh + B.shin + B.ankle_h - 0.04, 0);
-const AF = B.foot_len - 0.08;   // cổ chân nằm sau mũi chân AF (như proxy)
+const AF = B.af ?? (B.foot_len - 0.08);   // cổ chân nằm sau mũi chân AF (như proxy)
 const spine = bone("spine", pelvis, 0, L.spineLow, 0);
 const chest = bone("chest", spine, 0, L.spineMid, 0);
 const neck = bone("neck", chest, 0, L.chestTop, 0);
@@ -285,7 +288,7 @@ function setWorldQuat(b, qW) { b.parent.updateMatrixWorld(true); const qP = b.pa
 
 // ---------------------------------------------------------------- trạng thái tư thế (để lưu, hoàn tác, mở lại)
 const opts = { grip: true, spot: true };
-const FK = { spine, chest, neck, head, handR: J.handR, handL: J.handL };
+const FK = { spine, chest, neck, head, handR: J.handR, handL: J.handL, clavR: J.clavR, clavL: J.clavL };
 function getState() {
   const q = o => o.quaternion.toArray().map(v => +v.toFixed(5)), p = o => o.position.toArray().map(v => +v.toFixed(5));
   return { root: { p: p(pelvis), q: q(pelvis) }, fk: Object.fromEntries(Object.entries(FK).map(([k, o]) => [k, q(o)])),
@@ -294,6 +297,7 @@ function getState() {
 }
 function setState(s) {
   pelvis.position.fromArray(s.root.p); pelvis.quaternion.fromArray(s.root.q);
+  J.clavR.quaternion.identity(); J.clavL.quaternion.identity();
   for (const [k, v] of Object.entries(s.fk)) FK[k].quaternion.fromArray(v);
   for (const [k, v] of Object.entries(s.ik)) { ikT[k].position.fromArray(v.p); ikT[k].quaternion.fromArray(v.q); }
   for (const [k, v] of Object.entries(s.pole)) pole[k].position.fromArray(v);
@@ -303,7 +307,45 @@ function setState(s) {
 }
 
 // ---------------------------------------------------------------- dáng từ một khung của chuyển động đã nướng
+function basisQ(yv, xv) {   // xoay thế giới: trục y cục bộ theo yv, trục x (bên TRÁI nhân vật) theo xv
+  const y = yv.clone().normalize(), x = xv.clone(); x.addScaledVector(y, -x.dot(y)).normalize();
+  const z = x.clone().cross(y);
+  return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
+}
+let lastSpearDir = V(1, 0, 0);
+function fromHuman(f) {   // khung của khung xương người chuẩn (SMPL-H): đặt từng khớp đúng như nguồn
+  const P = k => V(...f.J[k]);
+  const hipM = P("L_Hip").add(P("R_Hip")).multiplyScalar(0.5), shX = P("L_Shoulder").sub(P("R_Shoulder"));
+  pelvis.position.copy(hipM); pelvis.quaternion.copy(basisQ(P("Spine1").sub(hipM), P("L_Hip").sub(P("R_Hip"))));
+  scene.updateMatrixWorld(true);
+  setWorldQuat(spine, basisQ(P("Spine3").sub(P("Spine1")), shX)); scene.updateMatrixWorld(true);
+  setWorldQuat(chest, basisQ(P("Neck").sub(P("Spine3")), shX)); scene.updateMatrixWorld(true);
+  setWorldQuat(neck, basisQ(P("Head").sub(P("Neck")), shX)); head.quaternion.identity(); J.handR.quaternion.identity(); J.handL.quaternion.identity();
+  J.clavR.quaternion.identity(); J.clavL.quaternion.identity(); scene.updateMatrixWorld(true);
+  for (const s of ["R", "L"]) {   // xương đòn: nhún / đưa vai tới đúng vai nguồn
+    swingBone(J["clav" + s], J["clav" + s].getWorldPosition(V()), J["upper" + s].getWorldPosition(V()), P((s === "R" ? "R_" : "L_") + "Shoulder"));
+    scene.updateMatrixWorld(true);
+  }
+  opts.grip = false; document.getElementById("grip").checked = false;
+  for (const s of ["R", "L"]) {
+    const n = s === "R" ? "R_" : "L_";
+    const sh = P(n + "Shoulder"), el = P(n + "Elbow"), wr = P(n + "Wrist");
+    ikT["hand" + s].position.copy(wr);
+    pole["hand" + s].position.copy(el).addScaledVector(el.clone().sub(sh.clone().add(wr).multiplyScalar(0.5)), 2);
+    const hp = P(n + "Hip"), kn = P(n + "Knee"), an = P(n + "Ankle"), ft = P(n + "Foot");
+    const v = ft.clone().sub(an), fy = Math.atan2(v.x, v.z), a0 = Math.atan2(-L.ankle, AF), a1 = Math.atan2(v.y, Math.hypot(v.x, v.z));
+    ikT["foot" + s].position.copy(an);
+    ikT["foot" + s].quaternion.setFromAxisAngle(UP, fy).multiply(new THREE.Quaternion().setFromAxisAngle(V(1, 0, 0), a0 - a1));
+    pole["foot" + s].position.copy(kn).addScaledVector(kn.clone().sub(hp.clone().add(an).multiplyScalar(0.5)), 2);
+  }
+  // thương tưởng tượng (nguồn là người tay không): trục qua hai lòng bàn tay, đầu mũi phía tay trái (tay trước)
+  const gR = P("R_Middle1"), gL = P("L_Middle1"), dv = gL.clone().sub(gR);
+  if (dv.length() > 0.12) lastSpearDir = dv.normalize();
+  spearCtl.position.copy(gR).add(gL).multiplyScalar(0.5); spearCtl.quaternion.setFromUnitVectors(UP, lastSpearDir);
+  solve();
+}
 function fromFrame(f) {
+  if (f.J) return fromHuman(f);
   pelvis.position.set(f.pelvis[0], f.pelvis[1], f.pelvis[2]);
   pelvis.quaternion.setFromAxisAngle(UP, f.yawP * D2R);
   const rel = wrap(f.yawC - f.yawP);
@@ -578,9 +620,9 @@ const rnd = (v, n = 4) => Math.round(v * 10 ** n) / 10 ** n;
 function poseRecord(name, note) {
   const Jt = joints(), y = yaws(), j = {};
   for (const [k, v] of Object.entries(Jt)) j[k] = [rnd(v.x), rnd(v.y), rnd(v.z)];
-  return { name, note, motion: M.name, fromFrame: +frameIn.value, rig: "pose3d-fk-ik-v3", state: getState(),
+  return { name, note, motion: M.name, fromFrame: +frameIn.value, rig: "pose3d-fk-ik-v3", body: HUMAN ? "human_smpl" : "moon_crane", state: getState(),
     yaw: { pelvis: rnd(y.pelvis, 2), chest: rnd(y.chest, 2), head: rnd(y.head, 2), weapon: rnd(y.weapon, 2) }, weaponPitch: rnd(y.pitch, 2),
-    heel: { R: rnd(last.heel.R, 3), L: rnd(last.heel.L, 3) }, joints: j, body: "moon_crane", savedAt: Date.now() };
+    heel: { R: rnd(last.heel.R, 3), L: rnd(last.heel.L, 3) }, joints: j, savedAt: Date.now() };
 }
 function updateJson() { document.getElementById("json").textContent = JSON.stringify(poseRecord("(chưa đặt tên)", ""), null, 1); }
 
@@ -631,6 +673,10 @@ new ResizeObserver(fitCam).observe(stage);
 
 // ---------------------------------------------------------------- khung chuyển động
 const frameIn = document.getElementById("frame"); frameIn.max = M.frames.length - 1;
+if (M.title) document.getElementById("ttl").textContent = M.title;
+if (M.subtitle) document.getElementById("subttl").textContent = M.subtitle;
+if (!M.master) document.getElementById("cmpMaster").hidden = true;
+if (HUMAN) { opts.spot = false; document.getElementById("spot").checked = false; }
 const showFrame = i => { const f = M.frames[i]; document.getElementById("frameOut").textContent = i; document.getElementById("phase").textContent = `τ ${f.t} · ${f.phase}`; };
 frameIn.addEventListener("pointerdown", () => pushUndo());
 frameIn.addEventListener("input", () => { showFrame(+frameIn.value); fromFrame(M.frames[+frameIn.value]); });

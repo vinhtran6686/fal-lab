@@ -8,5 +8,13 @@ python tools/pose3d/bake_motion.py <params_used.json> --name "<tên>" --out tool
 python tools/pose3d/build.py tools/pose3d/motion_<id>.json      # -> tools/pose3d/index.html
 ```
 
-Bản đang dùng: https://claude.ai/artifact/447LvWyAucynhJRkVuXC6G (moon_crane, quét thương lai, thân đo từ master).
+Người chuẩn (chuyển động gốc của HY-Motion, khung xương SMPL-H, không gắn nhân vật):
+
+```bash
+python scripts/motion_proxy/fbx_motion.py <hy_motion.fbx> --out .work/hy.json
+python tools/pose3d/bake_human.py .work/hy.json --out tools/pose3d/motion_human_<tên>.json --rotate <độ>
+python tools/pose3d/build.py tools/pose3d/motion_human_<tên>.json
+```
+
+Bản đang dùng: https://claude.ai/artifact/447LvWyAucynhJRkVuXC6G (người chuẩn, HY-Motion seed 1 quét thương; bản moon_crane build lại từ `motion_moon_crane_spear_sweep.json`).
 Hướng dẫn đầy đủ: `docs/tools/pose3d/pose3d-guide.md`.
