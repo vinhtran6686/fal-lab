@@ -1,6 +1,6 @@
 # Pose3D
 
-Trang chỉnh tư thế 3D: người nộm đúng tỉ lệ nhân vật cầm vũ khí, tay bám vũ khí và chân bám đất bằng IK, kiểm tra vật lý, lưu tư thế.
+Trang chỉnh tư thế 3D kiểu Cascadeur: ma-nơ-canh trơn theo thân chính của nhân vật, phân cấp khớp FK, tay chân IK hai đoạn có điểm hướng, tay cầm trên khớp + gizmo (W/E/Q), thương là đạo cụ hai tay bám theo, kiểm tra vật lý, lưu tư thế.
 
 ```bash
 python tools/pose3d/bake_motion.py <params_used.json> --name "<tên>" --out tools/pose3d/motion_<id>.json \

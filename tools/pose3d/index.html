@@ -3,49 +3,50 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: xưởng chỉnh dáng: khung 3D lớn (kéo trực tiếp lên bộ phận), bảng phụ bên phải; điện thoại: xếp dọc. */
+/* Layout: xưởng tạo dáng kiểu Cascadeur: khung 3D lớn với tay cầm trên khớp và gizmo; bảng phụ bên phải; điện thoại: xếp dọc. */
 :root {
-  --bg: #eef0f2; --panel: #ffffff; --ink: #1d232b; --muted: #5d6874; --line: #d5dae0;
-  --accent: #3f5f80; --accent-ink: #ffffff; --good: #2f7d4f; --warn: #b5472f; --stage: #4e5157;
+  --bg: #eceef1; --panel: #ffffff; --ink: #1c2229; --muted: #5d6874; --line: #d4d9df;
+  --accent: #2f6fb0; --accent-ink: #ffffff; --good: #2f7d4f; --warn: #b5472f; --stage: #3d4148;
   --f-ui: "IBM Plex Sans", system-ui, sans-serif; --f-num: "IBM Plex Mono", ui-monospace, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #15191e; --panel: #1d232a; --ink: #e6e9ed; --muted: #9aa5b1; --line: #313a44;
-  --accent: #7fa0c0; --accent-ink: #10161c; --good: #5cbf85; --warn: #e07a62; --stage: #3a3d42; color-scheme: dark } }
+  --bg: #14181d; --panel: #1c2229; --ink: #e6e9ed; --muted: #9aa5b1; --line: #303943;
+  --accent: #6aa5df; --accent-ink: #0d1520; --good: #5cbf85; --warn: #e07a62; --stage: #2f3238; color-scheme: dark } }
 :root[data-theme="dark"] {
-  --bg: #15191e; --panel: #1d232a; --ink: #e6e9ed; --muted: #9aa5b1; --line: #313a44;
-  --accent: #7fa0c0; --accent-ink: #10161c; --good: #5cbf85; --warn: #e07a62; --stage: #3a3d42; color-scheme: dark }
+  --bg: #14181d; --panel: #1c2229; --ink: #e6e9ed; --muted: #9aa5b1; --line: #303943;
+  --accent: #6aa5df; --accent-ink: #0d1520; --good: #5cbf85; --warn: #e07a62; --stage: #2f3238; color-scheme: dark }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font: 14px/1.45 var(--f-ui);
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 12px; }
-.app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; height: 100%; min-height: 600px; }
-.stage { position: relative; background: var(--stage); border-radius: 10px; overflow: hidden; min-height: 460px; }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 14px; height: 100%; min-height: 620px; }
+.stage { position: relative; background: var(--stage); border-radius: 10px; overflow: hidden; min-height: 480px; }
 .stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
-.hud { position: absolute; left: 12px; top: 10px; right: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; pointer-events: none; }
-.hud > * { pointer-events: auto; }
-.hint { position: absolute; left: 12px; bottom: 10px; right: 12px; color: #e9edf1; font-size: 12.5px; pointer-events: none; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
-.hint b { color: #fff; }
+.bar { position: absolute; left: 10px; top: 10px; right: 10px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; pointer-events: none; }
+.bar > * { pointer-events: auto; }
+.sep { width: 1px; height: 22px; background: rgba(255,255,255,.25); }
 .chip { font: 12px/1 var(--f-ui); padding: 6px 9px; border-radius: 999px; background: rgba(0,0,0,.45); color: #fff; }
 .chip.ok { background: rgba(47,125,79,.85); } .chip.bad { background: rgba(181,71,47,.9); }
-.btn { font: 500 13px/1 var(--f-ui); padding: 8px 12px; border-radius: 7px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.sel { position: absolute; left: 10px; bottom: 10px; right: 10px; color: #eef1f4; font-size: 12.5px; pointer-events: none; text-shadow: 0 1px 2px rgba(0,0,0,.7); }
+.sel b { color: #fff; }
+.btn { font: 500 13px/1 var(--f-ui); padding: 7px 11px; border-radius: 7px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
 .btn:hover { border-color: var(--accent); } .btn:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary, .btn.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .btn.small { padding: 5px 8px; font-size: 12px; }
-.btn.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow-y: auto; min-height: 0; display: flex; flex-direction: column; }
 .sec { padding: 12px 14px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
 .sec h2, summary { margin: 0; font: 600 12px/1.2 var(--f-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-summary { cursor: pointer; }
-details[open] > summary { margin-bottom: 8px; }
-.grp { display: grid; gap: 6px; margin-bottom: 8px; }
-.grp h3 { margin: 4px 0 0; font: 500 12px var(--f-ui); color: var(--muted); }
-.row { display: grid; grid-template-columns: 112px minmax(0,1fr) 54px; gap: 8px; align-items: center; }
-.row label { font-size: 13px; }
-.row output { font: 12px var(--f-num); text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
-input[type=range] { width: 100%; accent-color: var(--accent); }
+summary { cursor: pointer; } details[open] > summary { margin-bottom: 8px; }
 .title { padding: 12px 14px; border-bottom: 1px solid var(--line); }
 .title h1 { margin: 0; font: 600 16px/1.2 var(--f-ui); }
 .title p { margin: 4px 0 0; color: var(--muted); font-size: 12.5px; }
+.legend { display: grid; grid-template-columns: 16px minmax(0,1fr); gap: 5px 8px; font-size: 12.5px; align-items: center; }
+.dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.keys { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 3px 10px; font-size: 12.5px; }
+.keys kbd { font: 500 11.5px var(--f-num); padding: 1px 6px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); }
+.keys span { color: var(--muted); }
+.row { display: grid; grid-template-columns: 70px minmax(0,1fr) 40px; gap: 8px; align-items: center; }
+.row output { font: 12px var(--f-num); text-align: right; color: var(--muted); }
+input[type=range] { width: 100%; accent-color: var(--accent); }
 .inline { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .inline input[type=text] { flex: 1 1 140px; min-width: 0; font: 13px var(--f-ui); padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); }
 textarea { width: 100%; box-sizing: border-box; font: 12.5px var(--f-ui); padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); resize: vertical; min-height: 44px; }
@@ -53,48 +54,53 @@ textarea { width: 100%; box-sizing: border-box; font: 12.5px var(--f-ui); paddin
 .checks div { display: flex; justify-content: space-between; gap: 8px; }
 .checks b { font: 500 12px var(--f-num); }
 .ok-t { color: var(--good); } .bad-t { color: var(--warn); }
-.gest { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 4px 10px; font-size: 12.5px; }
-.gest dt { font-weight: 600; } .gest dd { margin: 0; color: var(--muted); }
 .poses { display: grid; gap: 6px; }
 .pose { display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: 6px; align-items: center; padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; }
 .pose .n { font-weight: 500; overflow-wrap: anywhere; } .pose .m { color: var(--muted); font-size: 11.5px; }
-.empty { color: var(--muted); font-size: 12.5px; }
-.status { font-size: 12px; color: var(--muted); min-height: 1.2em; }
+.empty, .status { color: var(--muted); font-size: 12.5px; }
 pre.json { font: 11px/1.35 var(--f-num); max-height: 160px; overflow: auto; background: var(--bg); padding: 8px; border-radius: 7px; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-@media (max-width: 860px) { .app { grid-template-columns: 1fr; height: auto; } .stage { height: 64vh; } }
+label.cb { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+@media (max-width: 860px) { .app { grid-template-columns: 1fr; height: auto; } .stage { height: 66vh; } }
 </style>
 
 <div class="app">
   <div class="stage" id="stage">
-    <div class="hud">
+    <div class="bar">
+      <button class="btn small on" id="mMove" type="button" title="Phím W">Di chuyển</button>
+      <button class="btn small" id="mRot" type="button" title="Phím E">Xoay</button>
+      <button class="btn small" id="mSpace" type="button" title="Phím Q">Trục: cục bộ</button>
+      <span class="sep"></span>
       <button class="btn small on" id="camGame" type="button">Camera game</button>
       <button class="btn small" id="camFree" type="button">Nhìn chéo</button>
+      <button class="btn small" id="camSide" type="button">Nhìn ngang</button>
       <button class="btn small" id="camTop" type="button">Nhìn từ trên</button>
-      <button class="btn small" id="cmpMaster" type="button">So với master</button>
+      <span class="sep"></span>
       <span class="chip" id="chipCom">Trọng tâm</span>
       <span class="chip" id="chipReach">Tầm với</span>
     </div>
-    <div class="hint" id="hint">Rê chuột lên một bộ phận để thấy nó sáng lên, rồi <b>kéo</b> để chỉnh. Kéo vùng trống để xoay camera, cuộn để thu phóng.</div>
+    <div class="sel" id="sel">Bấm một <b>chấm điều khiển</b> trên khớp (hoặc bấm vào thân) để chọn, rồi kéo gizmo. Kéo vùng trống để xoay camera.</div>
   </div>
 
-  <aside class="panel" aria-label="Bảng chỉnh tư thế">
+  <aside class="panel" aria-label="Bảng tạo dáng">
     <div class="title">
       <h1>Pose3D · moon_crane</h1>
-      <p>Người nộm đo từ master (cao 3,0 đơn vị). Tay tự bám thương, chân tự bám đất. Mục tiêu ở bên phải màn hình.</p>
+      <p>Ma-nơ-canh theo thân chính của master (cao 3,0 đơn vị, đầu to, vai rộng, chân ngắn). Mục tiêu ở bên phải màn hình.</p>
     </div>
 
     <div class="sec">
-      <h2>Kéo trực tiếp</h2>
-      <dl class="gest">
-        <dt>Hông, vạt áo</dt><dd>dời cả người (giữ Shift: xoay hông)</dd>
-        <dt>Ngực, giáp vai</dt><dd>ngang: xoay ngực · dọc: cúi/ngả (Shift: nghiêng)</dd>
-        <dt>Đầu</dt><dd>ngang: quay đầu</dd>
-        <dt>Nắm đấm, cẳng tay</dt><dd>dời chỗ hai tay nắm thương</dd>
-        <dt>Mũi thương</dt><dd>ngắm hướng thương</dd>
-        <dt>Cán thương</dt><dd>đẩy / rút thương dọc cán</dd>
-        <dt>Ủng</dt><dd>đặt chân trên mặt đất (Shift: xoay bàn chân)</dd>
-      </dl>
-      <div class="inline"><button class="btn small" id="undo" type="button">Hoàn tác</button><button class="btn small" id="redo" type="button">Làm lại</button><span class="status" id="dragStatus"></span></div>
+      <h2>Tay cầm</h2>
+      <div class="legend">
+        <span class="dot" style="background:#f2b233"></span><span>IK: kéo để đặt tay, chân, hông, thương; tay chân tự gập theo</span>
+        <span class="dot" style="background:#4aa3ff"></span><span>FK: xoay thắt lưng, ngực, cổ, đầu, cổ tay</span>
+        <span class="dot" style="background:#c77dff"></span><span>Hướng gối, khuỷu: kéo để xoay mặt phẳng gập</span>
+      </div>
+      <div class="keys">
+        <kbd>W</kbd><span>di chuyển</span><kbd>E</kbd><span>xoay</span><kbd>Q</kbd><span>đổi trục cục bộ / thế giới</span>
+        <kbd>Esc</kbd><span>bỏ chọn</span><kbd>Ctrl+Z</kbd><span>hoàn tác (Ctrl+Shift+Z: làm lại)</span>
+      </div>
+      <label class="cb"><input type="checkbox" id="grip" checked> Hai tay bám thương</label>
+      <label class="cb"><input type="checkbox" id="spot" checked> Mắt luôn nhìn mục tiêu</label>
+      <div class="inline"><button class="btn small" id="undo" type="button">Hoàn tác</button><button class="btn small" id="redo" type="button">Làm lại</button><button class="btn small" id="resetSel" type="button">Đặt lại khớp đang chọn</button></div>
     </div>
 
     <div class="sec">
@@ -111,17 +117,9 @@ pre.json { font: 11px/1.35 var(--f-num); max-height: 160px; overflow: auto; back
     <div class="sec">
       <h2>Lưu tư thế</h2>
       <div class="inline"><input type="text" id="poseName" placeholder="Tên, ví dụ: A thủ thế" maxlength="60"><button class="btn primary" id="save" type="button">Lưu</button></div>
-      <textarea id="poseNote" placeholder="Ghi chú cho người vẽ (tuỳ chọn), ví dụ: thương dựng bên trái mặt"></textarea>
+      <textarea id="poseNote" placeholder="Ghi chú cho người vẽ (tuỳ chọn)"></textarea>
       <div class="status" id="saveStatus"></div>
-      <div class="poses" id="poses"><div class="empty">Chưa có tư thế nào. Chỉnh dáng rồi bấm Lưu; tư thế sẽ hiện ở đây và Claude đọc được để vẽ.</div></div>
-    </div>
-
-    <div class="sec">
-      <details id="fine">
-        <summary>Tinh chỉnh bằng số</summary>
-        <div id="sliders"></div>
-        <label class="inline"><input type="checkbox" id="spot" checked> Mắt luôn nhìn mục tiêu</label>
-      </details>
+      <div class="poses" id="poses"><div class="empty">Chưa có tư thế nào. Tạo dáng rồi bấm Lưu; tư thế hiện ở đây và Claude đọc được để vẽ.</div></div>
     </div>
 
     <div class="sec">
@@ -139,440 +137,421 @@ pre.json { font: 11px/1.35 var(--f-num); max-height: 160px; overflow: auto; back
 <script type="module">
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { TransformControls } from "three/addons/controls/TransformControls.js";
 
 const M = JSON.parse(document.getElementById("motion").textContent);
-const B = M.body, W = M.weapon, PAL = M.palette;
-const SH = Object.assign({ chest_half: 0.62, waist_half: 0.53, depth: 0.72, pad_r: 0.28, upper_arm_r: 0.17, bracer_r: 0.3, bracer_len: 0.62,
-  thigh_r: 0.21, shin_r: 0.2, knee_guard_r: 0.22, boot_w: 0.22, boot_h: 0.2, skirt_len: 0.61, skirt_hem_half: 0.72, belt_h: 0.18,
-  bun_r: 0.11, wing_h: 1.26, wing_w: 0.82 }, M.shape || {});
+const B = M.body, W = M.weapon;
 const D2R = Math.PI / 180;
-const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 const UP = V(0, 1, 0);
 const fwd = y => V(Math.sin(y * D2R), 0, Math.cos(y * D2R));
 const right = y => V(-Math.cos(y * D2R), 0, Math.sin(y * D2R));
 const wrap = a => ((a + 180) % 360 + 360) % 360 - 180;
+const yawOf = v => Math.atan2(v.x, v.z) / D2R;
 
-// ---------------------------------------------------------------- điều khiển (một tư thế = các giá trị này)
-const SL = [
-  ["Hông và thân", "px", "Hông trái/phải", -1.6, 1.8, 0.01], ["Hông và thân", "py", "Hông cao/thấp", 0.35, 0.95, 0.005],
-  ["Hông và thân", "pz", "Hông trước/sau", -0.8, 0.8, 0.01], ["Hông và thân", "yawP", "Hông xoay", -180, 540, 1],
-  ["Hông và thân", "chestRel", "Ngực xoay thêm", -75, 75, 1], ["Hông và thân", "lean", "Ngực cúi/ngả", -30, 45, 1],
-  ["Hông và thân", "tilt", "Ngực nghiêng", -30, 30, 1], ["Đầu", "headRel", "Đầu xoay thêm", -90, 90, 1],
-  ["Thương và tay", "wYaw", "Thương hướng", -180, 540, 1], ["Thương và tay", "wPitch", "Thương nghiêng", -85, 89, 1],
-  ["Thương và tay", "gx", "Tay sang ngang", -0.8, 0.8, 0.01], ["Thương và tay", "gz", "Tay ra trước", -0.3, 1.1, 0.01],
-  ["Thương và tay", "handDrop", "Tay cao/thấp", -0.6, 1.2, 0.01], ["Thương và tay", "slide", "Đẩy/rút thương", -0.6, 0.8, 0.01],
-  ["Chân", "rx", "Chân phải X", -1.6, 1.8, 0.01], ["Chân", "rz", "Chân phải Z", -0.9, 0.9, 0.01], ["Chân", "fyR", "Bàn phải xoay", -180, 360, 1],
-  ["Chân", "lx", "Chân trái X", -1.6, 1.8, 0.01], ["Chân", "lz", "Chân trái Z", -0.9, 0.9, 0.01], ["Chân", "fyL", "Bàn trái xoay", -180, 360, 1],
-];
-const ctl = {}, inputs = {};
-{
-  const host = document.getElementById("sliders"); let grp = null, cur = "";
-  for (const [g, key, label, mn, mx, st] of SL) {
-    if (g !== cur) { grp = document.createElement("div"); grp.className = "grp"; grp.innerHTML = `<h3>${g}</h3>`; host.appendChild(grp); cur = g; }
-    const row = document.createElement("div"); row.className = "row";
-    row.innerHTML = `<label for="c_${key}">${label}</label><input id="c_${key}" type="range" min="${mn}" max="${mx}" step="${st}"><output id="o_${key}"></output>`;
-    grp.appendChild(row);
-    const inp = row.querySelector("input"); inputs[key] = inp;
-    inp.addEventListener("pointerdown", () => pushUndo());
-    inp.addEventListener("input", () => { ctl[key] = +inp.value; refresh(); });
-  }
-}
-document.getElementById("spot").addEventListener("change", e => { pushUndo(); ctl.spot = e.target.checked; refresh(); });
+// ---------------------------------------------------------------- tỉ lệ khung (thân chính, theo master)
+const L = {
+  spineLow: 0.22, spineMid: 0.42, chestTop: B.spine - 0.64, neck: 0.12, headC: B.head_above_neck - 0.12 + B.neck,
+  clav: B.shoulder_half * 0.55, shoulder: B.shoulder_half, upper: B.upper_arm, fore: B.forearm, hand: 0.2,
+  hip: B.hip_half, thigh: B.thigh, shin: B.shin, ankle: B.ankle_h, foot: B.foot_len, headR: B.head_r,
+};
+// bề dày khối (ma-nơ-canh trơn, không trang phục)
+const R = { pelvis: [0.40, 0.2, 0.27], belly: [0.36, 0.26, 0.27], chest: [0.5, 0.36, 0.33], neck: 0.13, upper: [0.15, 0.13], fore: [0.14, 0.11],
+  hand: [0.13, 0.17, 0.09], thigh: [0.19, 0.15], shin: [0.15, 0.11], foot: [0.12, 0.1] };
 
-function fromFrame(f) {
-  return { px: f.pelvis[0], py: f.pelvis[1], pz: f.pelvis[2], yawP: f.yawP, chestRel: f.yawC - f.yawP, lean: 0, tilt: 0,
-    headRel: 0, spot: true, wYaw: f.wYaw, wPitch: f.wPitch, gx: B.grip_center.right, gz: B.grip_center.forward,
-    handDrop: f.handDrop, slide: f.slide, rx: f.toeR[0], rz: f.toeR[2], fyR: f.fyR, lx: f.toeL[0], lz: f.toeL[2], fyL: f.fyL };
-}
-
-// ---------------------------------------------------------------- bộ giải (như scripts/motion_proxy/skeleton.py, không trễ pha)
-function ik2(root, target, l1, l2, pole) {
-  const d = target.clone().sub(root); const dist = d.length();
-  const over = Math.max(0, dist - (l1 + l2) * 0.999); const dc = Math.min(dist, (l1 + l2) * 0.999);
-  const dn = d.clone().divideScalar(Math.max(dist, 1e-9)); const end = root.clone().addScaledVector(dn, dc);
-  const a = (l1 * l1 - l2 * l2 + dc * dc) / (2 * dc); const h = Math.sqrt(Math.max(l1 * l1 - a * a, 0));
-  let p = pole.clone().addScaledVector(dn, -pole.dot(dn));
-  if (p.length() < 1e-6) p = UP.clone().addScaledVector(dn, -UP.dot(dn));
-  p.normalize();
-  return { mid: root.clone().addScaledVector(dn, a).addScaledVector(p, h), end, over };
-}
-function frameOf(c) {
-  const C = c.yawP + c.chestRel, rC = right(C), fC = fwd(C);
-  const spineDir = UP.clone().applyAxisAngle(rC, c.lean * D2R).applyAxisAngle(fC, -c.tilt * D2R);
-  const pelvis = V(c.px, c.py, c.pz);
-  const chest = pelvis.clone().addScaledVector(spineDir, B.spine).addScaledVector(fC, 0.04);
-  const sd = fwd(c.wYaw).multiplyScalar(Math.cos(c.wPitch * D2R)).addScaledVector(UP, Math.sin(c.wPitch * D2R));
-  const center = chest.clone().addScaledVector(rC, c.gx).addScaledVector(fC, c.gz).addScaledVector(UP, -c.handDrop).addScaledVector(sd, c.slide);
-  return { C, rC, fC, spineDir, pelvis, chest, sd, center };
-}
-function solve(c) {
-  const P = c.yawP, F = frameOf(c), { C, rC, fC, spineDir, pelvis, chest, sd, center } = F;
-  const neck = chest.clone().addScaledVector(spineDir, B.neck);
-  const head = neck.clone().addScaledVector(spineDir, B.head_above_neck);
-  const H = C + (c.spot ? Math.max(-60, Math.min(60, wrap(90 - C))) : 0) + c.headRel;
-  const hipR = pelvis.clone().addScaledVector(right(P), B.hip_half), hipL = pelvis.clone().addScaledVector(right(P), -B.hip_half);
-  const shR = chest.clone().addScaledVector(rC, B.shoulder_half), shL = chest.clone().addScaledVector(rC, -B.shoulder_half);
-  const gap = W.grip_gap - (W.slide_gap_factor ?? 0.6) * Math.max(0, c.slide);
-  let rear = center.clone().addScaledVector(sd, -gap / 2), front = center.clone().addScaledVector(sd, gap / 2);
-  const reach = (B.upper_arm + B.forearm) * 0.97; const shift = V(0, 0, 0);
-  for (let i = 0; i < 60; i++) {
-    const oR = rear.distanceTo(shR) - reach, oL = front.distanceTo(shL) - reach;
-    if (oR <= 1e-4 && oL <= 1e-4) break;
-    const mv = V(0, 0, 0);
-    if (oR > 0) mv.addScaledVector(shR.clone().sub(rear).normalize(), oR);
-    if (oL > 0) mv.addScaledVector(shL.clone().sub(front).normalize(), oL);
-    mv.multiplyScalar(0.6); rear.add(mv); front.add(mv); shift.add(mv);
-  }
-  const butt = rear.clone().addScaledVector(sd, -W.grip_rear), tip = rear.clone().addScaledVector(sd, W.length - W.grip_rear);
-  const armR = ik2(shR, rear, B.upper_arm, B.forearm, UP.clone().negate().addScaledVector(rC, 0.7));
-  const armL = ik2(shL, front, B.upper_arm, B.forearm, UP.clone().negate().addScaledVector(rC, -0.7));
-  const legs = {};
-  for (const [s, hip, toe, fy] of [["R", hipR, V(c.rx, 0, c.rz), c.fyR], ["L", hipL, V(c.lx, 0, c.lz), c.fyL]]) {
-    let lift = 0, res;
-    for (;;) {
-      const heel = toe.clone().addScaledVector(fwd(fy), -B.foot_len).addScaledVector(UP, lift);
-      const ank = heel.clone().addScaledVector(fwd(fy), 0.12).addScaledVector(UP, B.ankle_h);
-      res = ik2(hip, ank, B.thigh, B.shin, fwd(fy).addScaledVector(UP, 0.2));
-      res.heel = heel; res.toe = toe; res.lift = lift;
-      if (res.over <= 1e-4 || lift >= (B.max_heel_lift ?? 0.24)) break;
-      lift = Math.min(B.max_heel_lift ?? 0.24, lift + 0.01);
-    }
-    legs[s] = res;
-  }
-  const J = { pelvis, chest, neck, head, hipR, hipL, shR, shL, kneeR: legs.R.mid, kneeL: legs.L.mid, ankleR: legs.R.end, ankleL: legs.L.end,
-    heelR: legs.R.heel, heelL: legs.L.heel, toeR: legs.R.toe, toeL: legs.L.toe, elbowR: armR.mid, elbowL: armL.mid,
-    handR: armR.end, handL: armL.end, butt, tip, blade_root: tip.clone().addScaledVector(sd, -W.blade_len) };
-  let tot = 0; const com = V(0, 0, 0);
-  for (const [k, m] of Object.entries(B.mass)) { com.addScaledVector(J[k], m); tot += m; }
-  com.divideScalar(tot);
-  return { J, F, yaw: { pelvis: P, chest: C, head: H, weapon: c.wYaw }, pitch: c.wPitch, sd, shift: shift.length(), com,
-    over: { armR: armR.over, armL: armL.over, legR: legs.R.over, legL: legs.L.over }, heel: { R: legs.R.lift, L: legs.L.lift } };
-}
-
-// ---------------------------------------------------------------- cảnh 3D
+// ---------------------------------------------------------------- cảnh
 const stage = document.getElementById("stage");
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
 stage.appendChild(renderer.domElement);
-const scene = new THREE.Scene(); scene.background = new THREE.Color(0x4e5157);
-const cam = new THREE.OrthographicCamera(-4, 4, 3, -3, -50, 50);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x3d4148);
+const cam = new THREE.OrthographicCamera(-4, 4, 3, -3, -60, 60);
 const orbit = new OrbitControls(cam, renderer.domElement); orbit.enableDamping = true;
-scene.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1.15));
-const sun = new THREE.DirectionalLight(0xffffff, 1.35); sun.position.set(-3, 6, 5); scene.add(sun);
-const col = h => new THREE.Color(h);
-const mat = (h, k = 1) => new THREE.MeshStandardMaterial({ color: col(h).multiplyScalar(k), roughness: 0.75, metalness: 0.05 });
-const fig = new THREE.Group(); scene.add(fig);
-const S = {};
-// mỗi khối thuộc một "bộ phận kéo được"
-function add(k, mesh, part) { S[k] = mesh; mesh.userData.part = part; mesh.traverse(o => { o.userData.part = part; }); fig.add(mesh); return mesh; }
-const cyl = (r1, r2, m, seg = 20) => new THREE.Mesh(new THREE.CylinderGeometry(r2, r1, 1, seg), m);
-const sph = (r, m) => new THREE.Mesh(new THREE.SphereGeometry(r, 22, 16), m);
-for (const s of ["R", "L"]) {
-  const n = s === "R", k = n ? 1 : 0.82;
-  add("thigh" + s, cyl(SH.thigh_r, SH.thigh_r * 0.85, mat(PAL.leather, 1.25 * k)), "hips");
-  add("shin" + s, cyl(SH.shin_r, SH.shin_r * 1.05, mat(PAL.shaft, k)), "foot" + s);
-  add("knee" + s, sph(SH.knee_guard_r, mat(PAL.gold, k)), "foot" + s);
-  add("boot" + s, new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), mat(PAL.shaft, k)), "foot" + s);
-  add("toecap" + s, sph(SH.boot_w * 0.9, mat(PAL.gold, k)), "foot" + s);
-  add("upper" + s, cyl(SH.upper_arm_r, SH.upper_arm_r * 0.9, mat(PAL.skin, k)), "chest");
-  add("bracer" + s, cyl(SH.bracer_r, SH.bracer_r * 0.92, mat(PAL.armor, k)), "hands");
-  add("band" + s, new THREE.Mesh(new THREE.TorusGeometry(SH.bracer_r * 0.98, 0.05, 8, 24), mat(PAL.gold, k)), "hands");
-  add("fist" + s, sph(B.fist_r, mat(PAL.skin, k)), "hands");
-  add("pad" + s, sph(SH.pad_r, mat(PAL.armor, k)), "chest");
-  add("padrim" + s, new THREE.Mesh(new THREE.TorusGeometry(SH.pad_r * 0.95, 0.06, 8, 28), mat(PAL.gold, k)), "chest");
-}
-add("torso", new THREE.Mesh(new THREE.CylinderGeometry(1, SH.waist_half / SH.chest_half, 1, 28), mat(PAL.armor)), "chest");
-add("collar", new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.07, 8, 24), mat(PAL.gold)), "chest");
-add("emblem", sph(0.2, mat(PAL.gold)), "chest");
-add("belt", new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 28), mat(PAL.leather)), "hips");
-add("buckle", new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.2, 0.06), mat(PAL.gold)), "hips");
-add("skirt", new THREE.Mesh(new THREE.CylinderGeometry(1, SH.skirt_hem_half / SH.waist_half, 1, 28, 1, true), Object.assign(mat(PAL.armor, 0.85), { side: THREE.DoubleSide })), "hips");
-add("sash", new THREE.Mesh(new THREE.BoxGeometry(0.18, 1, 0.04), mat(PAL.red)), "hips");
-add("head", sph(B.head_r, mat(PAL.skin)), "head");
-add("hair", new THREE.Mesh(new THREE.SphereGeometry(B.head_r * 1.04, 22, 12, 0, Math.PI * 2, 0, Math.PI * 0.42), mat(PAL.hair)), "head");
-add("bun", sph(SH.bun_r, mat(PAL.hair)), "head");
-add("beard", new THREE.Mesh(new THREE.SphereGeometry(B.head_r * 1.03, 22, 12, -Math.PI * 0.42, Math.PI * 0.84, Math.PI * 0.52, Math.PI * 0.4), mat(PAL.hair)), "head");
-add("eyeR", sph(0.05, new THREE.MeshBasicMaterial({ color: col(PAL.eye) })), "head");
-add("eyeL", sph(0.05, new THREE.MeshBasicMaterial({ color: col(PAL.eye) })), "head");
-const wing = new THREE.Group(); S.wing = wing; fig.add(wing); wing.userData.part = "chest";
-for (let k = 0; k < 4; k++) {
-  const sh = new THREE.Shape(); sh.moveTo(0, -0.06); sh.quadraticCurveTo(0.22, 0.5, 0, 1); sh.quadraticCurveTo(-0.15, 0.5, 0, -0.06);
-  const m = new THREE.Mesh(new THREE.ShapeGeometry(sh), new THREE.MeshStandardMaterial({ color: col(PAL.ivory), side: THREE.DoubleSide, roughness: 0.8 }));
-  const ln = SH.wing_h * [1.0, 0.85, 0.7, 0.55][k]; m.scale.set(SH.wing_w * 0.9, ln, 1);
-  m.rotation.z = -([6, 22, 40, 58][k]) * D2R; m.userData.part = "chest"; wing.add(m);
-}
-add("shaft", cyl(0.05, 0.05, mat(PAL.shaft, 0.9), 12), "shaft");
-const leaf = new THREE.Shape(); leaf.moveTo(0, 0); leaf.quadraticCurveTo(0.34, 0.38, 0, 1); leaf.quadraticCurveTo(-0.34, 0.38, 0, 0);
-for (const k of ["bladeA", "bladeB"]) add(k, new THREE.Mesh(new THREE.ShapeGeometry(leaf), new THREE.MeshStandardMaterial({ color: col(PAL.blade), side: THREE.DoubleSide, metalness: 0.4, roughness: 0.35 })), "tip");
-add("guard", new THREE.Mesh(new THREE.TorusGeometry(W.crescent_r ?? 0.2, 0.045, 8, 22, Math.PI), mat(PAL.gold)), "tip");
-add("tassel", cyl(0.06, 0.02, mat(PAL.red), 8), "tip");
-add("butt", sph(0.07, mat(PAL.gold)), "shaft");
-// mặt đất, bóng, trọng tâm, vùng đỡ, mục tiêu
-const grid = new THREE.GridHelper(14, 28, 0x7a7f86, 0x63676d); grid.position.y = -0.002; scene.add(grid);
-const shadow = new THREE.Mesh(new THREE.CircleGeometry(1.0, 32), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25 }));
-shadow.rotation.x = -Math.PI / 2; shadow.scale.set(1, 0.6, 1); scene.add(shadow);
-const comDot = new THREE.Mesh(new THREE.RingGeometry(0.05, 0.1, 24), new THREE.MeshBasicMaterial({ color: 0x5cbf85, side: THREE.DoubleSide }));
-comDot.rotation.x = -Math.PI / 2; scene.add(comDot);
-const supGeo = new THREE.BufferGeometry().setFromPoints([V(0, 0.01, 0), V(1, 0.01, 0)]);
-const supLine = new THREE.Line(supGeo, new THREE.LineBasicMaterial({ color: 0x5cbf85 })); scene.add(supLine);
+scene.add(new THREE.HemisphereLight(0xf4f6fa, 0x3a4048, 1.25));
+const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(-3, 7, 6); scene.add(key);
+const rim = new THREE.DirectionalLight(0x9fc4ff, 0.5); rim.position.set(4, 3, -5); scene.add(rim);
+const grid = new THREE.GridHelper(16, 32, 0x6b717a, 0x535860); scene.add(grid);
 const target = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 2.4, 10), new THREE.MeshBasicMaterial({ color: 0xc87a6e }));
 target.position.set(3.6, 1.2, 0); scene.add(target);
-// ảnh master (so khối)
-let masterPlane = null;
-if (M.master && M.master.img) {
-  const tex = new THREE.TextureLoader().load(M.master.img); tex.colorSpace = THREE.SRGBColorSpace;
-  const w = M.master.size_px / M.master.px_per_unit;
-  masterPlane = new THREE.Mesh(new THREE.PlaneGeometry(w, w), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.5, depthWrite: false }));
-  masterPlane.visible = false; scene.add(masterPlane);
+
+const matBody = new THREE.MeshStandardMaterial({ color: 0xd9dce1, roughness: 0.55, metalness: 0.02 });
+const matR = new THREE.MeshStandardMaterial({ color: 0xe3d9cf, roughness: 0.55 });   // bên phải nhân vật: ấm
+const matL = new THREE.MeshStandardMaterial({ color: 0xcfd8e3, roughness: 0.55 });   // bên trái: lạnh
+const matJoint = new THREE.MeshStandardMaterial({ color: 0x7d848e, roughness: 0.6 });
+const matFace = new THREE.MeshStandardMaterial({ color: 0x3b4250, roughness: 0.5 });
+
+// ---------------------------------------------------------------- xương (Object3D lồng nhau = FK thật)
+const bone = (name, parent, x, y, z) => { const o = new THREE.Object3D(); o.name = name; o.position.set(x, y, z); parent.add(o); return o; };
+const root = new THREE.Group(); scene.add(root);
+const pelvis = bone("pelvis", root, 0, B.thigh + B.shin + B.ankle_h - 0.04, 0);
+const AF = B.foot_len - 0.08;   // cổ chân nằm sau mũi chân AF (như proxy)
+const spine = bone("spine", pelvis, 0, L.spineLow, 0);
+const chest = bone("chest", spine, 0, L.spineMid, 0);
+const neck = bone("neck", chest, 0, L.chestTop, 0);
+const head = bone("head", neck, 0, L.neck, 0);
+const J = {};
+for (const s of ["R", "L"]) {
+  const sg = s === "R" ? -1 : 1;                       // nhìn camera (yaw 0): bên phải nhân vật ở -x
+  J["clav" + s] = bone("clav" + s, chest, sg * 0.08, L.chestTop - 0.06, 0);
+  J["upper" + s] = bone("upper" + s, J["clav" + s], sg * (L.shoulder - 0.08), 0.02, 0);
+  J["fore" + s] = bone("fore" + s, J["upper" + s], 0, -L.upper, 0);
+  J["hand" + s] = bone("hand" + s, J["fore" + s], 0, -L.fore, 0);
+  J["thigh" + s] = bone("thigh" + s, pelvis, sg * L.hip, 0, 0);
+  J["shin" + s] = bone("shin" + s, J["thigh" + s], 0, -L.thigh, 0);
+  J["foot" + s] = bone("foot" + s, J["shin" + s], 0, -L.shin, 0);
+}
+// điểm phụ để xuất khớp
+const mark = (name, parent, x, y, z) => bone(name, parent, x, y, z);
+const mShoulderLine = mark("shLine", chest, 0, L.chestTop - 0.04, 0);
+const mHeadC = mark("headC", head, 0, L.headC, 0);
+const mToe = {}, mHeel = {};
+for (const s of ["R", "L"]) { mToe[s] = mark("toe" + s, J["foot" + s], 0, -L.ankle, AF); mHeel[s] = mark("heel" + s, J["foot" + s], 0, -L.ankle, -0.08); }
+
+// ---------------------------------------------------------------- hình khối ma-nơ-canh gắn vào xương
+const pickable = [];
+function addMesh(parent, geo, m, pos, scl, ctl) { const me = new THREE.Mesh(geo, m); me.position.copy(pos); if (scl) me.scale.copy(scl); me.userData.ctl = ctl; parent.add(me); pickable.push(me); return me; }
+const sphG = new THREE.SphereGeometry(1, 28, 20);
+const capG = (r1, r2, len) => { const g = new THREE.CylinderGeometry(r1, r2, len, 20); g.translate(0, -len / 2, 0); return g; };
+addMesh(pelvis, sphG, matBody, V(0, -0.02, 0), V(...R.pelvis), "pelvis");
+addMesh(spine, sphG, matBody, V(0, 0.18, 0.01), V(...R.belly), "spine");
+addMesh(chest, sphG, matBody, V(0, L.chestTop * 0.48, 0.02), V(R.chest[0], L.chestTop * 0.62 + 0.05, R.chest[2]), "chest");
+addMesh(neck, new THREE.CylinderGeometry(R.neck, R.neck * 1.1, L.neck + 0.12, 16), matBody, V(0, L.neck / 2, 0), null, "neck");
+addMesh(head, sphG, matBody, V(0, L.headC, 0), V(L.headR * 0.92, L.headR * 1.04, L.headR * 0.98), "head");
+addMesh(head, sphG, matFace, V(0, L.headC - 0.02, L.headR * 0.86), V(0.2, 0.06, 0.06), "head");          // dải mắt: biết đầu quay đâu
+addMesh(head, sphG, matBody, V(0, L.headC - 0.12, L.headR * 0.92), V(0.05, 0.07, 0.07), "head");        // mũi
+for (const s of ["R", "L"]) {
+  const m = s === "R" ? matR : matL;
+  addMesh(J["clav" + s], sphG, m, V(J["upper" + s].position.x, 0, 0), V(0.2, 0.17, 0.18), "chest");       // khối vai
+  addMesh(J["upper" + s], capG(R.upper[0], R.upper[1], L.upper), m, V(), null, "hand" + s);
+  addMesh(J["fore" + s], sphG, matJoint, V(), V(0.12, 0.12, 0.12), "hand" + s);
+  addMesh(J["fore" + s], capG(R.fore[0], R.fore[1], L.fore), m, V(), null, "hand" + s);
+  addMesh(J["hand" + s], new THREE.BoxGeometry(1, 1, 1), m, V(0, -R.hand[1] / 2 - 0.02, 0.02), V(R.hand[0] * 2, R.hand[1], R.hand[2] * 2), "hand" + s);
+  addMesh(J["thigh" + s], sphG, matJoint, V(), V(0.15, 0.15, 0.15), "foot" + s);
+  addMesh(J["thigh" + s], capG(R.thigh[0], R.thigh[1], L.thigh), m, V(), null, "foot" + s);
+  addMesh(J["shin" + s], sphG, matJoint, V(), V(0.13, 0.13, 0.13), "foot" + s);
+  addMesh(J["shin" + s], capG(R.shin[0], R.shin[1], L.shin), m, V(), null, "foot" + s);
+  addMesh(J["foot" + s], sphG, matJoint, V(), V(0.1, 0.1, 0.1), "foot" + s);
+  const fg = new THREE.BoxGeometry(R.foot[0] * 2, R.foot[1] * 1.6, AF + 0.12); fg.translate(0, -L.ankle + R.foot[1] * 0.8, AF / 2 - 0.02);
+  addMesh(J["foot" + s], fg, m, V(), null, "foot" + s);
+  const ag = new THREE.CylinderGeometry(0.1, 0.12, L.ankle, 14); ag.translate(0, -L.ankle / 2, 0);
+  addMesh(J["foot" + s], ag, m, V(), null, "foot" + s);
 }
 
-function placeSeg(mesh, a, b) {
-  const d = b.clone().sub(a); const L = d.length();
-  mesh.position.copy(a).addScaledVector(d, 0.5); mesh.scale.set(1, Math.max(L, 1e-4), 1);
-  mesh.quaternion.setFromUnitVectors(UP, d.normalize());
+// ---------------------------------------------------------------- thương (đạo cụ có tay cầm riêng)
+const spearCtl = new THREE.Object3D(); spearCtl.name = "spear"; scene.add(spearCtl);   // gốc = tâm hai tay nắm, trục thương = +Y cục bộ
+const G = { gap: W.grip_gap, rear: W.grip_rear, len: W.length, blade: W.blade_len };
+const yRear = -G.gap / 2, yButt = yRear - G.rear, yTip = yButt + G.len, yBase = yTip - G.blade;
+{
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, yBase - yButt, 12), new THREE.MeshStandardMaterial({ color: 0x8e5a3a, roughness: 0.7 }));
+  shaft.position.y = (yBase + yButt) / 2; shaft.userData.ctl = "spear"; spearCtl.add(shaft); pickable.push(shaft);
+  const leaf = new THREE.Shape(); leaf.moveTo(0, 0); leaf.quadraticCurveTo(W.blade_half_w * 1.1, G.blade * 0.38, 0, G.blade); leaf.quadraticCurveTo(-W.blade_half_w * 1.1, G.blade * 0.38, 0, 0);
+  const bm = new THREE.MeshStandardMaterial({ color: 0xdde9f2, metalness: 0.35, roughness: 0.35, side: THREE.DoubleSide });
+  for (const r of [0, Math.PI / 2]) { const b = new THREE.Mesh(new THREE.ShapeGeometry(leaf), bm); b.position.y = yBase; b.rotation.y = r; b.userData.ctl = "spear"; spearCtl.add(b); pickable.push(b); }
+  const guard = new THREE.Mesh(new THREE.TorusGeometry(W.crescent_r ?? 0.22, 0.04, 8, 22, Math.PI), new THREE.MeshStandardMaterial({ color: 0xd6a03a, roughness: 0.5 }));
+  guard.position.y = yBase; guard.rotation.x = Math.PI; spearCtl.add(guard);
 }
-function orient(obj, xAxis, yAxis) {
-  const x = xAxis.clone().normalize(); const y = yAxis.clone().addScaledVector(x, -yAxis.dot(x)).normalize(); const z = x.clone().cross(y);
-  obj.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
+const spearPt = y => spearCtl.localToWorld(V(0, y, 0));
+
+// ---------------------------------------------------------------- tay cầm IK (đầu mút) và hướng gối/khuỷu
+const ikT = {}, pole = {};
+for (const s of ["R", "L"]) {
+  ikT["hand" + s] = new THREE.Object3D(); ikT["foot" + s] = new THREE.Object3D();
+  pole["hand" + s] = new THREE.Object3D(); pole["foot" + s] = new THREE.Object3D();
+  for (const o of [ikT["hand" + s], ikT["foot" + s], pole["hand" + s], pole["foot" + s]]) scene.add(o);
 }
-function draw(r) {
-  const J = r.J, rC = right(r.yaw.chest), fC = fwd(r.yaw.chest), rP = right(r.yaw.pelvis), fP = fwd(r.yaw.pelvis);
-  for (const s of ["R", "L"]) {
-    placeSeg(S["thigh" + s], J["hip" + s], J["knee" + s]); placeSeg(S["shin" + s], J["knee" + s], J["ankle" + s]);
-    S["knee" + s].position.copy(J["knee" + s]);
-    const fy = s === "R" ? ctl.fyR : ctl.fyL, ff = fwd(fy);
-    const heel = J["heel" + s], toe = J["toe" + s];
-    S["boot" + s].position.copy(heel).add(toe).multiplyScalar(0.5).addScaledVector(UP, SH.boot_h * 0.45);
-    orient(S["boot" + s], toe.clone().sub(heel), UP); S["boot" + s].scale.set(heel.distanceTo(toe) + 0.12, SH.boot_h, SH.boot_w * 2);
-    S["toecap" + s].position.copy(toe).addScaledVector(UP, SH.boot_h * 0.45); S["toecap" + s].scale.set(1, 0.8, 1);
-    placeSeg(S["upper" + s], J["sh" + s], J["elbow" + s]);
-    const fa = J["hand" + s].clone().sub(J["elbow" + s]);
-    placeSeg(S["bracer" + s], J["elbow" + s].clone().addScaledVector(fa, 0.15), J["hand" + s].clone().addScaledVector(fa, -0.25));
-    S["band" + s].position.copy(J["elbow" + s]).addScaledVector(fa, 0.7); S["band" + s].quaternion.setFromUnitVectors(V(0, 0, 1), fa.clone().normalize());
-    S["fist" + s].position.copy(J["hand" + s]);
-    S["pad" + s].position.copy(J["sh" + s]).addScaledVector(UP, 0.07); S["pad" + s].scale.set(1, 0.85, 1);
-    S["padrim" + s].position.copy(J["sh" + s]).addScaledVector(UP, -0.02); orient(S["padrim" + s], rC, fC);
+
+// ---------------------------------------------------------------- IK hai đoạn: đặt xoay CỤC BỘ cho hai xương
+function twoBone(upperB, lowerB, endB, l1, l2, tgt, polePos, poleSide) {
+  scene.updateMatrixWorld(true);
+  const S = upperB.getWorldPosition(V());
+  const d = tgt.clone().sub(S); const dist = d.length();
+  const over = Math.max(0, dist - (l1 + l2) * 0.999); const dc = Math.min(dist, (l1 + l2) * 0.999);
+  const dn = d.clone().normalize();
+  const a = (l1 * l1 - l2 * l2 + dc * dc) / (2 * dc), h = Math.sqrt(Math.max(l1 * l1 - a * a, 0));
+  let p = polePos.clone().sub(S); p.addScaledVector(dn, -p.dot(dn)); if (p.lengthSq() < 1e-8) p = V(0, 0, 1).addScaledVector(dn, -dn.z);
+  p.normalize();
+  const E = S.clone().addScaledVector(dn, a).addScaledVector(p, h), Wp = S.clone().addScaledVector(dn, dc);
+  const setWorld = (b, dir) => {
+    const y = dir.clone().normalize().negate();                        // trục -Y cục bộ của xương chỉ dọc chi
+    let z = p.clone().multiplyScalar(poleSide); z.addScaledVector(y, -z.dot(y)); z.normalize();
+    const x = y.clone().cross(z).normalize(); z = x.clone().cross(y);
+    const qW = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
+    const qP = b.parent.getWorldQuaternion(new THREE.Quaternion());
+    b.quaternion.copy(qP.invert().multiply(qW)); b.updateMatrixWorld(true);
+  };
+  setWorld(upperB, E.clone().sub(S)); setWorld(lowerB, Wp.clone().sub(E));
+  return over;
+}
+function setWorldQuat(b, qW) { b.parent.updateMatrixWorld(true); const qP = b.parent.getWorldQuaternion(new THREE.Quaternion()); b.quaternion.copy(qP.invert().multiply(qW)); }
+
+// ---------------------------------------------------------------- trạng thái tư thế (để lưu, hoàn tác, mở lại)
+const opts = { grip: true, spot: true };
+const FK = { spine, chest, neck, head, handR: J.handR, handL: J.handL };
+function getState() {
+  const q = o => o.quaternion.toArray().map(v => +v.toFixed(5)), p = o => o.position.toArray().map(v => +v.toFixed(5));
+  return { root: { p: p(pelvis), q: q(pelvis) }, fk: Object.fromEntries(Object.entries(FK).map(([k, o]) => [k, q(o)])),
+    ik: Object.fromEntries(Object.entries(ikT).map(([k, o]) => [k, { p: p(o), q: q(o) }])), pole: Object.fromEntries(Object.entries(pole).map(([k, o]) => [k, p(o)])),
+    spear: { p: p(spearCtl), q: q(spearCtl) }, opts: { ...opts } };
+}
+function setState(s) {
+  pelvis.position.fromArray(s.root.p); pelvis.quaternion.fromArray(s.root.q);
+  for (const [k, v] of Object.entries(s.fk)) FK[k].quaternion.fromArray(v);
+  for (const [k, v] of Object.entries(s.ik)) { ikT[k].position.fromArray(v.p); ikT[k].quaternion.fromArray(v.q); }
+  for (const [k, v] of Object.entries(s.pole)) pole[k].position.fromArray(v);
+  spearCtl.position.fromArray(s.spear.p); spearCtl.quaternion.fromArray(s.spear.q);
+  Object.assign(opts, s.opts || {}); document.getElementById("grip").checked = opts.grip; document.getElementById("spot").checked = opts.spot;
+  solve();
+}
+
+// ---------------------------------------------------------------- dáng từ một khung của chuyển động đã nướng
+function fromFrame(f) {
+  pelvis.position.set(f.pelvis[0], f.pelvis[1], f.pelvis[2]);
+  pelvis.quaternion.setFromAxisAngle(UP, f.yawP * D2R);
+  const rel = wrap(f.yawC - f.yawP);
+  spine.quaternion.setFromAxisAngle(UP, rel * 0.45 * D2R); chest.quaternion.setFromAxisAngle(UP, rel * 0.55 * D2R);
+  neck.quaternion.identity(); head.quaternion.identity(); J.handR.quaternion.identity(); J.handL.quaternion.identity();
+  scene.updateMatrixWorld(true);
+  // thương: hướng và tâm hai tay như proxy
+  const C = f.yawC, rC = right(C), fC = fwd(C);
+  const sd = fwd(f.wYaw).multiplyScalar(Math.cos(f.wPitch * D2R)).addScaledVector(UP, Math.sin(f.wPitch * D2R)).normalize();
+  const chestP = mShoulderLine.getWorldPosition(V());
+  const center = chestP.clone().addScaledVector(rC, B.grip_center.right).addScaledVector(fC, B.grip_center.forward).addScaledVector(UP, -f.handDrop).addScaledVector(sd, f.slide);
+  spearCtl.position.copy(center); spearCtl.quaternion.setFromUnitVectors(UP, sd);
+  for (const [s, toe, fy] of [["R", f.toeR, f.fyR], ["L", f.toeL, f.fyL]]) {
+    // mũi chân khoá; gót nhấc vừa đủ để chân với tới (kiễng), tối đa max_heel_lift như proxy
+    const t = V(...toe), ff = fwd(fy), hip = J["thigh" + s].getWorldPosition(V());
+    const qy = new THREE.Quaternion().setFromAxisAngle(UP, fy * D2R);
+    for (let lift = 0; ; lift = Math.min(B.max_heel_lift ?? 0.24, lift + 0.01)) {
+      const pitch = Math.asin(Math.min(1, lift / B.foot_len));
+      const q = qy.clone().multiply(new THREE.Quaternion().setFromAxisAngle(V(1, 0, 0), pitch));
+      const ank = t.clone().add(V(0, L.ankle, -AF).applyQuaternion(q));
+      ikT["foot" + s].position.copy(ank); ikT["foot" + s].quaternion.copy(q);
+      if (hip.distanceTo(ank) <= (L.thigh + L.shin) * 0.995 || lift >= (B.max_heel_lift ?? 0.24)) break;
+    }
+    pole["foot" + s].position.copy(ikT["foot" + s].position).addScaledVector(ff, 0.9).addScaledVector(UP, 0.5);
   }
-  const waist = J.pelvis.clone().addScaledVector(UP, 0.42);
-  const top = J.chest.clone().addScaledVector(r.F.spineDir, 0.12);
-  placeSeg(S.torso, waist, top); orient(S.torso, rC, top.clone().sub(waist)); S.torso.scale.set(SH.chest_half, waist.distanceTo(top), SH.chest_half * SH.depth);
-  S.collar.position.copy(top).addScaledVector(r.F.spineDir, -0.02); orient(S.collar, rC, fC);
-  S.emblem.position.copy(J.chest).addScaledVector(r.F.spineDir, -0.32).addScaledVector(fC, SH.chest_half * SH.depth * 0.95);
-  orient(S.emblem, rC, r.F.spineDir); S.emblem.scale.set(1.5, 1.1, 0.3);
-  S.belt.position.copy(waist); orient(S.belt, rP, UP); S.belt.scale.set(SH.waist_half * 1.04, SH.belt_h, SH.waist_half * SH.depth * 1.04);
-  S.buckle.position.copy(waist).addScaledVector(fP, SH.waist_half * SH.depth * 1.06); orient(S.buckle, rP, UP);
-  S.skirt.position.copy(waist).addScaledVector(UP, -SH.skirt_len / 2 - SH.belt_h / 2); orient(S.skirt, rP, UP);
-  S.skirt.scale.set(SH.waist_half, SH.skirt_len, SH.waist_half * SH.depth);
-  S.sash.position.copy(waist).addScaledVector(UP, -0.38).addScaledVector(fP, SH.waist_half * SH.depth * 1.08); orient(S.sash, rP, UP); S.sash.scale.set(1, 0.6, 1);
-  S.head.position.copy(J.head); S.hair.position.copy(J.head); orient(S.hair, right(r.yaw.head), UP);
-  const fH = fwd(r.yaw.head), rH = right(r.yaw.head);
-  S.bun.position.copy(J.head).addScaledVector(UP, B.head_r + SH.bun_r * 0.6).addScaledVector(fH, -0.12);
-  S.beard.position.copy(J.head); orient(S.beard, rH.clone().negate(), UP);
-  S.eyeR.position.copy(J.head).addScaledVector(fH, B.head_r * 0.92).addScaledVector(rH, 0.12).addScaledVector(UP, 0.04);
-  S.eyeL.position.copy(J.head).addScaledVector(fH, B.head_r * 0.92).addScaledVector(rH, -0.12).addScaledVector(UP, 0.04);
-  S.wing.position.copy(J.shL).addScaledVector(UP, 0.1).addScaledVector(fC, -0.1); orient(S.wing, rC.clone().negate(), UP);
-  const base = J.blade_root, sdn = r.sd.clone().normalize();
-  placeSeg(S.shaft, J.butt, base); S.butt.position.copy(J.butt);
-  const q = new THREE.Quaternion().setFromUnitVectors(UP, sdn);
-  S.bladeA.position.copy(base); S.bladeA.quaternion.copy(q); S.bladeA.scale.set(W.blade_half_w * 2 / 0.68, W.blade_len, 1);
-  S.bladeB.position.copy(base); S.bladeB.quaternion.copy(q).multiply(new THREE.Quaternion().setFromAxisAngle(UP, Math.PI / 2)); S.bladeB.scale.copy(S.bladeA.scale);
-  S.guard.position.copy(base); S.guard.quaternion.copy(q).multiply(new THREE.Quaternion().setFromAxisAngle(V(1, 0, 0), Math.PI / 2));
-  placeSeg(S.tassel, base.clone().addScaledVector(sdn, -0.1), base.clone().addScaledVector(sdn, -0.1).addScaledVector(UP, -0.4));
-  shadow.position.set(r.com.x, 0.003, r.com.z); comDot.position.set(r.com.x, 0.006, r.com.z);
+  const fP = fwd(f.yawP);
+  for (const s of ["R", "L"]) {
+    const sh = J["upper" + s].getWorldPosition(V());
+    pole["hand" + s].position.copy(sh).addScaledVector(UP, -0.4).addScaledVector(fC, -0.6).addScaledVector(rC, s === "R" ? 0.5 : -0.5);
+    ikT["hand" + s].position.copy(sh).addScaledVector(UP, -0.8);
+  }
+  solve();
+  // tay quá tầm: dời thương về phía vai (cánh tay mang thương, như proxy)
+  for (let k = 0; k < 6 && (last.over.armR > 0.005 || last.over.armL > 0.005); k++) {
+    const mv = V();
+    for (const [s, y] of [["R", yRear], ["L", yRear + G.gap]]) {
+      const o = last.over["arm" + s]; if (o <= 0) continue;
+      mv.addScaledVector(J["upper" + s].getWorldPosition(V()).sub(spearPt(y)).normalize(), o);
+    }
+    spearCtl.position.add(mv); solve();
+  }
 }
+
+// ---------------------------------------------------------------- giải toàn thân
+let last = null;
+function solve() {
+  scene.updateMatrixWorld(true);
+  if (opts.spot) {   // đầu quay về mục tiêu (+x) trong ±60° so với ngực
+    const cq = neck.getWorldQuaternion(new THREE.Quaternion());
+    const cf = V(0, 0, 1).applyQuaternion(cq); const cy = yawOf(cf);
+    const want = Math.max(-60, Math.min(60, wrap(90 - cy)));
+    head.quaternion.setFromAxisAngle(UP, want * D2R); scene.updateMatrixWorld(true);
+  }
+  const over = {};
+  for (const s of ["R", "L"]) {
+    const tgt = opts.grip ? spearPt(s === "R" ? yRear : yRear + G.gap) : ikT["hand" + s].getWorldPosition(V());
+    if (opts.grip) ikT["hand" + s].position.copy(tgt);
+    over["arm" + s] = twoBone(J["upper" + s], J["fore" + s], J["hand" + s], L.upper, L.fore, tgt, pole["hand" + s].position, -1);
+    over["leg" + s] = twoBone(J["thigh" + s], J["shin" + s], J["foot" + s], L.thigh, L.shin, ikT["foot" + s].position, pole["foot" + s].position, 1);
+    setWorldQuat(J["foot" + s], ikT["foot" + s].quaternion);
+  }
+  scene.updateMatrixWorld(true);
+  last = { over };
+  updateHandles(); checks(); updateJson();
+}
+
+// ---------------------------------------------------------------- chấm điều khiển + gizmo
+const handleGroup = new THREE.Group(); scene.add(handleGroup);
+const HCOL = { ik: 0xf2b233, fk: 0x4aa3ff, pole: 0xc77dff };
+const handles = [];
+function mkHandle(id, kind, r, label) {
+  const m = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12), new THREE.MeshBasicMaterial({ color: HCOL[kind], depthTest: false, transparent: true, opacity: 0.95 }));
+  m.renderOrder = 10; m.userData = { id, kind, label }; handleGroup.add(m); handles.push(m); return m;
+}
+const HDEF = [
+  ["pelvis", "ik", 0.09, "Hông (dời và xoay cả thân)"], ["spine", "fk", 0.07, "Thắt lưng"], ["chest", "fk", 0.08, "Ngực"],
+  ["neck", "fk", 0.06, "Cổ"], ["head", "fk", 0.07, "Đầu"], ["spear", "ik", 0.09, "Thương (hai tay bám theo)"],
+  ["handR", "ik", 0.07, "Tay phải"], ["handL", "ik", 0.07, "Tay trái"], ["footR", "ik", 0.08, "Chân phải"], ["footL", "ik", 0.08, "Chân trái"],
+  ["poleHandR", "pole", 0.05, "Hướng khuỷu phải"], ["poleHandL", "pole", 0.05, "Hướng khuỷu trái"],
+  ["poleFootR", "pole", 0.05, "Hướng gối phải"], ["poleFootL", "pole", 0.05, "Hướng gối trái"],
+  ["wristR", "fk", 0.045, "Cổ tay phải"], ["wristL", "fk", 0.045, "Cổ tay trái"],
+];
+for (const [id, k, r, l] of HDEF) mkHandle(id, k, r, l);
+const H = Object.fromEntries(handles.map(h => [h.userData.id, h]));
+function objOf(id) {
+  return { pelvis, spine, chest, neck, head, spear: spearCtl, handR: ikT.handR, handL: ikT.handL, footR: ikT.footR, footL: ikT.footL,
+    poleHandR: pole.handR, poleHandL: pole.handL, poleFootR: pole.footR, poleFootL: pole.footL, wristR: J.handR, wristL: J.handL }[id];
+}
+function updateHandles() {
+  for (const h of handles) {
+    const id = h.userData.id, o = objOf(id);
+    h.position.copy(o.getWorldPosition(V()));
+    if (id === "chest") h.position.copy(mShoulderLine.getWorldPosition(V())).addScaledVector(UP, -0.25);
+    if (id === "head") h.position.copy(mHeadC.getWorldPosition(V()));
+    h.visible = !((id === "handR" || id === "handL") && opts.grip);
+  }
+}
+const tc = new TransformControls(cam, renderer.domElement); tc.setSize(0.85); scene.add(tc);
+let selected = null, mode = "translate", space = "local";
+const ROT_ONLY = new Set(["spine", "chest", "neck", "head", "wristR", "wristL"]);
+const MOVE_ONLY = new Set(["poleHandR", "poleHandL", "poleFootR", "poleFootL"]);
+function select(id) {
+  selected = id; for (const h of handles) h.scale.setScalar(h.userData.id === id ? 1.5 : 1);
+  if (!id) { tc.detach(); document.getElementById("sel").innerHTML = "Bấm một <b>chấm điều khiển</b> trên khớp (hoặc bấm vào thân) để chọn, rồi kéo gizmo. Kéo vùng trống để xoay camera."; return; }
+  let m = mode; if (ROT_ONLY.has(id)) m = "rotate"; if (MOVE_ONLY.has(id)) m = "translate";
+  tc.setMode(m); tc.setSpace(space); tc.attach(objOf(id));
+  document.getElementById("sel").innerHTML = `Đang chọn: <b>${H[id].userData.label}</b> · ${m === "rotate" ? "xoay" : "di chuyển"} (W / E đổi chế độ)`;
+}
+let dragStart = null;
+tc.addEventListener("dragging-changed", e => { orbit.enabled = !e.value; if (e.value) dragStart = JSON.stringify(getState()); else if (dragStart) { pushUndo(dragStart); dragStart = null; } });
+tc.addEventListener("objectChange", () => solve());
+function setMode(m) { mode = m; document.getElementById("mMove").classList.toggle("on", m === "translate"); document.getElementById("mRot").classList.toggle("on", m === "rotate"); if (selected) select(selected); }
+document.getElementById("mMove").onclick = () => setMode("translate");
+document.getElementById("mRot").onclick = () => setMode("rotate");
+document.getElementById("mSpace").onclick = () => { space = space === "local" ? "world" : "local"; document.getElementById("mSpace").textContent = "Trục: " + (space === "local" ? "cục bộ" : "thế giới"); if (selected) select(selected); };
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+let downAt = null;
+renderer.domElement.addEventListener("pointerdown", e => { downAt = [e.clientX, e.clientY]; });
+renderer.domElement.addEventListener("pointerup", e => {
+  if (!downAt || tc.dragging) return; const moved = Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]); downAt = null; if (moved > 4) return;
+  const rc = renderer.domElement.getBoundingClientRect();
+  ndc.set(((e.clientX - rc.left) / rc.width) * 2 - 1, -((e.clientY - rc.top) / rc.height) * 2 + 1); ray.setFromCamera(ndc, cam);
+  const hh = ray.intersectObjects(handles.filter(h => h.visible), false)[0];
+  if (hh) { select(hh.object.userData.id); return; }
+  const hb = ray.intersectObjects(pickable, false)[0];
+  if (hb) { let id = hb.object.userData.ctl; if ((id === "handR" || id === "handL") && opts.grip) id = "spear"; select(id); return; }
+  select(null);
+});
+window.addEventListener("keydown", e => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+  const k = e.key.toLowerCase();
+  if ((e.ctrlKey || e.metaKey) && k === "z") { e.preventDefault(); (e.shiftKey ? redoFn : undoFn)(); return; }
+  if (k === "w") setMode("translate"); if (k === "e") setMode("rotate"); if (k === "q") document.getElementById("mSpace").click(); if (k === "escape") select(null);
+});
+
+// ---------------------------------------------------------------- hoàn tác
+const undo = [], redo = [];
+function pushUndo(s) { undo.push(s || JSON.stringify(getState())); if (undo.length > 120) undo.shift(); redo.length = 0; }
+const undoFn = () => { if (!undo.length) return; redo.push(JSON.stringify(getState())); setState(JSON.parse(undo.pop())); };
+const redoFn = () => { if (!redo.length) return; undo.push(JSON.stringify(getState())); setState(JSON.parse(redo.pop())); };
+document.getElementById("undo").onclick = undoFn; document.getElementById("redo").onclick = redoFn;
+document.getElementById("resetSel").onclick = () => { if (!selected) return; const o = objOf(selected); pushUndo(); if (ROT_ONLY.has(selected)) o.quaternion.identity(); solve(); };
+document.getElementById("grip").onchange = e => { pushUndo(); opts.grip = e.target.checked; if (!opts.grip && selected === "spear") select(null); solve(); };
+document.getElementById("spot").onchange = e => { pushUndo(); opts.spot = e.target.checked; if (!opts.spot) head.quaternion.identity(); solve(); };
+
+// ---------------------------------------------------------------- khớp xuất ra, kiểm tra vật lý
+function joints() {
+  const w = o => o.getWorldPosition(V());
+  const out = { pelvis: w(pelvis), chest: w(mShoulderLine), neck: w(neck), head: w(mHeadC) };
+  for (const s of ["R", "L"]) {
+    out["hip" + s] = w(J["thigh" + s]); out["knee" + s] = w(J["shin" + s]); out["ankle" + s] = w(J["foot" + s]);
+    out["heel" + s] = w(mHeel[s]); out["toe" + s] = w(mToe[s]); out["sh" + s] = w(J["upper" + s]); out["elbow" + s] = w(J["fore" + s]); out["hand" + s] = w(J["hand" + s]);
+  }
+  out.butt = spearPt(yButt); out.tip = spearPt(yTip); out.blade_root = spearPt(yBase);
+  return out;
+}
+function yaws() {
+  const f = o => yawOf(V(0, 0, 1).applyQuaternion(o.getWorldQuaternion(new THREE.Quaternion())));
+  const sd = V(0, 1, 0).applyQuaternion(spearCtl.quaternion);
+  return { pelvis: f(pelvis), chest: f(chest), head: f(head), weapon: yawOf(sd), pitch: Math.asin(Math.max(-1, Math.min(1, sd.y))) / D2R };
+}
+function com(Jt) { let t = 0; const c = V(); for (const [k, m] of Object.entries(B.mass)) { if (Jt[k]) { c.addScaledVector(Jt[k], m); t += m; } } return c.divideScalar(t); }
+const shadow = new THREE.Mesh(new THREE.CircleGeometry(1, 32), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: 0.25 }));
+shadow.rotation.x = -Math.PI / 2; shadow.scale.set(0.9, 0.55, 1); scene.add(shadow);
+const comDot = new THREE.Mesh(new THREE.RingGeometry(0.05, 0.1, 24), new THREE.MeshBasicMaterial({ color: 0x5cbf85, side: THREE.DoubleSide }));
+comDot.rotation.x = -Math.PI / 2; scene.add(comDot);
+const supGeo = new THREE.BufferGeometry().setFromPoints([V(), V(1, 0, 0)]);
+const supLine = new THREE.Line(supGeo, new THREE.LineBasicMaterial({ color: 0x5cbf85 })); scene.add(supLine);
+function checks() {
+  const Jt = joints(), y = yaws(), c = com(Jt), out = [];
+  const twist = Math.abs(wrap(y.chest - y.pelvis)); out.push(["Xoắn ngực–hông ≤ 55°", `${twist.toFixed(0)}°`, twist <= 55]);
+  const legO = Math.max(last.over.legR, last.over.legL), armO = Math.max(last.over.armR, last.over.armL);
+  out.push(["Chân với tới", legO < 0.03 ? "ổn" : `thiếu ${(legO / 3 * 100).toFixed(1)}%`, legO < 0.03]);
+  out.push(["Tay với tới chỗ nắm", armO < 0.03 ? "ổn" : `thiếu ${(armO / 3 * 100).toFixed(1)}%`, armO < 0.03]);
+  const lowFoot = Math.min(Jt.toeR.y, Jt.toeL.y, Jt.heelR.y, Jt.heelL.y);
+  out.push(["Bàn chân không xuyên đất", lowFoot > -0.03 ? "ổn" : `${lowFoot.toFixed(2)}`, lowFoot > -0.03]);
+  const [b, f] = Jt.toeR.x <= Jt.toeL.x ? [Jt.toeR, Jt.toeL] : [Jt.toeL, Jt.toeR];
+  const seg = f.clone().sub(b); seg.y = 0; const cc = c.clone().sub(b); cc.y = 0;
+  const u = seg.lengthSq() > 1e-6 ? cc.dot(seg) / seg.lengthSq() : 0.5, perp = cc.clone().addScaledVector(seg, -u).length();
+  const inside = u >= -0.05 && u <= 1.05 && perp < 0.4; out.push(["Trọng tâm trong vùng đỡ", `${(u * 100).toFixed(0)}% về chân trước`, inside]);
+  const crossed = Jt.ankleR.clone().sub(Jt.ankleL).dot(right(y.pelvis)) < 0; out.push(["Hai chân không bắt chéo", crossed ? "chéo" : "ổn", !crossed]);
+  document.getElementById("checks").innerHTML = out.map(([n, v, ok]) => `<div><span>${n}</span><b class="${ok ? "ok-t" : "bad-t"}">${v}</b></div>`).join("");
+  supGeo.setFromPoints([V(b.x, 0.01, b.z), V(f.x, 0.01, f.z)]);
+  const col = inside ? 0x5cbf85 : 0xe07a62; supLine.material.color.setHex(col); comDot.material.color.setHex(col);
+  shadow.position.set(c.x, 0.003, c.z); comDot.position.set(c.x, 0.006, c.z);
+  const cm = document.getElementById("chipCom"); cm.textContent = `Trọng tâm ${(u * 100).toFixed(0)}% chân trước`; cm.className = "chip " + (inside ? "ok" : "bad");
+  const reachOk = legO < 0.03 && armO < 0.03; const cr = document.getElementById("chipReach"); cr.textContent = reachOk ? "Tay chân với tới" : "Tay hoặc chân quá tầm"; cr.className = "chip " + (reachOk ? "ok" : "bad");
+}
+const rnd = (v, n = 4) => Math.round(v * 10 ** n) / 10 ** n;
+function poseRecord(name, note) {
+  const Jt = joints(), y = yaws(), j = {};
+  for (const [k, v] of Object.entries(Jt)) j[k] = [rnd(v.x), rnd(v.y), rnd(v.z)];
+  return { name, note, motion: M.name, fromFrame: +frameIn.value, rig: "pose3d-fk-ik-v3", state: getState(),
+    yaw: { pelvis: rnd(y.pelvis, 2), chest: rnd(y.chest, 2), head: rnd(y.head, 2), weapon: rnd(y.weapon, 2) }, weaponPitch: rnd(y.pitch, 2),
+    joints: j, body: "moon_crane", savedAt: Date.now() };
+}
+function updateJson() { document.getElementById("json").textContent = JSON.stringify(poseRecord("(chưa đặt tên)", ""), null, 1); }
 
 // ---------------------------------------------------------------- camera
-const camBtns = { game: "camGame", free: "camFree", top: "camTop", front: "cmpMaster" };
-function fitCam() {
-  const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false);
-  const half = 3.3, asp = w / Math.max(h, 1);
-  cam.left = -half * asp; cam.right = half * asp; cam.top = half; cam.bottom = -half; cam.updateProjectionMatrix();
-}
-function setCam(mode) {
-  const t = V(0.4, 1.35, 0); orbit.target.copy(t); const d = 20;
-  if (mode === "game") cam.position.set(t.x, t.y + d * Math.sin(15 * D2R), d * Math.cos(15 * D2R));
-  if (mode === "free") cam.position.set(t.x + d * 0.62, t.y + d * 0.35, d * 0.7);
-  if (mode === "top") cam.position.set(t.x, t.y + d, 0.001);
-  if (mode === "front") { orbit.target.set(0, 1.45, 0); cam.position.set(0, 1.45, d); }
+const camIds = { game: "camGame", free: "camFree", side: "camSide", top: "camTop" };
+function fitCam() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); const half = 3.2, a = w / Math.max(h, 1); cam.left = -half * a; cam.right = half * a; cam.top = half; cam.bottom = -half; cam.updateProjectionMatrix(); }
+function setCam(m) {
+  const t = V(0.4, 1.3, 0), d = 25; orbit.target.copy(t);
+  if (m === "game") cam.position.set(t.x, t.y + d * Math.sin(15 * D2R), d * Math.cos(15 * D2R));
+  if (m === "free") cam.position.set(t.x + d * 0.62, t.y + d * 0.35, d * 0.7);
+  if (m === "side") cam.position.set(t.x + d, t.y, 0.001);
+  if (m === "top") cam.position.set(t.x, t.y + d, 0.001);
   cam.zoom = 1; cam.updateProjectionMatrix(); orbit.update();
-  for (const [k, id] of Object.entries(camBtns)) document.getElementById(id).classList.toggle("on", k === mode);
-  if (masterPlane) masterPlane.visible = mode === "front";
+  for (const [k, id] of Object.entries(camIds)) document.getElementById(id).classList.toggle("on", k === m);
 }
-document.getElementById("camGame").onclick = () => setCam("game");
-document.getElementById("camFree").onclick = () => setCam("free");
-document.getElementById("camTop").onclick = () => setCam("top");
-document.getElementById("cmpMaster").onclick = () => {
-  pushUndo();
-  // dáng đứng của master: thân gần chính diện, hai ủng choãi ra, thương dựng bên trái ảnh
-  Object.assign(ctl, { px: 0, py: B.thigh + B.shin + B.ankle_h - 0.01, pz: 0, yawP: 8, chestRel: 0, lean: 0, tilt: 0, headRel: 0, spot: false,
-    wYaw: 0, wPitch: 86, gx: 0.55, gz: 0.2, handDrop: 0.85, slide: 0, rx: -0.75, rz: 0.12, fyR: -55, lx: 0.95, lz: 0.12, fyL: 55 });
-  if (masterPlane) {
-    const ppu = M.master.px_per_unit, w = M.master.size_px / ppu;
-    masterPlane.position.set((M.master.size_px / 2 - M.master.center_x) / ppu, w / 2 - (M.master.size_px - M.master.ground_y) / ppu, -0.9);
-  }
-  refresh(); setCam("front");
-  document.getElementById("dragStatus").textContent = "Ảnh master mờ phía sau: so đầu, vai, thân, chân. Tay và thương của master khác dáng (một tay cầm thương).";
-};
+for (const [k, id] of Object.entries(camIds)) document.getElementById(id).onclick = () => setCam(k);
 new ResizeObserver(fitCam).observe(stage);
 
-// ---------------------------------------------------------------- kéo trực tiếp
-const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
-let hover = null, drag = null;
-const undo = [], redo = [];
-function pushUndo() { undo.push(JSON.stringify(ctl)); if (undo.length > 100) undo.shift(); redo.length = 0; }
-document.getElementById("undo").onclick = () => { if (!undo.length) return; redo.push(JSON.stringify(ctl)); Object.assign(ctl, JSON.parse(undo.pop())); refresh(); };
-document.getElementById("redo").onclick = () => { if (!redo.length) return; undo.push(JSON.stringify(ctl)); Object.assign(ctl, JSON.parse(redo.pop())); refresh(); };
-window.addEventListener("keydown", e => {
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); document.getElementById(e.shiftKey ? "redo" : "undo").click(); }
-});
-const PART_NAME = { hips: "Hông", chest: "Ngực", head: "Đầu", hands: "Tay", tip: "Mũi thương", shaft: "Cán thương", footR: "Chân phải", footL: "Chân trái" };
-function pick(ev) {
-  const rc = renderer.domElement.getBoundingClientRect();
-  ndc.set(((ev.clientX - rc.left) / rc.width) * 2 - 1, -((ev.clientY - rc.top) / rc.height) * 2 + 1);
-  ray.setFromCamera(ndc, cam);
-  const hits = ray.intersectObjects(fig.children, true);
-  if (!hits.length) return null;
-  // tay cầm nhỏ (mũi thương, nắm đấm, ủng) thắng các khối to che phía trước chúng
-  const PRI = ["tip", "hands", "footR", "footL"];
-  const small = hits.find(h => PRI.includes(h.object.userData.part));
-  const hit = small || hits[0];
-  return { part: hit.object.userData.part, point: hit.point };
-}
-function setHover(part) {
-  if (hover === part) return; hover = part;
-  fig.traverse(o => { if (o.material && o.material.emissive) o.material.emissive.setHex(o.userData.part === part ? 0x2a3a4a : 0x000000); });
-  renderer.domElement.style.cursor = part ? "grab" : "";
-}
-function planeAt(p) { const n = V(0, 0, 0); cam.getWorldDirection(n); return new THREE.Plane().setFromNormalAndCoplanarPoint(n.negate(), p); }
-function hitPlane(ev, plane) {
-  const rc = renderer.domElement.getBoundingClientRect();
-  ndc.set(((ev.clientX - rc.left) / rc.width) * 2 - 1, -((ev.clientY - rc.top) / rc.height) * 2 + 1);
-  ray.setFromCamera(ndc, cam); const out = V(0, 0, 0); return ray.ray.intersectPlane(plane, out) ? out : null;
-}
-const ground = new THREE.Plane(V(0, 1, 0), 0);
-const el = renderer.domElement;
-el.addEventListener("pointermove", ev => {
-  if (!drag) { const h = pick(ev); setHover(h ? h.part : null); return; }
-  const d = drag, c = ctl, base = d.start;
-  if (d.part === "footR" || d.part === "footL") {
-    const g = hitPlane(ev, ground); if (!g) return;
-    const s = d.part === "footR" ? "r" : "l";
-    if (ev.shiftKey) { c["fy" + s.toUpperCase()] = base["fy" + s.toUpperCase()] + (ev.clientX - d.x0) * 0.6; }
-    else { c[s + "x"] = base[s + "x"] + (g.x - d.p0.x); c[s + "z"] = base[s + "z"] + (g.z - d.p0.z); }
-  } else {
-    const p = hitPlane(ev, d.plane); if (!p) return;
-    const dv = p.clone().sub(d.p0), dx = ev.clientX - d.x0, dy = ev.clientY - d.y0;
-    if (d.part === "hips") {
-      if (ev.shiftKey) c.yawP = base.yawP + dx * 0.5;
-      else { c.px = base.px + dv.x; c.py = Math.max(0.3, base.py + dv.y); c.pz = base.pz + dv.z; }
-    } else if (d.part === "chest") {
-      if (ev.shiftKey) c.tilt = Math.max(-30, Math.min(30, base.tilt + dx * 0.25));
-      else { c.chestRel = Math.max(-75, Math.min(75, base.chestRel + dx * 0.4)); c.lean = Math.max(-30, Math.min(45, base.lean + dy * 0.25)); }
-    } else if (d.part === "head") {
-      c.headRel = Math.max(-90, Math.min(90, base.headRel + dx * 0.5));
-    } else if (d.part === "hands") {
-      const F = frameOf(base), nc = d.center0.clone().add(dv), off = nc.clone().sub(F.chest).addScaledVector(F.sd, -base.slide);
-      c.gx = off.dot(F.rC); c.gz = off.dot(F.fC); c.handDrop = -off.dot(UP);
-    } else if (d.part === "tip") {
-      const F = frameOf(base), dir = p.clone().sub(F.center).normalize();
-      c.wYaw = base.wYaw + wrap(Math.atan2(dir.x, dir.z) / D2R - base.wYaw);
-      c.wPitch = Math.max(-85, Math.min(89, Math.asin(Math.max(-1, Math.min(1, dir.y))) / D2R));
-    } else if (d.part === "shaft") {
-      const F = frameOf(base); c.slide = Math.max(-0.6, Math.min(0.8, base.slide + dv.dot(F.sd)));
-    }
-  }
-  refresh();
-});
-el.addEventListener("pointerdown", ev => {
-  const h = pick(ev); if (!h || !h.part) return;
-  pushUndo(); orbit.enabled = false; el.setPointerCapture(ev.pointerId);
-  const F = frameOf(ctl);
-  drag = { part: h.part, start: { ...ctl }, x0: ev.clientX, y0: ev.clientY, plane: planeAt(h.point), p0: h.point.clone(), center0: F.center.clone() };
-  if (h.part === "footR" || h.part === "footL") { const g = hitPlane(ev, ground); drag.p0 = g || h.point.clone(); }
-  if (h.part === "tip") drag.plane = planeAt(F.center);
-  renderer.domElement.style.cursor = "grabbing";
-  document.getElementById("dragStatus").textContent = "Đang kéo: " + (PART_NAME[h.part] || h.part);
-});
-function endDrag(ev) { if (!drag) return; drag = null; orbit.enabled = true; try { el.releasePointerCapture(ev.pointerId); } catch {} renderer.domElement.style.cursor = hover ? "grab" : ""; document.getElementById("dragStatus").textContent = ""; }
-el.addEventListener("pointerup", endDrag); el.addEventListener("pointercancel", endDrag);
-
-// ---------------------------------------------------------------- kiểm tra vật lý
-function checks(r) {
-  const J = r.J, out = [];
-  const twist = Math.abs(wrap(r.yaw.chest - r.yaw.pelvis));
-  out.push(["Xoắn ngực–hông ≤ 55°", `${twist.toFixed(0)}°`, twist <= 55]);
-  const legOver = Math.max(r.over.legR, r.over.legL);
-  out.push(["Chân với tới (gót đã kiễng)", legOver < 0.03 ? "ổn" : `thiếu ${(legOver / B.height * 100).toFixed(1)}%`, legOver < 0.03]);
-  out.push(["Tay nắm đúng chỗ trên thương", r.shift < 0.15 ? "ổn" : `lệch ${r.shift.toFixed(2)}`, r.shift < 0.15]);
-  const [b, f] = J.toeR.x <= J.toeL.x ? [J.toeR, J.toeL] : [J.toeL, J.toeR];
-  const seg = f.clone().sub(b); seg.y = 0; const c = r.com.clone().sub(b); c.y = 0;
-  const u = seg.lengthSq() > 1e-6 ? c.dot(seg) / seg.lengthSq() : 0.5;
-  const perp = c.clone().addScaledVector(seg, -u).length();
-  const inside = u >= -0.05 && u <= 1.05 && perp < 0.35;
-  out.push(["Trọng tâm trong vùng đỡ", `${(u * 100).toFixed(0)}% về chân trước`, inside]);
-  const crossed = J.ankleR.clone().sub(J.ankleL).dot(right(r.yaw.pelvis)) < 0;
-  out.push(["Hai chân không bắt chéo", crossed ? "chéo" : "ổn", !crossed]);
-  return { list: out, u, inside, b, f };
-}
-
-// ---------------------------------------------------------------- vòng chính
-let cur = null;
-function round(v, n = 4) { return Math.round(v * 10 ** n) / 10 ** n; }
-function refresh() {
-  for (const [, key, , , , st] of SL) { inputs[key].value = ctl[key]; document.getElementById("o_" + key).textContent = (+ctl[key]).toFixed(st < 1 ? 2 : 0); }
-  document.getElementById("spot").checked = !!ctl.spot;
-  const r = solve(ctl); cur = r; draw(r);
-  const ck = checks(r);
-  document.getElementById("checks").innerHTML = ck.list.map(([n, v, ok]) => `<div><span>${n}</span><b class="${ok ? "ok-t" : "bad-t"}">${v}</b></div>`).join("");
-  supGeo.setFromPoints([V(ck.b.x, 0.01, ck.b.z), V(ck.f.x, 0.01, ck.f.z)]);
-  const colr = ck.inside ? 0x5cbf85 : 0xe07a62; supLine.material.color.setHex(colr); comDot.material.color.setHex(colr);
-  const chipCom = document.getElementById("chipCom"); chipCom.textContent = `Trọng tâm ${(ck.u * 100).toFixed(0)}% chân trước`; chipCom.className = "chip " + (ck.inside ? "ok" : "bad");
-  const reachOk = ck.list[1][2] && ck.list[2][2];
-  const chipReach = document.getElementById("chipReach"); chipReach.textContent = reachOk ? "Tay chân với tới" : "Tay hoặc chân quá tầm"; chipReach.className = "chip " + (reachOk ? "ok" : "bad");
-  document.getElementById("json").textContent = JSON.stringify(poseRecord("(chưa đặt tên)", ""), null, 1);
-}
-function poseRecord(name, note) {
-  const r = cur; const J = {};
-  for (const [k, v] of Object.entries(r.J)) J[k] = [round(v.x), round(v.y), round(v.z)];
-  return { name, note, motion: M.name, fromFrame: +frameIn.value, controls: { ...ctl },
-    yaw: Object.fromEntries(Object.entries(r.yaw).map(([k, v]) => [k, round(v, 2)])), weaponPitch: round(r.pitch, 2),
-    heel: { R: round(r.heel.R, 3), L: round(r.heel.L, 3) }, joints: J, body: "moon_crane", mannequin: M.shape ? "master" : "proxy", savedAt: Date.now() };
-}
+// ---------------------------------------------------------------- khung chuyển động
 const frameIn = document.getElementById("frame"); frameIn.max = M.frames.length - 1;
-function showFrame(i) { const f = M.frames[i]; document.getElementById("frameOut").textContent = i; document.getElementById("phase").textContent = `τ ${f.t} · ${f.phase}`; }
+const showFrame = i => { const f = M.frames[i]; document.getElementById("frameOut").textContent = i; document.getElementById("phase").textContent = `τ ${f.t} · ${f.phase}`; };
 frameIn.addEventListener("pointerdown", () => pushUndo());
-frameIn.addEventListener("input", () => { showFrame(+frameIn.value); Object.assign(ctl, fromFrame(M.frames[+frameIn.value])); refresh(); });
-document.getElementById("takeFrame").onclick = () => { pushUndo(); Object.assign(ctl, fromFrame(M.frames[+frameIn.value])); refresh(); };
+frameIn.addEventListener("input", () => { showFrame(+frameIn.value); fromFrame(M.frames[+frameIn.value]); });
+document.getElementById("takeFrame").onclick = () => { pushUndo(); fromFrame(M.frames[+frameIn.value]); };
 let playing = null;
 document.getElementById("play").onclick = e => {
   if (playing) { clearInterval(playing); playing = null; e.target.textContent = "Phát"; return; }
-  e.target.textContent = "Dừng";
-  playing = setInterval(() => { const i = (+frameIn.value + 1) % M.frames.length; frameIn.value = i; showFrame(i); Object.assign(ctl, fromFrame(M.frames[i])); refresh(); }, 1000 / M.fps);
+  e.target.textContent = "Dừng"; select(null);
+  playing = setInterval(() => { const i = (+frameIn.value + 1) % M.frames.length; frameIn.value = i; showFrame(i); fromFrame(M.frames[i]); }, 1000 / M.fps);
 };
 document.getElementById("copy").onclick = async () => {
-  const st = document.getElementById("copyStatus"); const txt = document.getElementById("json").textContent;
-  try { await navigator.clipboard.writeText(txt); st.textContent = "Đã sao chép."; }
-  catch { const sel = window.getSelection(), rg = document.createRange(); rg.selectNodeContents(document.getElementById("json")); sel.removeAllRanges(); sel.addRange(rg); st.textContent = "Đã chọn sẵn văn bản, nhấn Ctrl+C."; }
+  const st = document.getElementById("copyStatus");
+  try { await navigator.clipboard.writeText(document.getElementById("json").textContent); st.textContent = "Đã sao chép."; }
+  catch { const s = window.getSelection(), r = document.createRange(); r.selectNodeContents(document.getElementById("json")); s.removeAllRanges(); s.addRange(r); st.textContent = "Đã chọn sẵn, nhấn Ctrl+C."; }
 };
 
 // ---------------------------------------------------------------- lưu tư thế (db của artifact)
 const saveStatus = document.getElementById("saveStatus"), listEl = document.getElementById("poses");
 let db = null;
 function renderList(docs) {
-  if (!docs.length) { listEl.innerHTML = `<div class="empty">Chưa có tư thế nào. Chỉnh dáng rồi bấm Lưu; tư thế sẽ hiện ở đây và Claude đọc được để vẽ.</div>`; return; }
+  if (!docs.length) { listEl.innerHTML = `<div class="empty">Chưa có tư thế nào. Tạo dáng rồi bấm Lưu; tư thế hiện ở đây và Claude đọc được để vẽ.</div>`; return; }
   listEl.innerHTML = "";
   for (const d of docs) {
-    const p = d.data(); const it = document.createElement("div"); it.className = "pose";
-    const when = p.savedAt ? new Date(p.savedAt).toLocaleString("vi-VN") : "";
+    const p = d.data(), it = document.createElement("div"); it.className = "pose";
     it.innerHTML = `<div><div class="n"></div><div class="m"></div></div><button class="btn small" type="button">Mở</button><button class="btn small" type="button">Xoá</button>`;
-    it.querySelector(".n").textContent = p.name || d.id; it.querySelector(".m").textContent = `từ khung ${p.fromFrame ?? "?"} · ${when}`;
-    const [bOpen, bDel] = it.querySelectorAll("button");
-    bOpen.onclick = () => { pushUndo(); Object.assign(ctl, fromFrame(M.frames[0]), p.controls); refresh(); saveStatus.textContent = `Đã mở "${p.name}".`; };
+    it.querySelector(".n").textContent = p.name || d.id;
+    it.querySelector(".m").textContent = `${p.rig === "pose3d-fk-ik-v3" ? "" : "bản cũ · "}từ khung ${p.fromFrame ?? "?"} · ${p.savedAt ? new Date(p.savedAt).toLocaleString("vi-VN") : ""}`;
+    const [bo, bd] = it.querySelectorAll("button");
+    bo.onclick = () => { if (!p.state) { saveStatus.textContent = "Tư thế này lưu bằng bản tool cũ, không mở lại được trong bản này."; return; } pushUndo(); setState(p.state); saveStatus.textContent = `Đã mở "${p.name}".`; };
     let armed = false;
-    bDel.onclick = async () => {
-      if (!armed) { armed = true; bDel.textContent = "Chắc chưa?"; setTimeout(() => { armed = false; bDel.textContent = "Xoá"; }, 2500); return; }
-      try { await db.collection("poses").doc(d.id).delete(); saveStatus.textContent = `Đã xoá "${p.name}".`; } catch (e) { saveStatus.textContent = "Không xoá được: " + (e?.message || e); }
-    };
+    bd.onclick = async () => { if (!armed) { armed = true; bd.textContent = "Chắc chưa?"; setTimeout(() => { armed = false; bd.textContent = "Xoá"; }, 2500); return; }
+      try { await db.collection("poses").doc(d.id).delete(); saveStatus.textContent = `Đã xoá "${p.name}".`; } catch (e) { saveStatus.textContent = "Không xoá được: " + (e?.message || e); } };
     listEl.appendChild(it);
   }
 }
@@ -590,13 +569,11 @@ document.getElementById("save").onclick = async () => {
   try { db = window.claude ? await window.claude.use("db") : null; } catch { db = null; }
   if (!db) { saveStatus.textContent = "Chế độ không lưu: dùng Sao chép JSON."; return; }
   const timer = setTimeout(() => { saveStatus.textContent = "Chưa tải được danh sách tư thế, thử mở lại sau."; }, 10000);
-  db.collection("poses").orderBy("savedAt", "desc").onSnapshot(
-    s => { if (!s.metadata.fromCache) clearTimeout(timer); renderList(s.docs); },
+  db.collection("poses").orderBy("savedAt", "desc").onSnapshot(s => { if (!s.metadata.fromCache) clearTimeout(timer); renderList(s.docs); },
     e => { clearTimeout(timer); saveStatus.textContent = "Không đọc được danh sách: " + (e?.message || e?.code); });
 })();
 
-Object.assign(ctl, fromFrame(M.frames[0])); showFrame(0);
-fitCam(); setCam("game"); refresh();
+showFrame(0); fromFrame(M.frames[0]); fitCam(); setCam("game");
 renderer.setAnimationLoop(() => { orbit.update(); renderer.render(scene, cam); });
-window.__pose3d = { ctl, refresh, setCam, solve, cam };
+window.__pose3d = { cam, select, joints, yaws, getState, setState, last: () => last, objOf, H, tc };
 </script>
