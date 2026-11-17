@@ -1,0 +1,466 @@
+<title>Pose3D moon_crane</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: xưởng chỉnh dáng — khung 3D lớn bên trái, bảng thanh trượt theo nhóm khớp bên phải; điện thoại: xếp dọc. */
+:root {
+  --bg: #eef0f2; --panel: #ffffff; --ink: #1d232b; --muted: #5d6874; --line: #d5dae0;
+  --accent: #3f5f80; --accent-ink: #ffffff; --gold: #b07f1f; --good: #2f7d4f; --warn: #b5472f; --stage: #4e5157;
+  --f-ui: "IBM Plex Sans", system-ui, sans-serif; --f-num: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15191e; --panel: #1d232a; --ink: #e6e9ed; --muted: #9aa5b1; --line: #313a44;
+  --accent: #7fa0c0; --accent-ink: #10161c; --gold: #d6a03a; --good: #5cbf85; --warn: #e07a62; --stage: #3a3d42; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15191e; --panel: #1d232a; --ink: #e6e9ed; --muted: #9aa5b1; --line: #313a44;
+  --accent: #7fa0c0; --accent-ink: #10161c; --gold: #d6a03a; --good: #5cbf85; --warn: #e07a62; --stage: #3a3d42; color-scheme: dark }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 14px/1.45 var(--f-ui);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 12px; }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; height: calc(100% - 0px); min-height: 560px; }
+.stage { position: relative; background: var(--stage); border-radius: 10px; overflow: hidden; min-height: 420px; }
+.stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.hud { position: absolute; left: 12px; top: 10px; right: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; pointer-events: none; }
+.hud > * { pointer-events: auto; }
+.chip { font: 12px/1 var(--f-ui); padding: 6px 9px; border-radius: 999px; background: rgba(0,0,0,.45); color: #fff; }
+.chip.ok { background: rgba(47,125,79,.85); } .chip.bad { background: rgba(181,71,47,.9); }
+.btn { font: 500 13px/1 var(--f-ui); padding: 8px 12px; border-radius: 7px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--accent); } .btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.small { padding: 5px 8px; font-size: 12px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow-y: auto; min-height: 0; display: flex; flex-direction: column; }
+.sec { padding: 12px 14px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+.sec h2 { margin: 0; font: 600 12px/1.2 var(--f-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.row { display: grid; grid-template-columns: 112px minmax(0,1fr) 54px; gap: 8px; align-items: center; }
+.row label { font-size: 13px; }
+.row output { font: 12px var(--f-num); text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.title { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.title h1 { margin: 0; font: 600 16px/1.2 var(--f-ui); }
+.title p { margin: 4px 0 0; color: var(--muted); font-size: 12.5px; }
+.inline { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.inline select, .inline input[type=text] { flex: 1 1 140px; min-width: 0; font: 13px var(--f-ui); padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); }
+textarea { width: 100%; box-sizing: border-box; font: 12.5px var(--f-ui); padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); resize: vertical; min-height: 44px; }
+.checks { display: grid; gap: 4px; font-size: 12.5px; }
+.checks div { display: flex; justify-content: space-between; gap: 8px; }
+.checks b { font: 500 12px var(--f-num); }
+.ok-t { color: var(--good); } .bad-t { color: var(--warn); }
+.poses { display: grid; gap: 6px; }
+.pose { display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: 6px; align-items: center; padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; }
+.pose .n { font-weight: 500; overflow-wrap: anywhere; } .pose .m { color: var(--muted); font-size: 11.5px; }
+.empty { color: var(--muted); font-size: 12.5px; }
+.status { font-size: 12px; color: var(--muted); min-height: 1.2em; }
+pre.json { font: 11px/1.35 var(--f-num); max-height: 160px; overflow: auto; background: var(--bg); padding: 8px; border-radius: 7px; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 860px) { .app { grid-template-columns: 1fr; height: auto; } .stage { height: 62vh; } .panel { max-height: none; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="app">
+  <div class="stage" id="stage">
+    <div class="hud">
+      <button class="btn small" id="camGame" type="button">Camera game</button>
+      <button class="btn small" id="camFree" type="button">Nhìn chéo</button>
+      <button class="btn small" id="camTop" type="button">Nhìn từ trên</button>
+      <span class="chip" id="chipCom">Trọng tâm</span>
+      <span class="chip" id="chipReach">Tầm với</span>
+    </div>
+  </div>
+
+  <aside class="panel" aria-label="Bảng chỉnh tư thế">
+    <div class="title">
+      <h1>Pose3D · moon_crane</h1>
+      <p>Kéo khung 3D để xoay camera. Chỉnh các thanh trượt; tay tự bám thương, chân tự bám đất. Mục tiêu ở bên phải màn hình.</p>
+    </div>
+
+    <div class="sec">
+      <h2>Bắt đầu từ chuyển động</h2>
+      <div class="row"><label for="frame">Khung</label><input id="frame" type="range" min="0" max="0" step="1" value="0"><output id="frameOut">0</output></div>
+      <div class="inline"><span class="status" id="phase"></span><button class="btn small" id="play" type="button">Phát</button><button class="btn small" id="takeFrame" type="button">Lấy dáng khung này</button></div>
+    </div>
+
+    <div class="sec" id="secBody"><h2>Hông và thân</h2></div>
+    <div class="sec" id="secHead"><h2>Đầu</h2></div>
+    <div class="sec" id="secSpear"><h2>Thương và tay</h2></div>
+    <div class="sec" id="secFeet"><h2>Chân</h2></div>
+
+    <div class="sec">
+      <h2>Kiểm tra vật lý</h2>
+      <div class="checks" id="checks"></div>
+    </div>
+
+    <div class="sec">
+      <h2>Lưu tư thế</h2>
+      <div class="inline"><input type="text" id="poseName" placeholder="Tên, ví dụ: A thủ thế" maxlength="60"><button class="btn primary" id="save" type="button">Lưu</button></div>
+      <textarea id="poseNote" placeholder="Ghi chú cho người vẽ (tuỳ chọn), ví dụ: thương dựng bên trái mặt"></textarea>
+      <div class="status" id="saveStatus"></div>
+      <div class="poses" id="poses"><div class="empty">Chưa có tư thế nào. Chỉnh dáng rồi bấm Lưu; tư thế sẽ hiện ở đây và Claude đọc được để vẽ.</div></div>
+    </div>
+
+    <div class="sec">
+      <h2>Dữ liệu tư thế hiện tại</h2>
+      <div class="inline"><button class="btn small" id="copy" type="button">Sao chép JSON</button><span class="status" id="copyStatus"></span></div>
+      <pre class="json" id="json"></pre>
+    </div>
+  </aside>
+</div>
+
+<script type="application/json" id="motion">{"name":"moon_crane · quét thương (lai v2)","fps":15,"hit":13,"body":{"height":3.0,"head_r":0.33,"head_above_neck":0.3,"thigh":0.38,"shin":0.34,"ankle_h":0.08,"foot_len":0.26,"spine":1.3,"neck":0.04,"hip_half":0.22,"shoulder_half":0.5,"waist_half":0.44,"shoulder_pad_half":0.64,"upper_arm":0.52,"forearm":0.48,"fist_r":0.22,"mass":{"head":0.14,"chest":0.36,"pelvis":0.22,"kneeR":0.05,"kneeL":0.05,"ankleR":0.02,"ankleL":0.02,"elbowR":0.03,"elbowL":0.03,"handR":0.04,"handL":0.04},"grip_center":{"right":0.0,"forward":0.34},"real_height_m":1.8,"skirt":{"drop":0.14,"flare_base":0.04,"flare_spin":0.28,"lift_spin":0.06}},"weapon":{"length":3.4,"grip_rear":1.1,"grip_gap":0.7,"blade_len":0.6,"blade_half_w":0.17,"slide_gap_factor":0.6},"palette":{"ink":"#2B1E22","skin":"#C98A55","armor":"#3F5F80","armor_dark":"#26394F","armor_light":"#7FA0C0","gold":"#D6A03A","ivory":"#EFE2BE","leather":"#6A4430","shaft":"#8E5A3A","blade":"#DDE9F2","red":"#B5472F","hair":"#2E2224","eye":"#FFE9A6"},"frames":[{"t":0.0,"phase":"thủ thế","pelvis":[0.03,0.696,0.0],"yawP":68.52,"yawC":19.31,"yawH":79.31,"wYaw":-12.0,"wPitch":66.0,"handDrop":0.38,"slide":-0.078,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":50.37,"fyL":100.34},{"t":1.0,"phase":"thủ thế","pelvis":[0.0261,0.6938,0.0],"yawP":69.76,"yawC":26.14,"yawH":86.14,"wYaw":-12.1,"wPitch":65.89,"handDrop":0.38,"slide":-0.097,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":50.08,"fyL":100.33},{"t":2.0,"phase":"thủ thế","pelvis":[0.0334,0.6933,0.0],"yawP":70.96,"yawC":35.45,"yawH":90.0,"wYaw":-12.42,"wPitch":65.57,"handDrop":0.38,"slide":-0.092,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":50.0,"fyL":102.34},{"t":3.0,"phase":"thủ thế","pelvis":[0.046,0.6955,0.0],"yawP":70.85,"yawC":45.04,"yawH":90.0,"wYaw":-12.96,"wPitch":65.03,"handDrop":0.38,"slide":-0.107,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":49.81,"fyL":104.33},{"t":4.0,"phase":"thủ thế","pelvis":[0.0521,0.6982,0.0],"yawP":68.76,"yawC":48.36,"yawH":90.0,"wYaw":-13.73,"wPitch":64.26,"handDrop":0.38,"slide":-0.119,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":49.27,"fyL":104.84},{"t":5.0,"phase":"thủ thế","pelvis":[0.0557,0.7005,0.0],"yawP":64.9,"yawC":44.58,"yawH":90.0,"wYaw":-14.74,"wPitch":63.25,"handDrop":0.38,"slide":-0.137,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":48.73,"fyL":104.97},{"t":6.0,"phase":"thủ thế","pelvis":[0.06,0.7004,0.0],"yawP":59.88,"yawC":37.55,"yawH":90.0,"wYaw":-16.0,"wPitch":62.0,"handDrop":0.38,"slide":-0.173,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":47.99,"fyL":105.42},{"t":7.0,"phase":"lấy đà","pelvis":[0.0454,0.6988,0.0],"yawP":53.23,"yawC":28.57,"yawH":88.57,"wYaw":-20.27,"wPitch":56.35,"handDrop":0.3726,"slide":-0.198,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":47.23,"fyL":107.49},{"t":8.0,"phase":"lấy đà","pelvis":[0.0108,0.6937,0.0],"yawP":39.2,"yawC":8.58,"yawH":68.58,"wYaw":-28.0,"wPitch":45.61,"handDrop":0.3563,"slide":-0.2,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":46.15,"fyL":111.38},{"t":9.0,"phase":"lấy đà","pelvis":[-0.0129,0.6871,0.0],"yawP":26.27,"yawC":-12.23,"yawH":47.77,"wYaw":-40.0,"wPitch":35.0,"handDrop":0.34,"slide":-0.2,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":44.6,"fyL":118.27},{"t":10.0,"phase":"lấy đà","pelvis":[-0.006,0.682,0.0],"yawP":18.5,"yawC":-23.13,"yawH":36.87,"wYaw":-44.31,"wPitch":26.57,"handDrop":0.3237,"slide":-0.196,"toeR":[-0.18,0.0,0.26],"toeL":[0.28,0.0,-0.3],"fyR":43.01,"fyL":130.65},{"t":11.0,"phase":"ra đòn","pelvis":[0.021,0.6623,0.0],"yawP":25.16,"yawC":-17.01,"yawH":42.99,"wYaw":-35.3,"wPitch":16.16,"handDrop":0.3561,"slide":-0.184,"toeR":[-0.18,0.0,0.26],"toeL":[0.3526,0.1212,-0.2948],"fyR":43.38,"fyL":144.61},{"t":12.0,"phase":"ra đòn","pelvis":[0.11,0.6318,0.0],"yawP":57.85,"yawC":20.45,"yawH":80.45,"wYaw":17.36,"wPitch":5.0,"handDrop":0.5,"slide":-0.1,"toeR":[-0.18,0.0,0.26],"toeL":[0.56,0.0,-0.28],"fyR":49.39,"fyL":156.73},{"t":13.0,"phase":"TRÚNG","pelvis":[0.308,0.615,0.0],"yawP":92.46,"yawC":67.0,"yawH":90.0,"wYaw":90.0,"wPitch":0.0,"handDrop":0.58,"slide":0.018,"toeR":[-0.18,0.0,0.26],"toeL":[0.56,0.0,-0.28],"fyR":60.83,"fyL":172.31},{"t":14.0,"phase":"theo đà","pelvis":[0.2816,0.53,0.0],"yawP":105.0,"yawC":90.0,"yawH":90.0,"wYaw":125.0,"wPitch":6.0,"handDrop":0.565,"slide":0.034,"toeR":[-0.18,0.0,0.26],"toeL":[0.56,0.0,-0.28],"fyR":70.8,"fyL":185.9},{"t":15.0,"phase":"theo đà","pelvis":[0.26,0.52,0.0],"yawP":112.0,"yawC":104.0,"yawH":90.0,"wYaw":145.0,"wPitch":12.0,"handDrop":0.55,"slide":0.028,"toeR":[-0.18,0.0,0.26],"toeL":[0.56,0.0,-0.28],"fyR":75.83,"fyL":190.02},{"t":16.0,"phase":"theo đà","pelvis":[0.254,0.52,0.0],"yawP":112.0,"yawC":104.0,"yawH":90.0,"wYaw":148.72,"wPitch":12.71,"handDrop":0.55,"slide":0.052,"toeR":[-0.18,0.0,0.26],"toeL":[0.56,0.0,-0.28],"fyR":77.5,"fyL":189.54},{"t":17.0,"phase":"theo đà","pelvis":[0.249,0.52,0.0],"yawP":112.0,"yawC":104.0,"yawH":90.0,"wYaw":150.0,"wPitch":13.23,"handDrop":0.55,"slide":0.076,"toeR":[-0.18,0.0,0.26],"toeL":[0.56,0.0,-0.28],"fyR":78.29,"fyL":190.34},{"t":18.0,"phase":"theo đà","pelvis":[0.2451,0.52,0.0],"yawP":112.0,"yawC":104.0,"yawH":90.0,"wYaw":150.0,"wPitch":13.6,"handDrop":0.55,"slide":0.087,"toeR":[-0.18,0.0,0.26],"toeL":[0.56,0.0,-0.28],"fyR":79.15,"fyL":190.88},{"t":19.0,"phase":"hồi thế","pelvis":[0.2423,0.52,0.0],"yawP":112.0,"yawC":104.0,"yawH":90.0,"wYaw":150.0,"wPitch":13.84,"handDrop":0.55,"slide":0.056,"toeR":[-0.18,0.0,0.26],"toeL":[0.56,0.0,-0.28],"fyR":79.69,"fyL":191.94},{"t":20.0,"phase":"hồi thế","pelvis":[0.2406,0.52,0.0],"yawP":112.0,"yawC":104.0,"yawH":90.0,"wYaw":150.0,"wPitch":13.96,"handDrop":0.55,"slide":0.032,"toeR":[-0.18,0.0,0.26],"toeL":[0.56,0.0,-0.28],"fyR":81.39,"fyL":192.2},{"t":21.0,"phase":"hồi thế","pelvis":[0.24,0.52,0.0],"yawP":112.0,"yawC":104.0,"yawH":90.0,"wYaw":150.0,"wPitch":14.0,"handDrop":0.55,"slide":0.033,"toeR":[-0.18,0.0,0.26],"toeL":[0.56,0.0,-0.28],"fyR":81.97,"fyL":192.73}]}</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+const M = JSON.parse(document.getElementById("motion").textContent);
+const B = M.body, W = M.weapon, PAL = M.palette;
+const D2R = Math.PI / 180;
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const UP = V(0, 1, 0);
+const fwd = y => V(Math.sin(y * D2R), 0, Math.cos(y * D2R));
+const right = y => V(-Math.cos(y * D2R), 0, Math.sin(y * D2R));
+
+// ---------------------------------------------------------------- điều khiển (một tư thế = các giá trị này)
+const SL = [
+  ["secBody", "px", "Hông trái/phải", -1.2, 1.4, 0.01], ["secBody", "py", "Hông cao/thấp", 0.35, 0.85, 0.005],
+  ["secBody", "pz", "Hông trước/sau", -0.6, 0.6, 0.01], ["secBody", "yawP", "Hông xoay", -180, 540, 1],
+  ["secBody", "chestRel", "Ngực xoay thêm", -75, 75, 1], ["secBody", "lean", "Ngực cúi/ngả", -30, 45, 1],
+  ["secBody", "tilt", "Ngực nghiêng", -30, 30, 1],
+  ["secHead", "headRel", "Đầu xoay thêm", -90, 90, 1],
+  ["secSpear", "wYaw", "Thương hướng", -180, 540, 1], ["secSpear", "wPitch", "Thương nghiêng", -80, 88, 1],
+  ["secSpear", "handDrop", "Tay cao/thấp", -0.4, 1.1, 0.01], ["secSpear", "slide", "Đẩy/rút thương", -0.35, 0.5, 0.01],
+  ["secFeet", "rx", "Chân phải X", -1.2, 1.4, 0.01], ["secFeet", "rz", "Chân phải Z", -0.7, 0.7, 0.01], ["secFeet", "fyR", "Bàn phải xoay", -180, 360, 1],
+  ["secFeet", "lx", "Chân trái X", -1.2, 1.4, 0.01], ["secFeet", "lz", "Chân trái Z", -0.7, 0.7, 0.01], ["secFeet", "fyL", "Bàn trái xoay", -180, 360, 1],
+];
+const ctl = {};
+const inputs = {};
+for (const [sec, key, label, mn, mx, st] of SL) {
+  const row = document.createElement("div"); row.className = "row";
+  row.innerHTML = `<label for="c_${key}">${label}</label><input id="c_${key}" type="range" min="${mn}" max="${mx}" step="${st}"><output id="o_${key}"></output>`;
+  document.getElementById(sec).appendChild(row);
+  const inp = row.querySelector("input"); inputs[key] = inp;
+  inp.addEventListener("input", () => { ctl[key] = +inp.value; refresh(); });
+}
+const headSpot = document.createElement("div"); headSpot.className = "inline";
+headSpot.innerHTML = `<label><input type="checkbox" id="spot" checked> Mắt luôn nhìn mục tiêu</label>`;
+document.getElementById("secHead").appendChild(headSpot);
+document.getElementById("spot").addEventListener("change", e => { ctl.spot = e.target.checked; refresh(); });
+
+function fromFrame(f) {
+  return { px: f.pelvis[0], py: f.pelvis[1], pz: f.pelvis[2], yawP: f.yawP, chestRel: f.yawC - f.yawP, lean: 0, tilt: 0,
+    headRel: 0, spot: true, wYaw: f.wYaw, wPitch: f.wPitch, handDrop: f.handDrop, slide: f.slide,
+    rx: f.toeR[0], rz: f.toeR[2], fyR: f.fyR, lx: f.toeL[0], lz: f.toeL[2], fyL: f.fyL };
+}
+
+// ---------------------------------------------------------------- bộ giải (như scripts/motion_proxy/skeleton.py, không trễ pha)
+function ik2(root, target, l1, l2, pole) {
+  const d = target.clone().sub(root); const dist = d.length();
+  const over = Math.max(0, dist - (l1 + l2) * 0.999); const dc = Math.min(dist, (l1 + l2) * 0.999);
+  const dn = d.clone().divideScalar(Math.max(dist, 1e-9)); const end = root.clone().addScaledVector(dn, dc);
+  const a = (l1 * l1 - l2 * l2 + dc * dc) / (2 * dc); const h = Math.sqrt(Math.max(l1 * l1 - a * a, 0));
+  let p = pole.clone().addScaledVector(dn, -pole.dot(dn));
+  if (p.length() < 1e-6) p = UP.clone().addScaledVector(dn, -UP.dot(dn));
+  p.normalize();
+  return { mid: root.clone().addScaledVector(dn, a).addScaledVector(p, h), end, over };
+}
+const wrap = a => ((a + 180) % 360 + 360) % 360 - 180;
+function solve(c) {
+  const P = c.yawP, C = c.yawP + c.chestRel;
+  const pelvis = V(c.px, c.py, c.pz);
+  const rC = right(C), fC = fwd(C);
+  const spineDir = UP.clone().applyAxisAngle(rC, c.lean * D2R).applyAxisAngle(fC, -c.tilt * D2R);
+  const chest = pelvis.clone().addScaledVector(spineDir, B.spine).addScaledVector(fC, 0.04);
+  const neck = chest.clone().addScaledVector(spineDir, B.neck);
+  const head = neck.clone().addScaledVector(spineDir, B.head_above_neck);
+  let H = C + (c.spot ? Math.max(-60, Math.min(60, wrap(90 - C))) : 0) + c.headRel;
+  const hipR = pelvis.clone().addScaledVector(right(P), B.hip_half), hipL = pelvis.clone().addScaledVector(right(P), -B.hip_half);
+  const shR = chest.clone().addScaledVector(rC, B.shoulder_half), shL = chest.clone().addScaledVector(rC, -B.shoulder_half);
+  const a = c.wPitch * D2R;
+  const sd = fwd(c.wYaw).multiplyScalar(Math.cos(a)).addScaledVector(UP, Math.sin(a));
+  const gc = B.grip_center;
+  const gap = W.grip_gap - (W.slide_gap_factor ?? 0.6) * Math.max(0, c.slide);
+  const center = chest.clone().addScaledVector(rC, gc.right).addScaledVector(fC, gc.forward).addScaledVector(UP, -c.handDrop).addScaledVector(sd, c.slide);
+  let rear = center.clone().addScaledVector(sd, -gap / 2), front = center.clone().addScaledVector(sd, gap / 2);
+  const reach = (B.upper_arm + B.forearm) * 0.97; const shift = V(0, 0, 0);
+  for (let i = 0; i < 60; i++) {
+    const oR = rear.distanceTo(shR) - reach, oL = front.distanceTo(shL) - reach;
+    if (oR <= 1e-4 && oL <= 1e-4) break;
+    const mv = V(0, 0, 0);
+    if (oR > 0) mv.addScaledVector(shR.clone().sub(rear).normalize(), oR);
+    if (oL > 0) mv.addScaledVector(shL.clone().sub(front).normalize(), oL);
+    mv.multiplyScalar(0.6); rear.add(mv); front.add(mv); shift.add(mv);
+  }
+  const butt = rear.clone().addScaledVector(sd, -W.grip_rear), tip = rear.clone().addScaledVector(sd, W.length - W.grip_rear);
+  const armR = ik2(shR, rear, B.upper_arm, B.forearm, UP.clone().negate().addScaledVector(rC, 0.7));
+  const armL = ik2(shL, front, B.upper_arm, B.forearm, UP.clone().negate().addScaledVector(rC, -0.7));
+  const legs = {};
+  for (const [s, hip, toe, fy] of [["R", hipR, V(c.rx, 0, c.rz), c.fyR], ["L", hipL, V(c.lx, 0, c.lz), c.fyL]]) {
+    let lift = 0, res;
+    for (;;) {
+      const heel = toe.clone().addScaledVector(fwd(fy), -B.foot_len).addScaledVector(UP, lift);
+      const ank = heel.clone().addScaledVector(fwd(fy), 0.08).addScaledVector(UP, B.ankle_h);
+      res = ik2(hip, ank, B.thigh, B.shin, fwd(fy).addScaledVector(UP, 0.2));
+      res.heel = heel; res.toe = toe; res.lift = lift;
+      if (res.over <= 1e-4 || lift >= (B.max_heel_lift ?? 0.24)) break;
+      lift = Math.min(B.max_heel_lift ?? 0.24, lift + 0.01);
+    }
+    legs[s] = res;
+  }
+  const J = { pelvis, chest, neck, head, hipR, hipL, shR, shL, kneeR: legs.R.mid, kneeL: legs.L.mid, ankleR: legs.R.end, ankleL: legs.L.end,
+    heelR: legs.R.heel, heelL: legs.L.heel, toeR: legs.R.toe, toeL: legs.L.toe, elbowR: armR.mid, elbowL: armL.mid,
+    handR: armR.end, handL: armL.end, butt, tip, blade_root: tip.clone().addScaledVector(sd, -W.blade_len) };
+  const mass = B.mass; let tot = 0; const com = V(0, 0, 0);
+  for (const [k, m] of Object.entries(mass)) { com.addScaledVector(J[k], m); tot += m; }
+  com.divideScalar(tot);
+  return { J, yaw: { pelvis: P, chest: C, head: H, weapon: c.wYaw }, pitch: c.wPitch, sd, shift: shift.length(), com,
+    over: { armR: armR.over, armL: armL.over, legR: legs.R.over, legL: legs.L.over }, heel: { R: legs.R.lift, L: legs.L.lift } };
+}
+
+// ---------------------------------------------------------------- cảnh 3D
+const stage = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+stage.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x4e5157);
+const cam = new THREE.OrthographicCamera(-4, 4, 3, -3, -50, 50);
+const orbit = new OrbitControls(cam, renderer.domElement);
+orbit.target.set(0.4, 1.35, 0); orbit.enableDamping = true;
+scene.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1.15));
+const sun = new THREE.DirectionalLight(0xffffff, 1.35); sun.position.set(-3, 6, 5); scene.add(sun);
+
+const col = h => new THREE.Color(h);
+const mat = (h, k = 1) => new THREE.MeshStandardMaterial({ color: col(h).multiplyScalar(k), roughness: 0.75, metalness: 0.05 });
+const MAT = {
+  skinN: mat(PAL.skin), skinF: mat(PAL.skin, 0.8), armorN: mat(PAL.armor), armorF: mat(PAL.armor, 0.82), armor: mat(PAL.armor),
+  legN: mat(PAL.leather, 1.25), legF: mat(PAL.leather, 1.0), bootN: mat(PAL.shaft), bootF: mat(PAL.shaft, 0.85),
+  gold: mat(PAL.gold), ivory: mat(PAL.ivory), hair: mat(PAL.hair), shaft: mat(PAL.shaft, 0.9), blade: mat(PAL.blade), red: mat(PAL.red),
+  eye: new THREE.MeshBasicMaterial({ color: col(PAL.eye) }),
+};
+const U = B.height / 3.0;
+const cyl = (r1, r2, m) => new THREE.Mesh(new THREE.CylinderGeometry(r2, r1, 1, 18), m);
+const sph = (r, m) => new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), m);
+function placeSeg(mesh, a, b) {
+  const d = b.clone().sub(a); const L = d.length();
+  mesh.position.copy(a).addScaledVector(d, 0.5);
+  mesh.scale.set(1, Math.max(L, 1e-4), 1);
+  mesh.quaternion.setFromUnitVectors(UP, d.normalize());
+}
+const fig = new THREE.Group(); scene.add(fig);
+const S = {};
+const add = (k, m) => { S[k] = m; fig.add(m); return m; };
+for (const s of ["R", "L"]) {
+  const n = s === "R";
+  add("thigh" + s, cyl(0.19, 0.15, n ? MAT.legN : MAT.legF)); add("shin" + s, cyl(0.16, 0.15, n ? MAT.bootN : MAT.bootF));
+  add("foot" + s, cyl(0.12, 0.13, n ? MAT.bootN : MAT.bootF)); add("knee" + s, sph(0.12, MAT.gold));
+  add("jk" + s, sph(0.17, n ? MAT.legN : MAT.legF)); add("ja" + s, sph(0.15, n ? MAT.bootN : MAT.bootF)); add("toecap" + s, sph(0.09, MAT.gold));
+  add("upper" + s, cyl(0.18, 0.15, n ? MAT.skinN : MAT.skinF)); add("fore" + s, cyl(0.17, 0.17, n ? MAT.armorN : MAT.armorF));
+  add("je" + s, sph(0.16, n ? MAT.skinN : MAT.skinF)); add("fist" + s, sph(B.fist_r, n ? MAT.skinN : MAT.skinF));
+  add("pad" + s, sph(0.27, MAT.armor)); add("padrim" + s, new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.05, 8, 24), MAT.gold));
+}
+add("torso", new THREE.Mesh(new THREE.CylinderGeometry(1, 0.78, 1, 24), MAT.armor));
+add("skirt", new THREE.Mesh(new THREE.CylinderGeometry(1, 1.25, 1, 24, 1, true), MAT.armorF));
+add("belt", new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 24), mat(PAL.leather)));
+add("emblem", sph(0.16, MAT.gold));
+add("head", sph(B.head_r, MAT.skinN)); add("bun", sph(0.13, MAT.hair)); add("hairCap", new THREE.Mesh(new THREE.SphereGeometry(B.head_r * 1.03, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.42), MAT.hair));
+add("beard", new THREE.Mesh(new THREE.SphereGeometry(B.head_r * 1.02, 20, 12, -Math.PI * 0.45, Math.PI * 0.9, Math.PI * 0.55, Math.PI * 0.35), MAT.hair));
+add("eyeR", sph(0.045, MAT.eye)); add("eyeL", sph(0.045, MAT.eye));
+const wing = new THREE.Group(); fig.add(wing); S.wing = wing;
+for (let k = 0; k < 4; k++) {
+  const sh = new THREE.Shape(); sh.moveTo(0, -0.08); sh.quadraticCurveTo(0.2, 0.5, 0, 1); sh.quadraticCurveTo(-0.16, 0.5, 0, -0.08);
+  const m = new THREE.Mesh(new THREE.ShapeGeometry(sh), new THREE.MeshStandardMaterial({ color: col(PAL.ivory), side: THREE.DoubleSide, roughness: 0.8 }));
+  const ln = [1.0, 0.92, 0.82, 0.7][k]; m.scale.set(1, ln, 1); m.rotation.z = -(84 - [84, 64, 45, 27][k]) * D2R; m.position.x = 0.05 * k;
+  wing.add(m);
+}
+add("shaft", cyl(0.045, 0.045, MAT.shaft));
+const leaf = new THREE.Shape(); leaf.moveTo(0, 0); leaf.quadraticCurveTo(0.2, 0.25, 0, 0.6); leaf.quadraticCurveTo(-0.2, 0.25, 0, 0);
+add("bladeA", new THREE.Mesh(new THREE.ShapeGeometry(leaf), new THREE.MeshStandardMaterial({ color: col(PAL.blade), side: THREE.DoubleSide, metalness: 0.4, roughness: 0.35 })));
+add("bladeB", new THREE.Mesh(new THREE.ShapeGeometry(leaf), new THREE.MeshStandardMaterial({ color: col(PAL.blade), side: THREE.DoubleSide, metalness: 0.4, roughness: 0.35 })));
+add("guard", new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.035, 8, 20, Math.PI), MAT.gold));
+add("tassel", cyl(0.05, 0.02, MAT.red));
+add("butt", sph(0.06, MAT.gold));
+// mặt đất, bóng, trọng tâm, vùng đỡ, mục tiêu
+const grid = new THREE.GridHelper(12, 24, 0x7a7f86, 0x63676d); grid.position.y = -0.002; scene.add(grid);
+const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.9, 32), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25 }));
+shadow.rotation.x = -Math.PI / 2; shadow.scale.set(1, 0.6, 1); scene.add(shadow);
+const comDot = new THREE.Mesh(new THREE.RingGeometry(0.05, 0.1, 24), new THREE.MeshBasicMaterial({ color: 0x5cbf85, side: THREE.DoubleSide }));
+comDot.rotation.x = -Math.PI / 2; scene.add(comDot);
+const supGeo = new THREE.BufferGeometry().setFromPoints([V(0, 0.01, 0), V(1, 0.01, 0)]);
+const supLine = new THREE.Line(supGeo, new THREE.LineBasicMaterial({ color: 0x5cbf85 })); scene.add(supLine);
+const target = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 2.4, 10), new THREE.MeshBasicMaterial({ color: 0xc87a6e }));
+target.position.set(3.4, 1.2, 0); scene.add(target);
+
+function orient(obj, xAxis, yAxis) {
+  const x = xAxis.clone().normalize(); const y = yAxis.clone().addScaledVector(x, -yAxis.dot(x)).normalize(); const z = x.clone().cross(y);
+  obj.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
+}
+function draw(r) {
+  const J = r.J;
+  for (const s of ["R", "L"]) {
+    placeSeg(S["thigh" + s], J["hip" + s], J["knee" + s]); placeSeg(S["shin" + s], J["knee" + s], J["ankle" + s]);
+    placeSeg(S["foot" + s], J["heel" + s], J["toe" + s]); S["knee" + s].position.copy(J["knee" + s]);
+    S["jk" + s].position.copy(J["knee" + s]); S["ja" + s].position.copy(J["ankle" + s]); S["toecap" + s].position.copy(J["toe" + s]);
+    placeSeg(S["upper" + s], J["sh" + s], J["elbow" + s]); placeSeg(S["fore" + s], J["elbow" + s], J["hand" + s]);
+    S["je" + s].position.copy(J["elbow" + s]); S["fist" + s].position.copy(J["hand" + s]);
+    S["pad" + s].position.copy(J["sh" + s]).addScaledVector(UP, 0.06); S["pad" + s].scale.set(1, 0.85, 1);
+    S["padrim" + s].position.copy(J["sh" + s]); orient(S["padrim" + s], right(r.yaw.chest), fwd(r.yaw.chest));
+  }
+  const waist = J.pelvis.clone().addScaledVector(UP, 0.46);
+  const spine = J.chest.clone().sub(waist);
+  S.torso.position.copy(waist).addScaledVector(spine, 0.5);
+  orient(S.torso, right(r.yaw.chest), spine); S.torso.scale.set(B.shoulder_half * 0.9, spine.length() + 0.12, 0.34);
+  S.skirt.position.copy(J.pelvis).addScaledVector(UP, 0.16); orient(S.skirt, right(r.yaw.pelvis), UP); S.skirt.scale.set(B.waist_half, 0.6, 0.38);
+  S.belt.position.copy(waist); orient(S.belt, right(r.yaw.pelvis), UP); S.belt.scale.set(B.waist_half * 1.04, 0.14, 0.4);
+  S.emblem.position.copy(J.chest).addScaledVector(spine.clone().normalize(), -0.35).addScaledVector(fwd(r.yaw.chest), 0.4); S.emblem.scale.set(1.4, 1, 0.4);
+  orient(S.emblem, right(r.yaw.chest), UP);
+  S.head.position.copy(J.head); S.hairCap.position.copy(J.head); orient(S.hairCap, right(r.yaw.head), UP);
+  S.bun.position.copy(J.head).addScaledVector(UP, B.head_r + 0.08).addScaledVector(fwd(r.yaw.head), -0.1);
+  S.beard.position.copy(J.head); orient(S.beard, right(r.yaw.head).negate(), UP);
+  const fH = fwd(r.yaw.head), rH = right(r.yaw.head);
+  S.eyeR.position.copy(J.head).addScaledVector(fH, B.head_r * 0.9).addScaledVector(rH, 0.12).addScaledVector(UP, 0.03);
+  S.eyeL.position.copy(J.head).addScaledVector(fH, B.head_r * 0.9).addScaledVector(rH, -0.12).addScaledVector(UP, 0.03);
+  S.wing.position.copy(J.shL).addScaledVector(UP, 0.08).addScaledVector(fwd(r.yaw.chest), -0.08);
+  orient(S.wing, right(r.yaw.chest).negate(), UP);
+  const base = J.blade_root;
+  placeSeg(S.shaft, J.butt, base); S.butt.position.copy(J.butt);
+  for (const [k, rot] of [["bladeA", 0], ["bladeB", Math.PI / 2]]) {
+    const m = S[k]; m.position.copy(base); const q = new THREE.Quaternion().setFromUnitVectors(UP, r.sd.clone().normalize());
+    m.quaternion.copy(q).multiply(new THREE.Quaternion().setFromAxisAngle(UP, rot)); m.scale.setScalar(W.blade_len / 0.6);
+  }
+  S.guard.position.copy(base); { const q = new THREE.Quaternion().setFromUnitVectors(UP, r.sd.clone().normalize()); S.guard.quaternion.copy(q).multiply(new THREE.Quaternion().setFromAxisAngle(V(1, 0, 0), Math.PI / 2)); }
+  placeSeg(S.tassel, base.clone().addScaledVector(r.sd, -0.08), base.clone().addScaledVector(r.sd, -0.08).addScaledVector(UP, -0.32));
+  shadow.position.set(r.com.x, 0.003, r.com.z);
+  comDot.position.set(r.com.x, 0.006, r.com.z);
+}
+
+// ---------------------------------------------------------------- camera
+let camMode = "game";
+function fitCam() {
+  const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false);
+  const half = 3.3, asp = w / Math.max(h, 1);
+  cam.left = -half * asp; cam.right = half * asp; cam.top = half; cam.bottom = -half; cam.updateProjectionMatrix();
+}
+function setCam(mode) {
+  camMode = mode; const t = V(0.4, 1.35, 0); orbit.target.copy(t);
+  const d = 20;
+  if (mode === "game") cam.position.set(t.x, t.y + d * Math.sin(15 * D2R), d * Math.cos(15 * D2R));
+  if (mode === "free") cam.position.set(t.x + d * 0.62, t.y + d * 0.35, d * 0.7);
+  if (mode === "top") cam.position.set(t.x, t.y + d, 0.001);
+  cam.zoom = 1; cam.updateProjectionMatrix(); orbit.update();
+}
+document.getElementById("camGame").onclick = () => setCam("game");
+document.getElementById("camFree").onclick = () => setCam("free");
+document.getElementById("camTop").onclick = () => setCam("top");
+new ResizeObserver(fitCam).observe(stage);
+
+// ---------------------------------------------------------------- kiểm tra vật lý
+function checks(r) {
+  const J = r.J, out = [];
+  const twist = Math.abs(wrap(r.yaw.chest - r.yaw.pelvis));
+  out.push(["Xoắn ngực–hông ≤ 55°", `${twist.toFixed(0)}°`, twist <= 55]);
+  const legOver = Math.max(r.over.legR, r.over.legL);
+  out.push(["Chân với tới (gót đã kiễng)", legOver < 0.03 ? "ổn" : `thiếu ${(legOver / B.height * 100).toFixed(1)}%`, legOver < 0.03]);
+  out.push(["Tay nắm đúng chỗ trên thương", r.shift < 0.15 ? "ổn" : `lệch ${r.shift.toFixed(2)}`, r.shift < 0.15]);
+  const [b, f] = J.toeR.x <= J.toeL.x ? [J.toeR, J.toeL] : [J.toeL, J.toeR];
+  const seg = f.clone().sub(b); seg.y = 0; const c = r.com.clone().sub(b); c.y = 0;
+  const u = seg.lengthSq() > 1e-6 ? c.dot(seg) / seg.lengthSq() : 0.5;
+  const perp = c.clone().addScaledVector(seg, -u).length();
+  const inside = u >= -0.05 && u <= 1.05 && perp < 0.3;
+  out.push(["Trọng tâm trong vùng đỡ", `${(u * 100).toFixed(0)}% về chân trước`, inside]);
+  const crossed = J.ankleR.clone().sub(J.ankleL).dot(right(r.yaw.pelvis)) < 0;
+  out.push(["Hai chân không bắt chéo", crossed ? "chéo" : "ổn", !crossed]);
+  return { list: out, u, inside, b, f };
+}
+
+// ---------------------------------------------------------------- vòng chính
+let cur = null;
+function refresh() {
+  for (const [, key, , , , st] of SL) { inputs[key].value = ctl[key]; document.getElementById("o_" + key).textContent = (+ctl[key]).toFixed(st < 1 ? 2 : 0); }
+  document.getElementById("spot").checked = !!ctl.spot;
+  const r = solve(ctl); cur = r; draw(r);
+  const ck = checks(r);
+  document.getElementById("checks").innerHTML = ck.list.map(([n, v, ok]) => `<div><span>${n}</span><b class="${ok ? "ok-t" : "bad-t"}">${v}</b></div>`).join("");
+  supGeo.setFromPoints([V(ck.b.x, 0.01, ck.b.z), V(ck.f.x, 0.01, ck.f.z)]);
+  const colr = ck.inside ? 0x5cbf85 : 0xe07a62; supLine.material.color.setHex(colr); comDot.material.color.setHex(colr);
+  const chipCom = document.getElementById("chipCom"); chipCom.textContent = `Trọng tâm ${(ck.u * 100).toFixed(0)}% chân trước`; chipCom.className = "chip " + (ck.inside ? "ok" : "bad");
+  const reachOk = ck.list[1][2] && ck.list[2][2];
+  const chipReach = document.getElementById("chipReach"); chipReach.textContent = reachOk ? "Tay chân với tới" : "Tay hoặc chân quá tầm"; chipReach.className = "chip " + (reachOk ? "ok" : "bad");
+  document.getElementById("json").textContent = JSON.stringify(poseRecord("(chưa đặt tên)", ""), null, 1);
+}
+function round(v, n = 4) { return Math.round(v * 10 ** n) / 10 ** n; }
+function poseRecord(name, note) {
+  const r = cur; const J = {};
+  for (const [k, v] of Object.entries(r.J)) J[k] = [round(v.x), round(v.y), round(v.z)];
+  return { name, note, motion: M.name, fromFrame: +frameIn.value, controls: { ...ctl },
+    yaw: Object.fromEntries(Object.entries(r.yaw).map(([k, v]) => [k, round(v, 2)])), weaponPitch: round(r.pitch, 2),
+    heel: { R: round(r.heel.R, 3), L: round(r.heel.L, 3) }, joints: J, body: "moon_crane", savedAt: Date.now() };
+}
+
+// khung của chuyển động
+const frameIn = document.getElementById("frame"); frameIn.max = M.frames.length - 1;
+function showFrame(i) {
+  const f = M.frames[i]; document.getElementById("frameOut").textContent = i;
+  document.getElementById("phase").textContent = `τ ${f.t} · ${f.phase}`;
+}
+frameIn.addEventListener("input", () => { showFrame(+frameIn.value); Object.assign(ctl, fromFrame(M.frames[+frameIn.value])); refresh(); });
+document.getElementById("takeFrame").onclick = () => { Object.assign(ctl, fromFrame(M.frames[+frameIn.value])); refresh(); };
+let playing = null;
+document.getElementById("play").onclick = e => {
+  if (playing) { clearInterval(playing); playing = null; e.target.textContent = "Phát"; return; }
+  e.target.textContent = "Dừng";
+  playing = setInterval(() => { const i = (+frameIn.value + 1) % M.frames.length; frameIn.value = i; showFrame(i); Object.assign(ctl, fromFrame(M.frames[i])); refresh(); }, 1000 / M.fps);
+};
+
+// sao chép JSON
+document.getElementById("copy").onclick = async () => {
+  const st = document.getElementById("copyStatus"); const txt = document.getElementById("json").textContent;
+  try { await navigator.clipboard.writeText(txt); st.textContent = "Đã sao chép."; }
+  catch { const sel = window.getSelection(), rg = document.createRange(); rg.selectNodeContents(document.getElementById("json")); sel.removeAllRanges(); sel.addRange(rg); st.textContent = "Đã chọn sẵn văn bản, nhấn Ctrl+C."; }
+};
+
+// ---------------------------------------------------------------- lưu tư thế (db của artifact)
+const saveStatus = document.getElementById("saveStatus"), listEl = document.getElementById("poses");
+let db = null;
+function renderList(docs) {
+  if (!docs.length) { listEl.innerHTML = `<div class="empty">Chưa có tư thế nào. Chỉnh dáng rồi bấm Lưu; tư thế sẽ hiện ở đây và Claude đọc được để vẽ.</div>`; return; }
+  listEl.innerHTML = "";
+  for (const d of docs) {
+    const p = d.data(); const el = document.createElement("div"); el.className = "pose";
+    const when = p.savedAt ? new Date(p.savedAt).toLocaleString("vi-VN") : "";
+    el.innerHTML = `<div><div class="n"></div><div class="m"></div></div><button class="btn small" type="button">Mở</button><button class="btn small" type="button">Xoá</button>`;
+    el.querySelector(".n").textContent = p.name || d.id; el.querySelector(".m").textContent = `từ khung ${p.fromFrame ?? "?"} · ${when}`;
+    const [bOpen, bDel] = el.querySelectorAll("button");
+    bOpen.onclick = () => { Object.assign(ctl, p.controls); refresh(); saveStatus.textContent = `Đã mở "${p.name}".`; };
+    let armed = false;
+    bDel.onclick = async () => {
+      if (!armed) { armed = true; bDel.textContent = "Chắc chưa?"; setTimeout(() => { armed = false; bDel.textContent = "Xoá"; }, 2500); return; }
+      try { await db.collection("poses").doc(d.id).delete(); saveStatus.textContent = `Đã xoá "${p.name}".`; } catch (e) { saveStatus.textContent = "Không xoá được: " + (e?.message || e); }
+    };
+    listEl.appendChild(el);
+  }
+}
+document.getElementById("save").onclick = async () => {
+  const name = document.getElementById("poseName").value.trim();
+  if (!name) { saveStatus.textContent = "Đặt tên cho tư thế trước khi lưu."; return; }
+  if (!db) { saveStatus.textContent = "Trang này không lưu được (mở ngoài claude.ai). Bấm Sao chép JSON rồi gửi cho Claude."; return; }
+  const rec = poseRecord(name, document.getElementById("poseNote").value.trim());
+  const id = name.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "pose";
+  saveStatus.textContent = "Đang lưu...";
+  try { await db.collection("poses").doc(id).set(rec); saveStatus.textContent = `Đã lưu "${name}". Claude đọc được tư thế này.`; }
+  catch (e) { saveStatus.textContent = "Không lưu được: " + (e?.message || e?.code || e); }
+};
+(async () => {
+  try {
+    db = window.claude ? await window.claude.use("db") : null;
+  } catch { db = null; }
+  if (!db) { saveStatus.textContent = "Chế độ không lưu: dùng Sao chép JSON."; return; }
+  const timer = setTimeout(() => { saveStatus.textContent = "Chưa tải được danh sách tư thế, thử mở lại sau."; }, 10000);
+  db.collection("poses").orderBy("savedAt", "desc").onSnapshot(
+    s => { if (!s.metadata.fromCache) clearTimeout(timer); renderList(s.docs); },
+    e => { clearTimeout(timer); saveStatus.textContent = "Không đọc được danh sách: " + (e?.message || e?.code); });
+})();
+
+// khởi động
+Object.assign(ctl, fromFrame(M.frames[0])); showFrame(0);
+fitCam(); setCam("game"); refresh();
+renderer.setAnimationLoop(() => { orbit.update(); renderer.render(scene, cam); });
+</script>

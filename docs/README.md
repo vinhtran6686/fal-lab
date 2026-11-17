@@ -33,8 +33,10 @@ docs/
 │   │   ├── puppet-studio-concepts.md                      khái niệm cho người dùng (khớp, dây chằng, IK, mối nối tròn)
 │   │   ├── puppet-studio-ai-guide.md                      sổ tay cho AI khi sửa rig theo yêu cầu
 │   │   └── puppet-studio-limits.md                        tính năng đã có và giới hạn của rig cắt từ một ảnh
-│   └── frame_tuner/
-│       └── frame-tuner-guide.md                           tools/frame_tuner/: bật/tắt frame, chỉnh thời gian, lưu công thức
+│   ├── frame_tuner/
+│   │   └── frame-tuner-guide.md                           tools/frame_tuner/: bật/tắt frame, chỉnh thời gian, lưu công thức
+│   └── pose3d/
+│       └── pose3d-guide.md                                tools/pose3d/: chỉnh tư thế 3D bằng tay, kiểm tra vật lý, lưu tư thế để vẽ bằng fal-image
 ```
 
 ## Docs nằm cạnh code (không chuyển vào docs/)
