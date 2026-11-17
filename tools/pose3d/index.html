@@ -66,10 +66,6 @@ label.cb { display: flex; gap: 8px; align-items: center; font-size: 13px; }
 <div class="app">
   <div class="stage" id="stage">
     <div class="bar">
-      <button class="btn small on" id="mMove" type="button" title="Phím W">Di chuyển</button>
-      <button class="btn small" id="mRot" type="button" title="Phím E">Xoay</button>
-      <button class="btn small" id="mSpace" type="button" title="Phím Q">Trục: cục bộ</button>
-      <span class="sep"></span>
       <button class="btn small on" id="camGame" type="button">Camera game</button>
       <button class="btn small" id="camFree" type="button">Nhìn chéo</button>
       <button class="btn small" id="camSide" type="button">Nhìn ngang</button>
@@ -79,7 +75,7 @@ label.cb { display: flex; gap: 8px; align-items: center; font-size: 13px; }
       <span class="chip" id="chipCom">Trọng tâm</span>
       <span class="chip" id="chipReach">Tầm với</span>
     </div>
-    <div class="sel" id="sel">Bấm một <b>chấm điều khiển</b> trên khớp (hoặc bấm vào thân) để chọn, rồi kéo gizmo. Kéo vùng trống để xoay camera.</div>
+    <div class="sel" id="sel">Bấm vào một khớp (chấm màu) hoặc vào thân rồi <b>rê</b> · Shift + rê: xoay · kéo vùng trống: xoay camera · cuộn: thu phóng</div>
   </div>
 
   <aside class="panel" aria-label="Bảng tạo dáng">
@@ -89,19 +85,19 @@ label.cb { display: flex; gap: 8px; align-items: center; font-size: 13px; }
     </div>
 
     <div class="sec">
-      <h2>Tay cầm</h2>
+      <h2>Tạo dáng</h2>
       <div class="legend">
-        <span class="dot" style="background:#f2b233"></span><span>IK: kéo để đặt tay, chân, hông, thương; tay chân tự gập theo</span>
-        <span class="dot" style="background:#4aa3ff"></span><span>FK: xoay thắt lưng, ngực, cổ, đầu, cổ tay</span>
-        <span class="dot" style="background:#c77dff"></span><span>Hướng gối, khuỷu: kéo để xoay mặt phẳng gập</span>
+        <span class="dot" style="background:#f2b233"></span><span>Hông, tay, chân, mũi thương: bấm và rê, tay chân tự gập theo</span>
+        <span class="dot" style="background:#4aa3ff"></span><span>Bụng, ngực, đầu: rê để gập, ngả, quay</span>
+        <span class="dot" style="background:#c77dff"></span><span>Khuỷu, gối: rê để đổi hướng gập</span>
       </div>
       <div class="keys">
-        <kbd>W</kbd><span>di chuyển</span><kbd>E</kbd><span>xoay</span><kbd>Q</kbd><span>đổi trục cục bộ / thế giới</span>
-        <kbd>Esc</kbd><span>bỏ chọn</span><kbd>Ctrl+Z</kbd><span>hoàn tác (Ctrl+Shift+Z: làm lại)</span>
+        <kbd>Shift</kbd><span>giữ khi rê: xoay (hông, thân, đầu, bàn chân)</span>
+        <kbd>Ctrl+Z</kbd><span>hoàn tác (Ctrl+Shift+Z: làm lại)</span>
       </div>
       <label class="cb"><input type="checkbox" id="grip" checked> Hai tay bám thương</label>
       <label class="cb"><input type="checkbox" id="spot" checked> Mắt luôn nhìn mục tiêu</label>
-      <div class="inline"><button class="btn small" id="undo" type="button">Hoàn tác</button><button class="btn small" id="redo" type="button">Làm lại</button><button class="btn small" id="resetSel" type="button">Đặt lại khớp đang chọn</button></div>
+      <div class="inline"><button class="btn small" id="undo" type="button">Hoàn tác</button><button class="btn small" id="redo" type="button">Làm lại</button><button class="btn small" id="resetSel" type="button">Thẳng lại bụng / ngực / đầu vừa chỉnh</button></div>
     </div>
 
     <div class="sec">
@@ -138,7 +134,6 @@ label.cb { display: flex; gap: 8px; align-items: center; font-size: 13px; }
 <script type="module">
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { TransformControls } from "three/addons/controls/TransformControls.js";
 
 const M = JSON.parse(document.getElementById("motion").textContent);
 const B = M.body, W = M.weapon;
@@ -212,7 +207,10 @@ for (const s of ["R", "L"]) { mToe[s] = mark("toe" + s, J["foot" + s], 0, -L.ank
 const pickable = [];
 function addMesh(parent, geo, m, pos, scl, ctl) { const me = new THREE.Mesh(geo, m); me.position.copy(pos); if (scl) me.scale.copy(scl); me.userData.ctl = ctl; parent.add(me); pickable.push(me); return me; }
 const sphG = new THREE.SphereGeometry(1, 28, 20);
-const capG = (r1, r2, len) => { const g = new THREE.CylinderGeometry(r1, r2, len, 20); g.translate(0, -len / 2, 0); return g; };
+const capG = (r1, r2, len) => {   // khối chi trơn: con nhộng thuôn (đầu trên r1, đầu dưới r2)
+  const r = (r1 + r2) / 2, g = new THREE.CapsuleGeometry(r, Math.max(0.01, len - r * 0.6), 8, 20); g.translate(0, -len / 2, 0);
+  const pos = g.attributes.position; for (let i = 0; i < pos.count; i++) { const t = Math.min(1, Math.max(0, -pos.getY(i) / len)); const k = (r1 + (r2 - r1) * t) / r; pos.setX(i, pos.getX(i) * k); pos.setZ(i, pos.getZ(i) * k); }
+  g.computeVertexNormals(); return g; };
 addMesh(pelvis, sphG, matBody, V(0, -0.02, 0), V(...R.pelvis), "pelvis");
 addMesh(spine, sphG, matBody, V(0, 0.18, 0.01), V(...R.belly), "spine");
 addMesh(chest, sphG, matBody, V(0, L.chestTop * 0.48, 0.02), V(R.chest[0], L.chestTop * 0.62 + 0.05, R.chest[2]), "chest");
@@ -375,73 +373,152 @@ function solve() {
   updateHandles(); checks(); updateJson();
 }
 
-// ---------------------------------------------------------------- chấm điều khiển + gizmo
+// ---------------------------------------------------------------- điểm điều khiển: bấm và rê thẳng (kiểu Cascadeur, không gizmo)
 const handleGroup = new THREE.Group(); scene.add(handleGroup);
 const HCOL = { ik: 0xf2b233, fk: 0x4aa3ff, pole: 0xc77dff };
 const handles = [];
-function mkHandle(id, kind, r, label) {
-  const m = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12), new THREE.MeshBasicMaterial({ color: HCOL[kind], depthTest: false, transparent: true, opacity: 0.95 }));
-  m.renderOrder = 10; m.userData = { id, kind, label }; handleGroup.add(m); handles.push(m); return m;
-}
-const HDEF = [
-  ["pelvis", "ik", 0.09, "Hông (dời và xoay cả thân)"], ["spine", "fk", 0.07, "Thắt lưng"], ["chest", "fk", 0.08, "Ngực"],
-  ["neck", "fk", 0.06, "Cổ"], ["head", "fk", 0.07, "Đầu"], ["spear", "ik", 0.09, "Thương (hai tay bám theo)"],
-  ["handR", "ik", 0.07, "Tay phải"], ["handL", "ik", 0.07, "Tay trái"], ["footR", "ik", 0.08, "Chân phải"], ["footL", "ik", 0.08, "Chân trái"],
-  ["poleHandR", "pole", 0.05, "Hướng khuỷu phải"], ["poleHandL", "pole", 0.05, "Hướng khuỷu trái"],
-  ["poleFootR", "pole", 0.05, "Hướng gối phải"], ["poleFootL", "pole", 0.05, "Hướng gối trái"],
-  ["wristR", "fk", 0.045, "Cổ tay phải"], ["wristL", "fk", 0.045, "Cổ tay trái"],
+const HDEF = [   // id, loại, bán kính, nhãn, việc khi rê
+  ["pelvis", "ik", 0.1, "Hông", "rê: dời cả người (chân giữ trên đất) · Shift: xoay hông"],
+  ["spine", "fk", 0.08, "Bụng", "rê: gập / ngả thân dưới · Shift: vặn"],
+  ["chest", "fk", 0.09, "Ngực", "rê: gập / ngả ngực · Shift: vặn ngực"],
+  ["head", "fk", 0.08, "Đầu", "rê: cúi / ngẩng / quay đầu · Shift: nghiêng"],
+  ["handR", "ik", 0.08, "Tay phải", "rê: đặt tay (đang bám thương: dời cả thương)"],
+  ["handL", "ik", 0.08, "Tay trái", "rê: đặt tay (đang bám thương: xoay thương quanh tay phải)"],
+  ["tip", "ik", 0.08, "Mũi thương", "rê: chĩa thương (quay quanh chỗ hai tay nắm)"],
+  ["elbowR", "pole", 0.065, "Khuỷu phải", "rê: hướng khuỷu"], ["elbowL", "pole", 0.065, "Khuỷu trái", "rê: hướng khuỷu"],
+  ["kneeR", "pole", 0.07, "Gối phải", "rê: hướng gối"], ["kneeL", "pole", 0.07, "Gối trái", "rê: hướng gối"],
+  ["footR", "ik", 0.09, "Chân phải", "rê: đặt chân · Shift: xoay bàn chân"], ["footL", "ik", 0.09, "Chân trái", "rê: đặt chân · Shift: xoay bàn chân"],
 ];
-for (const [id, k, r, l] of HDEF) mkHandle(id, k, r, l);
-const H = Object.fromEntries(handles.map(h => [h.userData.id, h]));
-function objOf(id) {
-  return { pelvis, spine, chest, neck, head, spear: spearCtl, handR: ikT.handR, handL: ikT.handL, footR: ikT.footR, footL: ikT.footL,
-    poleHandR: pole.handR, poleHandL: pole.handL, poleFootR: pole.footR, poleFootL: pole.footL, wristR: J.handR, wristL: J.handL }[id];
+for (const [id, kind, r, label, hint] of HDEF) {
+  const g = new THREE.Group(); g.userData = { id, kind, r, label, hint };
+  const core = new THREE.Mesh(new THREE.SphereGeometry(r, 18, 14), new THREE.MeshBasicMaterial({ color: HCOL[kind], depthTest: false, transparent: true, opacity: 0.95 }));
+  const ring = new THREE.Mesh(new THREE.RingGeometry(r * 1.25, r * 1.55, 28), new THREE.MeshBasicMaterial({ color: 0xffffff, depthTest: false, transparent: true, opacity: 0.0, side: THREE.DoubleSide }));
+  core.renderOrder = 11; ring.renderOrder = 12; g.add(core, ring); handleGroup.add(g); handles.push(g);
 }
-function updateHandles() {
-  for (const h of handles) {
-    const id = h.userData.id, o = objOf(id);
-    h.position.copy(o.getWorldPosition(V()));
-    if (id === "chest") h.position.copy(mShoulderLine.getWorldPosition(V())).addScaledVector(UP, -0.25);
-    if (id === "head") h.position.copy(mHeadC.getWorldPosition(V()));
-    h.visible = !((id === "handR" || id === "handL") && opts.grip);
+const H = Object.fromEntries(handles.map(h => [h.userData.id, h]));
+const gripC = () => spearPt(yRear + G.gap / 2);
+function handlePos(id) {
+  const w = o => o.getWorldPosition(V());
+  switch (id) {
+    case "pelvis": return w(pelvis);
+    case "spine": return w(chest);
+    case "chest": return w(mShoulderLine);
+    case "head": return w(mHeadC);
+    case "handR": return opts.grip ? spearPt(yRear) : w(J.handR);
+    case "handL": return opts.grip ? spearPt(yRear + G.gap) : w(J.handL);
+    case "tip": return spearPt(yBase + G.blade * 0.45);
+    case "elbowR": return w(J.foreR); case "elbowL": return w(J.foreL);
+    case "kneeR": return w(J.shinR); case "kneeL": return w(J.shinL);
+    case "footR": return w(J.footR); case "footL": return w(J.footL);
   }
 }
-const tc = new TransformControls(cam, renderer.domElement); tc.setSize(0.85); scene.add(tc);
-let selected = null, mode = "translate", space = "local";
-const ROT_ONLY = new Set(["spine", "chest", "neck", "head", "wristR", "wristL"]);
-const MOVE_ONLY = new Set(["poleHandR", "poleHandL", "poleFootR", "poleFootL"]);
-function select(id) {
-  selected = id; for (const h of handles) h.scale.setScalar(h.userData.id === id ? 1.5 : 1);
-  if (!id) { tc.detach(); document.getElementById("sel").innerHTML = "Bấm một <b>chấm điều khiển</b> trên khớp (hoặc bấm vào thân) để chọn, rồi kéo gizmo. Kéo vùng trống để xoay camera."; return; }
-  let m = mode; if (ROT_ONLY.has(id)) m = "rotate"; if (MOVE_ONLY.has(id)) m = "translate";
-  tc.setMode(m); tc.setSpace(space); tc.attach(objOf(id));
-  document.getElementById("sel").innerHTML = `Đang chọn: <b>${H[id].userData.label}</b> · ${m === "rotate" ? "xoay" : "di chuyển"} (W / E đổi chế độ)`;
+let hoverId = null, activeId = null, selected = null;
+function updateHandles() {
+  const z = 1 / Math.max(cam.zoom, 0.2);
+  for (const h of handles) {
+    const id = h.userData.id; h.position.copy(handlePos(id)); h.quaternion.copy(cam.quaternion);
+    const big = id === activeId ? 1.45 : id === hoverId ? 1.3 : 1;
+    h.scale.setScalar(z * big); h.children[1].material.opacity = id === activeId || id === hoverId ? 0.95 : 0;
+  }
 }
-let dragStart = null;
-tc.addEventListener("dragging-changed", e => { orbit.enabled = !e.value; if (e.value) dragStart = JSON.stringify(getState()); else if (dragStart) { pushUndo(dragStart); dragStart = null; } });
-tc.addEventListener("objectChange", () => solve());
-function setMode(m) { mode = m; document.getElementById("mMove").classList.toggle("on", m === "translate"); document.getElementById("mRot").classList.toggle("on", m === "rotate"); if (selected) select(selected); }
-document.getElementById("mMove").onclick = () => setMode("translate");
-document.getElementById("mRot").onclick = () => setMode("rotate");
-document.getElementById("mSpace").onclick = () => { space = space === "local" ? "world" : "local"; document.getElementById("mSpace").textContent = "Trục: " + (space === "local" ? "cục bộ" : "thế giới"); if (selected) select(selected); };
+// ---- chọn: điểm gần nhất trên màn hình (vùng bắt rộng), nếu không trúng điểm thì bấm vào thân cũng được
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
-let downAt = null;
-renderer.domElement.addEventListener("pointerdown", e => { downAt = [e.clientX, e.clientY]; });
-renderer.domElement.addEventListener("pointerup", e => {
-  if (!downAt || tc.dragging) return; const moved = Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]); downAt = null; if (moved > 4) return;
+const PART = { pelvis: "pelvis", spine: "spine", chest: "chest", neck: "head", head: "head", handR: "handR", handL: "handL", footR: "footR", footL: "footL", spear: "tip" };
+function screenOf(p) { const v = p.clone().project(cam), rc = renderer.domElement.getBoundingClientRect(); return [rc.left + (v.x + 1) / 2 * rc.width, rc.top + (1 - v.y) / 2 * rc.height]; }
+function pick(e) {
+  let best = null, bd = 26;
+  for (const h of handles) { const [x, y] = screenOf(h.position); const d = Math.hypot(x - e.clientX, y - e.clientY); if (d < bd) { bd = d; best = h.userData.id; } }
+  if (best) return best;
   const rc = renderer.domElement.getBoundingClientRect();
   ndc.set(((e.clientX - rc.left) / rc.width) * 2 - 1, -((e.clientY - rc.top) / rc.height) * 2 + 1); ray.setFromCamera(ndc, cam);
-  const hh = ray.intersectObjects(handles.filter(h => h.visible), false)[0];
-  if (hh) { select(hh.object.userData.id); return; }
   const hb = ray.intersectObjects(pickable, false)[0];
-  if (hb) { let id = hb.object.userData.ctl; if ((id === "handR" || id === "handL") && opts.grip) id = "spear"; select(id); return; }
-  select(null);
+  return hb ? PART[hb.object.userData.ctl] || null : null;
+}
+function mouseOnPlane(e, through) {
+  const rc = renderer.domElement.getBoundingClientRect();
+  ndc.set(((e.clientX - rc.left) / rc.width) * 2 - 1, -((e.clientY - rc.top) / rc.height) * 2 + 1); ray.setFromCamera(ndc, cam);
+  const n = V(0, 0, -1).applyQuaternion(cam.quaternion);
+  return ray.ray.intersectPlane(new THREE.Plane().setFromNormalAndCoplanarPoint(n, through), V()) || through.clone();
+}
+// ---- các phép kéo
+function swingBone(b, pivot, from, to) {   // xoay xương b (trong thế giới) sao cho hướng pivot→from thành pivot→to
+  const a = from.clone().sub(pivot), c = to.clone().sub(pivot); if (a.lengthSq() < 1e-6 || c.lengthSq() < 1e-6) return;
+  const q = new THREE.Quaternion().setFromUnitVectors(a.normalize(), c.normalize());
+  setWorldQuat(b, q.multiply(b.getWorldQuaternion(new THREE.Quaternion())));
+}
+function twistBone(b, deg) { const ax = V(0, 1, 0).applyQuaternion(b.getWorldQuaternion(new THREE.Quaternion())); setWorldQuat(b, new THREE.Quaternion().setFromAxisAngle(ax, deg * D2R).multiply(b.getWorldQuaternion(new THREE.Quaternion()))); }
+function swingSpear(pivot, from, to) {
+  const a = from.clone().sub(pivot), c = to.clone().sub(pivot); if (a.lengthSq() < 1e-6 || c.lengthSq() < 1e-6) return;
+  const q = new THREE.Quaternion().setFromUnitVectors(a.normalize(), c.normalize());
+  spearCtl.quaternion.premultiply(q); spearCtl.position.sub(pivot).applyQuaternion(q).add(pivot);
+}
+let drag = null;
+function startDrag(id, e) {
+  scene.updateMatrixWorld(true);
+  const p0 = handlePos(id);
+  drag = { id, p0, off: p0.clone().sub(mouseOnPlane(e, p0)), x: e.clientX, before: JSON.stringify(getState()), last: p0.clone() };
+  activeId = id; selected = id; orbit.enabled = false;
+  if (id === "head" && opts.spot) { opts.spot = false; document.getElementById("spot").checked = false; }
+  document.getElementById("sel").innerHTML = `<b>${H[id].userData.label}</b> · ${H[id].userData.hint}`;
+}
+function moveDrag(e) {
+  const id = drag.id, cur = handlePos(id), want = mouseOnPlane(e, drag.p0).add(drag.off);
+  const dx = e.clientX - drag.x; drag.x = e.clientX; scene.updateMatrixWorld(true);
+  const w = o => o.getWorldPosition(V());
+  if (e.shiftKey) {                                   // Shift: xoay quanh trục dọc của bộ phận
+    if (id === "pelvis") pelvis.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(UP, dx * 0.6 * D2R));
+    else if (id === "spine" || id === "chest") twistBone(id === "spine" ? spine : chest, dx * 0.6);
+    else if (id === "head") { const ax = V(0, 0, 1).applyQuaternion(head.getWorldQuaternion(new THREE.Quaternion())); setWorldQuat(head, new THREE.Quaternion().setFromAxisAngle(ax, -dx * 0.5 * D2R).multiply(head.getWorldQuaternion(new THREE.Quaternion()))); }
+    else if (id === "footR" || id === "footL") ikT[id].quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(UP, dx * 0.8 * D2R));
+    solve(); return;
+  }
+  switch (id) {
+    case "pelvis": pelvis.position.add(want.clone().sub(cur)); pelvis.position.y = Math.max(0.35, pelvis.position.y); break;
+    case "spine": swingBone(spine, w(spine), cur, want); break;
+    case "chest": swingBone(chest, w(chest), cur, want); break;
+    case "head": swingBone(neck, w(neck), cur, want); break;
+    case "handR": if (opts.grip) spearCtl.position.add(want.clone().sub(cur)); else ikT.handR.position.copy(want); break;
+    case "handL": if (opts.grip) swingSpear(spearPt(yRear), cur, want); else ikT.handL.position.copy(want); break;
+    case "tip": swingSpear(gripC(), cur, want); break;
+    case "elbowR": case "elbowL": case "kneeR": case "kneeL": {
+      const s = id.slice(-1), arm = id.startsWith("elbow");
+      const a = w(arm ? J["upper" + s] : J["thigh" + s]), c = arm ? w(J["hand" + s]) : ikT["foot" + s].position;
+      const mid = a.clone().add(c).multiplyScalar(0.5);
+      pole[(arm ? "hand" : "foot") + s].position.copy(want).addScaledVector(want.clone().sub(mid), 2);
+      break;
+    }
+    case "footR": case "footL": { const d = want.clone().sub(cur); ikT[id].position.add(d); ikT[id].position.y = Math.max(L.ankle, ikT[id].position.y);
+      pole[id].position.add(d); break; }
+  }
+  solve();
+}
+function endDrag() {
+  if (!drag) return;
+  if (drag.before !== JSON.stringify(getState())) pushUndo(drag.before);
+  drag = null; activeId = null; orbit.enabled = true; updateHandles();
+}
+// lắng nghe ở pha capture của khung để chặn xoay camera khi đã bắt trúng khớp
+stage.addEventListener("pointerdown", e => {
+  if (e.button !== 0 || e.target !== renderer.domElement) return;
+  const id = pick(e); if (!id) return;
+  e.stopPropagation(); renderer.domElement.setPointerCapture(e.pointerId); startDrag(id, e);
+}, true);
+renderer.domElement.addEventListener("pointermove", e => {
+  if (drag) { moveDrag(e); return; }
+  const id = e.buttons ? null : pick(e);
+  if (id !== hoverId) { hoverId = id; renderer.domElement.style.cursor = id ? "grab" : "default"; updateHandles();
+    if (!activeId) document.getElementById("sel").innerHTML = id ? `<b>${H[id].userData.label}</b> · ${H[id].userData.hint}` : SEL_IDLE; }
 });
+renderer.domElement.addEventListener("pointerup", endDrag);
+renderer.domElement.addEventListener("pointercancel", endDrag);
+const SEL_IDLE = "Bấm vào một khớp (chấm màu) hoặc vào thân rồi <b>rê</b> · Shift + rê: xoay · kéo vùng trống: xoay camera · cuộn: thu phóng";
+function select(id) { selected = id; document.getElementById("sel").innerHTML = id ? `<b>${H[id].userData.label}</b> · ${H[id].userData.hint}` : SEL_IDLE; }
+orbit.addEventListener("change", () => updateHandles());
 window.addEventListener("keydown", e => {
   if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
   const k = e.key.toLowerCase();
   if ((e.ctrlKey || e.metaKey) && k === "z") { e.preventDefault(); (e.shiftKey ? redoFn : undoFn)(); return; }
-  if (k === "w") setMode("translate"); if (k === "e") setMode("rotate"); if (k === "q") document.getElementById("mSpace").click(); if (k === "escape") select(null);
+  if (k === "escape") select(null);
 });
 
 // ---------------------------------------------------------------- hoàn tác
@@ -450,7 +527,7 @@ function pushUndo(s) { undo.push(s || JSON.stringify(getState())); if (undo.leng
 const undoFn = () => { if (!undo.length) return; redo.push(JSON.stringify(getState())); setState(JSON.parse(undo.pop())); };
 const redoFn = () => { if (!redo.length) return; undo.push(JSON.stringify(getState())); setState(JSON.parse(redo.pop())); };
 document.getElementById("undo").onclick = undoFn; document.getElementById("redo").onclick = redoFn;
-document.getElementById("resetSel").onclick = () => { if (!selected) return; const o = objOf(selected); pushUndo(); if (ROT_ONLY.has(selected)) o.quaternion.identity(); solve(); };
+document.getElementById("resetSel").onclick = () => { const o = { spine, chest, head: neck }[selected]; if (!o) return; pushUndo(); o.quaternion.identity(); solve(); };
 document.getElementById("grip").onchange = e => { pushUndo(); opts.grip = e.target.checked; if (!opts.grip && selected === "spear") select(null); solve(); };
 document.getElementById("spot").onchange = e => { pushUndo(); opts.spot = e.target.checked; if (!opts.spot) head.quaternion.identity(); solve(); };
 
@@ -609,5 +686,5 @@ document.getElementById("save").onclick = async () => {
 
 showFrame(0); fromFrame(M.frames[0]); fitCam(); setCam("game");
 renderer.setAnimationLoop(() => { orbit.update(); renderer.render(scene, cam); });
-window.__pose3d = { cam, select, joints, yaws, getState, setState, last: () => last, objOf, H, tc };
+window.__pose3d = { cam, select, joints, yaws, getState, setState, last: () => last, H, handlePos, screenOf };
 </script>
