@@ -51,7 +51,7 @@ Các khung dùng được (đếm từ 1; kiểm tra bằng phân tích chuyển
 
 Ảnh tĩnh `out/heroes/moon_crane/source/design/pose_profile_right_v01.png` (một ảnh `fal-image`, 0,0183 USD) cho **góc nghiêng thật** nhìn sang phải, thứ video không tạo được.
 
-Cú xoay đã chốt trước đó (`skill_spin_back_v5_t01.mp4`, rig pose-to-pose `source/rig/`) lấy các khung 0, 24, 50, 70, 80, 90 của clip, ứng với king 0, 15, 16, 17-18, (không có), 28-33.
+Cú xoay đã chốt trước đó (`skill_spin_back_v5_t01.mp4`): các khung chính 0, 24, 50, 70, 80, 90 của clip ứng với king 0, 15, 16, 17-18, (không có), 28-33. Bản dựng pose-to-pose bằng Puppet Kit từ các khung đó đã bị bỏ (không đạt).
 
 ## 3. Vì sao chưa ổn: những khó khăn
 
@@ -64,7 +64,7 @@ Cú xoay đã chốt trước đó (`skill_spin_back_v5_t01.mp4`, rig pose-to-po
 7. **Mất nhận dạng và đổi cỡ.** Video dài trôi dần; khung đầu và khung cuối khác cỡ thì nhân vật phình hoặc co; khung ghim cuối làm mô hình giữ khung đầu rồi nhảy cắt (clip master sang ảnh nghiêng).
 8. **Ảnh ghim khác tỉ lệ thân.** Ảnh nghiêng vẽ thương dài hơn thân so với master; căn theo thương thì thân nhỏ 40%, căn theo thân thì thương tràn khung 768.
 9. **Video-to-video bị rò hình ref.** LTX-2.3 `union`: nhịp theo ref khá tốt nhưng chép vệt chém trắng, đổi thương thành kiếm, nhân vật trôi sang tròn và thấp; `match_preprocessor` chép nguyên nhân vật ref. Đã bỏ.
-10. **Rig 2D không xoay ra ngoài mặt phẳng.** Cú xoay phải dùng pose tĩnh (6 pose cắt từ clip) và nhát cắt giữa các pose; khung trúng đòn bị cắt mất mũi thương và nhòe phải vá bằng mũi thương lật gương từ khung khác.
+10. **Rig 2D không xoay ra ngoài mặt phẳng.** Cú xoay phải dùng pose tĩnh cắt từ clip và nhát cắt giữa các pose; khung trúng đòn bị cắt mất mũi thương và nhòe phải vá bằng mũi thương lật gương từ khung khác. Bản dựng này không đạt và đã bị bỏ.
 11. **Fx bám vũ khí, không bám thân.** Vệt chém vòng quanh người phải đo từ điểm bám của rig; khung thời gian của fx (một khung phóng đòn, một khung trúng đòn) khác hẳn nhịp của video.
 12. **Tham chiếu và nhân vật khác tỉ lệ.** King cao 6 đầu cầm kiếm, moon_crane 3 đầu cầm thương dài hơn thân; copy tư thế khung theo khung làm tay chân và thương lệch; chỉ lấy được hướng và nhịp.
 
