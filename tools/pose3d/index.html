@@ -74,6 +74,7 @@ label.cb { display: flex; gap: 8px; align-items: center; font-size: 13px; }
       <button class="btn small" id="camFree" type="button">Nhìn chéo</button>
       <button class="btn small" id="camSide" type="button">Nhìn ngang</button>
       <button class="btn small" id="camTop" type="button">Nhìn từ trên</button>
+      <button class="btn small" id="cmpMaster" type="button">So với master</button>
       <span class="sep"></span>
       <span class="chip" id="chipCom">Trọng tâm</span>
       <span class="chip" id="chipReach">Tầm với</span>
@@ -156,7 +157,7 @@ const L = {
   hip: B.hip_half, thigh: B.thigh, shin: B.shin, ankle: B.ankle_h, foot: B.foot_len, headR: B.head_r,
 };
 // bề dày khối (ma-nơ-canh trơn, không trang phục)
-const R = { pelvis: [0.40, 0.2, 0.27], belly: [0.36, 0.26, 0.27], chest: [0.5, 0.36, 0.33], neck: 0.13, upper: [0.15, 0.13], fore: [0.14, 0.11],
+const R = { pelvis: [0.42, 0.2, 0.28], belly: [0.42, 0.26, 0.29], chest: [0.55, 0.36, 0.34], neck: 0.13, upper: [0.15, 0.13], fore: [0.14, 0.11],
   hand: [0.13, 0.17, 0.09], thigh: [0.19, 0.15], shin: [0.15, 0.11], foot: [0.12, 0.1] };
 
 // ---------------------------------------------------------------- cảnh
@@ -318,16 +319,9 @@ function fromFrame(f) {
   const center = chestP.clone().addScaledVector(rC, B.grip_center.right).addScaledVector(fC, B.grip_center.forward).addScaledVector(UP, -f.handDrop).addScaledVector(sd, f.slide);
   spearCtl.position.copy(center); spearCtl.quaternion.setFromUnitVectors(UP, sd);
   for (const [s, toe, fy] of [["R", f.toeR, f.fyR], ["L", f.toeL, f.fyL]]) {
-    // mũi chân khoá; gót nhấc vừa đủ để chân với tới (kiễng), tối đa max_heel_lift như proxy
-    const t = V(...toe), ff = fwd(fy), hip = J["thigh" + s].getWorldPosition(V());
-    const qy = new THREE.Quaternion().setFromAxisAngle(UP, fy * D2R);
-    for (let lift = 0; ; lift = Math.min(B.max_heel_lift ?? 0.24, lift + 0.01)) {
-      const pitch = Math.asin(Math.min(1, lift / B.foot_len));
-      const q = qy.clone().multiply(new THREE.Quaternion().setFromAxisAngle(V(1, 0, 0), pitch));
-      const ank = t.clone().add(V(0, L.ankle, -AF).applyQuaternion(q));
-      ikT["foot" + s].position.copy(ank); ikT["foot" + s].quaternion.copy(q);
-      if (hip.distanceTo(ank) <= (L.thigh + L.shin) * 0.995 || lift >= (B.max_heel_lift ?? 0.24)) break;
-    }
+    const t = V(...toe), ff = fwd(fy);
+    ikT["foot" + s].quaternion.setFromAxisAngle(UP, fy * D2R);
+    ikT["foot" + s].position.copy(t).add(V(0, L.ankle, -AF).applyQuaternion(ikT["foot" + s].quaternion));
     pole["foot" + s].position.copy(ikT["foot" + s].position).addScaledVector(ff, 0.9).addScaledVector(UP, 0.5);
   }
   const fP = fwd(f.yawP);
@@ -358,16 +352,26 @@ function solve() {
     const want = Math.max(-60, Math.min(60, wrap(90 - cy)));
     head.quaternion.setFromAxisAngle(UP, want * D2R); scene.updateMatrixWorld(true);
   }
-  const over = {};
+  const over = {}, heel = {};
   for (const s of ["R", "L"]) {
     const tgt = opts.grip ? spearPt(s === "R" ? yRear : yRear + G.gap) : ikT["hand" + s].getWorldPosition(V());
     if (opts.grip) ikT["hand" + s].position.copy(tgt);
     over["arm" + s] = twoBone(J["upper" + s], J["fore" + s], J["hand" + s], L.upper, L.fore, tgt, pole["hand" + s].position, -1);
-    over["leg" + s] = twoBone(J["thigh" + s], J["shin" + s], J["foot" + s], L.thigh, L.shin, ikT["foot" + s].position, pole["foot" + s].position, 1);
-    setWorldQuat(J["foot" + s], ikT["foot" + s].quaternion);
+    // chân: mũi chân khoá; gót nhấc vừa đủ để chân với tới (kiễng), tối đa max_heel_lift như proxy (không ghi vào đích IK)
+    const fq = ikT["foot" + s].quaternion, toe = ikT["foot" + s].position.clone().add(V(0, -L.ankle, AF).applyQuaternion(fq));
+    const hip = J["thigh" + s].getWorldPosition(V()), maxLift = B.max_heel_lift ?? 0.24;
+    let q = fq.clone(), ank = ikT["foot" + s].position.clone(), lift = 0;
+    while (hip.distanceTo(ank) > (L.thigh + L.shin) * 0.995 && lift < maxLift) {
+      lift = Math.min(maxLift, lift + 0.01);
+      q = fq.clone().multiply(new THREE.Quaternion().setFromAxisAngle(V(1, 0, 0), Math.asin(Math.min(1, lift / B.foot_len))));
+      ank = toe.clone().add(V(0, L.ankle, -AF).applyQuaternion(q));
+    }
+    heel[s] = lift;
+    over["leg" + s] = twoBone(J["thigh" + s], J["shin" + s], J["foot" + s], L.thigh, L.shin, ank, pole["foot" + s].position, 1);
+    setWorldQuat(J["foot" + s], q);
   }
   scene.updateMatrixWorld(true);
-  last = { over };
+  last = { over, heel };
   updateHandles(); checks(); updateJson();
 }
 
@@ -499,12 +503,38 @@ function poseRecord(name, note) {
   for (const [k, v] of Object.entries(Jt)) j[k] = [rnd(v.x), rnd(v.y), rnd(v.z)];
   return { name, note, motion: M.name, fromFrame: +frameIn.value, rig: "pose3d-fk-ik-v3", state: getState(),
     yaw: { pelvis: rnd(y.pelvis, 2), chest: rnd(y.chest, 2), head: rnd(y.head, 2), weapon: rnd(y.weapon, 2) }, weaponPitch: rnd(y.pitch, 2),
-    joints: j, body: "moon_crane", savedAt: Date.now() };
+    heel: { R: rnd(last.heel.R, 3), L: rnd(last.heel.L, 3) }, joints: j, body: "moon_crane", savedAt: Date.now() };
 }
 function updateJson() { document.getElementById("json").textContent = JSON.stringify(poseRecord("(chưa đặt tên)", ""), null, 1); }
 
+// ---------------------------------------------------------------- ảnh master mờ phía sau (so tỉ lệ thân)
+let masterPlane = null;
+if (M.master && M.master.img) {
+  const tex = new THREE.TextureLoader().load(M.master.img); tex.colorSpace = THREE.SRGBColorSpace;
+  const ppu = M.master.px_per_unit, w = M.master.size_px / ppu;
+  masterPlane = new THREE.Mesh(new THREE.PlaneGeometry(w, w), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.5, depthWrite: false }));
+  masterPlane.position.set((M.master.size_px / 2 - M.master.center_x) / ppu, w / 2 - (M.master.size_px - M.master.ground_y) / ppu, -1.2);
+  masterPlane.visible = false; scene.add(masterPlane);
+}
+// dáng đứng của master (đo trên master_v08): chính diện, hai ủng choãi, tay phải cầm thương dựng, tay trái buông
+function masterStance() {
+  const m = M.master, ppu = m.px_per_unit, X = px => (px - m.center_x) / ppu, Y = py => (m.ground_y - py) / ppu;
+  pelvis.position.set(0, L.thigh + L.shin + L.ankle - 0.01, 0); pelvis.quaternion.identity();
+  for (const o of [spine, chest, neck, head, J.handR, J.handL]) o.quaternion.identity();
+  for (const [s, ax] of [["R", 405], ["L", 670]]) {
+    ikT["foot" + s].quaternion.identity(); ikT["foot" + s].position.set(X(ax), L.ankle, 0);
+    pole["foot" + s].position.set(X(ax), 0.5, 1);
+  }
+  opts.grip = false; document.getElementById("grip").checked = false; opts.spot = false; document.getElementById("spot").checked = false;
+  ikT.handR.position.set(X(262), Y(650), 0.15); ikT.handL.position.set(X(780), Y(700), 0.15);   // cổ tay: tâm nắm đấm master thấp hơn cổ tay
+  pole.handR.position.set(X(250), Y(560), -0.8); pole.handL.position.set(X(820), Y(560), -0.8);
+  const tip = V(X(120), Y(60), 0.1), butt = V(X(280), Y(950), 0.1), dir = tip.clone().sub(butt).normalize();
+  spearCtl.quaternion.setFromUnitVectors(UP, dir); spearCtl.position.copy(butt).addScaledVector(dir, -yButt);
+  solve();
+}
+
 // ---------------------------------------------------------------- camera
-const camIds = { game: "camGame", free: "camFree", side: "camSide", top: "camTop" };
+const camIds = { game: "camGame", free: "camFree", side: "camSide", top: "camTop", front: "cmpMaster" };
 function fitCam() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); const half = 3.2, a = w / Math.max(h, 1); cam.left = -half * a; cam.right = half * a; cam.top = half; cam.bottom = -half; cam.updateProjectionMatrix(); }
 function setCam(m) {
   const t = V(0.4, 1.3, 0), d = 25; orbit.target.copy(t);
@@ -512,10 +542,14 @@ function setCam(m) {
   if (m === "free") cam.position.set(t.x + d * 0.62, t.y + d * 0.35, d * 0.7);
   if (m === "side") cam.position.set(t.x + d, t.y, 0.001);
   if (m === "top") cam.position.set(t.x, t.y + d, 0.001);
+  if (m === "front") { orbit.target.set(0, 1.5, 0); cam.position.set(0, 1.5, d); }
+  if (masterPlane) masterPlane.visible = m === "front";
   cam.zoom = 1; cam.updateProjectionMatrix(); orbit.update();
   for (const [k, id] of Object.entries(camIds)) document.getElementById(id).classList.toggle("on", k === m);
 }
 for (const [k, id] of Object.entries(camIds)) document.getElementById(id).onclick = () => setCam(k);
+document.getElementById("cmpMaster").onclick = () => { pushUndo(); select(null); masterStance(); setCam("front");
+  document.getElementById("sel").innerHTML = "Ảnh master mờ phía sau: so đầu, vai, hông, gối, mặt đất. Ma-nơ-canh không có giáp, vạt áo, cánh hạc. Hoàn tác (Ctrl+Z) để về dáng trước."; };
 new ResizeObserver(fitCam).observe(stage);
 
 // ---------------------------------------------------------------- khung chuyển động
