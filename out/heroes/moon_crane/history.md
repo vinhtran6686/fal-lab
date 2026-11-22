@@ -36,3 +36,10 @@ Round 3 (two hits with a stop) was read by the model as two opposite thrusts and
 The user approved round 4 clip 1 as the direction (one continuous sweep) and asked for a level, waist-height sweep and no slash. Round 5 prompt = round 4 + "the spear stays LEVEL, parallel to the ground at waist height" + a longer no-streak sentence. Two 5 s clips (`prompts/skill_spin_back_v5.txt`), 0.15 USD; round 4 clips removed. t01: the spear is level at waist height in front of the crouched body, then the body turns and the back faces the viewer with the spear level; t02: the spear swings down to point at the ground (not level). The model still paints pink/white arcs on the fast frames; a tighter key (alpha ramp from min(R,B)-G = 8 to 53) removes them completely, so the preview gif is clean. Preview: `skill_spin_back_v5_t01_preview.gif` (static frames 51-62 cut). Not accepted yet.
 
 **2026-11-15: user approved `skill_spin_back_v5_t01` (round 5, clip 1).** t02 not kept as final.
+
+### skill_sweep (2026-11-23): pose từ clip tham chiếu
+Tham chiếu: skill 3 của một hero KR5 (đoạn `skill_3_end`, khung 229-240). Cách thử và lý do thất bại của từng hướng:
+- Ảnh rời bằng `fal-image` + `--ref` pose (4 pose, hai lượt): đúng thân và tay nhưng mỗi ảnh vẽ chân và cỡ khác nhau; căn lại theo chân vẫn giật, ghép thân trên lên chân chung bị lộ vết cắt. Bỏ.
+- Video `reference-to-video`: t01 (3 s, mô tả có mốc giây, 4 pose) và t02 (4 s, không mốc giây, bịa đường quét qua đầu) bị loại, t03 (chỉ một cú quét trái sang phải, khung 229-240) giữ lại làm `skill_sweep_ref_t01` (nay là clip duy nhất). Tổng 0,50 USD cho ba clip (`out/costs.csv`).
+- Người dùng chốt: pose 1 ở khoảng 0,36 s và pose 2 ở khoảng 2,4 s của clip, không có động tác hạ thương. Vệt quét theo đường người dùng vẽ (võng qua hông, vút lên mũi thương bên phải). Rig lớp: đứng yên, một nhịp ngả ra sau, một nhịp quá đà rồi dừng, thêm chân nghiêng nhẹ và thương trễ nhẹ. Người dùng duyệt.
+- Lỗi đọc tham chiếu đã mắc: chia thành 4 pose, và coi tư thế cuối là "giơ thương cao" (thực ra là tay gác vai kiểu idle). Chuyển động chính chỉ là một cú quét trái sang phải.

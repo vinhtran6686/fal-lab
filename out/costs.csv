@@ -326,3 +326,16 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-15 18:09:38,clip.mp4,h3-max-turbo,video,768P 5s,False,3.6,0.0750,True
 2026-11-15 18:14:41,clip.mp4,h3-max-turbo,video,768P 5s,False,2.9,0.0750,True
 2026-11-15 18:14:41,clip.mp4,h3-max-turbo,video,768P 5s,False,3.1,0.0750,True
+2026-11-23 00:18:21,mc_spin_p2-20261123-001819-0.png,gpt-image-2,low,1024x1024,False,26.2,0.0118,True
+2026-11-23 00:24:47,mc_spin_p2b-20261123-002444-0.png,gpt-image-2,low,1024x1024,False,26.5,0.0120,True
+2026-11-23 00:24:49,mc_spin_p2b-20261123-002444-1.png,gpt-image-2,low,1024x1024,False,26.5,0.0120,True
+2026-11-23 00:29:38,mc_spin_p3-20261123-002934-0.png,gpt-image-2,low,1024x1024,False,30.0,0.0114,True
+2026-11-23 00:29:39,mc_spin_p4-20261123-002936-0.png,gpt-image-2,low,1024x1024,False,30.8,0.0115,True
+2026-11-23 00:29:41,mc_spin_p1-20261123-002938-0.png,gpt-image-2,low,1024x1024,False,33.6,0.0114,True
+2026-11-23 00:45:58,v2_D-20261123-004555-0.png,gpt-image-2,low,1024x1024,False,23.1,0.0123,True
+2026-11-23 00:46:53,v2_B-20261123-004651-0.png,gpt-image-2,low,1024x1024,False,26.7,0.0119,True
+2026-11-23 00:47:05,v2_A-20261123-004702-0.png,gpt-image-2,low,1024x1024,False,37.7,0.0117,True
+2026-11-23 00:47:08,v2_C-20261123-004705-0.png,gpt-image-2,low,1024x1024,False,40.9,0.0118,True
+2026-11-23 01:03:00,out/heroes/moon_crane/source/video/skill_spin_ref_t01.mp4,minimax/h3-max/reference-to-video,video,480P 3s,False,,0.15,True
+2026-11-23 01:12:00,out/heroes/moon_crane/source/video/skill_spin_ref_t02.mp4,minimax/h3-max/reference-to-video,video,480P 4s 16:9,False,,0.20,True
+2026-11-23 01:25:00,out/heroes/moon_crane/source/video/skill_sweep_ref_t01.mp4,minimax/h3-max/reference-to-video,video,480P 3s 16:9,False,,0.15,True

@@ -10,6 +10,7 @@ docs/
 ├── pipeline/                                              quy trình xuyên nhiều công cụ, trên một nhân vật
 │   ├── asset-manifest.md                                  bảng checklist asset trong brief.md, lệnh asset_status.py
 │   ├── pose-pair-fx-method.md                             skill bằng pose A/B + vệt chém lib-fx + rig Studio (quy trình, checklist, chi phí)
+│   ├── pose-from-reference-clip-method.md                 pose cắt từ một clip video tham chiếu + vệt chém lib-fx + rig lớp (đứng yên, lấy đà, quán tính)
 │   ├── images/pose-pair-sweep-fit-before-after.png       ảnh trước / sau của mục "Hai pose lệch nhau" trong pose-pair-fx-method.md
 │   ├── images/pose-pair-sweep-abc-before-after.png       ảnh trước (hai pose A, B) / sau (ba pose A, B, C) của mục 10.6 trong pose-pair-fx-method.md
 ├── skills/                                                tài liệu bổ sung cho .claude/skills/<skill>/
@@ -25,6 +26,8 @@ docs/
 │   │   ├── puppet-kit-motion-recipes.md                   công thức viết anims/*.json (dấu, bảng nhịp, run cycle, checklist)
 │   │   ├── puppet-kit-asset-prep-and-rig-v2.md            chuẩn bị tài nguyên, bộ xương 17 xương, Rig Tuner v2, quy tắc mỏ neo, nợ kỹ thuật
 │   │   └── puppet-kit-pose-reel.md                        pose reel: clip tư thế cho động tác rig không vẽ được (puppet_reel.py)
+│   └── ref_atlas/                                         scripts/ref_atlas/
+│       └── ref-atlas-split-and-animations.md              tách atlas tham khảo (png + lua) thành frame, gif và animation có tên
 ├── tools/                                                 tài liệu cho ứng dụng trong tools/
 │   ├── studio/                                            tools/studio/ (Rig & Pose Studio)
 │   │   ├── puppet-studio-guide.md                         cách dùng Studio, schema limit/links, quy tắc
