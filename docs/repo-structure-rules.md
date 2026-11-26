@@ -37,6 +37,7 @@ fal-image-lab/
 | Dựng lại từ mẫu tham khảo (GIF) | profile vào `lib-fx/_core/formulas/vector/profiles/`, kết quả vào `lib-fx/_core/results/vector-showcase/` | Xuất bằng `python lib-fx/_tools/vectorfx.py showcase PROFILE` |
 | Kết quả nghiên cứu, số đo | `lib-fx/_core/results/<tên>/` | Chỉ giữ số đo và demo. Quá trình, nhật ký, brief, bản v1/v2/v3 không được giữ |
 | Nhân vật, ảnh, clip, frame, fx của nhân vật | `out/<class>/<id>/` | Cấu trúc ở §5 |
+| Lưới nhiều nhân vật cùng tộc/hệ và clip chung của lưới (ảnh lưới, bản đặt lại ô, clip gốc, bộ khung từng con) | `out/<class>/_lineups/<tộc>/` | `source/design`, `source/video`, `frames/<động tác>/<id>/`, `meta.json` ghi tham số. Thử nghiệm bỏ dở và bản không duyệt không giữ (`.work/` bị git bỏ qua). Con nào được duyệt thì nhập thành asset `out/<class>/<id>/`. Quy trình: `docs/scripts/lineup/lineup-workflow.md` |
 | Tài liệu | `docs/` | Theo §4 |
 | Ảnh hoặc clip tham khảo từ bên ngoài | `ref/<chủ đề>/` | Chỉ đọc. Gửi vào API chỉ khi người dùng yêu cầu |
 | Thử nghiệm một lần | Không commit vào repo. Dùng thư mục tạm hoặc `out/<...>/.work/` (git bỏ qua) | Thử xong mà dùng lại được thì đưa vào hàng đúng ở trên, không để thành `experiments/` |

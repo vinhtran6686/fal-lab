@@ -1,0 +1,26 @@
+{
+  "prompt": "Animate this lineup of ten game enemies as ONE overhead downward attack, all ten at the same time, each attacking in place. The camera is fixed and does not move, zoom or pan. Left and right in this description are the screen's left and right. Forward is screen right: every character faces screen right and its target is an enemy standing just outside the picture to the right of its own position, at the height of its chest, one weapon length in front of it.\nEvery beat, for each character: the body stays near-side-view facing screen right with the head looking forward at the target; both feet stay planted on the same ground line as in the image, the front foot toward screen right, the feet never slide; each character stays exactly where it stands in the image, inside its own cell, and never moves into another character's space; the ten never touch or overlap; every character keeps its own size, the tiny ones stay tiny and the huge ones stay huge.\nThe attack is one continuous move in a vertical plane flat to the screen, from the hips: the hips and shoulders first coil back away from the target toward screen left while the weapon rises up and back over the head, then the hips and shoulders turn toward the target and the weapon chops straight down in a big arc from high above the head, in front of the body, toward screen right and down, through the target at chest height, ending low in front of the character, pointing down and forward. The body leans forward into the blow.\nEvery character keeps its own weapon and swings only that one: the tiny thorn stinger stays with the Slime Imp, the knobbly club with the Bog Toadling, the rusty dagger with the Plague Rat, the small sickle with the Fungal Acolyte, the mushroom club with the Toadspawn Brute, the bone-saw cleaver with the Plague Doctor, the broad sword with the Bile Knight, the huge cleaver with the Bloat Ogre. The Sporeling and the Swamp Troll have no weapon: each raises both clenched fists overhead together and smashes them down once.\nAfter the blow lands the move ends and the pose is held: no return to the starting stance, no second strike. Every character keeps its own design, colours and outline exactly as in the image, and has no tail, except the Plague Rat, which keeps its own thin tail.\nThe flat solid pure magenta background stays unchanged and fixed in every frame: no scenery, no ground, no shadows, no effects, no text, no grid, no camera shake.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab401b3/oeka1b2bjAcaLH97V5PoH_grid_v01_regrid.png"
+  },
+  "seconds": 4,
+  "resolution": "768P",
+  "size": [
+    2560,
+    1440
+  ],
+  "estimateUsd": 0.12,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/enemies/.work/poison_lineup/grid_v01_regrid.png",
+  "lastFrame": null,
+  "requestId": "01a21782-8741-76c1-94f5-10857f665dd7",
+  "seconds_elapsed": 3.9,
+  "source_url": "https://v3b.fal.media/files/b/0ab401b4/U991y19gGUT_VCsZ548Di_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

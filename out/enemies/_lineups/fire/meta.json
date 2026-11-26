@@ -1,0 +1,67 @@
+{
+  "clan": "fire",
+  "class": "enemy",
+  "status": "grid drawn and re-gridded; no clips yet",
+  "grid": {
+    "image": "source/design/grid_v01.png",
+    "regrid": "source/design/grid_v01_regrid.png",
+    "model": "gpt-image-2 low 2560x1440",
+    "prompt": "docs/scripts/lineup/prompts/lineup-grid-fire-clan.txt",
+    "cost_usd": 0.0176,
+    "regrid_args": "--heights 0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.44,0.44 --by area --feet 0.70"
+  },
+  "characters": [
+    {
+      "order": 1,
+      "id": "spark_imp",
+      "tier": "XS"
+    },
+    {
+      "order": 2,
+      "id": "ember_hound",
+      "tier": "XS"
+    },
+    {
+      "order": 3,
+      "id": "cinder_goblin",
+      "tier": "S"
+    },
+    {
+      "order": 4,
+      "id": "magma_slime",
+      "tier": "S"
+    },
+    {
+      "order": 5,
+      "id": "ash_cultist",
+      "tier": "S"
+    },
+    {
+      "order": 6,
+      "id": "salamander_warrior",
+      "tier": "M"
+    },
+    {
+      "order": 7,
+      "id": "obsidian_golem",
+      "tier": "M"
+    },
+    {
+      "order": 8,
+      "id": "blaze_duelist",
+      "tier": "M"
+    },
+    {
+      "order": 9,
+      "id": "lava_ogre",
+      "tier": "L"
+    },
+    {
+      "order": 10,
+      "id": "flame_drake",
+      "tier": "L"
+    }
+  ],
+  "planned_split_scales": "0.39,0.39,0.68,0.68,0.68,1,1,1,1,1",
+  "note": "all characters are drawn and filmed at least M size; XS and S are scaled down after the split"
+}

@@ -108,7 +108,8 @@ Quy trình chung cho mọi class có nhiều đơn vị cùng tộc/hệ (enemy,
 
 **Công cụ tẩy từng khung (CHƯA làm, ghi để làm sau):** khi vũ khí hoặc thân của con bên cạnh đã dính liền vào con chính (khung giơ lên của clip tấn công: Wolfman cầm búa, Monk cầm rìu), script tự động không tách được. Tool cần: một trang xem tất cả khung của 10 con trên một màn hình, bấm chọn vùng hoặc mảnh liên thông để xóa trên từng khung, bỏ cả khung, lưu lại. Một trang như vậy cũng giúp tiết kiệm token vì không phải đọc nhiều ảnh lớn.
 
-## Bước 5. Bản cuối
+## Bước 5. Bản cuối (và nơi lưu)
+0. **Lưu lên git** (thư mục `.work/` bị git bỏ qua, mất khi phiên kết thúc): ảnh lưới, bản đặt lại ô, clip gốc và bộ khung đã tách đi vào `out/<class>/_lineups/<tộc>/` (xem `docs/repo-structure-rules.md`); `meta.json` ghi tham số để phiên khác làm tiếp. Đã có `out/enemies/_lineups/poison/` (tấn công và chết) và `out/enemies/_lineups/fire/` (mới có lưới).
 1. Mở ảnh kiểm (6-8 khung mỗi con, thu nhỏ 1/3); bỏ khung sai vũ khí, dính hàng xóm hoặc viền hồng, và khung cuối của clip tấn công (nó quay về dáng đứng).
 2. Con nào giữ: nhập vào asset thật (`scripts/ingest_image.py`, `brief.md` có manifest), rồi `scripts/video_to_sheet.py` đưa khung vào canvas chuẩn của class (enemy tier M: 136×120 @1x, `{H}` 60 px). Rồi `video_prune.py`, `motion_check.py`.
 3. Dọn bằng `scripts/source_prune.py`; không để bản thử trong repo; chi phí chỉ ghi ở `out/costs.csv`.
