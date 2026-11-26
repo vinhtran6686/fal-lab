@@ -26,8 +26,12 @@ docs/
 │   │   ├── puppet-kit-motion-recipes.md                   công thức viết anims/*.json (dấu, bảng nhịp, run cycle, checklist)
 │   │   ├── puppet-kit-asset-prep-and-rig-v2.md            chuẩn bị tài nguyên, bộ xương 17 xương, Rig Tuner v2, quy tắc mỏ neo, nợ kỹ thuật
 │   │   └── puppet-kit-pose-reel.md                        pose reel: clip tư thế cho động tác rig không vẽ được (puppet_reel.py)
-│   └── ref_atlas/                                         scripts/ref_atlas/
+│   ├── ref_atlas/                                         scripts/ref_atlas/
 │       └── ref-atlas-split-and-animations.md              tách atlas tham khảo (png + lua) thành frame, gif và animation có tên
+│   └── lineup/                                            scripts/lineup/
+│       ├── lineup-workflow.md                             quy trình lưới nhiều nhân vật trong một clip cho mọi class: 5 bước, bảng thông số (kích thước, thời lượng, giá), bảng cấp và class
+│       ├── prompts/                                       prompt đã chạy: lưới 10 quái, đòn chém từ trên xuống, chết tại chỗ
+│       └── lineup-split-guide.md                          tách clip lưới nhiều nhân vật thành bộ khung từng con (lineup_split.py)
 ├── tools/                                                 tài liệu cho ứng dụng trong tools/
 │   ├── studio/                                            tools/studio/ (Rig & Pose Studio)
 │   │   ├── puppet-studio-guide.md                         cách dùng Studio, schema limit/links, quy tắc

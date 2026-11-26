@@ -339,3 +339,14 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-23 01:03:00,out/heroes/moon_crane/source/video/skill_spin_ref_t01.mp4,minimax/h3-max/reference-to-video,video,480P 3s,False,,0.15,True
 2026-11-23 01:12:00,out/heroes/moon_crane/source/video/skill_spin_ref_t02.mp4,minimax/h3-max/reference-to-video,video,480P 4s 16:9,False,,0.20,True
 2026-11-23 01:25:00,out/heroes/moon_crane/source/video/skill_sweep_ref_t01.mp4,minimax/h3-max/reference-to-video,video,480P 3s 16:9,False,,0.15,True
+2026-11-26 09:53:33,out/enemies/.work/lineup_walk_test/lineup_v01.png,gpt-image-2,low,2560x1440,False,24.2,0.0184,True
+2026-11-26 09:56:38,out/enemies/.work/lineup_walk_test/clip_h3/clip.mp4,h3-max-turbo,video,1080P 5s,False,13.1,0.0750,True
+2026-11-26 10:03:53,out/enemies/.work/lineup_walk_test/clip_h3_attack/clip.mp4,h3-max-turbo,video,1080P 5s,False,6.7,0.0750,True
+2026-11-26 10:15:22,out/enemies/.work/lineup_walk_test/lineup_v02.png,gpt-image-2,low,2560x1440,False,22.2,0.0188,True
+2026-11-26 10:18:43,out/enemies/.work/lineup_walk_test/clip_h3_attack_v02/clip.mp4,h3-max-turbo,video,768P 4s,False,3.8,0.0600,True
+2026-11-26 10:28:00,out/enemies/.work/lineup_walk_test/lineup_v03.png,gpt-image-2,low,2560x1440,False,26.0,0.0188,True
+2026-11-26 10:34:11,out/enemies/.work/lineup_walk_test/clip_h3_die/clip.mp4,h3-max-turbo,video,768P 4s,False,3.9,0.1200,True
+2026-11-26 10:38:27,out/enemies/.work/lineup_walk_test/clip_h3_attack_v03/clip.mp4,h3-max-turbo,video,768P 4s,False,4.1,0.1200,True
+2026-11-26 10:55:34,out/enemies/.work/poison_lineup/grid_v01.png,gpt-image-2,low,2560x1440,False,17.2,0.0185,True
+2026-11-26 10:59:25,out/enemies/.work/poison_lineup/clip_attack/clip.mp4,h3-max-turbo,video,768P 4s,False,3.9,0.1200,True
+2026-11-26 10:59:31,out/enemies/.work/poison_lineup/clip_die/clip.mp4,h3-max-turbo,video,768P 4s,False,3.9,0.1200,True

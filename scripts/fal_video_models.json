@@ -9,8 +9,8 @@
       "duration": {"field": "duration", "min": 1, "max": 15, "format": "int"},
       "resolution": {"field": "resolution", "map": {"480p": "480P", "540p": "480P", "720p": "768P", "1080p": "1080P"}},
       "fixed": {"prompt_expansion_mode": "disabled"},
-      "usd_per_s": {"480P": 0.015, "768P": 0.015, "1080P": 0.015},
-      "note": "cheapest with an end frame (2026-09); aspect follows the input image; price is the API base rate"
+      "usd_per_s": {"480P": 0.015, "768P": 0.03, "1080P": 0.06},
+      "note": "cheapest with an end frame (2026-09); aspect follows the input image; 768P and 1080P rates from the billing of 2026-11-26 (4 s 768P = 0.12 USD, 5 s 1080P = 0.30 USD); 480P rate not re-checked"
     },
     "h3-max": {
       "endpoint": "minimax/h3-max/image-to-video",
