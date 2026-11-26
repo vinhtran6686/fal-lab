@@ -1,15 +1,24 @@
 {
   "clan": "ice",
   "class": "enemy",
-  "status": "grid drawn, pink fixed and re-gridded; no clips yet",
+  "status": "master grid v02 (assassin and warlord redrawn and swapped in), re-gridded; no clips yet",
   "grid": {
-    "image": "source/design/grid_v01.png",
-    "fixed": "source/design/grid_v01_fixed.png (pink trousers of icicle_stalker recoloured with lineup_fix_pink.py)",
-    "regrid": "source/design/grid_v01_regrid.png",
-    "prompt": "docs/scripts/lineup/prompts/lineup-grid-ice-clan.txt",
+    "original": "source/design/grid_v01.png",
+    "pink_fixed": "source/design/grid_v01_fixed.png",
+    "pair": "source/design/pair_v01.png (icicle_stalker and frost_warlord redrawn large in one sheet)",
+    "master": "source/design/grid_v02.png (pink fixed, characters 2 and 10 swapped in with lineup_replace.py)",
+    "regrid": "source/design/grid_v02_regrid.png",
+    "prompts": [
+      "docs/scripts/lineup/prompts/lineup-grid-ice-clan.txt",
+      "docs/scripts/lineup/prompts/lineup-pair-ice-assassin-warlord.txt"
+    ],
     "model": "gpt-image-2 low 2560x1440",
-    "cost_usd": 0.0185,
-    "regrid_args": "--heights 0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.42,0.38 --by area --feet 0.70"
+    "cost_usd": 0.0347,
+    "swap_commands": [
+      "python scripts/lineup/lineup_replace.py grid_v01_fixed.png --new pair_v01.png --cell 2 --pick 1 --out tmp.png",
+      "python scripts/lineup/lineup_replace.py tmp.png --new pair_v01.png --cell 10 --pick 2 --out grid_v02.png"
+    ],
+    "regrid_args": "--heights 0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.42,0.40 --by area --feet 0.70"
   },
   "characters": [
     {
@@ -22,7 +31,8 @@
       "order": 2,
       "id": "icicle_stalker",
       "role": "assassin",
-      "tier": "S"
+      "tier": "S",
+      "note": "assassin: face mask, muscular, one short curved ice sword in reverse grip"
     },
     {
       "order": 3,
@@ -84,6 +94,6 @@
     "note": "casters only perform the casting motion; the vfx and projectile are added later"
   },
   "known_issues": [
-    "frost_warlord is tall and imposing but the cloak hides the legs and the stance is a little bulky (width/height 0.76)"
+    "frost_warlord is crisp now but bulkier and less tall than the first draw (cloak, wide shoulder plates)"
   ]
 }
