@@ -19,3 +19,13 @@ Mỗi nhân vật nhận `<out>/<tên>/frames/fNN.png` (RGBA đã xóa nền mag
 - Khi nhân vật hoặc vũ khí chạm nhân vật bên cạnh trong clip, mảnh của hàng xóm dính vào bộ khung (rõ nhất quanh khung 5-8 trên 13). Script chỉ bỏ được mảnh rời, không tách được phần đã dính liền; khung đó cần bỏ tay hoặc thử lại clip.
 - Mô hình vẽ thêm đuôi nhọn sau lưng ở một số con khi cúi xuống; đó là lỗi của clip, không phải của script.
 - Cắt kích thước ô cố định không áp dụng cho clip mà các con trôi nhiều (clip đi bộ): xem thông báo cảnh báo "silhouette touches the window edge".
+
+# Đặt lại ô trước khi làm video: `scripts/lineup/lineup_regrid.py`
+
+Model ảnh bỏ qua kích thước và vị trí viết trong prompt (xin 24% chiều cao ô, vẽ ra ~50%), nên khoảng trống giữa các nhân vật được tạo bằng code, miễn phí:
+
+```bash
+python scripts/lineup/lineup_regrid.py <lineup.png> --out <mới.png> [--cols 5 --rows 2] [--scale 0.68] [--feet 0.70] [--min-area 400]
+```
+
+Xóa nền magenta, gom các mảnh liên thông theo ô chứa trọng tâm của chúng (một nhân vật cùng vũ khí), thu nhỏ `--scale`, đặt vào tâm ngang của ô, điểm thấp nhất (chân; vũ khí treo thấp hơn thì tính theo vũ khí) ở `--feet` × chiều cao ô, trên nền magenta mới cùng kích thước. In kích thước từng con theo % ô. Với lưới 10 quái: `--scale 0.68` cho mỗi con ~35% cao và ~43% rộng ô, chân ở 70%.
