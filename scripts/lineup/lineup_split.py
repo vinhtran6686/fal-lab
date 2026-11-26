@@ -2,7 +2,7 @@
 """Split ONE lineup clip (a grid of characters on a magenta background) into one frame set per character.
 
     python scripts/lineup/lineup_split.py <clip.mp4> --out <dir> [--cols 5 --rows 2] [--frames 13 | --step N]
-                                           [--names a,b,c,...] [--scales s1,s2,...] [--erase-trail] [--x-margin 0.06] [--own-cell] [--fps 12]
+                                           [--names a,b,c,...] [--scales s1,s2,...] [--erase-trail] [--x-margin 0.06] [--own-cell] [--out-window 396x512] [--fps 12]
 
 Per character <out>/<name>/: frames/f01.png ... (RGBA, magenta keyed), sheet.png (one horizontal strip),
 preview.gif. Cells are cut with fixed cuts (clip width / cols, clip height / rows). One fixed transform per
@@ -118,6 +118,7 @@ def main():
     ap.add_argument("--erase-trail", action="store_true", help="erase pale lilac swing trails (crescents) drawn behind fast weapons (see erase_trail)")
     ap.add_argument("--x-margin", type=float, default=0.0, help="the same --x-margin that lineup_regrid.py used: the columns are packed between the two margins")
     ap.add_argument("--own-cell", action="store_true", help="drop separate pieces (not the main body) whose centre lies outside the character's own cell, i.e. the part of the padding that belongs to a neighbour")
+    ap.add_argument("--out-window", default="", help="WxH: crop every frame to this window around the feet anchor after the scaling (the anchor lands at x = W/2, y = H - 110), e.g. 396x512 for a boss filmed alone and big")
     ap.add_argument("--fps", type=int, default=12, help="playback rate of preview.gif")
     a = ap.parse_args()
 
@@ -180,14 +181,19 @@ def main():
                 small = img.resize((max(1, round(cw * s)), max(1, round(ch * s))), Image.LANCZOS)
                 img = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
                 img.paste(small, (round(anchor[0] - anchor[0] * s), round(anchor[1] - anchor[1] * s)))
+            if a.out_window:
+                ow, oh = (int(x) for x in a.out_window.lower().split("x"))
+                ox, oy = anchor[0] - ow // 2, anchor[1] - (oh - 110)
+                img = img.crop((ox, oy, ox + ow, oy + oh))
             img.save(d / f"f{k + 1:02d}.png")
             placed.append(img)
             bx = silhouette_box(rgba)
             if bx and (bx[0] <= 1 or bx[2] >= cw - 2 or bx[1] <= 1 or bx[3] >= ch - 2):
                 touches.append(k + 1)
-        sheet = Image.new("RGBA", (cw * len(placed), ch))
+        fw, fh = placed[0].size
+        sheet = Image.new("RGBA", (fw * len(placed), fh))
         for k, img in enumerate(placed):
-            sheet.paste(img, (k * cw, 0))
+            sheet.paste(img, (k * fw, 0))
         sheet.save(out / name / "sheet.png")
         gif = []
         for img in placed:
