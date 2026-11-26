@@ -135,14 +135,6 @@
       "prompt": "docs/scripts/lineup/prompts/motion-attack-v02-ice-clan.txt",
       "base_image": "source/design/grid_v02_regrid_xmargin.png (regrid with --x-margin 0.06, warlord height 0.36)",
       "frames": "frames/attack_v02 (all ten, split with --x-margin 0.06 --own-cell)"
-    },
-    "attack_v03": {
-      "video": "source/video/attack_v03.mp4",
-      "job": "source/video/attack_v03.job.json",
-      "prompt": "docs/scripts/lineup/prompts/motion-attack-simple-ice-clan.txt",
-      "base_image": "source/design/grid_v02_regrid_xmargin.png",
-      "frames": "frames/attack_v03 (all ten, split with --x-margin 0.06 --own-cell)",
-      "note": "a short creative prompt (only the grid is constrained)"
     }
   },
   "split": {
@@ -166,12 +158,6 @@
     "blizzard_shaman": "attack or attack_v02 (same)",
     "frost_knight": "attack (from attack_fix, accepted by the user); attack_v02 is worse (an extra curved blade appears)",
     "glacier_gladiator": "attack (perfect); v02 equal, one crescent frame (5)",
-    "frost_warlord": "attack_v03: keeps its own greatsword, raises it, swings (one crescent frame 9) and lunges low, then returns to the standing pose in the last frames; the first set where the chief keeps its weapon",
-    "frostbite_raider_v03": "v03: raider draws a bow in frames 3-5 (the model copied the archer's action), do not use",
-    "notes_v03": [
-      "with the short prompt the model copied the 'archer shoots' action onto frostbite_raider, icicle_stalker, frost_knight and blizzard_shaman (all draw a bow in frames 3-5)",
-      "snow_witch casts glowing orbs and a swirl around herself; frost_wolf breathes a cloud; spear_hurler does not throw; glacier_gladiator and frost_warlord are good",
-      "crescent trail frames: raider f7, stalker f7, knight f7, shaman f7, wolf f6, warlord f9"
-    ]
+    "frost_warlord": "none is good yet: attack_v01 has the gladiator's maul spilling in, attack_fix is cut at the right picture edge, attack_v02 changes the greatsword into a pink-gold mace; the boss is made alone in its own clip"
   }
 }
