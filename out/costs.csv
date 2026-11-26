@@ -362,3 +362,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-26 17:54:43,out/enemies/.work/ice_lineup/clip_attack_fix/clip.mp4,h3-max-turbo,video,768P 4s,False,3.1,0.1200,True
 2026-11-26 18:03:09,out/enemies/.work/ice_lineup/clip_attack2/clip.mp4,h3-max-turbo,video,768P 4s,False,3.9,0.1200,True
 2026-11-26 18:12:04,out/enemies/.work/ice_lineup/clip_attack3/clip.mp4,h3-max-turbo,video,768P 4s,False,3.2,0.1200,True
+2026-11-26 18:17:25,out/enemies/.work/ice_lineup/clip_boss/clip.mp4,h3-max-turbo,video,768P 5s,False,4.0,0.1500,True

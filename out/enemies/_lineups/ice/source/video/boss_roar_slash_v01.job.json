@@ -1,0 +1,26 @@
+{
+  "prompt": "Animate this game boss, the Frost Warlord, in one move: a roar and then two sword slashes. He is alone in the picture. The camera is fixed and does not move, zoom or pan. Left and right in this description are the screen's left and right. Forward is screen right: he faces screen right and his target is an enemy standing just outside the picture to the right of him, at the height of his chest, one sword length in front of him.\nFirst beat, the roar: he stands upright and tall with both hands on the hilt of his greatsword, the point of the blade down in front of him; he lifts his chin and tilts his head and face straight up toward the sky, opens his mouth wide and roars one loud roar, his chest swelling and his shoulders rising, his feet planted and his body upright, the greatsword still held in front of him.\nSecond beat, the first slash: he lowers his head and looks forward at the target, raises the greatsword with both hands up over his right shoulder, then swings it down forward in one big diagonal slash toward screen right, from high on the screen's left to low on the screen's right, through the target at chest height, his hips and shoulders turning into the swing and his body leaning forward.\nThird beat, the second slash: without stopping he brings the greatsword back up and slashes forward again in a second big diagonal slash of the same kind through the target, and ends with the sword low in front of him pointing forward and down, both hands on the hilt, and holds that final pose.\nHis feet stay planted on the same ground line throughout and he never moves out of his place. He keeps his own greatsword with its broad ice blade the whole time and never holds any other weapon. Nothing comes out of his mouth during the roar: no breath, no mist, no sound waves. No motion trail, no slash arc, no crescent, no swoosh, no streak and no afterimage is drawn. He keeps his own design, colours and outline exactly as in the image, and he stays completely inside the picture in every frame, with his sword and his cloak.\nThe flat solid pure magenta background stays unchanged and fixed in every frame: no scenery, no ground, no shadows, no extra effects, no text, no camera shake.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 5,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab40bf8/-0sHSDG-HTL9RbvobdTfz_boss_warlord_start.png"
+  },
+  "seconds": 5,
+  "resolution": "768P",
+  "size": [
+    2560,
+    1440
+  ],
+  "estimateUsd": 0.15,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/enemies/.work/ice_lineup/boss_warlord_start.png",
+  "lastFrame": null,
+  "requestId": "01a21913-8afe-7a52-b59f-9aef04ef20fe",
+  "seconds_elapsed": 4.0,
+  "source_url": "https://v3b.fal.media/files/b/0ab40bf8/qDjdUk0ct2fTYi0sIs1I3_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

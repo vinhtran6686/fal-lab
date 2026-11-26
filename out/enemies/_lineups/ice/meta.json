@@ -135,6 +135,17 @@
       "prompt": "docs/scripts/lineup/prompts/motion-attack-v02-ice-clan.txt",
       "base_image": "source/design/grid_v02_regrid_xmargin.png (regrid with --x-margin 0.06, warlord height 0.36)",
       "frames": "frames/attack_v02 (all ten, split with --x-margin 0.06 --own-cell)"
+    },
+    "boss_roar_slash": {
+      "video": "source/video/boss_roar_slash_v01.mp4",
+      "job": "source/video/boss_roar_slash_v01.job.json",
+      "prompt": "docs/scripts/lineup/prompts/motion-boss-roar-slash-ice-clan.txt",
+      "base_image": "source/design/boss_warlord_start.png (the warlord alone, 62% of the picture height, centre x 40%)",
+      "duration_s": 5,
+      "cost_usd": 0.15,
+      "split": "python scripts/lineup/lineup_split.py <clip> --out <dir> --cols 1 --rows 1 --pad 0 --names frost_warlord --scales 0.37 --frames 16 --out-window 396x512",
+      "frames": "frames/boss/frost_warlord (16 frames, RGBA 396x512, feet anchor y 402, x 198)",
+      "result": "the sword is the warlord's own greatsword all the time; frames 3 and 5 show the head tilted up (roar); one slash (frames 7-8, a crescent trail in frame 8) then a low lunge held to the end; the second slash is missing"
     }
   },
   "split": {
@@ -158,6 +169,6 @@
     "blizzard_shaman": "attack or attack_v02 (same)",
     "frost_knight": "attack (from attack_fix, accepted by the user); attack_v02 is worse (an extra curved blade appears)",
     "glacier_gladiator": "attack (perfect); v02 equal, one crescent frame (5)",
-    "frost_warlord": "none is good yet: attack_v01 has the gladiator's maul spilling in, attack_fix is cut at the right picture edge, attack_v02 changes the greatsword into a pink-gold mace; the boss is made alone in its own clip"
+    "frost_warlord": "frames/boss/frost_warlord (roar + one slash, own greatsword, not cut); the other attack sets are worse"
   }
 }
