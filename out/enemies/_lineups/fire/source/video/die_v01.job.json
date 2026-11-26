@@ -1,0 +1,26 @@
+{
+  "prompt": "Animate this lineup of ten game enemies as ONE death animation, all ten at the same time, each dying in place. The camera is fixed and does not move, zoom or pan. Left and right in this description are the screen's left and right. Every character starts facing screen right, and its killing blow comes from an unseen attacker standing just outside the picture to the right.\nEvery beat, for each character: it stays exactly where it stands in the image, inside its own cell, and never slides, is thrown or flies back; it never moves into another character's space and the ten never touch or overlap; each character's body ends up inside the empty magenta space around its own starting position, never nearer than half a body length to another character; every character keeps its own size, the small ones stay small and the huge ones stay huge.\nThe death is one continuous move and the same for every character: the blow lands and the head jerks back toward screen left, the weapon loosens, the legs buckle and the body sinks straight down over its own feet, then falls backward toward screen left right where it stood and ends lying flat on the ground, head toward screen left, limbs limp, the weapon lying on the ground beside the body. The Ember Hound and the Flame Drake end lying on their sides because of their four legs. The Magma Slime has no body to fall: it loses its dome shape and slumps into a low flat puddle of lava on the spot, no wider than its starting width. Every character keeps its own weapon: the torch with the Cinder Goblin, the coal censer mace with the Ash Cultist, the axe with the Salamander Warrior, the two blades with the Blaze Duelist, the anvil hammer with the Lava Ogre.\nAfter the fall the move ends and the final pose is held: no getting up, no second movement, no return to the starting stance. Every character keeps its own design, colours and outline exactly as in the image; the flames, the cracks and the glow stay on its own body; the Ember Hound, the Salamander Warrior and the Flame Drake keep their own tails, and no other character has a tail.\nThe flat solid pure magenta background stays unchanged and fixed in every frame: no scenery, no ground, no shadows, no extra effects, no blood, no text, no grid, no camera shake.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab40a9d/jbCESQ1NIhADY93XoMeUl_grid_v01_regrid.png"
+  },
+  "seconds": 4,
+  "resolution": "768P",
+  "size": [
+    2560,
+    1440
+  ],
+  "estimateUsd": 0.12,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/enemies/.work/fire_lineup/grid_v01_regrid.png",
+  "lastFrame": null,
+  "requestId": "01a218de-b638-7582-981e-e28724cd2e83",
+  "seconds_elapsed": 5.0,
+  "source_url": "https://v3b.fal.media/files/b/0ab40a9e/nCxFJBUwtQFOxcoMe0RXB_minimax-h3.mp4",
+  "cost_is_estimate": true
+}
