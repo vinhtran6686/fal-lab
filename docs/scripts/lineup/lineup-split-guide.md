@@ -29,3 +29,11 @@ python scripts/lineup/lineup_regrid.py <lineup.png> --out <mới.png> [--cols 5 
 ```
 
 Xóa nền magenta, gom các mảnh liên thông theo ô chứa trọng tâm của chúng (một nhân vật cùng vũ khí), thu nhỏ `--scale`, đặt vào tâm ngang của ô, điểm thấp nhất (chân; vũ khí treo thấp hơn thì tính theo vũ khí) ở `--feet` × chiều cao ô, trên nền magenta mới cùng kích thước. In kích thước từng con theo % ô. Với lưới 10 quái: `--scale 0.68` cho mỗi con ~35% cao và ~43% rộng ô, chân ở 70%.
+
+# Thông số lưới 10 con đã chạy tốt (h3-max-turbo, thử ngày 2026-11-26)
+
+- **Ảnh lưới:** gpt-image-2 quality low, 2560×1440, nền #FF00FF, 5 cột × 2 hàng, mỗi con có bảng màu hex riêng (~$0,019). Model vẽ mỗi con to gấp ~2 lần số xin trong prompt, nên đưa qua `lineup_regrid.py --scale 0.68 --feet 0.70` (mỗi con ~35% cao, ~43% rộng ô, chân ở 70% ô) trước khi làm video.
+- **Clip:** `minimax/h3-max-turbo/image-to-video`, `--resolution 720p` (= 768P), `--duration 4`, không có khung cuối cho đòn đánh và chết. Chi phí thật 4 giây 768P = $0,12 (1080P 5 giây = $0,30). Clip ra 1344×768, ~107 khung ở 24 fps.
+- **Tách:** `lineup_split.py --pad 64` (ô 268×384 + pad), 13 khung mỗi con.
+- **Prompt chuyển động:** mỗi vũ khí gắn đúng tên con, con tay không đứng riêng, "no tail". Chết: tại chỗ ("never slides, is thrown or flies back"), ngả ra sau, giữ tư thế nằm. Đòn tấn công: một đòn chém dọc từ trên xuống, giữ tư thế cuối.
+- **Kết quả với lưới đã đặt lại ô:** clip chết cho 10 bộ khung không dính nhau, không lẫn vũ khí. Với lưới chưa đặt lại (ô khít), clip tấn công còn dính và đổi vũ khí ở khung giữa. Clip đi bộ trôi khỏi ô và không dùng được.
