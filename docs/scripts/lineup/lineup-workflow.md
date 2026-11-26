@@ -1,6 +1,38 @@
-# Quy trình lưới nhiều nhân vật trong một clip: bước làm và thông số kỹ thuật
+# Quy trình lưới nhiều nhân vật trong một clip: bước làm, thông số kỹ thuật, áp dụng cho các class
 
-Mục tiêu: một ảnh lưới 10 nhân vật → mỗi động tác chỉ MỘT clip → tách ra 10 bộ khung. Đã chạy thật ngày 2026-11-26 (lưới 10 quái, động tác chết và tấn công). Mọi con số dưới đây là số đã đo; lần sau dùng lại đúng các số này để kết quả nhất quán.
+Quy trình chung cho mọi class có nhiều đơn vị cùng tộc/hệ (enemy, ally, và hero khi cần tạo hàng loạt). Mục tiêu: một ảnh lưới 10 nhân vật → mỗi động tác chỉ MỘT clip → tách ra 10 bộ khung. Đã chạy thật ngày 2026-11-26 (lưới 10 quái, động tác chết và tấn công). Mọi con số dưới đây là số đã đo; lần sau dùng lại đúng các số này để kết quả nhất quán.
+
+## Áp dụng cho các class khác (cách làm một bộ mới)
+**Bước 0, thiết kế bộ (ghi trong câu trả lời cho người dùng hoặc `brief.md`; viết trước khi vẽ, theo `fal-image/preflight.md`):**
+1. **Một lưới = một tộc/hệ.** Lấy hệ từ `lib-fx/element/` (lửa, băng, sét, độc, cây, đất, nước, gió) để fx và kỹ năng sau này khớp. Một dòng màu chủ đạo (hue riêng, không trùng tộc khác, 4 giá trị hex), một dòng ấm chung cho da/da thuộc/gỗ, một màu nhấn (mắt, giọt, đốm). Tộc đã làm: Độc (tím 285°, nhấn lục độc, xem `prompts/lineup-grid-poison-clan.txt`). Các hệ kế tiếp gợi ý: lửa ~8°, băng ~195°, sét ~52°, cây ~110°, đất ~35°, nước ~220°, gió ~165°.
+2. **10 con xếp theo cấp**: hàng trên từ thấp đến cao, hàng dưới từ thấp đến cao (hoặc hai hàng là lính và tinh nhuệ). Mỗi con: tên, cấp (`{H}`), thân (brawny / agile / slender), một vũ khí cầm thấp bên trái ảnh hoặc tay không, hai chân hai tay (không nhện, rắn).
+3. **Bảng chiều cao đích** từ cấp (xem bảng dưới).
+
+**Bảng cấp, kích thước và bố cục lưới** (`{H}` theo `fal-image/format.md` §7; clip 768P, 24 fps):
+| Cấp | `{H}` @1x | Cao @2x = cao trong clip 768P | Dùng cho class |
+|---|---|---|---|
+| XS | 24 | ~48 px | enemy nhỏ (spiderling, imp) |
+| S | 40 | ~80 px | enemy S (mặc định), ally S (mặc định), hero S, flying S |
+| M | 60 | ~120 px | enemy M, ally M, hero M (mặc định), flying M (mặc định) |
+| L | 84 | ~168 px | enemy L, ally L, hero L |
+| XL | 120 | ~240 px | boss XL |
+| XXL | 170 | ~340 px | boss XXL |
+
+- **Chiều cao đích mỗi con** (`--heights`, % chiều cao ô) = cao @2x / chiều cao ô trong clip. Với lưới 5×2 ở 768P (ô cao 384): XS 0,12, S 0,21, M 0,31, L 0,44. **Giới hạn:** con lớn nhất không quá ~44% chiều cao ô (còn chỗ giơ vũ khí lên). Vượt quá thì đổi bố cục:
+  - Có XL: một hàng, 3 cột (ô 448×768, XL ≈ 31% chiều cao ô). Có XXL: một hàng, 2 cột (ô 672×768, ≈ 44%). Mỗi clip vẫn $0,12 nên giá mỗi boss cao hơn ($0,04-0,06). **Chưa thử**; dùng `--cols 3 --rows 1`.
+  - **Con nhỏ (XS, S) phóng to lúc làm video** (XS 0,22, S 0,27) để video làm đúng chuyển động, rồi thu nhỏ lại khi tách khung (hệ số 0,55 và 0,78). Bước thu nhỏ này trong `lineup_split.py` chưa có.
+- **Lưới 5×2, ô 512×720 ở ảnh gốc**; ảnh 2560×1440 là cố định cho mọi class.
+
+**Khác biệt theo class** (đã đọc `classes/*.md`; chỉ enemy đã chạy thật):
+| Class | Hướng | Động tác cần | Ghi chú cho lưới |
+|---|---|---|---|
+| enemy (đã chạy) | 3 hướng: side, down, up | walk ×3, attack, death (ranged: thêm shoot + ảnh đạn) | lưới side chạy được. Walk down và up cần lưới đã vẽ mặt trước và mặt sau (hai lưới nữa) — chưa thử. Đi bộ trên lưới chưa đặt lại ô trôi khỏi ô; đặt lại ô rồi mới thử lại |
+| ally | 1 hướng: side | walk, attack, death | giống enemy side, hợp nhất cho lưới (ít hướng) |
+| enemy-flying | 3 hướng | bay, attack, death | không có đường đất: thân lơ lửng ~1/3 ô trên mặt đất; chưa thử. `--feet` phải nâng lên khoảng 0,55-0,60 và cánh sải ngang làm chiều rộng lớn hơn, dùng ô rộng hơn |
+| hero | side | run, attack, death, skill | mỗi hero thường duy nhất và có skill + vfx: dùng lưới chỉ cho các clip thân (run, attack, death); canvas M rộng 176×140 nên ô rộng hơn khi vũ khí dài. Chưa thử |
+| boss | 3 hướng | idle, attack, death, skill | XL, XXL: bố cục một hàng như trên. Chưa thử |
+
+**Việc cần làm cho mỗi bộ mới (theo thứ tự):** (0) ghi thiết kế bộ → (1) prompt lưới + lint sạch → hỏi "yes" vẽ → xem từng ô → (2) đặt lại ô → (3) với mỗi động tác: viết prompt chuyển động, liệt kê trong chat, dry run, hỏi "yes" kèm số tiền, chạy → (4) tách khung, xem ảnh kiểm → (5) chọn khung, thu nhỏ theo cấp, nhập asset.
 
 ## Tóm tắt một dòng mỗi bước
 | Bước | Việc | Công cụ | Vào → ra | Tiền |

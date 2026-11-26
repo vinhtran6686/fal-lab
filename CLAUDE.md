@@ -30,6 +30,7 @@ fal.ai + OpenAI GPT Image (quality `low` by default) is the "hand" that draws.
   `brief.md`, `history.md`, `meta.json` and `.work/` (tools only, not in git). One session, one finished step: originals
   are cut in the same session; at its end `python scripts/source_prune.py <asset> [--keep ...] --apply` drops every still
   and take that was not approved (no "pick again later": run the flow again).
+- **Lineup method** (since 2026-11-26, tested on a 10-enemy poison clan): one grid image of 10 characters of one clan + one clip per action instead of one clip per character, then split into per-character frames: `scripts/lineup/` (`lineup_regrid.py`, `lineup_split.py`), steps, sizes, timings, prices and the per-class table in `docs/scripts/lineup/lineup-workflow.md`, prompts that worked in `docs/scripts/lineup/prompts/`. About 0.013 USD per character per action at h3-max-turbo 768P 4 s (0.12 USD per clip, real billing).
 - Icon packing: `scripts/sprite_pack.py` (single stills into `ui/icon/`).
 - Effects (skills, attack smears, respawn, level-up): `scripts/fx_layers.py A/source/fx/<skill>.json`, a recipe of small flat
   layers (slash, ring, burst, bolt, pillar, particles, tweened fx part stills) on one canvas anchored at the
