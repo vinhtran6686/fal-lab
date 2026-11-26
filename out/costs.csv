@@ -356,3 +356,6 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-26 17:27:25,out/enemies/.work/fire_lineup/clip_walk/clip.mp4,h3-max-turbo,video,768P 4s,False,4.4,0.1200,True
 2026-11-26 17:37:11,out/enemies/.work/ice_lineup/grid_v01.png,gpt-image-2,low,2560x1440,False,20.5,0.0185,True
 2026-11-26 17:43:40,out/enemies/.work/ice_lineup/pair_v01.png,gpt-image-2,low,2560x1440,False,20.4,0.0162,True
+2026-11-26 17:46:44,out/enemies/.work/ice_lineup/clip_walk/clip.mp4,h3-max-turbo,video,768P 4s,False,4.3,0.1200,True
+2026-11-26 17:46:49,out/enemies/.work/ice_lineup/clip_attack/clip.mp4,h3-max-turbo,video,768P 4s,False,3.5,0.1200,True
+2026-11-26 17:46:54,out/enemies/.work/ice_lineup/clip_die/clip.mp4,h3-max-turbo,video,768P 4s,False,3.4,0.1200,True

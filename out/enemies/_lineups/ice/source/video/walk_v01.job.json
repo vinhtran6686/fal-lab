@@ -1,0 +1,27 @@
+{
+  "prompt": "Animate this lineup of ten game enemies as ONE looping walk cycle, all ten at the same time, each walking in place. The camera is fixed and does not move, zoom or pan. Left and right in this description are the screen's left and right. Forward is screen right: every character faces screen right and walks toward screen right, but stays exactly where it stands in the image, inside its own cell, like a walk on a treadmill: its body never travels across the picture, never drifts sideways, never moves into another character's space, and the ten never touch or overlap. Every character keeps its own size, the small ones stay small and the large ones stay large.\nEvery beat, for each character: the body stays near-side-view facing screen right with the head looking forward; the feet touch one and the same ground line as in the image and the body rises and sinks a little with each step; every character keeps the same pace of one full step cycle and keeps the same height above the ground line in every frame.\nEach character walks in its own way. The biped characters alternate their legs: the near leg lifts and swings forward toward screen right while the far leg pushes back toward screen left, the knees bend, and the arms swing in opposition to the legs. The Frostbite Raider and the Frost Knight walk with a steady average pace. The Icicle Stalker walks in a low fast crouch, leaning forward, with quick light steps. The Rime Archer and the Spear Hurler walk with light, long strides and a springy step. The Snow Witch takes small smooth steps and her long robe sways. The Blizzard Shaman shuffles forward hunched, with short steps, and his cloak sways. The Glacier Gladiator takes slow, short, heavy steps. The Frost Warlord takes slow, long, commanding strides and his long cloak sways behind him. Each character that holds a weapon keeps it in the same hand, hanging low and swaying with the step, and never raises it: the Raider keeps its axe low, the Stalker keeps its curved sword in the same reverse grip, the Archer keeps its bow low, the Hurler keeps its javelin tilted forward as in the image, the Witch keeps her staff low, the Shaman keeps his totem low, the Knight keeps his sword low, the Gladiator keeps his maul low, the Warlord keeps his greatsword low in front with both hands. The Frost Wolf walks on four legs: the legs move in alternating diagonal pairs and its head and tail sway with the steps.\nThe clip ends in exactly the pose it starts in, so the walk loops. Every character keeps its own design, colours and outline exactly as in the image; the crystals and the glow stay on its own body and never drift to another character; no character has a tail except the Frost Wolf.\nThe flat solid pure magenta background stays unchanged and fixed in every frame: no scenery, no ground, no shadows, no extra effects, no motion trails, no text, no grid, no camera shake.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab40b3f/juEGyjoOkVPpazMZ3dhYN_grid_v02_regrid.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0ab40b3f/jWokRk72FaDKGLbL9VinD_grid_v02_regrid.png"
+  },
+  "seconds": 4,
+  "resolution": "768P",
+  "size": [
+    2560,
+    1440
+  ],
+  "estimateUsd": 0.12,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/enemies/.work/ice_lineup/grid_v02_regrid.png",
+  "lastFrame": "/home/user/fal-lab/out/enemies/.work/ice_lineup/grid_v02_regrid.png",
+  "requestId": "01a218f7-7268-7482-a5db-78453d654ce0",
+  "seconds_elapsed": 4.3,
+  "source_url": "https://v3b.fal.media/files/b/0ab40b40/9t1bOW6zMJEA0g4eP1nKE_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

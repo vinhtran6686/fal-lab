@@ -1,7 +1,7 @@
 {
   "clan": "ice",
   "class": "enemy",
-  "status": "master grid v02 (assassin and warlord redrawn and swapped in), re-gridded; no clips yet",
+  "status": "walk, attack and die (side) done",
   "grid": {
     "original": "source/design/grid_v01.png",
     "pink_fixed": "source/design/grid_v01_fixed.png",
@@ -94,6 +94,43 @@
     "note": "casters only perform the casting motion; the vfx and projectile are added later"
   },
   "known_issues": [
-    "frost_warlord is crisp now but bulkier and less tall than the first draw (cloak, wide shoulder plates)"
+    "frost_warlord is crisp now but bulkier and less tall than the first draw (cloak, wide shoulder plates)",
+    "attack: the model drew a pale crescent swing trail (frame 5) on frostbite_raider and glacier_gladiator despite the ban; attached to the character",
+    "attack: frost_warlord frames from about frame 9 contain the glacier_gladiator's maul next to the warlord (neighbour spill) and the warlord ends crouched",
+    "attack: frost_knight lunges with the sword behind him instead of a clean chop; rime_archer shows an arrow on the string while aiming",
+    "walk and die: clean, no neighbour spill"
+  ],
+  "clips": {
+    "walk": {
+      "video": "source/video/walk_v01.mp4",
+      "job": "source/video/walk_v01.job.json",
+      "prompt": "docs/scripts/lineup/prompts/motion-walk-ice-clan.txt",
+      "note": "start image used as the last frame too (loop)"
+    },
+    "attack": {
+      "video": "source/video/attack_v01.mp4",
+      "job": "source/video/attack_v01.job.json",
+      "prompt": "docs/scripts/lineup/prompts/motion-attack-ice-clan.txt"
+    },
+    "die": {
+      "video": "source/video/die_v01.mp4",
+      "job": "source/video/die_v01.job.json",
+      "prompt": "docs/scripts/lineup/prompts/motion-die-ice-clan.txt"
+    },
+    "model": "minimax/h3-max-turbo/image-to-video",
+    "resolution": "768P (clip 1344x768, 24 fps)",
+    "duration_s": 4,
+    "cost_usd_each": 0.12,
+    "base_image": "source/design/grid_v02_regrid.png"
+  },
+  "split": {
+    "command": "python scripts/lineup/lineup_split.py <clip> --out <dir> --pad 64 --names <ids> --scales 0.68,0.68,0.68,1,1,1,1,1,1,1",
+    "frames": "frames/<action>/<id>/frames/f01..f13.png (RGBA 396x512, feet anchor y 402, x 198), sheet.png, preview.gif"
+  },
+  "ranged_attack_numbers": [
+    4,
+    5,
+    6,
+    7
   ]
 }
