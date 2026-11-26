@@ -330,3 +330,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-26 09:56:38,out/enemies/.work/lineup_walk_test/clip_h3/clip.mp4,h3-max-turbo,video,1080P 5s,False,13.1,0.0750,True
 2026-11-26 10:03:53,out/enemies/.work/lineup_walk_test/clip_h3_attack/clip.mp4,h3-max-turbo,video,1080P 5s,False,6.7,0.0750,True
 2026-11-26 10:15:22,out/enemies/.work/lineup_walk_test/lineup_v02.png,gpt-image-2,low,2560x1440,False,22.2,0.0188,True
+2026-11-26 10:18:43,out/enemies/.work/lineup_walk_test/clip_h3_attack_v02/clip.mp4,h3-max-turbo,video,768P 4s,False,3.8,0.0600,True
