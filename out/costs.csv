@@ -326,3 +326,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-15 18:09:38,clip.mp4,h3-max-turbo,video,768P 5s,False,3.6,0.0750,True
 2026-11-15 18:14:41,clip.mp4,h3-max-turbo,video,768P 5s,False,2.9,0.0750,True
 2026-11-15 18:14:41,clip.mp4,h3-max-turbo,video,768P 5s,False,3.1,0.0750,True
+2026-11-26 09:53:33,out/enemies/.work/lineup_walk_test/lineup_v01.png,gpt-image-2,low,2560x1440,False,24.2,0.0184,True
