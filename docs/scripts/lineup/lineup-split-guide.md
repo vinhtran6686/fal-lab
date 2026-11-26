@@ -1,3 +1,14 @@
+# Quy trình lưới nhiều nhân vật trong một clip (tóm tắt)
+
+1. **Vẽ lưới:** `python scripts/gen_image.py --prompt-file <prompt> --size 2560x1440 --png --name lineup --versioned --out <thư mục>` (nền #FF00FF, 5 cột × 2 hàng, ~$0,02). Prompt lưới: mỗi con một bảng màu hex, vũ khí cầm thấp, `prompt_lint.py` không có ERROR.
+2. **Đặt lại ô:** `python scripts/lineup/lineup_regrid.py <lưới>.png --out <lưới_regrid>.png` (thu nhỏ 0,68, chân ở 70% ô; miễn phí). Bước này tạo khoảng trống để các con không dính nhau.
+3. **Làm clip cho từng động tác** (mỗi động tác một clip, hỏi "yes" trước vì tốn tiền): `python scripts/fal_video.py video --model h3-max-turbo --prompt-file <prompt> --reference <lưới_regrid>.png --duration 4 --resolution 720p --out-dir <thư mục>` (768P 4 giây = $0,12). Prompt: tên vũ khí gắn từng con, con tay không đứng riêng, đứng yên tại chỗ (chết: "ngã tại chỗ, không văng"), giữ tư thế cuối, "no tail".
+4. **Tách khung:** `python scripts/lineup/lineup_split.py <clip.mp4> --out <thư mục> --pad 64 --names a,b,c,...` (13 khung mỗi con, RGBA).
+5. **Xem và chọn khung:** mở ảnh kiểm 6-8 khung mỗi con, bỏ khung có vũ khí sai hoặc dính hàng xóm (thường là khung giơ lên giữa clip) và khung cuối của clip tấn công (quay về dáng đứng).
+6. **Dùng khung:** mỗi con một thư mục `frames/` + `sheet.png` + `preview.gif`. Con nào giữ thì nhập vào asset thật (`scripts/ingest_image.py`, `brief.md`, `scripts/video_to_sheet.py`).
+
+Giá thật đã đo: ảnh lưới ~$0,019; clip 768P 4 giây $0,12; 1080P 5 giây $0,30. Một lưới 10 con với 2-3 động tác ≈ $0,02 + $0,12 × số động tác, tức khoảng $0,012 mỗi con mỗi động tác.
+
 # Tách clip lưới nhiều nhân vật: `scripts/lineup/lineup_split.py`
 
 Dùng khi một ảnh lưới (ví dụ 5 cột × 2 hàng, nền magenta) đã được đưa vào model video (`scripts/fal_video.py`, h3-max-turbo) để cả lưới cùng đi bộ hoặc tấn công trong MỘT clip. Script tách từng ô thành một bộ khung riêng. Không tốn tiền, cần ffmpeg, numpy, scipy, Pillow.
