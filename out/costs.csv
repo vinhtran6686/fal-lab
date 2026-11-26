@@ -350,3 +350,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-26 10:55:34,out/enemies/.work/poison_lineup/grid_v01.png,gpt-image-2,low,2560x1440,False,17.2,0.0185,True
 2026-11-26 10:59:25,out/enemies/.work/poison_lineup/clip_attack/clip.mp4,h3-max-turbo,video,768P 4s,False,3.9,0.1200,True
 2026-11-26 10:59:31,out/enemies/.work/poison_lineup/clip_die/clip.mp4,h3-max-turbo,video,768P 4s,False,3.9,0.1200,True
+2026-11-26 17:06:01,out/enemies/.work/fire_lineup/grid_v01.png,gpt-image-2,low,2560x1440,False,16.2,0.0176,True

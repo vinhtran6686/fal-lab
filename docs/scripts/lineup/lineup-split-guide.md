@@ -29,7 +29,9 @@ Mỗi nhân vật nhận `<out>/<tên>/frames/fNN.png` (RGBA đã xóa nền mag
 Model ảnh bỏ qua kích thước và vị trí viết trong prompt (xin 24% chiều cao ô, vẽ ra ~50%), nên khoảng trống giữa các nhân vật được tạo bằng code, miễn phí:
 
 ```bash
-python scripts/lineup/lineup_regrid.py <lineup.png> --out <mới.png> [--cols 5 --rows 2] [--scale 0.68 | --heights h1,...,hN] [--feet 0.70] [--min-area 400]
+python scripts/lineup/lineup_regrid.py <lineup.png> --out <mới.png> [--cols 5 --rows 2] [--scale 0.68 | --heights h1,...,hN [--by area]] [--feet 0.70] [--min-area 400]
 ```
 
 Xóa nền magenta, gom các mảnh liên thông thành nhân vật (mỗi hàng lấy `--cols` mảnh lớn nhất, từ trái sang phải; mảnh nhỏ như đuôi hoặc đầu vũ khí rời gộp vào mảnh gần nhất; vì model không đặt đúng cột đã yêu cầu nên ô của một con là THỨ TỰ của nó trong hàng), thu nhỏ `--scale` (hoặc `--heights`: chiều cao đích của từng con theo % chiều cao ô, theo thứ tự đọc, dùng khi các con khác cấp: ví dụ XS 0,12; S 0,21; M 0,31; L 0,44), đặt vào tâm ngang của ô, điểm thấp nhất (chân; vũ khí treo thấp hơn thì tính theo vũ khí) ở `--feet` × chiều cao ô, trên nền magenta mới cùng kích thước. In kích thước từng con theo % ô. Với lưới 10 quái: `--scale 0.68` cho mỗi con ~35% cao và ~43% rộng ô, chân ở 70%.
+
+`--by area`: `--heights` đo chiều cao tương đương = căn bậc hai diện tích hình bóng / `--area-k` (0,78: tỉ lệ thường gặp của người có vũ khí, đo trên 20 con: 0,67-0,84) thay cho chiều cao khung bao. Dùng khi lưới có dạng thấp và rộng (chó, slime, rồng): scale theo chiều cao sẽ phóng chúng thành khổng lồ. Nhân vật cao hẹp có lửa trên đầu (Spark Imp) sẽ cao hơn cỡ M trong ô; chấp nhận, vì hệ số `--scales` ở bước tách đã thu nhỏ theo cấp.

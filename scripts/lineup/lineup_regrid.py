@@ -32,6 +32,8 @@ def main():
     ap.add_argument("--rows", type=int, default=2)
     ap.add_argument("--scale", type=float, default=0.68, help="shrink factor of every character")
     ap.add_argument("--heights", default="", help="comma separated target heights, one per cell in reading order, as a share of the cell height (e.g. 0.12,0.12,0.21,...): every character is scaled so its box (weapon included) gets that height; replaces --scale")
+    ap.add_argument("--by", choices=["height", "area"], default="height", help="what --heights measures: the height of the character's box, or (area) the equivalent height sqrt(silhouette area) / --area-k, which keeps wide low creatures (a hound, a slime, a drake) from being blown up to the height of a biped")
+    ap.add_argument("--area-k", type=float, default=0.78, help="typical sqrt(area) / height of a biped with a weapon (measured on 20 characters: 0.67-0.84)")
     ap.add_argument("--feet", type=float, default=0.70, help="where the lowest point of a character sits, as a share of the cell height")
     ap.add_argument("--min-area", type=int, default=400, help="pieces smaller than this many pixels are noise")
     a = ap.parse_args()
@@ -78,7 +80,12 @@ def main():
         ys, xs = np.where(part[..., 3] > 0)
         x0, x1, y0, y1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
         crop = Image.fromarray(part[y0:y1, x0:x1], "RGBA")
-        s = heights[cell] * ch / crop.height if heights else a.scale
+        if not heights:
+            s = a.scale
+        elif a.by == "area":
+            s = heights[cell] * ch * a.area_k / float((part[..., 3] > 128).sum()) ** 0.5
+        else:
+            s = heights[cell] * ch / crop.height
         w, h = max(1, round(crop.width * s)), max(1, round(crop.height * s))
         crop = crop.resize((w, h), Image.LANCZOS)
         r, c = divmod(cell, a.cols)
