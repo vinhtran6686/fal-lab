@@ -1,7 +1,7 @@
 {
   "clan": "ice",
   "class": "enemy",
-  "status": "walk, attack and die (side) done",
+  "status": "scope closed by the user: grid, walk, attack (4 sets), die, boss roar+slash; frame editing, size and colour tools to be built later from the collected assets",
   "grid": {
     "original": "source/design/grid_v01.png",
     "pink_fixed": "source/design/grid_v01_fixed.png",
