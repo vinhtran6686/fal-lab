@@ -1,0 +1,89 @@
+{
+  "clan": "ice",
+  "class": "enemy",
+  "status": "grid drawn, pink fixed and re-gridded; no clips yet",
+  "grid": {
+    "image": "source/design/grid_v01.png",
+    "fixed": "source/design/grid_v01_fixed.png (pink trousers of icicle_stalker recoloured with lineup_fix_pink.py)",
+    "regrid": "source/design/grid_v01_regrid.png",
+    "prompt": "docs/scripts/lineup/prompts/lineup-grid-ice-clan.txt",
+    "model": "gpt-image-2 low 2560x1440",
+    "cost_usd": 0.0185,
+    "regrid_args": "--heights 0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.42,0.38 --by area --feet 0.70"
+  },
+  "characters": [
+    {
+      "order": 1,
+      "id": "frostbite_raider",
+      "role": "melee",
+      "tier": "S"
+    },
+    {
+      "order": 2,
+      "id": "icicle_stalker",
+      "role": "assassin",
+      "tier": "S"
+    },
+    {
+      "order": 3,
+      "id": "frost_wolf",
+      "role": "beast",
+      "tier": "S"
+    },
+    {
+      "order": 4,
+      "id": "rime_archer",
+      "role": "archer",
+      "tier": "M"
+    },
+    {
+      "order": 5,
+      "id": "spear_hurler",
+      "role": "javelin_thrower",
+      "tier": "M"
+    },
+    {
+      "order": 6,
+      "id": "snow_witch",
+      "role": "mage",
+      "tier": "M"
+    },
+    {
+      "order": 7,
+      "id": "blizzard_shaman",
+      "role": "support",
+      "tier": "M"
+    },
+    {
+      "order": 8,
+      "id": "frost_knight",
+      "role": "elite_melee",
+      "tier": "M"
+    },
+    {
+      "order": 9,
+      "id": "glacier_gladiator",
+      "role": "gladiator",
+      "tier": "L"
+    },
+    {
+      "order": 10,
+      "id": "frost_warlord",
+      "role": "chief",
+      "tier": "L"
+    }
+  ],
+  "planned_split_scales": "0.68,0.68,0.68,1,1,1,1,1,1,1",
+  "roles": {
+    "ranged_casters": [
+      "rime_archer",
+      "spear_hurler",
+      "snow_witch",
+      "blizzard_shaman"
+    ],
+    "note": "casters only perform the casting motion; the vfx and projectile are added later"
+  },
+  "known_issues": [
+    "frost_warlord is tall and imposing but the cloak hides the legs and the stance is a little bulky (width/height 0.76)"
+  ]
+}

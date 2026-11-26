@@ -117,6 +117,20 @@ Quy trình chung cho mọi class có nhiều đơn vị cùng tộc/hệ (enemy,
   5. Xuất: bộ khung sạch, `sheet.png`, `preview.gif`; cập nhật `meta.json` của tộc (số khung bỏ, lý do).
 - **Đo khi làm xong:** thời gian xử lý một bộ 10 con × 13 khung bằng tay so với số khung cần chạm; token đọc ảnh so với cách đọc ảnh kiểm hiện tại.
 
+## Hình dáng theo loại quái (vai trò đọc được từ hình bóng)
+Thử ngày 2026-11-26 trên Hàn Tộc (`out/enemies/_lineups/ice/`). Mỗi vai một kiểu thân; viết dáng bằng số và hình khối, tránh các chữ làm model đổi thân (`stout, massive, huge, round` đẩy về dáng mập: lint báo khi `--body slender`).
+| Vai | Thân | Dáng nói trong prompt |
+|---|---|---|
+| Cận chiến thường | trung bình, ~3,8 đầu | vai vừa, tay chân cân đối, một vũ khí cầm thấp |
+| Pháp sư, shaman | slender (shaman gù) | áo choàng thắt eo xòe gấu, mũ trùm, trượng ngắn không cao hơn đầu |
+| Cung thủ, phóng lao | slender, ~4 đầu | cao mảnh, tay chân dài, vai hẹp, cung cầm thấp / lao chếch 40° đầu lao không cao hơn đỉnh đầu |
+| Sát thủ | agile, ~4,3 đầu | nghiêng về trước, nhiều góc nhọn, khăn quàng, hai dao |
+| Đấu sĩ, tank | brawny, ~3 đầu | thân vuông như golem, vai vuông, nắm đấm khổng lồ, chân ngắn dày, trọng tâm thấp |
+| Thủ lĩnh | cao oai vệ | ~4,2 đầu, đầu ~22% chiều cao, chân ~45%, vai góc cạnh gai nhọn, eo hẹp, đứng thẳng ưỡn ngực, áo choàng dài, mũ sừng cao, "không bụng, không hình tròn" |
+Nguyên tắc tra cứu: mỗi vai một ngôn ngữ hình khối (tank rộng và vuông, kẻ nhanh góc cạnh và nghiêng về trước, hỗ trợ mềm), hình bóng phải đọc được ở cỡ nhỏ, thứ bậc yếu-mạnh phải rõ ([RocketBrush](https://rocketbrush.com/blog/shape-language-in-game-character-design-how-to-make-characters-readable-and-consistent), [The Level Design Book](https://https-book_leveldesignbook_com.proxy.bugsmash.io/process/combat/enemy), [CG Wire](https://blog.cg-wire.com/character-shape-language/)). Không có tài liệu chuẩn về tỉ lệ từng vai; các con số trên là của dự án, đo trên ảnh vẽ để chỉnh.
+- **Bài học Hỏa Tộc:** `Flame Drake` bị vẽ thấp, tròn (prompt chỉ ghi "four legs, folded wings"). Thủ lĩnh và boss phải ghi kiểu "cao oai vệ" như trên.
+- **Hồng trên nhân vật:** model đôi khi vẽ một phần hồng (quần của Icicle Stalker) dù đã cấm; khóa nền ăn mất phần đó. Chạy `python scripts/lineup/lineup_fix_pink.py <lưới>.png --out <lưới_sửa>.png` trước khi đặt lại ô.
+
 ## Bước 5. Bản cuối (và nơi lưu)
 0. **Lưu lên git** (thư mục `.work/` bị git bỏ qua, mất khi phiên kết thúc): ảnh lưới, bản đặt lại ô, clip gốc và bộ khung đã tách đi vào `out/<class>/_lineups/<tộc>/` (xem `docs/repo-structure-rules.md`); `meta.json` ghi tham số để phiên khác làm tiếp. Đã có `out/enemies/_lineups/poison/` (tấn công và chết) và `out/enemies/_lineups/fire/` (mới có lưới).
 1. Mở ảnh kiểm (6-8 khung mỗi con, thu nhỏ 1/3); bỏ khung sai vũ khí, dính hàng xóm hoặc viền hồng, và khung cuối của clip tấn công (nó quay về dáng đứng).
