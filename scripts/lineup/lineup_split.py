@@ -2,7 +2,7 @@
 """Split ONE lineup clip (a grid of characters on a magenta background) into one frame set per character.
 
     python scripts/lineup/lineup_split.py <clip.mp4> --out <dir> [--cols 5 --rows 2] [--frames 13 | --step N]
-                                           [--names a,b,c,...] [--scales s1,s2,...] [--erase-trail] [--fps 12]
+                                           [--names a,b,c,...] [--scales s1,s2,...] [--erase-trail] [--x-margin 0.06] [--fps 12]
 
 Per character <out>/<name>/: frames/f01.png ... (RGBA, magenta keyed), sheet.png (one horizontal strip),
 preview.gif. Cells are cut with fixed cuts (clip width / cols, clip height / rows). One fixed transform per
@@ -112,6 +112,7 @@ def main():
     ap.add_argument("--gap", type=int, default=14, help="a piece within this many px of the main body is kept")
     ap.add_argument("--scales", default="", help="comma separated shrink factor per character, in reading order (e.g. 0.55,0.55,0.78,0.78,0.78,1,1,1,1,1): the whole frame is scaled about the feet anchor after the cut, to bring characters that were enlarged for the video back to their true rank size")
     ap.add_argument("--erase-trail", action="store_true", help="erase pale lilac swing trails (crescents) drawn behind fast weapons (see erase_trail)")
+    ap.add_argument("--x-margin", type=float, default=0.0, help="the same --x-margin that lineup_regrid.py used: the columns are packed between the two margins")
     ap.add_argument("--fps", type=int, default=12, help="playback rate of preview.gif")
     a = ap.parse_args()
 
@@ -136,7 +137,8 @@ def main():
         frames = [np.array(Image.open(files[i]).convert("RGB")) for i in pick]
 
     H, W = frames[0].shape[:2]
-    cw0, ch0 = W // a.cols, H // a.rows
+    xm = int(round(a.x_margin * W))
+    cw0, ch0 = (W - 2 * xm) // a.cols, H // a.rows
     P = a.pad
     cw, ch = cw0 + 2 * P, ch0 + 2 * P
     anchor = (cw // 2, P + int(round(0.88 * ch0)))
@@ -150,7 +152,7 @@ def main():
 
     for idx, name in enumerate(names):
         r, c = divmod(idx, a.cols)
-        cell = [fr[r * ch0:r * ch0 + ch, c * cw0:c * cw0 + cw] for fr in padded]
+        cell = [fr[r * ch0:r * ch0 + ch, xm + c * cw0:xm + c * cw0 + cw] for fr in padded]
         keyed = [keep_main(erase_trail(key_magenta(x)) if a.erase_trail else key_magenta(x), cw // 2, a.gap) for x in cell]
         box = silhouette_box(keyed[0])
         if box is None:

@@ -34,6 +34,7 @@ def main():
     ap.add_argument("--heights", default="", help="comma separated target heights, one per cell in reading order, as a share of the cell height (e.g. 0.12,0.12,0.21,...): every character is scaled so its box (weapon included) gets that height; replaces --scale")
     ap.add_argument("--by", choices=["height", "area"], default="height", help="what --heights measures: the height of the character's box, or (area) the equivalent height sqrt(silhouette area) / --area-k, which keeps wide low creatures (a hound, a slime, a drake) from being blown up to the height of a biped")
     ap.add_argument("--area-k", type=float, default=0.78, help="typical sqrt(area) / height of a biped with a weapon (measured on 20 characters: 0.67-0.84)")
+    ap.add_argument("--x-margin", type=float, default=0.0, help="share of the image width kept empty at the left and at the right edge (e.g. 0.06): the columns are packed into the middle, so a swing of the last column is not cut by the picture edge")
     ap.add_argument("--feet", type=float, default=0.70, help="where the lowest point of a character sits, as a share of the cell height")
     ap.add_argument("--min-area", type=int, default=400, help="pieces smaller than this many pixels are noise")
     a = ap.parse_args()
@@ -43,7 +44,8 @@ def main():
         sys.exit(f"error: {len(heights)} heights for {a.cols * a.rows} cells")
     rgb = np.array(Image.open(a.image).convert("RGB"))
     H, W = rgb.shape[:2]
-    cw, ch = W / a.cols, H / a.rows
+    xm = a.x_margin * W
+    cw, ch = (W - 2 * xm) / a.cols, H / a.rows
     rgba = key_magenta(rgb)
     mask = rgba[..., 3] > 128
     lab, n = ndimage.label(mask)
@@ -89,10 +91,10 @@ def main():
         w, h = max(1, round(crop.width * s)), max(1, round(crop.height * s))
         crop = crop.resize((w, h), Image.LANCZOS)
         r, c = divmod(cell, a.cols)
-        px = int(round(c * cw + cw / 2 - w / 2))
+        px = int(round(xm + c * cw + cw / 2 - w / 2))
         py = int(round(r * ch + a.feet * ch - h))
         canvas.alpha_composite(crop, (px, py))
-        print(f"cell {cell + 1}: {len(ids)} piece(s), {100 * w / cw:.0f}% wide, {100 * h / ch:.0f}% tall, left {100 * (px - c * cw) / cw:.0f}%, top {100 * (py - r * ch) / ch:.0f}%")
+        print(f"cell {cell + 1}: {len(ids)} piece(s), {100 * w / cw:.0f}% wide, {100 * h / ch:.0f}% tall, left {100 * (px - xm - c * cw) / cw:.0f}%, top {100 * (py - r * ch) / ch:.0f}%")
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(a.out)
     print(f"saved {a.out}")
