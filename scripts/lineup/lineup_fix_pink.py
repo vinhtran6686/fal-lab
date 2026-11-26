@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Recolour pink or magenta paint on a character of a lineup image, before keying (costs nothing).
 
-    python scripts/lineup/lineup_fix_pink.py <lineup.png> --out <fixed.png> [--target 62,88,122]
+    python scripts/lineup/lineup_fix_pink.py <lineup.png> --out <fixed.png> [--target 62,88,122] [--flatten-bg]
 
 The image model sometimes paints a part of a character pink (a pair of trousers, a charm) although the prompt
 forbids it; the key then eats the part. Pixels that are pink (red and blue well above green) but are NOT the
@@ -20,9 +20,14 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("image")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--flatten-bg", action="store_true", help="first turn every dark or bright magenta pixel with low green (green < 70, red > 120, blue > 110) into the pure background colour: removes the ground shadows and the uneven background the model sometimes paints, and the thin magenta sparks")
     ap.add_argument("--target", default="62,88,122", help="R,G,B of the replacement colour")
     a = ap.parse_args()
     im = np.array(Image.open(a.image).convert("RGB")).astype(int)
+    if a.flatten_bg:
+        r0, g0, b0 = im[..., 0], im[..., 1], im[..., 2]
+        flat = (g0 < 70) & (r0 > 120) & (b0 > 110) & (r0 - g0 > 60) & (b0 - g0 > 60)
+        im[flat] = (255, 0, 255)
     r, g, b = im[..., 0], im[..., 1], im[..., 2]
     bg = (r > 215) & (b > 205) & (g < 70)
     pink = (~bg) & (r - g > 55) & (b - g > 45) & (abs(r - b) < 90)

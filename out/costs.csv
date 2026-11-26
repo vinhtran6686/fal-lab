@@ -364,3 +364,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-26 18:12:04,out/enemies/.work/ice_lineup/clip_attack3/clip.mp4,h3-max-turbo,video,768P 4s,False,3.2,0.1200,True
 2026-11-26 18:17:25,out/enemies/.work/ice_lineup/clip_boss/clip.mp4,h3-max-turbo,video,768P 5s,False,4.0,0.1500,True
 2026-11-26 18:20:55,out/enemies/.work/lightning_lineup/grid_v01.png,gpt-image-2,low,2560x1440,False,17.1,0.0186,True
+2026-11-26 18:24:51,out/enemies/.work/lightning_lineup/grid_v02.png,gpt-image-2,low,2560x1440,False,20.7,0.0196,True
