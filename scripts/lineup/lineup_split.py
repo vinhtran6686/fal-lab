@@ -33,6 +33,11 @@ def key_magenta(rgb):
     score = np.minimum(r, b) - g                      # magenta-ness: high for #FF00FF and its tints
     bg = np.clip((score - 70.0) / 70.0, 0.0, 1.0)     # 0 = subject, 1 = background
     bg = np.where((r > 120) & (b > 120), bg, 0.0)
+    # bright pink fringe: fast motion blends the magenta background with a light part of the subject (a blade, a
+    # highlight) into a pale pink (e.g. 245,150,215) that the plain test above keeps. It is pink, not purple
+    # (red >= blue, so a lilac highlight such as 205,176,238 is spared) and bright: key it out with a steeper ramp.
+    pink = (r > 200) & (b > 150) & (r >= b - 15) & (score > 30)
+    bg = np.where(pink, np.maximum(bg, np.clip((score - 30.0) / 25.0, 0.0, 1.0)), bg)
     alpha = 1.0 - bg
     # despill: pull the excess of red and blue over green back on partly transparent edge pixels
     edge = (alpha < 0.999) & (alpha > 0.0)

@@ -13,6 +13,7 @@ Mỗi nhân vật nhận `<out>/<tên>/frames/fNN.png` (RGBA đã xóa nền mag
 ## Cách hoạt động
 - Ô cắt cố định: rộng clip / số cột, cao clip / số hàng (clip 1920×1080 với lưới 5×2 cho ô 384×540). Mỗi ô được nới thêm `--pad` px mỗi phía để vũ khí vung qua đường ô vẫn nguyên vẹn; phần ngoài clip coi là nền.
 - Xóa nền: điểm "magenta" = min(R,B) − G; viền mềm, khử hồng ở rìa.
+- Vệt hồng nhạt do mờ chuyển động (vũ khí vung nhanh trộn nền magenta với phần sáng của vật, ví dụ màu 245,150,215): luật thêm cho pixel sáng và hồng (R > 200, B > 150, R ≥ B − 15, điểm magenta > 30) xóa dốc hơn. Điều kiện R ≥ B − 15 giữ lại màu tím nhạt của tộc (ví dụ 205,176,238, B lớn hơn R rõ). Đo trên 260 khung Độc Tộc: chỉ khung vung nhanh bị mất diện tích đáng kể (≤ 9%, chính là vệt hồng), các khung khác ≤ 1%; còn sót vài pixel viền (≤ 28 pixel mỗi khung).
 - Giữ thân chính: mảnh liên thông lớn nhất cắt qua cột giữa ô, cộng các mảnh cách nó ≤ `--gap` px. Mảnh rời của ô bên cạnh bị bỏ.
 - Một phép dịch cố định cho mỗi nhân vật: chân (đáy hình bóng khung đầu) và tâm ngang của hình bóng khung đầu đưa về (giữa ô, 0,88 chiều cao ô). Không căn lại từng khung nên chuyển động được giữ nguyên.
 - `--scales`: hệ số thu nhỏ từng nhân vật theo thứ tự đọc (nhân vật đã phóng to cho video về lại cỡ đúng cấp). Thu nhỏ cả khung quanh điểm neo chân nên chân và tâm ngang giữ nguyên. Ví dụ bộ 10 con: `0.55,0.55,0.78,0.78,0.78,1,1,1,1,1`.
