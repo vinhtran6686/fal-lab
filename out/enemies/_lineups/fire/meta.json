@@ -1,7 +1,7 @@
 {
   "clan": "fire",
   "class": "enemy",
-  "status": "attack and die done; walk not made",
+  "status": "attack, die and walk (side) done",
   "grid": {
     "image": "source/design/grid_v01.png",
     "regrid": "source/design/grid_v01_regrid.png",
@@ -86,7 +86,13 @@
     "model": "minimax/h3-max-turbo/image-to-video",
     "resolution": "768P (clip 1344x768, 24 fps)",
     "duration_s": 4,
-    "cost_usd_each": 0.12
+    "cost_usd_each": 0.12,
+    "walk": {
+      "video": "source/video/walk_v01.mp4",
+      "job": "source/video/walk_v01.job.json",
+      "prompt": "docs/scripts/lineup/prompts/motion-walk-fire-clan.txt",
+      "note": "start image used as the last frame too, so the walk loops; side view only (walk down and up need front and back grids)"
+    }
   },
   "split": {
     "command": "python scripts/lineup/lineup_split.py <clip> --out <dir> --pad 64 --names <ids> --scales 0.39,0.39,0.68,0.68,0.68,1,1,1,1,1",
@@ -95,6 +101,7 @@
   "known_issues": [
     "attack: the model draws a flame crescent swing trail around frame 5 on the Cinder Goblin, Salamander Warrior, Blaze Duelist and Spark Imp (attached to the character; to be erased per frame)",
     "attack: Flame Drake rears up instead of thrusting its head forward; the last frame returns to the standing pose",
-    "die: clean, the same fall for all ten (hound and drake on their sides, slime a flat puddle)"
+    "die: clean, the same fall for all ten (hound and drake on their sides, slime a flat puddle)",
+    "walk: stays in its cell (centre drift 1-13 px over the clip), no overlap; the Obsidian Golem and the Blaze Duelist turn their body toward the viewer in some frames"
   ]
 }
