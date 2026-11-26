@@ -20,7 +20,7 @@ Quy trình chung cho mọi class có nhiều đơn vị cùng tộc/hệ (enemy,
 
 - **Chiều cao đích mỗi con** (`--heights`, % chiều cao ô) = cao @2x / chiều cao ô trong clip. Với lưới 5×2 ở 768P (ô cao 384): XS 0,12, S 0,21, M 0,31, L 0,44. **Giới hạn:** con lớn nhất không quá ~44% chiều cao ô (còn chỗ giơ vũ khí lên). Vượt quá thì đổi bố cục:
   - Có XL: một hàng, 3 cột (ô 448×768, XL ≈ 31% chiều cao ô). Có XXL: một hàng, 2 cột (ô 672×768, ≈ 44%). Mỗi clip vẫn $0,12 nên giá mỗi boss cao hơn ($0,04-0,06). **Chưa thử**; dùng `--cols 3 --rows 1`.
-  - **Con nhỏ (XS, S) phóng to lúc làm video** (XS 0,22, S 0,27) để video làm đúng chuyển động, rồi thu nhỏ lại khi tách khung (hệ số 0,55 và 0,78). Bước thu nhỏ này trong `lineup_split.py` chưa có.
+  - **Con nhỏ (XS, S) phóng to lúc làm video** (XS 0,22, S 0,27) để video làm đúng chuyển động, rồi thu nhỏ lại khi tách khung (hệ số 0,55 và 0,78). Bước thu nhỏ: `lineup_split.py --scales ...` (hệ số theo thứ tự đọc).
 - **Lưới 5×2, ô 512×720 ở ảnh gốc**; ảnh 2560×1440 là cố định cho mọi class.
 
 **Khác biệt theo class** (đã đọc `classes/*.md`; chỉ enemy đã chạy thật):
@@ -125,7 +125,7 @@ Ví dụ 10 con × 2 động tác: $0,019 + 2 × $0,12 ≈ **$0,26**, khoảng $
 ## Lưới nhiều cấp kích thước (Độc Tộc, thử ngày 2026-11-26)
 Khi 10 con khác cấp (`{H}` 24 / 40 / 60 / 84 px), mỗi con có chiều cao đích riêng theo `lineup_regrid.py --heights` (% chiều cao ô, thứ tự đọc). Chạy thật:
 - **Tỉ lệ đúng cấp** (tính ra @2x ở clip 768P): XS 0,12, S 0,21, M 0,31, L 0,44. Con XS chỉ còn ~46 px trong clip nên video làm mờ, gần như không cử động.
-- **Đã dùng cho video: phóng to các con nhỏ**: `--heights 0.22,0.22,0.27,0.27,0.27,0.31,0.31,0.31,0.44,0.44` (XS 0,22 ≈ 85 px, S 0,27 ≈ 104 px trong clip). Để video làm đúng hơn, khi tách khung xong sẽ thu nhỏ lại từng cấp về cỡ đúng: hệ số **XS 0,12 / 0,22 = 0,55; S 0,21 / 0,27 = 0,78; M và L giữ 1** (bước thu nhỏ theo cấp ở `lineup_split.py` chưa làm, ghi để làm sau).
+- **Đã dùng cho video: phóng to các con nhỏ**: `--heights 0.22,0.22,0.27,0.27,0.27,0.31,0.31,0.31,0.44,0.44` (XS 0,22 ≈ 85 px, S 0,27 ≈ 104 px trong clip). Để video làm đúng hơn, khi tách khung xong sẽ thu nhỏ lại từng cấp về cỡ đúng: hệ số **XS 0,12 / 0,22 = 0,55; S 0,21 / 0,27 = 0,78; M và L giữ 1** (đã làm: `lineup_split.py --scales 0.55,0.55,0.78,0.78,0.78,1,1,1,1,1`, thu nhỏ cả khung quanh điểm neo chân sau khi cắt; kết quả đo trên 20 bộ khung Độc Tộc: cao 47, 46, 79-81, 118-120, 168-170 px, chân vẫn ở y = 402, khớp @2x của từng cấp: 48, 80, 120, 168).
 - Gán ô theo THỨ TỰ trong hàng (model không đặt đúng cột): mỗi hàng lấy 5 mảnh lớn nhất, từ trái sang phải.
 - Prompt: `prompts/lineup-grid-poison-clan.txt`, `prompts/motion-attack-poison-clan.txt`, `prompts/motion-die-poison-clan.txt` (thêm câu "giữ đúng cỡ của mình" và "no tail, trừ Plague Rat").
 

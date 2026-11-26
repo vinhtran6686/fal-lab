@@ -2,7 +2,7 @@
 """Split ONE lineup clip (a grid of characters on a magenta background) into one frame set per character.
 
     python scripts/lineup/lineup_split.py <clip.mp4> --out <dir> [--cols 5 --rows 2] [--frames 13 | --step N]
-                                           [--names a,b,c,...] [--fps 12]
+                                           [--names a,b,c,...] [--scales s1,s2,...] [--fps 12]
 
 Per character <out>/<name>/: frames/f01.png ... (RGBA, magenta keyed), sheet.png (one horizontal strip),
 preview.gif. Cells are cut with fixed cuts (clip width / cols, clip height / rows). One fixed transform per
@@ -11,7 +11,8 @@ goes to (cell width / 2, 0.88 x cell height); frames are never re-centred one by
 The window of each character is its cell plus --pad pixels on every side (so a weapon that swings past the cell
 line is kept whole); then only the main body is kept: the largest connected piece that crosses the window's centre column, plus any
 piece within --gap pixels of it. Pieces that belong to a neighbour
-(a weapon head crossing the line) are dropped. Warning: a kept silhouette touching the window edge.
+(a weapon head crossing the line) are dropped. --scales shrinks each character about its feet anchor afterwards (rank size: the small ones are enlarged for the video).
+Warning: a kept silhouette touching the window edge.
 Needs ffmpeg on PATH, numpy, scipy and Pillow. Costs nothing.
 """
 import argparse
@@ -84,11 +85,15 @@ def main():
     ap.add_argument("--names", default="", help="comma separated names, row by row (default c01..cNN)")
     ap.add_argument("--pad", type=int, default=96, help="pixels added around each cell so swings past the line stay whole")
     ap.add_argument("--gap", type=int, default=14, help="a piece within this many px of the main body is kept")
+    ap.add_argument("--scales", default="", help="comma separated shrink factor per character, in reading order (e.g. 0.55,0.55,0.78,0.78,0.78,1,1,1,1,1): the whole frame is scaled about the feet anchor after the cut, to bring characters that were enlarged for the video back to their true rank size")
     ap.add_argument("--fps", type=int, default=12, help="playback rate of preview.gif")
     a = ap.parse_args()
 
     out = Path(a.out)
     n_cells = a.cols * a.rows
+    scales = [float(x) for x in a.scales.split(",") if x.strip()]
+    if scales and len(scales) != a.cols * a.rows:
+        sys.exit(f"error: {len(scales)} scales for {a.cols * a.rows} cells")
     names = [s.strip() for s in a.names.split(",") if s.strip()] or [f"c{i + 1:02d}" for i in range(n_cells)]
     if len(names) != n_cells:
         sys.exit(f"error: {len(names)} names for {n_cells} cells")
@@ -137,6 +142,11 @@ def main():
             ys1, xs1 = min(ch, ch + dy), min(cw, cw + dx)
             canvas[ys0:ys1, xs0:xs1] = rgba[ys0 - dy:ys1 - dy, xs0 - dx:xs1 - dx]
             img = Image.fromarray(canvas, "RGBA")
+            s = scales[idx] if scales else 1.0
+            if s != 1.0:
+                small = img.resize((max(1, round(cw * s)), max(1, round(ch * s))), Image.LANCZOS)
+                img = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
+                img.paste(small, (round(anchor[0] - anchor[0] * s), round(anchor[1] - anchor[1] * s)))
             img.save(d / f"f{k + 1:02d}.png")
             placed.append(img)
             bx = silhouette_box(rgba)
