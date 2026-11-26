@@ -106,7 +106,16 @@ Quy trình chung cho mọi class có nhiều đơn vị cùng tộc/hệ (enemy,
 | Bỏ mảnh lạ | giữ mảnh lớn nhất qua cột giữa cửa sổ + mảnh cách nó ≤ `--gap` 14 px |
 | Ra | `<tên>/frames/f01..f13.png` (RGBA 396×512), `sheet.png` (5148×512), `preview.gif` |
 
-**Công cụ tẩy từng khung (CHƯA làm, ghi để làm sau):** khi vũ khí hoặc thân của con bên cạnh đã dính liền vào con chính (khung giơ lên của clip tấn công: Wolfman cầm búa, Monk cầm rìu), script tự động không tách được. Tool cần: một trang xem tất cả khung của 10 con trên một màn hình, bấm chọn vùng hoặc mảnh liên thông để xóa trên từng khung, bỏ cả khung, lưu lại. Một trang như vậy cũng giúp tiết kiệm token vì không phải đọc nhiều ảnh lớn.
+**Công cụ xem và xóa từng khung (CHƯA làm, đặc tả để làm sau; người dùng sẽ thử thêm trước khi làm).**
+- **Vì sao:** ba bộ khung đã có mảnh dính mà script tự động không xóa được: vệt chém hình cung dính vào vũ khí (Hỏa Tộc tấn công: Goblin, Salamander, Duelist, Spark Imp, khung 5), vũ khí hoặc thân của hàng xóm dính liền (Độc Tộc tấn công khung giơ lên), vệt hồng còn sót ở đầu vũ khí. Một trang xem được tất cả khung cũng tiết kiệm token vì không phải đọc nhiều ảnh lớn qua chat.
+- **Nền có sẵn:** `tools/frame_tuner/` (bật/tắt khung, thời gian, công thức lưu `export_recipe.json`, chạy cục bộ bằng `serve.py`, xem `docs/tools/frame_tuner/frame-tuner-guide.md`). Mở rộng tool đó thay vì viết tool mới; nguồn dữ liệu là `out/<class>/_lineups/<tộc>/frames/<động tác>/<con>/frames/fNN.png`.
+- **Cần có:**
+  1. Một lưới xem: mỗi hàng một con, mỗi cột một khung (13), nền ca-rô hoặc xám đậm, kèm tên con; chọn động tác (tấn công, chết, đi bộ); xem trước phát cả bộ ở 12 fps.
+  2. Đánh dấu tự động khung nghi ngờ: cảnh báo của `lineup_split.py` (chạm mép cửa sổ), vùng màu hồng còn sót, nhiều mảnh rời hoặc mảnh liên thông lớn thứ hai, diện tích đổi đột ngột so với khung kề.
+  3. Với một khung được chọn: bấm một mảnh liên thông để xóa; cọ hoặc vòng chọn để xóa vùng; hoàn tác; "chỉ giữ mảnh này"; áp cùng thao tác cho khung kề (vị trí tương tự); bỏ cả khung (tắt) hoặc thay bằng khung kề.
+  4. **Không phá bản gốc:** mọi chỉnh sửa lưu thành `edits.json` (khung, thao tác, tọa độ) cạnh bộ khung; `apply_edits` dựng lại PNG từ clip gốc và công thức, để chạy lại khi đổi `--scales` hoặc khử hồng.
+  5. Xuất: bộ khung sạch, `sheet.png`, `preview.gif`; cập nhật `meta.json` của tộc (số khung bỏ, lý do).
+- **Đo khi làm xong:** thời gian xử lý một bộ 10 con × 13 khung bằng tay so với số khung cần chạm; token đọc ảnh so với cách đọc ảnh kiểm hiện tại.
 
 ## Bước 5. Bản cuối (và nơi lưu)
 0. **Lưu lên git** (thư mục `.work/` bị git bỏ qua, mất khi phiên kết thúc): ảnh lưới, bản đặt lại ô, clip gốc và bộ khung đã tách đi vào `out/<class>/_lineups/<tộc>/` (xem `docs/repo-structure-rules.md`); `meta.json` ghi tham số để phiên khác làm tiếp. Đã có `out/enemies/_lineups/poison/` (tấn công và chết) và `out/enemies/_lineups/fire/` (mới có lưới).
