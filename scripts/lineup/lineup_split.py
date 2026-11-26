@@ -2,7 +2,7 @@
 """Split ONE lineup clip (a grid of characters on a magenta background) into one frame set per character.
 
     python scripts/lineup/lineup_split.py <clip.mp4> --out <dir> [--cols 5 --rows 2] [--frames 13 | --step N]
-                                           [--names a,b,c,...] [--scales s1,s2,...] [--fps 12]
+                                           [--names a,b,c,...] [--scales s1,s2,...] [--erase-trail] [--fps 12]
 
 Per character <out>/<name>/: frames/f01.png ... (RGBA, magenta keyed), sheet.png (one horizontal strip),
 preview.gif. Cells are cut with fixed cuts (clip width / cols, clip height / rows). One fixed transform per
@@ -71,6 +71,26 @@ def keep_main(rgba, cx, gap):
     return out
 
 
+def erase_trail(rgba, min_px=150):
+    """Erase a pale lilac / white swing trail (a crescent the video model draws behind a fast weapon although it was
+    banned). Lilac = red >= green - 8, blue > red + 10, blue > 190, red > 150: the clan's ice is cyan (green > red)
+    so it is spared. Only blobs of at least min_px lilac pixels are erased (with a 3 px margin, ice-cyan pixels kept),
+    so the few lilac pixels of a normal frame stay."""
+    r, g, b = (rgba[..., i].astype(int) for i in range(3))
+    lil = (rgba[..., 3] > 60) & (r > g - 8) & (b > r + 10) & (b > 190) & (r > 150)
+    if lil.sum() < min_px:
+        return rgba
+    grown = ndimage.binary_dilation(lil, iterations=3)
+    lab, n = ndimage.label(grown)
+    out = rgba.copy()
+    for i in range(1, n + 1):
+        comp = lab == i
+        if (lil & comp).sum() >= min_px:
+            cyan = (g >= r + 10) & (g > 150)
+            out[..., 3] = np.where(comp & ~cyan, 0, out[..., 3])
+    return out
+
+
 def silhouette_box(rgba):
     a = rgba[..., 3] > 128
     ys, xs = np.where(a)
@@ -91,6 +111,7 @@ def main():
     ap.add_argument("--pad", type=int, default=96, help="pixels added around each cell so swings past the line stay whole")
     ap.add_argument("--gap", type=int, default=14, help="a piece within this many px of the main body is kept")
     ap.add_argument("--scales", default="", help="comma separated shrink factor per character, in reading order (e.g. 0.55,0.55,0.78,0.78,0.78,1,1,1,1,1): the whole frame is scaled about the feet anchor after the cut, to bring characters that were enlarged for the video back to their true rank size")
+    ap.add_argument("--erase-trail", action="store_true", help="erase pale lilac swing trails (crescents) drawn behind fast weapons (see erase_trail)")
     ap.add_argument("--fps", type=int, default=12, help="playback rate of preview.gif")
     a = ap.parse_args()
 
@@ -130,7 +151,7 @@ def main():
     for idx, name in enumerate(names):
         r, c = divmod(idx, a.cols)
         cell = [fr[r * ch0:r * ch0 + ch, c * cw0:c * cw0 + cw] for fr in padded]
-        keyed = [keep_main(key_magenta(x), cw // 2, a.gap) for x in cell]
+        keyed = [keep_main(erase_trail(key_magenta(x)) if a.erase_trail else key_magenta(x), cw // 2, a.gap) for x in cell]
         box = silhouette_box(keyed[0])
         if box is None:
             print(f"warning: {name}: empty first frame", file=sys.stderr)

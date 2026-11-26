@@ -95,10 +95,10 @@
   },
   "known_issues": [
     "frost_warlord is crisp now but bulkier and less tall than the first draw (cloak, wide shoulder plates)",
-    "attack: the model drew a pale crescent swing trail (frame 5) on frostbite_raider and glacier_gladiator despite the ban; attached to the character",
-    "attack: frost_warlord frames from about frame 9 contain the glacier_gladiator's maul next to the warlord (neighbour spill) and the warlord ends crouched",
-    "attack: frost_knight lunges with the sword behind him instead of a clean chop; rime_archer shows an arrow on the string while aiming",
-    "walk and die: clean, no neighbour spill"
+    "walk and die: clean, no neighbour spill",
+    "attack (clip attack_v01): crescent swing trail around frame 5 on frostbite_raider and glacier_gladiator (user accepted these two as perfect); rime_archer shows an arrow on the string",
+    "attack (clip attack_fix_v01): a crescent trail is still drawn in one frame of each fixed character (stalker f3, hurler f5, knight f7, warlord f5 and f8); those frames were replaced by the next frame (the stalker's f3 by f4, the hurler's f5 by f6, the knight's f7 by f8, the warlord's f5 by f6 and f8 by f9) so the motion has one repeated frame",
+    "attack_fix: icicle_stalker ends with the sword pointing forward at chest height (a thrust) instead of a reverse-grip slash; frost_warlord ends crouched, not upright; the spear hurler throw is correct (javelin level, held in the hand)"
   ],
   "clips": {
     "walk": {
@@ -121,7 +121,14 @@
     "resolution": "768P (clip 1344x768, 24 fps)",
     "duration_s": 4,
     "cost_usd_each": 0.12,
-    "base_image": "source/design/grid_v02_regrid.png"
+    "base_image": "source/design/grid_v02_regrid.png",
+    "attack_fix": {
+      "video": "source/video/attack_fix_v01.mp4",
+      "job": "source/video/attack_fix_v01.job.json",
+      "prompt": "docs/scripts/lineup/prompts/motion-attack-fix-ice-clan.txt",
+      "base_image": "source/design/grid_v02_regrid_four.png (only characters 2, 5, 8, 10; the other cells blank)",
+      "note": "frames of icicle_stalker, spear_hurler, frost_knight, frost_warlord in frames/attack come from this clip; the other six come from attack_v01"
+    }
   },
   "split": {
     "command": "python scripts/lineup/lineup_split.py <clip> --out <dir> --pad 64 --names <ids> --scales 0.68,0.68,0.68,1,1,1,1,1,1,1",

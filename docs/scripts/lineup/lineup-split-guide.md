@@ -5,7 +5,7 @@ Quy trình đầy đủ và bảng thông số kỹ thuật: `lineup-workflow.md
 Dùng khi một ảnh lưới (ví dụ 5 cột × 2 hàng, nền magenta) đã được đưa vào model video (`scripts/fal_video.py`, h3-max-turbo) để cả lưới cùng đi bộ hoặc tấn công trong MỘT clip. Script tách từng ô thành một bộ khung riêng. Không tốn tiền, cần ffmpeg, numpy, scipy, Pillow.
 
 ```bash
-python scripts/lineup/lineup_split.py <clip.mp4> --out <thư_mục> --names tên1,tên2,... [--cols 5 --rows 2] [--frames 13 | --step N] [--pad 96] [--gap 14] [--scales s1,...,sN] [--fps 12]
+python scripts/lineup/lineup_split.py <clip.mp4> --out <thư_mục> --names tên1,tên2,... [--cols 5 --rows 2] [--frames 13 | --step N] [--pad 96] [--gap 14] [--scales s1,...,sN] [--erase-trail] [--fps 12]
 ```
 
 Mỗi nhân vật nhận `<out>/<tên>/frames/fNN.png` (RGBA đã xóa nền magenta, khử viền hồng), `sheet.png` (một dải ngang) và `preview.gif`.
@@ -17,6 +17,7 @@ Mỗi nhân vật nhận `<out>/<tên>/frames/fNN.png` (RGBA đã xóa nền mag
 - Giữ thân chính: mảnh liên thông lớn nhất cắt qua cột giữa ô, cộng các mảnh cách nó ≤ `--gap` px. Mảnh rời của ô bên cạnh bị bỏ.
 - Một phép dịch cố định cho mỗi nhân vật: chân (đáy hình bóng khung đầu) và tâm ngang của hình bóng khung đầu đưa về (giữa ô, 0,88 chiều cao ô). Không căn lại từng khung nên chuyển động được giữ nguyên.
 - `--scales`: hệ số thu nhỏ từng nhân vật theo thứ tự đọc (nhân vật đã phóng to cho video về lại cỡ đúng cấp). Thu nhỏ cả khung quanh điểm neo chân nên chân và tâm ngang giữ nguyên. Ví dụ bộ 10 con: `0.55,0.55,0.78,0.78,0.78,1,1,1,1,1`.
+- `--erase-trail`: xóa vệt chém màu tím nhạt (đỏ ≥ xanh lá − 8, xanh dương > đỏ + 10 và > 190) với khối từ 150 pixel trở lên; giữ pixel màu cyan của băng. Không xóa được vệt màu xanh băng.
 - Khung lấy đều trên cả clip (`--frames`, mặc định 13) hoặc mỗi N khung (`--step`).
 
 ## Giới hạn đã gặp (lưới 10 quái, clip tấn công h3-max-turbo)
