@@ -128,6 +128,13 @@
       "prompt": "docs/scripts/lineup/prompts/motion-attack-fix-ice-clan.txt",
       "base_image": "source/design/grid_v02_regrid_four.png (only characters 2, 5, 8, 10; the other cells blank)",
       "note": "frames of icicle_stalker, spear_hurler, frost_knight, frost_warlord in frames/attack come from this clip; the other six come from attack_v01"
+    },
+    "attack_v02": {
+      "video": "source/video/attack_v02.mp4",
+      "job": "source/video/attack_v02.job.json",
+      "prompt": "docs/scripts/lineup/prompts/motion-attack-v02-ice-clan.txt",
+      "base_image": "source/design/grid_v02_regrid_xmargin.png (regrid with --x-margin 0.06, warlord height 0.36)",
+      "frames": "frames/attack_v02 (all ten, split with --x-margin 0.06 --own-cell)"
     }
   },
   "split": {
@@ -139,5 +146,18 @@
     5,
     6,
     7
-  ]
+  ],
+  "attack_candidates": {
+    "note": "frames/attack = clip attack_v01 for six characters + attack_fix for 2, 5, 8, 10; frames/attack_v02 = all ten from the latest clip. Pick per character:",
+    "frostbite_raider": "attack (perfect); v02 equal, one crescent frame (5)",
+    "icicle_stalker": "attack_v02: one sword only, short slash ends with the sword up-forward (the earlier fix ended with two weapons)",
+    "frost_wolf": "attack or attack_v02 (same)",
+    "rime_archer": "attack (arrow on the string) or attack_v02 (arrow in the bow, aiming held)",
+    "spear_hurler": "attack_v02: real overhand throw, ends pointing with an empty hand; javelin removed by --own-cell",
+    "snow_witch": "attack or attack_v02 (same)",
+    "blizzard_shaman": "attack or attack_v02 (same)",
+    "frost_knight": "attack (from attack_fix, accepted by the user); attack_v02 is worse (an extra curved blade appears)",
+    "glacier_gladiator": "attack (perfect); v02 equal, one crescent frame (5)",
+    "frost_warlord": "none is good: attack_v01 has the gladiator's maul spilling in, attack_fix is cut at the right picture edge, attack_v02 changes the greatsword into a pink-gold mace; needs a new render (alone, with margin)"
+  }
 }

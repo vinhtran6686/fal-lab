@@ -2,7 +2,7 @@
 """Split ONE lineup clip (a grid of characters on a magenta background) into one frame set per character.
 
     python scripts/lineup/lineup_split.py <clip.mp4> --out <dir> [--cols 5 --rows 2] [--frames 13 | --step N]
-                                           [--names a,b,c,...] [--scales s1,s2,...] [--erase-trail] [--x-margin 0.06] [--fps 12]
+                                           [--names a,b,c,...] [--scales s1,s2,...] [--erase-trail] [--x-margin 0.06] [--own-cell] [--fps 12]
 
 Per character <out>/<name>/: frames/f01.png ... (RGBA, magenta keyed), sheet.png (one horizontal strip),
 preview.gif. Cells are cut with fixed cuts (clip width / cols, clip height / rows). One fixed transform per
@@ -47,7 +47,7 @@ def key_magenta(rgb):
     return out
 
 
-def keep_main(rgba, cx, gap):
+def keep_main(rgba, cx, gap, own=None):
     """Zero the alpha of every piece that is not the main body (the biggest piece nearest the window centre) or a
     close fragment of it."""
     a = rgba[..., 3] > 128
@@ -65,6 +65,10 @@ def keep_main(rgba, cx, gap):
     keep[main + 1] = True
     for i in range(n):
         if i != main and areas[i] >= 30 and dist[lab == i + 1].min() <= gap:
+            if own is not None:                       # a separate piece whose centre lies outside the character's own cell
+                cxp = ndimage.center_of_mass(lab == i + 1)[1]   # belongs to a neighbour (or flew away): drop it
+                if not (own[0] <= cxp <= own[1]):
+                    continue
             keep[i + 1] = True
     out = rgba.copy()
     out[..., 3] = np.where(keep[lab], rgba[..., 3], 0)
@@ -113,6 +117,7 @@ def main():
     ap.add_argument("--scales", default="", help="comma separated shrink factor per character, in reading order (e.g. 0.55,0.55,0.78,0.78,0.78,1,1,1,1,1): the whole frame is scaled about the feet anchor after the cut, to bring characters that were enlarged for the video back to their true rank size")
     ap.add_argument("--erase-trail", action="store_true", help="erase pale lilac swing trails (crescents) drawn behind fast weapons (see erase_trail)")
     ap.add_argument("--x-margin", type=float, default=0.0, help="the same --x-margin that lineup_regrid.py used: the columns are packed between the two margins")
+    ap.add_argument("--own-cell", action="store_true", help="drop separate pieces (not the main body) whose centre lies outside the character's own cell, i.e. the part of the padding that belongs to a neighbour")
     ap.add_argument("--fps", type=int, default=12, help="playback rate of preview.gif")
     a = ap.parse_args()
 
@@ -153,7 +158,7 @@ def main():
     for idx, name in enumerate(names):
         r, c = divmod(idx, a.cols)
         cell = [fr[r * ch0:r * ch0 + ch, xm + c * cw0:xm + c * cw0 + cw] for fr in padded]
-        keyed = [keep_main(erase_trail(key_magenta(x)) if a.erase_trail else key_magenta(x), cw // 2, a.gap) for x in cell]
+        keyed = [keep_main(erase_trail(key_magenta(x)) if a.erase_trail else key_magenta(x), cw // 2, a.gap, (P, P + cw0) if a.own_cell else None) for x in cell]
         box = silhouette_box(keyed[0])
         if box is None:
             print(f"warning: {name}: empty first frame", file=sys.stderr)
