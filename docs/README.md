@@ -27,6 +27,7 @@ docs/
 │   │   └── puppet-kit-pose-reel.md                        pose reel: clip tư thế cho động tác rig không vẽ được (puppet_reel.py)
 │   └── lineup/                                            scripts/lineup/
 │       ├── lineup-workflow.md                             quy trình lưới nhiều nhân vật trong một clip: 5 bước, bảng thông số (kích thước, thời lượng, giá)
+│       ├── prompts/                                       prompt đã chạy: lưới 10 quái, đòn chém từ trên xuống, chết tại chỗ
 │       └── lineup-split-guide.md                          tách clip lưới nhiều nhân vật thành bộ khung từng con (lineup_split.py)
 ├── tools/                                                 tài liệu cho ứng dụng trong tools/
 │   ├── studio/                                            tools/studio/ (Rig & Pose Studio)

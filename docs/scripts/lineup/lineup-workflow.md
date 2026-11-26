@@ -14,7 +14,7 @@ Mục tiêu: một ảnh lưới 10 nhân vật → mỗi động tác chỉ M�
 ## Bước 1. Vẽ lưới (nhân vật nằm giữa từng ô)
 - **Ảnh:** gpt-image-2, `--quality low`, `--size 2560x1440` (16:9, chia hết cho 16), `--png`, nền magenta #FF00FF. Thời gian vẽ đo được 22-26 giây.
 - **Lưới:** 5 cột × 2 hàng, mỗi ô 512×720 px. Con 1-5 hàng trên, con 6-10 hàng dưới, trái sang phải.
-- **Prompt lưới** (~7.000 ký tự, file mẫu ghi trong git ở lịch sử phiên; viết lại từ mẫu dưới đây):
+- **Prompt lưới** (~7.000 ký tự; bản đã chạy: `prompts/lineup-grid-10-enemies.txt`; đổi roster thì sửa 10 đoạn nhân vật, giữ nguyên phần quy cách ô và style):
   - mở đầu: "TEN different enemy sprites in a strict grid of 5 columns by 2 rows, each in its own invisible cell";
   - mọi con SIDE VIEW quay sang PHẢI, đứng thẳng (UPRIGHT), hai chân trên một đường đất, `TWO ARMS`, `TWO LEGS`, mặt ít nét;
   - mỗi con: tên, thân (brawny / agile / slender), vũ khí cầm thấp bên trái ảnh, **bảng màu hex riêng** (bóng, nền, sáng, điểm sáng nhất); vũ khí dài cầm chéo, không dựng đứng;
@@ -53,7 +53,7 @@ Mục tiêu: một ảnh lưới 10 nhân vật → mỗi động tác chỉ M�
 | Ô sau khi cắt (768P) | 1344 / 5 × 768 / 2 = **268×384** (1080P: 384×540) |
 | Cỡ mỗi con trong clip 768P | ô 384 / 720 = 0,533 so với ảnh lưới → cao ~119-157 px, rộng ~110-133 px |
 
-**Prompt chuyển động** (theo `fal-image/action-planes.md` §9; liệt kê trong chat để duyệt trước khi chạy):
+**Prompt chuyển động** (bản đã chạy: `prompts/motion-attack-overhead.txt`, `prompts/motion-die-in-place.txt`; đi bộ chưa có bản dùng được; theo `fal-image/action-planes.md` §9; liệt kê trong chat để duyệt trước khi chạy):
 1. Hệ quy chiếu: "Left and right are the screen's"; hướng tiến = sang phải màn hình; mục tiêu ngoài khung bên phải.
 2. Mỗi con **đứng tại chỗ**: "stays inside its own cell, feet never slide, never moves into another character's space". Chết: "ngã tại chỗ, không văng, không trượt".
 3. Một chuỗi động tác liên tục, bắt đầu từ hông; **gắn tên vũ khí cho từng con** (mace với Knight, ...); con tay không (Wolfman, Golem) đứng riêng một câu.
