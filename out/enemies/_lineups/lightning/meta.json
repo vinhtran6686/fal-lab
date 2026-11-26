@@ -1,69 +1,70 @@
 {
   "clan": "lightning",
   "class": "enemy",
-  "status": "grid drawn, accent colour fixed, re-gridded; no clips yet",
+  "status": "grid redrawn with more creative designs (the first, more generic grid was replaced), fixed and re-gridded; no clips yet",
   "grid": {
     "image": "source/design/grid_v01.png",
-    "fixed": "source/design/grid_v01_fixed.png (violet eyes and gems drawn magenta-pink by the model, recoloured with lineup_fix_pink.py --target 130,90,235; without it the key leaves holes)",
+    "fixed": "source/design/grid_v01_fixed.png (lineup_fix_pink.py --target 130,90,235 --flatten-bg: the model painted violet eyes magenta-pink, ground shadows and sparks in magenta)",
     "regrid": "source/design/grid_v01_regrid.png",
     "prompt": "docs/scripts/lineup/prompts/lineup-grid-lightning-clan.txt",
     "model": "gpt-image-2 low 2560x1440",
-    "cost_usd": 0.0186,
-    "regrid_args": "--heights 0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.42,0.38 --by area --feet 0.70 --x-margin 0.06"
+    "cost_usd": 0.0382,
+    "regrid_args": "--heights 0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.42,0.38 --by area --feet 0.70 --x-margin 0.06",
+    "note": "the file names keep v01 because the first grid was removed from the repo (it is in git history); this is the creative redraw"
   },
   "characters": [
     {
       "order": 1,
-      "id": "thunder_raider",
+      "id": "coil_soldier",
       "role": "melee",
       "tier": "S"
     },
     {
       "order": 2,
-      "id": "volt_duelist",
+      "id": "mantis_blade",
       "role": "assassin",
       "tier": "S"
     },
     {
       "order": 3,
-      "id": "storm_lynx",
+      "id": "thunder_ram",
       "role": "beast",
       "tier": "S"
     },
     {
       "order": 4,
-      "id": "gale_archer",
+      "id": "kite_archer",
       "role": "archer",
       "tier": "M"
     },
     {
       "order": 5,
-      "id": "bolt_thrower",
-      "role": "javelin_thrower",
+      "id": "spark_spearman",
+      "role": "spear_thrower",
       "tier": "M"
     },
     {
       "order": 6,
-      "id": "storm_mage",
+      "id": "storm_caller",
       "role": "mage",
       "tier": "M"
     },
     {
       "order": 7,
-      "id": "thunder_drummer",
+      "id": "rod_priest",
       "role": "support",
       "tier": "M"
     },
     {
       "order": 8,
-      "id": "thunder_knight",
+      "id": "storm_captain",
       "role": "elite_melee",
       "tier": "M"
     },
     {
       "order": 9,
-      "id": "tempest_brute",
-      "role": "brute",
+      "id": "capacitor_golem",
+      "role": "golem",
       "tier": "L"
     },
     {
@@ -77,10 +78,10 @@
   "planned_split_args": "--x-margin 0.06 --own-cell",
   "roles": {
     "ranged": [
-      "gale_archer",
-      "bolt_thrower",
-      "storm_mage",
-      "thunder_drummer"
+      "kite_archer",
+      "spark_spearman",
+      "storm_caller",
+      "rod_priest"
     ]
   },
   "lessons_applied": [
