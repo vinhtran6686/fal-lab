@@ -90,6 +90,13 @@ Mục tiêu: một ảnh lưới 10 nhân vật → mỗi động tác chỉ M�
 | Tách khung | 0 | vài giây mỗi clip |
 Ví dụ 10 con × 2 động tác: $0,019 + 2 × $0,12 ≈ **$0,26**, khoảng $0,013 mỗi con mỗi động tác (làm từng con riêng: ~$0,12 mỗi con mỗi động tác).
 
+## Lưới nhiều cấp kích thước (Độc Tộc, thử ngày 2026-11-26)
+Khi 10 con khác cấp (`{H}` 24 / 40 / 60 / 84 px), mỗi con có chiều cao đích riêng theo `lineup_regrid.py --heights` (% chiều cao ô, thứ tự đọc). Chạy thật:
+- **Tỉ lệ đúng cấp** (tính ra @2x ở clip 768P): XS 0,12, S 0,21, M 0,31, L 0,44. Con XS chỉ còn ~46 px trong clip nên video làm mờ, gần như không cử động.
+- **Đã dùng cho video: phóng to các con nhỏ**: `--heights 0.22,0.22,0.27,0.27,0.27,0.31,0.31,0.31,0.44,0.44` (XS 0,22 ≈ 85 px, S 0,27 ≈ 104 px trong clip). Để video làm đúng hơn, khi tách khung xong sẽ thu nhỏ lại từng cấp về cỡ đúng: hệ số **XS 0,12 / 0,22 = 0,55; S 0,21 / 0,27 = 0,78; M và L giữ 1** (bước thu nhỏ theo cấp ở `lineup_split.py` chưa làm, ghi để làm sau).
+- Gán ô theo THỨ TỰ trong hàng (model không đặt đúng cột): mỗi hàng lấy 5 mảnh lớn nhất, từ trái sang phải.
+- Prompt: `prompts/lineup-grid-poison-clan.txt`, `prompts/motion-attack-poison-clan.txt`, `prompts/motion-die-poison-clan.txt` (thêm câu "giữ đúng cỡ của mình" và "no tail, trừ Plague Rat").
+
 ## Kết quả đã đo và việc còn lại
 - **Chết:** sạch, 10/10 không dính nhau (lưới đã đặt lại ô, h3-max-turbo 768P 4 giây).
 - **Tấn công:** đòn chém và tư thế giữ sạch; nhịp giơ lên (khung 3-5) có vũ khí lạ (Wolfman cầm búa, Monk cầm rìu). Cần công cụ tẩy từng khung hoặc chạy lại.
