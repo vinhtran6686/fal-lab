@@ -27,9 +27,9 @@ rem ---- packages ----
 "%PY%" -c "import numpy, scipy, PIL" >nul 2>&1
 if errorlevel 1 (
   echo [Frame Tuner] Missing Python packages: numpy, scipy or Pillow.
-  choice /m "Install them now with pip (requirements.txt)"
+  choice /m "Install numpy, scipy and Pillow now with pip"
   if errorlevel 2 exit /b 1
-  "%PY%" -m pip install -r "%~dp0..\..\requirements.txt"
+  "%PY%" -m pip install numpy scipy pillow
   "%PY%" -c "import numpy, scipy, PIL" >nul 2>&1
   if errorlevel 1 (
     echo [Frame Tuner] The install did not work. Run:  python -m pip install numpy scipy pillow

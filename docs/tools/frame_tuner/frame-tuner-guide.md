@@ -5,7 +5,7 @@ Tool cục bộ để biến clip động tác (một lưới nhiều nhân vậ
 ## Mở tool
 Double-click `tools/frame_tuner/frame_tuner.bat`. File `.bat`:
 1. tìm Python 3.10+ (bỏ qua bản stub của Microsoft Store nếu có bản cài thật);
-2. kiểm tra numpy, scipy, Pillow (thiếu thì hỏi để `pip install -r requirements.txt`);
+2. kiểm tra numpy, scipy, Pillow (thiếu thì hỏi để `pip install numpy scipy pillow`);
 3. kiểm tra ffmpeg (thiếu thì báo, tool vẫn mở nhưng không tách được clip mới: `winget install Gyan.FFmpeg`);
 4. chạy `serve.py` (chỉ nghe 127.0.0.1:8767) và mở trình duyệt khi server đã trả lời. Đã chạy rồi thì chỉ mở trình duyệt.
 Đóng cửa sổ đen để tắt tool.
@@ -27,7 +27,7 @@ Dải hình = mọi khung gốc của take (24 fps). Chấm màu = cờ tự đ�
 - Không sửa ảnh gốc: thao tác lưu vào `prep/<hero>/<clip>.edits.json` (theo số khung gốc), ảnh gốc đã tách nằm trong `.work/` và dựng lại được từ clip.
 
 ## 3 · Chọn khung
-Bấm hình để giữ / bỏ (Shift+bấm: cả khoảng; **K** với khung đang chọn), ô số dưới khung giữ = thời gian (ms), **H** = khung va chạm. Nút nhanh: giữ 1 trong N trong khoảng, chỉ giữ / bỏ một khoảng, thời gian đều (ms hoặc 8, 10, 12, 15 fps).
+Bấm hình để **chọn**; bấm đúp hoặc **K** để giữ / bỏ; Shift+bấm giữ / bỏ cả khoảng từ hình đang chọn; ô số dưới khung giữ = thời gian (ms); **H** = khung va chạm (khung đang chọn phải là khung giữ). Nút nhanh: giữ 1 trong N trong khoảng, chỉ giữ / bỏ một khoảng, thời gian đều (ms hoặc 8, 10, 12, 15 fps).
 - **Ghép nhiều take**: *Thêm đoạn từ take* thêm một đoạn từ take khác, chạy tiếp đoạn trước; *Xem chỗ nối* chồng khung cuối đoạn trước lên khung đầu đoạn sau, chỉnh **dx, dy** cho khớp.
 - **Lặp vòng** (run, idle): *Kiểm tra vòng lặp* chấm chỗ nối cuối → đầu và gợi ý điểm cắt cho vòng mượt.
 - Lưu vào `prep/<hero>/<động tác>.seq.json`.
@@ -38,7 +38,7 @@ Chạy chuỗi đã chọn theo đúng thời gian: cỡ nguồn, cỡ game @2x 
 ## 5 · Xuất
 - Thiết lập hero: canvas @1x (theo tier, L = 220 × 196), chiều cao thân @2x (L = 168), bóng dưới chân (hero bay như `pale_seraph`: tắt, bóng là decal riêng).
 - **Canvas và cỡ thân**: đo mọi động tác đã chọn khung. Lần xuất đầu tiên của một asset chốt canvas và cỡ thân cho mọi động tác (`video_to_sheet.py`), nên tool đo trước và gợi ý canvas đủ lớn; cỡ thân khung đầu của các động tác phải lệch nhau ≤ 4%.
-- **Xuất**: thứ tự an toàn (động tác một lần trước, `attack` đầu tiên, vòng lặp sau). Đổi *Thư mục asset đích* sang thư mục khác để xuất thử. Kết quả: `frames/<sheet>/` (@2x, @1x, sheet, preview), `meta.json` ghi động tác lấy từ workspace và chuỗi nào.
+- **Xuất**: sheet đã có trong asset mà không xuất từ workspace này (ví dụ bản đã duyệt làm bằng cách khác) thì trang hỏi trước khi ghi đè. Thứ tự an toàn (động tác một lần trước, `attack` đầu tiên, vòng lặp sau). Đổi *Thư mục asset đích* sang thư mục khác để xuất thử (đường dẫn tương đối tính từ gốc repo). Kết quả: `frames/<sheet>/` (@2x, @1x, sheet, preview), `meta.json` ghi động tác lấy từ workspace và chuỗi nào.
 
 ## Không có trong tool (cố ý)
 Ghép fx và điểm va chạm cho fx (tool fx riêng); nội suy khung mới.

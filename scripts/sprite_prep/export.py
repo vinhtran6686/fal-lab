@@ -133,6 +133,20 @@ def body_report(ws: Workspace, hero: str) -> dict:
     return {"scale": round(scale, 4), "actions": rows}
 
 
+def overwrite_risk(ws: Workspace, hero: str, actions: list[str], asset_out: Path | None = None) -> list[str]:
+    """Sheets that already exist in the asset and were NOT made from this workspace (an approved export of another
+    route): exporting would replace them, so the page asks first."""
+    asset = Path(asset_out) if asset_out else ROOT / ws.cfg["heroes"][hero]["asset"]
+    states = (read_json(asset / "meta.json", {}) or {}).get("states") or {}
+    out = []
+    for a in actions:
+        sheet = ws.action(hero, a)["sheet"]
+        st = states.get(sheet)
+        if st and (st.get("prep") or {}).get("ws") != ws.id:
+            out.append(sheet)
+    return out
+
+
 def export(ws: Workspace, hero: str, action: str, asset_out: Path | None = None) -> dict:
     seq = ws.seq(hero, action)
     if not seq or not items(seq):
@@ -178,9 +192,16 @@ def export(ws: Workspace, hero: str, action: str, asset_out: Path | None = None)
         if st is not None:
             st["prep"] = {"ws": ws.id, "action": action, "sequence": f"prep/{hero}/{action}.seq.json",
                           "clips": sorted({it["clip"] for it in its}), "scale": round(scale, 4)}
-            st["source"] = Path(ws.clip_path(its[0]["clip"])).resolve().relative_to(ROOT).as_posix()
-            st["video"] = {"route": "sprite_prep", "ws": ws.id}
+            # video_to_sheet writes `source` relative to the asset when the clip is the asset's own (source_prune.py keeps
+            # that clip because of it): leave it. A lineup clip comes out as an absolute path: store it repo-relative.
+            if Path(str(st.get("source", ""))).is_absolute():
+                st["source"] = Path(ws.clip_path(its[0]["clip"])).resolve().relative_to(ROOT).as_posix()
+            if isinstance(st.get("video"), dict):
+                st["video"]["set"] = "sprite_prep (temporary set)"
             write_json(meta_p, meta)
+            if not hcfg.get("body_px"):      # freeze the hero's scale at its first export: later splits must not drift it
+                ws.cfg["heroes"][hero]["body_px"] = round(hero_body_px(ws, hero), 2)
+                ws.save_config()
         return {"ok": True, "out": (r.stdout or "").strip()[-600:], "warn": (r.stderr or "").strip()[-600:], "asset": str(asset)}
     finally:
         shutil.rmtree(work, ignore_errors=True)

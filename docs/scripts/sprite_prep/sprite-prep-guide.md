@@ -31,5 +31,6 @@ Workspace một asset (`out/<class>/<id>/` có clip trong `source/video/`) khôn
 ## Đã kiểm
 - Tách `attack_t01` (5 hero × 107 khung): ~40 s; `skill3_knight_ash_t03` (2 hero): ~14 s.
 - Xuất `cinder_maul` attack vào một bản sao asset: canvas 220 × 196, thân 168 px @2x, chân đúng chỗ, bóng có.
-- Trang (Playwright): tạo chuỗi, xóa mảnh, cọ xóa, tải lại vẫn còn thao tác, xem, xuất vào thư mục thử; không lỗi console.
+- Trang (Playwright, server chạy từ `tools/frame_tuner/` như .bat): tạo chuỗi, xóa mảnh, cọ xóa, tải lại vẫn còn thao tác; chọn khung bằng bấm đúp và K, khung va chạm H, lặp vòng, tải lại rồi đọc file `.seq.json` đúng; xuất vào đường dẫn tương đối (tính từ gốc repo); chặn ghi đè sheet không phải của workspace (HTTP 409, trang hỏi lại); không lỗi console.
+- `meta.json` sau khi xuất: giữ `source` tương đối của clip trong asset (để `source_prune.py` giữ clip), chỉ đổi đường dẫn tuyệt đối của clip lưới thành đường dẫn trong repo; `video.set` ghi là set tạm; `prep` ghi workspace, chuỗi, clip, hệ số. Lần xuất đầu ghi `body_px` của hero vào `sprite_prep.json` để hệ số không trôi.
 - Trang cũ của holy_commander qua server mới: `apply_recipe.py attack` ra đúng từng điểm ảnh (18/18 khung @2x và @1x) so với bản trong repo.

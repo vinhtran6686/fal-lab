@@ -12,7 +12,7 @@ const el = (tag, attrs = {}, ...kids) => {
 };
 const qs = o => Object.entries(o).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
 async function api(path, params = {}) { const r = await fetch(`/api/prep/${path}?${qs(params)}`); const j = await r.json(); if (!r.ok) throw new Error(j.error || r.status); return j; }
-async function post(path, body) { const r = await fetch(`/api/prep/${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); const j = await r.json(); if (!r.ok || j.ok === false) throw new Error(j.error || r.status); return j; }
+async function post(path, body) { const r = await fetch(`/api/prep/${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); const j = await r.json(); if (!r.ok || j.ok === false) { const e = new Error(j.error || r.status); e.data = j; throw e; } return j; }
 const loadImg = src => new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = src; });
 const clone = o => JSON.parse(JSON.stringify(o));
 const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
@@ -158,8 +158,9 @@ function speedSel(o) { const s = el('select', { onchange: e => { o.speed = +e.ta
 async function pickTake(c) {
   await post('config', { ws: S.ws, hero: S.hero, action: S.action, pick: c });
   const seq = await api('seq', { ws: S.ws, hero: S.hero, action: S.action });
-  if (!seq) await post('seq', { ws: S.ws, hero: S.hero, action: S.action, data: await defaultSeq(c) });
-  await refreshSummary(); renderTakes(); toast(`${S.hero} ${S.action}: dùng ${c}`, 'ok');
+  if (!seq || confirm(`Động tác này đã có chuỗi khung (${seq.segments.map(x => x.clip).join(', ')}). Thay bằng chuỗi mặc định từ ${c}?`))
+    await post('seq', { ws: S.ws, hero: S.hero, action: S.action, data: await defaultSeq(c) });
+  S.seq = null; await refreshSummary(); renderTakes(); toast(`${S.hero} ${S.action}: dùng ${c}`, 'ok');
 }
 async function defaultSeq(c) {
   const inf = await info(S.hero, c);
@@ -320,10 +321,12 @@ function nextFlag() {
 }
 
 // ---------------------------------------------------------------------------------------------------------- 3 sequence
+// the page's S.seq is the truth: structural changes are saved at once (commitSeq), typed numbers with a short debounce (saveSeq)
 const saveSeq = debounce(async () => { await post('seq', { ws: S.ws, hero: S.hero, action: S.action, data: S.seq }); refreshSummary(); }, 400);
+async function commitSeq() { await post('seq', { ws: S.ws, hero: S.hero, action: S.action, data: S.seq }); refreshSummary(); renderSeq(); }
 async function renderSeq() {
   const p = $('#pane-seq'); p.innerHTML = '';
-  S.seq = await api('seq', { ws: S.ws, hero: S.hero, action: S.action });
+  if (!S.seq) S.seq = await api('seq', { ws: S.ws, hero: S.hero, action: S.action });
   const takes = splitTakes();
   if (!S.seq) {
     p.append(el('p', {}, 'Chưa có chuỗi khung cho động tác này.'));
@@ -336,10 +339,10 @@ async function renderSeq() {
   const msAll = el('input', { type: 'number', value: 83, min: 10 });
   p.append(el('div', { class: 'row' },
     el('b', {}, `${nKeep} khung, ${(total / 1000).toFixed(2)} s`),
-    el('label', {}, el('input', { type: 'checkbox', checked: !!sq.loop, onchange: e => { sq.loop = e.target.checked; saveSeq(); renderSeq(); } }), 'lặp vòng'),
+    el('label', {}, el('input', { type: 'checkbox', checked: !!sq.loop, onchange: e => { sq.loop = e.target.checked; commitSeq(); } }), 'lặp vòng'),
     el('span', {}, 'Thời gian đều:'), msAll, el('span', {}, 'ms'),
-    el('button', { onclick: () => { sq.segments.forEach(s => s.ms = s.keep.map(() => +msAll.value)); saveSeq(); renderSeq(); } }, 'Áp'),
-    [8, 10, 12, 15].map(fps => el('button', { onclick: () => { sq.segments.forEach(s => s.ms = s.keep.map(() => Math.round(1000 / fps))); saveSeq(); renderSeq(); } }, `${fps} fps`)),
+    el('button', { onclick: () => { sq.segments.forEach(s => s.ms = s.keep.map(() => +msAll.value)); commitSeq(); } }, 'Áp'),
+    [8, 10, 12, 15].map(fps => el('button', { onclick: () => { sq.segments.forEach(s => s.ms = s.keep.map(() => Math.round(1000 / fps))); commitSeq(); } }, `${fps} fps`)),
     sq.hit ? el('span', { class: 'warn' }, `va chạm: đoạn ${sq.hit.seg + 1}, khung giữ thứ ${sq.hit.k + 1}`) : el('span', { class: 'muted' }, 'chưa đánh dấu va chạm (H)')));
   if (sq.loop) {
     const out = el('span', { class: 'muted' }, '');
@@ -353,12 +356,12 @@ async function renderSeq() {
   }
   for (let si = 0; si < sq.segments.length; si++) p.append(await segBox(si));
   const addSel = el('select', {}, takes.map(c => el('option', { value: c }, c)));
-  p.append(el('div', { class: 'row' }, 'Thêm đoạn từ take ', addSel, el('button', { onclick: async () => { const s = (await defaultSeq(addSel.value)).segments[0]; s.keep = []; s.ms = []; sq.segments.push(s); saveSeq(); renderSeq(); } }, 'Thêm đoạn'),
-    el('span', { class: 'muted' }, 'Ghép khung từ nhiều take: đoạn sau chạy tiếp đoạn trước. Bấm hình để giữ/bỏ (Shift+bấm: cả khoảng).')));
+  p.append(el('div', { class: 'row' }, 'Thêm đoạn từ take ', addSel, el('button', { onclick: async () => { const s = (await defaultSeq(addSel.value)).segments[0]; s.keep = []; s.ms = []; sq.segments.push(s); commitSeq(); } }, 'Thêm đoạn'),
+    el('span', { class: 'muted' }, 'Bấm hình để chọn; bấm đúp hoặc K để giữ / bỏ; Shift+bấm: giữ / bỏ cả khoảng từ hình đang chọn; H: khung va chạm. Ghép khung từ nhiều take: đoạn sau chạy tiếp đoạn trước.')));
 }
 function trimTo(idx) {
   let n = 0; for (const s of S.seq.segments) { const room = Math.max(0, idx + 1 - n); n += s.keep.length; if (s.keep.length > room) { s.keep = s.keep.slice(0, room); s.ms = s.ms.slice(0, room); } }
-  S.seq.segments = S.seq.segments.filter(s => s.keep.length || S.seq.segments.length === 1); saveSeq(); renderSeq();
+  S.seq.segments = S.seq.segments.filter(s => s.keep.length || S.seq.segments.length === 1); commitSeq();
 }
 async function segBox(si) {
   const sq = S.seq, s = sq.segments[si];
@@ -366,20 +369,19 @@ async function segBox(si) {
   const inf = await info(S.hero, s.clip);
   const st = await strip(S.hero, s.clip, 80);
   const a = el('input', { type: 'number', value: 0, min: 0, max: inf.frames - 1 }), b = el('input', { type: 'number', value: inf.frames - 1, min: 0, max: inf.frames - 1 }), nEvery = el('input', { type: 'number', value: 2, min: 1 });
-  const setKeep = keep => { rekeep(si, keep); saveSeq(); renderSeq(); };
+  const setKeep = keep => { rekeep(si, keep); commitSeq(); };
   box.append(el('div', { class: 'row' }, el('b', {}, `Đoạn ${si + 1}: ${s.clip}`), el('span', { class: 'muted' }, `${s.keep.length} khung giữ / ${inf.frames}`),
     el('label', {}, 'dx', el('input', { type: 'number', value: s.dx || 0, onchange: e => { s.dx = +e.target.value; saveSeq(); } })),
     el('label', {}, 'dy', el('input', { type: 'number', value: s.dy || 0, onchange: e => { s.dy = +e.target.value; saveSeq(); } })),
     si > 0 ? el('button', { onclick: () => joinPreview(si, box) }, 'Xem chỗ nối') : '',
-    si > 0 ? el('button', { onclick: () => { [sq.segments[si - 1], sq.segments[si]] = [sq.segments[si], sq.segments[si - 1]]; sq.hit = null; saveSeq(); renderSeq(); } }, '↑') : '',
-    sq.segments.length > 1 ? el('button', { onclick: () => { sq.segments.splice(si, 1); sq.hit = null; saveSeq(); renderSeq(); } }, 'Xóa đoạn') : ''));
+    si > 0 ? el('button', { onclick: () => { [sq.segments[si - 1], sq.segments[si]] = [sq.segments[si], sq.segments[si - 1]]; sq.hit = null; commitSeq(); } }, '↑') : '',
+    sq.segments.length > 1 ? el('button', { onclick: () => { sq.segments.splice(si, 1); sq.hit = null; commitSeq(); } }, 'Xóa đoạn') : ''));
   box.append(el('div', { class: 'row' }, 'Từ', a, 'đến', b,
     el('button', { onclick: () => { const k = []; for (let f = +a.value; f <= +b.value; f += Math.max(1, +nEvery.value)) k.push(f); setKeep(k); } }, 'Giữ 1 trong'), nEvery,
     el('button', { onclick: () => setKeep(s.keep.filter(f => f >= +a.value && f <= +b.value)) }, 'Chỉ giữ trong khoảng'),
     el('button', { onclick: () => setKeep(s.keep.filter(f => f < +a.value || f > +b.value)) }, 'Bỏ khoảng'),
     el('button', { onclick: () => setKeep([]) }, 'Bỏ hết')));
   const row = el('div', { class: 'strip' });
-  let last = null;
   for (let f = 0; f < inf.frames; f++) {
     const ki = s.keep.indexOf(f), kept = ki >= 0;
     const isHit = sq.hit && sq.hit.seg === si && kept && sq.hit.k === ki;
@@ -387,12 +389,17 @@ async function segBox(si) {
     const t = el('div', { class: `thumb ${kept ? 'keep' : 'drop'} ${isCur ? 'cur' : ''}`, title: `khung ${f}`, style: `width:${st.w}px;height:${st.h + (kept ? 16 : 0)}px;background-image:url(${st.img.src});background-position:-${f * st.w}px 0` },
       el('span', { class: 'n' }, f), isHit ? el('span', { class: 'hit' }, 'HIT') : '');
     t.onclick = ev => {
-      S.seqCur = { seg: si, f };
       if (ev.target.tagName === 'INPUT') return;
-      if (ev.shiftKey && last !== null) { const lo = Math.min(last, f), hi = Math.max(last, f); const want = !kept; let k = new Set(s.keep); for (let x = lo; x <= hi; x++) want ? k.add(x) : k.delete(x); setKeep([...k]); }
-      else setKeep(kept ? s.keep.filter(x => x !== f) : [...s.keep, f]);
-      last = f;
+      if (ev.shiftKey && S.seqCur.seg === si && S.seqCur.f !== undefined) {      // Shift: keep / drop the whole range from the selected frame
+        const lo = Math.min(S.seqCur.f, f), hi = Math.max(S.seqCur.f, f), want = !kept, k = new Set(s.keep);
+        for (let x = lo; x <= hi; x++) want ? k.add(x) : k.delete(x);
+        S.seqCur = { seg: si, f }; setKeep([...k]); return;
+      }
+      S.seqCur = { seg: si, f };                                                  // plain click: select only (K keep / drop, H hit)
+      for (const th of document.querySelectorAll('#pane-seq .thumb.cur')) th.classList.remove('cur');
+      t.classList.add('cur');
     };
+    t.ondblclick = ev => { if (ev.target.tagName === 'INPUT') return; S.seqCur = { seg: si, f }; setKeep(kept ? s.keep.filter(x => x !== f) : [...s.keep, f]); };
     if (kept) t.append(el('input', { type: 'number', value: s.ms[ki], title: 'ms', onchange: e => { s.ms[ki] = Math.max(10, +e.target.value); saveSeq(); } }));
     row.append(t);
   }
@@ -424,7 +431,8 @@ async function joinPreview(si, box) {
 let viewItems = [];
 async function renderView() {
   const p = $('#pane-view'); p.innerHTML = '';
-  const seq = await api('seq', { ws: S.ws, hero: S.hero, action: S.action });
+  if (!S.seq) S.seq = await api('seq', { ws: S.ws, hero: S.hero, action: S.action });
+  const seq = S.seq;
   if (!seq || !seq.segments.some(s => s.keep.length)) { p.append(el('p', { class: 'muted' }, 'Chưa có khung nào được chọn (tab Chọn khung).')); return; }
   const V = S.view; const hcfg = S.sum.heroes[S.hero];
   viewItems = [];
@@ -498,7 +506,15 @@ async function renderExport() {
     el('div', { class: 'row' }, 'Thư mục asset đích', assetIn, el('span', { class: 'muted' }, '(đổi sang thư mục khác để xuất thử)')),
     el('div', { class: 'row' }, el('button', { class: 'primary', disabled: !acts.length, onclick: async () => {
       const sel = checks.filter(c => c.checked).map(c => c.dataset.a); if (!sel.length) return;
-      const r = await post('export', { ws: S.ws, hero: h, actions: sel, asset: assetIn.value !== hc.asset ? assetIn.value : null }); toast('Đang xuất…', 'warn'); exportLog(`xếp việc xuất ${sel.join(', ')} (job ${r.job})`);
+      const body = { ws: S.ws, hero: h, actions: sel, asset: assetIn.value !== hc.asset ? assetIn.value : null };
+      let r;
+      try { r = await post('export', body); }
+      catch (e) {
+        if (!e.data || !e.data.confirm) return exportLog('LỖI: ' + e.message);
+        if (!confirm(`Các sheet sau đã có trong asset và KHÔNG được xuất từ workspace này (có thể là bản đã duyệt):\n${e.data.confirm.join('\n')}\n\nGhi đè?`)) return exportLog('Đã hủy: không ghi đè ' + e.data.confirm.join(', '));
+        r = await post('export', { ...body, force: true });
+      }
+      toast('Đang xuất…', 'warn'); exportLog(`xếp việc xuất ${sel.join(', ')} (job ${r.job})`);
     } }, 'Xuất (một động tác một lần trước, vòng lặp sau)')),
     el('div', { id: 'exportLog', class: 'log' }, '')));
   try {
@@ -551,8 +567,8 @@ function onKey(e) {
   } else if (S.tab === 'seq' && S.seq) {
     const cur = S.seqCur, s = S.seq.segments[cur.seg]; if (!s || cur.f === undefined) return;
     if (k === 'arrowleft' || k === 'arrowright') { cur.f = Math.max(0, cur.f + (k === 'arrowleft' ? -1 : 1)); renderSeq(); }
-    else if (k === 'k') { rekeep(cur.seg, s.keep.includes(cur.f) ? s.keep.filter(x => x !== cur.f) : [...s.keep, cur.f]); saveSeq(); renderSeq(); }
-    else if (k === 'h') { const i = s.keep.indexOf(cur.f); if (i < 0) return toast('Khung va chạm phải là khung đang giữ.', 'warn'); S.seq.hit = (S.seq.hit && S.seq.hit.seg === cur.seg && S.seq.hit.k === i) ? null : { seg: cur.seg, k: i }; saveSeq(); renderSeq(); }
+    else if (k === 'k') { rekeep(cur.seg, s.keep.includes(cur.f) ? s.keep.filter(x => x !== cur.f) : [...s.keep, cur.f]); commitSeq(); }
+    else if (k === 'h') { const i = s.keep.indexOf(cur.f); if (i < 0) return toast('Khung va chạm phải là khung đang giữ.', 'warn'); S.seq.hit = (S.seq.hit && S.seq.hit.seg === cur.seg && S.seq.hit.k === i) ? null : { seg: cur.seg, k: i }; commitSeq(); }
   }
 }
 init().catch(e => toast('Không tải được: ' + e.message, 'bad'));

@@ -265,6 +265,11 @@ class H(SimpleHTTPRequestHandler):
                 hero = body["hero"]
                 acts = body.get("actions") or [a for a in ws.cfg["actions"][hero] if ws.seq(hero, a)]
                 asset = body.get("asset") or None
+                if asset and not pathlib.Path(asset).is_absolute():
+                    asset = str(ROOT / asset)          # relative to the repo, never to this folder
+                risk = ex.overwrite_risk(ws, hero, acts, pathlib.Path(asset) if asset else None)
+                if risk and not body.get("force"):
+                    return self._json({"ok": False, "confirm": risk, "error": "sheet đã có (không phải từ workspace này): " + ", ".join(risk)}, 409)
 
                 def run(say, acts=acts, hero=hero, asset=asset):
                     w2 = Workspace.load(ws.id)
