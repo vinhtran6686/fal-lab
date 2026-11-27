@@ -1,0 +1,46 @@
+{
+  "purpose": "six women: the five user reference images (ref/style_board/female/) redrawn faithfully (same character, pose, costume, props; only the drawing style changed to bold heroic graphics), plus a sixth new priestess; 3x2 grid in 3840x2160 so each character is about twice as large as in the 10-character grid; the five references were sent as --ref (user request 2026-11-27)",
+  "status": "master drawn once (0.0167 USD), waiting for review",
+  "master": "source/design/master_six_v01.png",
+  "prompt": "docs/styles/heroic-vector-style/prompt-template-female-six-redraw.txt",
+  "refs": "ref/style_board/female/",
+  "cost_usd": 0.0167,
+  "characters": [
+    {
+      "order": 1,
+      "id": "knight",
+      "from": "knight_cape_polished"
+    },
+    {
+      "order": 2,
+      "id": "sorceress",
+      "from": "sorceress_smoke_ink"
+    },
+    {
+      "order": 3,
+      "id": "fire_mage",
+      "from": "fire_mage_braid_painterly"
+    },
+    {
+      "order": 4,
+      "id": "fur_warrior_bison",
+      "from": "bison_rider_fur_ink"
+    },
+    {
+      "order": 5,
+      "id": "archer",
+      "from": "archer_hood_ink"
+    },
+    {
+      "order": 6,
+      "id": "lumina_priestess",
+      "from": "new"
+    }
+  ],
+  "known_issues": [
+    "sorceress: lower legs and boots dissolve into dark shapes",
+    "archer's bow reaches into the cell above (touches the sorceress)",
+    "fire mage flame is cut at the top edge",
+    "line weight closer to the references (medium) than to the very thick heroic outline"
+  ]
+}
