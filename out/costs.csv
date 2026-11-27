@@ -376,3 +376,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-27 11:29:23,out/heroes/.work/female_ref_style/female_v02.png,gpt-image-2,low,3840x2160,False,29.0,0.0242,True
 2026-11-27 11:33:47,out/heroes/.work/female_six/six_v01.png,gpt-image-2,low,3840x2160,False,32.9,0.0167,True
 2026-11-27 11:36:17,out/heroes/.work/female_six/clip_attack/clip.mp4,h3-max-turbo,video,1080P 4s,False,7.1,0.2400,True
+2026-11-27 19:31:57,out/heroes/cinder_maul/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,16.9,0.0163,True
