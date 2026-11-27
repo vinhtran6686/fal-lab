@@ -131,6 +131,15 @@
       "cost_usd": 0.12,
       "prompt": "source/video/prompts/motion_skill3_p04.txt (knight: new rising hammer launch; archer: t03 paragraph; 3-5: t02 paragraphs)",
       "peek": "knight crouches with the hammer low behind, swings it up (blurred), ends holding the hammer level above his head (not tilted forward); archer draws with an arrow visible, jumps, releases at the top, lands with the hand open; seraph ok; red_axe plants the axe head-down this time and roars; giant raises arms and stamps, a small white-pink dust puff at the stomp, ends crouched with the face visible",
+      "status": "user 2026-11-27: keep ash_ranger from this clip; knight still fails -> skill3_t05 with a loose knight description (three strikes of his own choice)"
+    },
+    "skill3_t05": {
+      "model": "h3-max-turbo",
+      "resolution": "768P",
+      "duration_s": 4,
+      "cost_usd": 0.12,
+      "prompt": "source/video/prompts/motion_skill3_p05.txt (knight: loose description, three strikes of the model's choice)",
+      "peek": "knight: one overhead swing and one low swing (pink slash arc at ~f36), then holds the hammer level on the screen-LEFT side for the last ~2/3 of the clip, so not three strikes; archer, seraph, red_axe as before; giant stomps and ends crouched with the face visible",
       "status": "awaiting user"
     }
   },
@@ -139,6 +148,7 @@
     "death_t01: 'its killing blow comes from an unseen attacker' made the model draw a fire strike on every hero. Do not describe an incoming blow; say the hero collapses on its own, and ban fire, explosions, projectiles and impact effects.",
     "user 2026-11-27: every hero must move independently: one paragraph per hero with its own action, no shared group sentence that a model can copy across heroes.",
     "skill1_t01: one paragraph per hero + 'only the bodies move' + a full ban list of effects gave a clean clip (no invented effects)",
-    "skill2: 'the arrows simply vanish' did not work (three arrows flew into the next cell); even 'no arrows at all' left one arrow on the string in the first frames. For archers: describe the draw with empty fingers and repeat the ban; plan to erase a stray arrow at split time. A spin with a long weapon reaches the next cell: avoid spins with long weapons or run that hero alone"
+    "skill2: 'the arrows simply vanish' did not work (three arrows flew into the next cell); even 'no arrows at all' left one arrow on the string in the first frames. For archers: describe the draw with empty fingers and repeat the ban; plan to erase a stray arrow at split time. A spin with a long weapon reaches the next cell: avoid spins with long weapons or run that hero alone",
+    "knight skill 3: five tries (t01-t05). Every level swing or free combo ends with the hammer held level on the screen-left side; the model reliably does only vertical overhead chops/smashes for this character"
   ]
 }
