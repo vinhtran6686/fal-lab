@@ -1,13 +1,15 @@
 {
   "purpose": "heroic-vector-style test: ten different women (body shapes and classes), user request 2026-11-27",
-  "status": "drawn once (0.0218 USD), background flattened, characters cut, shrink test made; waiting for the user's review",
+  "status": "v01 (generic, soft, rejected by the user) removed; v02 (game-unit version: oversized signature object, element built into body and object, 3-3.8 heads, simplified game faces, 3840x2160) drawn, waiting for review",
   "grid": {
-    "image": "source/design/grid_v01.png",
-    "flat": "source/design/grid_v01_flat.png",
-    "shrink_test": "source/design/shrink_test_60_120px.png",
-    "characters_dir": "characters/ (one transparent PNG each)",
-    "prompt": "docs/styles/heroic-vector-style/prompt-template-female-lineup.txt",
-    "cost_usd": 0.0218
+    "image": "source/design/grid_v02_unit.png",
+    "flat": "source/design/grid_v02_unit_flat.png",
+    "shrink_test": "source/design/shrink_test_v02_60_120px.png",
+    "characters_dir": "characters/ (one transparent PNG each, ~700x970)",
+    "prompt": "docs/styles/heroic-vector-style/prompt-template-female-unit-lineup.txt",
+    "size": "3840x2160",
+    "model": "gpt-image-2 low",
+    "cost_usd": 0.021
   },
   "characters": [
     {
@@ -17,7 +19,8 @@
       "class": "witch",
       "element": "poison",
       "kind": "human",
-      "body": "tall and slim"
+      "body": "tall and slim",
+      "signature": "huge potion flask with green goo, dripping hat"
     },
     {
       "order": 2,
@@ -26,7 +29,8 @@
       "class": "battle mage",
       "element": "light",
       "kind": "human",
-      "body": "athletic"
+      "body": "athletic",
+      "signature": "floating gold sun disc, sun emblem"
     },
     {
       "order": 3,
@@ -35,7 +39,8 @@
       "class": "assassin",
       "element": "wind",
       "kind": "human",
-      "body": "lean and wiry"
+      "body": "lean and wiry",
+      "signature": "two body-long curved blades, wind swirl"
     },
     {
       "order": 4,
@@ -44,7 +49,8 @@
       "class": "archer",
       "element": "nature",
       "kind": "human",
-      "body": "long-limbed"
+      "body": "long-limbed",
+      "signature": "living branch bow, leaf armour"
     },
     {
       "order": 5,
@@ -53,7 +59,8 @@
       "class": "healer",
       "element": "light",
       "kind": "human",
-      "body": "plump and motherly, short"
+      "body": "plump and motherly, short",
+      "signature": "big golden lantern, sun apron"
     },
     {
       "order": 6,
@@ -62,7 +69,8 @@
       "class": "berserker",
       "element": "earth",
       "kind": "human",
-      "body": "broad and muscular"
+      "body": "broad and muscular",
+      "signature": "stone fists, turquoise-crystal greataxe"
     },
     {
       "order": 7,
@@ -71,7 +79,8 @@
       "class": "thief",
       "element": "wind",
       "kind": "human",
-      "body": "petite"
+      "body": "petite",
+      "signature": "loot sack bigger than her head, dagger"
     },
     {
       "order": 8,
@@ -80,7 +89,8 @@
       "class": "knight swordswoman",
       "element": "ice",
       "kind": "human",
-      "body": "heavily armoured, strong"
+      "body": "heavily armoured, strong",
+      "signature": "ice crystal shoulders, tower shield with snowflake"
     },
     {
       "order": 9,
@@ -89,7 +99,8 @@
       "class": "duelist swordswoman",
       "element": "fire",
       "kind": "human",
-      "body": "slender and agile"
+      "body": "slender and agile",
+      "signature": "rapier longer than her body, flame-shaped guard, flames at boots"
     },
     {
       "order": 10,
@@ -98,7 +109,8 @@
       "class": "chief sorceress",
       "element": "water",
       "kind": "human",
-      "body": "tall, commanding"
+      "body": "tall, commanding",
+      "signature": "pearl trident taller than her, wave crown and cape"
     }
   ]
 }
