@@ -1,0 +1,95 @@
+{
+  "purpose": "style test of the vivid preset (.claude/skills/fal-image/style-vivid.md) on ten new characters of mixed gender, class, element and kind (not a clan, not lightning)",
+  "status": "drawn once (0.0209 USD), background flattened, shrink test made; waiting for the user's review of the style",
+  "grid": {
+    "image": "source/design/grid_v01.png",
+    "flat": "source/design/grid_v01_flat.png (lineup_fix_pink.py --flatten-bg logic only; NO pink recolour here: the purple skin of the Bog Behemoth would be recoloured)",
+    "shrink_test": "source/design/shrink_test_60_120px.png",
+    "prompt": "docs/scripts/lineup/prompts/lineup-grid-vivid-style-test.txt",
+    "model": "gpt-image-2 low 2560x1440",
+    "cost_usd": 0.0209
+  },
+  "characters": [
+    {
+      "order": 1,
+      "id": "sir_brant",
+      "gender": "male",
+      "class": "tank paladin",
+      "element": "light",
+      "kind": "human"
+    },
+    {
+      "order": 2,
+      "id": "ember",
+      "gender": "female",
+      "class": "sorceress",
+      "element": "fire",
+      "kind": "human"
+    },
+    {
+      "order": 3,
+      "id": "grumm",
+      "gender": "male",
+      "class": "berserker",
+      "element": "earth",
+      "kind": "human"
+    },
+    {
+      "order": 4,
+      "id": "zephyra",
+      "gender": "female",
+      "class": "assassin",
+      "element": "wind",
+      "kind": "human"
+    },
+    {
+      "order": 5,
+      "id": "old_mossbeard",
+      "gender": "male",
+      "class": "druid support",
+      "element": "nature",
+      "kind": "human"
+    },
+    {
+      "order": 6,
+      "id": "marina",
+      "gender": "female",
+      "class": "archer",
+      "element": "wind",
+      "kind": "human"
+    },
+    {
+      "order": 7,
+      "id": "bog_behemoth",
+      "gender": "male",
+      "class": "brute",
+      "element": "poison",
+      "kind": "monster"
+    },
+    {
+      "order": 8,
+      "id": "frostfang",
+      "gender": "male",
+      "class": "beast",
+      "element": "ice",
+      "kind": "beast"
+    },
+    {
+      "order": 9,
+      "id": "crystal_colossus",
+      "gender": "none",
+      "class": "tank",
+      "element": "earth",
+      "kind": "construct"
+    },
+    {
+      "order": 10,
+      "id": "tide_lord",
+      "gender": "male",
+      "class": "chief",
+      "element": "water",
+      "kind": "human"
+    }
+  ],
+  "palettes": "each character its own saturated dominant + complementary accent + cream highlight (see the prompt)"
+}
