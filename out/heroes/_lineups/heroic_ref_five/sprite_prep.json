@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "title": "heroic_ref_five (5 hero L)",
+  "kind": "lineup",
+  "grid": {"cols": 5, "rows": 1, "x_margin": 0.03, "pad": 64, "gap": 14},
+  "fps": 24,
+  "heroes": {
+    "cinder_maul": {"asset": "out/heroes/cinder_maul", "kind": "hero", "tier": "L", "cell": [220, 196], "body_2x": 168, "shadow": true},
+    "ash_ranger":  {"asset": "out/heroes/ash_ranger",  "kind": "hero", "tier": "L", "cell": [220, 196], "body_2x": 168, "shadow": true},
+    "pale_seraph": {"asset": "out/heroes/pale_seraph", "kind": "hero", "tier": "L", "cell": [220, 196], "body_2x": 168, "shadow": false, "note": "hovers: no baked ground shadow (a separate decal, like flyers)"},
+    "red_axe":     {"asset": "out/heroes/red_axe",     "kind": "hero", "tier": "L", "cell": [220, 196], "body_2x": 168, "shadow": true},
+    "magma_giant": {"asset": "out/heroes/magma_giant", "kind": "hero", "tier": "L", "cell": [220, 196], "body_2x": 168, "shadow": true}
+  },
+  "clips": {
+    "attack_t01": {"path": "source/video/attack_t01/clip.mp4"},
+    "death_t01": {"path": "source/video/death_t01/clip.mp4"},
+    "run_t01": {"path": "source/video/run_t01/clip.mp4"},
+    "skill1_t01": {"path": "source/video/skill1_t01/clip.mp4"},
+    "skill2_t01": {"path": "source/video/skill2_t01/clip.mp4"},
+    "skill2_ash_t02": {"path": "source/video/skill2_ash_t02/clip.mp4", "heroes": ["ash_ranger"]},
+    "skill3_t01": {"path": "source/video/skill3_t01/clip.mp4"},
+    "skill3_t02": {"path": "source/video/skill3_t02/clip.mp4"},
+    "skill3_knight_ash_t03": {"path": "source/video/skill3_knight_ash_t03/clip.mp4", "heroes": ["cinder_maul", "ash_ranger"]},
+    "skill3_t04": {"path": "source/video/skill3_t04/clip.mp4"},
+    "skill3_t05": {"path": "source/video/skill3_t05/clip.mp4"}
+  },
+  "actions": {
+    "cinder_maul": {
+      "attack": {"sheet": "attack_side", "takes": ["attack_t01"], "pick": "attack_t01"},
+      "death": {"sheet": "death_side", "takes": ["death_t01"], "pick": "death_t01"},
+      "run": {"sheet": "run_side", "loop": true, "takes": ["run_t01"], "pick": "run_t01"},
+      "skill1": {"sheet": "skill_leap_slam_side", "takes": ["skill1_t01"], "pick": "skill1_t01"},
+      "skill2": {"sheet": "skill_quake_side", "takes": ["skill2_t01"], "pick": "skill2_t01"},
+      "skill3": {"sheet": "skill_hammer_combo_side", "takes": ["skill3_t01", "skill3_t02", "skill3_knight_ash_t03", "skill3_t04", "skill3_t05"], "pick": "skill3_t05"}
+    },
+    "ash_ranger": {
+      "attack": {"sheet": "shoot_side", "takes": ["attack_t01"], "pick": "attack_t01"},
+      "death": {"sheet": "death_side", "takes": ["death_t01"], "pick": "death_t01"},
+      "run": {"sheet": "run_side", "loop": true, "takes": ["run_t01"], "pick": "run_t01"},
+      "skill1": {"sheet": "skill_pierce_shot_side", "takes": ["skill1_t01"], "pick": "skill1_t01"},
+      "skill2": {"sheet": "skill_arrow_rain_side", "takes": ["skill2_t01", "skill2_ash_t02"], "pick": "skill2_ash_t02"},
+      "skill3": {"sheet": "skill_leap_shot_side", "takes": ["skill3_t01", "skill3_t02", "skill3_knight_ash_t03", "skill3_t04", "skill3_t05"], "pick": "skill3_t04"}
+    },
+    "pale_seraph": {
+      "attack": {"sheet": "shoot_side", "takes": ["attack_t01"], "pick": "attack_t01"},
+      "death": {"sheet": "death_side", "takes": ["death_t01"], "pick": "death_t01"},
+      "run": {"sheet": "run_side", "loop": true, "takes": ["run_t01"], "pick": "run_t01"},
+      "skill1": {"sheet": "skill_soul_field_side", "takes": ["skill1_t01"], "pick": "skill1_t01"},
+      "skill2": {"sheet": "skill_cape_storm_side", "takes": ["skill2_t01"], "pick": "skill2_t01"},
+      "skill3": {"sheet": "skill_soul_beam_side", "takes": ["skill3_t01", "skill3_t02", "skill3_t04", "skill3_t05"], "pick": "skill3_t01"}
+    },
+    "red_axe": {
+      "attack": {"sheet": "attack_side", "takes": ["attack_t01"], "pick": "attack_t01"},
+      "death": {"sheet": "death_side", "takes": ["death_t01"], "pick": "death_t01"},
+      "run": {"sheet": "run_side", "loop": true, "takes": ["run_t01"], "pick": "run_t01"},
+      "skill1": {"sheet": "skill_axe_combo_side", "takes": ["skill1_t01"], "pick": "skill1_t01"},
+      "skill2": {"sheet": "skill_axe_whirl_side", "takes": ["skill2_t01"], "pick": "skill2_t01"},
+      "skill3": {"sheet": "skill_war_cry_side", "takes": ["skill3_t01", "skill3_t02", "skill3_t04", "skill3_t05"], "pick": "skill3_t01"}
+    },
+    "magma_giant": {
+      "attack": {"sheet": "attack_side", "takes": ["attack_t01"], "pick": "attack_t01"},
+      "death": {"sheet": "death_side", "takes": ["death_t01"], "pick": "death_t01"},
+      "run": {"sheet": "run_side", "loop": true, "takes": ["run_t01"], "pick": "run_t01"},
+      "skill1": {"sheet": "skill_lava_fist_side", "takes": ["skill1_t01"], "pick": "skill1_t01"},
+      "skill2": {"sheet": "skill_stone_skin_side", "takes": ["skill2_t01"], "pick": "skill2_t01"},
+      "skill3": {"sheet": "skill_stomp_side", "takes": ["skill3_t01", "skill3_t02", "skill3_t04", "skill3_t05"], "pick": "skill3_t02"}
+    }
+  }
+}

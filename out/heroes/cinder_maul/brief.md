@@ -14,7 +14,7 @@
 ## Skills (level 1, ý tưởng nhanh; bảng pha chi tiết khi bắt đầu làm)
 - leap_slam (Nhảy nện búa): nhảy lên, lao tới một điểm xa, nện búa xuống; vụ nổ tròn tại điểm rơi (vfx)
 - quake (Địa chấn): đứng tại chỗ, giơ búa nện đất; vết nứt lan thẳng ra trước (vfx)
-- sweep (Quét ngang): xoay hông quét búa ngang tầm thắt lưng; vệt quét nặng
+- hammer_combo (Liên hoàn búa; thay sweep 2026-11-27, clip skill3_t05): chuỗi 3 đòn búa nặng do model tự chọn (quét ngang không làm được, xem docs/scripts/lineup/lineup-heroes-lessons.md §3)
 
 ## Design note (preflight)
 1. Hero L 84 px, melee, nam trưởng thành, búa chiến hai tay cao bằng người, màu chủ thép xám-xanh.
@@ -42,7 +42,7 @@
 | pose_respawn | - | - | ⏭ | không cần (respawn = vfx + idle) |
 | pose_skill_leap_slam | fal-image | ảnh tĩnh | ❌ | |
 | pose_skill_quake | fal-image | ảnh tĩnh | ❌ | |
-| pose_skill_sweep | fal-image | ảnh tĩnh | ❌ | |
+| pose_skill_hammer_combo | fal-image | ảnh tĩnh | ❌ | |
 | run_side | video-sprite (lưới heroic_ref_five) | loop | ✅ clip run_t01 (chưa tách khung) | `out/heroes/_lineups/heroic_ref_five/source/video/run_t01` |
 | attack_side | video-sprite (lưới heroic_ref_five) | one-shot | ✅ clip attack_t01 (chưa tách khung) | `out/heroes/_lineups/heroic_ref_five/source/video/attack_t01` |
 | death_side | video-sprite (lưới heroic_ref_five) | one-shot | ✅ clip death_t01 (chưa tách khung; bỏ khung có lửa) | `out/heroes/_lineups/heroic_ref_five/source/video/death_t01` |
@@ -50,8 +50,8 @@
 | levelup_side | idle (rig) + lib-fx | one-shot | ❌ | không làm clip (user 2026-11-27): dùng idle + tự thêm vfx như holy_commander |
 | skill_leap_slam_side | video-sprite | one-shot | ❌ | |
 | skill_quake_side | video-sprite | one-shot | ❌ | |
-| skill_sweep_side | video-sprite | one-shot | ❌ | |
-| fx_leap_slam, fx_quake, fx_sweep, fx_respawn, fx_levelup | lib-fx / fx-layers | hiệu ứng | ❌ | |
+| skill_hammer_combo_side | video-sprite | one-shot | ❌ | |
+| fx_leap_slam, fx_quake, fx_hammer_combo, fx_respawn, fx_levelup | lib-fx / fx-layers | hiệu ứng | ❌ | |
 | package | export | gói | ❌ | |
 
 Estimated cost: 6 stills (~USD 0.09) + 8 clips (~USD 0.64) + retakes; fx in code (0 USD).
