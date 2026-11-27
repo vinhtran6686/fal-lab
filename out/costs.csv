@@ -379,3 +379,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-27 19:31:57,out/heroes/cinder_maul/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,16.9,0.0163,True
 2026-11-27 19:42:21,out/heroes/ash_ranger/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,14.8,0.0163,True
 2026-11-27 19:52:15,out/heroes/pale_seraph/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,16.8,0.0161,True
+2026-11-27 19:56:34,out/heroes/red_axe/source/design/master_v01.png,gpt-image-2,low,1024x1024,False,15.1,0.0164,True

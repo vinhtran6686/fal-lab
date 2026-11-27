@@ -32,7 +32,7 @@
 ## Asset manifest
 | Asset | Từ | Loại | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| master (= idle) | fal-image | ảnh tĩnh | ⏳ v01 chờ duyệt | lơ lửng, vẽ lại từ ảnh tham khảo |
+| master (= idle) | fal-image | ảnh tĩnh | ✅ v01 (chốt 2026-11-27) | lơ lửng, vẽ lại từ ảnh tham khảo |
 | icon | fal-image | ảnh tĩnh | ❌ | |
 | projectile | fal-image | ảnh tĩnh | ❌ | cầu sáng |
 | projectile_fly, projectile_hit | fx-layers | hiệu ứng | ❌ | |
