@@ -1,7 +1,7 @@
 # Showcase: các hiệu ứng đã dựng lại bằng bộ tool vector
 
 Xuất bằng `python lib-fx/_tools/vectorfx.py showcase PROFILE` (bộ tool không cần chạy lại để xem). Mỗi thư mục biến thể có:
-`compare.gif` (bản gốc | bản dựng, đúng tốc độ gốc), `rebuilt.gif` (chỉ bản dựng), `frames/NN.png` (frame hoàn chỉnh: gradient, glow),
+`compare.gif` (bản gốc | bản dựng, đúng tốc độ gốc; mỗi bên thu về 320 px), `compare_original_size.gif` (chỉ có ở `flame-burst/jet` và `lightning/bolt`: vùng cắt của bản gốc ở **kích thước gốc** | bản dựng thu về đúng cùng tỉ lệ, cùng khung hình), `rebuilt.gif` (chỉ bản dựng), `frames/NN.png` (frame hoàn chỉnh: gradient, glow),
 `svg/NN.svg` (vector sạch, mỗi lớp một `<path id="lớp">`).
 
 | Profile | Biến thể | Thư mục | Điểm user |
