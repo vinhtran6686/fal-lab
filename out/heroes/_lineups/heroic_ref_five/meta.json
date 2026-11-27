@@ -44,6 +44,23 @@
       "prompt": "source/video/prompts/motion_run_p01.txt",
       "peek": "all five stay in their cells; knight drags the hammer behind but its head rides at shin height instead of scraping the ground; archer and red_axe run; seraph flies forward; giant walks, turns toward the viewer in mid-loop",
       "status": "approved by user 2026-11-27 (\"đẹp nha -> chốt\"); frames not split yet"
+    },
+    "skill1_t01": {
+      "model": "h3-max-turbo",
+      "resolution": "768P",
+      "duration_s": 4,
+      "cost_usd": 0.12,
+      "prompt": "source/video/prompts/motion_skill1_p01.txt",
+      "skills": {
+        "cinder_maul": "leap_slam",
+        "ash_ranger": "pierce_shot",
+        "pale_seraph": "soul_field",
+        "red_axe": "axe_combo",
+        "magma_giant": "lava_fist"
+      },
+      "phase_tables": "level-2 tables agreed with the user in chat 2026-11-27 (body only in the clip; effects later from lib-fx at the impact frame)",
+      "peek": "knight jumps and smashes, holds low; archer draws long and releases; seraph rises, spreads arms, ends leaning forward with one arm down; red_axe chops (a faint pink trail behind the axe in one frame); giant raises the fist and drives it down, end pose bent with the head low behind the shoulders",
+      "status": "awaiting user"
     }
   },
   "workflow_note": "user 2026-11-27: after a clip, only send the video for review and keep it in the repo (source/video/<action>_tNN/); do NOT split frames now, frame splitting is done later",
