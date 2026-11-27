@@ -28,6 +28,7 @@ docs/
 │       ├── style-board.md                                 10 ảnh tham khảo và nhận xét (ảnh ở ref/style_board/)
 │       ├── prompt-template.txt                            prompt lưới 10 nhân vật hỗn hợp đã chạy được
 │       ├── prompt-template-female-lineup.txt              prompt lưới 10 nữ (chunky, tô khối, nét dày, vật khổng lồ, 3840x2160)
+│       ├── prompt-template-hero-faithful-redraw.txt       prompt master hero vẽ lại sát ảnh tham khảo (một con, 1024x1024, --ref ảnh đã xóa chữ ký)
 ├── scripts/                                               tài liệu cho code trong scripts/
 │   ├── puppet_kit/                                        scripts/puppet*.py, scripts/puppet_kit/
 │   │   ├── puppet-kit-guide.md                            cách dùng kit: rig, lệnh check/render/track/slash, skin, links
@@ -38,7 +39,8 @@ docs/
 │   │   └── ref-atlas-split-and-animations.md              tách atlas tham khảo (png + lua) thành frame, gif và animation có tên
 │   └── lineup/                                            scripts/lineup/
 │       ├── lineup-workflow.md                             quy trình lưới nhiều nhân vật trong một clip cho mọi class: 5 bước, bảng thông số (kích thước, thời lượng, giá), bảng cấp và class
-│       ├── prompts/                                       prompt đã chạy: lưới 10 quái, đòn chém từ trên xuống, chết tại chỗ
+│       ├── lineup-heroes-from-masters.md                  lưới hero ghép từ master đã chốt: viết prompt mỗi con độc lập, bài học, khi nào để model tự sáng tạo
+│       ├── prompts/                                       prompt đã chạy: lưới 10 quái, đòn chém từ trên xuống, chết tại chỗ; hero-lineup-* (attack, death, run, skill 1-3)
 │       └── lineup-split-guide.md                          tách clip lưới nhiều nhân vật thành bộ khung từng con (lineup_split.py)
 ├── tools/                                                 tài liệu cho ứng dụng trong tools/
 │   ├── studio/                                            tools/studio/ (Rig & Pose Studio)

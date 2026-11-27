@@ -1,6 +1,6 @@
 # Quy trình lưới nhiều nhân vật trong một clip: bước làm, thông số kỹ thuật, áp dụng cho các class
 
-Quy trình chung cho mọi class có nhiều đơn vị cùng tộc/hệ (enemy, ally, và hero khi cần tạo hàng loạt). Mục tiêu: một ảnh lưới 10 nhân vật → mỗi động tác chỉ MỘT clip → tách ra 10 bộ khung. Đã chạy thật ngày 2026-11-26 (lưới 10 quái, động tác chết và tấn công). Mọi con số dưới đây là số đã đo; lần sau dùng lại đúng các số này để kết quả nhất quán.
+Quy trình chung cho mọi class có nhiều đơn vị cùng tộc/hệ (enemy, ally, và hero khi cần tạo hàng loạt; hero ghép từ master đã chốt: `lineup-heroes-from-masters.md`). Mục tiêu: một ảnh lưới 10 nhân vật → mỗi động tác chỉ MỘT clip → tách ra 10 bộ khung. Đã chạy thật ngày 2026-11-26 (lưới 10 quái, động tác chết và tấn công). Mọi con số dưới đây là số đã đo; lần sau dùng lại đúng các số này để kết quả nhất quán.
 
 ## Áp dụng cho các class khác (cách làm một bộ mới)
 **Bước 0, thiết kế bộ (ghi trong câu trả lời cho người dùng hoặc `brief.md`; viết trước khi vẽ, theo `fal-image/preflight.md`):**
@@ -29,7 +29,7 @@ Quy trình chung cho mọi class có nhiều đơn vị cùng tộc/hệ (enemy,
 | enemy (đã chạy) | 3 hướng: side, down, up | walk ×3, attack, death (ranged: thêm shoot + ảnh đạn) | lưới side chạy được. Walk down và up cần lưới đã vẽ mặt trước và mặt sau (hai lưới nữa) — chưa thử. Đi bộ trên lưới chưa đặt lại ô trôi khỏi ô; đặt lại ô rồi mới thử lại |
 | ally | 1 hướng: side | walk, attack, death | giống enemy side, hợp nhất cho lưới (ít hướng) |
 | enemy-flying | 3 hướng | bay, attack, death | không có đường đất: thân lơ lửng ~1/3 ô trên mặt đất; chưa thử. `--feet` phải nâng lên khoảng 0,55-0,60 và cánh sải ngang làm chiều rộng lớn hơn, dùng ô rộng hơn |
-| hero | side | run, attack, death, skill | mỗi hero thường duy nhất và có skill + vfx: dùng lưới chỉ cho các clip thân (run, attack, death); canvas M rộng 176×140 nên ô rộng hơn khi vũ khí dài. Chưa thử |
+| hero (đã chạy, 5 hero L) | side | run, attack, death, skill | ghép lưới từ master đã chốt (5×1, cao 0,22 ô); run, attack, death và cả skill (mỗi con một đoạn riêng, hiệu ứng làm sau); xem `lineup-heroes-from-masters.md` |
 | boss | 3 hướng | idle, attack, death, skill | XL, XXL: bố cục một hàng như trên. Chưa thử |
 
 **Việc cần làm cho mỗi bộ mới (theo thứ tự):** (0) ghi thiết kế bộ → (1) prompt lưới + lint sạch → hỏi "yes" vẽ → xem từng ô → (2) đặt lại ô → (3) với mỗi động tác: viết prompt chuyển động, liệt kê trong chat, dry run, hỏi "yes" kèm số tiền, chạy → (4) tách khung, xem ảnh kiểm → (5) chọn khung, thu nhỏ theo cấp, nhập asset.
