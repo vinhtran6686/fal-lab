@@ -1,0 +1,90 @@
+{
+  "purpose": "ten new women: DESIGN (body, outfit vocabulary, attitude) taken from the five user reference images in ref/style_board/female/, GRAPHICS from heroic-vector-style (thick form-shaded outline, bright rich colours, one oversized signature object, element in body); master image only (no frame split), user request 2026-11-27",
+  "references": "ref/style_board/female/ (5 images)",
+  "status": "master drawn (0.0242 USD); an earlier attempt that copied the references' own thin ink rendering was rejected (female_v01, not kept); waiting for review",
+  "master": "source/design/master_grid_v01.png (3840x2160, 5x2 grid)",
+  "prompt": "docs/styles/heroic-vector-style/prompt-template-female-ref-design.txt",
+  "cost_usd": 0.0242,
+  "characters": [
+    {
+      "order": 1,
+      "id": "vesper",
+      "gender": "female",
+      "class": "witch",
+      "element": "poison",
+      "kind": "human"
+    },
+    {
+      "order": 2,
+      "id": "emberlyn",
+      "gender": "female",
+      "class": "fire mage",
+      "element": "fire",
+      "kind": "human"
+    },
+    {
+      "order": 3,
+      "id": "raven",
+      "gender": "female",
+      "class": "assassin",
+      "element": "shadow",
+      "kind": "human"
+    },
+    {
+      "order": 4,
+      "id": "nimue",
+      "gender": "female",
+      "class": "archer",
+      "element": "wind",
+      "kind": "human"
+    },
+    {
+      "order": 5,
+      "id": "orla",
+      "gender": "female",
+      "class": "beast tamer",
+      "element": "earth",
+      "kind": "human"
+    },
+    {
+      "order": 6,
+      "id": "lumina",
+      "gender": "female",
+      "class": "priestess healer",
+      "element": "light",
+      "kind": "human"
+    },
+    {
+      "order": 7,
+      "id": "ivana",
+      "gender": "female",
+      "class": "knight swordswoman",
+      "element": "ice",
+      "kind": "human"
+    },
+    {
+      "order": 8,
+      "id": "zahra",
+      "gender": "female",
+      "class": "duelist",
+      "element": "sand",
+      "kind": "human"
+    },
+    {
+      "order": 9,
+      "id": "nocta",
+      "gender": "female",
+      "class": "necromancer",
+      "element": "death",
+      "kind": "human"
+    },
+    {
+      "order": 10,
+      "id": "tempesta",
+      "gender": "female",
+      "class": "chief storm sorceress",
+      "element": "storm",
+      "kind": "human"
+    }
+  ]
+}

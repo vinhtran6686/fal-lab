@@ -372,3 +372,5 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-27 11:10:35,out/heroes/.work/heroic_female/female_v02.png,gpt-image-2,low,3840x2160,False,28.1,0.0210,True
 2026-11-27 11:13:41,out/heroes/.work/heroic_female/female_v03.png,gpt-image-2,low,3840x2160,False,27.7,0.0225,True
 2026-11-27 11:18:16,out/heroes/.work/heroic_female/female_v04.png,gpt-image-2,low,3840x2160,False,27.8,0.0244,True
+2026-11-27 11:26:06,out/heroes/.work/female_ref_style/female_v01.png,gpt-image-2,low,3840x2160,False,28.2,0.0209,True
+2026-11-27 11:29:23,out/heroes/.work/female_ref_style/female_v02.png,gpt-image-2,low,3840x2160,False,29.0,0.0242,True
