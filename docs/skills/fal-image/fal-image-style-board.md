@@ -43,6 +43,8 @@ Tài liệu làm việc, **còn mở**: người dùng có thể gửi thêm ả
 **Hiệu ứng trong tranh (cho vfx sau, không vẽ trong thân sprite)**
 - Lớp phẳng nhiều tông có viền: lưỡi lửa, vòng gió, mũi nhọn nổ, mảnh vụn, khói phẳng, sao hình thoi, vòng cầu đồng tâm, tia vạch.
 
+**Cách viết mô tả (yêu cầu của người dùng):** mỗi nhân vật mở đầu bằng bốn thẻ: GIỚI TÍNH, CLASS, HỆ, LOẠI (người, thú, quái, công trình, linh hồn); xem `style-vivid.md` §0.
+
 ## 3. So với bản chunky hiện tại (`style-chunky.md`)
 | Mục | Chunky hiện tại | Phong cách tham khảo (vivid) |
 |---|---|---|

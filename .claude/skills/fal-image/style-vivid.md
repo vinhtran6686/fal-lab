@@ -2,6 +2,9 @@
 
 Candidate default for new characters, to replace `style-chunky.md` once the Lightning clan test is approved. Same FORMAT as `format.md` (one character per still or a lineup grid on magenta, side view, upright). It changes HOW the character is drawn. Source of the traits: `docs/skills/fal-image/fal-image-style-board.md` and the images in `ref/style_board/`. Never name the game the references come from in a prompt.
 
+## 0. Description header (required for every character)
+Every character description starts with four tags, in this order, so the model draws gender, role, element and kind unmistakably: **GENDER** (male, female, or "no gender" for a construct), **CLASS** (melee fighter, assassin, archer, spear thrower, mage, priest or support, knight, brute or tank, chief or boss), **ELEMENT** (the clan's: fire, ice, lightning, poison, nature, earth, water, wind) and **KIND** (human, beast, monster, construct, spirit). Example: "COIL SOLDIER, male, melee fighter, lightning, human: ...". The body paragraph of §1 then follows the tags (male fighter: stocky with huge fists; female caster: slim with flowing hair; beast: its own anatomy). The element shows in the colour plan and in ONE signature motif of the element (coil and spark shapes for lightning, flame clumps for fire, crystal shards for ice, goo drips for poison), never as a glow. Same four tags go in `brief.md` and in the lineup `meta.json`.
+
 ## 1. Body by gender and role (write one body paragraph per character; never copy another's)
 | Group | Heads | Words that give it |
 |---|---|---|
@@ -36,4 +39,7 @@ Heavy angular brows, and ONE expression: a snarl with teeth, a toothy grin, a sq
 - [ ] No pink or magenta on the subject (`python scripts/lineup/lineup_fix_pink.py`).
 
 ## 7. Status and known limits
-Draft: not yet tried on a still. Tested next on the Lightning clan lineup (`out/enemies/_lineups/lightning/`); record the result and the lessons here. The pre-existing limits of `style-chunky.md` §9 (the model ignores percentages and positions, side views drift to frontal) still apply.
+Draft. Tried once on the Lightning clan lineup (10 characters, `out/enemies/_lineups/lightning/source/design/grid_vivid_v01.png`, prompt `docs/scripts/lineup/prompts/lineup-grid-lightning-clan-vivid.txt`, one image about 0.021 USD):
+- **Worked:** the four tags of §0 gave an unmistakable gender, class, element and kind per character; stocky males with enormous fists and big beards and moustaches, slim women with a clear waist, flowing hair and a confident smirk, a beast, an insect-like monster, a stone construct; every face has an expression; the dominant yellow with a violet accent (near-complementary) reads strongly; the outline is dark and tinted; the cel shading is hard-edged.
+- **Watch:** more texture and trim than the references (scratchy fringes on cloaks and feathers, many small bits), which may not read at 60 px; the chief's jagged cloak and shoulder plates are very wide (about 67 % of the cell, 43 % tall after the regrid); women's armour is skimpy (keep it like the references or ask for more cover); the model again painted violet as magenta-pink (use `lineup_fix_pink.py --target 130,90,235 --flatten-bg`, then the key is clean).
+- The pre-existing limits of `style-chunky.md` §9 still apply. Not approved yet: the user compares it with the chunky grid before it replaces the default.
