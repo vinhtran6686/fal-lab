@@ -386,3 +386,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-27 20:19:00,out/heroes/_lineups/heroic_ref_five/source/video/run_t01/clip.mp4,h3-max-turbo,video,768P 4s,False,6.5,0.1200,True
 2026-11-27 20:27:44,out/heroes/_lineups/heroic_ref_five/source/video/skill1_t01/clip.mp4,h3-max-turbo,video,768P 4s,False,5.6,0.1200,True
 2026-11-27 20:35:07,out/heroes/_lineups/heroic_ref_five/source/video/skill2_t01/clip.mp4,h3-max-turbo,video,768P 4s,False,4.2,0.1200,True
+2026-11-27 20:41:03,out/heroes/_lineups/heroic_ref_five/source/video/skill2_ash_t02/clip.mp4,h3-max-turbo,video,768P 4s,False,4.0,0.1200,True

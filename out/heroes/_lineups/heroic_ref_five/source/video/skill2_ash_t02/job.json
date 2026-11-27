@@ -1,0 +1,26 @@
+{
+  "prompt": "Animate the ONE hooded archer in this picture. He is the only character: the rest of the picture stays empty flat magenta, and no other character, weapon or object ever appears. The camera is fixed and does not move, zoom or pan. Left and right in this description are the screen's left and right. He stays exactly where he stands, his feet planted on his ground line and never sliding, and keeps his own size, design, colours, outline and dark bow exactly as in the image, in the near-side view facing screen right.\nHe plants his feet a little wider and raises his dark bow in his forward hand, aiming HIGH into the sky toward the upper right, the bow arm stretched up at about 60 degrees above the horizon, his head tilted back looking up along the bow. Keeping that high aim the whole time, he shoots again and again in a steady rhythm, THREE times in a row: each time his rear hand comes to the string, draws it back to his cheek with the elbow pulled back toward screen left and down, holds for an instant, then releases, the string snaps forward, his rear hand flicks back and his bow arm recoils a little; then the rear hand returns to the string for the next draw. After the third release he holds the pose with the bow still aimed high into the sky.\nThere are NO arrows at all: no arrow on the string, no arrow in his hand, no arrow in the air; the string is drawn and released empty. No effect of any kind is drawn: no light, no glow, no motion trail, no afterimage, no dust. The flat solid pure magenta background stays unchanged and fixed in every frame: no scenery, no ground, no shadows, no text, no grid, no camera shake.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab43115/LzwX09I7H73dbMWQtTlUC_lineup_v01_regrid_only_ash.png"
+  },
+  "seconds": 4,
+  "resolution": "768P",
+  "size": [
+    2560,
+    1440
+  ],
+  "estimateUsd": 0.12,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/heroes/_lineups/heroic_ref_five/source/design/lineup_v01_regrid_only_ash.png",
+  "lastFrame": null,
+  "requestId": "01a21ebd-660d-70c3-a689-33154a8148c0",
+  "seconds_elapsed": 4.0,
+  "source_url": "https://v3b.fal.media/files/b/0ab43115/HMii-Zbua56ox3FJqMOa2_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

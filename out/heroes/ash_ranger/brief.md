@@ -12,7 +12,7 @@
 
 ## Skills (level 1, ý tưởng nhanh)
 - pierce_shot (Tên xuyên): kéo căng lâu, bắn một mũi xuyên thẳng hàng quái; vệt gió (vfx)
-- triple_shot (Ba mũi tên): bắn ba mũi tên xòe quạt ra trước
+- arrow_rain (Mưa tên; thay triple_shot theo user 2026-11-27): chĩa cung lên trời, kéo và thả dây liên tục; mũi tên làm thành hiệu ứng mưa tên (vfx riêng)
 
 ## Design note (preflight)
 1. Hero L, ranged, nam; cung recurve gãy góc ~85% chiều cao hình.
@@ -37,13 +37,13 @@
 | projectile_fly, projectile_hit | fx-layers | hiệu ứng | ❌ | |
 | pose_respawn | - | - | ⏭ | không cần (respawn = vfx + idle) |
 | pose_skill_pierce_shot | fal-image | ảnh tĩnh | ❌ | |
-| pose_skill_triple_shot | fal-image | ảnh tĩnh | ❌ | |
+| pose_skill_arrow_rain | fal-image | ảnh tĩnh | ❌ | |
 | run_side | video-sprite (lưới heroic_ref_five) | loop | ✅ clip run_t01 (chưa tách khung) | `out/heroes/_lineups/heroic_ref_five/source/video/run_t01` |
 | shoot_side | video-sprite (lưới heroic_ref_five) | one-shot | ✅ clip attack_t01 (chưa tách khung) | `out/heroes/_lineups/heroic_ref_five/source/video/attack_t01` |
 | death_side | video-sprite (lưới heroic_ref_five) | one-shot | ✅ clip death_t01 (chưa tách khung; bỏ khung có lửa) | `out/heroes/_lineups/heroic_ref_five/source/video/death_t01` |
 | respawn_side | idle (rig) + lib-fx | one-shot | ❌ | không làm clip (user 2026-11-27): vfx sáng -> hiện nhân vật ở idle |
 | levelup_side | idle (rig) + lib-fx | one-shot | ❌ | không làm clip (user 2026-11-27): dùng idle + tự thêm vfx như holy_commander |
 | skill_pierce_shot_side | video-sprite | one-shot | ❌ | |
-| skill_triple_shot_side | video-sprite | one-shot | ❌ | |
-| fx_pierce_shot, fx_triple_shot, fx_respawn, fx_levelup | lib-fx / fx-layers | hiệu ứng | ❌ | |
+| skill_arrow_rain_side | video-sprite | one-shot | ❌ | |
+| fx_pierce_shot, fx_arrow_rain, fx_respawn, fx_levelup | lib-fx / fx-layers | hiệu ứng | ❌ | |
 | package | export | gói | ❌ | |

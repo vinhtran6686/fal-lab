@@ -76,6 +76,17 @@
         "magma_giant": "stone_skin"
       },
       "peek": "knight plants the hammer head-down and holds; archer shoots, but the three arrows fly into the seraph's cell (~f50) despite 'arrows vanish'; seraph's spin is a blurred ghost for a few frames, ends facing right; red_axe spins, the axe head reaches into the seraph's cell during the spin; giant crosses arms, flexes and roars, head visible",
+      "status": "user 2026-11-27: ok except ash_ranger (bow part wrong); ash_ranger skill 2 redone alone as skill2_ash_t02"
+    },
+    "skill2_ash_t02": {
+      "model": "h3-max-turbo",
+      "resolution": "768P",
+      "duration_s": 4,
+      "cost_usd": 0.12,
+      "prompt": "source/video/prompts/motion_skill2_ash_p02.txt",
+      "reference": "source/design/lineup_v01_regrid_only_ash.png (lineup with every cell but ash_ranger's blanked; same position)",
+      "skill": "arrow_rain (user: bow aimed at the sky, draw and release again and again; arrows become a rain-of-arrows vfx later)",
+      "peek": "bow aimed high up-right, draws and releases; one arrow visible on the string in the first frames; body turned toward the viewer",
       "status": "awaiting user"
     }
   },
