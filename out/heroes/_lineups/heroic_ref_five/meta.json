@@ -61,6 +61,22 @@
       "phase_tables": "level-2 tables agreed with the user in chat 2026-11-27 (body only in the clip; effects later from lib-fx at the impact frame)",
       "peek": "knight jumps and smashes, holds low; archer draws long and releases; seraph rises, spreads arms, ends leaning forward with one arm down; red_axe chops (a faint pink trail behind the axe in one frame); giant raises the fist and drives it down, end pose bent with the head low behind the shoulders",
       "status": "approved by user 2026-11-27 (\"tuyệt\"); frames not split yet"
+    },
+    "skill2_t01": {
+      "model": "h3-max-turbo",
+      "resolution": "768P",
+      "duration_s": 4,
+      "cost_usd": 0.12,
+      "prompt": "source/video/prompts/motion_skill2_p01.txt",
+      "skills": {
+        "cinder_maul": "quake",
+        "ash_ranger": "triple_shot",
+        "pale_seraph": "cape_storm",
+        "red_axe": "axe_whirl",
+        "magma_giant": "stone_skin"
+      },
+      "peek": "knight plants the hammer head-down and holds; archer shoots, but the three arrows fly into the seraph's cell (~f50) despite 'arrows vanish'; seraph's spin is a blurred ghost for a few frames, ends facing right; red_axe spins, the axe head reaches into the seraph's cell during the spin; giant crosses arms, flexes and roars, head visible",
+      "status": "awaiting user"
     }
   },
   "workflow_note": "user 2026-11-27: after a clip, only send the video for review and keep it in the repo (source/video/<action>_tNN/); do NOT split frames now, frame splitting is done later",
