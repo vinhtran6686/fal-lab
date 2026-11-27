@@ -1,0 +1,39 @@
+# Style preset: vivid (draft, from 10 user references; 2026-11-27)
+
+Candidate default for new characters, to replace `style-chunky.md` once the Lightning clan test is approved. Same FORMAT as `format.md` (one character per still or a lineup grid on magenta, side view, upright). It changes HOW the character is drawn. Source of the traits: `docs/skills/fal-image/fal-image-style-board.md` and the images in `ref/style_board/`. Never name the game the references come from in a prompt.
+
+## 1. Body by gender and role (write one body paragraph per character; never copy another's)
+| Group | Heads | Words that give it |
+|---|---|---|
+| Male fighter, brute, tank | 2.5-3 | BIG head, huge shoulders and chest, enormous fists as big as the face or bigger, very short thick legs, wide stance, a big beard or moustache |
+| Old or comic caster | about 3 | caricature face (wide open mouth or shut eyes), long white beard, small hands |
+| Female hero, priestess, mage | 4-5 | slim with a clear waist and a gentle curve, long flowing hair, a cape that flies, a confident face with a few eyelash marks, bright eyes; never chibi |
+| Agile (assassin, scout) | 4-4.5 | lean and muscular, forward lean, sharp angles |
+| Monster, elemental | 2.5-3 | body made of its element (stone blocks, flame shapes, chitin), biggest part is a fist or a limb |
+| Beast, mount | natural | one huge feature (horns, ruff), strong silhouette |
+One OVERSIZED signature element per character (weapon, shield, hat, pauldron, fist, mount). The silhouette must read when filled black and at 60 px.
+
+## 2. Outline, shading, material
+- Thick clean outline, **dark but tinted by the local colour** (deep navy, deep purple, deep brown, deep green), thicker on the outside, thinner inside, rounded joins.
+- Flat cel shading in 3-4 hard-edged tones with **strong contrast**: a deep tinted shadow, the base, a light tone, and a cream-white highlight shape; one bright rim-light shape on the lit edge and a few glossy highlight shapes on metal. No gradients, no airbrush, no soft glow, no blur.
+- Material by flat speckle spots, scratches, rivets, plate edges and slots; hair, fur and flames as flat clumps with sharp pointed tips.
+
+## 3. Colour
+One **saturated** dominant hue + one **bright accent close to its complement** (purple + gold, green + gold, blue + gold or cyan, orange + blue-grey) + cream-white highlights. Shadows are a deeper tint of the same colour. Glows (eyes, crystals, gems) are flat layered shapes, never a halo. Never magenta or pink on the subject (the background is keyed): a violet or pink accent must be kept clearly violet (see `docs/scripts/lineup/lineup-workflow.md`, the pink fix).
+
+## 4. Face: personality in a few bold shapes
+Heavy angular brows, and ONE expression: a snarl with teeth, a toothy grin, a squint, a big moustache or beard, glowing eyes (no realistic eyes, no tiny pupils). Women: eyelash marks, small mouth shape, brow lines. Dark, grim-heroic or comic, never a cute mascot.
+
+## 5. Prompt block `{STYLE vivid}` (fill `{H}`)
+> Style: stylized 2D vector cartoon game art for a fantasy tower defense game, in the manner of a bold heroic cartoon character illustration with a lot of personality, designed to read at about {H} pixels tall. Exaggerated chunky proportions: stocky male characters about 2.5 to 3 heads tall with a big head, huge shoulders and chest, enormous fists and short legs; female and agile characters slimmer, about 4 to 5 heads tall; every character has ONE oversized signature element. Faces with strong expression: heavy angular brows, snarls or grins showing teeth, big moustaches and beards, glowing eyes. Colour: one saturated dominant hue with a bright accent close to its complement and cream-white highlights; flat solid fills in 3 to 4 hard-edged tones with strong contrast, a deep shadow tone tinted toward the colour, a bright rim-light shape and a few glossy highlight shapes on metal; no gradients, no airbrush, no soft glow, no blur, no painterly texture. Thick clean outlines in a dark shade of the local colour, thicker on the outside and thinner inside, with rounded joins. Material is told by flat speckle spots, scratches, rivets and plate edges; hair, fur and flames are flat clumps with sharp pointed tips. High top-down camera tilted about 60 degrees; light comes from the top-left.
+
+## 6. Review (a still passes only if every line is true when LOOKED AT)
+- [ ] Proportions match the group of §1; one oversized signature element; fists as big as the face on males.
+- [ ] Outline dark and tinted, thick outside; tones hard-edged with a cream-white highlight; no gradient, no halo.
+- [ ] One dominant hue + a complementary accent; deep tinted shadows.
+- [ ] The face has an expression (brow, teeth, moustache or lashes), not a blank face.
+- [ ] Shrink test at 60 px: silhouette, signature element and eyes still read.
+- [ ] No pink or magenta on the subject (`python scripts/lineup/lineup_fix_pink.py`).
+
+## 7. Status and known limits
+Draft: not yet tried on a still. Tested next on the Lightning clan lineup (`out/enemies/_lineups/lightning/`); record the result and the lessons here. The pre-existing limits of `style-chunky.md` §9 (the model ignores percentages and positions, side views drift to frontal) still apply.
