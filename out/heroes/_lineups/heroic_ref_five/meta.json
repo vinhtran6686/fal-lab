@@ -24,6 +24,15 @@
         "red_axe": "ok: raise over the shoulder, diagonal chop, hold low; slash crescent in f8",
         "magma_giant": "FAIL: during the punch the head and beard disappear (the body turns away and the design breaks), f10-f13"
       },
+      "status": "approved by user 2026-11-27 (\"cả 5 nhân vật đều ổn, chốt video này\"); frames not split yet"
+    },
+    "death_t01": {
+      "model": "h3-max-turbo",
+      "resolution": "768P",
+      "duration_s": 4,
+      "cost_usd": 0.12,
+      "prompt": "source/video/prompts/motion_death_p01.txt",
+      "peek": "all five fall on their backs in place; red_axe's axe haft reaches into magma_giant's space at the end; magma_giant's lava core and flame stay lit",
       "status": "awaiting user"
     }
   },

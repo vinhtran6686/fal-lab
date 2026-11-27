@@ -1,0 +1,26 @@
+{
+  "prompt": "Animate this lineup of five fantasy heroes as ONE death animation, all five at the same time, each dying in place. The camera is fixed and does not move, zoom or pan. Left and right in this description are the screen's left and right. Every hero starts facing screen right, and its killing blow comes from an unseen attacker standing just outside the picture to the right.\nEvery beat, for each hero: it stays exactly where it stands in the image, inside its own cell, and never slides, is thrown or flies back; it never moves into another hero's space and the five never touch or overlap; each hero's body ends up inside the empty magenta space around its own starting position, never nearer than half a body length to another hero.\nThe death is one continuous move: the blow lands and the head jerks back toward screen left, the hero's weapon loosens in its hand, the knees buckle and the body sinks straight down over its own feet, the torso then tips backward toward screen left and the hero falls onto its back on the ground right where it stood, ending lying on its back with the head toward screen left and the feet toward screen right, arms limp, the weapon lying on the ground beside the body within reach of its hand.\nEvery hero keeps its own weapon and design: the armoured knight with the red crest (far left) keeps his stone hammer; the hooded archer (second from left) keeps his dark bow; the pale floating woman with the cape (middle) has no weapon: she stops floating, drops straight down onto her own ground line, her cape settling over her as she falls on her back; the red-haired woman (second from right) keeps her double axe; the stone giant with the black beard (far right) has no weapon: his huge body sinks to its knees and falls back heavily, his head, black beard and gold beard rings stay visible the whole time, the lava core dims and the small flame on his hand goes out.\nAfter the fall the move ends and the final pose is held: no getting up, no second movement, no return to the starting stance. Every hero keeps its own size, design, colours and outline exactly as in the image.\nThe flat solid pure magenta background stays unchanged and fixed in every frame: no scenery, no ground, no shadows, no effects, no blood, no text, no grid, no camera shake.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab4306e/WYFIt2xtOzF4EEEYb3htM_lineup_v01_regrid.png"
+  },
+  "seconds": 4,
+  "resolution": "768P",
+  "size": [
+    2560,
+    1440
+  ],
+  "estimateUsd": 0.12,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/heroes/_lineups/heroic_ref_five/source/design/lineup_v01_regrid.png",
+  "lastFrame": null,
+  "requestId": "01a21ea3-e0da-7392-a16c-57a3e7e7e8d0",
+  "seconds_elapsed": 4.2,
+  "source_url": "https://v3b.fal.media/files/b/0ab4306e/JK4A-C3aC-tRlIIAOh8tW_minimax-h3.mp4",
+  "cost_is_estimate": true
+}
