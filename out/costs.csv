@@ -367,3 +367,4 @@ time,file,model,quality,size,transparent,seconds,cost_usd,approx
 2026-11-26 18:24:51,out/enemies/.work/lightning_lineup/grid_v02.png,gpt-image-2,low,2560x1440,False,20.7,0.0196,True
 2026-11-27 10:31:22,out/enemies/.work/lightning_lineup/grid_v03.png,gpt-image-2,low,2560x1440,False,17.5,0.0212,True
 2026-11-27 10:43:03,out/enemies/.work/vivid_test/vivid_v01.png,gpt-image-2,low,2560x1440,False,20.5,0.0209,True
+2026-11-27 10:48:06,out/enemies/.work/vivid_test/vivid_v02.png,gpt-image-2,low,2560x1440,False,20.9,0.0215,True
