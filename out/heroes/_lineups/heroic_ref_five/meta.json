@@ -122,6 +122,15 @@
       "prompt": "source/video/prompts/motion_skill3_knight_ash_p03.txt",
       "reference": "source/design/lineup_v01_regrid_only_knight_ash.png (cells 1-2 only, same positions)",
       "peek": "knight: three beats (heave back, level sweep, overhead smash) but the sweep is held on the screen-left side, then the smash lands in front on the right and the end pose is good; archer: draws on the ground, jumps while holding the draw, releases at the top with the hand flung open behind his head, lands; an arrow is visible on the string during the draw (first ~6 frames)",
+      "status": "user 2026-11-27: not accepted; redo all five as skill3_t04 with a completely new knight move"
+    },
+    "skill3_t04": {
+      "model": "h3-max-turbo",
+      "resolution": "768P",
+      "duration_s": 4,
+      "cost_usd": 0.12,
+      "prompt": "source/video/prompts/motion_skill3_p04.txt (knight: new rising hammer launch; archer: t03 paragraph; 3-5: t02 paragraphs)",
+      "peek": "knight crouches with the hammer low behind, swings it up (blurred), ends holding the hammer level above his head (not tilted forward); archer draws with an arrow visible, jumps, releases at the top, lands with the hand open; seraph ok; red_axe plants the axe head-down this time and roars; giant raises arms and stamps, a small white-pink dust puff at the stomp, ends crouched with the face visible",
       "status": "awaiting user"
     }
   },
