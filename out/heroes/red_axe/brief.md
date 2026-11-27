@@ -31,7 +31,7 @@
 ## Asset manifest
 | Asset | Từ | Loại | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| master (= idle) | fal-image | ảnh tĩnh | ⏳ v01 chờ duyệt | vẽ lại từ ảnh tham khảo |
+| master (= idle) | fal-image | ảnh tĩnh | ✅ v01 (chốt 2026-11-27) | vẽ lại từ ảnh tham khảo |
 | icon | fal-image | ảnh tĩnh | ❌ | |
 | pose_respawn | fal-image | ảnh tĩnh | ❌ | |
 | pose_skill_axe_combo | fal-image | ảnh tĩnh | ❌ | |

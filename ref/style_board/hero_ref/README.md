@@ -8,3 +8,4 @@
 | hooded_archer_white.png | cung thủ mũ trùm trắng, huy hiệu vàng, áo choàng xám, cung đen gãy góc, đang kéo cung (2026-11-27) | `out/heroes/ash_ranger` |
 | caped_sorceress_pale.png | nữ pháp sư bộ đồ trắng xám, capelet vàng, ngọc xanh, áo choàng rách xòe, lơ lửng (2026-11-27) | `out/heroes/pale_seraph` |
 | axe_barbarian_redhair.png | nữ chiến binh tóc cam đỏ, vai lông, rìu kép lớn (có logo và tên trên ảnh gốc; không dùng) (2026-11-27) | `out/heroes/red_axe` |
+| magma_stone_giant.png | người khổng lồ đá râu đen, lõi dung nham, lửa trên tay (2026-11-27) | `out/heroes/magma_giant` |
