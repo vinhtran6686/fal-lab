@@ -7,12 +7,33 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 from . import measure
-from .review import _crop_box
+
+
+def _wide_box(prof, v, frames, pad=16):
+    """Box around everything the effect draws in any frame, keeping its own aspect ratio (review._crop_box is a square capped at
+    the short side of the frame, which cuts a long effect such as a flame stream)."""
+    U = None
+    for f in frames:
+        rgb = measure.load_frame(prof, v, f)
+        if rgb is None:
+            continue
+        for m in measure.layer_masks(prof, v, rgb).values():
+            U = m.copy() if U is None else (U | m)
+    ys, xs = np.nonzero(U)
+    H, W = U.shape
+    return (max(0, int(xs.min()) - pad), max(0, int(ys.min()) - pad), min(W, int(xs.max()) + 1 + pad), min(H, int(ys.max()) + 1 + pad))
+
+
+def _fit(img, box, size):
+    """Crop to box and scale so the longer side is `size` px (no distortion)."""
+    c = img.crop(box)
+    k = size / max(c.size)
+    return c.resize((max(1, round(c.width * k)), max(1, round(c.height * k))), Image.LANCZOS)
 
 ROOT = Path(__file__).resolve().parents[2] / "results" / "vector-showcase"
 
 
-def export(prof, frames=None, size=320, fps=25):
+def export(prof, frames=None, size=480, fps=25):
     out_root = ROOT / prof.name
     src = prof.out_dir()
     frames = frames or prof.frames()
@@ -23,7 +44,7 @@ def export(prof, frames=None, size=320, fps=25):
             shutil.rmtree(d)
         (d / "frames").mkdir(parents=True)
         (d / "svg").mkdir()
-        box = _crop_box(prof, v, frames)
+        box = _wide_box(prof, v, frames)
         comp, reb = [], []
         for f in frames:
             fp, sp = src / "frames" / f"{v}_{f:02d}.png", src / "svg" / f"{v}_{f:02d}.svg"
@@ -35,10 +56,10 @@ def export(prof, frames=None, size=320, fps=25):
                 img.save(d / "frames" / f"{f:02d}.png", optimize=True)
             if sp.exists():
                 shutil.copy(sp, d / "svg" / f"{f:02d}.svg")
-            a = Image.fromarray(ref.astype(np.uint8)).crop(box).resize((size, size), Image.LANCZOS)
-            b = img.crop(box).resize((size, size), Image.LANCZOS)
-            row = Image.new("RGB", (size * 2, size))
-            row.paste(a, (0, 0)); row.paste(b, (size, 0))
+            a = _fit(Image.fromarray(ref.astype(np.uint8)), box, size)
+            b = _fit(img, box, size)
+            row = Image.new("RGB", (a.width * 2, a.height))
+            row.paste(a, (0, 0)); row.paste(b, (a.width, 0))
             comp.append(row); reb.append(b)
         ms = int(1000 / fps)
         if comp:

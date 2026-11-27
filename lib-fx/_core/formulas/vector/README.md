@@ -120,6 +120,7 @@ smooth.smooth_simplify ─► compose.composite (gradient trong, glow × gain[fr
 | `frames.py` | khung cực / thẳng, tách mặt nạ thành dải (`edge_bias`) |
 | `strokes.py` | đơn vị hình (nét thon) + preset |
 | `fit.py` | đo tham số nét, khớp lớp (tính điểm tăng dần) |
+| `pipeline.py` | `rebuild`: khớp nét từng khung; với profile có `fit.mode = "trace"` thì `rebuild_trace` bỏ bước khớp nét, lấy viền thẳng từ mặt nạ qua `smooth_simplify` (hợp với nhiều nét mảnh nhiều hướng như sét; ví dụ `profiles/lightning-trace.json`) |
 | `smooth.py` | Smooth & Simplify |
 | `compose.py` | tô chồng, gradient, glow, độ đục, SVG |
 | `metrics.py` | IoU, độ mượt path |

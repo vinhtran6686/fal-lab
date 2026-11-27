@@ -65,8 +65,29 @@ def fit_frame(prof, v, f):
     return {"frame": frame_to_dict(fr), "shape": list(rgb.shape[:2]), "layers": layers}
 
 
+def trace_covers(prof, v, f):
+    """fit.mode = "trace": no stroke fitting, the layer masks themselves go to smooth_simplify (Potrace-like contour ->
+    faired Bezier). For shapes the band model of fit_layer cannot hold: many thin strokes in every direction (lightning).
+    Returns {layer: coverage at 2x} (with the underlay of compose.underlay_target), or None for a missing frame."""
+    rgb = measure.load_frame(prof, v, f)
+    if rgb is None:
+        return None
+    masks = measure.layer_masks(prof, v, rgb)
+    groups, fp = prof.groups(v), prof.get("fit")
+    T = measure.full_targets(masks, groups)
+    H, W = rgb.shape[:2]
+    out = {}
+    for l in prof.order(v):
+        tgt = compose.underlay_target(T, prof.order(v), groups, l, fp["underlay_px"])
+        if tgt.sum() >= 12:
+            out[l] = cv2.resize(tgt.astype(np.float32), (W * 2, H * 2), interpolation=cv2.INTER_LINEAR)
+    return out, (H, W)
+
+
 def rebuild(prof, frames=None, variants=None, refit=False, log=print):
     out = prof.out_dir()
+    if prof.get("fit").get("mode") == "trace":
+        return rebuild_trace(prof, frames, variants, log)
     for sub in ("strokes", "frames", "flat", "svg"):
         (out / sub).mkdir(exist_ok=True)
     rp = out / "report.json"
@@ -102,6 +123,43 @@ def rebuild(prof, frames=None, variants=None, refit=False, log=print):
                 report[f"{v}_{f:02d}_{l}"] = r
                 log(f"{v}_{f:02d}_{l} {r}")
     fresh = json.loads(rp.read_text()) if rp.exists() else {}  # merge: several rebuilds (variants) may run in parallel
+    fresh.update(report)
+    rp.write_text(json.dumps(dict(sorted(fresh.items())), indent=1))
+    return report
+
+
+def rebuild_trace(prof, frames=None, variants=None, log=print):
+    """rebuild() for fit.mode = "trace": same outputs (frames, flat, svg, report), no strokes/ cache (it is fast)."""
+    out = prof.out_dir()
+    for sub in ("frames", "flat", "svg"):
+        (out / sub).mkdir(exist_ok=True)
+    rp = out / "report.json"
+    report = {}
+    for v in variants or prof.variants:
+        for f in frames or prof.frames():
+            got = trace_covers(prof, v, f)
+            if got is None:
+                continue
+            cov2, shape = got
+            covers, paths = {}, {}
+            for l in prof.order(v):
+                if l not in cov2:
+                    continue
+                pl, _ = smooth_simplify(cov2[l], ss=2, **prof.smooth(v))
+                if pl:
+                    paths[l], covers[l] = pl, raster_evenodd(pl, shape)
+            if not covers:
+                continue
+            img, flat, vis = compose.composite(covers, prof.order(v), prof, v, f)
+            Image.fromarray(img).save(out / "frames" / f"{v}_{f:02d}.png")
+            Image.fromarray(flat).save(out / "flat" / f"{v}_{f:02d}.png")
+            (out / "svg" / f"{v}_{f:02d}.svg").write_text(compose.svg(paths, prof.order(v), prof, v, shape))
+            T = measure.full_targets(measure.layer_masks(prof, v, measure.load_frame(prof, v, f)), prof.groups(v))
+            for l in paths:
+                r = dict(iou=round(iou(vis[l], T[l]), 3), **path_fairness(paths[l]))
+                report[f"{v}_{f:02d}_{l}"] = r
+                log(f"{v}_{f:02d}_{l} {r}")
+    fresh = json.loads(rp.read_text()) if rp.exists() else {}
     fresh.update(report)
     rp.write_text(json.dumps(dict(sorted(fresh.items())), indent=1))
     return report

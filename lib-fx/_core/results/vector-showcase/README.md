@@ -1,7 +1,7 @@
 # Showcase: các hiệu ứng đã dựng lại bằng bộ tool vector
 
 Xuất bằng `python lib-fx/_tools/vectorfx.py showcase PROFILE` (bộ tool không cần chạy lại để xem). Mỗi thư mục biến thể có:
-`compare.gif` (bản gốc | bản dựng, đúng tốc độ gốc; mỗi bên thu về 320 px), `compare_original_size.gif` (chỉ có ở `flame-burst/jet` và `lightning/bolt`: vùng cắt của bản gốc ở **kích thước gốc** | bản dựng thu về đúng cùng tỉ lệ, cùng khung hình), `rebuilt.gif` (chỉ bản dựng), `frames/NN.png` (frame hoàn chỉnh: gradient, glow),
+`compare.gif` (bản gốc | bản dựng, đúng tốc độ gốc; mỗi bên thu về 320 px), `compare_original_size.gif` (chỉ có ở `flame-burst/jet`, `lightning/bolt`, `flame-burst-trace/fire`, `lightning-trace/green`: vùng cắt của bản gốc ở **kích thước gốc** | bản dựng thu về đúng cùng tỉ lệ, cùng khung hình), `rebuilt.gif` (chỉ bản dựng), `frames/NN.png` (frame hoàn chỉnh: gradient, glow),
 `svg/NN.svg` (vector sạch, mỗi lớp một `<path id="lớp">`).
 
 | Profile | Biến thể | Thư mục | Điểm user |
@@ -16,6 +16,10 @@ Xuất bằng `python lib-fx/_tools/vectorfx.py showcase PROFILE` (bộ tool kh�
 | | nhát chém vàng | [slash-trio/gold](slash-trio/gold/) (+ `gold_refl`) | đạt (chấp nhận được) |
 | `flame-burst` | lửa phụt ngang + khói | [flame-burst/jet](flame-burst/jet/) | chờ chấm |
 | `lightning` | tia sét xanh lá, nét mảnh + quầng nhoè (127 khung, mỗi khung một tia mới) | [lightning/bolt](lightning/bolt/) | chờ chấm |
+| `flame-burst-trace` | lần dựng đầu (nhánh `vfx/vector-rebuild-flame-burst-lightning`): chế độ `fit.mode = "trace"` (viền từ mặt nạ, không khớp nét), 59 khung; lửa còn thiếu nhiều | [flame-burst-trace/fire](flame-burst-trace/fire/) | chưa chấm |
+| `lightning-trace` | lần dựng đầu cho sét: chế độ `trace`, 3 lớp (quầng, tia, lõi), 115 khung | [lightning-trace/green](lightning-trace/green/) | chưa chấm |
+
+Mỗi bản của `flame-burst/jet` và `lightning/bolt` còn thư mục `recipe/`: `lifecycle.json` (vòng đời từng lớp), `report.json` (IoU và độ mượt từng khung), bảng màu (`palette_*.png`), ảnh kiểm mặt nạ (`check_*.png`) và, với sét, các ảnh nghiên cứu (`study_*`). Cách dựng ra chúng: `lib-fx/_plans/vfx-rebuild-02/R1-flame-burst.md`, `R2-lightning.md`, `METHOD.md`; hồ sơ: `lib-fx/_core/formulas/vector/profiles/{flame-burst,lightning}.json` (bản `jet`, `bolt`) và `{flame-burst-trace,lightning-trace}.json` (bản `trace`).
 
 Trang review đầy đủ (từng lớp, từng frame): Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdKGR,
 Element Trio https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn, Slash Trio https://claude.ai/artifact/69ermXASZKmFccapxfCYis.
