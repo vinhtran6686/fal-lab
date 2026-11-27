@@ -43,7 +43,7 @@
       "last_frame": "same as the first (loop)",
       "prompt": "source/video/prompts/motion_run_p01.txt",
       "peek": "all five stay in their cells; knight drags the hammer behind but its head rides at shin height instead of scraping the ground; archer and red_axe run; seraph flies forward; giant walks, turns toward the viewer in mid-loop",
-      "status": "awaiting user"
+      "status": "approved by user 2026-11-27 (\"đẹp nha -> chốt\"); frames not split yet"
     }
   },
   "workflow_note": "user 2026-11-27: after a clip, only send the video for review and keep it in the repo (source/video/<action>_tNN/); do NOT split frames now, frame splitting is done later",
