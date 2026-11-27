@@ -39,7 +39,8 @@ docs/
 │   │   └── ref-atlas-split-and-animations.md              tách atlas tham khảo (png + lua) thành frame, gif và animation có tên
 │   └── lineup/                                            scripts/lineup/
 │       ├── lineup-workflow.md                             quy trình lưới nhiều nhân vật trong một clip cho mọi class: 5 bước, bảng thông số (kích thước, thời lượng, giá), bảng cấp và class
-│       ├── lineup-heroes-from-masters.md                  lưới hero ghép từ master đã chốt: viết prompt mỗi con độc lập, bài học, khi nào để model tự sáng tạo
+│       ├── lineup-heroes-from-masters.md                  lưới hero ghép từ master đã chốt: các bước, khung prompt mỗi con độc lập, quy trình duyệt
+│       ├── lineup-heroes-lessons.md                       bài học từ các lần chốt / trả lại: master vẽ lại, clip, khi nào để model tự sáng tạo
 │       ├── prompts/                                       prompt đã chạy: lưới 10 quái, đòn chém từ trên xuống, chết tại chỗ; hero-lineup-* (attack, death, run, skill 1-3)
 │       └── lineup-split-guide.md                          tách clip lưới nhiều nhân vật thành bộ khung từng con (lineup_split.py)
 ├── tools/                                                 tài liệu cho ứng dụng trong tools/
