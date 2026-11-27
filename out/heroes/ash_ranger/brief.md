@@ -14,6 +14,8 @@
 - pierce_shot (Tên xuyên): kéo căng lâu, bắn một mũi xuyên thẳng hàng quái; vệt gió (vfx)
 - arrow_rain (Mưa tên; thay triple_shot theo user 2026-11-27): chĩa cung lên trời, kéo và thả dây liên tục; mũi tên làm thành hiệu ứng mưa tên (vfx riêng)
 
+- leap_shot (Nhảy lùi bắn, skill 3 mới 2026-11-27): bật nhảy tại chỗ, bắn giữa không trung, hạ xuống chỗ cũ; lùi ra sau do code dịch vị trí
+
 ## Design note (preflight)
 1. Hero L, ranged, nam; cung recurve gãy góc ~85% chiều cao hình.
 2. Body agile/lean ~5 đầu; vai rộng, eo hẹp.

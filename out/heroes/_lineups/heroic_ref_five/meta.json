@@ -88,6 +88,22 @@
       "skill": "arrow_rain (user: bow aimed at the sky, draw and release again and again; arrows become a rain-of-arrows vfx later)",
       "peek": "bow aimed high up-right, draws and releases; one arrow visible on the string in the first frames; body turned toward the viewer",
       "status": "approved by user 2026-11-27; erase the arrow of the first frames when splitting"
+    },
+    "skill3_t01": {
+      "model": "h3-max-turbo",
+      "resolution": "768P",
+      "duration_s": 4,
+      "cost_usd": 0.12,
+      "prompt": "source/video/prompts/motion_skill3_p01.txt",
+      "skills": {
+        "cinder_maul": "sweep",
+        "ash_ranger": "leap_shot (new)",
+        "pale_seraph": "soul_beam",
+        "red_axe": "war_cry (new)",
+        "magma_giant": "stomp"
+      },
+      "peek": "knight sweeps and holds the hammer straight out to the right, head just inside his cell; archer jumps, shoots with an empty string, NO arrow seen; seraph spreads both arms wide instead of one palm push; red_axe plants the axe and roars with the fist up; giant lifts the knee and stamps, but in the hold he turns toward the viewer and the head sinks between the shoulders",
+      "status": "awaiting user"
     }
   },
   "workflow_note": "user 2026-11-27: after a clip, only send the video for review and keep it in the repo (source/video/<action>_tNN/); do NOT split frames now, frame splitting is done later",

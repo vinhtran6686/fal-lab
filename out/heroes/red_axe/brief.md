@@ -15,6 +15,8 @@
 - axe_combo (Liên hoàn rìu): tung chuỗi đòn chém bằng rìu (vật lý)
 - axe_whirl (Lốc xoáy rìu): xoay tròn với rìu dài, chém mọi quái quanh mình
 
+- war_cry (Tiếng gầm chiến, skill 3 mới 2026-11-27): cắm rìu, giơ nắm đấm, gầm; buff đỏ cam (vfx)
+
 ## Design note (preflight)
 1. Hero L, melee, nữ trưởng thành, rìu kép cao hơn người ~15%.
 2. Body athletic, đồng hồ cát, ~5 đầu.
