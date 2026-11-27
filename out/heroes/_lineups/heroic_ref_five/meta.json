@@ -1,0 +1,21 @@
+{
+  "purpose": "five heroes redrawn from user references (heroic style, tier L), composed in code from their approved masters (no redraw) into one 5x1 lineup; one clip per action, split into per-hero frames (docs/scripts/lineup/lineup-workflow.md)",
+  "heroes": ["cinder_maul", "ash_ranger", "pale_seraph", "red_axe", "magma_giant"],
+  "masters": "out/heroes/<id>/source/design/master_v01.png (all approved 2026-11-27)",
+  "compose": "masters keyed and pasted 512 px cells on 2560x1440 magenta (.work/compose_raw.png, rebuilt by code), then lineup_regrid.py --cols 5 --rows 1 --heights 0.22,0.22,0.23,0.24,0.22 --feet 0.70 --x-margin 0.03 -> source/design/lineup_v01_regrid.png (each hero ~169 px tall in the 768P clip = L @2x)",
+  "clips": {
+    "attack_t01": {
+      "model": "h3-max-turbo", "resolution": "768P", "duration_s": 4, "cost_usd": 0.12,
+      "prompt": "source/video/prompts/motion_attack_p01.txt",
+      "split": "lineup_split.py source/video/attack_t01/clip.mp4 --out .work/frames/attack --cols 5 --rows 1 --pad 64 --x-margin 0.03 --frames 13 --fps 12 --names cinder_maul,ash_ranger,pale_seraph,red_axe,magma_giant",
+      "review": {
+        "cinder_maul": "ok: raise, chop down, hold low; f3 turns his back to the camera at the top of the swing; white slash crescent in f4",
+        "ash_ranger": "ok: nock, draw, release, hold; arrow visible in f3-f6, body turns toward the viewer in the hold",
+        "pale_seraph": "usable: instead of a palm push she lunges forward flying horizontal with the arm stretched; reads as an attack",
+        "red_axe": "ok: raise over the shoulder, diagonal chop, hold low; slash crescent in f8",
+        "magma_giant": "FAIL: during the punch the head and beard disappear (the body turns away and the design breaks), f10-f13"
+      },
+      "status": "awaiting user"
+    }
+  }
+}
