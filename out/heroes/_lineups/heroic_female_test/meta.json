@@ -1,15 +1,15 @@
 {
   "purpose": "heroic-vector-style test: ten different women (body shapes and classes), user request 2026-11-27",
-  "status": "v01 (generic, soft, rejected by the user) removed; v02 (game-unit version: oversized signature object, element built into body and object, 3-3.8 heads, simplified game faces, 3840x2160) drawn, waiting for review",
+  "status": "v01 (generic) and v02 (thin game-unit, pale, flat) rejected and removed; v03 (chunky 2.8-3.3 heads, form-following 4-5 step shading, very thick tapered outline, deep rich colours, signature objects) drawn, waiting for review",
   "grid": {
-    "image": "source/design/grid_v02_unit.png",
-    "flat": "source/design/grid_v02_unit_flat.png",
-    "shrink_test": "source/design/shrink_test_v02_60_120px.png",
-    "characters_dir": "characters/ (one transparent PNG each, ~700x970)",
-    "prompt": "docs/styles/heroic-vector-style/prompt-template-female-unit-lineup.txt",
+    "image": "source/design/grid_v03_chunky.png",
+    "flat": "source/design/grid_v03_chunky_flat.png",
+    "shrink_test": "source/design/shrink_test_v03_60_120px.png",
+    "characters_dir": "characters/",
+    "prompt": "docs/styles/heroic-vector-style/prompt-template-female-lineup.txt",
     "size": "3840x2160",
     "model": "gpt-image-2 low",
-    "cost_usd": 0.021
+    "cost_usd": 0.0225
   },
   "characters": [
     {

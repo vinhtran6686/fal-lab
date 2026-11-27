@@ -1,6 +1,6 @@
 # heroic-vector-style: cách viết prompt (công thức đã cho ra bản thử v02 được duyệt)
 
-Mẫu đầy đủ đã chạy: `prompt-template.txt` (10 nhân vật hỗn hợp) và `prompt-template-female-unit-lineup.txt` (10 nữ khác dáng và class, bản "game unit": vật khổng lồ định nghĩa hình bóng, hệ nằm trong cơ thể; ảnh 3840×2160) (lưới 10 nhân vật, ~9.200 ký tự, một ảnh `gpt-image-2` chất lượng low 2560×1440, khoảng $0,02). Kết quả: `out/enemies/_lineups/style_test_heroic_vector/source/design/grid_v02_simple.png`. Đặc tả phong cách: `style-spec.md`.
+Mẫu đầy đủ đã chạy: `prompt-template.txt` (10 nhân vật hỗn hợp) và `prompt-template-female-lineup.txt` (10 nữ khác dáng và class, bản chunky đã sửa: nén 2,8-3,3 đầu, tô khối 4-5 bậc, nét rất dày, màu tối sâu, vật khổng lồ; ảnh 3840×2160) (lưới 10 nhân vật, ~9.200 ký tự, một ảnh `gpt-image-2` chất lượng low 2560×1440, khoảng $0,02). Kết quả: `out/enemies/_lineups/style_test_heroic_vector/source/design/grid_v02_simple.png`. Đặc tả phong cách: `style-spec.md`.
 
 ## 1. Khung một lệnh vẽ
 ```

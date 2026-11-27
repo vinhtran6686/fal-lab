@@ -27,7 +27,7 @@ docs/
 │       ├── lessons.md                                     bài học bản v01 rối và v02 đạt
 │       ├── style-board.md                                 10 ảnh tham khảo và nhận xét (ảnh ở ref/style_board/)
 │       ├── prompt-template.txt                            prompt lưới 10 nhân vật hỗn hợp đã chạy được
-│       ├── prompt-template-female-unit-lineup.txt         prompt lưới 10 nữ "game unit" (vật khổng lồ, hệ trong cơ thể, 3840x2160)
+│       ├── prompt-template-female-lineup.txt              prompt lưới 10 nữ (chunky, tô khối, nét dày, vật khổng lồ, 3840x2160)
 ├── scripts/                                               tài liệu cho code trong scripts/
 │   ├── puppet_kit/                                        scripts/puppet*.py, scripts/puppet_kit/
 │   │   ├── puppet-kit-guide.md                            cách dùng kit: rig, lệnh check/render/track/slash, skin, links
