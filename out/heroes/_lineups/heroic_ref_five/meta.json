@@ -60,12 +60,13 @@
       },
       "phase_tables": "level-2 tables agreed with the user in chat 2026-11-27 (body only in the clip; effects later from lib-fx at the impact frame)",
       "peek": "knight jumps and smashes, holds low; archer draws long and releases; seraph rises, spreads arms, ends leaning forward with one arm down; red_axe chops (a faint pink trail behind the axe in one frame); giant raises the fist and drives it down, end pose bent with the head low behind the shoulders",
-      "status": "awaiting user"
+      "status": "approved by user 2026-11-27 (\"tuyệt\"); frames not split yet"
     }
   },
   "workflow_note": "user 2026-11-27: after a clip, only send the video for review and keep it in the repo (source/video/<action>_tNN/); do NOT split frames now, frame splitting is done later",
   "lessons": [
     "death_t01: 'its killing blow comes from an unseen attacker' made the model draw a fire strike on every hero. Do not describe an incoming blow; say the hero collapses on its own, and ban fire, explosions, projectiles and impact effects.",
-    "user 2026-11-27: every hero must move independently: one paragraph per hero with its own action, no shared group sentence that a model can copy across heroes."
+    "user 2026-11-27: every hero must move independently: one paragraph per hero with its own action, no shared group sentence that a model can copy across heroes.",
+    "skill1_t01: one paragraph per hero + 'only the bodies move' + a full ban list of effects gave a clean clip (no invented effects)"
   ]
 }
