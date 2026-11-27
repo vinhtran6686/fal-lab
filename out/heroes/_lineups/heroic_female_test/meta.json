@@ -1,15 +1,15 @@
 {
   "purpose": "heroic-vector-style test: ten different women (body shapes and classes), user request 2026-11-27",
-  "status": "v01 (generic) and v02 (thin game-unit, pale, flat) rejected and removed; v03 (chunky 2.8-3.3 heads, form-following 4-5 step shading, very thick tapered outline, deep rich colours, signature objects) drawn, waiting for review",
+  "status": "v04: brighter, ranged women (witch, battle mage, archer, healer, sorceress queen) with a hourglass figure and toned limbs, melee women (assassin, berserker, thief, knight, duelist) kept chunky; waiting for review. v01-v03 removed",
   "grid": {
-    "image": "source/design/grid_v03_chunky.png",
-    "flat": "source/design/grid_v03_chunky_flat.png",
-    "shrink_test": "source/design/shrink_test_v03_60_120px.png",
+    "image": "source/design/grid_v04_bright_hourglass.png",
+    "flat": "source/design/grid_v04_bright_hourglass_flat.png",
+    "shrink_test": "source/design/shrink_test_v04_60_120px.png",
     "characters_dir": "characters/",
     "prompt": "docs/styles/heroic-vector-style/prompt-template-female-lineup.txt",
     "size": "3840x2160",
     "model": "gpt-image-2 low",
-    "cost_usd": 0.0225
+    "cost_usd": 0.0244
   },
   "characters": [
     {
@@ -20,7 +20,8 @@
       "element": "poison",
       "kind": "human",
       "body": "tall and slim",
-      "signature": "huge potion flask with green goo, dripping hat"
+      "signature": "huge potion flask with green goo, dripping hat",
+      "body_family": "hourglass (ranged)"
     },
     {
       "order": 2,
@@ -30,7 +31,8 @@
       "element": "light",
       "kind": "human",
       "body": "athletic",
-      "signature": "floating gold sun disc, sun emblem"
+      "signature": "floating gold sun disc, sun emblem",
+      "body_family": "hourglass (ranged)"
     },
     {
       "order": 3,
@@ -40,7 +42,8 @@
       "element": "wind",
       "kind": "human",
       "body": "lean and wiry",
-      "signature": "two body-long curved blades, wind swirl"
+      "signature": "two body-long curved blades, wind swirl",
+      "body_family": "chunky (melee)"
     },
     {
       "order": 4,
@@ -50,7 +53,8 @@
       "element": "nature",
       "kind": "human",
       "body": "long-limbed",
-      "signature": "living branch bow, leaf armour"
+      "signature": "living branch bow, leaf armour",
+      "body_family": "hourglass (ranged)"
     },
     {
       "order": 5,
@@ -60,7 +64,8 @@
       "element": "light",
       "kind": "human",
       "body": "plump and motherly, short",
-      "signature": "big golden lantern, sun apron"
+      "signature": "big golden lantern, sun apron",
+      "body_family": "hourglass (ranged)"
     },
     {
       "order": 6,
@@ -70,7 +75,8 @@
       "element": "earth",
       "kind": "human",
       "body": "broad and muscular",
-      "signature": "stone fists, turquoise-crystal greataxe"
+      "signature": "stone fists, turquoise-crystal greataxe",
+      "body_family": "chunky (melee)"
     },
     {
       "order": 7,
@@ -80,7 +86,8 @@
       "element": "wind",
       "kind": "human",
       "body": "petite",
-      "signature": "loot sack bigger than her head, dagger"
+      "signature": "loot sack bigger than her head, dagger",
+      "body_family": "chunky (melee)"
     },
     {
       "order": 8,
@@ -90,7 +97,8 @@
       "element": "ice",
       "kind": "human",
       "body": "heavily armoured, strong",
-      "signature": "ice crystal shoulders, tower shield with snowflake"
+      "signature": "ice crystal shoulders, tower shield with snowflake",
+      "body_family": "chunky (melee)"
     },
     {
       "order": 9,
@@ -100,7 +108,8 @@
       "element": "fire",
       "kind": "human",
       "body": "slender and agile",
-      "signature": "rapier longer than her body, flame-shaped guard, flames at boots"
+      "signature": "rapier longer than her body, flame-shaped guard, flames at boots",
+      "body_family": "chunky (melee)"
     },
     {
       "order": 10,
@@ -110,7 +119,8 @@
       "element": "water",
       "kind": "human",
       "body": "tall, commanding",
-      "signature": "pearl trident taller than her, wave crown and cape"
+      "signature": "pearl trident taller than her, wave crown and cape",
+      "body_family": "hourglass (ranged)"
     }
   ]
 }
