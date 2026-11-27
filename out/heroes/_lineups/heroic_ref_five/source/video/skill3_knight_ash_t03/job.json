@@ -1,0 +1,26 @@
+{
+  "prompt": "Two separate fantasy heroes stand in the two left cells of this picture: the armoured knight with the red crest (far left) and the hooded archer (second from left). They are the only characters: the rest of the picture stays empty flat magenta, and no other character ever appears. Each performs its OWN move, described in its own paragraph; the two are independent: never copy one hero's movement or prop onto the other. The camera is fixed and does not move, zoom or pan. Left and right in this description are the screen's left and right. Both face screen right; each target is an enemy just outside its own cell to the right. Each hero stays over its own spot inside its own cell, ends where it started, never touches the other hero, its weapon never reaches into the other hero's cell, and keeps its own size, design, colours, outline and weapon exactly as in the image, in the near-side view facing screen right with the head looking forward to screen right. Each move ends on its last pose and holds it.\n1. The knight performs a heavy three-part hammer combo. First, he grips the haft in both hands and heaves the stone hammer back and up over his rear shoulder on the screen-left side, leaning back. Second, he swings it in a big level sweep at waist height across the front of his body from screen left to screen right, his hips turning first and his shoulders following, and stops the sweep with the hammer head out in front of him on the screen-right side at waist height, his body leaning after it. Third, without pausing, he lifts the hammer straight up over his head with both hands and smashes it straight down in front of him so the hammer head hits his own ground line just in front of his front foot on the screen-right side, his knees bending under the blow. He holds this final pose, bent over the hammer lying on the ground in front of him on the screen-right side.\n2. The archer first raises his dark bow aimed to screen right and draws the bare string fully back to his cheek with two empty fingers, and keeps it drawn. Holding the full draw, he crouches and jumps straight up in place about a third of his height. At the very top of the jump, still in the air, he RELEASES: the string snaps forward against the bow, his drawing hand flies open and back behind his head with the fingers spread wide, and the bow arm kicks with the recoil. Only then does he fall and land on the same spot with his knees bending, the bow still aimed to screen right and his drawing hand open behind him, and he holds that pose. He has NO arrow anywhere: no arrow on the string, no arrow in his hand, no arrow in the air.\nNo arrow, no light, no glow, no explosion, no projectile, no dust, no debris, no crack in the ground, no slash arc, no motion trail, no afterimage and no effect of any kind is drawn; only the bodies move. The flat solid pure magenta background stays unchanged and fixed in every frame: no scenery, no ground, no shadows, no text, no grid, no camera shake.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab4316b/554VkE09DcU0mEXn6zpsE_lineup_v01_regrid_only_knight_ash.png"
+  },
+  "seconds": 4,
+  "resolution": "768P",
+  "size": [
+    2560,
+    1440
+  ],
+  "estimateUsd": 0.12,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/heroes/_lineups/heroic_ref_five/source/design/lineup_v01_regrid_only_knight_ash.png",
+  "lastFrame": null,
+  "requestId": "01a21eca-734c-7001-903c-525801ae52ad",
+  "seconds_elapsed": 3.4,
+  "source_url": "https://v3b.fal.media/files/b/0ab4316b/Iomx6XwBzswMPkdLV1yxw_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

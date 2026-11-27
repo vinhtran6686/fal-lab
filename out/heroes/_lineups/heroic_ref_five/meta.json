@@ -112,6 +112,16 @@
       "cost_usd": 0.12,
       "prompt": "source/video/prompts/motion_skill3_p02.txt (p01 with new paragraphs 1, 2, 5)",
       "peek": "knight swings from overhead but ends with the hammer on the screen-left side (behind him), 'wraps toward his far side' was read as behind; archer: a blurred hop in the first frames, then the draw happens on the ground; seraph and red_axe like t01; giant raises both arms (livelier) but in the stomps and the hold the body turns and the face is hard to read",
+      "status": "user 2026-11-27: keep magma_giant (and seraph, red_axe ok); knight and archer redone alone as skill3_knight_ash_t03"
+    },
+    "skill3_knight_ash_t03": {
+      "model": "h3-max-turbo",
+      "resolution": "768P",
+      "duration_s": 4,
+      "cost_usd": 0.12,
+      "prompt": "source/video/prompts/motion_skill3_knight_ash_p03.txt",
+      "reference": "source/design/lineup_v01_regrid_only_knight_ash.png (cells 1-2 only, same positions)",
+      "peek": "knight: three beats (heave back, level sweep, overhead smash) but the sweep is held on the screen-left side, then the smash lands in front on the right and the end pose is good; archer: draws on the ground, jumps while holding the draw, releases at the top with the hand flung open behind his head, lands; an arrow is visible on the string during the draw (first ~6 frames)",
       "status": "awaiting user"
     }
   },
