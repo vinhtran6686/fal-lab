@@ -140,7 +140,7 @@
       "cost_usd": 0.12,
       "prompt": "source/video/prompts/motion_skill3_p05.txt (knight: loose description, three strikes of the model's choice)",
       "peek": "knight: one overhead swing and one low swing (pink slash arc at ~f36), then holds the hammer level on the screen-LEFT side for the last ~2/3 of the clip, so not three strikes; archer, seraph, red_axe as before; giant stomps and ends crouched with the face visible",
-      "status": "awaiting user"
+      "status": "user 2026-11-27: knight approved (\"nhân vật 1 ok rồi, chốt\")"
     }
   },
   "workflow_note": "user 2026-11-27: after a clip, only send the video for review and keep it in the repo (source/video/<action>_tNN/); do NOT split frames now, frame splitting is done later",
@@ -150,5 +150,53 @@
     "skill1_t01: one paragraph per hero + 'only the bodies move' + a full ban list of effects gave a clean clip (no invented effects)",
     "skill2: 'the arrows simply vanish' did not work (three arrows flew into the next cell); even 'no arrows at all' left one arrow on the string in the first frames. For archers: describe the draw with empty fingers and repeat the ban; plan to erase a stray arrow at split time. A spin with a long weapon reaches the next cell: avoid spins with long weapons or run that hero alone",
     "knight skill 3: five tries (t01-t05). Every level swing or free combo ends with the hammer held level on the screen-left side; the model reliably does only vertical overhead chops/smashes for this character"
-  ]
+  ],
+  "pick": {
+    "_note": "which clip to cut each hero's action from (user approvals 2026-11-27); frames not split yet, the user will build a frame-splitting tool; every clip is kept in source/video/",
+    "attack": {
+      "cinder_maul": "attack_t01",
+      "ash_ranger": "attack_t01",
+      "pale_seraph": "attack_t01",
+      "red_axe": "attack_t01",
+      "magma_giant": "attack_t01"
+    },
+    "death": {
+      "cinder_maul": "death_t01 (drop the frames with the fire blow)",
+      "ash_ranger": "death_t01 (drop the frames with the fire blow)",
+      "pale_seraph": "death_t01 (drop the frames with the fire blow)",
+      "red_axe": "death_t01 (drop the frames with the fire blow)",
+      "magma_giant": "death_t01 (drop the frames with the fire blow)"
+    },
+    "run": {
+      "cinder_maul": "run_t01 (loop)",
+      "ash_ranger": "run_t01 (loop)",
+      "pale_seraph": "run_t01 (loop)",
+      "red_axe": "run_t01 (loop)",
+      "magma_giant": "run_t01 (loop)"
+    },
+    "skill1": {
+      "cinder_maul": "skill1_t01 leap_slam",
+      "ash_ranger": "skill1_t01 pierce_shot",
+      "pale_seraph": "skill1_t01 soul_field",
+      "red_axe": "skill1_t01 axe_combo",
+      "magma_giant": "skill1_t01 lava_fist"
+    },
+    "skill2": {
+      "cinder_maul": "skill2_t01 quake",
+      "ash_ranger": "skill2_ash_t02 arrow_rain (erase the arrow of the first frames)",
+      "pale_seraph": "skill2_t01 cape_storm",
+      "red_axe": "skill2_t01 axe_whirl (axe crosses into the seraph's cell in the spin)",
+      "magma_giant": "skill2_t01 stone_skin"
+    },
+    "skill3": {
+      "cinder_maul": "skill3_t05 (free three-strike combo)",
+      "ash_ranger": "skill3_t04 leap_shot (erase the arrow during the draw)",
+      "pale_seraph": "skill3_t01 soul_beam (or t02/t04/t05)",
+      "red_axe": "skill3_t01 war_cry (or t02/t04/t05)",
+      "magma_giant": "skill3_t02 stomp (or t04/t05)"
+    },
+    "unused_clips": [
+      "skill3_knight_ash_t03"
+    ]
+  }
 }
