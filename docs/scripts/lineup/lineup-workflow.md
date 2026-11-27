@@ -108,16 +108,7 @@ Quy trình chung cho mọi class có nhiều đơn vị cùng tộc/hệ (enemy,
 | Bỏ mảnh lạ | giữ mảnh lớn nhất qua cột giữa cửa sổ + mảnh cách nó ≤ `--gap` 14 px |
 | Ra | `<tên>/frames/f01..f13.png` (RGBA 396×512), `sheet.png` (5148×512), `preview.gif` |
 
-**Công cụ xem và xóa từng khung (CHƯA làm, đặc tả để làm sau; người dùng sẽ thử thêm trước khi làm).**
-- **Vì sao:** ba bộ khung đã có mảnh dính mà script tự động không xóa được: vệt chém hình cung dính vào vũ khí (Hỏa Tộc tấn công: Goblin, Salamander, Duelist, Spark Imp, khung 5), vũ khí hoặc thân của hàng xóm dính liền (Độc Tộc tấn công khung giơ lên), vệt hồng còn sót ở đầu vũ khí. Một trang xem được tất cả khung cũng tiết kiệm token vì không phải đọc nhiều ảnh lớn qua chat.
-- **Nền có sẵn:** `tools/frame_tuner/` (bật/tắt khung, thời gian, công thức lưu `export_recipe.json`, chạy cục bộ bằng `serve.py`, xem `docs/tools/frame_tuner/frame-tuner-guide.md`). Mở rộng tool đó thay vì viết tool mới; nguồn dữ liệu là `out/<class>/_lineups/<tộc>/frames/<động tác>/<con>/frames/fNN.png`.
-- **Cần có:**
-  1. Một lưới xem: mỗi hàng một con, mỗi cột một khung (13), nền ca-rô hoặc xám đậm, kèm tên con; chọn động tác (tấn công, chết, đi bộ); xem trước phát cả bộ ở 12 fps.
-  2. Đánh dấu tự động khung nghi ngờ: cảnh báo của `lineup_split.py` (chạm mép cửa sổ), vùng màu hồng còn sót, nhiều mảnh rời hoặc mảnh liên thông lớn thứ hai, diện tích đổi đột ngột so với khung kề.
-  3. Với một khung được chọn: bấm một mảnh liên thông để xóa; cọ hoặc vòng chọn để xóa vùng; hoàn tác; "chỉ giữ mảnh này"; áp cùng thao tác cho khung kề (vị trí tương tự); bỏ cả khung (tắt) hoặc thay bằng khung kề.
-  4. **Không phá bản gốc:** mọi chỉnh sửa lưu thành `edits.json` (khung, thao tác, tọa độ) cạnh bộ khung; `apply_edits` dựng lại PNG từ clip gốc và công thức, để chạy lại khi đổi `--scales` hoặc khử hồng.
-  5. Xuất: bộ khung sạch, `sheet.png`, `preview.gif`; cập nhật `meta.json` của tộc (số khung bỏ, lý do).
-- **Đo khi làm xong:** thời gian xử lý một bộ 10 con × 13 khung bằng tay so với số khung cần chạm; token đọc ảnh so với cách đọc ảnh kiểm hiện tại.
+**Công cụ xem, dọn và chọn khung: Frame Tuner** (`tools/frame_tuner/frame_tuner.bat`, cách dùng `docs/tools/frame_tuner/frame-tuner-guide.md`, code `scripts/sprite_prep/`). Lưới cần một `sprite_prep.json` (mẫu: `out/heroes/_lineups/heroic_ref_five/sprite_prep.json`). Tool tách mọi khung (không lấy mẫu 13 khung), tẩy và khử nhiễu không phá ảnh (`prep/<hero>/<clip>.edits.json`), ghép khung từ nhiều take, kiểm tra vòng lặp, canvas và cỡ thân, rồi xuất qua `video_to_sheet.py`. `lineup_split.py` vẫn dùng được để xem nhanh 13 khung.
 
 ## Hình dáng theo loại quái (vai trò đọc được từ hình bóng)
 Thử ngày 2026-11-26 trên Hàn Tộc (`out/enemies/_lineups/ice/`). Mỗi vai một kiểu thân; viết dáng bằng số và hình khối, tránh các chữ làm model đổi thân (`stout, massive, huge, round` đẩy về dáng mập: lint báo khi `--body slender`).

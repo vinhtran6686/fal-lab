@@ -37,6 +37,8 @@ docs/
 │   │   └── puppet-kit-pose-reel.md                        pose reel: clip tư thế cho động tác rig không vẽ được (puppet_reel.py)
 │   ├── ref_atlas/                                         scripts/ref_atlas/
 │   │   └── ref-atlas-split-and-animations.md              tách atlas tham khảo (png + lua) thành frame, gif và animation có tên
+│   ├── sprite_prep/                                       scripts/sprite_prep/
+│   │   └── sprite-prep-guide.md                           lệnh và file của bước tách, dọn, chọn khung, xuất (dùng chung với Frame Tuner)
 │   └── lineup/                                            scripts/lineup/
 │       ├── lineup-workflow.md                             quy trình lưới nhiều nhân vật trong một clip cho mọi class: 5 bước, bảng thông số (kích thước, thời lượng, giá), bảng cấp và class
 │       ├── lineup-heroes-from-masters.md                  lưới hero ghép từ master đã chốt: các bước, khung prompt mỗi con độc lập, quy trình duyệt
@@ -50,7 +52,7 @@ docs/
 │   │   ├── puppet-studio-ai-guide.md                      sổ tay cho AI khi sửa rig theo yêu cầu
 │   │   └── puppet-studio-limits.md                        tính năng đã có và giới hạn của rig cắt từ một ảnh
 │   └── frame_tuner/
-│       └── frame-tuner-guide.md                           tools/frame_tuner/: bật/tắt frame, chỉnh thời gian, lưu công thức
+│       └── frame-tuner-guide.md                           tools/frame_tuner/: tách khung, dọn (tẩy, khử nhiễu), chọn khung, xem cỡ game, xuất sheet; trang cũ holy_commander
 ```
 
 ## Docs nằm cạnh code (không chuyển vào docs/)

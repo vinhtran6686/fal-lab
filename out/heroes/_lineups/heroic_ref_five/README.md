@@ -3,7 +3,7 @@
 Lưới: `source/design/lineup_v01_regrid.png` (5 cột x 1 hàng, ghép bằng code từ 5 master đã chốt, mỗi con cao ~169 px trong clip 768P = L @2x).
 Thứ tự ô (trái sang phải): `cinder_maul`, `ash_ranger`, `pale_seraph`, `red_axe`, `magma_giant`.
 Mọi clip: `minimax/h3-max-turbo` 768P (1344x768), 4 s, 24 fps, 107 khung; prompt trong `source/video/prompts/`; tham số và nhận xét trong `meta.json`.
-**Chưa tách khung** (người dùng sẽ làm tool tách khung). Cắt ô: `lineup_split.py <clip> --cols 5 --rows 1 --x-margin 0.03 --pad 64`.
+**Tách, dọn, chọn khung và xuất**: Frame Tuner (`tools/frame_tuner/frame_tuner.bat`) đọc `sprite_prep.json` của lưới này (bảng sheet, take và take đang chọn dưới đây).
 
 ## Clip chọn cho từng nhân vật
 | Động tác | cinder_maul | ash_ranger | pale_seraph | red_axe | magma_giant |

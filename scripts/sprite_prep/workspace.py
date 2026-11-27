@@ -68,7 +68,9 @@ def _single_asset_config(asset: Path) -> dict | None:
         cid = v.parent.name if v.name == "clip.mp4" else v.stem
         clips[cid] = {"path": v.relative_to(asset).as_posix()}
         act = _clip_action(cid)
-        a = actions.setdefault(act, {"sheet": act if act.endswith("_side") else act + "_side", "takes": [], "pick": cid})
+        m = re.match(r"(.*?_side)(?:_|$)", act)      # attack_side_attack -> attack_side ; skill_side_skill_x -> skill_x_side
+        sheet = m.group(1) if m and not act.startswith("skill_side_") else (re.sub(r"^skill_side_", "", act) + "_side" if act.startswith("skill_side_") else act + "_side")
+        a = actions.setdefault(act, {"sheet": sheet, "takes": [], "pick": cid})
         a["takes"].append(cid)
         if "run" in act or "walk" in act or "idle" in act:
             a["loop"] = True
