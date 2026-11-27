@@ -32,15 +32,16 @@
 | Asset | Từ | Loại | Trạng thái | Ghi chú |
 |---|---|---|---|---|
 | master (= idle) | fal-image | ảnh tĩnh | ✅ v01 (chốt 2026-11-27) | vẽ lại từ ảnh tham khảo |
+| idle_side | Puppet Kit (rig từ master, $0) | loop | ❌ | user 2026-11-27: idle tách rig từ master |
 | icon | fal-image | ảnh tĩnh | ❌ | |
-| pose_respawn | fal-image | ảnh tĩnh | ❌ | |
+| pose_respawn | - | - | ⏭ | không cần (respawn = vfx + idle) |
 | pose_skill_axe_combo | fal-image | ảnh tĩnh | ❌ | |
 | pose_skill_axe_whirl | fal-image | ảnh tĩnh | ❌ | |
-| run_side | video-sprite | loop | ❌ | |
-| attack_side | video-sprite | one-shot | ❌ | |
-| death_side | video-sprite | one-shot | ❌ | |
-| respawn_side | video-sprite | one-shot | ❌ | |
-| levelup_side | video-sprite | one-shot | ❌ | |
+| run_side | video-sprite (lưới heroic_ref_five) | loop | ✅ clip run_t01 (chưa tách khung) | `out/heroes/_lineups/heroic_ref_five/source/video/run_t01` |
+| attack_side | video-sprite (lưới heroic_ref_five) | one-shot | ✅ clip attack_t01 (chưa tách khung) | `out/heroes/_lineups/heroic_ref_five/source/video/attack_t01` |
+| death_side | video-sprite (lưới heroic_ref_five) | one-shot | ✅ clip death_t01 (chưa tách khung; bỏ khung có lửa) | `out/heroes/_lineups/heroic_ref_five/source/video/death_t01` |
+| respawn_side | idle (rig) + lib-fx | one-shot | ❌ | không làm clip (user 2026-11-27): vfx sáng -> hiện nhân vật ở idle |
+| levelup_side | idle (rig) + lib-fx | one-shot | ❌ | không làm clip (user 2026-11-27): dùng idle + tự thêm vfx như holy_commander |
 | skill_axe_combo_side, skill_axe_whirl_side | video-sprite | one-shot | ❌ | |
 | fx_axe_combo, fx_axe_whirl, fx_respawn, fx_levelup | lib-fx | hiệu ứng | ❌ | `melee/slash/axe` |
 | package | export | gói | ❌ | |
