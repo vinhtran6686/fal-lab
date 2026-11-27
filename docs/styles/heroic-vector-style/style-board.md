@@ -1,6 +1,6 @@
-# Bảng phong cách tham khảo (style board): ghi nhận từ ảnh người dùng gửi
+# Bảng ảnh tham khảo của heroic-vector-style (10 ảnh người dùng gửi)
 
-Tài liệu làm việc, **còn mở**: người dùng có thể gửi thêm ảnh. Tổng hợp của 10 ảnh đã thành bản nháp preset `style-vivid.md` trong `.claude/skills/fal-image/` (cạnh `style-chunky.md`); sau khi thử với Lôi Tộc và được duyệt sẽ thành mặc định. Ảnh gốc nằm ở `ref/style_board/` (chỉ đọc). Không đặt tên game nguồn trong prompt (luật của `format.md`).
+Ảnh gốc ở `ref/style_board/` (chỉ đọc). Đặc tả phong cách rút ra từ các ảnh này: `style-spec.md`. Không đặt tên game nguồn trong prompt.
 
 ## 1. Ảnh đã nhận (10)
 | File trong `ref/style_board/` | Là gì | Ghi nhận |
@@ -43,22 +43,6 @@ Tài liệu làm việc, **còn mở**: người dùng có thể gửi thêm ả
 **Hiệu ứng trong tranh (cho vfx sau, không vẽ trong thân sprite)**
 - Lớp phẳng nhiều tông có viền: lưỡi lửa, vòng gió, mũi nhọn nổ, mảnh vụn, khói phẳng, sao hình thoi, vòng cầu đồng tâm, tia vạch.
 
-**Cách viết mô tả (yêu cầu của người dùng):** mỗi nhân vật mở đầu bằng bốn thẻ: GIỚI TÍNH, CLASS, HỆ, LOẠI (người, thú, quái, công trình, linh hồn); xem `style-vivid.md` §0.
+**Cách viết mô tả (yêu cầu của người dùng):** mỗi nhân vật mở đầu bằng bốn thẻ: GIỚI TÍNH, CLASS, HỆ, LOẠI (người, thú, quái, công trình, linh hồn); xem `style-spec.md` §3.
 
-## 3. So với bản chunky hiện tại (`style-chunky.md`)
-| Mục | Chunky hiện tại | Phong cách tham khảo (vivid) |
-|---|---|---|
-| Tính cách | nghiêm, không dễ thương | dữ pha hài, mặt biểu cảm |
-| Mặt | ít nét nhất | nhiều nét hơn (răng, ria, nheo mắt, lông mi) |
-| Tương phản | vùng lớn ở **tông giữa**, sáng không trắng | tối sâu ngả màu, điểm sáng kem trắng, viền sáng, điểm bóng loáng |
-| Nét viền | một màu nâu tím | đậm, ngả màu vùng (nhiều màu) |
-| Chi tiết | không hoa văn nhỏ | đinh tán, khe giáp, đốm xước, huy hiệu |
-| Màu | chủ đạo + ấm + vàng | chủ đạo bão hòa + nhấn bù + kem trắng |
-| Tỉ lệ | ~3 đầu brawny; slender 4; agile 4,3 | nam 2,5-3; nữ và nhẹ 4-5; vật cầm khổng lồ |
-| Nữ | thân slender chibi-không | mảnh, đường cong, tóc và áo choàng bay |
-
-## 4. Việc cần làm khi nhận đủ ảnh
-1. Đo từng ảnh theo phương pháp của `style-chunky.md` §3 (lượng tử hóa màu, tách phần nền, giá trị H/S/V) và tỉ lệ đầu/thân/chân.
-2. Phân nhóm: nam, nữ, quái, class (cận chiến, pháp sư, xạ thủ, đấu sĩ, boss) rồi viết quy tắc hình dáng theo nhóm.
-3. Đề xuất bản phong cách mới (khối `{STYLE}`, quy tắc mặt, bảng màu mẫu) cho người dùng duyệt, rồi cập nhật `style-chunky.md`.
-4. Thử một lưới (một tộc) theo phong cách mới để so với lưới hiện tại, trước khi áp cho mọi tộc.
+> **Lưu ý:** các dòng "chất liệu: đốm, vết xước, đinh tán" ở trên là quan sát của ảnh gốc; khi vẽ prompt thì **không** nhờ model vẽ chúng (bản thử đầu làm vậy và bị rối). Xem `lessons.md`.

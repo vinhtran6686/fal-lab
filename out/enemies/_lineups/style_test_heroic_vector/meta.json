@@ -1,13 +1,8 @@
 {
-  "purpose": "style test of the vivid preset (.claude/skills/fal-image/style-vivid.md) on ten new characters of mixed gender, class, element and kind (not a clan, not lightning)",
-  "status": "v01 (detailed) rejected by the user except character 1; v02 (simple and clean) drawn, waiting for review",
+  "purpose": "style test of heroic-vector-style (docs/styles/heroic-vector-style/) on ten new characters of mixed gender, class, element and kind (not a clan, not lightning); v02 was approved by the user on 2026-11-27",
+  "status": "v02 (simple and clean) approved; v01 (detailed, rejected) was removed from the repo (in git history)",
   "grid": {
-    "image": "source/design/grid_v01.png",
-    "flat": "source/design/grid_v01_flat.png (lineup_fix_pink.py --flatten-bg logic only; NO pink recolour here: the purple skin of the Bog Behemoth would be recoloured)",
-    "shrink_test": "source/design/shrink_test_60_120px.png",
-    "prompt": "docs/scripts/lineup/prompts/lineup-grid-vivid-style-test.txt",
-    "model": "gpt-image-2 low 2560x1440",
-    "cost_usd": 0.0209
+    "note": "v01 files removed (rejected: too busy)"
   },
   "characters": [
     {
@@ -96,7 +91,7 @@
     "image": "source/design/grid_v02_simple.png",
     "flat": "source/design/grid_v02_simple_flat.png",
     "shrink_test": "source/design/shrink_test_v02_60_120px.png",
-    "prompt": "docs/scripts/lineup/prompts/lineup-grid-vivid-style-test-simple.txt",
+    "prompt": "docs/styles/heroic-vector-style/prompt-template.txt",
     "cost_usd": 0.0215,
     "change": "v01 was too busy (scratches, fringes, many small bits, soft smudged rendering); v02 asks for big smooth shapes, at most six bold shapes per costume, hair and flames as 3-5 big clumps, NO texture, hatching, scratches, speckles, fringe, tiny details or thin lines, characters drawn large (80% of the cell) instead of tiny"
   }

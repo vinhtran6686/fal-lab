@@ -15,12 +15,18 @@ docs/
 │   ├── images/pose-pair-sweep-abc-before-after.png       ảnh trước (hai pose A, B) / sau (ba pose A, B, C) của mục 10.6 trong pose-pair-fx-method.md
 ├── skills/                                                tài liệu bổ sung cho .claude/skills/<skill>/
 │   ├── fal-image/                                         ảnh tĩnh qua scripts/gen_image.py
-│   │   ├── fal-image-style-board.md                       bảng phong cách tham khảo (ảnh người dùng gửi ở ref/style_board/): điểm chung, so với style-chunky, việc cần làm
 │   │   ├── fal-image-manual-prompt-style-transfer.md      prompt chuyển concept image sang style của dự án (chế độ --manual)
 │   │   └── fal-image-manual-prompt-assets-from-master.md  prompt cho các ảnh còn lại từ master đã duyệt (chế độ --manual)
 │   └── video-sprite/                                      animation bằng video qua scripts/fal_video.py
 │       ├── video-sprite-motion-description-rules.md       quy tắc viết mô tả động tác (hệ quy chiếu, hướng từng bước, mục tiêu)
 │       └── video-sprite-reference-video-route.md          route video tham chiếu (scripts/make_ref_video.py)
+├── styles/                                                phong cách thiết kế nhân vật (nghiên cứu riêng, skill đọc khi người dùng yêu cầu)
+│   └── heroic-vector-style/                               "style heroic" của fal-image (mặc định vẫn là style-chunky)
+│       ├── style-spec.md                                  đặc tả: đơn giản sạch, thân hình theo giới tính và vai, thẻ mô tả, nét, màu, mặt, kiểm duyệt
+│       ├── prompt-recipe.md                               cách viết prompt: khung lưới, mẫu đoạn nhân vật, khối style, từ nên dùng và tránh
+│       ├── lessons.md                                     bài học bản v01 rối và v02 đạt
+│       ├── style-board.md                                 10 ảnh tham khảo và nhận xét (ảnh ở ref/style_board/)
+│       ├── prompt-template.txt                            prompt lưới 10 nhân vật đã chạy được
 ├── scripts/                                               tài liệu cho code trong scripts/
 │   ├── puppet_kit/                                        scripts/puppet*.py, scripts/puppet_kit/
 │   │   ├── puppet-kit-guide.md                            cách dùng kit: rig, lệnh check/render/track/slash, skin, links
@@ -47,7 +53,7 @@ docs/
 
 | Vị trí | Nội dung |
 |---|---|
-| `.claude/skills/fal-image/` | `SKILL.md`, `format.md` (style, góc nhìn, thư mục, manifest), `classes/*.md` (hero, ally, enemy, enemy-flying, boss), `reference.md`, `templates.md`, `examples.md`, `action-planes.md` (góc nhìn của game và mặt phẳng của động tác: chém dọc, ngang, xéo, đâm, phép; cách viết pose và nơi đặt vfx), `preflight.md` (suy nghĩ và kiểm tra trước khi tạo ảnh: ghi chú thiết kế, lint prompt, một quyết định một ảnh), `style-vivid.md` (nháp, từ 10 ảnh tham khảo của người dùng: thân hình theo giới và vai, nét viền ngả màu, tô tương phản mạnh, mặt biểu cảm, khối `{STYLE vivid}`), `style-chunky.md` (phong cách mặc định cho nhân vật mới: tỉ lệ 3 đầu, nét viền, bảng màu hài hoà, mặt, mức chi tiết, mẫu prompt, checklist có phép thử thu nhỏ 60 px) |
+| `.claude/skills/fal-image/` | `SKILL.md`, `format.md` (style, góc nhìn, thư mục, manifest), `classes/*.md` (hero, ally, enemy, enemy-flying, boss), `reference.md`, `templates.md`, `examples.md`, `action-planes.md` (góc nhìn của game và mặt phẳng của động tác: chém dọc, ngang, xéo, đâm, phép; cách viết pose và nơi đặt vfx), `preflight.md` (suy nghĩ và kiểm tra trước khi tạo ảnh: ghi chú thiết kế, lint prompt, một quyết định một ảnh), `style-chunky.md` (phong cách mặc định cho nhân vật mới: tỉ lệ 3 đầu, nét viền, bảng màu hài hoà, mặt, mức chi tiết, mẫu prompt, checklist có phép thử thu nhỏ 60 px) |
 | `.claude/skills/video-sprite/` | `SKILL.md`, `references/` (prompt chuyển động; `action-planes.md`: mặt phẳng của động tác trong clip), `playtest/`, `scripts/` |
 | `lib-fx/` | `README.md` (lệnh, luật nhìn), `GUIDE.md` (bản đồ thư mục), `MINDSET.md`, `lib-fx/_core/formulas/draw/FXKIT.md` (fxkit: hệ thống dựng hiệu ứng theo lớp, phong cách, hợp đồng của một lớp), `lib-fx/_core/formulas/draw/DESIGN.md`, `RECIPE-*.md`, `lib-fx/_core/formulas/draw/SHAPE-RULES.md`, `RESEARCH-*.md` |
 | `lib-fx/_core/` | `README.md` (bản đồ công thức vs kết quả), `formulas/vector/README.md`, `formulas/rules/` (luật + số đo) |

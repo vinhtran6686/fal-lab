@@ -90,7 +90,7 @@
     "boss filmed alone, large, with margin (--out-window)"
   ],
   "style_test": {
-    "style": "vivid (draft, .claude/skills/fal-image/style-vivid.md)",
+    "style": "an early draft of what became heroic-vector-style (docs/styles/heroic-vector-style/); this version was too busy and was superseded",
     "image": "source/design/grid_vivid_v01.png",
     "fixed": "source/design/grid_vivid_v01_fixed.png",
     "regrid": "source/design/grid_vivid_v01_regrid.png",
