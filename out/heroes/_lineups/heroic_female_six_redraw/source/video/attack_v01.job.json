@@ -1,0 +1,26 @@
+{
+  "prompt": "Animate this roster of six fantasy heroines, all six at the same time, each performing ONE attack in place that fits her class, then holding the final pose. The camera is fixed and does not move, zoom or pan. Left and right in this description are the screen's left and right. Every heroine faces and attacks toward screen right, at an enemy standing just outside the picture to the right of her at chest height. Each heroine stays exactly where she stands in her own cell, her feet planted and never sliding, never touching or overlapping another heroine, never leaving the picture, and keeps her own size, design, colours and outline exactly as in the image and keeps only her own weapon or props.\n1. The knight (top left) grips her broad sword with both hands, raises it up behind her head, then brings it straight down in front of her toward screen right in one powerful chop, leaning her whole body into the blow, her cape swinging behind her, and holds the end of the chop with the sword low in front of her.\n2. The sorceress (top middle) lowers her head and looks forward, brings both open hands back to her hips with the green smoke gathering in her right hand, then thrusts both palms straight forward toward screen right with a hard push, the smoke streaming forward from her hand, and holds the pose with her arms extended.\n3. The fire mage (top right) pulls her thrown-back left hand with its small flame in toward her chest, then thrusts her right hand with the big flame hard forward toward screen right, her braid and coat flying back, and holds the pose with the big flame held out in front of her hand.\n4. The fur warrior (bottom left) raises her hand from the bison's back and points forward at the enemy with a fierce shout, while the huge bison beside her lowers its horns, stamps a hoof and lunges its head forward toward screen right in a head-butt, and both hold the final pose.\n5. The archer (bottom middle) draws the bowstring back to her cheek with her arrow ready, holds the aim for a moment, then releases the string so that her bow arm recoils; the arrow flies straight forward toward screen right at chest height and out of the picture, and she holds the follow-through pose.\n6. The priestess (bottom right) raises her golden staff up beside her, then sweeps it forward and down toward screen right while she pushes her other hand forward, the ball of light in her hand growing and glowing, and holds the final pose with the staff pointing forward.\nNo slash arc, no crescent, no swoosh, no motion trail and no afterimage is drawn behind any weapon or limb. The flat solid pure magenta background stays unchanged and fixed in every frame: no scenery, no ground, no shadows, no text, no camera shake.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "1080P",
+    "image_url": "https://v3b.fal.media/files/b/0ab42450/aE6X0fk5jV44Wkqz8irGe_six_v01_layout.png"
+  },
+  "seconds": 4,
+  "resolution": "1080P",
+  "size": [
+    3840,
+    2160
+  ],
+  "estimateUsd": 0.24,
+  "lastFrameUsed": false,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/heroes/.work/female_six/six_v01_layout.png",
+  "lastFrame": null,
+  "requestId": "01a21cca-9074-7071-af31-1f7bb9b7cec1",
+  "seconds_elapsed": 7.1,
+  "source_url": "https://v3b.fal.media/files/b/0ab42450/AMNh4H4TdzBYPKRTgVlqm_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

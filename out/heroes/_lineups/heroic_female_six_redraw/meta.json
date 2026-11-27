@@ -42,5 +42,13 @@
     "archer's bow reaches into the cell above (touches the sorceress)",
     "fire mage flame is cut at the top edge",
     "line weight closer to the references (medium) than to the very thick heroic outline"
-  ]
+  ],
+  "layout_for_video": "source/design/master_six_v01_layout.png (each character cut out and re-placed in its own 3x2 cell, 0.8 scale, on clean magenta; the sorceress is cut flat at the legs where her dissolved boots met the archer's bow)",
+  "attack_video": {
+    "video": "source/video/attack_v01.mp4",
+    "job": "source/video/attack_v01.job.json",
+    "prompt": "docs/styles/heroic-vector-style/prompt-motion-female-six-attack.txt",
+    "model": "minimax/h3-max-turbo/image-to-video 1080P 4 s (1918x1080, 24 fps)",
+    "cost_usd": 0.24
+  }
 }
