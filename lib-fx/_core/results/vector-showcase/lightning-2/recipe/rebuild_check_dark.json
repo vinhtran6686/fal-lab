@@ -1,0 +1,58 @@
+{
+ "mode": "dark",
+ "dark_l": 40.0,
+ "dark_d": 25.0,
+ "arc": {
+  "summary": {},
+  "in_band": "0/0",
+  "frames": []
+ },
+ "strike": {
+  "summary": {
+   "area_ratio": {
+    "mean": 0.948,
+    "min": 0.948,
+    "min_frame": 12
+   },
+   "iou": {
+    "mean": 0.903,
+    "min": 0.903,
+    "min_frame": 12
+   }
+  },
+  "in_band": "1/1",
+  "frames": [
+   {
+    "frame": 12,
+    "area_ref": 7785,
+    "area_reb": 7382,
+    "area_ratio": 0.948,
+    "iou": 0.903
+   }
+  ]
+ },
+ "bolt": {
+  "summary": {
+   "area_ratio": {
+    "mean": 0.991,
+    "min": 0.991,
+    "min_frame": 0
+   },
+   "iou": {
+    "mean": 0.904,
+    "min": 0.904,
+    "min_frame": 0
+   }
+  },
+  "in_band": "1/1",
+  "frames": [
+   {
+    "frame": 0,
+    "area_ref": 16222,
+    "area_reb": 16081,
+    "area_ratio": 0.991,
+    "iou": 0.904
+   }
+  ]
+ }
+}

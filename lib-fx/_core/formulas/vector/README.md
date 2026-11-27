@@ -74,7 +74,7 @@ python lib-fx/_tools/vectorfx.py lifecycle PROFILE                             v
 python lib-fx/_tools/vectorfx.py track     PROFILE                             theo dõi từng mảnh: lớn, tách, co, trôi, chết
 python lib-fx/_tools/vectorfx.py study     PROFILE                             lúc sinh, cách mép bị ăn, bố cục đỉnh (rules/05)
 python lib-fx/_tools/vectorfx.py showcase  PROFILE                             xuất GIF, frame, SVG vào ../results/vector-showcase/ (có trong git)
-python lib-fx/_tools/rebuild_check.py      PROFILE [--bright 170] [--frames a-b]   diện tích + bề rộng nét so với gốc; đạt khi 0,8-1,25
+python lib-fx/_tools/rebuild_check.py      PROFILE [--mode bright|dark] [--bright 170] [--dark-l 110] [--frames a-b]   so với ẢNH gốc: diện tích, bề rộng nét (bright), IoU (dark)
 ```
 
 `PROFILE` là đường dẫn hoặc tên trong `profiles/`. Kết quả ở `lib-fx/_study/<tên>/vector/` (không vào git): `strokes/` (nét đã khớp, cache;
