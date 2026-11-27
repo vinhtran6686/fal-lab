@@ -4,6 +4,8 @@
   "name": "swirl-slash",
   "source": {"frames_dir": "...", "pattern": "{variant}_{frame:02d}.png", "frames": [2, 12],        # inclusive range
              "gif": "...", "crops": {"fire": [x0, y0, x1, y1]}, "scale": 1, "background_frame": 13},   # scale: ingest upscale
+             # or "video": "x.mp4", "video_frames": {"fire": [a, b]}, "dedupe": {"diff": 40, "min_px": 200}:
+             # one PNG per DRAWING, exposure.json = timing chart (measure.ingest_video)
   "frame": {"type": "polar"} | {"type": "linear", "angle": null},
   "fit":    {"underlay_px": 10, "passes": 4, "min_area": 6, "min_gain": 0.0008, "axes": ["u", "v"],
              "edge_bias": [0, 0]},                                  # band edge shift in samples (frames.bands)
@@ -18,10 +20,14 @@
                             "gradient": {"edge": [255,163,69], "s": 8.08},     # inner edge gradient (optional)
                             "alpha": [0.3, 0.7],          # optional: match by opacity over the background (veils, fading)
                             "opacity": {"9": 0.89, ...},  # per-frame opacity of an alpha layer (written by measure)
-                            "darker_than_bg": 10}},       # optional: dark translucent layer (smoke shadow)
+                            "darker_than_bg": 10,         # optional: dark translucent layer (smoke shadow)
+                            "feather": 2.5,               # optional: soft edge (px) of the fill (a ground flash)
+                            "own_halo": {"sigma": [[6, 25], [20, 80]]}}},  # optional: this layer's own glow ([sy, sx] start values;
+                                                          # measure writes "halo": {"sigma", "c"}); not part of the shared glow
       "halo": {"s_near": .., "c_near": [..], "s_far": .., "c_far": [..]},     # glow behind the shapes (optional)
       "halo_model": "blur",          # glow = blurred copy of the shapes x gain per frame: {"sigma": [..], "c": [[..]], "gain": {"0": ..}}
       "near_halo": true,
+      "halo_gain_max": 2,            # cap of the per-frame glow strength (an inverse flash frame needs more)
       "smooth": {...},                                              # per-variant override
       "frame": {...}                                                # per-variant override
     }

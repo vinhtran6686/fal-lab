@@ -19,8 +19,11 @@ def load_frame(prof, v, f):
 
 
 def ingest(prof):
-    """Cut the source GIF into one PNG per frame and variant (crop boxes from the profile)."""
+    """Cut the source GIF into one PNG per frame and variant (crop boxes from the profile).
+    A source with "video" instead of "gif" goes to ingest_video (one PNG per DRAWING, held frames dropped)."""
     s = prof.d["source"]
+    if s.get("video"):
+        return ingest_video(prof)
     out = prof.resolve(s["frames_dir"])
     out.mkdir(parents=True, exist_ok=True)
     im = Image.open(prof.resolve(s["gif"]))
@@ -35,6 +38,72 @@ def ingest(prof):
             c.save(out / s.get("pattern", "{variant}_{frame:02d}.png").format(variant=v, frame=i))
         n += 1
     return n
+
+
+def _read_video(path):
+    import cv2
+    cap = cv2.VideoCapture(str(path))
+    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+    out = []
+    while True:
+        ok, bgr = cap.read()
+        if not ok:
+            break
+        out.append(bgr[..., ::-1])
+    cap.release()
+    return out, fps
+
+
+def ingest_video(prof):
+    """Video reference (mp4: a screen recording of a reel, several effects side by side).
+    source keys: "video", "crops" {variant: box}, "video_frames" {variant: [a, b]} (inclusive range = ONE loop of that
+    effect, found by content: the smallest lag where the crop repeats), "dedupe" {"diff": 40, "min_px": 200}
+    (a frame is a NEW drawing when more than min_px pixels change by more than diff on any channel; below that it is a
+    held frame or codec noise), "scale". Writes one PNG per drawing ({variant}_{NN}.png, NN = drawing index), the
+    backdrop as frame 999 (per-pixel 20th percentile of every 3rd video frame: removes the effect, keeps grid and
+    vignette), and exposure.json: {variant: {"fps": video fps, "start": a, "drawings": [[first video frame, frames held]]}}
+    = the timing chart of the loop."""
+    import json
+    s = prof.d["source"]
+    out = prof.resolve(s["frames_dir"])
+    out.mkdir(parents=True, exist_ok=True)
+    vid, fps = _read_video(prof.resolve(s["video"]))
+    k = s.get("scale", 1)
+    dd = {"diff": 40, "min_px": 200, **s.get("dedupe", {})}
+    pat = s.get("pattern", "{variant}_{frame:02d}.png")
+    expo, n = {}, 0
+    for v, box in s["crops"].items():
+        x0, y0, x1, y1 = box
+        crop = lambda im: im[y0:y1, x0:x1]
+        bg = np.percentile(np.stack([crop(im) for im in vid[::3]]), 20, axis=0).astype(np.uint8)
+        a, b = s.get("video_frames", {}).get(v, [0, len(vid) - 1])
+        draws, prev = [], None
+        for i in range(a, b + 1):
+            c = crop(vid[i]).astype(np.int16)
+            if prev is None or (np.abs(c - prev).max(-1) > dd["diff"]).sum() > dd["min_px"]:
+                draws.append([i, 1])
+                im = Image.fromarray(c.astype(np.uint8))
+                if k != 1:
+                    im = im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS)
+                im.save(out / pat.format(variant=v, frame=len(draws) - 1))
+            else:
+                draws[-1][1] += 1
+            prev = c
+        im = Image.fromarray(bg)
+        if k != 1:
+            im = im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS)
+        im.save(out / pat.format(variant=v, frame=999))
+        expo[v] = {"fps": round(fps, 3), "start": a, "drawings": draws}
+        n += len(draws)
+    (out / "exposure.json").write_text(json.dumps(expo, indent=1))
+    return n
+
+
+def exposure(prof, v):
+    """Timing chart written by ingest_video ({"fps", "drawings": [[first frame, held]]}), or None for GIF sources."""
+    import json
+    p = prof.resolve(prof.d["source"]["frames_dir"]) / "exposure.json"
+    return json.loads(p.read_text()).get(v) if p.exists() else None
 
 
 def background(prof, v):
@@ -272,6 +341,12 @@ def measure_profile(prof, frames=None, write=True):
             if write and hb:
                 prof.var(v)["halo"] = hb
                 prof.var(v)["near_halo"] = False
+            for l, cfg in prof.layers(v).items():
+                if "own_halo" in cfg:
+                    lh = fit_layer_halo(prof, v, l, prof.frames())
+                    report[v][l + "_halo"] = lh
+                    if write and lh:
+                        cfg["halo"] = lh
         elif halo:
             h = fit_halo(halo)
             report[v]["halo"] = h
@@ -288,7 +363,8 @@ def fit_halo_blur(prof, v, frames, peak_share=0.4, rng_seed=0):
     Measured on element-trio: a distance-based halo needs its strength scaled from ~1.6 (peak) down to ~0.15 (last
     frames), i.e. the designer fades the glow layer out while the effect dissolves; the blur model also fills the holes
     inside a flame the way the reference does. Fit: colours and sigmas on the biggest frames (gain 1), then one
-    least-squares gain per frame, clipped to [0, 2]."""
+    least-squares gain per frame, clipped to [0, 2] (variant key `halo_gain_max` raises the cap: an inverse
+    flash frame, the shape drawn black inside a glow twice as strong, needs ~4)."""
     bg = background(prof, v)
     data = []
     for f in frames:
@@ -296,12 +372,17 @@ def fit_halo_blur(prof, v, frames, peak_share=0.4, rng_seed=0):
         if rgb is None:
             continue
         U = np.zeros(rgb.shape[:2], bool)
-        for m in layer_masks(prof, v, rgb).values():
-            U |= m
+        O = np.zeros(rgb.shape[:2], bool)   # layers with their own halo (own_halo): not part of the shared glow
+        for l, m in layer_masks(prof, v, rgb).items():
+            if "own_halo" in prof.layers(v)[l]:
+                O |= m
+            else:
+                U |= m
         if U.sum() < 50:
             continue
         d = ndi.distance_transform_edt(~U)
-        sel = np.flatnonzero((d.ravel() > 3) & (d.ravel() < 150))
+        far = ndi.distance_transform_edt(~O) > prof.var(v).get("own_halo_clear", 90) if O.any() else np.ones(U.shape, bool)
+        sel = np.flatnonzero((d.ravel() > 3) & (d.ravel() < 150) & far.ravel())
         idx = np.random.default_rng(rng_seed + f).choice(sel, min(6000, len(sel)), replace=False)
         data.append((f, U, idx, (rgb.astype(float) - bg).reshape(-1, 3)[idx]))
     if not data:
@@ -329,10 +410,63 @@ def fit_halo_blur(prof, v, frames, peak_share=0.4, rng_seed=0):
     for f, U, idx, y in data:
         a, b = feats(f, U, idx, x[0], x[1])
         p = a[:, None] * x[2:5] + b[:, None] * x[5:8]
-        gain[f] = float(np.clip((p * y).sum() / max((p * p).sum(), 1e-9), 0, 2))
+        gain[f] = float(np.clip((p * y).sum() / max((p * p).sum(), 1e-9), 0, prof.var(v).get("halo_gain_max", 2)))
     return {"model": "blur", "sigma": [round(float(x[0]), 2), round(float(x[1]), 2)],
             "c": [[round(float(c), 1) for c in x[2:5]], [round(float(c), 1) for c in x[5:8]]],
             "gain": {str(f): round(g, 3) for f, g in sorted(gain.items())}}
+
+
+def fit_layer_halo(prof, v, layer, frames, n_samples=8000):
+    """Glow of ONE layer that the shared glow cannot hold (layer key "own_halo": {"sigma": [[sy, sx], ...]} = start
+    values; anisotropic sigmas allowed). lightning-2: the ground flash spreads a flat ellipse of light ~4x wider than
+    tall; the inverse flash (shape drawn black) glows 2-3x wider and stronger than the bolt does on its normal frames.
+    Fit on the frames where the layer is present: residual = reference - backdrop - shared glow of the other layers
+    (variant halo x gain[frame]); model = sum_k G(sigma_k) * mask * c_k. Returns {"sigma": [[sy, sx]..], "c": [[r,g,b]..]}."""
+    from .compose import halo as shared_halo
+    cfg = prof.layers(v)[layer]
+    s0 = [list(map(float, x)) for x in cfg["own_halo"]["sigma"]]
+    bg = background(prof, v)
+    vh = prof.var(v).get("halo")
+    data = []
+    for f in frames:
+        rgb = load_frame(prof, v, f)
+        if rgb is None:
+            continue
+        M = layer_masks(prof, v, rgb)
+        if M[layer].sum() < 30:
+            continue
+        y = rgb.astype(float) - bg
+        others = {l: m.astype(float) for l, m in M.items() if l != layer and "own_halo" not in prof.layers(v)[l] and m.any()}
+        if vh and others:
+            y = y - shared_halo(others, vh, False, f)
+        d = ndi.distance_transform_edt(~M[layer])
+        U = np.zeros(M[layer].shape, bool)
+        for m in M.values():
+            U |= m
+        sel = np.flatnonzero((d.ravel() > 1) & (d.ravel() < 260) & ~U.ravel())
+        idx = np.random.default_rng(f).choice(sel, min(n_samples, len(sel)), replace=False)
+        data.append((f, M[layer].astype(float), idx, y.reshape(-1, 3)[idx]))
+    if not data:
+        return None
+    K = len(s0)
+    cache = {}
+
+    def feats(f, m, idx, sig):
+        key = (f,) + tuple(round(x, 1) for x in sig)
+        if key not in cache:
+            cache[key] = [ndi.gaussian_filter(m, (sig[2 * k], sig[2 * k + 1])).ravel()[idx] for k in range(K)]
+        return cache[key]
+
+    def solve(sig):
+        A = np.concatenate([np.stack(feats(f, m, idx, sig), 1) for f, m, idx, _ in data])
+        Y = np.concatenate([y for *_, y in data])
+        C, *_ = np.linalg.lstsq(A, Y, rcond=None)
+        return C, A @ C - Y
+
+    x = least_squares(lambda sig: solve(sig)[1].ravel(), [c for s in s0 for c in s], bounds=(1, 300), diff_step=0.05).x
+    C, _ = solve(x)
+    return {"sigma": [[round(float(x[2 * k]), 1), round(float(x[2 * k + 1]), 1)] for k in range(K)],
+            "c": [[round(float(c), 1) for c in C[k]] for k in range(K)]}
 
 
 def measure_opacity(prof, v, frames):

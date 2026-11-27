@@ -7,6 +7,7 @@ Mỗi loại hiệu ứng có một thư mục riêng: bản gốc đã đọc, 
 |---|---|---|---|---|
 | **Slash** (nhát chém) | [slash/](slash/README.md) | `swirl-slash` (lửa, băng), `slash-trio` (xanh, hồng, vàng) | lưỡi liềm; xoay tại chỗ thường / nặng; chém trước mặt chữ C | có bộ sinh; user: slash đơn sinh mới 9-10/10 (2026-11-09) |
 | **Explosion** (nổ / phun từ đất) | [explosion/](explosion/README.md) | `element-trio` (lửa phun, Arcane, Toxic) | chưa có | đọc xong, 10/10 |
+| **Lightning** (sét) | [lightning/](lightning/README.md) | `lightning-2` (cung xanh, sét vàng đánh đất, sét xanh lớn; từ video), `lightning` (GIF nét mảnh) | chưa có (luật cho bộ sinh ở §5) | `lightning-2` dựng lại trọn vòng lặp, chờ chấm |
 
 Thêm loại mới: tạo `vfx/<loại>/README.md` theo cùng mẫu (bản gốc + profile + showcase, lớp và màu, vòng đời, luật, bẫy khi đọc, bộ sinh, việc còn
 thiếu), dựng lại 2-3 GIF tham khảo của loại đó trước khi viết bộ sinh.

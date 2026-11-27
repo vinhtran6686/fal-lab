@@ -45,7 +45,8 @@ def export(prof, frames=None, size=480, fps=25):
         (d / "frames").mkdir(parents=True)
         (d / "svg").mkdir()
         box = _wide_box(prof, v, frames)
-        comp, reb = [], []
+        comp, reb, dur = [], [], []
+        ex = measure.exposure(prof, v)   # video source: each drawing held as long as in the reference
         for f in frames:
             fp, sp = src / "frames" / f"{v}_{f:02d}.png", src / "svg" / f"{v}_{f:02d}.svg"
             ref = measure.load_frame(prof, v, f)
@@ -61,9 +62,9 @@ def export(prof, frames=None, size=480, fps=25):
             row = Image.new("RGB", (a.width * 2, a.height))
             row.paste(a, (0, 0)); row.paste(b, (a.width, 0))
             comp.append(row); reb.append(b)
-        ms = int(1000 / fps)
+            dur.append(round(1000 * ex["drawings"][f][1] / ex["fps"]) if ex and f < len(ex["drawings"]) else int(1000 / fps))
         if comp:
-            comp[0].save(d / "compare.gif", save_all=True, append_images=comp[1:], duration=ms, loop=0, optimize=True)
-            reb[0].save(d / "rebuilt.gif", save_all=True, append_images=reb[1:], duration=ms, loop=0, optimize=True)
+            comp[0].save(d / "compare.gif", save_all=True, append_images=comp[1:], duration=dur, loop=0, optimize=True)
+            reb[0].save(d / "rebuilt.gif", save_all=True, append_images=reb[1:], duration=dur, loop=0, optimize=True)
         written.append(d)
     return written

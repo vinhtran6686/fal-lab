@@ -1,0 +1,578 @@
+{
+ "name": "lightning-2",
+ "about": "Reference: ref/vfx/lightning-2/lightnings.mp4 (1920x640, 30 fps, 20 s; study only). A screen recording of three looping hand-drawn lightning effects side by side on a dark grid: arc = left, a blue bolt crawling sideways (loop 30 video frames); strike = centre, a gold vertical strike to the ground with a ground flash (loop 23 frames, 17 drawings); bolt = right, a big blue bolt from the top to the ground (loop 30 frames). Drawn at 24 fps and pulled down to 30 fps (every 5th video frame repeats). Fills: flat body + lighter core + blurred glow; one inverse frame per strike (the bolt drawn black inside its glow).",
+ "source": {
+  "video": "ref/vfx/lightning-2/lightnings.mp4",
+  "crops": {
+   "arc": [
+    0,
+    0,
+    700,
+    640
+   ],
+   "strike": [
+    720,
+    0,
+    1200,
+    640
+   ],
+   "bolt": [
+    1240,
+    0,
+    1920,
+    640
+   ]
+  },
+  "video_frames": {
+   "arc": [
+    0,
+    29
+   ],
+   "strike": [
+    0,
+    22
+   ],
+   "bolt": [
+    0,
+    29
+   ]
+  },
+  "dedupe": {
+   "diff": 40,
+   "min_px": 200
+  },
+  "scale": 1,
+  "frames_dir": "lib-fx/_study/lightning-2/vector_src",
+  "pattern": "{variant}_{frame:02d}.png",
+  "frames": [
+   0,
+   19
+  ],
+  "background_frame": 999
+ },
+ "frame": {
+  "type": "linear",
+  "angle": null
+ },
+ "fit": {
+  "underlay_px": 3,
+  "passes": 4,
+  "min_area": 4,
+  "min_gain": 0.0006,
+  "axes": [
+   "u",
+   "v"
+  ],
+  "edge_bias": [
+   0,
+   0
+  ],
+  "mode": "trace"
+ },
+ "masks": {
+  "min_area": 6
+ },
+ "smooth": {
+  "sigma": 1.5,
+  "corner_deg": 150,
+  "merge_tol": 0.6,
+  "min_area": 3,
+  "close_px": 0.8
+ },
+ "background": [
+  38,
+  37,
+  46
+ ],
+ "variants": {
+  "arc": {
+   "order": [
+    "ink",
+    "body"
+   ],
+   "layers": {
+    "ink": {
+     "colours": [
+      [
+       0,
+       0,
+       0
+      ],
+      [
+       20,
+       20,
+       30
+      ]
+     ],
+     "tol": 40,
+     "darker_than_bg": 25,
+     "own_halo": {
+      "sigma": [
+       [
+        8,
+        8
+       ],
+       [
+        30,
+        30
+       ]
+      ]
+     }
+    },
+    "body": {
+     "colours": [
+      [
+       255,
+       255,
+       255
+      ],
+      [
+       200,
+       237,
+       255
+      ],
+      [
+       121,
+       206,
+       252
+      ],
+      [
+       90,
+       170,
+       240
+      ]
+     ],
+     "tol": 30,
+     "gradient": {
+      "edge": [
+       101,
+       197,
+       248
+      ],
+      "s": 8.45
+     }
+    }
+   },
+   "halo_model": "blur",
+   "halo": {
+    "model": "blur",
+    "sigma": [
+     2.42,
+     28.21
+    ],
+    "c": [
+     [
+      -2.6,
+      71.9,
+      309.4
+     ],
+     [
+      -28.3,
+      74.1,
+      260.0
+     ]
+    ],
+    "gain": {
+     "0": 1.062,
+     "1": 1.188,
+     "2": 1.361,
+     "4": 0.968,
+     "5": 0.958,
+     "6": 0.984,
+     "7": 1.004,
+     "8": 1.084,
+     "9": 1.239,
+     "11": 1.0,
+     "12": 1.002,
+     "13": 1.095,
+     "14": 1.432,
+     "15": 2.322,
+     "16": 0.988,
+     "17": 1.079,
+     "18": 1.009
+    }
+   },
+   "near_halo": false,
+   "halo_gain_max": 6
+  },
+  "strike": {
+   "order": [
+    "flash",
+    "ink",
+    "body"
+   ],
+   "layers": {
+    "ink": {
+     "colours": [
+      [
+       0,
+       0,
+       0
+      ],
+      [
+       20,
+       20,
+       30
+      ]
+     ],
+     "tol": 40,
+     "darker_than_bg": 25,
+     "gradient": {
+      "edge": [
+       13,
+       3,
+       3
+      ],
+      "s": 2.15
+     },
+     "own_halo": {
+      "sigma": [
+       [
+        8,
+        8
+       ],
+       [
+        30,
+        30
+       ]
+      ]
+     },
+     "halo": {
+      "sigma": [
+       [
+        26.3,
+        28.1
+       ],
+       [
+        300.0,
+        44.8
+       ]
+      ],
+      "c": [
+       [
+        489.6,
+        340.0,
+        -69.9
+       ],
+       [
+        434.5,
+        273.2,
+        -16.8
+       ]
+      ]
+     }
+    },
+    "body": {
+     "colours": [
+      [
+       250,
+       254,
+       186
+      ],
+      [
+       255,
+       230,
+       145
+      ],
+      [
+       245,
+       210,
+       120
+      ]
+     ],
+     "tol": 30,
+     "gradient": {
+      "edge": [
+       249,
+       210,
+       129
+      ],
+      "s": 4.32
+     }
+    },
+    "flash": {
+     "colours": [
+      [
+       255,
+       255,
+       58
+      ],
+      [
+       250,
+       222,
+       48
+      ]
+     ],
+     "tol": 34,
+     "feather": 2.5,
+     "gradient": {
+      "edge": [
+       246,
+       188,
+       43
+      ],
+      "s": 2.42
+     },
+     "own_halo": {
+      "sigma": [
+       [
+        6,
+        14
+       ],
+       [
+        18,
+        70
+       ]
+      ]
+     },
+     "halo": {
+      "sigma": [
+       [
+        6.1,
+        25.1
+       ],
+       [
+        21.8,
+        79.8
+       ]
+      ],
+      "c": [
+       [
+        587.4,
+        366.7,
+        16.6
+       ],
+       [
+        1041.6,
+        689.1,
+        15.6
+       ]
+      ]
+     }
+    }
+   },
+   "halo_model": "blur",
+   "halo": {
+    "model": "blur",
+    "sigma": [
+     5.61,
+     52.19
+    ],
+    "c": [
+     [
+      101.8,
+      47.7,
+      -20.6
+     ],
+     [
+      212.5,
+      87.2,
+      -3.5
+     ]
+    ],
+    "gain": {
+     "0": 0.92,
+     "1": 1.128,
+     "2": 1.108,
+     "3": 1.368,
+     "4": 1.324,
+     "5": 1.336,
+     "6": 1.144,
+     "7": 1.498,
+     "9": 0.749,
+     "10": 0.978,
+     "11": 1.258,
+     "13": 1.019,
+     "14": 1.141,
+     "15": 0.948,
+     "16": 0.931
+    }
+   },
+   "near_halo": false,
+   "halo_gain_max": 6
+  },
+  "bolt": {
+   "order": [
+    "flash",
+    "ink",
+    "body"
+   ],
+   "layers": {
+    "ink": {
+     "colours": [
+      [
+       0,
+       0,
+       0
+      ],
+      [
+       20,
+       20,
+       30
+      ]
+     ],
+     "tol": 40,
+     "darker_than_bg": 25,
+     "own_halo": {
+      "sigma": [
+       [
+        8,
+        8
+       ],
+       [
+        30,
+        30
+       ]
+      ]
+     },
+     "halo": {
+      "sigma": [
+       [
+        2.3,
+        1.2
+       ],
+       [
+        22.5,
+        23.3
+       ]
+      ],
+      "c": [
+       [
+        -17.9,
+        -121.8,
+        -198.8
+       ],
+       [
+        12.1,
+        277.0,
+        445.6
+       ]
+      ]
+     }
+    },
+    "body": {
+     "colours": [
+      [
+       126,
+       230,
+       252
+      ],
+      [
+       73,
+       188,
+       247
+      ],
+      [
+       19,
+       140,
+       248
+      ]
+     ],
+     "tol": 30,
+     "gradient": {
+      "edge": [
+       24,
+       147,
+       238
+      ],
+      "s": 3.06
+     }
+    },
+    "flash": {
+     "colours": [
+      [
+       60,
+       255,
+       255
+      ],
+      [
+       55,
+       232,
+       252
+      ]
+     ],
+     "tol": 34,
+     "feather": 2.5,
+     "own_halo": {
+      "sigma": [
+       [
+        6,
+        14
+       ],
+       [
+        18,
+        70
+       ]
+      ]
+     },
+     "halo": {
+      "sigma": [
+       [
+        8.6,
+        36.0
+       ],
+       [
+        19.6,
+        74.9
+       ]
+      ],
+      "c": [
+       [
+        38.5,
+        270.8,
+        279.6
+       ],
+       [
+        -39.9,
+        275.2,
+        781.4
+       ]
+      ]
+     }
+    }
+   },
+   "halo_model": "blur",
+   "halo": {
+    "model": "blur",
+    "sigma": [
+     2.67,
+     67.15
+    ],
+    "c": [
+     [
+      -94.0,
+      73.0,
+      290.3
+     ],
+     [
+      -3.2,
+      48.6,
+      200.0
+     ]
+    ],
+    "gain": {
+     "1": 1.172,
+     "2": 1.334,
+     "3": 1.349,
+     "4": 1.501,
+     "5": 0.984,
+     "6": 1.039,
+     "7": 1.138,
+     "8": 1.158,
+     "9": 1.066,
+     "10": 1.038,
+     "11": 1.167,
+     "12": 1.211,
+     "13": 1.55,
+     "14": 1.537,
+     "15": 2.052,
+     "17": 0.925,
+     "18": 1.005,
+     "19": 1.031
+    }
+   },
+   "near_halo": false,
+   "halo_gain_max": 6
+  }
+ }
+}

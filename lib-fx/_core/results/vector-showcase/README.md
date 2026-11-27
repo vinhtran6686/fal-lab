@@ -18,6 +18,9 @@ Xuất bằng `python lib-fx/_tools/vectorfx.py showcase PROFILE` (bộ tool kh�
 | `lightning` | tia sét xanh lá, nét mảnh + quầng nhoè (127 khung, mỗi khung một tia mới) | [lightning/bolt](lightning/bolt/) | chờ chấm |
 | `flame-burst-trace` | lần dựng đầu (nhánh `vfx/vector-rebuild-flame-burst-lightning`): chế độ `fit.mode = "trace"` (viền từ mặt nạ, không khớp nét), 59 khung; lửa còn thiếu nhiều | [flame-burst-trace/fire](flame-burst-trace/fire/) | chưa chấm |
 | `lightning-trace` | lần dựng đầu cho sét: chế độ `trace`, 3 lớp (quầng, tia, lõi), 115 khung | [lightning-trace/green](lightning-trace/green/) | chưa chấm |
+| `lightning-2` | ba hiệu ứng sét từ **video** (`ref/vfx/lightning-2/lightnings.mp4`), mỗi cái một vòng lặp: cung xanh 19 hình, sét vàng đánh đất 17 hình, sét xanh lớn 20 hình; chế độ `trace`, lớp thân + chớp đất + khung mực (đảo màu); `compare.gif` giữ đúng số frame của từng hình | [lightning-2/arc](lightning-2/arc/), [lightning-2/strike](lightning-2/strike/), [lightning-2/bolt](lightning-2/bolt/) | chưa chấm |
+
+`lightning-2/recipe/`: `exposure.json` (bảng nhịp: frame video đầu và số frame giữ của từng hình), `rebuild_check.json` (diện tích, bề rộng nét so với gốc), `report.json`, ảnh kiểm mặt nạ `check_*.png`; công thức và số đo: `lib-fx/_core/formulas/rules/vfx/lightning/README.md`.
 
 Mỗi bản của `flame-burst/jet` và `lightning/bolt` còn thư mục `recipe/`: `lifecycle.json` (vòng đời từng lớp), `report.json` (IoU và độ mượt từng khung), bảng màu (`palette_*.png`), ảnh kiểm mặt nạ (`check_*.png`) và, với sét, các ảnh nghiên cứu (`study_*`). Cách dựng ra chúng: `lib-fx/_plans/vfx-rebuild-02/R1-flame-burst.md`, `R2-lightning.md`, `METHOD.md`; hồ sơ: `lib-fx/_core/formulas/vector/profiles/{flame-burst,lightning}.json` (bản `jet`, `bolt`) và `{flame-burst-trace,lightning-trace}.json` (bản `trace`).
 

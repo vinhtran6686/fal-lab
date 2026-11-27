@@ -8,7 +8,7 @@ Pipeline (one effect = one JSON profile in profiles/):
     review   : panels, motion GIFs, review page with OK / needs-work notes
 CLI: python lib-fx/_tools/vectorfx.py --help.  Method and lessons: README.md here,
 lib-fx/_core/results/bezier-research/FINDINGS.md (the measurements behind this kit)."""
-__version__ = "1.11"
+__version__ = "1.12"
 
 from .profile import Profile
 from .strokes import to_path, crescent, tongue, feather, notch, width_profile, peak_scale

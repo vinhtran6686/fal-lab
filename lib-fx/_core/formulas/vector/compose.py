@@ -35,6 +35,8 @@ def halo(covers, h, near=True, frame=None, weights=None):
     sil = np.zeros(next(iter(covers.values())).shape)
     for l, c in covers.items():
         sil = np.maximum(sil, c * (weights or {}).get(l, 1.0))
+    if h.get("model") == "blur" and not sil.any():
+        return np.zeros(sil.shape + (3,))
     if h.get("model") == "blur":
         g = h.get("gain", {})
         if frame is not None and g:
@@ -82,12 +84,22 @@ def composite(covers, order, prof, v, frame=None, base=None):
         w = {l: c["halo_w"] for l, c in prof.layers(v).items() if "halo_w" in c}
         if var.get("halo_follows_opacity"):     # generators: a layer that fades also glows less (rebuilt profiles keep the old rule)
             w = {l: w.get(l, 1.0) * layer_opacity(c, frame) for l, c in prof.layers(v).items()}
-        img = img + halo(covers, var["halo"], var.get("near_halo", True), frame, w or None)
+        shared = {l: c for l, c in covers.items() if "own_halo" not in prof.layers(v)[l]}
+        if shared:
+            img = img + halo(shared, var["halo"], var.get("near_halo", True), frame, w or None)
+    for l, c in covers.items():                  # own_halo layers: their own (anisotropic) blurred glow, measured by fit_layer_halo
+        lh = prof.layers(v)[l].get("halo") if "own_halo" in prof.layers(v)[l] else None
+        if lh:
+            img = img + sum(ndi.gaussian_filter(c.astype(float), tuple(s))[..., None] * np.array(cc, float)
+                            for s, cc in zip(lh["sigma"], lh["c"])) * layer_opacity(prof.layers(v)[l], frame)
     flat = np.zeros(shape + (3,)) + 20
     vis = visible(covers, order)
     for l in order:
         if l in covers:
-            a = covers[l][..., None] * layer_opacity(prof.layers(v)[l], frame)
+            cv = covers[l]
+            if prof.layers(v)[l].get("feather"):   # soft-edged layer (a ground flash): coverage blurred by `feather` px
+                cv = ndi.gaussian_filter(cv.astype(float), prof.layers(v)[l]["feather"])
+            a = cv[..., None] * layer_opacity(prof.layers(v)[l], frame)
             col = prof.flat(v, l)
             img = img * (1 - a) + layer_colour(vis[l], col, prof.layers(v)[l].get("gradient")) * a
             flat = flat * (1 - a) + np.array(col, float) * a
