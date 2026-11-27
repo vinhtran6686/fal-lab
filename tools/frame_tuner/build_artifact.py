@@ -5,7 +5,7 @@ Publish it with the sheets so other PCs can use the tuner without the repo:
 In the artifact the recipes are saved in the page's db (Claude reads them back with ArtifactData) and can be downloaded or copied as JSON."""
 import re, pathlib
 HERE = pathlib.Path(__file__).resolve().parent
-s = (HERE / 'index.html').read_text(encoding='utf-8')
+s = (HERE / 'legacy.html').read_text(encoding='utf-8')
 style = re.search(r'<style>(.*?)</style>', s, re.S).group(1)
 script = re.search(r'<script>(.*?)</script>', s, re.S).group(1)
 body = re.search(r'<body>(.*?)<script>', s, re.S).group(1)
