@@ -93,6 +93,8 @@ Quy trình chung cho mọi class có nhiều đơn vị cùng tộc/hệ (enemy,
 5. Giữ thiết kế, "no tail"; nền magenta cố định, không hiệu ứng, không chữ, camera cố định.
 
 ## Bước 4. Tách khung từng con
+**Thứ tự làm (người dùng, 2026-11-27):** sau mỗi clip chỉ lưu clip vào repo (`source/video/<động tác>_tNN/clip.mp4` + `job.json` + prompt) và gửi video cho người dùng đánh giá; **không tách khung ngay**. Bước tách khung làm sau, khi người dùng yêu cầu.
+
 `python scripts/lineup/lineup_split.py clip.mp4 --out <thư mục> --pad 64 --names rust_knight,dune_raider,ash_wolfman,quarry_ogre,moss_troll,bog_hag,drowned_marauder,bone_reaver,gloom_monk,scrap_golem`
 
 | Thông số | Giá trị |
