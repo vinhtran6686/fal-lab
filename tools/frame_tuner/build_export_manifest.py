@@ -30,8 +30,8 @@ STILLS = [('master', 'source/design/master_v07.png', 'ảnh chốt = idle'), ('i
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()[:16]
 
 def build():
-    meta = json.loads((A / 'meta.json').read_text()); recipe = json.loads((A / 'frames' / 'export_recipe.json').read_text()); fxs = {}
-    for name, rel in (meta.get('fx') or {}).items(): fxs[name] = json.loads((A / rel).read_text())
+    meta = json.loads((A / 'meta.json').read_text(encoding='utf-8')); recipe = json.loads((A / 'frames' / 'export_recipe.json').read_text(encoding='utf-8')); fxs = {}
+    for name, rel in (meta.get('fx') or {}).items(): fxs[name] = json.loads((A / rel).read_text(encoding='utf-8'))
     cell = meta['cell']; ms = round(1000 / 15)
     states = []
     for sid, st in meta['states'].items():
@@ -66,7 +66,7 @@ def build():
            'reproduce': {'recipes': 'frames/export_recipe.json', 'source_clips': 'source/video/*.mp4', 'tools': ['tools/frame_tuner/apply_recipe.py', 'tools/frame_tuner/export_fx.py', 'tools/frame_tuner/build_export_manifest.py']},
            'not_in_package': 'source/ (clips, stills, fx code) and .work are repo-only; copy frames/ and meta.json',
            'open_items': ['respawn clip not approved by the user yet', 'fx blend: screen is preferred; alpha-over is dimmer on bright ground', 'no gate run (qc.json) on the new states', 'stats not defined']}
-    (A / 'frames' / 'export_manifest.json').write_text(json.dumps(man, ensure_ascii=False, indent=1)); return man
+    (A / 'frames' / 'export_manifest.json').write_text(json.dumps(man, ensure_ascii=False, indent=1), encoding='utf-8'); return man
 
 def verify(man):
     bad = []; cell = tuple(man['canvas_1x']); c2 = tuple(man['canvas_2x']); total = 0
@@ -97,5 +97,5 @@ def verify(man):
     print('OK: package complete' if not bad else 'PROBLEMS:\n  ' + '\n  '.join(bad)); return not bad
 
 if __name__ == '__main__':
-    man = json.loads((A / 'frames' / 'export_manifest.json').read_text()) if '--verify-only' in sys.argv else build()
+    man = json.loads((A / 'frames' / 'export_manifest.json').read_text(encoding='utf-8')) if '--verify-only' in sys.argv else build()
     sys.exit(0 if verify(man) else 1)

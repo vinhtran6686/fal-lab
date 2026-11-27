@@ -27,8 +27,8 @@ def screen(c, im, xy):
     c[sy0:sy1, sx0:sx1] = 1 - (1 - reg) * (1 - col); return c
 
 def build(name):
-    fx = json.loads((A / 'frames' / 'fx' / name / 'fx.json').read_text()); state = fx['state']
-    meta = json.loads((A / 'meta.json').read_text())['states'][state]; sdir = A / meta['dir']
+    fx = json.loads((A / 'frames' / 'fx' / name / 'fx.json').read_text(encoding='utf-8')); state = fx['state']
+    meta = json.loads((A / 'meta.json').read_text(encoding='utf-8'))['states'][state]; sdir = A / meta['dir']
     body = sorted((sdir / 'frames' / '@2x').glob('*.png'))
     fb = sorted((A / 'frames' / 'fx' / name / 'back' / 'frames' / '@2x').glob('*.png')); ff = sorted((A / 'frames' / 'fx' / name / 'front' / 'frames' / '@2x').glob('*.png'))
     assert len(body) == len(fb) == len(ff), (len(body), len(fb), len(ff))
@@ -58,7 +58,7 @@ def build(name):
     sh.save(out / 'sheet.png', optimize=True)
     fx['previews'] = {'fx_only_gif': f'frames/fx/{name}/preview_fx_only.gif', 'with_body_gif': f'frames/fx/{name}/preview_with_body.gif', 'sheet': f'frames/fx/{name}/sheet.png',
                       'state_folder_gif': meta['dir'] + '/preview_with_fx.gif', 'note': 'previews only (dark ground, screen blend); the game uses the PNG layers'}
-    (out / 'fx.json').write_text(json.dumps(fx, indent=1, ensure_ascii=False))
+    (out / 'fx.json').write_text(json.dumps(fx, indent=1, ensure_ascii=False), encoding='utf-8')
     return withb, only, ms
 
 if __name__ == '__main__':

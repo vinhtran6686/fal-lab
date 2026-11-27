@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 from sprite_pack import key_out
 from PIL import Image
 
-CFG = json.loads((HERE / 'sources.json').read_text())
+CFG = json.loads((HERE / 'sources.json').read_text(encoding='utf-8'))
 CW = CH = 512; AX, AY = 256, 400; TARGET_H = 120
 
 def default_recipe(st):
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     ap.add_argument('--asset', help='export into this asset folder instead of the real one (testing)')
     a = ap.parse_args()
     rf = ROOT / CFG['asset'] / 'frames' / 'export_recipe.json'
-    saved = json.loads(rf.read_text()).get('states', {}) if rf.exists() else {}
+    saved = json.loads(rf.read_text(encoding='utf-8')).get('states', {}) if rf.exists() else {}
     todo = [s for s in CFG['states'] if (a.states and s['id'] in a.states) or (not a.states and (a.default or s['id'] in saved))]
     if not todo: print('nothing to do: no saved recipe in', rf, '(save one in the frame tuner, or use --default <state>)'); sys.exit(0)
     out = pathlib.Path(a.asset) if a.asset else ROOT / CFG['asset']

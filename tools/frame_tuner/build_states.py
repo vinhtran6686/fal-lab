@@ -64,7 +64,7 @@ def variant(state, cfg, fps, tag, force, base_n=None):
     fxmod = (FXDIR / (state['fx']['module'] + '.py')) if state.get('fx') else None
     newest = max([clip.stat().st_mtime] + ([fxmod.stat().st_mtime] if fxmod else []))
     fresh = not force and sheet.exists() and meta.exists() and sheet.stat().st_mtime > clip.stat().st_mtime
-    m = json.loads(meta.read_text()) if fresh else None
+    m = json.loads(meta.read_text(encoding='utf-8')) if fresh else None
     if m is None:
         frames = get_frames(clip, fps); bb = union_box(frames)
         s = CELL_H / (bb[3] - bb[1]); cw, ch = round((bb[2] - bb[0]) * s), CELL_H
@@ -83,10 +83,10 @@ def variant(state, cfg, fps, tag, force, base_n=None):
     m['default'] = {'keep': keep, 'durationsMs': [ms] * len(keep), 'hit': hit}
     if state.get('fx'):
         fxs = out / f"{state['id']}_fx{tag}.jpg"; fxm = out / f"{state['id']}_fx{tag}.json"
-        if not force and fxs.exists() and fxm.exists() and fxs.stat().st_mtime > newest: m['fx'] = json.loads(fxm.read_text())
+        if not force and fxs.exists() and fxm.exists() and fxs.stat().st_mtime > newest: m['fx'] = json.loads(fxm.read_text(encoding='utf-8'))
         else:
             m['fx'] = build_fx(state, cfg, get_frames(clip, fps), out, fps, tag); fxm.write_text(json.dumps(m['fx']))
-    meta.write_text(json.dumps({k: v for k, v in m.items() if k != 'fx'}, ensure_ascii=False))
+    meta.write_text(json.dumps({k: v for k, v in m.items() if k != 'fx'}, ensure_ascii=False), encoding='utf-8')
     return m
 
 def build(state, cfg, force):
@@ -100,8 +100,8 @@ def build(state, cfg, force):
     return m
 
 if __name__ == '__main__':
-    cfg = json.loads((HERE / 'sources.json').read_text()); force = '--force' in sys.argv
+    cfg = json.loads((HERE / 'sources.json').read_text(encoding='utf-8')); force = '--force' in sys.argv
     only = [a for a in sys.argv[1:] if not a.startswith('--')]
     states = [m for st in cfg['states'] if (not only or st['id'] in only) for m in [build(st, cfg, force)] if m]
-    (HERE / 'data' / 'states.json').write_text(json.dumps({'hero': cfg['hero'], 'fps': cfg['fps'], 'altFps': cfg.get('altFps'), 'states': states}, ensure_ascii=False))
+    (HERE / 'data' / 'states.json').write_text(json.dumps({'hero': cfg['hero'], 'fps': cfg['fps'], 'altFps': cfg.get('altFps'), 'states': states}, ensure_ascii=False), encoding='utf-8')
     print('wrote data/states.json with', len(states), 'states')

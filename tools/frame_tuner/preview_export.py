@@ -17,7 +17,7 @@ def screen_layer(c, im, pivot):
 
 def render_state(sheet, folder, fxname):
     body = sorted(glob.glob(str(A / folder / sheet / 'frames' / '@2x' / '*.png')))
-    fx = json.loads((A / 'frames' / 'fx' / fxname / 'fx.json').read_text()) if fxname else None
+    fx = json.loads((A / 'frames' / 'fx' / fxname / 'fx.json').read_text(encoding='utf-8')) if fxname else None
     fb = sorted(glob.glob(str(A / 'frames' / 'fx' / fxname / 'back' / 'frames' / '@2x' / '*.png'))) if fxname else []
     ff = sorted(glob.glob(str(A / 'frames' / 'fx' / fxname / 'front' / 'frames' / '@2x' / '*.png'))) if fxname else []
     out = []
@@ -32,7 +32,7 @@ def render_state(sheet, folder, fxname):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(); ap.add_argument('--out', default=str(HERE / 'data' / 'export_preview')); a = ap.parse_args()
     od = pathlib.Path(a.out); od.mkdir(parents=True, exist_ok=True)
-    meta = json.loads((A / 'meta.json').read_text()); fxmap = {'levelup_side': 'levelup', 'skill_radiant_slash_side': 'radiant_slash'}
+    meta = json.loads((A / 'meta.json').read_text(encoding='utf-8')); fxmap = {'levelup_side': 'levelup', 'skill_radiant_slash_side': 'radiant_slash'}
     for sheet, st in meta['states'].items():
         frames = render_state(sheet, st['dir'].rsplit('/', 1)[0], fxmap.get(sheet))
         d = od / sheet; d.mkdir(exist_ok=True)

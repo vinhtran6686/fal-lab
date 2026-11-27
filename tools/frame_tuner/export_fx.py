@@ -66,7 +66,7 @@ def to_rgba(rgb_img):
     return Image.fromarray(np.dstack([(np.clip(rgb, 0, 1) * 255).astype(np.uint8), (a * 255).astype(np.uint8)]), 'RGBA')
 
 def run(st, saved, asset_out):
-    fx = st['fx']; meta_p = asset_out / 'meta.json'; meta = json.loads(meta_p.read_text())
+    fx = st['fx']; meta_p = asset_out / 'meta.json'; meta = json.loads(meta_p.read_text(encoding='utf-8'))
     sheet = st['sheet']; sm = meta['states'][sheet]; rescale = sm.get('body_rescale', 1.0)
     rec = saved[st['id']]; keep, dur = rec['keep'], rec['durationsMs']
     rfps = rec.get('fps') or ar.CFG['fps']; fxscale = 15 / rfps       # the fx beats are counted in 15 fps frames
@@ -108,13 +108,13 @@ def run(st, saved, asset_out):
            'note': 'place the fx image so its pivot sits on the hero pivot (feet, x 0.5, y 0.88 of the 176x140 cell); frame n goes with body frame n of the same state',
            'layers': [{'id': 'back', 'z': 'behind the body', 'files': f'frames/fx/{name}/back/frames/@2x/{nm}_back_NN.png (also @1x)'},
                       {'id': 'front', 'z': 'in front of the body', 'files': f'frames/fx/{name}/front/frames/@2x/{nm}_front_NN.png (also @1x)'}]}
-    (out / 'fx.json').write_text(json.dumps(fxj, indent=1, ensure_ascii=False))
-    meta.setdefault('fx', {})[name] = f'frames/fx/{name}/fx.json'; meta_p.write_text(json.dumps(meta, indent=2, ensure_ascii=False))
+    (out / 'fx.json').write_text(json.dumps(fxj, indent=1, ensure_ascii=False), encoding='utf-8')
+    meta.setdefault('fx', {})[name] = f'frames/fx/{name}/fx.json'; meta_p.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding='utf-8')
     print(f"  wrote {out.relative_to(asset_out)}: {len(order)} frames each for back/front, {w2}x{h2} @2x, pivot {pivot2}")
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser(); p.add_argument('states', nargs='*'); p.add_argument('--asset'); a = p.parse_args()
-    rf = ROOT / ar.CFG['asset'] / 'frames' / 'export_recipe.json'; saved = json.loads(rf.read_text()).get('states', {})
+    rf = ROOT / ar.CFG['asset'] / 'frames' / 'export_recipe.json'; saved = json.loads(rf.read_text(encoding='utf-8')).get('states', {})
     out = pathlib.Path(a.asset) if a.asset else ROOT / ar.CFG['asset']
     todo = [s for s in ar.CFG['states'] if s.get('fx') and (not a.states or s['id'] in a.states) and s['id'] in saved]
     for st in todo: run(st, saved, out)
