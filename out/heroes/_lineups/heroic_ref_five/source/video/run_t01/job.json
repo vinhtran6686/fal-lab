@@ -1,0 +1,27 @@
+{
+  "prompt": "Five separate fantasy heroes stand in five separate cells of this picture. Each one performs its OWN movement cycle, described in its own paragraph below; the five are independent: never copy one hero's movement, prop or effect onto another. The camera is fixed and does not move, zoom or pan. Left and right in this description are the screen's left and right. Every hero faces and moves toward screen right, but moves IN PLACE, like on a treadmill: its body stays over the same spot of its own cell the whole time and never travels left or right, never leaves its cell, never touches or overlaps another hero. The movement is a smooth seamless loop: the last frame matches the first frame. Every hero keeps its own size, design, colours, outline and weapon exactly as in the image, and keeps the near-side view facing screen right with the head looking forward to screen right.\n1. The armoured knight with the red crest (far left) runs with heavy armoured strides. He holds the end of his stone hammer's haft in his rear hand down behind his hip, and the hammer is DRAGGED behind him toward screen left: the haft slants down and back, the big stone hammer head rests and scrapes along his own ground line behind his heels. His free arm swings forward and back with each stride, his body leans forward, his cape flaps behind him.\n2. The hooded archer (second from left) runs at a normal running pace: knees lifting, the arms swinging forward and back in turn, the dark bow held low in his forward hand and pointing down, the body leaning slightly forward, his cloak and tabard flapping behind him.\n3. The pale woman with the cape (middle) does NOT walk or run: her feet never touch the ground. She flies forward in place: her body leans forward toward screen right, both legs trail together behind and below her with pointed toes, one arm stretched forward and the other held back, her long hair and her wide cape stream back toward screen left and ripple; her whole body bobs gently up and down in the air, rising and sinking a short distance once per loop.\n4. The red-haired woman with the double axe (second from right) runs at a normal running pace: knees lifting, her free arm swinging, the double axe held across her body in both hands at chest height with the axe head up near her forward shoulder, her body leaning forward, her wild hair and her cloth panel flowing back.\n5. The stone giant with the black beard (far right) WALKS, he does not run: slow heavy steps, each big stone foot lifting low and planting flat on his own ground line, his huge shoulders rolling from side to side with each step, his long arms swinging slowly beside his legs, his head, black beard and gold beard rings always facing screen right; the small flame stays on his hand.\nNo fire, no explosion, no projectile, no dust, no speed lines, no motion trail, no afterimage and no effect of any kind is drawn. The flat solid pure magenta background stays unchanged and fixed in every frame: no scenery, no ground, no shadows, no text, no grid, no camera shake.",
+  "model": "h3-max-turbo",
+  "endpoint": "minimax/h3-max-turbo/image-to-video",
+  "arguments": {
+    "duration": 4,
+    "prompt_expansion_mode": "disabled",
+    "resolution": "768P",
+    "image_url": "https://v3b.fal.media/files/b/0ab43091/uE4BxNuVntEuRQkcCsBKp_lineup_v01_regrid.png",
+    "end_image_url": "https://v3b.fal.media/files/b/0ab43091/hwKCxWKjvL-WL7jFGKQeE_lineup_v01_regrid.png"
+  },
+  "seconds": 4,
+  "resolution": "768P",
+  "size": [
+    2560,
+    1440
+  ],
+  "estimateUsd": 0.12,
+  "lastFrameUsed": true,
+  "notes": [],
+  "reference": "/home/user/fal-lab/out/heroes/_lineups/heroic_ref_five/source/design/lineup_v01_regrid.png",
+  "lastFrame": "/home/user/fal-lab/out/heroes/_lineups/heroic_ref_five/source/design/lineup_v01_regrid.png",
+  "requestId": "01a21ea9-27f1-79b3-b215-1f03d053b533",
+  "seconds_elapsed": 6.5,
+  "source_url": "https://v3b.fal.media/files/b/0ab43091/G6NSRhpxiBCDEUFtfyJJc_minimax-h3.mp4",
+  "cost_is_estimate": true
+}

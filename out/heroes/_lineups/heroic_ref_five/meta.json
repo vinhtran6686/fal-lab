@@ -33,8 +33,22 @@
       "cost_usd": 0.12,
       "prompt": "source/video/prompts/motion_death_p01.txt",
       "peek": "all five fall on their backs in place; red_axe's axe haft reaches into magma_giant's space at the end; magma_giant's lava core and flame stay lit",
+      "status": "accepted by user 2026-11-27 (\"tạm cho là ổn\"): the model drew a fire blow hitting all five; drop those frames when splitting"
+    },
+    "run_t01": {
+      "model": "h3-max-turbo",
+      "resolution": "768P",
+      "duration_s": 4,
+      "cost_usd": 0.12,
+      "last_frame": "same as the first (loop)",
+      "prompt": "source/video/prompts/motion_run_p01.txt",
+      "peek": "all five stay in their cells; knight drags the hammer behind but its head rides at shin height instead of scraping the ground; archer and red_axe run; seraph flies forward; giant walks, turns toward the viewer in mid-loop",
       "status": "awaiting user"
     }
   },
-  "workflow_note": "user 2026-11-27: after a clip, only send the video for review and keep it in the repo (source/video/<action>_tNN/); do NOT split frames now, frame splitting is done later"
+  "workflow_note": "user 2026-11-27: after a clip, only send the video for review and keep it in the repo (source/video/<action>_tNN/); do NOT split frames now, frame splitting is done later",
+  "lessons": [
+    "death_t01: 'its killing blow comes from an unseen attacker' made the model draw a fire strike on every hero. Do not describe an incoming blow; say the hero collapses on its own, and ban fire, explosions, projectiles and impact effects.",
+    "user 2026-11-27: every hero must move independently: one paragraph per hero with its own action, no shared group sentence that a model can copy across heroes."
+  ]
 }
