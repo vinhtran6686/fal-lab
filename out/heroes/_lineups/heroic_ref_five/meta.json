@@ -103,6 +103,15 @@
         "magma_giant": "stomp"
       },
       "peek": "knight sweeps and holds the hammer straight out to the right, head just inside his cell; archer jumps, shoots with an empty string, NO arrow seen; seraph spreads both arms wide instead of one palm push; red_axe plants the axe and roars with the fist up; giant lifts the knee and stamps, but in the hold he turns toward the viewer and the head sinks between the shoulders",
+      "status": "user 2026-11-27: keep pale_seraph and red_axe from this clip; knight swing wrong (held the hammer straight out like a thrust), archer must shoot while in the air, giant too plain -> redo all five as skill3_t02"
+    },
+    "skill3_t02": {
+      "model": "h3-max-turbo",
+      "resolution": "768P",
+      "duration_s": 4,
+      "cost_usd": 0.12,
+      "prompt": "source/video/prompts/motion_skill3_p02.txt (p01 with new paragraphs 1, 2, 5)",
+      "peek": "knight swings from overhead but ends with the hammer on the screen-left side (behind him), 'wraps toward his far side' was read as behind; archer: a blurred hop in the first frames, then the draw happens on the ground; seraph and red_axe like t01; giant raises both arms (livelier) but in the stomps and the hold the body turns and the face is hard to read",
       "status": "awaiting user"
     }
   },
