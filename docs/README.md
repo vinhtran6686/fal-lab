@@ -15,6 +15,7 @@ docs/
 │   ├── images/pose-pair-sweep-abc-before-after.png       ảnh trước (hai pose A, B) / sau (ba pose A, B, C) của mục 10.6 trong pose-pair-fx-method.md
 ├── skills/                                                tài liệu bổ sung cho .claude/skills/<skill>/
 │   ├── fal-image/                                         ảnh tĩnh qua scripts/gen_image.py
+│   │   ├── fal-image-style-board.md                       bảng phong cách tham khảo (ảnh người dùng gửi ở ref/style_board/): điểm chung, so với style-chunky, việc cần làm
 │   │   ├── fal-image-manual-prompt-style-transfer.md      prompt chuyển concept image sang style của dự án (chế độ --manual)
 │   │   └── fal-image-manual-prompt-assets-from-master.md  prompt cho các ảnh còn lại từ master đã duyệt (chế độ --manual)
 │   └── video-sprite/                                      animation bằng video qua scripts/fal_video.py
