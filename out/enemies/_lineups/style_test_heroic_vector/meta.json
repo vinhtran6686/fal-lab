@@ -94,5 +94,6 @@
     "prompt": "docs/styles/heroic-vector-style/prompt-template.txt",
     "cost_usd": 0.0215,
     "change": "v01 was too busy (scratches, fringes, many small bits, soft smudged rendering); v02 asks for big smooth shapes, at most six bold shapes per costume, hair and flames as 3-5 big clumps, NO texture, hatching, scratches, speckles, fringe, tiny details or thin lines, characters drawn large (80% of the cell) instead of tiny"
-  }
+  },
+  "characters_dir": "characters/ (one transparent PNG per character, cut from grid_v02_simple_flat.png, ~700-900 px tall)"
 }

@@ -1,0 +1,104 @@
+{
+  "purpose": "heroic-vector-style test: ten different women (body shapes and classes), user request 2026-11-27",
+  "status": "drawn once (0.0218 USD), background flattened, characters cut, shrink test made; waiting for the user's review",
+  "grid": {
+    "image": "source/design/grid_v01.png",
+    "flat": "source/design/grid_v01_flat.png",
+    "shrink_test": "source/design/shrink_test_60_120px.png",
+    "characters_dir": "characters/ (one transparent PNG each)",
+    "prompt": "docs/styles/heroic-vector-style/prompt-template-female-lineup.txt",
+    "cost_usd": 0.0218
+  },
+  "characters": [
+    {
+      "order": 1,
+      "id": "witch_morgana",
+      "gender": "female",
+      "class": "witch",
+      "element": "poison",
+      "kind": "human",
+      "body": "tall and slim"
+    },
+    {
+      "order": 2,
+      "id": "mage_astra",
+      "gender": "female",
+      "class": "battle mage",
+      "element": "light",
+      "kind": "human",
+      "body": "athletic"
+    },
+    {
+      "order": 3,
+      "id": "shade_nyx",
+      "gender": "female",
+      "class": "assassin",
+      "element": "wind",
+      "kind": "human",
+      "body": "lean and wiry"
+    },
+    {
+      "order": 4,
+      "id": "huntress_lyra",
+      "gender": "female",
+      "class": "archer",
+      "element": "nature",
+      "kind": "human",
+      "body": "long-limbed"
+    },
+    {
+      "order": 5,
+      "id": "mother_elda",
+      "gender": "female",
+      "class": "healer",
+      "element": "light",
+      "kind": "human",
+      "body": "plump and motherly, short"
+    },
+    {
+      "order": 6,
+      "id": "brunhilde",
+      "gender": "female",
+      "class": "berserker",
+      "element": "earth",
+      "kind": "human",
+      "body": "broad and muscular"
+    },
+    {
+      "order": 7,
+      "id": "pip",
+      "gender": "female",
+      "class": "thief",
+      "element": "wind",
+      "kind": "human",
+      "body": "petite"
+    },
+    {
+      "order": 8,
+      "id": "dame_isolde",
+      "gender": "female",
+      "class": "knight swordswoman",
+      "element": "ice",
+      "kind": "human",
+      "body": "heavily armoured, strong"
+    },
+    {
+      "order": 9,
+      "id": "solara",
+      "gender": "female",
+      "class": "duelist swordswoman",
+      "element": "fire",
+      "kind": "human",
+      "body": "slender and agile"
+    },
+    {
+      "order": 10,
+      "id": "queen_seraphine",
+      "gender": "female",
+      "class": "chief sorceress",
+      "element": "water",
+      "kind": "human",
+      "body": "tall, commanding"
+    }
+  ]
+}

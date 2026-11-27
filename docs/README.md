@@ -26,7 +26,8 @@ docs/
 │       ├── prompt-recipe.md                               cách viết prompt: khung lưới, mẫu đoạn nhân vật, khối style, từ nên dùng và tránh
 │       ├── lessons.md                                     bài học bản v01 rối và v02 đạt
 │       ├── style-board.md                                 10 ảnh tham khảo và nhận xét (ảnh ở ref/style_board/)
-│       ├── prompt-template.txt                            prompt lưới 10 nhân vật đã chạy được
+│       ├── prompt-template.txt                            prompt lưới 10 nhân vật hỗn hợp đã chạy được
+│       ├── prompt-template-female-lineup.txt              prompt lưới 10 nhân vật nữ khác dáng và class
 ├── scripts/                                               tài liệu cho code trong scripts/
 │   ├── puppet_kit/                                        scripts/puppet*.py, scripts/puppet_kit/
 │   │   ├── puppet-kit-guide.md                            cách dùng kit: rig, lệnh check/render/track/slash, skin, links
