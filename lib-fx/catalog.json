@@ -1145,6 +1145,69 @@
   "hit_frame": 1,
   "kit": true
  },
+ "melee/slash/ring": {
+  "name": "Quét vòng quanh người",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "planar",
+   "horizontal",
+   "full-turn",
+   "space:aim",
+   "weight:medium"
+  ],
+  "desc": "a WEAPON swung level with the ground through a FULL turn round the body (360 degrees) seen from the game's camera: a flat ring, the near half in FRONT of the character, bright and thick, the far half BEHIND it, cool and thin; the head runs the circle in about a second (u falls: from the left, across the front to the right, behind the body and back to the left); use it with the body centre as --from and --to = a point at the weapon's reach on the side of the first position; set k, u0, u1 and r with --swing when the real path differs",
+  "fps": 30.0,
+  "frames": 50,
+  "frame_size_2x": [
+   698,
+   352
+  ],
+  "anchor_2x": [
+   340.0,
+   162.0
+  ],
+  "dir": "melee/slash/ring",
+  "qa": "warn",
+  "hit_frame": 3,
+  "kit": true
+ },
+ "melee/slash/ring_fast": {
+  "name": "Quét vòng nhanh",
+  "status": "draft",
+  "tags": [
+   "melee",
+   "blade",
+   "slash",
+   "one-shot",
+   "anchor:path",
+   "planar",
+   "horizontal",
+   "full-turn",
+   "fast",
+   "space:aim",
+   "weight:medium"
+  ],
+  "desc": "the same full-turn level sweep as `ring` but FAST (a decisive strike): the head runs the front half in about two frames (born one frame before the hit, at the hit it is at the target) and the back half one frame later, then the stroke is pulled in from the tail; made for a body that cuts from a loaded pose to a hit pose (pose to pose); use it with the body centre as --from and the target side as --to, set k, roll, u0, u1 and r with --swing",
+  "fps": 30.0,
+  "frames": 23,
+  "frame_size_2x": [
+   388,
+   258
+  ],
+  "anchor_2x": [
+   220.0,
+   130.0
+  ],
+  "dir": "melee/slash/ring_fast",
+  "qa": "warn",
+  "hit_frame": 3,
+  "kit": true
+ },
  "melee/slash/sweep": {
   "name": "Chém ngang",
   "status": "draft",

@@ -156,7 +156,13 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
         elif pre > 0 and tt < -1e-6: fh = 0.10 + 0.06 * (1 + tt / pre)                         # before the hit the blade is still at pose A: a thin slice on it
         elif pre > 0: fh = 1.0                                                              # from the hit the blade is at pose B: the smear is whole
         else: fh = min(1.0, 0.45 + 0.55 * out_quint(g))                                      # a real swing: the head must land on the final blade
-    lo = (1 - span) * fh                                                                    # where the tail begins
+    run = float(sw.get("run", 0) or 0) if sw else 0.0                                      # a LONG swing (a full turn of the body, about a second): the head travels the whole path over the attack
+    if run > 0:
+        fh = 0.04 + 0.96 * g
+        lo = max(0.0, fh - float(sw.get("tail", 0.4)) * (1.0 - ph.decay))                    # `tail` = the share of the path that stays drawn behind the head; it is pulled in during the release
+    else:
+        lo = (1 - span) * fh
+    #                                                                   # where the tail begins
     sg = c.sp.hand * (1 if bend >= 0 else -1)                                                # +1: the inside of the bow is the left of travel
     W = width * s
     OFS = 0.7                                                                              # stroke coordinate lying on the path (bow mode)
@@ -265,6 +271,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
 
     def prof(v):                                                                           # width along the ribbon, v 0 tail .. 1 head
         v = clamp(v)
+        if sw and sw.get("full"): return 0.85 + 0.15 * v ** 0.6                                # a smear that starts at the FULL width of the blade (no needle tail): used for a long swing of a broad weapon head
         if lead: return min(1.0, v / 0.85) ** 1.15                           # a lead stroke: a needle tail, the width grows steadily, the last 15 % is the blunt head at full width
         if tracked: return v ** 0.6                                          # needle tail, the head keeps the blade's full width
         if axe: return v ** 0.6 * (1 - v ** 3) ** 0.45                                       # fat tail, blunt head
@@ -452,7 +459,7 @@ def slash(c, ph, weapon="sword", bend=0.34, width=0.0, span=0.0, strands=0, tone
             pts.append((p[0] + n_[0] * o, p[1] + n_[1] * o)); ws_.append(wd * math.sin(math.pi * u) ** 0.7)
         ink.add("main", shapes.ribbon(pts, ws_))
 
-    glw = 0.3 if axe else 1.0                                                                # a full glow would fill the gaps between the bands
+    glw = (0.3 if axe else 1.0) * (float(sw.get("glow", 1.0)) if sw else 1.0)                                                                # a full glow would fill the gaps between the bands
     if tracked and pre > 0:                                                                  # a tracked swing: a bright edge along the blade at the head
         k = 1.0 if tt <= 0.07 else clamp(1 - d / 0.35)                                       # white to the frame after the hit, then a hot sliver that thins out
         hnear = (not sw) or depth(fh) >= 0                                                   # a head on the far side is dim: no white edge there

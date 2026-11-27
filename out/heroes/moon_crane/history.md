@@ -43,3 +43,6 @@ Tham chiếu: skill 3 của một hero KR5 (đoạn `skill_3_end`, khung 229-240
 - Video `reference-to-video`: t01 (3 s, mô tả có mốc giây, 4 pose) và t02 (4 s, không mốc giây, bịa đường quét qua đầu) bị loại, t03 (chỉ một cú quét trái sang phải, khung 229-240) giữ lại làm `skill_sweep_ref_t01` (nay là clip duy nhất). Tổng 0,50 USD cho ba clip (`out/costs.csv`).
 - Người dùng chốt: pose 1 ở khoảng 0,36 s và pose 2 ở khoảng 2,4 s của clip, không có động tác hạ thương. Vệt quét theo đường người dùng vẽ (võng qua hông, vút lên mũi thương bên phải). Rig lớp: đứng yên, một nhịp ngả ra sau, một nhịp quá đà rồi dừng, thêm chân nghiêng nhẹ và thương trễ nhẹ. Người dùng duyệt.
 - Lỗi đọc tham chiếu đã mắc: chia thành 4 pose, và coi tư thế cuối là "giơ thương cao" (thực ra là tay gác vai kiểu idle). Chuyển động chính chỉ là một cú quét trái sang phải.
+
+## 2026-11-17 — dọn các lần thử không đạt
+Đã bỏ khỏi repo (lịch sử git còn): tấn thấp chép từ một khung mẫu (`pose_horse_stance_v01`) và các clip vòng 2 của `skill_spin_back` (v2A, v2B).

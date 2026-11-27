@@ -1,0 +1,84 @@
+{
+ "id": "melee/slash/ring",
+ "name": "Quét vòng quanh người",
+ "desc": "a WEAPON swung level with the ground through a FULL turn round the body (360 degrees) seen from the game's camera: a flat ring, the near half in FRONT of the character, bright and thick, the far half BEHIND it, cool and thin; the head runs the circle in about a second (u falls: from the left, across the front to the right, behind the body and back to the left); use it with the body centre as --from and --to = a point at the weapon's reach on the side of the first position; set k, u0, u1 and r with --swing when the real path differs",
+ "status": "draft",
+ "tags": [
+  "melee",
+  "blade",
+  "slash",
+  "one-shot",
+  "anchor:path",
+  "planar",
+  "horizontal",
+  "full-turn",
+  "space:aim",
+  "weight:medium"
+ ],
+ "fps": 30.0,
+ "frames": 50,
+ "frame_size_2x": [
+  698,
+  352
+ ],
+ "anchor_2x": [
+  340.0,
+  162.0
+ ],
+ "target_2x": [
+  610.0,
+  162.0
+ ],
+ "hit_frame": 3,
+ "direction": "a -> b (set with --from / --to)",
+ "palette": "frost",
+ "seed": 0,
+ "layers": [
+  {
+   "id": "slash",
+   "kind": "slash",
+   "role": "primary",
+   "z": "front",
+   "start": -0.067,
+   "end": 1.083
+  },
+  {
+   "id": "scraps",
+   "kind": "scraps",
+   "role": "particles",
+   "z": "front",
+   "start": 0.8,
+   "end": 1.566
+  },
+  {
+   "id": "streaks",
+   "kind": "streaks",
+   "role": "accent",
+   "z": "front",
+   "start": 0.8,
+   "end": 0.966
+  }
+ ],
+ "lint": [],
+ "files": {
+  "sheet": "sheet.png",
+  "frames": "frames/ring_NN.png",
+  "preview": "preview.gif",
+  "preview_game": "preview_game.gif"
+ },
+ "qa": {
+  "fail": [],
+  "warn": [
+   "linger: the last 20 of 50 frames carry under 2 % of the peak",
+   "empty0: the first frame is empty"
+  ],
+  "frames": 50,
+  "peak_frame": 15,
+  "peak_size_1x": [
+   286,
+   94
+  ],
+  "last_frame_pct": 0.0
+ },
+ "source": "lib-fx/melee/slash/slash.py: EFFECTS['ring']"
+}
