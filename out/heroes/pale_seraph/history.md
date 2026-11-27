@@ -1,0 +1,3 @@
+| date | sheet/still | vNN | model | score | approved/rejected/final/awaiting user | issue | change for next version | requested by (pipeline/user: "...") |
+|---|---|---|---|---|---|---|---|---|
+| 2026-11-27 | master | v01 | gpt-image-2 low (ref: ảnh tham khảo đã xóa chữ ký) | 7.5 | awaiting user | rất khớp ảnh gốc (tóc, capelet vàng, ngọc xanh, áo choàng rách có lỗ, tư thế bay); nhưng ~6,5 đầu (hỏi 5, model theo ảnh gốc) và nét viền mảnh hơn hẳn cinder_maul / ash_ranger; mặt quay gần chính diện; chiếm 92% khung | nếu vẽ lại: tỷ lệ thấp hơn + nét viền dày như 2 con trước (gửi kèm cinder_maul làm ref style) | user: "tiếp tục với" |
