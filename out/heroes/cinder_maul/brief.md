@@ -36,7 +36,7 @@
 ## Asset manifest
 | Asset | Từ | Loại | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| master (= idle) | fal-image | ảnh tĩnh | ⏳ v01 chờ duyệt | vẽ lại từ ảnh tham khảo, style heroic |
+| master (= idle) | fal-image | ảnh tĩnh | ✅ v01 (chốt 2026-11-27) | vẽ lại từ ảnh tham khảo, style heroic |
 | icon | fal-image | ảnh tĩnh | ❌ | |
 | pose_respawn | fal-image | ảnh tĩnh | ❌ | |
 | pose_skill_leap_slam | fal-image | ảnh tĩnh | ❌ | |
@@ -54,3 +54,6 @@
 | package | export | gói | ❌ | |
 
 Estimated cost: 6 stills (~USD 0.09) + 8 clips (~USD 0.64) + retakes; fx in code (0 USD).
+
+## Approved 2026-11-27
+master_v01 approved by user ("đẹp đó -> chốt"). Kế hoạch: 5 nhân vật vẽ lại từ ảnh tham khảo, ghép lưới rồi làm video pose chung một lần (lineup method, `docs/scripts/lineup/lineup-workflow.md`).
