@@ -170,5 +170,6 @@
     "frost_knight": "attack (from attack_fix, accepted by the user); attack_v02 is worse (an extra curved blade appears)",
     "glacier_gladiator": "attack (perfect); v02 equal, one crescent frame (5)",
     "frost_warlord": "frames/boss/frost_warlord (roar + one slash, own greatsword, not cut); the other attack sets are worse"
-  }
+  },
+  "cleanup": "2026-11-27 cleanup: removed derived or rejected files (split frames, pink-fixed and flattened copies, shrink tests, rejected style-test grids). Kept: original grids, video-input images, clips with job.json, prompts, characters/ crops. Regenerate frames with the command in `split` (scripts/lineup/lineup_split.py) from source/video."
 }

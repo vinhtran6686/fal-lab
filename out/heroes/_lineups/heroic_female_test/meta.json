@@ -3,8 +3,6 @@
   "status": "v04: brighter, ranged women (witch, battle mage, archer, healer, sorceress queen) with a hourglass figure and toned limbs, melee women (assassin, berserker, thief, knight, duelist) kept chunky; waiting for review. v01-v03 removed",
   "grid": {
     "image": "source/design/grid_v04_bright_hourglass.png",
-    "flat": "source/design/grid_v04_bright_hourglass_flat.png",
-    "shrink_test": "source/design/shrink_test_v04_60_120px.png",
     "characters_dir": "characters/",
     "prompt": "docs/styles/heroic-vector-style/prompt-template-female-lineup.txt",
     "size": "3840x2160",
@@ -122,5 +120,6 @@
       "signature": "pearl trident taller than her, wave crown and cape",
       "body_family": "hourglass (ranged)"
     }
-  ]
+  ],
+  "cleanup": "2026-11-27 cleanup: removed derived or rejected files (split frames, pink-fixed and flattened copies, shrink tests, rejected style-test grids). Kept: original grids, video-input images, clips with job.json, prompts, characters/ crops. Regenerate frames with the command in `split` (scripts/lineup/lineup_split.py) from source/video."
 }

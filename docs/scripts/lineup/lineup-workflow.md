@@ -138,7 +138,7 @@ Nguyên tắc tra cứu: mỗi vai một ngôn ngữ hình khối (tank rộng v
 - **Hồng trên nhân vật:** model đôi khi vẽ một phần hồng (quần của Icicle Stalker) dù đã cấm; khóa nền ăn mất phần đó. Chạy `python scripts/lineup/lineup_fix_pink.py <lưới>.png --out <lưới_sửa>.png` trước khi đặt lại ô.
 
 ## Bước 5. Bản cuối (và nơi lưu)
-0. **Lưu lên git** (thư mục `.work/` bị git bỏ qua, mất khi phiên kết thúc): ảnh lưới, bản đặt lại ô, clip gốc và bộ khung đã tách đi vào `out/<class>/_lineups/<tộc>/` (xem `docs/repo-structure-rules.md`); `meta.json` ghi tham số để phiên khác làm tiếp. Đã có `out/enemies/_lineups/poison/` (tấn công và chết) và `out/enemies/_lineups/fire/` (mới có lưới).
+0. **Lưu lên git** (thư mục `.work/` bị git bỏ qua, mất khi phiên kết thúc): chỉ giữ **bản gốc**: ảnh lưới gốc, ảnh đưa vào video (bản đặt lại ô), clip gốc kèm `job.json`, prompt, và `meta.json` (tham số, lệnh tách khung). **Không** giữ khung đã tách, bản sửa hồng hoặc làm phẳng nền, ảnh kiểm hoặc thử thu nhỏ (dựng lại được bằng script từ clip và ảnh gốc), bản bị từ chối. Thư mục: `out/<class>/_lineups/<tộc>/` (xem `docs/repo-structure-rules.md`).
 1. Mở ảnh kiểm (6-8 khung mỗi con, thu nhỏ 1/3); bỏ khung sai vũ khí, dính hàng xóm hoặc viền hồng, và khung cuối của clip tấn công (nó quay về dáng đứng).
 2. Con nào giữ: nhập vào asset thật (`scripts/ingest_image.py`, `brief.md` có manifest), rồi `scripts/video_to_sheet.py` đưa khung vào canvas chuẩn của class (enemy tier M: 136×120 @1x, `{H}` 60 px). Rồi `video_prune.py`, `motion_check.py`.
 3. Dọn bằng `scripts/source_prune.py`; không để bản thử trong repo; chi phí chỉ ghi ở `out/costs.csv`.

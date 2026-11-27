@@ -4,7 +4,6 @@
   "status": "grid redrawn with more creative designs (the first, more generic grid was replaced), fixed and re-gridded; no clips yet",
   "grid": {
     "image": "source/design/grid_v01.png",
-    "fixed": "source/design/grid_v01_fixed.png (lineup_fix_pink.py --target 130,90,235 --flatten-bg: the model painted violet eyes magenta-pink, ground shadows and sparks in magenta)",
     "regrid": "source/design/grid_v01_regrid.png",
     "prompt": "docs/scripts/lineup/prompts/lineup-grid-lightning-clan.txt",
     "model": "gpt-image-2 low 2560x1440",
@@ -89,96 +88,5 @@
     "one sentence per character in the motion prompts (no role-example list)",
     "boss filmed alone, large, with margin (--out-window)"
   ],
-  "style_test": {
-    "style": "an early draft of what became heroic-vector-style (docs/styles/heroic-vector-style/); this version was too busy and was superseded",
-    "image": "source/design/grid_vivid_v01.png",
-    "fixed": "source/design/grid_vivid_v01_fixed.png",
-    "regrid": "source/design/grid_vivid_v01_regrid.png",
-    "prompt": "docs/scripts/lineup/prompts/lineup-grid-lightning-clan-vivid.txt",
-    "cost_usd": 0.0212,
-    "regrid_args": "--heights 0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.31,0.40,0.40 --by area --feet 0.70 --x-margin 0.06",
-    "tags": [
-      {
-        "order": 1,
-        "id": "coil_soldier",
-        "gender": "male",
-        "class": "melee fighter",
-        "element": "lightning",
-        "kind": "human"
-      },
-      {
-        "order": 2,
-        "id": "mantis_blade",
-        "gender": "male",
-        "class": "assassin",
-        "element": "lightning",
-        "kind": "monster"
-      },
-      {
-        "order": 3,
-        "id": "thunder_ram",
-        "gender": "male",
-        "class": "beast",
-        "element": "lightning",
-        "kind": "beast"
-      },
-      {
-        "order": 4,
-        "id": "kite_archer",
-        "gender": "female",
-        "class": "archer",
-        "element": "lightning",
-        "kind": "human"
-      },
-      {
-        "order": 5,
-        "id": "spark_spearwoman",
-        "gender": "female",
-        "class": "spear thrower",
-        "element": "lightning",
-        "kind": "human"
-      },
-      {
-        "order": 6,
-        "id": "storm_caller",
-        "gender": "female",
-        "class": "mage",
-        "element": "lightning",
-        "kind": "human"
-      },
-      {
-        "order": 7,
-        "id": "rod_priest",
-        "gender": "male",
-        "class": "support priest",
-        "element": "lightning",
-        "kind": "human"
-      },
-      {
-        "order": 8,
-        "id": "storm_captain",
-        "gender": "male",
-        "class": "elite melee knight",
-        "element": "lightning",
-        "kind": "human"
-      },
-      {
-        "order": 9,
-        "id": "capacitor_golem",
-        "gender": "none",
-        "class": "tank",
-        "element": "lightning",
-        "kind": "construct"
-      },
-      {
-        "order": 10,
-        "id": "thunder_lord",
-        "gender": "male",
-        "class": "chief",
-        "element": "lightning",
-        "kind": "human"
-      }
-    ],
-    "note": "the same clan drawn again in the vivid style to compare with the chunky creative grid (grid_v01*); not approved yet"
-  }
+  "cleanup": "2026-11-27 cleanup: removed derived or rejected files (split frames, pink-fixed and flattened copies, shrink tests, rejected style-test grids). Kept: original grids, video-input images, clips with job.json, prompts, characters/ crops. Regenerate frames with the command in `split` (scripts/lineup/lineup_split.py) from source/video."
 }

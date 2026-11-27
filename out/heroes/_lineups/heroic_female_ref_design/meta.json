@@ -86,5 +86,6 @@
       "element": "storm",
       "kind": "human"
     }
-  ]
+  ],
+  "cleanup": "2026-11-27 cleanup: removed derived or rejected files (split frames, pink-fixed and flattened copies, shrink tests, rejected style-test grids). Kept: original grids, video-input images, clips with job.json, prompts, characters/ crops. Regenerate frames with the command in `split` (scripts/lineup/lineup_split.py) from source/video."
 }

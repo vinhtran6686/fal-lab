@@ -103,5 +103,6 @@
     "attack: Flame Drake rears up instead of thrusting its head forward; the last frame returns to the standing pose",
     "die: clean, the same fall for all ten (hound and drake on their sides, slime a flat puddle)",
     "walk: stays in its cell (centre drift 1-13 px over the clip), no overlap; the Obsidian Golem and the Blaze Duelist turn their body toward the viewer in some frames"
-  ]
+  ],
+  "cleanup": "2026-11-27 cleanup: removed derived or rejected files (split frames, pink-fixed and flattened copies, shrink tests, rejected style-test grids). Kept: original grids, video-input images, clips with job.json, prompts, characters/ crops. Regenerate frames with the command in `split` (scripts/lineup/lineup_split.py) from source/video."
 }
