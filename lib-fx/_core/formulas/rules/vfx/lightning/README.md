@@ -139,7 +139,7 @@ từng mảnh, không theo tổng diện tích: mảnh vụn vẫn chói. Ngư�
 
 ## 7. Bộ sinh và việc tiếp theo
 
-**Sét quanh nhân vật: `wrap`**, `python lib-fx/_tools/vectorfx.py gen-lightning NAME`, code [`vector/gen_lightning.py`](../../../vector/gen_lightning.py),
+**Sét quanh nhân vật: `wrap`** (**ĐÃ DUYỆT**, user 2026-11-28: "đúng ý mình rồi, hãy lưu giữ style làm sét này"; đây là phong cách sét chuẩn của repo), `python lib-fx/_tools/vectorfx.py gen-lightning NAME`, code [`vector/gen_lightning.py`](../../../vector/gen_lightning.py),
 kết quả [generated/gen-lightning-wrap-blue](../../../../results/vector-showcase/generated/gen-lightning-wrap-blue/).
 Không vẽ sét mới: lấy chính các hình vector của bản remake (`bolt`, `arc`: svg từng hình), giữ nguyên màu, gradient mép, quầng và độ mạnh quầng từng
 hình, chớp đất, khung mực và nhịp (`exposure.json`); chỉ đổi hình học:
@@ -156,6 +156,13 @@ mảnh + bóng đen đậm (`crackle`) bị chê "đậm, tối, không tự nhi
 đồng bộ: dùng chính nhịp vẽ tay của bản gốc và lệch pha các lớp; (3) sét bao quanh = có phần sau thân và phần trước thân, không tia đứng rời; (4) không
 gì nằm dưới mặt đất (ghim điểm chạm đất, cắt phần dưới); (5) các nét đen user thấy trong bản remake là **khung mực** (tia đen trong quầng), giữ nguyên.
 
-Việc tiếp theo: user chấm `wrap`; thêm cung thứ hai hoặc đổi bán kính / độ nghiêng nếu cần; tách thành vào / giữ lặp / ra để thời gian gồng thay đổi được; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
+**Cách làm sét chuẩn (dùng lại cho mọi nhân vật / hiệu ứng sét mới):**
+1. Hình sét lấy từ một bản remake vẽ tay đã dựng lại (vector, đúng màu, gradient, quầng, chớp đất, khung mực, nhịp); không tự vẽ nét sét mới bằng code.
+2. Chỉ biến đổi hình học: ghim điểm chạm đất vào mặt đất (tia đánh xuống), quấn quanh thân trên hình trụ có mặt trước / sau (cung), lật ngang,
+   đổi tỉ lệ; mọi số đo px nhân theo tỉ lệ.
+3. Lớp sau thân và trước thân tách riêng; vài lớp lệch nhịp nhau (sét không đồng bộ); không gì nằm dưới mặt đất.
+4. Màu khác (vàng, tím...): dùng bản remake cùng phong cách (`strike` vàng) hoặc đổi màu trong profile, giữ nguyên hình và nhịp.
+
+Việc tiếp theo: đưa vào thư viện `lib-fx/element/lightning/aura/` (sheet, meta, @2x) khi cần cho nhân vật thật; thêm cung thứ hai hoặc đổi bán kính / độ nghiêng nếu cần; tách thành vào / giữ lặp / ra để thời gian gồng thay đổi được; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
 đưa hiệu ứng duyệt vào `lib-fx/element/lightning/` (hiện chưa có hiệu ứng nào).
 - Xuất bản dựng theo chuẩn lib-fx (nền trong suốt, @2x, `sheet.png`, `meta.json`): chưa có cho mọi bản dựng vector (`vector/README.md` §9 E).
