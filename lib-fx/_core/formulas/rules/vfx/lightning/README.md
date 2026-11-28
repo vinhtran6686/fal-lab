@@ -7,7 +7,7 @@ Luật chung cho mọi loại hiệu ứng nằm ở [../../README.md](../../REA
 
 | Bản gốc | Biến thể | Profile | Kết quả | Trạng thái |
 |---|---|---|---|---|
-| `ref/vfx/lightning-2/lightnings.mp4` (1920×640, 30 fps, 20 s; ba hiệu ứng lặp cạnh nhau) | `arc` (trái: cung sét xanh bò ngang), `strike` (giữa: sét vàng đánh thẳng xuống đất), `bolt` (phải: sét xanh lớn từ trên xuống đất) | [`lightning-2.json`](../../../vector/profiles/lightning-2.json) | [showcase/lightning-2](../../../../results/vector-showcase/lightning-2/) | dựng lại trọn vòng lặp, chờ user chấm |
+| `ref/vfx/lightning-2/lightnings.mp4` (1920×640, 30 fps, 20 s; ba hiệu ứng lặp cạnh nhau) | `arc` (trái: cung sét xanh bò ngang), `strike` (giữa: sét vàng đánh thẳng xuống đất), `bolt` (phải: sét xanh lớn từ trên xuống đất) | [`lightning-2.json`](../../../vector/profiles/lightning-2.json) | [showcase/lightning-2](../../../../results/vector-showcase/lightning-2/) | **đạt** (2026-11-28): nguồn hình của bộ sét quanh nhân vật (§7) |
 | `ref/vfx/lightning/dmitry-sarkisov-lqafinal.gif` (400×400, 127 frame) | `bolt` / `green`: nét mảnh xanh lá + quầng | `lightning.json`, `lightning-trace.json` | [lightning/bolt](../../../../results/vector-showcase/lightning/bolt/), [lightning-trace/green](../../../../results/vector-showcase/lightning-trace/green/) | lần dựng đầu, nét béo gấp ~3 (xem §6) |
 
 Số đo của `lightning-2`: [`data/lifecycle_lightning-2.json`](../../data/lifecycle_lightning-2.json) (từng hình vẽ: diện tích, số mảnh, bề rộng nét,
@@ -103,7 +103,7 @@ từng mảnh, không theo tổng diện tích: mảnh vụn vẫn chói. Ngư�
 4. **Tia nhánh ngắn ở chân** khi chạm đất: 2-3 vạch nhọn 20-40 px chĩa ra hai bên (`strike` 0, 15).
 5. Tia **xuất phát ngoài khung hoặc ở mép trên** (`strike`, `bolt` y = 2-8) và kết thúc đúng ở điểm chớp đất (y ≈ 545).
 
-## 5. Luật cho bộ sinh sét (chưa viết bộ sinh)
+## 5. Luật đo được của một cú sét (đọc để hiểu vì sao bản remake đẹp)
 
 1. Một cú = 6-10 hình vẽ ở 24 fps: [mồi 0-1] → quệt 1 → đỉnh 1-2 → [mực 1] → mỏng 1-3 → vỡ 3-5 → trống 2-5. Ba cú mỗi giây ở cỡ khung này.
 2. Mỗi hình **vẽ lại** cả tia theo một đường gấp khúc cố định của cú đó (neo đầu và chân giữ nguyên, các điểm gập dịch 5-20 px mỗi hình, đoạn phình
@@ -137,84 +137,74 @@ từng mảnh, không theo tổng diện tích: mảnh vụn vẫn chói. Ngư�
 - Bản gốc `lightning` (GIF 400 px, nét 2-5 px) chưa sửa: nét béo vì quầng sát nét cùng màu nét; cách sửa đề xuất (lọc "sáng hơn vùng quanh") ở
   `lib-fx/_plans/vfx-rebuild-02/R2b-lightning-thin.md`.
 
-## 7. Bộ sinh và việc tiếp theo
+## 7. Bộ sét quanh nhân vật (ĐÃ DUYỆT 2026-11-28): công thức đầy đủ
 
-**Sét quanh nhân vật: `wrap`** (**ĐÃ DUYỆT**, user 2026-11-28: "đúng ý mình rồi, hãy lưu giữ style làm sét này"; đây là phong cách sét chuẩn của repo), `python lib-fx/_tools/vectorfx.py gen-lightning NAME`, code [`vector/gen_lightning.py`](../../../vector/gen_lightning.py),
-kết quả [generated/gen-lightning-wrap-blue](../../../../results/vector-showcase/generated/gen-lightning-wrap-blue/).
-Không vẽ sét mới: lấy chính các hình vector của bản remake (`bolt`, `arc`: svg từng hình), giữ nguyên màu, gradient mép, quầng và độ mạnh quầng từng
-hình, chớp đất, khung mực và nhịp (`exposure.json`); chỉ đổi hình học:
-- **Tia đánh xuống** (hình `bolt`): điểm chạm đất của bản gốc (đáy chớp đất) ghim vào mặt đất cạnh chân, nên không lố xuống đất; một tia sau thân,
-  một tia trước thân (lật ngang), lệch nhau nửa vòng lặp. Tỉ lệ 1,35 H / 551 px.
-- **Cung quấn quanh thân** (hình `arc`): coi như vẽ trên một hình trụ quanh trục thân: x của bản gốc → góc (300°), y → chiều cao (0,18-1,18 H); mỗi
-  điểm ảnh tra ngược mặt trước (sin > 0) và mặt sau riêng, nên nửa sau bị thân che, nửa trước vắt qua người, hình hẹp lại ở hai bên như dải quấn;
-  vòng nghiêng 0,22 (nửa trước thấp hơn). Phần dưới mặt đất bị cắt (mặt đất che).
-- Mọi số đo px (σ quầng, `s` gradient, mép chớp, quầng riêng) nhân theo tỉ lệ của từng lớp; vòng lặp = vòng lặp gốc (30 frame, 30 fps), ba lớp
-  lệch nhịp nhau.
+**Đây là phong cách chính để làm VFX cho game 2D của dự án.** User duyệt cả 6 dáng × 5 màu ("đúng ý", "cực kỳ tốt", "đẹp, final").
+Lệnh: `python lib-fx/_tools/vectorfx.py gen-lightning NAME --style STYLE [--colour COLOUR] [--preview-only]`; code
+[`vector/gen_lightning.py`](../../../vector/gen_lightning.py) (mọi thông số của một dáng là một dòng trong `STYLES`, màu trong `PALETTES`); kết quả
+`lib-fx/_core/results/vector-showcase/generated/gen-lightning-<style>-blue/` (+ `colours/<màu>.gif`); trang xem Lightning-2 Remake
+https://claude.ai/artifact/4cbfa2MD123GvG3iVK3ubb (mục "Xưởng sét": chọn dáng và màu).
 
-Bài học từ bốn vòng nhận xét của user (2026-11-28): (1) **giữ phong cách của bản remake** (khối phẳng màu dịu, quầng mềm): vẽ lại bằng nét
-mảnh + bóng đen đậm (`crackle`) bị chê "đậm, tối, không tự nhiên"; (2) lịch đều hoặc đường bao đều (`aura`, `charge`) đọc ra máy móc, sét phải không
-đồng bộ: dùng chính nhịp vẽ tay của bản gốc và lệch pha các lớp; (3) sét bao quanh = có phần sau thân và phần trước thân, không tia đứng rời; (4) không
-gì nằm dưới mặt đất (ghim điểm chạm đất, cắt phần dưới); (5) các nét đen user thấy trong bản remake là **khung mực** (tia đen trong quầng), giữ nguyên.
+### 7.1 Ý chính
 
-**Cách làm sét chuẩn (dùng lại cho mọi nhân vật / hiệu ứng sét mới):**
-1. Hình sét lấy từ một bản remake vẽ tay đã dựng lại (vector, đúng màu, gradient, quầng, chớp đất, khung mực, nhịp); không tự vẽ nét sét mới bằng code.
-2. Chỉ biến đổi hình học: ghim điểm chạm đất vào mặt đất (tia đánh xuống), quấn quanh thân trên hình trụ có mặt trước / sau (cung), lật ngang,
-   đổi tỉ lệ; mọi số đo px nhân theo tỉ lệ.
-3. Lớp sau thân và trước thân tách riêng; vài lớp lệch nhịp nhau (sét không đồng bộ); không gì nằm dưới mặt đất.
-4. Màu khác (vàng, tím...): dùng bản remake cùng phong cách (`strike` vàng) hoặc đổi màu trong profile, giữ nguyên hình và nhịp.
+**Không vẽ sét mới. Lấy chính các hình vẽ tay đã dựng lại (remake vector) và chỉ biến đổi hình học cho hợp dáng nhân vật, có vật lý.**
+Mọi thứ làm nên vẻ đẹp của bản gốc được giữ nguyên: khối phẳng màu dịu, lõi sáng + gradient mép cùng sắc, quầng mềm hai tầng với độ mạnh đo từng
+hình, chớp đất elip, khung mực (tia đen trong quầng mạnh), nhịp vẽ tay (`exposure.json`). Những gì user đã loại (giữ làm luật, không giữ bản):
+nét sét vẽ lại bằng code (mảnh, cứng, màu đậm tối, bóng đen tự thêm), lịch xuất hiện đều / đường bao lớn-nhỏ đều (máy móc), tia đứng rời không bao
+quanh, hình lố xuống dưới mặt đất.
 
-### 7.1 Cách làm chi tiết (từng bước, để làm lại cho nhân vật / bộ phận khác)
+### 7.2 Các bước (làm lại cho nhân vật, bộ phận, nguyên tố khác)
 
-1. **Có bản remake trước.** Dựng lại hiệu ứng tham khảo bằng bộ vector (§1): mỗi hình vẽ là một `svg/NN.svg` (lớp `body`, `ink`, `flash`), profile
-   giữ màu, gradient mép, quầng chung + độ mạnh từng hình (`halo.gain`), quầng riêng của chớp đất và khung mực, `recipe/exposure.json` giữ nhịp
-   (frame đầu + số frame giữ của từng hình). Đây là "kho hình" của phong cách; không vẽ thêm nét nào.
-2. **Phác dáng nhân vật bằng khối**: thân chữ nhật (cao H, rộng 0,36 H, chân trên mặt đất); khi cần bộ phận thì thêm khối của nó (tay giơ ngang:
-   từ vai ở 0,22 H dưới đỉnh đầu, dài 0,85 H, dày 0,11 H). Khối này chỉ để xem trước; sản phẩm là lớp sau / trước nền trong suốt.
-3. **Chọn vai trò cho từng hình gốc**:
-   - `bolt` (tia lớn có điểm chạm + chớp) = **tia đánh / tia phóng**: ghim một điểm của hình gốc vào một điểm vật lý. Đánh xuống: đáy chớp đất
-     (340, 556) → mặt đất cạnh chân. Phóng từ tay: điểm đầu của tia (trung bình các điểm có y < 40, tính lại **từng hình** vì mỗi hình vẽ lại tia ở chỗ
-     khác) → bàn tay, xoay −90° để tia chạy ra phía trước, chớp đất thành chớp va chạm ở đầu xa.
-   - `arc` (cung bò ngang, nhiều mảnh) = **cung quấn**: coi như vẽ trên một hình trụ. Trụ đứng quanh thân: x gốc → góc (300°), y gốc → chiều cao,
-     vòng nghiêng 0,22. Trụ nằm dọc cánh tay: x gốc → vị trí dọc tay, y gốc → góc quanh tay (360°) + xoắn 0,9-1,2 vòng theo chiều dài (thành lò
-     xo). Bán kính trụ 0,17-0,21 H cho tay, 0,48 H cho thân.
-4. **Mặt trước / sau bằng tra ngược**: với mỗi điểm ảnh đích, tính hai nghiệm góc (mặt trước: sin > 0 với trụ đứng, cos > 0 với trụ nằm; mặt sau:
-   nghiệm còn lại), tra ngược về toạ độ hình gốc và lấy mẫu (`cv2.remap`) hình đã raster. Mặt sau vẽ **trước** khối nhân vật (bị che), mặt trước vẽ
-   **sau** (vắt qua). Hình tự hẹp lại ở mép trụ như dải quấn thật.
-5. **Nhân mọi số đo px theo tỉ lệ của lớp** (k = kích thước đích / kích thước gốc): σ quầng, `s` gradient, `feather` chớp, σ quầng riêng (dọc,
-   ngang). Màu và độ mạnh quầng giữ nguyên.
-6. **Nhịp**: vòng lặp = vòng lặp gốc (30 frame, 30 fps); mỗi lớp lấy hình theo `exposure.json` với độ lệch riêng (0, 7-8, 14-15, 21) để các lớp không
-   cùng lúc bùng: sét không đồng bộ mà vẫn là nhịp vẽ tay của bản gốc.
-7. **Vật lý**: tia đánh xuống chạm đúng mặt đất; phần nào rơi dưới mặt đất thì cắt (mặt đất che); tia từ tay bắt đầu ở bàn tay.
-8. **Xuất**: `frames/` (có khối, để xem), `back/` và `front/` (RGBA, chỉ hiệu ứng: ghép sau nhân vật, nhân vật, trước nhân vật), `preview.gif`,
-   `preview_game.gif` (thân 60 px), `design.json` (lớp nào lấy hình nào ở mỗi frame).
-9. **Biến thể mới = một dòng trong `STYLES`** của `gen_lightning.py` (khối nhân vật + danh sách lớp `strike` / `shoot` / `wrap` / `wrap_h`):
-   - `wrap` (quanh thân, đã duyệt): 2 `strike` (sau thân, trước thân lật ngang, lệch nửa vòng) + 1 `wrap`.
-   - `arm` (quanh tay giơ ngang): 2 `wrap_h` (xoắn ngược chiều nhau, bán kính 0,17 / 0,21 H) + 1 `shoot` từ bàn tay dài 0,95 H.
+1. **Remake mẫu vẽ tay** bằng bộ vector (§1) tới mức khớp ảnh gốc (`rebuild_check`: diện tích và bề rộng nét 0,8-1,25). Mỗi hình vẽ là một
+   `svg/NN.svg` có lớp `body` (+ `ink`, `flash`); profile giữ màu, gradient, quầng chung + `halo.gain` từng hình, quầng riêng (`own_halo`) của chớp và
+   mực; `recipe/exposure.json` giữ nhịp. Đây là kho hình của phong cách.
+2. **Phác dáng bằng khối**: thân chữ nhật cao H, rộng 0,36 H, chân trên mặt đất; tay là thanh từ vai (`arms`: `side` ±1, `angle` độ, 0 = ngang
+   phải, 90 = thẳng lên, `length`, `thick` 0,11 H, `y` vai 0,18-0,24 H dưới đỉnh đầu). Khối chỉ để xem; sản phẩm là lớp sau / trước nền trong suốt.
+3. **Gán vai trò cho từng loại hình gốc**:
+   - hình có **điểm chạm + chớp** (`bolt`) = **tia giữa hai điểm vật lý**. Mỗi hình: đầu tia của chính hình đó (trung bình các điểm y < 40) → điểm
+     nguồn, đáy chớp đất gốc (340, 556) → điểm đích (phép đồng dạng: tỉ lệ + xoay + lật). Điểm: `sky` (mép trên), `hand` (bàn tay), `along`
+     (theo hướng tay, cách bàn tay d·H), `ground` (mặt đất). Đánh xuống đất: `flash_flat` giữ chớp nằm phẳng trên mặt đất. Phóng từ tay: chớp thành
+     điểm va chạm ở đầu xa.
+   - hình **cung bò ngang nhiều mảnh** (`arc`) = **cung quấn trên một hình trụ**. Trụ đứng quanh thân (`wrap`): x gốc → góc 300°, y gốc → chiều cao,
+     bán kính 0,48 H, vòng nghiêng 0,22. Trụ dọc một tay (`wrap_h` tay ngang, `wrap_axis` tay góc bất kỳ): x gốc → vị trí dọc tay, y gốc → góc
+     quanh tay 360° + xoắn 0,9-1,2 vòng (lò xo), bán kính 0,17-0,21 H.
+4. **Mặt trước / sau bằng tra ngược**: mỗi điểm ảnh đích có hai nghiệm góc trên trụ (trước / sau); tra về toạ độ hình gốc và lấy mẫu (`cv2.remap`)
+   hình đã raster. Mặt sau vẽ trước khối nhân vật (bị che), mặt trước vẽ sau (vắt qua); hình tự hẹp ở mép trụ như dải quấn thật.
+5. **Nhân mọi số đo px theo tỉ lệ của lớp** (k = kích thước đích / gốc): σ quầng chung, `s` gradient, `feather` chớp, σ quầng riêng (dọc, ngang).
+   Màu và độ mạnh quầng giữ nguyên.
+6. **Nhịp**: vòng lặp = vòng lặp gốc (30 frame, 30 fps). Mỗi lớp lấy hình theo `exposure.json` với độ lệch riêng (0, 7-9, 14-15, 19-22) để các lớp
+   không cùng lúc bùng: sét không đồng bộ mà vẫn là nhịp vẽ tay.
+7. **Vật lý**: tia đánh xuống chạm đúng mặt đất; phần nằm dưới mặt đất bị cắt (kiểm `stroke_px_below_floor = 0`); tia từ tay bắt đầu ở bàn tay.
+8. **Thứ tự vẽ**: nền → quầng lớp sau → hình lớp sau (thứ tự lớp của bản gốc: chớp, mực, thân) → khối nhân vật → quầng lớp trước → hình lớp trước.
+9. **Màu** (`PALETTES`): `blue` gốc; `gold` = màu đo được của sét vàng `strike` (thân (250,254,186) → mép (249,210,129), quầng, chớp (255,255,58));
+   `red` +155°, `purple` +70°, `green` −80°: xoay mọi màu (thân, mép, quầng, chớp, quầng mực) quanh trục xám, giữ quan hệ sáng / tối. Profile trên
+   đĩa không bị sửa (đổi màu trong bộ nhớ).
+10. **Xuất**: `frames/` (có khối, để xem), `back/` và `front/` (RGBA @2x, chỉ hiệu ứng: ghép lớp sau, nhân vật, lớp trước), `preview.gif` (thân 120 px),
+    `preview_game.gif` (thân 60 px, kiểm ở cỡ game), `preview_slow.gif`, `design.json` (lớp nào lấy hình nào ở mỗi frame). Màu khác:
+    `--preview-only` ghi `colours/<màu>.gif`, `colours/<màu>_game.gif`.
 
-### 7.2 Phong cách VFX chính của game và các dáng chiêu
+### 7.3 Sáu dáng đã duyệt (mỗi dáng là một dòng trong `STYLES`)
 
-**Đây là phong cách chính để làm VFX cho game 2D của dự án** (user 2026-11-28, sau khi duyệt `wrap` và `arm`): hình vẽ tay đã dựng lại thành
-vector (khối phẳng màu dịu, gradient mép cùng sắc, quầng mềm hai tầng, khung đảo màu đen, nhịp vẽ tay), đặt vào dáng nhân vật bằng biến đổi hình học
-có vật lý (§7.1). Không vẽ hiệu ứng mới bằng nét code thô khi đã có bản remake phù hợp; hiệu ứng loại khác (lửa, băng...) đi cùng đường: remake một
-mẫu vẽ tay tới 9-10/10 → dùng hình của nó, chỉ biến đổi hình học, màu, nhịp lệch pha.
+| `--style` | Ý chiêu | Lớp (vai trò, độ lệch nhịp) |
+|---|---|---|
+| `wrap` | vận sức, sét bao quanh thân | `strike` sau thân (x +0,44 H, 0) + `strike` trước thân lật ngang (x −0,48 H, 15) + `wrap` quanh thân (8) |
+| `arm` | tung chiêu, tay giơ ngang | 2 `wrap_h` quanh tay (bán kính 0,17 / 0,21 H, xoắn +1,2 / −0,9, lệch 0 / 14) + `shoot` từ bàn tay dài 0,95 H (7) |
+| `raise` | gọi sét, tay giơ thẳng lên | `bolt2` trời → bàn tay (0) + `wrap_axis` quanh tay đứng (9) + `wrap` quanh thân (20) |
+| `dual` | dang hai tay | 2 `wrap_axis` (mỗi tay một cung, xoắn ngược, 0 / 15) + 2 `bolt2` phóng ra hai phía dài 0,9 H (7 / 22) |
+| `slam` | đập xuống đất, tay chéo xuống 50° | `wrap_axis` quanh tay (0) + `bolt2` bàn tay → đất phía trước (+1,3 H, 7) + `bolt2` trời → đất sau lưng (−0,5 H, 19), chớp nằm phẳng |
+| `thrust` | phóng chéo lên 35° | 2 `wrap_axis` quanh tay (0 / 14) + `bolt2` phóng theo hướng tay dài 1,0 H (7) |
 
-| Dáng (`--style`) | Ý chiêu | Lớp | Trạng thái |
-|---|---|---|---|
-| `wrap` | vận sức, sét bao quanh thân | 2 `strike` (sau / trước thân) + 1 `wrap` | **đạt** (2026-11-28) |
-| `arm` | tung chiêu bằng tay giơ ngang | 2 `wrap_h` xoắn quanh tay + 1 `shoot` từ bàn tay | **đạt** (2026-11-28) |
-| `raise` | gọi sét: tay giơ thẳng lên trời | 1 `bolt2` trời → bàn tay (chớp va chạm ở tay) + 1 `wrap_axis` quanh tay đứng + 1 `wrap` quanh thân | chờ chấm |
-| `dual` | dang hai tay | 2 `wrap_axis` (mỗi tay một cung, xoắn ngược) + 2 `bolt2` phóng ra hai phía | chờ chấm |
-| `slam` | đập xuống đất: tay chéo xuống 50° | 1 `wrap_axis` quanh tay + 1 `bolt2` bàn tay → mặt đất phía trước (chớp đất nằm phẳng) + 1 `bolt2` trời → đất sau lưng | chờ chấm |
-| `thrust` | phóng chéo lên 35° | 2 `wrap_axis` quanh tay + 1 `bolt2` phóng theo hướng tay | chờ chấm |
+Dáng mới: thêm một dòng `STYLES` (khối + `arms` + danh sách lớp `strike` / `shoot` / `bolt2` / `wrap` / `wrap_h` / `wrap_axis`), chạy `gen-lightning`,
+xem `preview_game.gif`, kiểm `stroke_px_below_floor`.
 
-Lớp mới cho dáng tự do: tay là thanh từ vai theo góc bất kỳ (`arms`: `side`, `angle` 0 = ngang phải, 90 = thẳng lên, `length`, `thick`, `y` vai);
-`wrap_axis` = trụ dọc theo tay bất kỳ; `bolt2` = tia giữa hai điểm vật lý (`hand`, `along` theo hướng tay, `ground` trên mặt đất, `sky` mép trên),
-mỗi hình tính lại phép đồng dạng (đầu tia của hình đó → điểm nguồn, điểm chạm đất gốc → điểm đích); `flash_flat` giữ chớp đất nằm ngang trên mặt đất.
+### 7.4 Nguyên tố khác
 
-**Màu** (`--colour`): `blue` (gốc), `gold` (màu đo được của sét vàng `strike` cho thân, quầng, chớp), `red`, `purple`, `green` (xoay sắc mọi màu
-của bản remake quanh trục xám: +155°, +70°, −80°; giữ nguyên quan hệ sáng / tối và quầng). `--preview-only` chỉ ghi `colours/<màu>.gif` và
-`colours/<màu>_game.gif` cạnh bản xanh (không ghi đè frame của bản đã duyệt).
+Cùng đường: (1) chọn một mẫu VFX vẽ tay của nguyên tố đó (lửa, băng, độc...), (2) remake bằng bộ vector tới khi `rebuild_check` đạt và user duyệt,
+(3) xếp hình của nó vào các dáng bằng đúng các vai trò trên (hình có điểm chạm → tia / cột giữa hai điểm vật lý; hình dải / cung → quấn trên trụ),
+(4) lệch nhịp, đổi màu. Code `gen_lightning.py` đọc thẳng `svg/`, profile và `exposure.json` của bản remake: nguyên tố mới cần đổi `SRC`, `PROFILE`,
+tên biến thể và hai điểm neo (đầu hình, điểm chạm) cho hợp mẫu mới.
 
-Việc tiếp theo: đưa vào thư viện `lib-fx/element/lightning/aura/` (sheet, meta, @2x) khi cần cho nhân vật thật; thêm cung thứ hai hoặc đổi bán kính / độ nghiêng nếu cần; tách thành vào / giữ lặp / ra để thời gian gồng thay đổi được; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
-đưa hiệu ứng duyệt vào `lib-fx/element/lightning/` (hiện chưa có hiệu ứng nào).
-- Xuất bản dựng theo chuẩn lib-fx (nền trong suốt, @2x, `sheet.png`, `meta.json`): chưa có cho mọi bản dựng vector (`vector/README.md` §9 E).
+### 7.5 Việc tiếp theo
+
+Đưa dáng cần dùng vào thư viện `lib-fx/element/lightning/` (sheet, meta, @2x) khi gắn cho nhân vật thật, dùng điểm vai / bàn tay thật của nhân vật
+thay khối; tách vào / giữ lặp / ra nếu thời gian gồng thay đổi.
