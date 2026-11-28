@@ -137,8 +137,17 @@ từng mảnh, không theo tổng diện tích: mảnh vụn vẫn chói. Ngư�
 - Bản gốc `lightning` (GIF 400 px, nét 2-5 px) chưa sửa: nét béo vì quầng sát nét cùng màu nét; cách sửa đề xuất (lọc "sáng hơn vùng quanh") ở
   `lib-fx/_plans/vfx-rebuild-02/R2b-lightning-thin.md`.
 
-## 7. Việc tiếp theo
+## 7. Bộ sinh và việc tiếp theo
 
-- **Bộ sinh sét** theo §5 (khung thẳng nguồn → đích, đường gấp khúc có seed, bảng pha), đặt cạnh `lightning-2` để user chấm; rồi đưa vào
-  `lib-fx/element/lightning/` (hiện chưa có hiệu ứng nào). Kiểm thêm bằng mẫu thứ ba (sét chuyền ngang giữa hai mục tiêu).
+**Bộ sinh đầu tiên: `aura`** (sét bao quanh nhân vật khi gồng chiêu), `python lib-fx/_tools/vectorfx.py gen-lightning NAME [--frame SEED]`,
+code [`vector/gen_lightning.py`](../../../vector/gen_lightning.py), kết quả [generated/gen-lightning-aura-blue](../../../../results/vector-showcase/generated/gen-lightning-aura-blue/).
+Lấy từ công thức: bảng pha một cú (§3, §5.1), vẽ lại mỗi hình với điểm gập dịch (§5.2), bề rộng theo pha (§5.3), vỡ thành vuốt tại chỗ (§5.4;
+kiểm: diện tích còn 0,56-0,74 mỗi hình vỡ, tối đa 7 mảnh), chớp đất elip ở chân tia đứng (§5.5), một khung mực mỗi vòng (§5.6), quầng theo
+từng tia tăng 1,0 → 2,0 khi vỡ (§5.7); tia đứng mang kiểu `bolt` (lục lam, dày), cung quanh thân mang kiểu `arc` (lõi trắng, mỏng hơn);
+mọi số đo px nhân k = chiều cao vùng sét / 540. **Tự đặt ra** (không có trong bản gốc): đường xoắn quanh trục thân (vòng elip nghiêng 0,24,
+bán kính 0,5-0,6 H, đi lên 0,35-0,45 H), độ sâu = sin θ tách mỗi cung thành phần sau thân và trước thân, lịch 8 tia so le trong 24 hình (luôn
+2-3 tia sống, không có hình trống), quầng ×1,5, bề rộng cung 18 (đo 15) để mảnh vỡ còn ≥ 1,5 px ở cỡ game.
+
+Việc tiếp theo: user chấm `aura`; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
+đưa hiệu ứng duyệt vào `lib-fx/element/lightning/` (hiện chưa có hiệu ứng nào).
 - Xuất bản dựng theo chuẩn lib-fx (nền trong suốt, @2x, `sheet.png`, `meta.json`): chưa có cho mọi bản dựng vector (`vector/README.md` §9 E).

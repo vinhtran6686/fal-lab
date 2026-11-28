@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """CLI for the lib-fx vector kit (lib-fx/_core/formulas/vector). 0 USD, no model.
 
+  python lib-fx/_tools/vectorfx.py gen-lightning NAME [--frame SEED]   NEW lightning aura around a stand-in body (gen_lightning.py)
   python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED] [--style crescent|loop|loop-heavy|front-heavy|combo|x] [--dummy]
       x: [--scale S] [--rotation DEG] [--duration-ms MS] [--fps N]   generate a NEW slash from the foundation rules
   python lib-fx/_tools/vectorfx.py init     GIF NAME                            draft profile: auto crops (+ reflections), frames, suggested layers
@@ -17,7 +18,7 @@
   python lib-fx/_tools/vectorfx.py showcase  PROFILE                            export GIFs, frames and SVGs into lib-fx/_core/results/vector-showcase/ (tracked)
 
 PROFILE: path, or a name in lib-fx/_core/formulas/vector/profiles/ (e.g. swirl-slash). Outputs: lib-fx/_study/<name>/vector/ (not in git)."""
-import argparse, sys, pathlib
+import argparse, json, sys, pathlib
 HERE = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE / "_core" / "formulas"))
 from vector import Profile, measure, pipeline, review  # noqa: E402
@@ -32,7 +33,7 @@ def rng(s):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["gen-slash", "init", "check", "palette", "ingest", "measure", "rebuild", "review", "all", "lifecycle", "track", "showcase", "study"])
+    ap.add_argument("cmd", choices=["gen-slash", "gen-lightning", "init", "check", "palette", "ingest", "measure", "rebuild", "review", "all", "lifecycle", "track", "showcase", "study"])
     ap.add_argument("profile")
     ap.add_argument("name", nargs="?", help="init only: profile name")
     ap.add_argument("--frames"); ap.add_argument("--variants"); ap.add_argument("--variant"); ap.add_argument("--frame", type=int)
@@ -41,6 +42,12 @@ def main():
     ap.add_argument("--dummy", action="store_true", help="gen-slash combo: also render a preview with a training dummy")
     ap.add_argument("--style", choices=["crescent", "loop", "loop-heavy", "front-heavy", "combo", "x"], default="crescent")
     a = ap.parse_args()
+    if a.cmd == "gen-lightning":
+        from vector import gen_lightning
+        out, check = gen_lightning.build(a.profile, "aura", a.frame or 3)
+        print("out:", out)
+        import json as _j; print(_j.dumps(check))
+        return
     if a.cmd == "gen-slash":
         import shutil
         if a.style == "x":  # sequential double slash forming an X (gold), additive frames on black
