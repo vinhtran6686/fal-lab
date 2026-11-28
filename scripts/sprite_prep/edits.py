@@ -3,11 +3,14 @@ only sends ops and shows what this returns).
 
 edits file (prep/<hero>/<clip>.edits.json):
   {"version": 1, "grid": {...split settings...},
-   "denoise": {"specks": 40, "pink": true, "trail": false},       # applied to every frame of this hero in this clip
+   "denoise": {"specks": 40, "pink": true, "trail": false,        # applied to every frame of this hero in this clip
+               "despill": 12, "sharpen": 0.8},                    # optional: magenta key despill, unsharp mask
    "ops": {"<source frame>": [op, ...]}}                           # applied in order after the denoise
 ops (window pixel coordinates, the same for every frame of the clip):
   {"op": "brush", "pts": [[x, y], ...], "r": 6, "mode": "erase" | "restore"}   a stroke of radius r
-  {"op": "lasso", "pts": [[x, y], ...], "mode": "erase" | "restore"}           a closed polygon
+  {"op": "lasso", "pts": [[x, y], ...], "mode": "erase" | "restore" | "erase_tint"}   a closed polygon
+      erase_tint (brush or lasso): erase only the dark tinted pixels inside the shape (magenta- or green-tinted with luma
+      < 110, or near black < 50): a neighbour's arrow or smear crossing the hero, while the hero's own colours stay
   {"op": "piece", "x": X, "y": Y, "mode": "erase" | "keep"}                    the connected piece under the point:
                                                                                 erase it, or keep only it (drop the rest)
 "restore" brings back the pixels of the denoised raw frame (undo of an erase in a region).
@@ -51,6 +54,8 @@ def denoise(rgba: np.ndarray, cfg: dict) -> np.ndarray:
         sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lineup"))
         from lineup_split import erase_trail
         out = erase_trail(out)
+    if cfg.get("despill") is not None:
+        out = despill(out, float(cfg["despill"]))
     n = int(cfg.get("specks") or 0)
     if n > 0:
         al = out[..., 3] > ALPHA
@@ -62,6 +67,35 @@ def denoise(rgba: np.ndarray, cfg: dict) -> np.ndarray:
             small[1:] = areas < n
             small[big] = False
             out[..., 3] = np.where(small[lab], 0, out[..., 3])
+    if cfg.get("sharpen"):
+        out = sharpen(out, float(cfg["sharpen"]))
+    return out
+
+
+def despill(rgba: np.ndarray, t: float = 12.0) -> np.ndarray:
+    """Magenta key spill: where min(R, B) exceeds G by more than t, pull R and B down by the excess (a purple-grey cape,
+    R ~ G < B, is untouched; the dark pink-purple rim left by the magenta background goes neutral). Rim pixels next to the
+    transparent outside that were strongly magenta also lose half their opacity (pale_seraph cape_storm, 2026-11-28)."""
+    f = rgba.astype(np.float32)
+    r, g, b = f[..., 0], f[..., 1], f[..., 2]
+    ex = np.clip(np.minimum(r, b) - g - t, 0, None)
+    f[..., 0], f[..., 2] = r - ex, b - ex
+    rim = ndimage.binary_dilation(rgba[..., 3] <= ALPHA, iterations=1) & (rgba[..., 3] > 0)
+    f[..., 3] = np.where(rim & (ex > 20), f[..., 3] * 0.5, f[..., 3])
+    return f.clip(0, 255).astype(np.uint8)
+
+
+def sharpen(rgba: np.ndarray, amount: float = 0.8, radius: float = 1.0) -> np.ndarray:
+    """Unsharp mask on the colour only. Transparent pixels first take the colour of the nearest visible pixel, so the
+    outline does not pick up a dark halo; the alpha is left as it is."""
+    vis = rgba[..., 3] > ALPHA
+    if not vis.any():
+        return rgba
+    idx = ndimage.distance_transform_edt(~vis, return_distances=False, return_indices=True)
+    rgb = rgba[..., :3].astype(np.float32)[idx[0], idx[1]]
+    blur = ndimage.gaussian_filter(rgb, (radius, radius, 0))
+    out = rgba.copy()
+    out[..., :3] = np.clip(rgb + amount * (rgb - blur), 0, 255).astype(np.uint8)
     return out
 
 
@@ -87,6 +121,11 @@ def apply_op(img: np.ndarray, base: np.ndarray, op: dict) -> np.ndarray:
         m = _mask(img.shape[:2], op)
         if op.get("mode") == "restore":
             out[m] = base[m]
+        elif op.get("mode") == "erase_tint":
+            r, g, b = (img[..., i].astype(int) for i in range(3))
+            luma = 0.3 * r + 0.59 * g + 0.11 * b
+            tint = ((np.minimum(r, b) - g > 18) | ((g - r > 15) & (g > b))) & (luma < 110)
+            out[..., 3][m & (tint | (luma < 50))] = 0
         else:
             out[..., 3][m] = 0
     elif op["op"] == "piece":

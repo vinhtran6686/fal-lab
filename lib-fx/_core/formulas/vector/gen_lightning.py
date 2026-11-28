@@ -368,16 +368,68 @@ class Bolt2:
         return out
 
 
-def build(name, style="wrap", seed=0, out_root=None, colour="blue", preview_only=False):
-    """style "wrap": around the body; "arm": around an arm held out level (casting) plus a bolt shot from the hand; poses
-    "raise", "dual", "slam", "thrust" (see STYLES). colour: a PALETTES name. preview_only: write only colours/<colour>.gif and
-    colours/<colour>_game.gif (colour variants of an output whose frames are already stored)."""
-    st = dict(STYLES[style])
+def _instance_layers(sp, geo, k, t, st, prof, prism, expo, shape, floor_y, glow, fill):
+    """Glow and fills of one layer (instance) at frame t, appended to glow[depth] / fill[depth]. -> (log entry, px below floor)."""
+    v = sp["v"]
+    below = 0
+    if sp.get("src") == "prism":                          # Prism Spark: one drawing per frame, no exposure chart
+        P, f = prism, (t + sp["offset"]) % PRISM["frames"]
+        layers = load_drawing(v, f, PRISM["svg"])
+    else:
+        P = prof
+        f = drawing_at(expo[v], (t + sp["offset"]) % st["loop"])
+        layers = load_drawing(v, f)
+    if not layers:
+        return f"{v}:{f}", 0
+    var, L = P.var(v), P.layers(v)
+    cov = geo.covers(layers, shape)
+    gain = _gain(var, f)
+    for dep in (-1, 1):
+        shared = [c[dep] for l, c in cov.items() if dep in c and "own_halo" not in L[l]]
+        if shared:
+            sil = np.max(shared, axis=0)
+            glow[dep].append(sum(ndi.gaussian_filter(sil, s * k)[..., None] * np.array(c, float)
+                                 for s, c in zip(var["halo"]["sigma"], var["halo"]["c"])) * gain)
+        for l, c in cov.items():
+            if dep in c and "own_halo" in L[l] and L[l].get("halo"):
+                glow[dep].append(sum(ndi.gaussian_filter(c[dep], (sy * k, sx * k))[..., None] * np.array(cc, float)
+                                     for (sy, sx), cc in zip(L[l]["halo"]["sigma"], L[l]["halo"]["c"])))
+        ch = var.get("chroma")                                   # RGB-split fringe in screen space, under the core
+        if ch and ch["of"] in cov and dep in cov[ch["of"]]:
+            ks = k * P.d["source"].get("scale", 1)
+            for (dx, dy), cc in zip(ch["shift"], ch["colours"]):
+                a = np.clip(ndi.shift(cov[ch["of"]][dep], (dy * ks, dx * ks), order=1), 0, 1)
+                fill[dep].append((np.zeros(a.shape + (3,)) + np.array(cc, float), a))
+        for l in P.order(v):                                     # fills bottom -> top, as in the remake
+            if l not in cov or dep not in cov[l]:
+                continue
+            a = cov[l][dep]
+            if l != "flash":
+                below += int((a[floor_y + 2:] > 0.5).sum())
+            if L[l].get("feather"):
+                a = ndi.gaussian_filter(a, L[l]["feather"] * k)
+            grad = L[l].get("gradient")
+            col = compose.layer_colour(a >= 0.5, L[l]["colours"][0], dict(edge=grad["edge"], s=grad["s"] * k) if grad else None)
+            fill[dep].append((col, a))
+    return f"{v}:{f}", below
+
+
+def _profiles(colour):
+    """The lightning-2 profile and the Prism Spark profile, recoloured (in memory)."""
     prof = recolour(Profile(PROFILE), colour)
     prism = Profile(PRISM["profile"])
     pv = prism.var("spark")
     pv["halo"]["c"] = [[float(x) for x in _hue(c, PRISM_ROT[colour])] for c in pv["halo"]["c"]]
     pv["chroma"]["colours"] = [[float(x) for x in np.clip(_hue(c, PRISM_ROT[colour]), 0, 255)] for c in pv["chroma"]["colours"]]
+    return prof, prism
+
+
+def build(name, style="wrap", seed=0, out_root=None, colour="blue", preview_only=False):
+    """style "wrap": around the body; "arm": around an arm held out level (casting) plus a bolt shot from the hand; poses
+    "raise", "dual", "slam", "thrust" (see STYLES). colour: a PALETTES name. preview_only: write only colours/<colour>.gif and
+    colours/<colour>_game.gif (colour variants of an output whose frames are already stored)."""
+    st = dict(STYLES[style])
+    prof, prism = _profiles(colour)
     expo = json.loads(EXPOSURE.read_text())
     H = st["H"]
     W, Hc = int(st["canvas"][0] * H), int(st["canvas"][1] * H)
@@ -430,47 +482,9 @@ def build(name, style="wrap", seed=0, out_root=None, colour="blue", preview_only
     for t in range(st["loop"]):
         glow, fill, row = {-1: [], 1: []}, {-1: [], 1: []}, []
         for sp, geo, k in inst:
-            v = sp["v"]
-            if sp.get("src") == "prism":                          # Prism Spark: one drawing per frame, no exposure chart
-                P, f = prism, (t + sp["offset"]) % PRISM["frames"]
-                layers = load_drawing(v, f, PRISM["svg"])
-            else:
-                P = prof
-                f = drawing_at(expo[v], (t + sp["offset"]) % st["loop"])
-                layers = load_drawing(v, f)
-            row.append(f"{v}:{f}")
-            if not layers:
-                continue
-            var, L = P.var(v), P.layers(v)
-            cov = geo.covers(layers, (Hc, W))
-            gain = _gain(var, f)
-            for dep in (-1, 1):
-                shared = [c[dep] for l, c in cov.items() if dep in c and "own_halo" not in L[l]]
-                if shared:
-                    sil = np.max(shared, axis=0)
-                    glow[dep].append(sum(ndi.gaussian_filter(sil, s * k)[..., None] * np.array(c, float)
-                                         for s, c in zip(var["halo"]["sigma"], var["halo"]["c"])) * gain)
-                for l, c in cov.items():
-                    if dep in c and "own_halo" in L[l] and L[l].get("halo"):
-                        glow[dep].append(sum(ndi.gaussian_filter(c[dep], (sy * k, sx * k))[..., None] * np.array(cc, float)
-                                             for (sy, sx), cc in zip(L[l]["halo"]["sigma"], L[l]["halo"]["c"])))
-                ch = var.get("chroma")                                   # RGB-split fringe in screen space, under the core
-                if ch and ch["of"] in cov and dep in cov[ch["of"]]:
-                    ks = k * P.d["source"].get("scale", 1)
-                    for (dx, dy), cc in zip(ch["shift"], ch["colours"]):
-                        a = np.clip(ndi.shift(cov[ch["of"]][dep], (dy * ks, dx * ks), order=1), 0, 1)
-                        fill[dep].append((np.zeros(a.shape + (3,)) + np.array(cc, float), a))
-                for l in P.order(v):                                     # fills bottom -> top, as in the remake
-                    if l not in cov or dep not in cov[l]:
-                        continue
-                    a = cov[l][dep]
-                    if l != "flash":
-                        below += int((a[rect[3] + 2:] > 0.5).sum())
-                    if L[l].get("feather"):
-                        a = ndi.gaussian_filter(a, L[l]["feather"] * k)
-                    grad = L[l].get("gradient")
-                    col = compose.layer_colour(a >= 0.5, L[l]["colours"][0], dict(edge=grad["edge"], s=grad["s"] * k) if grad else None)
-                    fill[dep].append((col, a))
+            r_, b_ = _instance_layers(sp, geo, k, t, st, prof, prism, expo, (Hc, W), rect[3], glow, fill)
+            row.append(r_)
+            below += b_
         img = np.zeros((Hc, W, 3)) + np.array(st["bg"], float)
         img[rect[3]:rect[3] + 2] = st["floor"]
         img = _paint(img, glow[-1], fill[-1])
@@ -507,3 +521,94 @@ def build(name, style="wrap", seed=0, out_root=None, colour="blue", preview_only
     (out / "design.json").write_text(json.dumps(dict(style=style, colour=colour, params={k: v for k, v in st.items() if not k.startswith("_")},
                                                      frames=log, check=check), indent=1, default=float))
     return out, check
+
+
+def build_on_sprite(frames, colour="blue", style="prism", envelope=None, body_px=None, pad=90, fps=24):
+    """Put a style's wrap layers around a REAL character animation (user 2026-11-28: Charge v2 on pale_seraph cape_storm).
+    frames: list of RGBA arrays (one per animation frame, same window, feet-anchored, e.g. sprite_prep edited frames).
+    Per frame the shell follows the silhouette: centre x = median x of the opaque pixels, feet = lowest opaque row,
+    radius = half the silhouette width (the cape) / body height, clamped 0.42-1.0 H and scaled by each layer's own R / 0.46;
+    the three are smoothed over 5 frames so the shell does not jitter. The body height (and so every measured px scale)
+    stays constant (body_px, default: silhouette height of frame 0). envelope: {frame: intensity} keys, linear in between
+    (effect alpha and glow x intensity). Returns (composite frames RGB on a dark backdrop, back RGBA, front RGBA), all on the
+    window padded by `pad` px on every side."""
+    st = dict(STYLES[style])
+    prof, prism = _profiles(colour)
+    expo = json.loads(EXPOSURE.read_text())
+    h0, w0 = frames[0].shape[:2]
+    Hc, W = h0 + 2 * pad, w0 + 2 * pad
+    al = [f[..., 3] > 24 for f in frames]
+    boxes = []
+    for a in al:
+        ys, xs = np.nonzero(a)
+        boxes.append((float(np.median(xs)), float(ys.max()), (xs.max() - xs.min()) / 2.0, float(ys.max() - ys.min())))
+    H = float(body_px or boxes[0][3])
+    sm = lambda i: np.convolve(np.pad([b[i] for b in boxes], 2, mode="edge"), np.ones(5) / 5, mode="valid")
+    cxs, fys, hws = sm(0), sm(1), sm(2)
+    keys = sorted((int(k), float(v)) for k, v in (envelope or {0: 1.0}).items())
+    I = np.interp(np.arange(len(frames)), [k for k, _ in keys], [v for _, v in keys])
+    comp, backs, fronts = [], [], []
+    for t, fr in enumerate(frames):
+        body = dict(H=H, cx=cxs[t] + pad, fy=fys[t] + pad + 0.02 * H)
+        R0 = float(np.clip(hws[t] / H * 1.05, 0.42, 1.0))
+        glow, fill = {-1: [], 1: []}, {-1: [], 1: []}
+        if I[t] > 0.01:
+            for sp in st["instances"]:
+                sp2 = dict(sp, R=R0 * sp["R"] / 0.46)
+                geo = Wrap(sp2, st, body, (Hc, W))
+                geo.floor = Hc                                    # a hovering character: nothing to clip under the feet
+                _instance_layers(sp2, geo, geo.k, t, st, prof, prism, expo, (Hc, W), Hc, glow, fill)
+        glow = {d: [g * I[t] for g in v] for d, v in glow.items()}
+        fill = {d: [(c, a * min(1.0, I[t])) for c, a in v] for d, v in fill.items()}
+        img = np.zeros((Hc, W, 3)) + np.array(st["bg"], float)
+        img = _paint(img, glow[-1], fill[-1])
+        ch = np.zeros((Hc, W, 4))
+        ch[pad:pad + h0, pad:pad + w0] = fr
+        a = ch[..., 3:] / 255.0
+        img = img * (1 - a) + ch[..., :3] * a
+        img = np.clip(_paint(img, glow[1], fill[1]), 0, 255).astype(np.uint8)
+        comp.append(img)
+        backs.append(_rgba(glow[-1], fill[-1], (Hc, W)))
+        fronts.append(_rgba(glow[1], fill[1], (Hc, W)))
+    return comp, backs, fronts
+
+
+def onto_prep(name, onto, style, colour, envelope, body_px=None):
+    """CLI wrapper of build_on_sprite: the sprite_prep edited frames of WORKSPACE:CLIP:HERO (despill, cleanup, sharpen from
+    prep/<hero>/<clip>.edits.json) -> <hero asset>/.work/fx/<name>/<colour>/ composite/ back/ front/ (PNG per frame, window +
+    pad), preview.gif (cropped to everything drawn, 24 fps), preview_slow.gif, preview_game.gif (body at the tier height)."""
+    import sys
+    sys.path.insert(0, str(REPO / "scripts"))
+    from sprite_prep.workspace import Workspace
+    from sprite_prep import edits as E
+    wsid, clip, hero = onto.split(":")
+    ws = Workspace.load(wsid)
+    n = ws.split_info(clip, hero)["frames"]
+    frames = [E.render(ws, clip, hero, f) for f in range(n)]
+    env = {int(k): float(v) for k, v in (kv.split(":") for kv in envelope.split(","))}
+    comp, backs, fronts = build_on_sprite(frames, colour, style, env, body_px)
+    asset = REPO / ws.cfg["heroes"][hero]["asset"]
+    out = asset / ".work" / "fx" / name / colour
+    for sub, seq in (("composite", comp), ("back", backs), ("front", fronts)):
+        (out / sub).mkdir(parents=True, exist_ok=True)
+        for t, im in enumerate(seq):
+            Image.fromarray(im).save(out / sub / f"f{t:03d}.png")
+    U = np.zeros(comp[0].shape[:2], bool)
+    for b, f in zip(backs, fronts):
+        U |= (b[..., 3] > 8) | (f[..., 3] > 8)
+    for fr in frames:
+        pad = (comp[0].shape[0] - fr.shape[0]) // 2
+        U[pad:pad + fr.shape[0], pad:pad + fr.shape[1]] |= fr[..., 3] > 24
+    ys, xs = np.nonzero(U)
+    box = (max(0, xs.min() - 8), max(0, ys.min() - 8), xs.max() + 9, ys.max() + 9)
+    imgs = [Image.fromarray(c).crop(box) for c in comp]
+    fps = ws.cfg.get("fps", 24)
+    imgs[0].save(out / "preview.gif", save_all=True, append_images=imgs[1:], duration=round(1000 / fps), loop=0)
+    imgs[0].save(out / "preview_slow.gif", save_all=True, append_images=imgs[1:], duration=round(3000 / fps), loop=0)
+    hb = ws.cfg["heroes"][hero].get("body_2x", 168) / 2                 # body height at game size (@1x)
+    k = hb / float(body_px or frames[0][..., 3].any(1).sum())
+    game = [im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS) for im in imgs]
+    game[0].save(out / "preview_game.gif", save_all=True, append_images=game[1:], duration=round(1000 / fps), loop=0)
+    (out / "design.json").write_text(json.dumps(dict(onto=onto, style=style, colour=colour, envelope=env, body_px=body_px,
+                                                     crop=[int(x) for x in box]), indent=1))
+    return out

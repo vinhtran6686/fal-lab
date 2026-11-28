@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CLI for the lib-fx vector kit (lib-fx/_core/formulas/vector). 0 USD, no model.
 
-  python lib-fx/_tools/vectorfx.py gen-lightning NAME [--style wrap|arm|raise|dual|slam|thrust|prism] [--colour blue|gold|red|purple|green] [--preview-only]   the remake's lightning around a stand-in pose (gen_lightning.py)
+  python lib-fx/_tools/vectorfx.py gen-lightning NAME [--style wrap|arm|raise|dual|slam|thrust|prism] [--colour blue|gold|red|purple|green] [--preview-only] [--onto WS:CLIP:HERO --envelope 0:0,30:1,95:0 --body-px N]   the remake's lightning around a stand-in pose or a real animation (gen_lightning.py)
   python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED] [--style crescent|loop|loop-heavy|front-heavy|combo|x] [--dummy]
       x: [--scale S] [--rotation DEG] [--duration-ms MS] [--fps N]   generate a NEW slash from the foundation rules
   python lib-fx/_tools/vectorfx.py init     GIF NAME                            draft profile: auto crops (+ reflections), frames, suggested layers
@@ -40,12 +40,20 @@ def main():
     ap.add_argument("--refit", action="store_true"); ap.add_argument("--scale", type=float, default=1.0); ap.add_argument("--rotation", type=float, default=0.0)
     ap.add_argument("--duration-ms", type=float, default=550.0); ap.add_argument("--fps", type=int, default=30)
     ap.add_argument("--colour", default="blue", help="gen-lightning: blue|gold|red|purple|green")
+    ap.add_argument("--onto", help="gen-lightning: put the style around a real animation: WORKSPACE:CLIP:HERO (sprite_prep edited frames)")
+    ap.add_argument("--envelope", default="0:1", help="gen-lightning --onto: intensity keys frame:value,... (linear between)")
+    ap.add_argument("--body-px", type=float, default=None, help="gen-lightning --onto: standing body height in the frames (px)")
     ap.add_argument("--preview-only", action="store_true", help="gen-lightning: only colours/<colour>.gif of an existing output")
     ap.add_argument("--dummy", action="store_true", help="gen-slash combo: also render a preview with a training dummy")
     ap.add_argument("--style", choices=["crescent", "loop", "loop-heavy", "front-heavy", "combo", "x", "wrap", "arm", "raise", "dual", "slam", "thrust", "prism"], default="crescent")
     a = ap.parse_args()
     if a.cmd == "gen-lightning":
         from vector import gen_lightning
+        if a.onto:
+            out = gen_lightning.onto_prep(a.profile, a.onto, a.style if a.style in gen_lightning.STYLES else "prism", a.colour,
+                                          a.envelope, a.body_px)
+            print("out:", out)
+            return
         out, check = gen_lightning.build(a.profile, a.style if a.style in gen_lightning.STYLES else "wrap", colour=a.colour, preview_only=a.preview_only)
         print("out:", out)
         import json as _j; print(_j.dumps(check))
