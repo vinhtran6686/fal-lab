@@ -139,27 +139,28 @@ từng mảnh, không theo tổng diện tích: mảnh vụn vẫn chói. Ngư�
 
 ## 7. Bộ sinh và việc tiếp theo
 
-**Bộ sinh: `charge`** (nhân vật vận sức, sét bao quanh), `python lib-fx/_tools/vectorfx.py gen-lightning NAME [--frame SEED]`,
-code [`vector/gen_lightning.py`](../../../vector/gen_lightning.py), kết quả [generated/gen-lightning-charge-blue](../../../../results/vector-showcase/generated/gen-lightning-charge-blue/)
-(`sketch.png`: nét phẳng ở đầu / đỉnh / cuối + đường bao kích thước).
+**Bộ sinh: `crackle`** (sét lách tách quanh nhân vật đang vận sức), `python lib-fx/_tools/vectorfx.py gen-lightning NAME [--frame SEED]`,
+code [`vector/gen_lightning.py`](../../../vector/gen_lightning.py), kết quả [generated/gen-lightning-crackle-blue](../../../../results/vector-showcase/generated/gen-lightning-crackle-blue/)
+(`sketch.png`: nét phẳng của ba hình + đường cường độ và số tia sinh ra mỗi hình).
 
-Luật cho sét bao quanh nhân vật (từ nhận xét của user 2026-11-28 về bản `aura` đầu tiên: "thô, cứng, chưa bao quanh, có tia đi hàng dọc"):
-1. **Mọi tia nằm trên một vỏ kén** (elip 0,56 H × 0,80 H quanh thân, nhìn hơi từ trên); không có tia đứng riêng lẻ. Phác nét một màu trước, kiểm
-   xem đã thành một hình kín chưa, rồi mới lên màu và quầng.
-2. **Vai trò**: tia viền chạy theo đường bao của kén (chính là hình bóng, dài, có một nhánh rẽ); tia xoắn đi vòng quanh **cùng một chiều** và chéo lên
-   30-50° (không thành vạch ngang), 80 % ở sau thân; phần cắt ngang trước thân ít và mảnh hơn (×0,6) để nhân vật vẫn là tâm điểm; tia lửa ngắn ở viền.
-   Kiểm "bao kín": chia vỏ thành 12 cung, mỗi 3 hình liên tiếp ở pha giữ phải chạm ≥ 10 cung (đạt 10-12).
-3. **Nét thanh mảnh ở mọi kích thước**: ~1,1 px ở cỡ game (thân 60 px), phình tối đa ×1,6 ở 1-2 điểm gập, hai đầu nhọn. Bề rộng tính bằng px tuyệt
-   đối, không nhân theo độ lớn của kén; số điểm gập theo chiều dài tia (cách nhau 0,16 H), nên kén nhỏ có tia ngắn ít gập.
-4. **Không cứng**: các đoạn cạnh nhau dài chênh 2-5 lần, mỗi đoạn hơi cong, vài điểm gập thật + rung nhỏ mỗi hình. Mảnh vỡ ngắn hơn 0,05 H bị bỏ
-   (trông như chấm).
-5. **Đường bao của cả hiệu ứng**: lớn dần (kén 0,3 → 1, nhanh rồi chậm, 33 % thời gian) → giữ (thở ±3 %) → thu lại (1 → 0,55) và tắt dần; một đường
-   cường độ điều khiển số tia sinh ra, quầng và độ đục; không sinh tia mới ở 8 hình cuối nên hình cuối trống. 44 hình ở 24 fps (1,8 s). Từng tia vẫn
-   giữ bảng pha đã đo (mọc từ một đầu → đủ → mỏng → vỡ thành vuốt tại chỗ, quầng tăng 1,0 → 1,9).
-6. Bỏ khung mực đen và chớp đất cho kiểu này (làm hiệu ứng thô).
+Luật cho sét quanh nhân vật, rút từ ba vòng nhận xét của user (2026-11-28):
+1. **Sét là nguyên tố ngẫu nhiên, không đồng bộ.** Bản `aura` (lịch so le đều) và `charge` (vỏ kén lớn-giữ-nhỏ đều) bị chê "xuất hiện đều, ẩn đều".
+   Mỗi hình do một quá trình ngẫu nhiên có seed quyết định: số tia mới ~ Poisson(1,7 × I + 0,25), 22 % × I là đợt bùng 3-5 tia, mỗi tia sống
+   2-5 hình (ngẫu nhiên), vài hình trống (nhấp nháy), ~18 % hình giữ 2 frame, quầng nhấp nháy ×0,75-1,3 mỗi hình. Cường độ I (lên, giữ, xuống)
+   cũng có nhiễu ×0,75-1,15. Nguồn: vẽ lại mỗi hình lỏng tay, trộn hình trống và nhấp nháy, càng ngẫu nhiên càng đọc ra sét (Johannes Fast; UE5
+   chọn biến thể ngẫu nhiên có cả ô trống).
+2. **Tia bám vào thân**: mọi tia bắt đầu trên đường viền thân (hai cạnh và đỉnh đầu, không bao giờ dưới chân); kiểu `crawl` quay lại thân (phình ra
+   0,10-0,35 H), `wrap` vắt từ cạnh này sang cạnh kia (70 % trước thân), `jump` bắn ra ngoài 0,3-0,7 H có 1-2 nhánh ngón tay, `spark` ngắn sát chân.
+   Tầm vươn tăng theo I. Không vẽ tia đứng riêng lẻ, không vỏ kén đều.
+3. **Không lố xuống đất**: toạ độ y bị kẹp trên mặt đất nửa bề rộng nét; kiểm `line_px_below_floor = 0`.
+4. **Bóng đen phía sau**: mỗi tia có một bản tối (6,8,22) rộng hơn ×1,7 + 0,01 H, lệch xuống phải 0,006 H × 0,010 H, vẽ sau quầng và trước nét sáng:
+   tia sáng nổi hẳn lên. Khoảng 1/8 tia sống từ 3 hình trở lên có **một hình mực** (tia đen trong quầng mạnh), đúng khung đảo màu đo được trên
+   `lightning-2` (strike 12, bolt 0). User nhận ra các nét đen đó trong bản remake là thứ làm sét sống động.
+5. **Nét thanh**: ~1,1 px ở cỡ game, đầu nhọn, điểm gập cách nhau ~0,085 H chênh 2-5 lần, đoạn hơi cong, điểm gập rung lại mỗi hình; tia kết thúc
+   bằng vỡ thành vuốt tại chỗ.
 
-**Tự đặt ra** (không có trong bản gốc): vỏ kén và vai trò tia, đường bao, nhánh rẽ, quầng ×1,6, quầng vận sức mờ sau thân.
+**Tự đặt ra** (không có trong bản gốc): điểm neo trên thân và bốn kiểu tia, quá trình ngẫu nhiên, độ lệch của bóng, quầng vận sức mờ sau thân.
 
-Việc tiếp theo: user chấm `charge`; tách thành vào / giữ lặp / ra để thời gian gồng thay đổi được; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
+Việc tiếp theo: user chấm `crackle`; tách thành vào / giữ lặp / ra để thời gian gồng thay đổi được; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
 đưa hiệu ứng duyệt vào `lib-fx/element/lightning/` (hiện chưa có hiệu ứng nào).
 - Xuất bản dựng theo chuẩn lib-fx (nền trong suốt, @2x, `sheet.png`, `meta.json`): chưa có cho mọi bản dựng vector (`vector/README.md` §9 E).
