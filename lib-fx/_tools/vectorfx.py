@@ -42,6 +42,7 @@ def main():
     ap.add_argument("--colour", default="blue", help="gen-lightning: blue|gold|red|purple|green")
     ap.add_argument("--onto", help="gen-lightning: put the style around a real animation: WORKSPACE:CLIP:HERO (sprite_prep edited frames)")
     ap.add_argument("--envelope", default="0:1", help="gen-lightning --onto: intensity keys frame:value,... (linear between)")
+    ap.add_argument("--enhance", action="store_true", help="gen-lightning --onto: x2 + flatten + sharpen the character frames first")
     ap.add_argument("--body-px", type=float, default=None, help="gen-lightning --onto: standing body height in the frames (px)")
     ap.add_argument("--preview-only", action="store_true", help="gen-lightning: only colours/<colour>.gif of an existing output")
     ap.add_argument("--dummy", action="store_true", help="gen-slash combo: also render a preview with a training dummy")
@@ -51,7 +52,7 @@ def main():
         from vector import gen_lightning
         if a.onto:
             out = gen_lightning.onto_prep(a.profile, a.onto, a.style if a.style in gen_lightning.STYLES else "prism", a.colour,
-                                          a.envelope, a.body_px)
+                                          a.envelope, a.body_px, a.enhance)
             print("out:", out)
             return
         out, check = gen_lightning.build(a.profile, a.style if a.style in gen_lightning.STYLES else "wrap", colour=a.colour, preview_only=a.preview_only)

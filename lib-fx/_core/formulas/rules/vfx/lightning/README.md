@@ -267,7 +267,8 @@ python lib-fx/_tools/vectorfx.py gen-lightning gen-lightning-prism-blue --style 
 
 **Gắn vào một animation thật (đã chạy: pale_seraph cape_storm + Charge v2, 2026-11-28, chờ user chấm)**:
 `python lib-fx/_tools/vectorfx.py gen-lightning cape_storm_prism --style prism --colour blue --onto out/heroes/_lineups/heroic_ref_five:skill2_t01:pale_seraph --envelope 0:0,6:0.35,12:0.6,30:1,47:1.15,60:0.9,80:0.45,95:0,106:0 --body-px 174`
-→ `out/heroes/pale_seraph/.work/fx/cape_storm_prism/<màu>/` (`composite/`, `back/`, `front/`, `preview*.gif`). Khung lấy từ sprite_prep đã dọn
+(thêm `--enhance` để nhân vật nét hơn: khung qua `enhance_x2` (×2, làm phẳng màu, làm nét), `body_px` nhân đôi; bản user chọn 2026-11-28 là
+`cape_storm_prism_x2`) → `out/heroes/pale_seraph/.work/fx/<tên>/<màu>/` (`composite/`, `back/`, `front/`, `preview*.gif`). Khung lấy từ sprite_prep đã dọn
 (`prep/pale_seraph/skill2_t01.edits.json`: despill, làm nét, xoá mũi tên lạc). Mỗi khung vỏ sét theo bóng dáng (`build_on_sprite`: tâm = trung vị x
 của điểm thấy được, chân = hàng thấp nhất, bán kính = nửa bề rộng bóng (áo choàng) / chiều cao thân, kẹp 0,42-1,0 H, làm mượt 5 khung; chiều cao
 thân cố định nên tỉ lệ quầng không nhảy); `--envelope` = cường độ theo khung (khoá nối tuyến tính) theo pha của chiêu.

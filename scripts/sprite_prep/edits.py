@@ -172,3 +172,24 @@ def render(ws: Workspace, clip: str, hero: str, f: int, edits: dict | None = Non
     Image.fromarray(img, "RGBA").save(cpng)
     ckey.write_text(key)
     return img
+
+
+def enhance_x2(rgba: np.ndarray, sharpen_amount: float = 1.2) -> np.ndarray:
+    """Free "make it crisper" pass for a small character cut from a compressed video (pale_seraph cape_storm, 174 px tall
+    in 768P, user 2026-11-28): x2 Lanczos upscale -> two edge-keeping bilateral passes (flattens the compression mush into
+    flat cel colours) -> unsharp mask (radius 1.6 at x2) -> alpha contrast (70-190 -> 0-255) for a clean outline.
+    Output is TWICE the size; it adds no real detail (a bigger source clip is the only way to get that)."""
+    import cv2
+    vis = rgba[..., 3] > ALPHA
+    if not vis.any():
+        return np.repeat(np.repeat(rgba, 2, 0), 2, 1)
+    idx = ndimage.distance_transform_edt(~vis, return_distances=False, return_indices=True)
+    filled = np.dstack([rgba[..., :3][idx[0], idx[1]], rgba[..., 3]]).astype(np.uint8)
+    up = cv2.resize(filled, None, fx=2, fy=2, interpolation=cv2.INTER_LANCZOS4)
+    rgb = np.ascontiguousarray(up[..., :3])
+    rgb = cv2.bilateralFilter(cv2.bilateralFilter(rgb, 9, 40, 7), 9, 30, 7)
+    out = np.dstack([rgb, up[..., 3]])
+    out = sharpen(out, sharpen_amount, 1.6)
+    a = out[..., 3].astype(np.float32)
+    out[..., 3] = np.clip((a - 70) * 255 / 120, 0, 255).astype(np.uint8)
+    return out

@@ -30,7 +30,10 @@ Workspace một asset (`out/<class>/<id>/` có clip trong `source/video/`) khôn
    - `denoise.sharpen: 0.8`: unsharp mask (bán kính 1 px) trên màu, điểm trong suốt lấy màu của điểm thấy được gần nhất nên viền không bị quầng tối.
    - Thao tác `lasso` / `brush` chế độ `erase_tint`: chỉ xoá các điểm tối ngả tím hoặc ngả xanh (độ sáng < 110) hoặc gần đen (< 50) trong vùng,
      cho vật của hero bên cạnh lọt sang ô (mũi tên của ash_ranger trong `skill2_t01` của pale_seraph, khung 48-51); màu của hero giữ nguyên.
-     Phần chắc chắn nằm ngoài người thì dùng `erase` thường. "Khôi phục" lấy lại điểm ảnh của ảnh gốc đã khử nhiễu. Một cách làm duy nhất (Python), trang chỉ gửi thao tác.
+     Phần chắc chắn nằm ngoài người thì dùng `erase` thường.
+   - `enhance_x2(rgba)` (hàm, không phải khoá edits): phóng ×2 Lanczos → hai lần lọc song phương giữ viền (làm phẳng vệt nén thành mảng màu phẳng) →
+     làm nét (bán kính 1,6) → tăng tương phản độ đục (70-190 → 0-255) cho viền gọn. Miễn phí, nhanh; không thêm chi tiết thật (muốn chi tiết thật thì
+     cần clip có nhân vật to hơn). Dùng qua `gen-lightning --onto ... --enhance`. "Khôi phục" lấy lại điểm ảnh của ảnh gốc đã khử nhiễu. Một cách làm duy nhất (Python), trang chỉ gửi thao tác.
 3. **Cờ** (`analyze.py`): chạm mép, hồng (nhiều hơn khung 0 ít nhất max(40, số của khung 0) điểm), diện tích > 1,35 × trung vị (vệt chém, hiệu ứng), nhiều mảnh ≥ 30 px. Vòng lặp: chấm chỗ nối cuối → đầu so với bước thường, gợi ý điểm cắt.
 4. **Xuất** (`export.py`): mỗi hero MỘT hệ số thu phóng `body_2x / body_px` (chiều cao đứng trong clip, đo ở khung 0) cho mọi động tác, vì `video_to_sheet.py` không tự đưa về chiều cao đích. Rồi dựng một set tạm và gọi `video_to_sheet.py --cell <cell>` (thêm `--no-shadow` khi `shadow` tắt). Lần xuất đầu của asset chốt canvas và diện tích thân: `fit()` đo trước mọi động tác; `export_order()` xuất động tác một lần (attack trước) rồi mới tới vòng lặp. `meta.json` của asset ghi `prep` (workspace, động tác, chuỗi, clip, hệ số).
 

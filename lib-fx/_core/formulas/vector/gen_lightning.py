@@ -573,10 +573,11 @@ def build_on_sprite(frames, colour="blue", style="prism", envelope=None, body_px
     return comp, backs, fronts
 
 
-def onto_prep(name, onto, style, colour, envelope, body_px=None):
+def onto_prep(name, onto, style, colour, envelope, body_px=None, enhance=False):
     """CLI wrapper of build_on_sprite: the sprite_prep edited frames of WORKSPACE:CLIP:HERO (despill, cleanup, sharpen from
     prep/<hero>/<clip>.edits.json) -> <hero asset>/.work/fx/<name>/<colour>/ composite/ back/ front/ (PNG per frame, window +
-    pad), preview.gif (cropped to everything drawn, 24 fps), preview_slow.gif, preview_game.gif (body at the tier height)."""
+    pad), preview.gif (cropped to everything drawn, 24 fps), preview_slow.gif, preview_game.gif (body at the tier height).
+    enhance: frames go through sprite_prep.edits.enhance_x2 first (twice the size, crisper), body_px doubles."""
     import sys
     sys.path.insert(0, str(REPO / "scripts"))
     from sprite_prep.workspace import Workspace
@@ -585,8 +586,11 @@ def onto_prep(name, onto, style, colour, envelope, body_px=None):
     ws = Workspace.load(wsid)
     n = ws.split_info(clip, hero)["frames"]
     frames = [E.render(ws, clip, hero, f) for f in range(n)]
+    if enhance:                                    # x2 + flatten + sharpen (sprite_prep.edits.enhance_x2): crisper character
+        frames = [E.enhance_x2(f) for f in frames]
+        body_px = 2 * body_px if body_px else None
     env = {int(k): float(v) for k, v in (kv.split(":") for kv in envelope.split(","))}
-    comp, backs, fronts = build_on_sprite(frames, colour, style, env, body_px)
+    comp, backs, fronts = build_on_sprite(frames, colour, style, env, body_px, pad=180 if enhance else 90)
     asset = REPO / ws.cfg["heroes"][hero]["asset"]
     out = asset / ".work" / "fx" / name / colour
     for sub, seq in (("composite", comp), ("back", backs), ("front", fronts)):
@@ -609,6 +613,6 @@ def onto_prep(name, onto, style, colour, envelope, body_px=None):
     k = hb / float(body_px or frames[0][..., 3].any(1).sum())
     game = [im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS) for im in imgs]
     game[0].save(out / "preview_game.gif", save_all=True, append_images=game[1:], duration=round(1000 / fps), loop=0)
-    (out / "design.json").write_text(json.dumps(dict(onto=onto, style=style, colour=colour, envelope=env, body_px=body_px,
+    (out / "design.json").write_text(json.dumps(dict(onto=onto, style=style, colour=colour, envelope=env, body_px=body_px, enhance=enhance,
                                                      crop=[int(x) for x in box]), indent=1))
     return out
