@@ -31,6 +31,8 @@ Bản gốc: `ref/vfx/swirl-slash/`, `ref/vfx/element-trio/`, `ref/vfx/slash-tri
 
 ## Hiệu ứng sinh mới (không có bản gốc)
 
+Trang xem cả bộ sét (remake, Xưởng sét 6 dáng × 5 màu, Charge v2): [lightning-page/](lightning-page/README.md).
+
 Mỗi bản `gen-lightning-*` có thêm `colours/<gold|red|purple|green>.gif` (và `_game.gif`): cùng hiệu ứng ở màu khác (`--colour ... --preview-only`).
 
 | Tên | Lệnh | Thư mục | Trang |

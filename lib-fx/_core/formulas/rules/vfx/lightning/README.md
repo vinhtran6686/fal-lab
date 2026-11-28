@@ -227,3 +227,48 @@ tên biến thể và hai điểm neo (đầu hình, điểm chạm) cho hợp m
 
 Đưa dáng cần dùng vào thư viện `lib-fx/element/lightning/` (sheet, meta, @2x) khi gắn cho nhân vật thật, dùng điểm vai / bàn tay thật của nhân vật
 thay khối; tách vào / giữ lặp / ra nếu thời gian gồng thay đổi.
+
+## 8. Làm lại toàn bộ ở một session khác (bản đồ file + lệnh)
+
+Mọi thứ cần để làm tiếp đã có trong git; `lib-fx/_study/` (frame trung gian) bị git bỏ qua và **không cần** cho bước đặt hiệu ứng quanh nhân vật.
+Cần: Python 3, `numpy scipy pillow opencv-python-headless scikit-image` (`pip install -r requirements.txt` hoặc cài lẻ).
+
+**File**
+
+| Thứ | Ở đâu |
+|---|---|
+| Mẫu gốc | `ref/vfx/lightning-2/lightnings.mp4` (3 hiệu ứng: `arc`, `strike`, `bolt`), `ref/vfx/lightning-3/reference.gif` (Prism Spark) |
+| Profile (màu, gradient, quầng + độ mạnh từng hình, `own_halo`, `chroma`, `halo_tint`, vùng cắt) | `lib-fx/_core/formulas/vector/profiles/lightning-2.json`, `lightning-3.json` |
+| Hình vector của bản remake (nguồn của mọi hiệu ứng sinh ra) | `lib-fx/_core/results/vector-showcase/lightning-2/<arc|strike|bolt>/svg/NN.svg`, `lightning-3/spark/svg/NN.svg` |
+| Nhịp của bản remake | `lightning-2/recipe/exposure.json` (Prism Spark: mỗi frame một hình, không có bảng) |
+| Kiểm tra so với ảnh gốc | `lightning-2/recipe/rebuild_check_*.json`, `lightning-3/recipe/rebuild_check_bright.json` |
+| Bộ đặt hiệu ứng quanh nhân vật | `lib-fx/_core/formulas/vector/gen_lightning.py` (`STYLES`, `PALETTES`, `PRISM_ROT`) |
+| Kết quả đã duyệt | `lib-fx/_core/results/vector-showcase/generated/gen-lightning-<wrap|arm|raise|dual|slam|thrust|prism>-blue/` (`frames/`, `back/`, `front/`, `preview*.gif`, `design.json`, `colours/<màu>*.gif`) |
+| Trang xem (artifact) | `lib-fx/_core/results/vector-showcase/lightning-page/` (`index.html`, `files.json`, README) |
+| Công cụ trong bộ kit dùng ở đây | `measure.ingest_video` (video → hình vẽ + `exposure.json`), khoá `feather`, `own_halo`, `halo_gain_max`, `chroma`, `halo_tint` (`compose.py`, `measure.py`), `lib-fx/_tools/rebuild_check.py`, `lifecycle.events` |
+
+**Lệnh**
+
+```bash
+# 1) dựng lại bản remake (chỉ cần khi đổi profile; ~5 phút lightning-2, ~15 phút lightning-3 vì ảnh phóng x2)
+python lib-fx/_tools/vectorfx.py ingest  lightning-2      # rồi: measure, rebuild, showcase, lifecycle (như §1)
+python lib-fx/_tools/vectorfx.py ingest  lightning-3
+python lib-fx/_tools/vectorfx.py measure lightning-3
+python lib-fx/_tools/vectorfx.py rebuild lightning-3
+python lib-fx/_tools/rebuild_check.py    lightning-3 --bright 200
+python lib-fx/_tools/vectorfx.py showcase lightning-3
+
+# 2) đặt hiệu ứng quanh nhân vật (đọc thẳng svg + profile + exposure đã commit; ~30-60 giây mỗi dáng)
+python lib-fx/_tools/vectorfx.py gen-lightning gen-lightning-wrap-blue  --style wrap
+python lib-fx/_tools/vectorfx.py gen-lightning gen-lightning-prism-blue --style prism
+# 3) màu khác của một dáng (không ghi đè frame bản xanh đã duyệt)
+python lib-fx/_tools/vectorfx.py gen-lightning gen-lightning-prism-blue --style prism --colour gold --preview-only
+```
+
+**Gắn vào một nhân vật thật** (chưa làm, bước tiếp theo): thay khối bằng số đo của nhân vật trong một dòng `STYLES` mới: `H` = chiều cao thân
+@2x, `feet` (vị trí chân), `body_x`, `body_w`; với dáng có tay: `arms` (vai, góc, dài) lấy từ pose / rig của nhân vật (`out/heroes/<id>/source/rig/`
+hoặc frame của skill); chọn các lớp theo §7.3; xuất `back/` + `front/` rồi ghép quanh sprite (lớp sau, nhân vật, lớp trước). Cùng canvas và tỉ lệ
+với sheet của nhân vật (`meta.json` của sheet), kiểm ở cỡ game (thân 60 px).
+
+**Kiểm hồi quy khi sửa `gen_lightning.py`**: tạo lại `wrap` và `arm` vào thư mục tạm (`gen_lightning.build('x', s, out_root=...)`), so md5 của
+`frames/*.png` với bản đã commit: phải giống hệt.

@@ -1,0 +1,235 @@
+<title>Lightning-2 Remake</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one dark column of three effect cards, each a full-width compare GIF (reference | remake) with its numbers under it. */
+:root {
+  color-scheme: dark;
+  --bg: #15161d;
+  --panel: #1e2029;
+  --line: #2c2f3b;
+  --fg: #e8e9f0;
+  --muted: #9a9db0;
+  --blue: #7fd8ff;
+  --gold: #ffd77a;
+  --ok: #7be0a6;
+  --warn: #ffb36b;
+  --f-display: "Space Grotesk", system-ui, sans-serif;
+  --f-body: "Inter", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 28px; }
+h1 { font-family: var(--f-display); font-size: 1.7rem; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-size: 1.25rem; margin: 0; text-wrap: balance; }
+p { margin: 0; max-width: 65ch; }
+.lead { color: var(--muted); }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.nav a { font-family: var(--f-mono); font-size: 13px; color: var(--fg); text-decoration: none; padding: 6px 12px;
+  border: 1px solid var(--line); border-radius: 999px; }
+.nav a:focus-visible, .nav a:hover { border-color: var(--muted); outline: none; }
+.card { display: grid; gap: 14px; scroll-margin-top: 12px; }
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.tag { font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+.blue .tag { color: var(--blue); } .gold .tag { color: var(--gold); }
+figure { margin: 0; background: #0f1015; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+figure img { display: block; width: 100%; height: auto; }
+.narrow img { max-width: 420px; margin: 0 auto; }
+.lbl { display: grid; grid-template-columns: 1fr 1fr; font-family: var(--f-mono); font-size: 12px; color: var(--muted);
+  border-top: 1px solid var(--line); }
+.lbl span { padding: 6px 10px; text-align: center; }
+.lbl span + span { border-left: 1px solid var(--line); color: var(--fg); }
+.narrow .lbl { max-width: 420px; margin: 0 auto; }
+.lbl.one { grid-template-columns: 1fr; }
+.lbl.one span { color: var(--fg); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: inherit; font-size: 13.5px; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+  padding: 7px 13px; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+.chip i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.chip small { font-family: var(--f-mono); font-size: 10.5px; color: var(--ok); letter-spacing: .04em; }
+.chip.on { border-color: var(--fg); background: #2a2d3a; }
+.chip:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.stat { background: var(--panel); border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; }
+.stat b { font-family: var(--f-mono); font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+.stat small { color: var(--muted); font-size: 12px; }
+.ok { color: var(--ok); } .warn { color: var(--warn); }
+ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; max-width: 65ch; }
+.phases { display: flex; flex-wrap: wrap; gap: 6px; }
+.phases span { font-size: 12.5px; padding: 4px 9px; border-radius: 6px; background: var(--panel); border: 1px solid var(--line); }
+.phases span.ink { background: #000; border-color: var(--gold); }
+.note { background: var(--panel); border-radius: 10px; padding: 14px 16px; display: grid; gap: 8px; }
+code { font-family: var(--f-mono); font-size: 13px; word-break: break-word; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap">
+  <header style="display:grid; gap:10px">
+    <span class="tag" style="color:var(--muted)">ref/vfx/lightning-2/lightnings.mp4 · vector remake · 0 USD</span>
+    <h1>Remake ba hiệu ứng sét</h1>
+    <p class="lead">Mỗi GIF: <b style="color:var(--fg)">trái là bản gốc</b>, <b style="color:var(--fg)">phải là bản remake</b>, chạy đúng nhịp gốc (vẽ 24 fps, mỗi hình một tia mới). Xem và chấm điểm từng hiệu ứng.</p>
+    <nav class="nav"><a href="#v2">Charge v2 (Prism Spark)</a><a href="#spark">Prism Spark remake</a><a href="#studio">Xưởng sét (dáng + màu)</a><a href="#strike">Sét vàng</a><a href="#bolt">Sét xanh lớn</a><a href="#arc">Cung sét xanh</a><a href="#formula">Công thức</a></nav>
+  </header>
+
+  <section class="card blue" id="v2">
+    <div class="head"><h2>Charge v2: Prism Spark quanh nhân vật</h2><span class="tag">mới · 52 frame / 2,1 s, lặp</span></div>
+    <p class="lead">Khối xám là nhân vật (không tay). Dùng chính hình vẽ của bản remake Prism Spark, quấn quanh thân như trên ống trụ giống charge v1: phần sau bị thân che, phần trước vắt qua người. Ba lớp lệch nhịp nhau nên tia nổ lách tách liên tục quanh người. Viền tách màu được tính sau khi quấn nên luôn lệch đúng hướng trên màn hình.</p>
+    <div class="chips" id="v2colours" role="group" aria-label="Màu"></div>
+    <figure><img id="v2main" src="prism_blue.gif" alt="Prism Spark quanh khối nhân vật, màu đang chọn"><div class="lbl one"><span>Tốc độ thật · nhân vật cao 120 px</span></div></figure>
+    <div class="pair">
+      <figure><img id="v2game" src="prism_blue_game.gif" alt="Prism Spark ở cỡ game"><div class="lbl one"><span>Cỡ game · thân cao 60 px</span></div></figure>
+      <div class="note"><p><b>Lệnh tạo lại</b></p><p><code>python lib-fx/_tools/vectorfx.py gen-lightning NAME --style prism --colour blue|gold|red|purple|green</code></p></div>
+    </div>
+  </section>
+
+  <script>
+  (function () {
+    var C = [{id: "blue", name: "Xanh dương", sw: "#8fc7ff"}, {id: "gold", name: "Vàng", sw: "#ffd77a"}, {id: "red", name: "Đỏ", sw: "#ff8a8a"},
+             {id: "purple", name: "Tím", sw: "#c79bff"}, {id: "green", name: "Xanh lá", sw: "#8cf59a"}];
+    var cur = "blue";
+    try { cur = localStorage.getItem("lz-v2") || cur; } catch (e) {}
+    function draw() {
+      var box = document.getElementById("v2colours");
+      box.textContent = "";
+      C.forEach(function (c) {
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "chip" + (c.id === cur ? " on" : "");
+        b.setAttribute("aria-pressed", c.id === cur ? "true" : "false");
+        var d = document.createElement("i"); d.style.background = c.sw; b.appendChild(d);
+        b.appendChild(document.createTextNode(c.name));
+        b.addEventListener("click", function () { cur = c.id; try { localStorage.setItem("lz-v2", cur); } catch (e) {} draw(); });
+        box.appendChild(b);
+      });
+      document.getElementById("v2main").src = "prism_" + cur + ".gif";
+      document.getElementById("v2game").src = "prism_" + cur + "_game.gif";
+    }
+    draw();
+  })();
+  </script>
+
+  <section class="card blue" id="spark">
+    <div class="head"><h2>Prism Spark · “Điện lăng kính” (remake)</h2><span class="tag">đã duyệt · 52 khung · 25 fps</span></div>
+    <p class="lead">Trái là bản gốc, phải là bản remake vector, cùng tốc độ. Tia điện ngoằn ngoèo, lõi trắng, viền tách màu (xanh ngọc phía trên-trái, hồng phía dưới-phải) và quầng xanh mềm.</p>
+    <figure><img src="spark_compare.gif" alt="Tia điện tách màu: bản gốc bên trái, bản remake bên phải"><div class="lbl"><span>Gốc</span><span>Remake</span></div></figure>
+    <div class="stats">
+      <div class="stat"><small>Diện tích dựng / gốc</small><b class="ok">1,06</b></div>
+      <div class="stat"><small>Bề rộng nét dựng / gốc</small><b class="ok">1,00</b></div>
+      <div class="stat"><small>Khung đạt (0,8-1,25)</small><b>40/50</b></div>
+    </div>
+    <ul>
+      <li>Viền tách màu dựng đúng cách người vẽ làm: hai bản của nét trắng dịch lệch hai phía, một tô xanh ngọc, một tô hồng, nằm dưới nét trắng.</li>
+      <li>Quầng đo từ bản gốc, ép về đúng sắc xanh để không bị trắng loá quanh nét.</li>
+      <li>Còn hụt: vài nét rất mảnh chỉ có màu viền (không có lõi trắng) bị đứt đoạn.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="studio">
+    <div class="head"><h2>Xưởng sét: chọn dáng và màu</h2><span class="tag" style="color:var(--muted)">phong cách VFX chính</span></div>
+    <p class="lead">Mọi dáng đều dùng chính hình vẽ của bản remake, chỉ đặt lại theo dáng nhân vật. Bấm một dáng và một màu để xem.</p>
+    <div class="chips" id="poses" role="group" aria-label="Dáng"></div>
+    <div class="chips" id="colours" role="group" aria-label="Màu"></div>
+    <figure><img id="main" src="wrap_blue.gif" alt="Hiệu ứng sét theo dáng và màu đang chọn"><div class="lbl one"><span id="cap">Tốc độ thật · nhân vật cao 120 px</span></div></figure>
+    <div class="pair">
+      <figure><img id="game" src="wrap_blue_game.gif" alt="Cỡ trong game"><div class="lbl one"><span>Cỡ game · thân cao 60 px</span></div></figure>
+      <div class="note" id="desc"></div>
+    </div>
+  </section>
+
+  <script>
+  (function () {
+    var POSES = [
+      {id: "wrap", name: "Vận sức quanh thân", ok: true, d: "Hai tia đánh xuống hai bên (một sau lưng, một trước người) và một cung quấn quanh thân như trên ống trụ."},
+      {id: "arm", name: "Tung chiêu tay ngang", ok: true, d: "Hai cung xoắn quanh cánh tay giơ ngang như lò xo, một tia phóng ra từ bàn tay."},
+      {id: "raise", name: "Gọi sét (tay giơ lên)", ok: false, d: "Tay giơ thẳng lên trời, tia từ trời đánh vào bàn tay, cung xoắn quanh tay và quanh thân."},
+      {id: "dual", name: "Dang hai tay", ok: false, d: "Mỗi tay một cung xoắn ngược chiều nhau, hai tia phóng ra hai phía, lệch nhịp nửa vòng."},
+      {id: "slam", name: "Đập xuống đất", ok: false, d: "Tay chéo xuống, tia từ bàn tay đánh xuống mặt đất phía trước (chớp nằm phẳng trên đất), thêm tia trời đánh sau lưng."},
+      {id: "thrust", name: "Phóng chéo lên", ok: false, d: "Tay chếch lên 35 độ, hai cung xoắn quanh tay, tia phóng theo hướng tay."}
+    ];
+    var COLOURS = [
+      {id: "blue", name: "Xanh dương", sw: "#7fd8ff"}, {id: "gold", name: "Vàng", sw: "#ffd77a"},
+      {id: "red", name: "Đỏ", sw: "#ff7a86"}, {id: "purple", name: "Tím", sw: "#c79bff"}, {id: "green", name: "Xanh lá", sw: "#8cf59a"}
+    ];
+    var pose = "wrap", colour = "blue";
+    try { pose = localStorage.getItem("lz-pose") || pose; colour = localStorage.getItem("lz-colour") || colour; } catch (e) {}
+    function chip(box, item, on, click, sw) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "chip" + (on ? " on" : "");
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      if (sw) { var d = document.createElement("i"); d.style.background = sw; b.appendChild(d); }
+      b.appendChild(document.createTextNode(item.name));
+      if (item.ok) { var t = document.createElement("small"); t.textContent = "đạt"; b.appendChild(t); }
+      b.addEventListener("click", click); box.appendChild(b);
+    }
+    function render() {
+      var P = document.getElementById("poses"), C = document.getElementById("colours");
+      P.textContent = ""; C.textContent = "";
+      POSES.forEach(function (p) { chip(P, p, p.id === pose, function () { pose = p.id; save(); render(); }); });
+      COLOURS.forEach(function (c) { chip(C, c, c.id === colour, function () { colour = c.id; save(); render(); }, c.sw); });
+      document.getElementById("main").src = pose + "_" + colour + ".gif";
+      document.getElementById("game").src = pose + "_" + colour + "_game.gif";
+      var p = POSES.filter(function (x) { return x.id === pose; })[0];
+      var c = COLOURS.filter(function (x) { return x.id === colour; })[0];
+      document.getElementById("desc").innerHTML = "<p><b>" + p.name + "</b> · " + c.name + (p.ok ? " · <span class='ok'>đã duyệt</span>" : " · chờ bạn chấm") + "</p><p class='lead'>" + p.d + "</p>";
+    }
+    function save() { try { localStorage.setItem("lz-pose", pose); localStorage.setItem("lz-colour", colour); } catch (e) {} }
+    render();
+  })();
+  </script>
+
+  <section class="card gold" id="strike">
+    <div class="head"><h2>Sét vàng đánh xuống đất</h2><span class="tag">strike · 17 hình / 0,77 s</span></div>
+    <figure class="narrow"><img src="strike.gif" alt="Sét vàng: bản gốc bên trái, bản remake bên phải"><div class="lbl"><span>Gốc</span><span>Remake</span></div></figure>
+    <div class="stats">
+      <div class="stat"><small>Diện tích dựng / gốc</small><b class="ok">0,92</b></div>
+      <div class="stat"><small>Bề rộng nét dựng / gốc</small><b class="ok">1,12</b></div>
+      <div class="stat"><small>Hình đạt (0,8-1,25)</small><b>13/16</b></div>
+      <div class="stat"><small>Khung đen: IoU</small><b class="ok">0,90</b></div>
+    </div>
+    <p class="lead">Lệch: mảnh vụn cuối (hình 7) và hình có chớp đất to (hình 14).</p>
+  </section>
+
+  <section class="card blue" id="bolt">
+    <div class="head"><h2>Sét xanh lớn từ trên xuống</h2><span class="tag">bolt · 20 hình / 1,0 s</span></div>
+    <figure><img src="bolt.gif" alt="Sét xanh lớn: bản gốc bên trái, bản remake bên phải"><div class="lbl"><span>Gốc</span><span>Remake</span></div></figure>
+    <div class="stats">
+      <div class="stat"><small>Diện tích dựng / gốc</small><b class="ok">1,02</b></div>
+      <div class="stat"><small>Bề rộng nét dựng / gốc</small><b class="ok">1,03</b></div>
+      <div class="stat"><small>Hình đạt (0,8-1,25)</small><b>18/18</b></div>
+      <div class="stat"><small>Khung đen: IoU</small><b class="ok">0,90</b></div>
+    </div>
+  </section>
+
+  <section class="card blue" id="arc">
+    <div class="head"><h2>Cung sét xanh bò ngang</h2><span class="tag">arc · 19 hình / 1,0 s</span></div>
+    <figure><img src="arc.gif" alt="Cung sét xanh: bản gốc bên trái, bản remake bên phải"><div class="lbl"><span>Gốc</span><span>Remake</span></div></figure>
+    <div class="stats">
+      <div class="stat"><small>Diện tích dựng / gốc</small><b class="ok">0,99</b></div>
+      <div class="stat"><small>Bề rộng nét dựng / gốc</small><b class="ok">1,12</b></div>
+      <div class="stat"><small>Hình đạt (0,8-1,25)</small><b>15/17</b></div>
+      <div class="stat"><small>Cú đánh / giây</small><b>3</b></div>
+    </div>
+    <p class="lead">Lệch: hai mảnh vụn cuối (hình 14, 15) dựng hơi béo vì mũi vuốt bị làm tròn.</p>
+  </section>
+
+  <section class="card" id="formula">
+    <div class="head"><h2>Công thức một cú sét</h2><span class="tag" style="color:var(--muted)">6-10 hình ở 24 fps</span></div>
+    <div class="phases">
+      <span>mồi (0-1)</span><span>quệt rộng ×2-3 (1)</span><span>chạm đất + chớp elip (1-2)</span><span>mỏng ×0,5-0,6 (1-3)</span><span class="ink">khung đen, quầng ×2-3 (1)</span><span>vỡ 3-12 vuốt nhọn (3-5)</span><span>trống (2-6 frame)</span>
+    </div>
+    <ul>
+      <li>Mỗi hình vẽ lại cả tia theo cùng đường gấp khúc; điểm gập dịch 5-20 px mỗi hình. Không nội suy.</li>
+      <li>Thân: một màu lõi sáng phẳng, mép đậm hơn cùng sắc (gradient 3-8 px). Không có viền tối.</li>
+      <li>Quầng: bản làm nhoè của hình, hai tầng (sát nét và rộng). Quầng <b>mạnh lên</b> khi tia vỡ, ngược với hiệu ứng nổ.</li>
+      <li>Chớp đất: elip 4:1, màu bão hoà, quầng elip rộng ngang. Chỉ ở hình chạm đất.</li>
+      <li>Khung đen nằm ở hình thứ hai sau cú chạm, cùng đường tia.</li>
+      <li>Cú sau đánh theo đường khác, không lặp đường cũ.</li>
+    </ul>
+    <div class="note">
+      <p>Đầy đủ (lớp, màu, nhịp, số đo hình, bẫy, lệnh dựng lại): <code>lib-fx/_core/formulas/rules/vfx/lightning/README.md</code></p>
+      <p class="lead">Chấm mỗi hiệu ứng trên thang 10 và ghi chỗ nào chưa giống trong chat; mình sửa theo đó.</p>
+    </div>
+  </section>
+</div>
