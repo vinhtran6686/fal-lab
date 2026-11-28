@@ -43,7 +43,7 @@ Họ hiệu ứng cũ (khai báo `VARIANTS`: `force/shock`, `impact/hit`, `impac
 | # | Việc | Ở đâu | Ai / trạng thái |
 |---|---|---|---|
 | 1 | Chém ngang `azure_blade` **xong** (S4 + S4b đạt, `frames/skill_sweep_side/`, manifest ✅) | `slash-round-02/PLAN.md` | xong |
-| 2 | **R1b** flame-burst làm lại (vỏ khói sáng, khói không quầng, công cụ đo độc lập `rebuild_check.py`) | `vfx-rebuild-02/R1b-flame-burst-smoke.md` | **TẠM DỪNG** (người dùng, 2026-11-14); task giữ nguyên, làm trước R2b khi mở lại |
+| 2 | **R1b** flame-burst làm lại (vỏ khói sáng, khói không quầng, công cụ đo độc lập `rebuild_check.py`) | `vfx-rebuild-02/R1b-flame-burst-smoke.md` | **TẠM DỪNG** (người dùng, 2026-11-14); task giữ nguyên, làm trước R2b khi mở lại. **Bước 1 đã xong** (2026-11-28): `lib-fx/_tools/rebuild_check.py` có đúng giao diện R1b (`--mode bright\|dark`, thêm `--bright`, `--dark-l`, `--dark-d`), đừng viết lại |
 | 3 | **R2b** lightning làm lại (nét mảnh như gốc, nhánh mờ, quầng đổi màu ở khung chớp) | `vfx-rebuild-02/R2b-lightning-thin.md` | **TẠM DỪNG** (người dùng, 2026-11-14); cần công cụ của R1b |
 | 4 | **S5** việc nhỏ từ review chém ngang (7 việc: tài liệu `action-planes.md`, phần trăm trong prompt pose C, `swing_fit` vào `meta.json`, `rebuild` dùng `shlex.join`, định nghĩa đo độ dày, tia lửa cắt chân, test ba điểm) | `slash-round-02/S5-sweep-review-leftovers.md` | đã viết task, giao cùng lúc với S3 |
 | 5 | **R3** xuất số đo cho H1-H8 và `METHOD.md` (chỉ sau khi R1b, R2b đạt; dùng `rebuild_check.py`, không dùng `report.json`) | `vfx-rebuild-02/R3-export-measurements.md` | chờ |
