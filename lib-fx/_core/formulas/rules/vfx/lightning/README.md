@@ -139,15 +139,27 @@ từng mảnh, không theo tổng diện tích: mảnh vụn vẫn chói. Ngư�
 
 ## 7. Bộ sinh và việc tiếp theo
 
-**Bộ sinh đầu tiên: `aura`** (sét bao quanh nhân vật khi gồng chiêu), `python lib-fx/_tools/vectorfx.py gen-lightning NAME [--frame SEED]`,
-code [`vector/gen_lightning.py`](../../../vector/gen_lightning.py), kết quả [generated/gen-lightning-aura-blue](../../../../results/vector-showcase/generated/gen-lightning-aura-blue/).
-Lấy từ công thức: bảng pha một cú (§3, §5.1), vẽ lại mỗi hình với điểm gập dịch (§5.2), bề rộng theo pha (§5.3), vỡ thành vuốt tại chỗ (§5.4;
-kiểm: diện tích còn 0,56-0,74 mỗi hình vỡ, tối đa 7 mảnh), chớp đất elip ở chân tia đứng (§5.5), một khung mực mỗi vòng (§5.6), quầng theo
-từng tia tăng 1,0 → 2,0 khi vỡ (§5.7); tia đứng mang kiểu `bolt` (lục lam, dày), cung quanh thân mang kiểu `arc` (lõi trắng, mỏng hơn);
-mọi số đo px nhân k = chiều cao vùng sét / 540. **Tự đặt ra** (không có trong bản gốc): đường xoắn quanh trục thân (vòng elip nghiêng 0,24,
-bán kính 0,5-0,6 H, đi lên 0,35-0,45 H), độ sâu = sin θ tách mỗi cung thành phần sau thân và trước thân, lịch 8 tia so le trong 24 hình (luôn
-2-3 tia sống, không có hình trống), quầng ×1,5, bề rộng cung 18 (đo 15) để mảnh vỡ còn ≥ 1,5 px ở cỡ game.
+**Bộ sinh: `charge`** (nhân vật vận sức, sét bao quanh), `python lib-fx/_tools/vectorfx.py gen-lightning NAME [--frame SEED]`,
+code [`vector/gen_lightning.py`](../../../vector/gen_lightning.py), kết quả [generated/gen-lightning-charge-blue](../../../../results/vector-showcase/generated/gen-lightning-charge-blue/)
+(`sketch.png`: nét phẳng ở đầu / đỉnh / cuối + đường bao kích thước).
 
-Việc tiếp theo: user chấm `aura`; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
+Luật cho sét bao quanh nhân vật (từ nhận xét của user 2026-11-28 về bản `aura` đầu tiên: "thô, cứng, chưa bao quanh, có tia đi hàng dọc"):
+1. **Mọi tia nằm trên một vỏ kén** (elip 0,56 H × 0,80 H quanh thân, nhìn hơi từ trên); không có tia đứng riêng lẻ. Phác nét một màu trước, kiểm
+   xem đã thành một hình kín chưa, rồi mới lên màu và quầng.
+2. **Vai trò**: tia viền chạy theo đường bao của kén (chính là hình bóng, dài, có một nhánh rẽ); tia xoắn đi vòng quanh **cùng một chiều** và chéo lên
+   30-50° (không thành vạch ngang), 80 % ở sau thân; phần cắt ngang trước thân ít và mảnh hơn (×0,6) để nhân vật vẫn là tâm điểm; tia lửa ngắn ở viền.
+   Kiểm "bao kín": chia vỏ thành 12 cung, mỗi 3 hình liên tiếp ở pha giữ phải chạm ≥ 10 cung (đạt 10-12).
+3. **Nét thanh mảnh ở mọi kích thước**: ~1,1 px ở cỡ game (thân 60 px), phình tối đa ×1,6 ở 1-2 điểm gập, hai đầu nhọn. Bề rộng tính bằng px tuyệt
+   đối, không nhân theo độ lớn của kén; số điểm gập theo chiều dài tia (cách nhau 0,16 H), nên kén nhỏ có tia ngắn ít gập.
+4. **Không cứng**: các đoạn cạnh nhau dài chênh 2-5 lần, mỗi đoạn hơi cong, vài điểm gập thật + rung nhỏ mỗi hình. Mảnh vỡ ngắn hơn 0,05 H bị bỏ
+   (trông như chấm).
+5. **Đường bao của cả hiệu ứng**: lớn dần (kén 0,3 → 1, nhanh rồi chậm, 33 % thời gian) → giữ (thở ±3 %) → thu lại (1 → 0,55) và tắt dần; một đường
+   cường độ điều khiển số tia sinh ra, quầng và độ đục; không sinh tia mới ở 8 hình cuối nên hình cuối trống. 44 hình ở 24 fps (1,8 s). Từng tia vẫn
+   giữ bảng pha đã đo (mọc từ một đầu → đủ → mỏng → vỡ thành vuốt tại chỗ, quầng tăng 1,0 → 1,9).
+6. Bỏ khung mực đen và chớp đất cho kiểu này (làm hiệu ứng thô).
+
+**Tự đặt ra** (không có trong bản gốc): vỏ kén và vai trò tia, đường bao, nhánh rẽ, quầng ×1,6, quầng vận sức mờ sau thân.
+
+Việc tiếp theo: user chấm `charge`; tách thành vào / giữ lặp / ra để thời gian gồng thay đổi được; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
 đưa hiệu ứng duyệt vào `lib-fx/element/lightning/` (hiện chưa có hiệu ứng nào).
 - Xuất bản dựng theo chuẩn lib-fx (nền trong suốt, @2x, `sheet.png`, `meta.json`): chưa có cho mọi bản dựng vector (`vector/README.md` §9 E).
