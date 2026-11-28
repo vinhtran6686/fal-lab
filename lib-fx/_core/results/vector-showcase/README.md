@@ -30,6 +30,8 @@ Bản gốc: `ref/vfx/swirl-slash/`, `ref/vfx/element-trio/`, `ref/vfx/slash-tri
 
 ## Hiệu ứng sinh mới (không có bản gốc)
 
+Mỗi bản `gen-lightning-*` có thêm `colours/<gold|red|purple|green>.gif` (và `_game.gif`): cùng hiệu ứng ở màu khác (`--colour ... --preview-only`).
+
 | Tên | Lệnh | Thư mục | Trang |
 |---|---|---|---|
 | Nhát chém ngang xanh | `vectorfx.py gen-slash gen-slash-blue --variant blue --frame 7` | [generated/gen-slash-blue](generated/gen-slash-blue/) (`preview.gif`, `frames/`, `svg/`, `design.json`) | https://claude.ai/artifact/WSPsgRkzRos6fW6BfDrsNM |
@@ -39,4 +41,8 @@ Bản gốc: `ref/vfx/swirl-slash/`, `ref/vfx/element-trio/`, `ref/vfx/slash-tri
 | Chém đôi chữ X tuần tự, vàng | `vectorfx.py gen-slash gen-slash-x-gold --style x` | [generated/gen-slash-x-gold](generated/gen-slash-x-gold/) (`sheet.png`, `fx_meta.json`) | https://claude.ai/artifact/JrmYvD4FCabP17GaeLUyVP |
 | **Đã duyệt (user 2026-11-28, phong cách sét chuẩn).** Sét quanh nhân vật, dùng chính hình vector của bản remake `lightning-2`: hai tia `bolt` đánh xuống hai bên (một sau, một trước thân), một cung `arc` quấn quanh thân (nửa sau bị che) | `vectorfx.py gen-lightning gen-lightning-wrap-blue` | [generated/gen-lightning-wrap-blue](generated/gen-lightning-wrap-blue/) (`preview.gif` có khối thân thay nhân vật, `preview_game.gif` thân cao 60 px, `back/` `front/` RGBA chỉ có hiệu ứng, `design.json`) | https://claude.ai/artifact/4cbfa2MD123GvG3iVK3ubb |
 | Sét quanh cánh tay giơ ngang (cùng phong cách đã duyệt): 2 cung remake xoắn quanh tay (lò xo, mặt sau bị tay che) + 1 tia remake phóng từ bàn tay | `vectorfx.py gen-lightning gen-lightning-arm-blue --style arm` | [generated/gen-lightning-arm-blue](generated/gen-lightning-arm-blue/) | https://claude.ai/artifact/4cbfa2MD123GvG3iVK3ubb |
+| Gọi sét: tay giơ thẳng lên, tia từ trời đánh vào bàn tay, cung xoắn quanh tay + quanh thân (phong cách đã duyệt, chờ chấm) | `vectorfx.py gen-lightning gen-lightning-raise-blue --style raise` | [generated/gen-lightning-raise-blue](generated/gen-lightning-raise-blue/) | https://claude.ai/artifact/4cbfa2MD123GvG3iVK3ubb |
+| Dang hai tay: cung xoắn quanh mỗi tay, tia phóng ra hai phía (phong cách đã duyệt, chờ chấm) | `vectorfx.py gen-lightning gen-lightning-dual-blue --style dual` | [generated/gen-lightning-dual-blue](generated/gen-lightning-dual-blue/) | https://claude.ai/artifact/4cbfa2MD123GvG3iVK3ubb |
+| Đập đất: tay chéo xuống, tia từ bàn tay đánh xuống đất phía trước, tia trời đánh sau lưng (phong cách đã duyệt, chờ chấm) | `vectorfx.py gen-lightning gen-lightning-slam-blue --style slam` | [generated/gen-lightning-slam-blue](generated/gen-lightning-slam-blue/) | https://claude.ai/artifact/4cbfa2MD123GvG3iVK3ubb |
+| Phóng chéo lên: cung xoắn quanh tay, tia phóng theo hướng tay (phong cách đã duyệt, chờ chấm) | `vectorfx.py gen-lightning gen-lightning-thrust-blue --style thrust` | [generated/gen-lightning-thrust-blue](generated/gen-lightning-thrust-blue/) | https://claude.ai/artifact/4cbfa2MD123GvG3iVK3ubb |
 | Combo 2 nhát: quét ngang + bổ xuống có toé | `vectorfx.py gen-slash gen-slash-combo-blue --style combo --dummy` (`preview_dummy.gif`: có hình nộm) | [generated/gen-slash-combo-blue](generated/gen-slash-combo-blue/) | https://claude.ai/artifact/6XeNBdLFJbwNAS9BwEuqYp |

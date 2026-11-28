@@ -1,0 +1,354 @@
+{
+ "style": "thrust",
+ "colour": "blue",
+ "params": {
+  "H": 240,
+  "body_w": 0.36,
+  "game_H": 60,
+  "fps": 30,
+  "loop": 30,
+  "bg": [
+   38,
+   37,
+   46
+  ],
+  "floor": [
+   58,
+   58,
+   72
+  ],
+  "arc_box": [
+   700,
+   640
+  ],
+  "arc_x": [
+   55,
+   640
+  ],
+  "arc_y": [
+   135,
+   590
+  ],
+  "strike": {
+   "ground": [
+    340,
+    556
+   ],
+   "top": 5,
+   "height": 1.35
+  },
+  "canvas": [
+   3.1,
+   2.6
+  ],
+  "feet": 2.45,
+  "body_x": 0.75,
+  "arms": [
+   {
+    "side": 1,
+    "angle": 35,
+    "length": 0.85,
+    "thick": 0.11,
+    "y": 0.22
+   }
+  ],
+  "instances": [
+   {
+    "kind": "wrap_axis",
+    "v": "arc",
+    "arm": 0,
+    "x": [
+     -0.05,
+     1.12
+    ],
+    "R": 0.17,
+    "twist": 1.2,
+    "th0": 0,
+    "dth": 360,
+    "mirror": false,
+    "offset": 0
+   },
+   {
+    "kind": "wrap_axis",
+    "v": "arc",
+    "arm": 0,
+    "x": [
+     0.1,
+     1.2
+    ],
+    "R": 0.21,
+    "twist": -0.9,
+    "th0": 140,
+    "dth": 360,
+    "mirror": true,
+    "offset": 14
+   },
+   {
+    "kind": "bolt2",
+    "v": "bolt",
+    "src": [
+     "hand",
+     0
+    ],
+    "dst": [
+     "along",
+     0,
+     1.0
+    ],
+    "depth": 1,
+    "offset": 7
+   }
+  ]
+ },
+ "frames": [
+  {
+   "frame": 0,
+   "drawings": [
+    "arc:0",
+    "arc:10",
+    "bolt:6"
+   ]
+  },
+  {
+   "frame": 1,
+   "drawings": [
+    "arc:1",
+    "arc:10",
+    "bolt:6"
+   ]
+  },
+  {
+   "frame": 2,
+   "drawings": [
+    "arc:2",
+    "arc:10",
+    "bolt:7"
+   ]
+  },
+  {
+   "frame": 3,
+   "drawings": [
+    "arc:2",
+    "arc:10",
+    "bolt:8"
+   ]
+  },
+  {
+   "frame": 4,
+   "drawings": [
+    "arc:3",
+    "arc:10",
+    "bolt:9"
+   ]
+  },
+  {
+   "frame": 5,
+   "drawings": [
+    "arc:3",
+    "arc:10",
+    "bolt:10"
+   ]
+  },
+  {
+   "frame": 6,
+   "drawings": [
+    "arc:4",
+    "arc:11",
+    "bolt:10"
+   ]
+  },
+  {
+   "frame": 7,
+   "drawings": [
+    "arc:5",
+    "arc:12",
+    "bolt:11"
+   ]
+  },
+  {
+   "frame": 8,
+   "drawings": [
+    "arc:5",
+    "arc:13",
+    "bolt:12"
+   ]
+  },
+  {
+   "frame": 9,
+   "drawings": [
+    "arc:6",
+    "arc:13",
+    "bolt:13"
+   ]
+  },
+  {
+   "frame": 10,
+   "drawings": [
+    "arc:7",
+    "arc:14",
+    "bolt:14"
+   ]
+  },
+  {
+   "frame": 11,
+   "drawings": [
+    "arc:8",
+    "arc:15",
+    "bolt:14"
+   ]
+  },
+  {
+   "frame": 12,
+   "drawings": [
+    "arc:9",
+    "arc:16",
+    "bolt:14"
+   ]
+  },
+  {
+   "frame": 13,
+   "drawings": [
+    "arc:9",
+    "arc:17",
+    "bolt:15"
+   ]
+  },
+  {
+   "frame": 14,
+   "drawings": [
+    "arc:10",
+    "arc:17",
+    "bolt:16"
+   ]
+  },
+  {
+   "frame": 15,
+   "drawings": [
+    "arc:10",
+    "arc:18",
+    "bolt:16"
+   ]
+  },
+  {
+   "frame": 16,
+   "drawings": [
+    "arc:10",
+    "arc:0",
+    "bolt:16"
+   ]
+  },
+  {
+   "frame": 17,
+   "drawings": [
+    "arc:10",
+    "arc:1",
+    "bolt:16"
+   ]
+  },
+  {
+   "frame": 18,
+   "drawings": [
+    "arc:10",
+    "arc:2",
+    "bolt:16"
+   ]
+  },
+  {
+   "frame": 19,
+   "drawings": [
+    "arc:10",
+    "arc:2",
+    "bolt:17"
+   ]
+  },
+  {
+   "frame": 20,
+   "drawings": [
+    "arc:11",
+    "arc:3",
+    "bolt:18"
+   ]
+  },
+  {
+   "frame": 21,
+   "drawings": [
+    "arc:12",
+    "arc:3",
+    "bolt:18"
+   ]
+  },
+  {
+   "frame": 22,
+   "drawings": [
+    "arc:13",
+    "arc:4",
+    "bolt:19"
+   ]
+  },
+  {
+   "frame": 23,
+   "drawings": [
+    "arc:13",
+    "arc:5",
+    "bolt:0"
+   ]
+  },
+  {
+   "frame": 24,
+   "drawings": [
+    "arc:14",
+    "arc:5",
+    "bolt:1"
+   ]
+  },
+  {
+   "frame": 25,
+   "drawings": [
+    "arc:15",
+    "arc:6",
+    "bolt:2"
+   ]
+  },
+  {
+   "frame": 26,
+   "drawings": [
+    "arc:16",
+    "arc:7",
+    "bolt:2"
+   ]
+  },
+  {
+   "frame": 27,
+   "drawings": [
+    "arc:17",
+    "arc:8",
+    "bolt:3"
+   ]
+  },
+  {
+   "frame": 28,
+   "drawings": [
+    "arc:17",
+    "arc:9",
+    "bolt:4"
+   ]
+  },
+  {
+   "frame": 29,
+   "drawings": [
+    "arc:18",
+    "arc:9",
+    "bolt:5"
+   ]
+  }
+ ],
+ "check": {
+  "scale_strike": 0.588,
+  "scale_wrap": [
+   0.48,
+   0.451,
+   0.436
+  ],
+  "stroke_px_below_floor": 0
+ }
+}

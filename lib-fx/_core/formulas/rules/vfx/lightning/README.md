@@ -191,6 +191,30 @@ gì nằm dưới mặt đất (ghim điểm chạm đất, cắt phần dưới
    - `wrap` (quanh thân, đã duyệt): 2 `strike` (sau thân, trước thân lật ngang, lệch nửa vòng) + 1 `wrap`.
    - `arm` (quanh tay giơ ngang): 2 `wrap_h` (xoắn ngược chiều nhau, bán kính 0,17 / 0,21 H) + 1 `shoot` từ bàn tay dài 0,95 H.
 
+### 7.2 Phong cách VFX chính của game và các dáng chiêu
+
+**Đây là phong cách chính để làm VFX cho game 2D của dự án** (user 2026-11-28, sau khi duyệt `wrap` và `arm`): hình vẽ tay đã dựng lại thành
+vector (khối phẳng màu dịu, gradient mép cùng sắc, quầng mềm hai tầng, khung đảo màu đen, nhịp vẽ tay), đặt vào dáng nhân vật bằng biến đổi hình học
+có vật lý (§7.1). Không vẽ hiệu ứng mới bằng nét code thô khi đã có bản remake phù hợp; hiệu ứng loại khác (lửa, băng...) đi cùng đường: remake một
+mẫu vẽ tay tới 9-10/10 → dùng hình của nó, chỉ biến đổi hình học, màu, nhịp lệch pha.
+
+| Dáng (`--style`) | Ý chiêu | Lớp | Trạng thái |
+|---|---|---|---|
+| `wrap` | vận sức, sét bao quanh thân | 2 `strike` (sau / trước thân) + 1 `wrap` | **đạt** (2026-11-28) |
+| `arm` | tung chiêu bằng tay giơ ngang | 2 `wrap_h` xoắn quanh tay + 1 `shoot` từ bàn tay | **đạt** (2026-11-28) |
+| `raise` | gọi sét: tay giơ thẳng lên trời | 1 `bolt2` trời → bàn tay (chớp va chạm ở tay) + 1 `wrap_axis` quanh tay đứng + 1 `wrap` quanh thân | chờ chấm |
+| `dual` | dang hai tay | 2 `wrap_axis` (mỗi tay một cung, xoắn ngược) + 2 `bolt2` phóng ra hai phía | chờ chấm |
+| `slam` | đập xuống đất: tay chéo xuống 50° | 1 `wrap_axis` quanh tay + 1 `bolt2` bàn tay → mặt đất phía trước (chớp đất nằm phẳng) + 1 `bolt2` trời → đất sau lưng | chờ chấm |
+| `thrust` | phóng chéo lên 35° | 2 `wrap_axis` quanh tay + 1 `bolt2` phóng theo hướng tay | chờ chấm |
+
+Lớp mới cho dáng tự do: tay là thanh từ vai theo góc bất kỳ (`arms`: `side`, `angle` 0 = ngang phải, 90 = thẳng lên, `length`, `thick`, `y` vai);
+`wrap_axis` = trụ dọc theo tay bất kỳ; `bolt2` = tia giữa hai điểm vật lý (`hand`, `along` theo hướng tay, `ground` trên mặt đất, `sky` mép trên),
+mỗi hình tính lại phép đồng dạng (đầu tia của hình đó → điểm nguồn, điểm chạm đất gốc → điểm đích); `flash_flat` giữ chớp đất nằm ngang trên mặt đất.
+
+**Màu** (`--colour`): `blue` (gốc), `gold` (màu đo được của sét vàng `strike` cho thân, quầng, chớp), `red`, `purple`, `green` (xoay sắc mọi màu
+của bản remake quanh trục xám: +155°, +70°, −80°; giữ nguyên quan hệ sáng / tối và quầng). `--preview-only` chỉ ghi `colours/<màu>.gif` và
+`colours/<màu>_game.gif` cạnh bản xanh (không ghi đè frame của bản đã duyệt).
+
 Việc tiếp theo: đưa vào thư viện `lib-fx/element/lightning/aura/` (sheet, meta, @2x) khi cần cho nhân vật thật; thêm cung thứ hai hoặc đổi bán kính / độ nghiêng nếu cần; tách thành vào / giữ lặp / ra để thời gian gồng thay đổi được; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
 đưa hiệu ứng duyệt vào `lib-fx/element/lightning/` (hiện chưa có hiệu ứng nào).
 - Xuất bản dựng theo chuẩn lib-fx (nền trong suốt, @2x, `sheet.png`, `meta.json`): chưa có cho mọi bản dựng vector (`vector/README.md` §9 E).

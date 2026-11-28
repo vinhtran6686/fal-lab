@@ -1,0 +1,355 @@
+{
+ "style": "slam",
+ "colour": "blue",
+ "params": {
+  "H": 240,
+  "body_w": 0.36,
+  "game_H": 60,
+  "fps": 30,
+  "loop": 30,
+  "bg": [
+   38,
+   37,
+   46
+  ],
+  "floor": [
+   58,
+   58,
+   72
+  ],
+  "arc_box": [
+   700,
+   640
+  ],
+  "arc_x": [
+   55,
+   640
+  ],
+  "arc_y": [
+   135,
+   590
+  ],
+  "strike": {
+   "ground": [
+    340,
+    556
+   ],
+   "top": 5,
+   "height": 1.35
+  },
+  "canvas": [
+   3.4,
+   2.0
+  ],
+  "feet": 1.85,
+  "body_x": 1.1,
+  "arms": [
+   {
+    "side": 1,
+    "angle": -50,
+    "length": 0.78,
+    "thick": 0.11,
+    "y": 0.24
+   }
+  ],
+  "instances": [
+   {
+    "kind": "wrap_axis",
+    "v": "arc",
+    "arm": 0,
+    "x": [
+     -0.05,
+     1.1
+    ],
+    "R": 0.17,
+    "twist": 1.0,
+    "th0": 0,
+    "dth": 360,
+    "mirror": false,
+    "offset": 0
+   },
+   {
+    "kind": "bolt2",
+    "v": "bolt",
+    "src": [
+     "hand",
+     0
+    ],
+    "dst": [
+     "ground",
+     1.3
+    ],
+    "depth": 1,
+    "flash_flat": true,
+    "offset": 7
+   },
+   {
+    "kind": "bolt2",
+    "v": "bolt",
+    "src": [
+     "sky",
+     -0.45
+    ],
+    "dst": [
+     "ground",
+     -0.5
+    ],
+    "depth": -1,
+    "flash_flat": true,
+    "mirror": true,
+    "offset": 19
+   }
+  ]
+ },
+ "frames": [
+  {
+   "frame": 0,
+   "drawings": [
+    "arc:0",
+    "bolt:6",
+    "bolt:14"
+   ]
+  },
+  {
+   "frame": 1,
+   "drawings": [
+    "arc:1",
+    "bolt:6",
+    "bolt:15"
+   ]
+  },
+  {
+   "frame": 2,
+   "drawings": [
+    "arc:2",
+    "bolt:7",
+    "bolt:16"
+   ]
+  },
+  {
+   "frame": 3,
+   "drawings": [
+    "arc:2",
+    "bolt:8",
+    "bolt:16"
+   ]
+  },
+  {
+   "frame": 4,
+   "drawings": [
+    "arc:3",
+    "bolt:9",
+    "bolt:16"
+   ]
+  },
+  {
+   "frame": 5,
+   "drawings": [
+    "arc:3",
+    "bolt:10",
+    "bolt:16"
+   ]
+  },
+  {
+   "frame": 6,
+   "drawings": [
+    "arc:4",
+    "bolt:10",
+    "bolt:16"
+   ]
+  },
+  {
+   "frame": 7,
+   "drawings": [
+    "arc:5",
+    "bolt:11",
+    "bolt:17"
+   ]
+  },
+  {
+   "frame": 8,
+   "drawings": [
+    "arc:5",
+    "bolt:12",
+    "bolt:18"
+   ]
+  },
+  {
+   "frame": 9,
+   "drawings": [
+    "arc:6",
+    "bolt:13",
+    "bolt:18"
+   ]
+  },
+  {
+   "frame": 10,
+   "drawings": [
+    "arc:7",
+    "bolt:14",
+    "bolt:19"
+   ]
+  },
+  {
+   "frame": 11,
+   "drawings": [
+    "arc:8",
+    "bolt:14",
+    "bolt:0"
+   ]
+  },
+  {
+   "frame": 12,
+   "drawings": [
+    "arc:9",
+    "bolt:14",
+    "bolt:1"
+   ]
+  },
+  {
+   "frame": 13,
+   "drawings": [
+    "arc:9",
+    "bolt:15",
+    "bolt:2"
+   ]
+  },
+  {
+   "frame": 14,
+   "drawings": [
+    "arc:10",
+    "bolt:16",
+    "bolt:2"
+   ]
+  },
+  {
+   "frame": 15,
+   "drawings": [
+    "arc:10",
+    "bolt:16",
+    "bolt:3"
+   ]
+  },
+  {
+   "frame": 16,
+   "drawings": [
+    "arc:10",
+    "bolt:16",
+    "bolt:4"
+   ]
+  },
+  {
+   "frame": 17,
+   "drawings": [
+    "arc:10",
+    "bolt:16",
+    "bolt:5"
+   ]
+  },
+  {
+   "frame": 18,
+   "drawings": [
+    "arc:10",
+    "bolt:16",
+    "bolt:6"
+   ]
+  },
+  {
+   "frame": 19,
+   "drawings": [
+    "arc:10",
+    "bolt:17",
+    "bolt:6"
+   ]
+  },
+  {
+   "frame": 20,
+   "drawings": [
+    "arc:11",
+    "bolt:18",
+    "bolt:7"
+   ]
+  },
+  {
+   "frame": 21,
+   "drawings": [
+    "arc:12",
+    "bolt:18",
+    "bolt:8"
+   ]
+  },
+  {
+   "frame": 22,
+   "drawings": [
+    "arc:13",
+    "bolt:19",
+    "bolt:9"
+   ]
+  },
+  {
+   "frame": 23,
+   "drawings": [
+    "arc:13",
+    "bolt:0",
+    "bolt:10"
+   ]
+  },
+  {
+   "frame": 24,
+   "drawings": [
+    "arc:14",
+    "bolt:1",
+    "bolt:10"
+   ]
+  },
+  {
+   "frame": 25,
+   "drawings": [
+    "arc:15",
+    "bolt:2",
+    "bolt:11"
+   ]
+  },
+  {
+   "frame": 26,
+   "drawings": [
+    "arc:16",
+    "bolt:2",
+    "bolt:12"
+   ]
+  },
+  {
+   "frame": 27,
+   "drawings": [
+    "arc:17",
+    "bolt:3",
+    "bolt:13"
+   ]
+  },
+  {
+   "frame": 28,
+   "drawings": [
+    "arc:17",
+    "bolt:4",
+    "bolt:14"
+   ]
+  },
+  {
+   "frame": 29,
+   "drawings": [
+    "arc:18",
+    "bolt:5",
+    "bolt:14"
+   ]
+  }
+ ],
+ "check": {
+  "scale_strike": 0.588,
+  "scale_wrap": [
+   0.472,
+   0.279,
+   0.789
+  ],
+  "stroke_px_below_floor": 0
+ }
+}

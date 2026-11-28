@@ -3,6 +3,10 @@
 Nơi lưu trữ chuẩn cho mọi hiệu ứng (fx) của dự án, dùng chung cho toàn bộ nhân vật. Mỗi hiệu ứng được vẽ bằng code
 (0 USD, không gọi model) và lưu **riêng lẻ, không kèm nhân vật**. Nhân vật nào cần thì lấy từ đây ra dùng.
 
+**Phong cách VFX chính của game (user duyệt 2026-11-28):** remake một mẫu vẽ tay thành vector, rồi dùng chính hình của nó, chỉ biến đổi hình
+học theo dáng nhân vật (quấn quanh thân / tay trên hình trụ có mặt trước và sau, tia ghim vào điểm vật lý), lệch nhịp các lớp, đổi màu bằng bảng màu.
+Mẫu và cách làm: `_core/formulas/rules/vfx/lightning/README.md` §7 (sét: dáng `wrap`, `arm` đã duyệt; `raise`, `dual`, `slam`, `thrust`; 5 màu).
+
 **Tư duy xây lib-fx (mục tiêu, các bước tái tạo → mô tả → biên độ → gắn nhân vật, tái tạo và sáng tạo, thư mục anh em): [MINDSET.md](MINDSET.md).**
 **Bản đồ thư mục (mỗi nhóm, mỗi họ chứa gì): [GUIDE.md](GUIDE.md).**
 
