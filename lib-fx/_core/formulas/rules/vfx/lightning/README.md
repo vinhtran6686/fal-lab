@@ -139,28 +139,23 @@ từng mảnh, không theo tổng diện tích: mảnh vụn vẫn chói. Ngư�
 
 ## 7. Bộ sinh và việc tiếp theo
 
-**Bộ sinh: `crackle`** (sét lách tách quanh nhân vật đang vận sức), `python lib-fx/_tools/vectorfx.py gen-lightning NAME [--frame SEED]`,
-code [`vector/gen_lightning.py`](../../../vector/gen_lightning.py), kết quả [generated/gen-lightning-crackle-blue](../../../../results/vector-showcase/generated/gen-lightning-crackle-blue/)
-(`sketch.png`: nét phẳng của ba hình + đường cường độ và số tia sinh ra mỗi hình).
+**Sét quanh nhân vật: `wrap`**, `python lib-fx/_tools/vectorfx.py gen-lightning NAME`, code [`vector/gen_lightning.py`](../../../vector/gen_lightning.py),
+kết quả [generated/gen-lightning-wrap-blue](../../../../results/vector-showcase/generated/gen-lightning-wrap-blue/).
+Không vẽ sét mới: lấy chính các hình vector của bản remake (`bolt`, `arc`: svg từng hình), giữ nguyên màu, gradient mép, quầng và độ mạnh quầng từng
+hình, chớp đất, khung mực và nhịp (`exposure.json`); chỉ đổi hình học:
+- **Tia đánh xuống** (hình `bolt`): điểm chạm đất của bản gốc (đáy chớp đất) ghim vào mặt đất cạnh chân, nên không lố xuống đất; một tia sau thân,
+  một tia trước thân (lật ngang), lệch nhau nửa vòng lặp. Tỉ lệ 1,35 H / 551 px.
+- **Cung quấn quanh thân** (hình `arc`): coi như vẽ trên một hình trụ quanh trục thân: x của bản gốc → góc (300°), y → chiều cao (0,18-1,18 H); mỗi
+  điểm ảnh tra ngược mặt trước (sin > 0) và mặt sau riêng, nên nửa sau bị thân che, nửa trước vắt qua người, hình hẹp lại ở hai bên như dải quấn;
+  vòng nghiêng 0,22 (nửa trước thấp hơn). Phần dưới mặt đất bị cắt (mặt đất che).
+- Mọi số đo px (σ quầng, `s` gradient, mép chớp, quầng riêng) nhân theo tỉ lệ của từng lớp; vòng lặp = vòng lặp gốc (30 frame, 30 fps), ba lớp
+  lệch nhịp nhau.
 
-Luật cho sét quanh nhân vật, rút từ ba vòng nhận xét của user (2026-11-28):
-1. **Sét là nguyên tố ngẫu nhiên, không đồng bộ.** Bản `aura` (lịch so le đều) và `charge` (vỏ kén lớn-giữ-nhỏ đều) bị chê "xuất hiện đều, ẩn đều".
-   Mỗi hình do một quá trình ngẫu nhiên có seed quyết định: số tia mới ~ Poisson(1,7 × I + 0,25), 22 % × I là đợt bùng 3-5 tia, mỗi tia sống
-   2-5 hình (ngẫu nhiên), vài hình trống (nhấp nháy), ~18 % hình giữ 2 frame, quầng nhấp nháy ×0,75-1,3 mỗi hình. Cường độ I (lên, giữ, xuống)
-   cũng có nhiễu ×0,75-1,15. Nguồn: vẽ lại mỗi hình lỏng tay, trộn hình trống và nhấp nháy, càng ngẫu nhiên càng đọc ra sét (Johannes Fast; UE5
-   chọn biến thể ngẫu nhiên có cả ô trống).
-2. **Tia bám vào thân**: mọi tia bắt đầu trên đường viền thân (hai cạnh và đỉnh đầu, không bao giờ dưới chân); kiểu `crawl` quay lại thân (phình ra
-   0,10-0,35 H), `wrap` vắt từ cạnh này sang cạnh kia (70 % trước thân), `jump` bắn ra ngoài 0,3-0,7 H có 1-2 nhánh ngón tay, `spark` ngắn sát chân.
-   Tầm vươn tăng theo I. Không vẽ tia đứng riêng lẻ, không vỏ kén đều.
-3. **Không lố xuống đất**: toạ độ y bị kẹp trên mặt đất nửa bề rộng nét; kiểm `line_px_below_floor = 0`.
-4. **Bóng đen phía sau**: mỗi tia có một bản tối (6,8,22) rộng hơn ×1,7 + 0,01 H, lệch xuống phải 0,006 H × 0,010 H, vẽ sau quầng và trước nét sáng:
-   tia sáng nổi hẳn lên. Khoảng 1/8 tia sống từ 3 hình trở lên có **một hình mực** (tia đen trong quầng mạnh), đúng khung đảo màu đo được trên
-   `lightning-2` (strike 12, bolt 0). User nhận ra các nét đen đó trong bản remake là thứ làm sét sống động.
-5. **Nét thanh**: ~1,1 px ở cỡ game, đầu nhọn, điểm gập cách nhau ~0,085 H chênh 2-5 lần, đoạn hơi cong, điểm gập rung lại mỗi hình; tia kết thúc
-   bằng vỡ thành vuốt tại chỗ.
+Bài học từ bốn vòng nhận xét của user (2026-11-28): (1) **giữ phong cách của bản remake** (khối phẳng màu dịu, quầng mềm): vẽ lại bằng nét
+mảnh + bóng đen đậm (`crackle`) bị chê "đậm, tối, không tự nhiên"; (2) lịch đều hoặc đường bao đều (`aura`, `charge`) đọc ra máy móc, sét phải không
+đồng bộ: dùng chính nhịp vẽ tay của bản gốc và lệch pha các lớp; (3) sét bao quanh = có phần sau thân và phần trước thân, không tia đứng rời; (4) không
+gì nằm dưới mặt đất (ghim điểm chạm đất, cắt phần dưới); (5) các nét đen user thấy trong bản remake là **khung mực** (tia đen trong quầng), giữ nguyên.
 
-**Tự đặt ra** (không có trong bản gốc): điểm neo trên thân và bốn kiểu tia, quá trình ngẫu nhiên, độ lệch của bóng, quầng vận sức mờ sau thân.
-
-Việc tiếp theo: user chấm `crackle`; tách thành vào / giữ lặp / ra để thời gian gồng thay đổi được; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
+Việc tiếp theo: user chấm `wrap`; thêm cung thứ hai hoặc đổi bán kính / độ nghiêng nếu cần; tách thành vào / giữ lặp / ra để thời gian gồng thay đổi được; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
 đưa hiệu ứng duyệt vào `lib-fx/element/lightning/` (hiện chưa có hiệu ứng nào).
 - Xuất bản dựng theo chuẩn lib-fx (nền trong suốt, @2x, `sheet.png`, `meta.json`): chưa có cho mọi bản dựng vector (`vector/README.md` §9 E).

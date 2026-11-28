@@ -1,0 +1,326 @@
+{
+ "style": "wrap",
+ "params": {
+  "H": 240,
+  "canvas": [
+   2.8,
+   2.3
+  ],
+  "feet": 2.1,
+  "body_w": 0.36,
+  "game_H": 60,
+  "fps": 30,
+  "loop": 30,
+  "bg": [
+   38,
+   37,
+   46
+  ],
+  "floor": [
+   58,
+   58,
+   72
+  ],
+  "arc_box": [
+   700,
+   640
+  ],
+  "arc_x": [
+   55,
+   640
+  ],
+  "arc_y": [
+   135,
+   590
+  ],
+  "strike": {
+   "ground": [
+    340,
+    556
+   ],
+   "top": 5,
+   "height": 1.35
+  },
+  "instances": [
+   {
+    "kind": "strike",
+    "v": "bolt",
+    "x": 0.44,
+    "mirror": false,
+    "depth": -1,
+    "offset": 0
+   },
+   {
+    "kind": "strike",
+    "v": "bolt",
+    "x": -0.48,
+    "mirror": true,
+    "depth": 1,
+    "offset": 15
+   },
+   {
+    "kind": "wrap",
+    "v": "arc",
+    "th0": -70,
+    "dth": 300,
+    "y": [
+     0.18,
+     1.18
+    ],
+    "R": 0.48,
+    "tilt": 0.22,
+    "mirror": false,
+    "offset": 8
+   }
+  ]
+ },
+ "frames": [
+  {
+   "frame": 0,
+   "drawings": [
+    "bolt:0",
+    "bolt:12",
+    "arc:5"
+   ]
+  },
+  {
+   "frame": 1,
+   "drawings": [
+    "bolt:1",
+    "bolt:13",
+    "arc:6"
+   ]
+  },
+  {
+   "frame": 2,
+   "drawings": [
+    "bolt:2",
+    "bolt:14",
+    "arc:7"
+   ]
+  },
+  {
+   "frame": 3,
+   "drawings": [
+    "bolt:2",
+    "bolt:14",
+    "arc:8"
+   ]
+  },
+  {
+   "frame": 4,
+   "drawings": [
+    "bolt:3",
+    "bolt:14",
+    "arc:9"
+   ]
+  },
+  {
+   "frame": 5,
+   "drawings": [
+    "bolt:4",
+    "bolt:15",
+    "arc:9"
+   ]
+  },
+  {
+   "frame": 6,
+   "drawings": [
+    "bolt:5",
+    "bolt:16",
+    "arc:10"
+   ]
+  },
+  {
+   "frame": 7,
+   "drawings": [
+    "bolt:6",
+    "bolt:16",
+    "arc:10"
+   ]
+  },
+  {
+   "frame": 8,
+   "drawings": [
+    "bolt:6",
+    "bolt:16",
+    "arc:10"
+   ]
+  },
+  {
+   "frame": 9,
+   "drawings": [
+    "bolt:7",
+    "bolt:16",
+    "arc:10"
+   ]
+  },
+  {
+   "frame": 10,
+   "drawings": [
+    "bolt:8",
+    "bolt:16",
+    "arc:10"
+   ]
+  },
+  {
+   "frame": 11,
+   "drawings": [
+    "bolt:9",
+    "bolt:17",
+    "arc:10"
+   ]
+  },
+  {
+   "frame": 12,
+   "drawings": [
+    "bolt:10",
+    "bolt:18",
+    "arc:11"
+   ]
+  },
+  {
+   "frame": 13,
+   "drawings": [
+    "bolt:10",
+    "bolt:18",
+    "arc:12"
+   ]
+  },
+  {
+   "frame": 14,
+   "drawings": [
+    "bolt:11",
+    "bolt:19",
+    "arc:13"
+   ]
+  },
+  {
+   "frame": 15,
+   "drawings": [
+    "bolt:12",
+    "bolt:0",
+    "arc:13"
+   ]
+  },
+  {
+   "frame": 16,
+   "drawings": [
+    "bolt:13",
+    "bolt:1",
+    "arc:14"
+   ]
+  },
+  {
+   "frame": 17,
+   "drawings": [
+    "bolt:14",
+    "bolt:2",
+    "arc:15"
+   ]
+  },
+  {
+   "frame": 18,
+   "drawings": [
+    "bolt:14",
+    "bolt:2",
+    "arc:16"
+   ]
+  },
+  {
+   "frame": 19,
+   "drawings": [
+    "bolt:14",
+    "bolt:3",
+    "arc:17"
+   ]
+  },
+  {
+   "frame": 20,
+   "drawings": [
+    "bolt:15",
+    "bolt:4",
+    "arc:17"
+   ]
+  },
+  {
+   "frame": 21,
+   "drawings": [
+    "bolt:16",
+    "bolt:5",
+    "arc:18"
+   ]
+  },
+  {
+   "frame": 22,
+   "drawings": [
+    "bolt:16",
+    "bolt:6",
+    "arc:0"
+   ]
+  },
+  {
+   "frame": 23,
+   "drawings": [
+    "bolt:16",
+    "bolt:6",
+    "arc:1"
+   ]
+  },
+  {
+   "frame": 24,
+   "drawings": [
+    "bolt:16",
+    "bolt:7",
+    "arc:2"
+   ]
+  },
+  {
+   "frame": 25,
+   "drawings": [
+    "bolt:16",
+    "bolt:8",
+    "arc:2"
+   ]
+  },
+  {
+   "frame": 26,
+   "drawings": [
+    "bolt:17",
+    "bolt:9",
+    "arc:3"
+   ]
+  },
+  {
+   "frame": 27,
+   "drawings": [
+    "bolt:18",
+    "bolt:10",
+    "arc:3"
+   ]
+  },
+  {
+   "frame": 28,
+   "drawings": [
+    "bolt:18",
+    "bolt:10",
+    "arc:4"
+   ]
+  },
+  {
+   "frame": 29,
+   "drawings": [
+    "bolt:19",
+    "bolt:11",
+    "arc:5"
+   ]
+  }
+ ],
+ "check": {
+  "scale_strike": 0.588,
+  "scale_wrap": [
+   0.527
+  ],
+  "stroke_px_below_floor": 0
+ }
+}
