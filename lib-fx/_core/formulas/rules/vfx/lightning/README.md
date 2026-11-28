@@ -8,6 +8,7 @@ Luật chung cho mọi loại hiệu ứng nằm ở [../../README.md](../../REA
 | Bản gốc | Biến thể | Profile | Kết quả | Trạng thái |
 |---|---|---|---|---|
 | `ref/vfx/lightning-2/lightnings.mp4` (1920×640, 30 fps, 20 s; ba hiệu ứng lặp cạnh nhau) | `arc` (trái: cung sét xanh bò ngang), `strike` (giữa: sét vàng đánh thẳng xuống đất), `bolt` (phải: sét xanh lớn từ trên xuống đất) | [`lightning-2.json`](../../../vector/profiles/lightning-2.json) | [showcase/lightning-2](../../../../results/vector-showcase/lightning-2/) | **đạt** (2026-11-28): nguồn hình của bộ sét quanh nhân vật (§7) |
+| `ref/vfx/lightning-3/reference.gif` (1286×723, 52 frame, 25 fps, mỗi frame một hình) | `spark`: tia điện ngoằn ngoèo, lõi trắng, **viền tách màu** (xanh ngọc trên-trái, hồng dưới-phải), quầng xanh rộng | [`lightning-3.json`](../../../vector/profiles/lightning-3.json) | [showcase/lightning-3](../../../../results/vector-showcase/lightning-3/) | dựng lại, chờ user chấm |
 | `ref/vfx/lightning/dmitry-sarkisov-lqafinal.gif` (400×400, 127 frame) | `bolt` / `green`: nét mảnh xanh lá + quầng | `lightning.json`, `lightning-trace.json` | [lightning/bolt](../../../../results/vector-showcase/lightning/bolt/), [lightning-trace/green](../../../../results/vector-showcase/lightning-trace/green/) | lần dựng đầu, nét béo gấp ~3 (xem §6) |
 
 Số đo của `lightning-2`: [`data/lifecycle_lightning-2.json`](../../data/lifecycle_lightning-2.json) (từng hình vẽ: diện tích, số mảnh, bề rộng nét,
@@ -136,6 +137,19 @@ từng mảnh, không theo tổng diện tích: mảnh vụn vẫn chói. Ngư�
   sáng giữa màu mép nét và màu quầng (ở đây 120).
 - Bản gốc `lightning` (GIF 400 px, nét 2-5 px) chưa sửa: nét béo vì quầng sát nét cùng màu nét; cách sửa đề xuất (lọc "sáng hơn vùng quanh") ở
   `lib-fx/_plans/vfx-rebuild-02/R2b-lightning-thin.md`.
+
+### 6.1 Mẫu `lightning-3` (tia điện tách màu): cách đọc
+
+- **Phóng ×2 khi ingest** (`source.scale` 2): viền màu chỉ 1-3 px và nét mảnh 2-4 px; ở cỡ gốc bước làm mượt xoá mất chúng, phần hụt bị tính vào
+  quầng (quầng sát nét thành trắng, nét trông béo). Đo và dựng mất ~7 phút mỗi bước ở cỡ này.
+- **Mặt cắt một nét** (frame 27): (112,179,175) → (204,255,255) → trắng (255,255,255) → (144,108,113) → (131,51,77): mép trên xanh ngọc, mép dưới
+  đỏ sẫm. Nét mảnh là trắng xám (205,215,215) / (170,192,198).
+- **Viền tách màu = hai bản của lõi dịch hai phía** (khoá `chroma` của profile, không dò viền như lớp riêng: dò ra loang lổ). Đo bằng tương quan
+  mặt nạ lõi với mặt nạ viền: lệch tâm (−2,5, −4,5) / (+2,2, +4,5) px gốc, nhưng bề rộng viền thấy được = chính khoảng dịch, nên dùng **một nửa**:
+  (−1,2, −2,3) xanh ngọc (140,232,205), (+1,1, +2,3) hồng (205,95,130).
+- **Quầng ép về một sắc** (`halo_tint` = màu tầng rộng (185,449,827)): tầng hẹp đo tự do ra gần trắng vì ăn các điểm mép chưa có lớp.
+- Kết quả: `rebuild_check --bright 200`: diện tích 1,06, bề rộng nét 1,00, 40/50 frame trong 0,8-1,25 (ở 120: 1,11 / 1,15, 35/50). Còn hụt: vài
+  nét rất mảnh chỉ có màu viền (không có lõi trắng) bị đứt.
 
 ## 7. Bộ sét quanh nhân vật (ĐÃ DUYỆT 2026-11-28): công thức đầy đủ
 

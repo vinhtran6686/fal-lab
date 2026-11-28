@@ -40,6 +40,7 @@ mượt như vẽ bằng pen tool, kèm gradient, glow, độ đục và nhịp 
 | | khớp lớp = thân bền vững + lưỡi cộng + vết khoét, mỗi mảnh phải tăng IoU | `fit.fit_layer` |
 | | **Smooth & Simplify** (nối khe, góc thật hai tầm, làm trơn theo độ cong ít biến thiên, nắn gãy < 35°, gộp đoạn, tay nắm ≤ 0,45) | `smooth.py` |
 | Tô | tô chồng (lớp dưới chạy dưới lớp trên), gradient trong theo mép phần nhìn thấy, glow, độ đục từng frame | `compose.py` |
+| | viền tách màu (`chroma`: hai bản của một lớp dịch hai phía, tô phẳng, nằm dưới các lớp), quầng ép một sắc (`halo_tint`) | `compose.py`, `measure.py` |
 | | lớp mép mềm (`feather`), lớp có **quầng riêng** (`own_halo`: quầng elip của chớp đất, quầng mạnh của khung đảo màu), đo bằng `measure.fit_layer_halo` | `compose.py`, `measure.py` |
 | Kiểm tra | IoU, điểm gãy, điểm uốn, độ biến thiên độ cong; trang review có nút Đạt / Cần sửa | `metrics.py`, `review.py` |
 | | diện tích và bề rộng nét phần sáng / phần tối so với bản gốc (bắt nét béo mà IoU bỏ qua) | `lib-fx/_tools/rebuild_check.py` |
@@ -54,6 +55,7 @@ mượt như vẽ bằng pen tool, kèm gradient, glow, độ đục và nhịp 
 | | arcane | pha lê + cánh, 3 lớp | 10 | màn cánh trong mờ (độ đục ~0,45); tím nhạt mờ dần 1 → 0,59 |
 | | toxic | khói độc + vòng sáng, 2 lớp | 10 | bóng tối trong mờ (`darker_than_bg`); không có gradient mép |
 | `slash-trio` | blue, pink, gold (+ `*_refl`) | nhát chém, khung cực; phản chiếu khung thẳng ngang, 2-3 lớp | đạt, cả 3 | glow giữ sáng trên tia; phản chiếu là biến thể riêng |
+| `lightning-3` | spark | tia điện tách màu (GIF, phóng ×2), lõi + `chroma` + `halo_tint` | chờ chấm | diện tích 1,06, bề rộng 1,00 (ngưỡng 200) |
 | `lightning-2` | arc, strike, bolt | sét từ **video**, `fit.mode = trace`, thân + chớp đất + khung mực | đạt | diện tích dựng / gốc 0,92-1,02; công thức: [rules/vfx/lightning](../rules/vfx/lightning/README.md) |
 
 Trang review: Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdKGR, Element Trio https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn.
@@ -143,6 +145,7 @@ smooth.smooth_simplify ─► compose.composite (gradient trong, glow × gain[fr
 | `source.video`, `video_frames`, `dedupe` | — / cả video / `{diff: 40, min_px: 200}` | nguồn mp4; `video_frames.<v>` = một vòng lặp (tìm theo nội dung); `dedupe`: ngưỡng một hình mới |
 | `layers.<l>.feather` | — | làm mềm mép lớp (px), cho chớp sáng dưới đất |
 | `layers.<l>.own_halo` | — | `{sigma: [[dọc, ngang], ...]}` giá trị đầu: lớp có quầng riêng (có thể elip), `measure` ghi `halo`; lớp này không vào quầng chung |
+| `chroma`, `halo_tint` | — | viền tách màu `{of, shift: [[dx,dy]..] (px gốc), colours}`; sắc của mọi tầng quầng `[r,g,b]` |
 | `halo_gain_max`, `own_halo_clear` | 2 / 90 | trần độ mạnh quầng từng frame; khoảng cách (px) quanh lớp `own_halo` không dùng để đo quầng chung |
 | `layers.<l>.colours`, `tol` | — / 12-30 | đường màu và dung sai; lớp có gradient rộng cần lớn, lớp tối dễ lẫn glow cần nhỏ |
 | `layers.<l>.alpha` | — | nhận theo độ đục [lo, hi]; dùng cho màn mờ và lớp mờ dần; `measure` ghi `opacity` từng frame |

@@ -93,6 +93,13 @@ def composite(covers, order, prof, v, frame=None, base=None):
             img = img + sum(ndi.gaussian_filter(c.astype(float), tuple(s))[..., None] * np.array(cc, float)
                             for s, cc in zip(lh["sigma"], lh["c"])) * layer_opacity(prof.layers(v)[l], frame)
     flat = np.zeros(shape + (3,)) + 20
+    ch = var.get("chroma")                       # RGB-split fringe: shifted copies of one layer, painted under the layers
+    if ch and ch["of"] in covers:
+        k = prof.d["source"].get("scale", 1)
+        for (dx, dy), col in zip(ch["shift"], ch["colours"]):
+            sc = np.clip(ndi.shift(covers[ch["of"]].astype(float), (dy * k, dx * k), order=1), 0, 1)[..., None]
+            img = img * (1 - sc) + np.array(col, float) * sc
+            flat = flat * (1 - sc) + np.array(col, float) * sc
     vis = visible(covers, order)
     for l in order:
         if l in covers:

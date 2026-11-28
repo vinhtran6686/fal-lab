@@ -28,6 +28,9 @@
       "halo_model": "blur",          # glow = blurred copy of the shapes x gain per frame: {"sigma": [..], "c": [[..]], "gain": {"0": ..}}
       "near_halo": true,
       "halo_gain_max": 2,            # cap of the per-frame glow strength (an inverse flash frame needs more)
+      "halo_tint": [r, g, b],        # optional: every glow tier takes this hue (measure keeps each tier's strength)
+      "chroma": {"of": "core", "shift": [[dx, dy], ...], "colours": [[..], ..]},   # optional RGB-split fringe: shifted copies
+                                     # of one layer (source px) painted in flat colours under every layer
       "smooth": {...},                                              # per-variant override
       "frame": {...}                                                # per-variant override
     }

@@ -338,6 +338,9 @@ def measure_profile(prof, frames=None, write=True):
             if hb:  # a blur narrower than 1.5 source px is the reference's anti-aliasing fringe, not glow: drop it
                 keep = [i for i, sg in enumerate(hb["sigma"]) if sg >= 1.5 * k]
                 hb["sigma"], hb["c"] = [hb["sigma"][i] for i in keep], [hb["c"][i] for i in keep]
+            if write and hb and prof.var(v).get("halo_tint"):   # glow tiers forced to one hue (keeps each tier's strength):
+                t = np.array(prof.var(v)["halo_tint"], float)     # the near tier otherwise eats unmodelled edge pixels (white haze)
+                hb["c"] = [[round(float(x), 1) for x in t / t.sum() * sum(c)] for c in hb["c"]]
             if write and hb:
                 prof.var(v)["halo"] = hb
                 prof.var(v)["near_halo"] = False
