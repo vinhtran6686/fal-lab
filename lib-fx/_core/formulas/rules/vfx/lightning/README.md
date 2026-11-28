@@ -163,6 +163,34 @@ gì nằm dưới mặt đất (ghim điểm chạm đất, cắt phần dưới
 3. Lớp sau thân và trước thân tách riêng; vài lớp lệch nhịp nhau (sét không đồng bộ); không gì nằm dưới mặt đất.
 4. Màu khác (vàng, tím...): dùng bản remake cùng phong cách (`strike` vàng) hoặc đổi màu trong profile, giữ nguyên hình và nhịp.
 
+### 7.1 Cách làm chi tiết (từng bước, để làm lại cho nhân vật / bộ phận khác)
+
+1. **Có bản remake trước.** Dựng lại hiệu ứng tham khảo bằng bộ vector (§1): mỗi hình vẽ là một `svg/NN.svg` (lớp `body`, `ink`, `flash`), profile
+   giữ màu, gradient mép, quầng chung + độ mạnh từng hình (`halo.gain`), quầng riêng của chớp đất và khung mực, `recipe/exposure.json` giữ nhịp
+   (frame đầu + số frame giữ của từng hình). Đây là "kho hình" của phong cách; không vẽ thêm nét nào.
+2. **Phác dáng nhân vật bằng khối**: thân chữ nhật (cao H, rộng 0,36 H, chân trên mặt đất); khi cần bộ phận thì thêm khối của nó (tay giơ ngang:
+   từ vai ở 0,22 H dưới đỉnh đầu, dài 0,85 H, dày 0,11 H). Khối này chỉ để xem trước; sản phẩm là lớp sau / trước nền trong suốt.
+3. **Chọn vai trò cho từng hình gốc**:
+   - `bolt` (tia lớn có điểm chạm + chớp) = **tia đánh / tia phóng**: ghim một điểm của hình gốc vào một điểm vật lý. Đánh xuống: đáy chớp đất
+     (340, 556) → mặt đất cạnh chân. Phóng từ tay: điểm đầu của tia (trung bình các điểm có y < 40, tính lại **từng hình** vì mỗi hình vẽ lại tia ở chỗ
+     khác) → bàn tay, xoay −90° để tia chạy ra phía trước, chớp đất thành chớp va chạm ở đầu xa.
+   - `arc` (cung bò ngang, nhiều mảnh) = **cung quấn**: coi như vẽ trên một hình trụ. Trụ đứng quanh thân: x gốc → góc (300°), y gốc → chiều cao,
+     vòng nghiêng 0,22. Trụ nằm dọc cánh tay: x gốc → vị trí dọc tay, y gốc → góc quanh tay (360°) + xoắn 0,9-1,2 vòng theo chiều dài (thành lò
+     xo). Bán kính trụ 0,17-0,21 H cho tay, 0,48 H cho thân.
+4. **Mặt trước / sau bằng tra ngược**: với mỗi điểm ảnh đích, tính hai nghiệm góc (mặt trước: sin > 0 với trụ đứng, cos > 0 với trụ nằm; mặt sau:
+   nghiệm còn lại), tra ngược về toạ độ hình gốc và lấy mẫu (`cv2.remap`) hình đã raster. Mặt sau vẽ **trước** khối nhân vật (bị che), mặt trước vẽ
+   **sau** (vắt qua). Hình tự hẹp lại ở mép trụ như dải quấn thật.
+5. **Nhân mọi số đo px theo tỉ lệ của lớp** (k = kích thước đích / kích thước gốc): σ quầng, `s` gradient, `feather` chớp, σ quầng riêng (dọc,
+   ngang). Màu và độ mạnh quầng giữ nguyên.
+6. **Nhịp**: vòng lặp = vòng lặp gốc (30 frame, 30 fps); mỗi lớp lấy hình theo `exposure.json` với độ lệch riêng (0, 7-8, 14-15, 21) để các lớp không
+   cùng lúc bùng: sét không đồng bộ mà vẫn là nhịp vẽ tay của bản gốc.
+7. **Vật lý**: tia đánh xuống chạm đúng mặt đất; phần nào rơi dưới mặt đất thì cắt (mặt đất che); tia từ tay bắt đầu ở bàn tay.
+8. **Xuất**: `frames/` (có khối, để xem), `back/` và `front/` (RGBA, chỉ hiệu ứng: ghép sau nhân vật, nhân vật, trước nhân vật), `preview.gif`,
+   `preview_game.gif` (thân 60 px), `design.json` (lớp nào lấy hình nào ở mỗi frame).
+9. **Biến thể mới = một dòng trong `STYLES`** của `gen_lightning.py` (khối nhân vật + danh sách lớp `strike` / `shoot` / `wrap` / `wrap_h`):
+   - `wrap` (quanh thân, đã duyệt): 2 `strike` (sau thân, trước thân lật ngang, lệch nửa vòng) + 1 `wrap`.
+   - `arm` (quanh tay giơ ngang): 2 `wrap_h` (xoắn ngược chiều nhau, bán kính 0,17 / 0,21 H) + 1 `shoot` từ bàn tay dài 0,95 H.
+
 Việc tiếp theo: đưa vào thư viện `lib-fx/element/lightning/aura/` (sheet, meta, @2x) khi cần cho nhân vật thật; thêm cung thứ hai hoặc đổi bán kính / độ nghiêng nếu cần; tách thành vào / giữ lặp / ra để thời gian gồng thay đổi được; các kiểu khác (sét đánh xuống mục tiêu, sét chuyền giữa hai mục tiêu, sét vàng); kiểm thêm bằng mẫu thứ ba;
 đưa hiệu ứng duyệt vào `lib-fx/element/lightning/` (hiện chưa có hiệu ứng nào).
 - Xuất bản dựng theo chuẩn lib-fx (nền trong suốt, @2x, `sheet.png`, `meta.json`): chưa có cho mọi bản dựng vector (`vector/README.md` §9 E).

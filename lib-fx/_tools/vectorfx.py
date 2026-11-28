@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CLI for the lib-fx vector kit (lib-fx/_core/formulas/vector). 0 USD, no model.
 
-  python lib-fx/_tools/vectorfx.py gen-lightning NAME   the remake's lightning placed around a stand-in body (gen_lightning.py)
+  python lib-fx/_tools/vectorfx.py gen-lightning NAME [--style wrap|arm]   the remake's lightning placed around a stand-in body / an arm held out (gen_lightning.py)
   python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED] [--style crescent|loop|loop-heavy|front-heavy|combo|x] [--dummy]
       x: [--scale S] [--rotation DEG] [--duration-ms MS] [--fps N]   generate a NEW slash from the foundation rules
   python lib-fx/_tools/vectorfx.py init     GIF NAME                            draft profile: auto crops (+ reflections), frames, suggested layers
@@ -40,11 +40,11 @@ def main():
     ap.add_argument("--refit", action="store_true"); ap.add_argument("--scale", type=float, default=1.0); ap.add_argument("--rotation", type=float, default=0.0)
     ap.add_argument("--duration-ms", type=float, default=550.0); ap.add_argument("--fps", type=int, default=30)
     ap.add_argument("--dummy", action="store_true", help="gen-slash combo: also render a preview with a training dummy")
-    ap.add_argument("--style", choices=["crescent", "loop", "loop-heavy", "front-heavy", "combo", "x"], default="crescent")
+    ap.add_argument("--style", choices=["crescent", "loop", "loop-heavy", "front-heavy", "combo", "x", "wrap", "arm"], default="crescent")
     a = ap.parse_args()
     if a.cmd == "gen-lightning":
         from vector import gen_lightning
-        out, check = gen_lightning.build(a.profile, "wrap")
+        out, check = gen_lightning.build(a.profile, a.style if a.style in gen_lightning.STYLES else "wrap")
         print("out:", out)
         import json as _j; print(_j.dumps(check))
         return

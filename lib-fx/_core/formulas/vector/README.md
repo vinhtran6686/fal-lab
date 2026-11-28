@@ -62,7 +62,7 @@ Trang review: Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdK
 
 ```
 python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED] [--style crescent|loop|loop-heavy|front-heavy|combo|x] [--dummy]   SINH nhát chém mới từ luật (gen_slash.py; loop: gen_slash_loop.py)
-python lib-fx/_tools/vectorfx.py gen-lightning NAME                              đặt sét của bản remake lightning-2 quanh nhân vật (đánh xuống hai bên + cung quấn thân) (gen_lightning.py)
+python lib-fx/_tools/vectorfx.py gen-lightning NAME [--style wrap|arm]           đặt sét của bản remake lightning-2 quanh nhân vật (wrap) hoặc quanh tay giơ ngang (arm) (gen_lightning.py)
 python lib-fx/_tools/vectorfx.py init      GIF NAME                            bản nháp profile: tự tìm khung cắt (+ phản chiếu), frame, lớp màu
 python lib-fx/_tools/vectorfx.py check     PROFILE                             điểm ảnh sáng không lớp nào nhận; báo "MISSING LAYER" khi một màu chiếm phần lớn
 python lib-fx/_tools/vectorfx.py palette   PROFILE [--variant V] [--frame N]   màu phẳng + cụm màu + ảnh mặt nạ từng màu

@@ -39,6 +39,14 @@ STYLES = {
                  instances=[dict(kind="strike", v="bolt", x=0.44, mirror=False, depth=-1, offset=0),
                             dict(kind="strike", v="bolt", x=-0.48, mirror=True, depth=1, offset=15),
                             dict(kind="wrap", v="arc", th0=-70, dth=300, y=(0.18, 1.18), R=0.48, tilt=0.22, mirror=False, offset=8)]),
+    # an arm held out level with the ground (a casting pose); arm = shoulder -> hand along +x, in body heights
+    "arm": dict(H=240, canvas=(3.1, 2.1), feet=1.92, body_x=0.75, body_w=0.36, game_H=60, fps=30, loop=30,
+                bg=(38, 37, 46), floor=(58, 58, 72), arc_box=(700, 640), arc_x=(55, 640), arc_y=(135, 590),
+                strike=dict(ground=(340, 556), top=5, height=1.35),
+                arm=dict(y=0.22, length=0.85, thick=0.11),
+                instances=[dict(kind="wrap_h", v="arc", x=(-0.05, 1.12), R=0.17, twist=1.2, th0=0, dth=360, mirror=False, offset=0),
+                           dict(kind="wrap_h", v="arc", x=(0.10, 1.20), R=0.21, twist=-0.9, th0=140, dth=360, mirror=True, offset=14),
+                           dict(kind="shoot", v="bolt", anchor=(300, 5), length=0.95, rot=-90, mirror=False, depth=1, offset=7)]),
 }
 
 
@@ -63,17 +71,30 @@ def _affine(loops, A):
 
 
 class Strike:
-    def __init__(self, spec, st, body, k):
+    """Bolt drawings under one affine map: a reference anchor -> a target point, scale k, optional mirror and rotation.
+    strike: anchor = the ground point (flash bottom) -> the floor beside the feet; shoot: anchor = the bolt's top (its source)
+    -> the hand, rotated -90 deg so the bolt runs out along +x, its flash becoming the impact at the far end."""
+    def __init__(self, spec, st, body, k, anchor=None, target=None):
         self.s, self.k = spec, k
-        gx, gy = st["strike"]["ground"]
-        sx = -k if spec["mirror"] else k
-        tx = body["cx"] + spec["x"] * body["H"]
-        self.A = np.array([[sx, 0, tx - sx * gx], [0, k, body["fy"] - k * gy]])
+        if anchor is None:
+            anchor = st["strike"]["ground"]
+            target = (body["cx"] + spec["x"] * body["H"], body["fy"])
+        a = np.radians(spec.get("rot", 0))
+        M = k * np.array([[np.cos(a), -np.sin(a)], [np.sin(a), np.cos(a)]]) @ np.diag([-1.0 if spec["mirror"] else 1.0, 1.0])
+        self.A = np.c_[M, np.asarray(target, float) - M @ np.asarray(anchor, float)]
 
     def covers(self, layers, shape):
         out = {}
+        A = self.A
+        if self.s["kind"] == "shoot":                           # every drawing's own source point goes to the hand
+            top = [p for loops in layers.values() for loop in loops for seg in loop for p in seg if p[1] < 40]
+            if top:
+                self.ax = float(np.mean([p[0] for p in top]))
+            if getattr(self, "ax", None) is not None:
+                A = self.A.copy()
+                A[:, 2] += A[:, :2] @ np.array([self.s["anchor"][0] - self.ax, 0.0])
         for l, loops in layers.items():
-            c = raster_evenodd(_affine(loops, self.A), shape)
+            c = raster_evenodd(_affine(loops, A), shape)
             if c.any():
                 out[l] = {self.s["depth"]: c}
         return out
@@ -118,6 +139,36 @@ class Wrap:
         return out
 
 
+class WrapH:
+    """Arc drawings painted on a cylinder lying along the arm (axis along +x): reference x -> position along the arm,
+    reference y -> angle around it (+ twist turns along the length, a helix). Screen y = axis_y - R sin(theta),
+    depth = cos(theta): the back half is hidden by the arm, the front half crosses it."""
+    def __init__(self, spec, st, body, shape):
+        H, (Hc, W) = body["H"], shape
+        xr, yr = st["arc_x"], st["arc_y"]
+        self.s, self.ref_shape, self.floor = spec, (st["arc_box"][1], st["arc_box"][0]), body["fy"] - 1
+        yy, xx = np.mgrid[0:Hc, 0:W].astype(np.float32)
+        R, ay = spec["R"] * H, body["arm_y"]
+        x0, x1 = body["shoulder"] + spec["x"][0] * H, body["shoulder"] + spec["x"][1] * H
+        u = (xx - x0) / (x1 - x0)
+        v = np.clip((ay - yy) / R, -1, 1)
+        inside = (np.abs(ay - yy) <= R) & (u >= 0) & (u <= 1)
+        self.k = (x1 - x0) / (xr[1] - xr[0])
+        self.maps = {}
+        for depth, th in ((1, np.arcsin(v)), (-1, np.pi - np.arcsin(v))):
+            a = (np.degrees(th) - spec["th0"] - 360 * spec["twist"] * u) % 360
+            valid = inside & (a <= spec["dth"])
+            frac = a / spec["dth"]
+            if spec["mirror"]:
+                frac = 1 - frac
+            mx = xr[0] + np.clip(u, 0, 1) * (xr[1] - xr[0])
+            my = yr[0] + frac * (yr[1] - yr[0])
+            mx[~valid] = -10
+            self.maps[depth] = (mx.astype(np.float32), my.astype(np.float32))
+
+    covers = Wrap.covers
+
+
 def _gain(cfg, f):
     g = cfg["halo"].get("gain", {})
     if not g:
@@ -148,18 +199,31 @@ def _rgba(glow_parts, fill_parts, shape):
 
 
 def build(name, style="wrap", seed=0, out_root=None):
+    """style "wrap": around the body; "arm": around an arm held out level (casting), plus a bolt shot from the hand."""
     st = STYLES[style]
     prof = Profile(PROFILE)
     expo = json.loads(EXPOSURE.read_text())
     H = st["H"]
     W, Hc = int(st["canvas"][0] * H), int(st["canvas"][1] * H)
-    body = dict(H=H, cx=W / 2, fy=st["feet"] * H)
+    body = dict(H=H, cx=st.get("body_x", W / H / 2) * H, fy=st["feet"] * H)
     rect = (int(body["cx"] - st["body_w"] * H / 2), int(body["fy"] - H), int(body["cx"] + st["body_w"] * H / 2), int(body["fy"]))
+    rects = [rect]
+    if "arm" in st:                                               # stand-in arm: shoulder -> hand, level with the ground
+        am = st["arm"]
+        body["shoulder"], body["arm_y"] = rect[2], rect[1] + am["y"] * H
+        body["hand"] = (body["shoulder"] + am["length"] * H, body["arm_y"])
+        rects.append((rect[2], int(body["arm_y"] - am["thick"] * H / 2), int(body["hand"][0]), int(body["arm_y"] + am["thick"] * H / 2)))
     ks = st["strike"]["height"] * H / (st["strike"]["ground"][1] - st["strike"]["top"])
     inst = []
     for sp in st["instances"]:
         if sp["kind"] == "strike":
             inst.append((sp, Strike(sp, st, body, ks), ks))
+        elif sp["kind"] == "shoot":
+            k = sp["length"] * H / (st["strike"]["ground"][1] - sp["anchor"][1])
+            inst.append((sp, Strike(sp, st, body, k, sp["anchor"], body["hand"]), k))
+        elif sp["kind"] == "wrap_h":
+            w = WrapH(sp, st, body, (Hc, W))
+            inst.append((sp, w, w.k))
         else:
             w = Wrap(sp, st, body, (Hc, W))
             inst.append((sp, w, w.k))
@@ -205,7 +269,8 @@ def build(name, style="wrap", seed=0, out_root=None):
         img = np.zeros((Hc, W, 3)) + np.array(st["bg"], float)
         img[rect[3]:rect[3] + 2] = st["floor"]
         img = _paint(img, glow[-1], fill[-1])
-        img[rect[1]:rect[3], rect[0]:rect[2]] = BODY
+        for r in rects:
+            img[r[1]:r[3], r[0]:r[2]] = BODY
         img = np.clip(_paint(img, glow[1], fill[1]), 0, 255).astype(np.uint8)
         Image.fromarray(img).save(out / "frames" / f"{t:02d}.png")
         Image.fromarray(_rgba(glow[-1], fill[-1], (Hc, W))).save(out / "back" / f"{t:02d}.png")
@@ -219,7 +284,7 @@ def build(name, style="wrap", seed=0, out_root=None):
     gk = st["game_H"] / H
     game = [im.resize((round(W * gk), round(Hc * gk)), Image.LANCZOS) for im in frames]
     game[0].save(out / "preview_game.gif", save_all=True, append_images=game[1:], duration=ms, loop=0)
-    check = dict(scale_strike=round(ks, 3), scale_wrap=[round(k, 3) for sp, _, k in inst if sp["kind"] == "wrap"],
+    check = dict(scale_strike=round(ks, 3), scale_wrap=[round(k, 3) for sp, _, k in inst if sp["kind"] != "strike"],
                  stroke_px_below_floor=below)
     (out / "design.json").write_text(json.dumps(dict(style=style, params=st, frames=log, check=check), indent=1, default=float))
     return out, check
