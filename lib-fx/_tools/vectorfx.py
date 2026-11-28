@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CLI for the lib-fx vector kit (lib-fx/_core/formulas/vector). 0 USD, no model.
 
-  python lib-fx/_tools/vectorfx.py gen-lightning NAME [--style wrap|arm|raise|dual|slam|thrust] [--colour blue|gold|red|purple|green] [--preview-only]   the remake's lightning around a stand-in pose (gen_lightning.py)
+  python lib-fx/_tools/vectorfx.py gen-lightning NAME [--style wrap|arm|raise|dual|slam|thrust|prism] [--colour blue|gold|red|purple|green] [--preview-only]   the remake's lightning around a stand-in pose (gen_lightning.py)
   python lib-fx/_tools/vectorfx.py gen-slash NAME [--variant blue|pink|gold] [--frame SEED] [--style crescent|loop|loop-heavy|front-heavy|combo|x] [--dummy]
       x: [--scale S] [--rotation DEG] [--duration-ms MS] [--fps N]   generate a NEW slash from the foundation rules
   python lib-fx/_tools/vectorfx.py init     GIF NAME                            draft profile: auto crops (+ reflections), frames, suggested layers
@@ -42,7 +42,7 @@ def main():
     ap.add_argument("--colour", default="blue", help="gen-lightning: blue|gold|red|purple|green")
     ap.add_argument("--preview-only", action="store_true", help="gen-lightning: only colours/<colour>.gif of an existing output")
     ap.add_argument("--dummy", action="store_true", help="gen-slash combo: also render a preview with a training dummy")
-    ap.add_argument("--style", choices=["crescent", "loop", "loop-heavy", "front-heavy", "combo", "x", "wrap", "arm", "raise", "dual", "slam", "thrust"], default="crescent")
+    ap.add_argument("--style", choices=["crescent", "loop", "loop-heavy", "front-heavy", "combo", "x", "wrap", "arm", "raise", "dual", "slam", "thrust", "prism"], default="crescent")
     a = ap.parse_args()
     if a.cmd == "gen-lightning":
         from vector import gen_lightning

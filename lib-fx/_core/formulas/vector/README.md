@@ -55,7 +55,7 @@ mượt như vẽ bằng pen tool, kèm gradient, glow, độ đục và nhịp 
 | | arcane | pha lê + cánh, 3 lớp | 10 | màn cánh trong mờ (độ đục ~0,45); tím nhạt mờ dần 1 → 0,59 |
 | | toxic | khói độc + vòng sáng, 2 lớp | 10 | bóng tối trong mờ (`darker_than_bg`); không có gradient mép |
 | `slash-trio` | blue, pink, gold (+ `*_refl`) | nhát chém, khung cực; phản chiếu khung thẳng ngang, 2-3 lớp | đạt, cả 3 | glow giữ sáng trên tia; phản chiếu là biến thể riêng |
-| `lightning-3` | spark | tia điện tách màu (GIF, phóng ×2), lõi + `chroma` + `halo_tint` | chờ chấm | diện tích 1,06, bề rộng 1,00 (ngưỡng 200) |
+| `lightning-3` | spark (Prism Spark) | tia điện tách màu (GIF, phóng ×2), lõi + `chroma` + `halo_tint` | đạt | diện tích 1,06, bề rộng 1,00 (ngưỡng 200) |
 | `lightning-2` | arc, strike, bolt | sét từ **video**, `fit.mode = trace`, thân + chớp đất + khung mực | đạt | diện tích dựng / gốc 0,92-1,02; công thức: [rules/vfx/lightning](../rules/vfx/lightning/README.md) |
 
 Trang review: Swirl Slash Shapes https://claude.ai/artifact/QYf1pHQVRyrNRWtUyAdKGR, Element Trio https://claude.ai/artifact/6Vw3supbrvPSULNoNsxCzn.

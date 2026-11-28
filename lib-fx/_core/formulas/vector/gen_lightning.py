@@ -31,6 +31,11 @@ from .profile import Profile, REPO
 SRC = REPO / "lib-fx/_core/results/vector-showcase/lightning-2"
 PROFILE = REPO / "lib-fx/_core/formulas/vector/profiles/lightning-2.json"
 EXPOSURE = SRC / "recipe/exposure.json"
+# Prism Spark ("Điện lăng kính", remake of ref/vfx/lightning-3, user-approved 2026-11-28): every frame a new drawing (25 fps,
+# 52-frame burst), white core + RGB-split fringe (profile `chroma`) + blue glow; svg at 2x the GIF (source.scale 2)
+PRISM = dict(svg=REPO / "lib-fx/_core/results/vector-showcase/lightning-3",
+             profile=REPO / "lib-fx/_core/formulas/vector/profiles/lightning-3.json", frames=52, box=(1830, 1020))
+PRISM_ROT = {"blue": 0, "gold": -165, "red": 150, "purple": 55, "green": -95}   # hue turn of glow + fringe (core stays white)
 STYLES = {
     # H: body height @2x. strike: ground point of the reference bolt (its flash bottom) and the height it spans.
     "wrap": dict(H=240, canvas=(2.8, 2.3), feet=2.1, body_w=0.36, game_H=60, fps=30, loop=30,
@@ -72,6 +77,12 @@ STYLES = {
                               dict(kind="wrap_axis", v="arc", arm=0, x=(0.10, 1.20), R=0.21, twist=-0.9, th0=140, dth=360, mirror=True, offset=14),
                               dict(kind="bolt2", v="bolt", src=("hand", 0), dst=("along", 0, 1.0), depth=1, offset=7)]),
 }
+STYLES["prism"] = dict(H=240, canvas=(2.4, 2.1), feet=1.92, body_w=0.36, game_H=60, fps=25, loop=PRISM["frames"],
+                       bg=(14, 15, 22), floor=(46, 48, 62), arc_box=PRISM["box"], arc_x=(0, 1830), arc_y=(0, 1020),
+                       strike=dict(ground=(340, 556), top=5, height=1.35),
+                       instances=[dict(kind="wrap", src="prism", v="spark", th0=-60, dth=300, y=(0.05, 1.05), R=0.46, tilt=0.22, mirror=False, offset=0),
+                                  dict(kind="wrap", src="prism", v="spark", th0=120, dth=300, y=(0.20, 1.22), R=0.52, tilt=0.22, mirror=True, offset=17),
+                                  dict(kind="wrap", src="prism", v="spark", th0=30, dth=300, y=(0.00, 0.85), R=0.42, tilt=0.22, mirror=False, offset=34)])
 # colour variants: rotate every colour of the remake around the grey axis (hue shift that keeps the light / dark structure);
 # gold takes the measured colours of the lightning-2 `strike` (a real gold reference) where it has them.
 PALETTES = {"blue": dict(rot=0), "purple": dict(rot=70), "red": dict(rot=155), "green": dict(rot=-80),
@@ -80,9 +91,9 @@ PALETTES = {"blue": dict(rot=0), "purple": dict(rot=70), "red": dict(rot=155), "
                          flash_halo=[[587.4, 366.7, 16.6], [1041.6, 689.1, 15.6]])}
 
 
-def load_drawing(v, f):
+def load_drawing(v, f, src=SRC):
     """{layer: [loops]} of one remake drawing (None for a blank drawing)."""
-    p = SRC / v / "svg" / f"{f:02d}.svg"
+    p = src / v / "svg" / f"{f:02d}.svg"
     if not p.exists():
         return None
     return {m.group(1): parse_path_d(m.group(2)) for m in re.finditer(r'<path id="([^"]+)"[^>]*? d="([^"]+)"', p.read_text())}
@@ -134,8 +145,9 @@ class Wrap:
     """Arc drawings painted on a cylinder around the body axis; inverse maps for the front and back surfaces."""
     def __init__(self, spec, st, body, shape):
         H, (Hc, W) = body["H"], shape
-        xr, yr = st["arc_x"], st["arc_y"]
-        self.s, self.ref_shape, self.floor = spec, (st["arc_box"][1], st["arc_box"][0]), body["fy"] - 1
+        xr, yr = spec.get("ref_x", st["arc_x"]), spec.get("ref_y", st["arc_y"])
+        box = spec.get("box", st["arc_box"])
+        self.s, self.ref_shape, self.floor = spec, (box[1], box[0]), body["fy"] - 1
         yy, xx = np.mgrid[0:Hc, 0:W].astype(np.float32)
         R = spec["R"] * H
         u = np.clip((xx - body["cx"]) / R, -1, 1)
@@ -362,6 +374,10 @@ def build(name, style="wrap", seed=0, out_root=None, colour="blue", preview_only
     colours/<colour>_game.gif (colour variants of an output whose frames are already stored)."""
     st = dict(STYLES[style])
     prof = recolour(Profile(PROFILE), colour)
+    prism = Profile(PRISM["profile"])
+    pv = prism.var("spark")
+    pv["halo"]["c"] = [[float(x) for x in _hue(c, PRISM_ROT[colour])] for c in pv["halo"]["c"]]
+    pv["chroma"]["colours"] = [[float(x) for x in np.clip(_hue(c, PRISM_ROT[colour]), 0, 255)] for c in pv["chroma"]["colours"]]
     expo = json.loads(EXPOSURE.read_text())
     H = st["H"]
     W, Hc = int(st["canvas"][0] * H), int(st["canvas"][1] * H)
@@ -415,12 +431,17 @@ def build(name, style="wrap", seed=0, out_root=None, colour="blue", preview_only
         glow, fill, row = {-1: [], 1: []}, {-1: [], 1: []}, []
         for sp, geo, k in inst:
             v = sp["v"]
-            f = drawing_at(expo[v], (t + sp["offset"]) % st["loop"])
-            layers = load_drawing(v, f)
+            if sp.get("src") == "prism":                          # Prism Spark: one drawing per frame, no exposure chart
+                P, f = prism, (t + sp["offset"]) % PRISM["frames"]
+                layers = load_drawing(v, f, PRISM["svg"])
+            else:
+                P = prof
+                f = drawing_at(expo[v], (t + sp["offset"]) % st["loop"])
+                layers = load_drawing(v, f)
             row.append(f"{v}:{f}")
             if not layers:
                 continue
-            var, L = prof.var(v), prof.layers(v)
+            var, L = P.var(v), P.layers(v)
             cov = geo.covers(layers, (Hc, W))
             gain = _gain(var, f)
             for dep in (-1, 1):
@@ -433,7 +454,13 @@ def build(name, style="wrap", seed=0, out_root=None, colour="blue", preview_only
                     if dep in c and "own_halo" in L[l] and L[l].get("halo"):
                         glow[dep].append(sum(ndi.gaussian_filter(c[dep], (sy * k, sx * k))[..., None] * np.array(cc, float)
                                              for (sy, sx), cc in zip(L[l]["halo"]["sigma"], L[l]["halo"]["c"])))
-                for l in prof.order(v):                                  # fills bottom -> top, as in the remake
+                ch = var.get("chroma")                                   # RGB-split fringe in screen space, under the core
+                if ch and ch["of"] in cov and dep in cov[ch["of"]]:
+                    ks = k * P.d["source"].get("scale", 1)
+                    for (dx, dy), cc in zip(ch["shift"], ch["colours"]):
+                        a = np.clip(ndi.shift(cov[ch["of"]][dep], (dy * ks, dx * ks), order=1), 0, 1)
+                        fill[dep].append((np.zeros(a.shape + (3,)) + np.array(cc, float), a))
+                for l in P.order(v):                                     # fills bottom -> top, as in the remake
                     if l not in cov or dep not in cov[l]:
                         continue
                     a = cov[l][dep]

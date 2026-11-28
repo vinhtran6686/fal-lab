@@ -8,7 +8,7 @@ Luật chung cho mọi loại hiệu ứng nằm ở [../../README.md](../../REA
 | Bản gốc | Biến thể | Profile | Kết quả | Trạng thái |
 |---|---|---|---|---|
 | `ref/vfx/lightning-2/lightnings.mp4` (1920×640, 30 fps, 20 s; ba hiệu ứng lặp cạnh nhau) | `arc` (trái: cung sét xanh bò ngang), `strike` (giữa: sét vàng đánh thẳng xuống đất), `bolt` (phải: sét xanh lớn từ trên xuống đất) | [`lightning-2.json`](../../../vector/profiles/lightning-2.json) | [showcase/lightning-2](../../../../results/vector-showcase/lightning-2/) | **đạt** (2026-11-28): nguồn hình của bộ sét quanh nhân vật (§7) |
-| `ref/vfx/lightning-3/reference.gif` (1286×723, 52 frame, 25 fps, mỗi frame một hình) | `spark`: tia điện ngoằn ngoèo, lõi trắng, **viền tách màu** (xanh ngọc trên-trái, hồng dưới-phải), quầng xanh rộng | [`lightning-3.json`](../../../vector/profiles/lightning-3.json) | [showcase/lightning-3](../../../../results/vector-showcase/lightning-3/) | dựng lại, chờ user chấm |
+| `ref/vfx/lightning-3/reference.gif` (1286×723, 52 frame, 25 fps, mỗi frame một hình) | `spark` = **Prism Spark** ("Điện lăng kính"): tia điện ngoằn ngoèo, lõi trắng, **viền tách màu** (xanh ngọc trên-trái, hồng dưới-phải), quầng xanh rộng | [`lightning-3.json`](../../../vector/profiles/lightning-3.json) | [showcase/lightning-3](../../../../results/vector-showcase/lightning-3/) | **đạt** (2026-11-28) |
 | `ref/vfx/lightning/dmitry-sarkisov-lqafinal.gif` (400×400, 127 frame) | `bolt` / `green`: nét mảnh xanh lá + quầng | `lightning.json`, `lightning-trace.json` | [lightning/bolt](../../../../results/vector-showcase/lightning/bolt/), [lightning-trace/green](../../../../results/vector-showcase/lightning-trace/green/) | lần dựng đầu, nét béo gấp ~3 (xem §6) |
 
 Số đo của `lightning-2`: [`data/lifecycle_lightning-2.json`](../../data/lifecycle_lightning-2.json) (từng hình vẽ: diện tích, số mảnh, bề rộng nét,
@@ -206,10 +206,15 @@ quanh, hình lố xuống dưới mặt đất.
 | `raise` | gọi sét, tay giơ thẳng lên | `bolt2` trời → bàn tay (0) + `wrap_axis` quanh tay đứng (9) + `wrap` quanh thân (20) |
 | `dual` | dang hai tay | 2 `wrap_axis` (mỗi tay một cung, xoắn ngược, 0 / 15) + 2 `bolt2` phóng ra hai phía dài 0,9 H (7 / 22) |
 | `slam` | đập xuống đất, tay chéo xuống 50° | `wrap_axis` quanh tay (0) + `bolt2` bàn tay → đất phía trước (+1,3 H, 7) + `bolt2` trời → đất sau lưng (−0,5 H, 19), chớp nằm phẳng |
+| `prism` | **charge v2**: vận sức với Prism Spark quanh thân (thân không tay); đạt 2026-11-28 | 3 `wrap` Prism Spark quanh thân (bán kính 0,46 / 0,52 / 0,42 H, cao 0,05-1,05 / 0,20-1,22 / 0-0,85 H, lệch 0 / 17 / 34 trên vòng 52 frame, 25 fps) |
 | `thrust` | phóng chéo lên 35° | 2 `wrap_axis` quanh tay (0 / 14) + `bolt2` phóng theo hướng tay dài 1,0 H (7) |
 
 Dáng mới: thêm một dòng `STYLES` (khối + `arms` + danh sách lớp `strike` / `shoot` / `bolt2` / `wrap` / `wrap_h` / `wrap_axis`), chạy `gen-lightning`,
 xem `preview_game.gif`, kiểm `stroke_px_below_floor`.
+
+**Nguồn hình thứ hai: Prism Spark** (`lightning-3`): mỗi frame một hình, nên frame t lấy hình `(t + lệch) mod 52`, không có bảng nhịp; svg ở
+×2 ảnh GIF nên mọi số đo px nhân thêm `source.scale`. Viền tách màu (`chroma`) dịch **trong không gian màn hình sau khi quấn** (đúng bản chất lệch
+kênh màu), tô dưới lõi; lõi luôn trắng. Màu (`PRISM_ROT`): xoay sắc quầng và hai màu viền: `gold` −165°, `red` +150°, `purple` +55°, `green` −95°.
 
 ### 7.4 Nguyên tố khác
 

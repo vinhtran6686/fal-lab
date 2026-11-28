@@ -1,0 +1,520 @@
+{
+ "style": "prism",
+ "colour": "blue",
+ "params": {
+  "H": 240,
+  "canvas": [
+   2.4,
+   2.1
+  ],
+  "feet": 1.92,
+  "body_w": 0.36,
+  "game_H": 60,
+  "fps": 25,
+  "loop": 52,
+  "bg": [
+   14,
+   15,
+   22
+  ],
+  "floor": [
+   46,
+   48,
+   62
+  ],
+  "arc_box": [
+   1830,
+   1020
+  ],
+  "arc_x": [
+   0,
+   1830
+  ],
+  "arc_y": [
+   0,
+   1020
+  ],
+  "strike": {
+   "ground": [
+    340,
+    556
+   ],
+   "top": 5,
+   "height": 1.35
+  },
+  "instances": [
+   {
+    "kind": "wrap",
+    "src": "prism",
+    "v": "spark",
+    "th0": -60,
+    "dth": 300,
+    "y": [
+     0.05,
+     1.05
+    ],
+    "R": 0.46,
+    "tilt": 0.22,
+    "mirror": false,
+    "offset": 0
+   },
+   {
+    "kind": "wrap",
+    "src": "prism",
+    "v": "spark",
+    "th0": 120,
+    "dth": 300,
+    "y": [
+     0.2,
+     1.22
+    ],
+    "R": 0.52,
+    "tilt": 0.22,
+    "mirror": true,
+    "offset": 17
+   },
+   {
+    "kind": "wrap",
+    "src": "prism",
+    "v": "spark",
+    "th0": 30,
+    "dth": 300,
+    "y": [
+     0.0,
+     0.85
+    ],
+    "R": 0.42,
+    "tilt": 0.22,
+    "mirror": false,
+    "offset": 34
+   }
+  ]
+ },
+ "frames": [
+  {
+   "frame": 0,
+   "drawings": [
+    "spark:0",
+    "spark:17",
+    "spark:34"
+   ]
+  },
+  {
+   "frame": 1,
+   "drawings": [
+    "spark:1",
+    "spark:18",
+    "spark:35"
+   ]
+  },
+  {
+   "frame": 2,
+   "drawings": [
+    "spark:2",
+    "spark:19",
+    "spark:36"
+   ]
+  },
+  {
+   "frame": 3,
+   "drawings": [
+    "spark:3",
+    "spark:20",
+    "spark:37"
+   ]
+  },
+  {
+   "frame": 4,
+   "drawings": [
+    "spark:4",
+    "spark:21",
+    "spark:38"
+   ]
+  },
+  {
+   "frame": 5,
+   "drawings": [
+    "spark:5",
+    "spark:22",
+    "spark:39"
+   ]
+  },
+  {
+   "frame": 6,
+   "drawings": [
+    "spark:6",
+    "spark:23",
+    "spark:40"
+   ]
+  },
+  {
+   "frame": 7,
+   "drawings": [
+    "spark:7",
+    "spark:24",
+    "spark:41"
+   ]
+  },
+  {
+   "frame": 8,
+   "drawings": [
+    "spark:8",
+    "spark:25",
+    "spark:42"
+   ]
+  },
+  {
+   "frame": 9,
+   "drawings": [
+    "spark:9",
+    "spark:26",
+    "spark:43"
+   ]
+  },
+  {
+   "frame": 10,
+   "drawings": [
+    "spark:10",
+    "spark:27",
+    "spark:44"
+   ]
+  },
+  {
+   "frame": 11,
+   "drawings": [
+    "spark:11",
+    "spark:28",
+    "spark:45"
+   ]
+  },
+  {
+   "frame": 12,
+   "drawings": [
+    "spark:12",
+    "spark:29",
+    "spark:46"
+   ]
+  },
+  {
+   "frame": 13,
+   "drawings": [
+    "spark:13",
+    "spark:30",
+    "spark:47"
+   ]
+  },
+  {
+   "frame": 14,
+   "drawings": [
+    "spark:14",
+    "spark:31",
+    "spark:48"
+   ]
+  },
+  {
+   "frame": 15,
+   "drawings": [
+    "spark:15",
+    "spark:32",
+    "spark:49"
+   ]
+  },
+  {
+   "frame": 16,
+   "drawings": [
+    "spark:16",
+    "spark:33",
+    "spark:50"
+   ]
+  },
+  {
+   "frame": 17,
+   "drawings": [
+    "spark:17",
+    "spark:34",
+    "spark:51"
+   ]
+  },
+  {
+   "frame": 18,
+   "drawings": [
+    "spark:18",
+    "spark:35",
+    "spark:0"
+   ]
+  },
+  {
+   "frame": 19,
+   "drawings": [
+    "spark:19",
+    "spark:36",
+    "spark:1"
+   ]
+  },
+  {
+   "frame": 20,
+   "drawings": [
+    "spark:20",
+    "spark:37",
+    "spark:2"
+   ]
+  },
+  {
+   "frame": 21,
+   "drawings": [
+    "spark:21",
+    "spark:38",
+    "spark:3"
+   ]
+  },
+  {
+   "frame": 22,
+   "drawings": [
+    "spark:22",
+    "spark:39",
+    "spark:4"
+   ]
+  },
+  {
+   "frame": 23,
+   "drawings": [
+    "spark:23",
+    "spark:40",
+    "spark:5"
+   ]
+  },
+  {
+   "frame": 24,
+   "drawings": [
+    "spark:24",
+    "spark:41",
+    "spark:6"
+   ]
+  },
+  {
+   "frame": 25,
+   "drawings": [
+    "spark:25",
+    "spark:42",
+    "spark:7"
+   ]
+  },
+  {
+   "frame": 26,
+   "drawings": [
+    "spark:26",
+    "spark:43",
+    "spark:8"
+   ]
+  },
+  {
+   "frame": 27,
+   "drawings": [
+    "spark:27",
+    "spark:44",
+    "spark:9"
+   ]
+  },
+  {
+   "frame": 28,
+   "drawings": [
+    "spark:28",
+    "spark:45",
+    "spark:10"
+   ]
+  },
+  {
+   "frame": 29,
+   "drawings": [
+    "spark:29",
+    "spark:46",
+    "spark:11"
+   ]
+  },
+  {
+   "frame": 30,
+   "drawings": [
+    "spark:30",
+    "spark:47",
+    "spark:12"
+   ]
+  },
+  {
+   "frame": 31,
+   "drawings": [
+    "spark:31",
+    "spark:48",
+    "spark:13"
+   ]
+  },
+  {
+   "frame": 32,
+   "drawings": [
+    "spark:32",
+    "spark:49",
+    "spark:14"
+   ]
+  },
+  {
+   "frame": 33,
+   "drawings": [
+    "spark:33",
+    "spark:50",
+    "spark:15"
+   ]
+  },
+  {
+   "frame": 34,
+   "drawings": [
+    "spark:34",
+    "spark:51",
+    "spark:16"
+   ]
+  },
+  {
+   "frame": 35,
+   "drawings": [
+    "spark:35",
+    "spark:0",
+    "spark:17"
+   ]
+  },
+  {
+   "frame": 36,
+   "drawings": [
+    "spark:36",
+    "spark:1",
+    "spark:18"
+   ]
+  },
+  {
+   "frame": 37,
+   "drawings": [
+    "spark:37",
+    "spark:2",
+    "spark:19"
+   ]
+  },
+  {
+   "frame": 38,
+   "drawings": [
+    "spark:38",
+    "spark:3",
+    "spark:20"
+   ]
+  },
+  {
+   "frame": 39,
+   "drawings": [
+    "spark:39",
+    "spark:4",
+    "spark:21"
+   ]
+  },
+  {
+   "frame": 40,
+   "drawings": [
+    "spark:40",
+    "spark:5",
+    "spark:22"
+   ]
+  },
+  {
+   "frame": 41,
+   "drawings": [
+    "spark:41",
+    "spark:6",
+    "spark:23"
+   ]
+  },
+  {
+   "frame": 42,
+   "drawings": [
+    "spark:42",
+    "spark:7",
+    "spark:24"
+   ]
+  },
+  {
+   "frame": 43,
+   "drawings": [
+    "spark:43",
+    "spark:8",
+    "spark:25"
+   ]
+  },
+  {
+   "frame": 44,
+   "drawings": [
+    "spark:44",
+    "spark:9",
+    "spark:26"
+   ]
+  },
+  {
+   "frame": 45,
+   "drawings": [
+    "spark:45",
+    "spark:10",
+    "spark:27"
+   ]
+  },
+  {
+   "frame": 46,
+   "drawings": [
+    "spark:46",
+    "spark:11",
+    "spark:28"
+   ]
+  },
+  {
+   "frame": 47,
+   "drawings": [
+    "spark:47",
+    "spark:12",
+    "spark:29"
+   ]
+  },
+  {
+   "frame": 48,
+   "drawings": [
+    "spark:48",
+    "spark:13",
+    "spark:30"
+   ]
+  },
+  {
+   "frame": 49,
+   "drawings": [
+    "spark:49",
+    "spark:14",
+    "spark:31"
+   ]
+  },
+  {
+   "frame": 50,
+   "drawings": [
+    "spark:50",
+    "spark:15",
+    "spark:32"
+   ]
+  },
+  {
+   "frame": 51,
+   "drawings": [
+    "spark:51",
+    "spark:16",
+    "spark:33"
+   ]
+  }
+ ],
+ "check": {
+  "scale_strike": 0.4,
+  "scale_wrap": [
+   0.235,
+   0.24,
+   0.2
+  ],
+  "stroke_px_below_floor": 0
+ }
+}
